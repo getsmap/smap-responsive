@@ -6,19 +6,23 @@ smap.core.Layer = L.Class.extend({
 		var self = this;
 		smap.event.on("smap.core.applyparams", function(e, obj) {
 			var p = obj.params;
-			if (p.OL) {
-				var t;
-				for (var i=0,len=p.OL.length; i<len; i++) {
-					t = smap.cmd.getLayerConfig( p.OL[i] );
-					self._addLayer( self._createLayer(t) );
-				}
-			}
 			if (p.BL) {
 				var t = smap.cmd.getLayerConfig( p.BL );
 				self._addLayer( self._createLayer(t) );
 			}
 			else {
 				self._addLayer( self._createLayer( smap.config.bl[0] ) );
+			}
+			if (p.OL) {
+				var t, i=0;
+				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
+				for (i=0,len=ol.length; i<len; i++) {
+					t = smap.cmd.getLayerConfig( ol[i] );
+					if (!t || !t.init) {
+						continue;
+					}
+					self._addLayer( self._createLayer(t) );
+				}
 			}
 		});
 	},
