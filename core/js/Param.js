@@ -83,12 +83,13 @@ smap.core.Param = L.Class.extend({
 			if (val instanceof Array) {
 				val = val.join(",");
 			}
-			pString += "&" + val;
+			pString += "&" + key + "=" + val;
 		}
+		pString = pString.substring(1); // remove &
 		if (addRoot === true) {
 			pString = document.URL.split("?")[0] + "?" + pString;
 		}
-		return pString.substring(1); // remove &
+		return pString;
 	},
 	
 	applyParams: function(p) {

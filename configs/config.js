@@ -15,11 +15,11 @@ var config = {
 	    		 url: "http://geoserver.smap.se/geoserver/wms",
 	    		 options: {
 	    			 layerId: "gangstig",
-	    			 displayName: "GŒngstig",
+	    			 displayName: "GÃ¥ngstig",
 	    			 layers: 'sandboxws:regisln',
 	    			 format: 'image/png',
 	    			 transparent: true,
-	    			 attribution: "© Malmš Stadsbyggnadskontor"
+	    			 attribution: "@ MalmÃ¶ Stadsbyggnadskontor"
 	    		 }
 		     }
 		     ],
@@ -31,7 +31,7 @@ var config = {
 				options: {
 					layerId: "osm",
 					displayName: "OSM",
-					attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
+					attribution: '<span>Â© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
 					maxZoom: 18
 				}
 			}
