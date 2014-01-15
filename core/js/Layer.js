@@ -23,13 +23,9 @@ smap.core.Layer = L.Class.extend({
 		});
 	},
 	
-//	addBaseLayers: function(arr) {
-//		this._addLayers(arr);
-//	},
-//	
-//	addOverlays: function(arr) {
-//		this._addLayers(arr);
-//	},
+	addOverlays: function(arr) {
+		this._addLayers(arr);
+	},
 	
 	_addLayers: function(arr) {
 		arr = arr || [];

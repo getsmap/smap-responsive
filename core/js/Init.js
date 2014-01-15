@@ -1,6 +1,8 @@
 smap.core.Init = L.Class.extend({
 	
 	initialize: function() {
+		var self = this;
+		
 		// Instantiate core classes
 		smap.core.divInst = new smap.core.Div();
 		this.drawMap();
@@ -11,7 +13,8 @@ smap.core.Init = L.Class.extend({
 
 		var getConfig = this.getConfig(params.config).done(function() {
 				smap.config = config || window.config;
-				smap.config.ws = smap.config.ws ? smap.config.ws[document.domain] : {};
+				
+				self.preProcessConfig(smap.config);
 				
 				smap.core.paramInst.applyParams(params);
 				
@@ -34,6 +37,10 @@ smap.core.Init = L.Class.extend({
 			dataType: "script"
 		});
 		
+	},
+	
+	preProcessConfig: function(config) {
+		config.ws = config.ws ? config.ws[document.domain] : {};
 	},
 	
 	CLASS_NAME: "smap.core.Init"
