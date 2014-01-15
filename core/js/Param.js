@@ -43,8 +43,52 @@ smap.core.Param = L.Class.extend({
 	    return out;
 	},
 	
-	createParams: function() {
+	createParams: function(addRoot) {
+		addRoot = addRoot || false;
 		
+		var c = this.map.getCenter(),
+			bl = smap.cmd.getLayerConfigBy("isBaseLayer", true),
+			layer;
+		
+		var layers = this.map._layers,
+			ols = [];
+		for (var lid in layers) {
+			layer = layers[lid];
+			if (layer.options.isBaseLayer) {
+				bl = layer.options.layerId;
+			}
+			else {
+				ols.push(layer.options.layerId);
+			}
+		}
+		
+		var p = {
+				zoom: this.map.getZoom(),
+				center: [utils.round(c.lng, 5), utils.round(c.lat, 5)],
+				ol: ols,
+				bl: bl
+		};
+		
+		// Remove all undefined or null values
+		$.map(p, function(i, val) {
+			if (!val || val.length === 0) {
+				return null;
+			}
+			return val;
+		});
+		var pString = "",
+			val;
+		for (var key in p) {
+			val = p[key];
+			if (val instanceof Array) {
+				val = val.join(",");
+			}
+			pString += "&" + val;
+		}
+		if (addRoot === true) {
+			pString = document.URL.split("?")[0] + "?" + pString;
+		}
+		return pString.substring(1); // remove &
 	},
 	
 	applyParams: function(p) {

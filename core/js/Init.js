@@ -26,6 +26,7 @@ smap.core.Init = L.Class.extend({
 		
 		var defaultOptions = smap.core.mainConfig.mapConfig || {};
 		this.map = L.map("mapdiv", $.extend(defaultOptions, options));
+		smap.map = this.map;
 	},
 	
 	getConfig: function(configName) {

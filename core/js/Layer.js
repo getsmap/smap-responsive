@@ -1,18 +1,23 @@
 smap.core.Layer = L.Class.extend({
 	
+	_layers: {},
+	
 	initialize: function(map) {
 		this.map = map;
 		
 		var self = this;
 		smap.event.on("smap.core.applyparams", function(e, obj) {
-			var p = obj.params;
+			var p = obj.params,
+				tBL;
 			if (p.BL) {
-				var t = smap.cmd.getLayerConfig( p.BL );
-				self._addLayer( self._createLayer(t) );
+				tBL = smap.cmd.getLayerConfig( p.BL );
 			}
 			else {
-				self._addLayer( self._createLayer( smap.config.bl[0] ) );
+				tBL = smap.config.bl[0];
 			}
+			tBL.options.isBaseLayer = true;
+			self._addLayer( self._createLayer(tBL) );
+			
 			if (p.OL) {
 				var t, i=0;
 				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
@@ -42,8 +47,34 @@ smap.core.Layer = L.Class.extend({
 		}
 	},
 	
+	/**
+	 * Add a layer to the map through the smap framework's core. The advantage of
+	 * doing this is that it listens to load events (so they connect to onloading)
+	 * and you can use these methods:
+	 * - smap.cmd.getLayer()
+	 * 
+	 * Note! The layer to be added must have a layerId (layer.options.layerId)
+	 * Note 2! If the layer is removed Ð it must be done through this._removeLayer
+	 * @param layer {Leaflet layer} with a (unique) layerId
+	 */
 	_addLayer: function(layer) {
+		var layerId = layer.options.layerId;
+		if (this._layers[layerId]) {
+			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
+			return false;
+		}
+		this._layers[layerId] = layer;
 		this.map.addLayer(layer);
+		return layer;
+	},
+	
+	_removeLayer: function(layerId) {
+		var layer = this._layers[layerId];
+		if (this.map.hasLayer(layer)) {
+			this.map.removeLayer( layer );
+			return true;
+		}
+		return false;
 	},
 	
 	_createLayer: function(t) {

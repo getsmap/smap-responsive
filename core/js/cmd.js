@@ -10,7 +10,7 @@ smap.cmd = {
 				i, t;
 			for (i=0,len=arr.length; i<len; i++) {
 				t = arr[i];
-				if (t.options[key] === val) {
+				if (t.options[key] !== undefined && t.options[key] === val) {
 					return t;
 				}
 			}
