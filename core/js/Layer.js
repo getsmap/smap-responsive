@@ -19,7 +19,7 @@ smap.core.Layer = L.Class.extend({
 			self._addLayer( self._createLayer(tBL) );
 			
 			if (p.OL) {
-				var t, i=0;
+				var t, i;
 				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
 				for (i=0,len=ol.length; i<len; i++) {
 					t = smap.cmd.getLayerConfig( ol[i] );
@@ -54,7 +54,7 @@ smap.core.Layer = L.Class.extend({
 	 * - smap.cmd.getLayer()
 	 * 
 	 * Note! The layer to be added must have a layerId (layer.options.layerId)
-	 * Note 2! If the layer is removed Ð it must be done through this._removeLayer
+	 * Note 2! If the layer is removed ï¿½ it must be done through this._removeLayer
 	 * @param layer {Leaflet layer} with a (unique) layerId
 	 */
 	_addLayer: function(layer) {

@@ -21,6 +21,29 @@ var config = {
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor"
 	    		 }
+		     },
+		     {
+				  init: "L.GeoJSON.WFS2",
+				  url: "http://geoserver.smap.se/geoserver/wfs",
+				  options: {
+					  layerId: "intressepunkter",
+					  displayName: "Intressepunkter",
+					  featureType: "sandboxws:regispt",
+					  attribution: "Malmö stads WFS",
+					  inputCrs: "EPSG:3008",
+					  reverseAxis: true,
+					  popupHtml: '<h1>${namn}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="${picture}"></img>',
+					  bigPopup: {
+						  headerHtml: "${namn}",
+						  srcVideo: '<video controls="controls" autoplay width="240" height="135">' +
+				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.m4v" type="video/mp4" />' +
+				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.webm" type="video/webm" />' +
+				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.ogg" type="video/ogg" />' +
+			        	   			'</video>',
+			        	   	srcImage: '${pictures}',
+			        	   	srcAudio: '${video}'
+			        }
+		  		}
 		     }
 		     ],
 			
@@ -39,3 +62,6 @@ var config = {
 		
 		
 };
+
+// Set proxy
+L.GeoJSON.WFS2.proxy = config.ws[document.domain].proxy;
