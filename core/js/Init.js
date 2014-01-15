@@ -11,8 +11,10 @@ smap.core.Init = L.Class.extend({
 
 		var getConfig = this.getConfig(params.config).done(function() {
 				smap.config = config || window.config;
-				smap.core.layerInst.addBaseLayers(smap.config.bl);
-				smap.core.layerInst.addOverlays(smap.config.ol);
+				smap.config.ws = smap.config.ws ? smap.config.ws[document.domain] : {};
+				
+				smap.core.paramInst.applyParams(params);
+				
 		});
 	},
 	

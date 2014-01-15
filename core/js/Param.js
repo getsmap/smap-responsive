@@ -1,9 +1,12 @@
 smap.core.Param = L.Class.extend({
 	
-	initialize: function() {},
+	initialize: function(map) {
+		this.map = map;
+	},
 	
 	getParams: function() {
-		var p = location.href.split(smap.core.mainConfig.urlSep);
+		var sep = "?";
+		var p = location.href.split(sep);
     	var pString = p.length > 1 ? p[1] : "";
 		
 		// The following code taken and modified from OpenLayers 2.13.1.
@@ -44,8 +47,24 @@ smap.core.Param = L.Class.extend({
 		
 	},
 	
-	applyParams: function() {
+	applyParams: function(p) {
+		p = p || {};
 		
+		var zoom = p.ZOOM ? parseInt(p.ZOOM) : 0,
+			center = p.CENTER ? L.latLng([parseFloat(p.CENTER[1]), parseFloat(p.CENTER[0])]) : null;
+		
+		if (!zoom && zoom !== 0) {
+			zoom = this.map.options.minZoom || 0;
+		}
+		if (center) {
+			this.map.setView(center, zoom, {animate: false});
+		}
+		else {
+			this.map.fitWorld();
+		}
+		smap.event.trigger("smap.core.applyparams", {
+			params: p
+		});
 	},
 	
 	CLASS_NAME: "smap.core.Param"
