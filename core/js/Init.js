@@ -17,7 +17,7 @@ smap.core.Init = L.Class.extend({
 				smap.config = config || window.config;
 				
 				self.preProcessConfig(smap.config);
-				
+				self.addPlugins(smap.config.plugins);
 				smap.core.paramInst.applyParams(params);
 				
 		});
@@ -39,11 +39,22 @@ smap.core.Init = L.Class.extend({
 			context: this,
 			dataType: "script"
 		});
-		
 	},
 	
 	preProcessConfig: function(config) {
 		config.ws = config.ws ? config.ws[document.domain] : {};
+	},
+	
+	addPlugins: function(arr) {
+		var t, init;
+		for (var i=0,len=arr.length; i<len; i++) {
+			t = arr[i];
+			init = eval(t.init);
+			if (init) {
+				init = new init(t.options || {});
+				this.map.addControl(init);
+			}
+		}
 	},
 	
 	defineProjs: function() {
