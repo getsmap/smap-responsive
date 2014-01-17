@@ -4,20 +4,21 @@ var utils = {
 		},
 		
 		drawDialog: function(title, bodyContent, footerContent) {
-			var html = $('<div class="modal fade"><div class="modal-dialog">'+
+			var d = $('<div class="modal fade"><div class="modal-dialog">'+
 			    '<div class="modal-content">'+
 		      '<div class="modal-header">'+
 		        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
 		        (title.search(/</g) === -1 ? '<h4 class="modal-title">'+title+'</h4>' : title) + 
 		      '</div>'+
 		      '<div class="modal-body"></div>'+
-		      '<div class="modal-footer"></div>'+
 		    '</div>');
-			html.find(".modal-body").append(bodyContent);
+			d.find(".modal-body").append(bodyContent);
 			if (footerContent) {
-				html.find(".modal-footer").append(footerContent);				
+				var footer = $('<div class="modal-footer"></div>');
+				d.find(".modal-body").after(footer);
+				footer.append(footerContent);
 			}
-			return html;
+			return d;
 		},
 		
 		round: function(val, nbrOfDecimals) {
@@ -29,7 +30,7 @@ var utils = {
 			tag.attr("unselectable", "unselectable").addClass("unselectable");
 		},
 		
-		extractHtml: function(html, props) {
+		extractToHtml: function(html, props) {
 			function extractAttribute(a, txt) {
 				var index = txt.search(/\${/g);
 				if (index !== -1) {

@@ -37,7 +37,7 @@ smap.core.Init = L.Class.extend({
 				});
 				props = props[typeName][0];
 				props._displayName = t.options.displayName;
-				var html = utils.extractHtml(t.options.popup, props);
+				var html = utils.extractToHtml(t.options.popup, props);
 				html = html.replace("${_displayName}", t.options.displayName);
 				map.closePopup();
 				var popup = L.popup()

@@ -54,7 +54,7 @@ smap.core.Layer = L.Class.extend({
 	 * - smap.cmd.getLayer()
 	 * 
 	 * Note! The layer to be added must have a layerId (layer.options.layerId)
-	 * Note 2! If the layer is removed � it must be done through this._removeLayer
+	 * Note 2! If the layer is removed – it must be done through this._removeLayer
 	 * @param layer {Leaflet layer} with a (unique) layerId
 	 */
 	_addLayer: function(layer) {
@@ -80,8 +80,20 @@ smap.core.Layer = L.Class.extend({
 	_createLayer: function(t) {
 		var init = eval(t.init);
 		var layer = new init(t.url, t.options);
+
+		var self = this;
+		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS2") {
+			layer.on("load", function(e) {
+				var html = layer.options.popup;
+				layer.eachLayer(function(f) {
+					var props = f.feature.properties;
+					html = utils.extractToHtml(html, props);
+					f.bindPopup(html);
+				});
+			});
+		}
 		return layer;
-		
+
 	},
 	
 	CLASS_NAME: "smap.core.Layer"
