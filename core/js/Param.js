@@ -39,7 +39,6 @@ smap.core.Param = L.Class.extend({
 	            out[key.toUpperCase()] = value;
 	         }
 	    }
-	    smap.event.trigger("paramscreate", out);
 	    return out;
 	},
 	
@@ -47,8 +46,7 @@ smap.core.Param = L.Class.extend({
 		addRoot = addRoot || false;
 		
 		var c = this.map.getCenter(),
-			bl = smap.cmd.getLayerConfigBy("isBaseLayer", true),
-			layer;
+			bl, layer;
 		
 		var layers = this.map._layers,
 			ols = [];
@@ -68,6 +66,8 @@ smap.core.Param = L.Class.extend({
 				ol: ols,
 				bl: bl
 		};
+		
+		smap.event.trigger("paramscreate", p);
 		
 		// Remove all undefined or null values
 		$.map(p, function(i, val) {
