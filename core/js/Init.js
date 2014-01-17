@@ -8,6 +8,7 @@ smap.core.Init = L.Class.extend({
 		// Instantiate core classes
 		smap.core.divInst = new smap.core.Div();
 		this.drawMap();
+		this.bindEvents(this.map);
 		smap.core.layerInst = new smap.core.Layer(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
 		
@@ -15,11 +16,35 @@ smap.core.Init = L.Class.extend({
 
 		var getConfig = this.getConfig(params.config).done(function() {
 				smap.config = config || window.config;
-				
 				self.preProcessConfig(smap.config);
 				self.addPlugins(smap.config.plugins);
 				smap.core.paramInst.applyParams(params);
+		});
+	},
+	
+	bindEvents: function(map) {
+		var self = this;
+		map.on("selected", function(resp) {
+			var props = resp.properties;
+			
+			var isMarker = false;
+			if (isMarker === false) {
+				for (var typeName in props) {}
 				
+				// Get popup html for this typename
+				var t = smap.cmd.getLayerConfigBy("layers", typeName, {
+					inText: true
+				});
+				props = props[typeName][0];
+				props._displayName = t.options.displayName;
+				var html = utils.extractHtml(t.options.popup, props);
+				html = html.replace("${_displayName}", t.options.displayName);
+				map.closePopup();
+				var popup = L.popup()
+					.setLatLng(resp.latLng)
+					.setContent(html)
+					.openOn(map);
+			}
 		});
 	},
 	

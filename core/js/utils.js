@@ -27,6 +27,47 @@ var utils = {
 		
 		makeUnselectable: function(tag) {
 			tag.attr("unselectable", "unselectable").addClass("unselectable");
+		},
+		
+		extractHtml: function(html, props) {
+			function extractAttribute(a, txt) {
+				var index = txt.search(/\${/g);
+				if (index !== -1) {
+					var extractedAttribute = "";
+					
+					// Find the end of the attribute
+					var attr = html.substring(index + 2);
+					var endIndex = 0;
+					if (attr.substring(0, 8) === "function") {
+						endIndex = sMap.util.getFunctionEnd(attr);
+					}
+					else {
+						endIndex = attr.search(/\}/g);
+						
+					}
+					attr = attr.substring(0, endIndex);
+					
+					if (attr.substring(0, 8) === "function") {
+						var theFunc = attr.replace("function", "function f");
+						eval(theFunc);
+						extractedAttribute = f.call(this, a);
+					}
+					else {
+						// Replace ${...} by the extracted attribute.
+						extractedAttribute = a[attr] || ""; // If attribute does not exist – use empty string "".						
+					}
+					txt = txt.replace("${"+attr+"}", extractedAttribute);
+				}
+				return txt;
+			}
+			
+			// Extract props until there are no left to extract.
+			var index = html.search(/\${/g);
+			while (index !== -1) {
+				html = extractAttribute(props, html);			
+				index = html.search(/\${/g);
+			}
+			return html;
 		}
 		
 		

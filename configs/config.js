@@ -18,8 +18,38 @@ var config = {
 	    			 displayName: "Gångstig",
 	    			 layers: 'sandboxws:regisln',
 	    			 format: 'image/png',
+	    			 selectable: true,
 	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor"
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
+	    		 }
+		     },
+		     {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://geoserver.smap.se/geoserver/wms",
+	    		 options: {
+	    			 layerId: "gangstig2",
+	    			 displayName: "Gångstig2",
+	    			 layers: 'sandboxws:regisln',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
+	    		 }
+		     },
+		     {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://geoserver.smap.se/geoserver/wms",
+	    		 options: {
+	    			 layerId: "cykelvag",
+	    			 displayName: "Cykelväg",
+	    			 layers: 'malmows:GK_CYKELVAG_L',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: "<h3>${_displayName}</h3><p>Typ: ${typ}</p><p>Geom: ${geom}</p>"
 	    		 }
 		     },
 		     {
@@ -76,11 +106,18 @@ var config = {
 		        	   options: {
 		        		   imperial: false
 		        	   }
+		           },
+		           {
+		        	   init: "L.Control.SelectWMS",
+		        	   options: {}
 		           }
        ]
 		
 		
 };
 
-// Set proxy
+// Set proxy for WFS
 L.GeoJSON.WFS2.proxy = config.ws[document.domain].proxy;
+
+// Set proxy for SelectWMS
+L.Control.SelectWMS.proxy = config.ws[document.domain].proxy;
