@@ -26,7 +26,8 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	
 	_onPopupClick: function(e) {
-		this.createPopup(this.properties);
+		var props = $("#gp-btn-show").data("props");
+		this.createPopup(props);
 		return false;
 	},
 	
@@ -36,12 +37,13 @@ L.Control.GuidePopup = L.Control.extend({
 			self.layerId = e.popup.layerId;
 			self.properties = props; // properties for filling the dialog
 			
-			var btn = $('<button class="btn btn-primary gp-btn-show"></button>');
+			var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-primary">Läs mer</button>');
 			$(".leaflet-popup-content").append(btn);
 			
 //			$(".leaflet-popup-content-wrapper").css("cursor", "pointer");
 //			$(".leaflet-popup-content-wrapper").on("touchstart click", onPopupClick);
-			btn.on("touchstart click", $.proxy(onPopupClick, this), this);
+			btn.data("props", props);
+			btn.on("touchstart click", $.proxy(this._onPopupClick, this));
 		}
 	},
 	
@@ -144,29 +146,29 @@ L.Control.GuidePopup = L.Control.extend({
 		'<div class="tab-content gp-popup">'+
 		  '<div class="tab-pane active" id="gp-intro">'+
 //		  		'<h1>${'+this.attrTxtTitle+'}</h1>'+
-	  			'<img src="${'+this.attrImgStart+'}">'+
-		  		'<p>${'+this.attrTxtIntro+'}</p>'+
+	  			'<img src="${'+this.options.attrImgStart+'}">'+
+		  		'<p>${'+this.options.attrTxtIntro+'}</p>'+
 			'</div>'+
 		  '<div class="tab-pane" id="gp-moreinfo"></div>'+
 		'</div>';
 		
 		content = utils.extractToHtml(content, props);
-		var featureId = props[this.attrId];
-		var list = this._makeMediaList(this.media[featureId])
+		var featureId = props[this.options.attrId];
+		var list = this._makeMediaList(this.options.media[featureId]);
 		
 		content = $(content);
 		content.find("#gp-moreinfo").append(list);
 		
-		this.dialog = utils.drawDialog({
-			theId: "gp-popup",
-			title: props[this.attrTxtTitle],
-			titleBtnClose: true,
-			content: content,
-			footerBtnClose: true,
-			onClose: function() {
-				$(this).empty().remove();
-			}
+		this.dialog = utils.drawDialog(
+				props[this.options.attrTxtTitle],
+				content
+		);
+		this.dialog.on("hidden.bs.modal", function() {
+			$(this).empty().remove();
+			self.dialog = null;
+			delete self.dialog;
 		});
+		this.dialog.attr("id", "gp-popup");
 		
 		function onLiTap(e) {
 			var index = $(this).index(); // The tag's order corresponds to index in media array
@@ -205,7 +207,8 @@ L.Control.GuidePopup = L.Control.extend({
 		};
 		this.dialog.find("#gp-listmoreinfo").find(".list-group-item").on("tap click", onLiTap);
 		$("body").append(this.dialog);
-		this.openPopup();
+		
+		this.dialog.modal();
 		
 	}
 });

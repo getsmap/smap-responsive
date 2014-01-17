@@ -84,11 +84,13 @@ smap.core.Layer = L.Class.extend({
 		var self = this;
 		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS2") {
 			layer.on("load", function(e) {
-				var html = layer.options.popup;
+				var html;
 				layer.eachLayer(function(f) {
-					var props = f.feature.properties;
-					html = utils.extractToHtml(html, props);
-					f.bindPopup(html);
+					if (!f._popup) {
+						html = layer.options.popup
+						html = utils.extractToHtml(html, f.feature.properties);
+						f.bindPopup(html);						
+					}
 				});
 			});
 		}

@@ -117,7 +117,41 @@ var config = {
 		           },
 		           {
 		        	   init: "L.Control.GuidePopup",
-		        	   options: {}
+		        	   options: {
+		        		   attrTxtTitle: "namn",
+		        		   attrTxtIntro: "starttext",
+		        		   attrImgStart: "picture",
+		        		   attrId: "namn",
+		        		   media: {
+		        			   "Stortorget": [
+									{
+										label: "Fler bilder från Stortorget",
+										mediaType: "image",
+										sources: [
+										          "http://xyz.malmo.se/temp/regis1330/images/img616.jpg",
+										          "http://xyz.malmo.se/temp/regis1330/images/img604.jpg"
+									    ]
+									},
+									{
+										label: "Lyssna på en häst",
+										mediaType: "audio",
+										sources: [
+										          "http://xyz.malmo.se/temp/regis1330/audio/horse.mp3",
+										          "http://xyz.malmo.se/temp/regis1330/audio/horse.ogg"
+									    ]
+									},
+									{
+										label: "Se en film från Stortorget",
+										mediaType: "video",
+										sources: [
+										          "http://xyz.malmo.se/temp/regis1330/videos/video_061.mp4",
+										          "http://xyz.malmo.se/temp/regis1330/videos/video_061.ogg"
+									    ]
+									}
+									
+								]
+		        		   }
+		        	   }
 		           }
        ]
 		
