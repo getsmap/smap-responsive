@@ -42,9 +42,13 @@ smap.core.Layer = L.Class.extend({
 		var i, t, layer;
 		for (i=0,len=arr.length; i<len; i++) {
 			t = arr[i];
-			layer = this._createLayer(t);
-			this._addLayer(layer);
+			this._addLayerWithConfig(t);
 		}
+	},
+	
+	_addLayerWithConfig: function(t) {
+		var layer = this._createLayer(t);
+		return this._addLayer(layer);
 	},
 	
 	/**

@@ -1,5 +1,8 @@
 smap.cmd = {
 	
+		addLayerWithConfig: function(layerConfig) {
+			return smap.core.layerInst._addLayerWithConfig(layerConfig);
+		},
 		
 		getLayerConfig: function(layerId) {
 			return this.getLayerConfigBy("layerId", layerId);

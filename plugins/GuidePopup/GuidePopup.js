@@ -61,47 +61,48 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_activate: function() {
 		var self = this;
-		
-		var layer;
-		for (var i=0,len=this.map._layers.length; i<len; i++) {
-			layer = this.map._layers[i];
-			if (layer.options.layerId === this.options.layerId) {
-				break;
-			}
-		}
-		if (!this.options.layerId || !layer) {
-			alert("No layerId specified for GuidePopup plugin OR vector layer not found.");
-			return false;
-		}
-		
+			
 		var icons = {
 				audio: {
 					icon:L.icon({
-					    iconUrl: 'leaf-green.png',
-					    shadowUrl: 'leaf-shadow.png',
-	
-					    iconSize:     [38, 95], // size of the icon
-					    shadowSize:   [50, 64], // size of the shadow
-					    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-					    shadowAnchor: [4, 62],  // the same for the shadow
-					    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+					    iconUrl: 'img/marker-icon-green.png',
+					    iconSize:     [25, 41],
+//					    iconAnchor:   [11, 41],
+					    popupAnchor:  [0, -13]
+					})
+				},
+				video: {
+					icon:L.icon({
+						iconUrl: 'img/marker-icon-green.png',
+					    iconSize:     [25, 41],
+//					    iconAnchor:   [11, 41],
+					    popupAnchor:  [0, -13]
+					})
+				},
+				image: {
+					icon:L.icon({
+						iconUrl: 'img/marker-icon-green.png',
+					    iconSize:     [25, 41],
+//					    iconAnchor:   [11, 41],
+					    popupAnchor:  [0, -13]
 					})
 				}
+				
 		};
-		layer.setStyle(function(f) {
+	
+		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
+		layerConfig.options.pointToLayer = function(f, latLng) {
+			var props = f.properties;
 			var m = self.options.media[ props[self.options.attrId] ];
-			if (m instanceof Object && !(m instanceof Array)) {
-				
-				
-				m.mediaType
+			if (m instanceof Object && !(m instanceof Array) && m.mediaType) {
+				return L.marker(latLng, icons[m.mediaType]);
 			}
-			
-	        switch (f.properties.party) {
-	            case 'Republican': return {color: "#ff0000"};
-	            case 'Democrat':   return {color: "#0000ff"};
-	        }
-		});
-			
+			else {
+				return L.marker(latLng);
+			}
+		};
+		var layer = smap.cmd.addLayerWithConfig(layerConfig);
+		
 		this.map.on("popupopen", $.proxy(this._onPopupOpen, this));
 		this.map.on("popupclose", $.proxy(this._onPopupClose, this));
 	},
