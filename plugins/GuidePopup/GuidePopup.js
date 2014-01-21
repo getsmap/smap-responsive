@@ -169,8 +169,8 @@ L.Control.GuidePopup = L.Control.extend({
 		arrVideoSources = arrVideoSources || [];
 		
 		
-		var w = $(window).width() - 20,
-			h = $(window).height() - 20;
+		var w = $(window).width() - 2,
+			h = $(window).height() - 65;
 		if (h > w) {
 			// swap
 			var _w = w;
@@ -179,11 +179,12 @@ L.Control.GuidePopup = L.Control.extend({
 		}
 		var src = arrVideoSources[0];
 		var $tagVideo;
-		if (src.search("youtu.be") > -1) {
+		if (src.search(/youtu.be|youtube/i) > -1) {
 			$tagVideo = $('<iframe width="'+w+'" height="'+h+'" src="'+src+'" frameborder="0" allowfullscreen></iframe>');			
 		}
-		else if (src.search("vimeo")) {
+		else if (src.search(/vimeo.com/i)) {
 			// TODO: Implement
+			$tagVideo = $('<iframe src="'+src+'" width="'+w+'" height="'+h+'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
 		}
 		
 //		var src,

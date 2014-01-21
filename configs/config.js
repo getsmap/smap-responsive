@@ -134,9 +134,14 @@ var config = {
 		        			   "Frans Suell staty": {
 		        				   mediaType: "video",
 		        				   sources: [
-		        				             "http://youtu.be/FvnGKI_rEoo"
+		        				             "http://www.youtube.com/embed/FvnGKI_rEoo"
 		        				   ]
-		        				   
+		        			   },
+		        			   '"Pitta huset"': {
+		        				   mediaType: "video",
+		        				   sources: [
+	        				             "//player.vimeo.com/video/62057084"
+		        				   ]
 		        			   },
 		        			   "Stora Nygatan": {
 		        				   mediaType: "image",
@@ -167,8 +172,7 @@ var config = {
 										label: "Se en film från Stortorget",
 										mediaType: "video",
 										sources: [
-										          "http://xyz.malmo.se/temp/regis1330/videos/video_061.mp4",
-										          "http://xyz.malmo.se/temp/regis1330/videos/video_061.ogg"
+										          "http://vimeo.com/62057084"
 									    ]
 									}
 									
