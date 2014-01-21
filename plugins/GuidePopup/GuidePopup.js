@@ -45,7 +45,7 @@ L.Control.GuidePopup = L.Control.extend({
 			self.layerId = e.popup.layerId;
 			self.properties = props; // properties for filling the dialog
 			
-			var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-primary">Läs mer</button>');
+			var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-primary">Visa mer</button>');
 			$(".leaflet-popup-content").append(btn);
 			
 //			$(".leaflet-popup-content-wrapper").css("cursor", "pointer");
@@ -65,26 +65,26 @@ L.Control.GuidePopup = L.Control.extend({
 		var icons = {
 				audio: {
 					icon:L.icon({
-					    iconUrl: 'img/marker-icon-green.png',
-					    iconSize:     [25, 41],
-//					    iconAnchor:   [11, 41],
-					    popupAnchor:  [0, -13]
+					    iconUrl: "img/glyphish-icons/PNG-icons/120-headphones.png",
+					    iconSize:     [22, 21],
+					    iconAnchor:   [11, 10],
+					    popupAnchor:  [0, -8]
 					})
 				},
 				video: {
 					icon:L.icon({
-						iconUrl: 'img/marker-icon-green.png',
-					    iconSize:     [25, 41],
-//					    iconAnchor:   [11, 41],
-					    popupAnchor:  [0, -13]
+						iconUrl: "img/glyphish-icons/PNG-icons/46-movie-2.png",
+						iconSize:     [20, 25],
+						iconAnchor:   [10, 12],
+						popupAnchor:  [0, -9]
 					})
 				},
 				image: {
 					icon:L.icon({
-						iconUrl: 'img/marker-icon-green.png',
-					    iconSize:     [25, 41],
-//					    iconAnchor:   [11, 41],
-					    popupAnchor:  [0, -13]
+						iconUrl: "img/glyphish-icons/PNG-icons/121-landscape.png",
+					    iconSize:     [22, 21],
+					    iconAnchor:   [11, 10],
+					    popupAnchor:  [0, -8]
 					})
 				}
 				
@@ -168,28 +168,46 @@ L.Control.GuidePopup = L.Control.extend({
 	_makeVideoTag: function(arrVideoSources) {
 		arrVideoSources = arrVideoSources || [];
 		
-		var src,
-			ext,
-			type,
-			$tagVideo = $('<video controls autoplay width="320" height="180" />'),
-			tagSrc;
-		for (var i=0,len=arrVideoSources.length; i<len; i++) {
-			src = arrVideoSources[i];
-			ext = src.substring(src.length-3).toUpperCase();
-			switch (ext) {
-			case "M4V":
-				type = 'video/mp4';
-				break;
-			case "OGG":
-				type = 'video/ogg';
-				break;
-			default:
-				continue;
-			}
-			tagSrc = '<source src="'+src+'" type="'+type+'" />';
-			$tagVideo.append(tagSrc);
+		
+		var w = $(window).width() - 20,
+			h = $(window).height() - 20;
+		if (h > w) {
+			// swap
+			var _w = w;
+			w = h;
+			h = _w;
 		}
-		$tagVideo.append('<span title="No video playback capabilities, please download the video below">Download video</span>');
+		var src = arrVideoSources[0];
+		var $tagVideo;
+		if (src.search("youtu.be") > -1) {
+			$tagVideo = $('<iframe width="'+w+'" height="'+h+'" src="'+src+'" frameborder="0" allowfullscreen></iframe>');			
+		}
+		else if (src.search("vimeo")) {
+			// TODO: Implement
+		}
+		
+//		var src,
+//			ext,
+//			type,
+//			$tagVideo = $('<video controls autoplay width="320" height="180" />'),
+//			tagSrc;
+//		for (var i=0,len=arrVideoSources.length; i<len; i++) {
+//			src = arrVideoSources[i];
+//			ext = src.substring(src.length-3).toUpperCase();
+//			switch (ext) {
+//			case "M4V":
+//				type = 'video/mp4';
+//				break;
+//			case "OGG":
+//				type = 'video/ogg';
+//				break;
+//			default:
+//				continue;
+//			}
+//			tagSrc = '<source src="'+src+'" type="'+type+'" />';
+//			$tagVideo.append(tagSrc);
+//		}
+//		$tagVideo.append('<span title="No video playback capabilities, please download the video below">Download video</span>');
 		
 		return $tagVideo;
 	},

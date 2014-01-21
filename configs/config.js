@@ -130,6 +130,20 @@ var config = {
 		        				   sources: [
 		        				             "http://xyz.malmo.se/temp/regis1330/video/video1.mp3"
 		        				   ]
+		        			   },
+		        			   "Frans Suell staty": {
+		        				   mediaType: "video",
+		        				   sources: [
+		        				             "http://youtu.be/FvnGKI_rEoo"
+		        				   ]
+		        				   
+		        			   },
+		        			   "Stora Nygatan": {
+		        				   mediaType: "image",
+		        				   sources: [
+										"http://xyz.malmo.se/temp/regis1330/images/img616.jpg",
+										"http://xyz.malmo.se/temp/regis1330/images/img604.jpg"
+		        				   ]
 		        				   
 		        			   },
 		        			   "Stortorget": [
