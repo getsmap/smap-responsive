@@ -14,11 +14,13 @@ smap.core.Init = L.Class.extend({
 		
 		var params = smap.core.paramInst.getParams();
 
-		var getConfig = this.getConfig(params.CONFIG).done(function() {
+		this.getConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				self.preProcessConfig(smap.config);
 				self.addPlugins(smap.config.plugins);
 				smap.core.paramInst.applyParams(params);
+		}).fail(function(a, text, c) {
+			console.log("Config not loaded because: "+text);
 		});
 	},
 	
