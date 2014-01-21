@@ -14,7 +14,7 @@ smap.core.Init = L.Class.extend({
 		
 		var params = smap.core.paramInst.getParams();
 
-		var getConfig = this.getConfig(params.config).done(function() {
+		var getConfig = this.getConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				self.preProcessConfig(smap.config);
 				self.addPlugins(smap.config.plugins);
