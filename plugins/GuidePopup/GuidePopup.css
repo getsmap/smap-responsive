@@ -3,3 +3,46 @@
 	margin: 5px 0;
 	
 }
+
+.gp-fullscreen {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 2000;
+	background-color: #fff;
+	text-align: center;
+	opacity: 0;
+	filter: alpha(opacity=0);
+	transition: opacity .5s;
+	-webkit-transition: opacity .5s;
+}
+
+.gp-fs-visible {
+	opacity: 1;
+	filter: alpha(opacity=1);
+	transition: opacity .5s;
+	-webkit-transition: opacity .5s;	
+}
+
+.gp-fullscreen img {
+	max-width: 100%;
+	max-height: 100%;
+	display: inline !important;
+}
+
+.gp-fullscreen .btn-default {
+	position: absolute;
+	top: 20px;
+	text-align: center;
+	color: #666;
+	opacity: 1;
+	border: 1px solid #666;
+	margin-left: -30px;
+	background: rgba(255,255,255,.4);
+}
+
+.gp-fullscreen .btn-default:hover {
+	background: rgba(255,255,255,.7);
+}

@@ -63,6 +63,33 @@ L.Control.GuidePopup = L.Control.extend({
 		this.map.off("popupclose", $.proxy(this._onPopupClose, this));
 	},
 	
+	_makeCarousel: function(arrImageSources) {
+		arrImageSources = arrImageSources || [];
+		
+		var $carousel = $('<div id="carousel-example-generic" class="carousel slide">'),
+			src,
+			$indicators = $('<ol class="carousel-indicators" />'),
+			$inner = $('<div class="carousel-inner" />'),
+			$controls = $(
+					'<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"><span class="icon-prev"></span></a>'+
+			'<a class="right carousel-control" href="#carousel-example-generic" data-slide="next"><span class="icon-next"></span></a>');
+			
+		for (var i=0,len=arrImageSources.length; i<len; i++) {
+			src = arrImageSources[i];
+			$indicators.append('<li data-target="#carousel-example-generic" data-slide-to="'+i+'"></li>');
+			$inner.append('<div class="item"><img src="'+src+'"></img></div>');
+		}
+		
+		// Render first image as active
+		$inner.find(".item:first").add($indicators.find("li:first")).addClass("active");
+		
+		// Append everything
+		$carousel.append($indicators).append($inner).append($controls);
+		
+		return $carousel;
+		
+	},
+	
 	_makeAudioTag: function(arrAudioSources) {
 		arrAudioSources = arrAudioSources || [];
 		
@@ -133,6 +160,30 @@ L.Control.GuidePopup = L.Control.extend({
 		return list;
 	},
 	
+	showFullScreen: function(content) {
+		var div = $('<div class="gp-fullscreen"></div>');
+		var close = function() {
+			$(".gp-fullscreen").removeClass("gp-fs-visible");
+			setTimeout(function() {
+				$(".gp-fullscreen").empty().remove();
+			}, 500);
+		};
+		
+		
+		var btnClose = $('<button type="button" class="btn btn-default">Stäng</button>');
+		btnClose.on("click", function() {
+			close();
+			return false;
+		});
+		div.append(content);
+		div.append(btnClose);
+		btnClose.css("z-index", 3000);
+		$("body").append(div);
+		setTimeout(function() {
+			div.addClass("gp-fs-visible");			
+		}, 1);
+	},
+	
 	createPopup: function(props) {
 		props = props || {};
 		
@@ -170,9 +221,11 @@ L.Control.GuidePopup = L.Control.extend({
 		});
 		this.dialog.attr("id", "gp-popup");
 		
+		var media = self.options.media;
+		
 		function onLiTap(e) {
 			var index = $(this).index(); // The tag's order corresponds to index in media array
-			var t = self.media[featureId][index],
+			var t = media[featureId][index],
 				content;
 			
 			switch (t.mediaType.toLowerCase()) {
@@ -189,20 +242,24 @@ L.Control.GuidePopup = L.Control.extend({
 			default:
 				break;
 			}
-			var dialog = utils.drawDialog({
-				theId: "gp-media",
-				title: $(this).text(),
-				titleBtnClose: true,
-				content: content,
-				footerBtnClose: true,
-				onClose: function() {
-					$(this).empty().remove();
-				}
-			});
-			dialog.modal({
-				backdrop: true,
-				show: true
-			});
+//			var dialog = utils.drawDialog({
+//				theId: "gp-media",
+//				title: $(this).text(),
+//				titleBtnClose: true,
+//				content: content,
+//				footerBtnClose: true,
+//				onClose: function() {
+//					$(this).empty().remove();
+//				}
+//			});
+//			dialog.modal({
+//				backdrop: true,
+//				show: true
+//			});
+			
+			self.showFullScreen(content);
+			
+			
 			return false;
 		};
 		this.dialog.find("#gp-listmoreinfo").find(".list-group-item").on("tap click", onLiTap);
