@@ -125,7 +125,7 @@ var config = {
 		        		   media: {
 		        			   "Stortorget": [
 									{
-										label: "Fler bilder från Stortorget",
+										label: "Alla bilder från Stortorget",
 										mediaType: "image",
 										sources: [
 										          "http://xyz.malmo.se/temp/regis1330/images/img616.jpg",

@@ -163,19 +163,20 @@ L.Control.GuidePopup = L.Control.extend({
 	showFullScreen: function(content) {
 		var div = $('<div class="gp-fullscreen"></div>');
 		
-		function close() {
-			$(".gp-fullscreen").removeClass("gp-fs-visible");
-			setTimeout(function() {
-				$(".gp-fullscreen").empty().remove();
-			}, 500);
-			return false;
-		};
-		
 		function onKeyDown(e) {
 			if (e.which === 27) {
 				// Escape
 				close();
 			}
+		};
+		
+		function close() {
+			$("body").off("keydown", onKeyDown);
+			$(".gp-fullscreen").removeClass("gp-fs-visible");
+			setTimeout(function() {
+				$(".gp-fullscreen").empty().remove();
+			}, 500);
+			return false;
 		};
 		
 		$("body").on("keydown", onKeyDown);
