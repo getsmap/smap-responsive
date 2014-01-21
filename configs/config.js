@@ -6,6 +6,9 @@ var config = {
 			},
 			"xyz.malmo.se": {
 				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
+			},
+			"91.123.201.52": {
+				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
 			}
 		},
 		
