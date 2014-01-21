@@ -87,9 +87,9 @@ smap.core.Layer = L.Class.extend({
 				var html;
 				layer.eachLayer(function(f) {
 					if (!f._popup) {
-						html = layer.options.popup
+						html = layer.options.popup;
 						html = utils.extractToHtml(html, f.feature.properties);
-						f.bindPopup(html);						
+						f.bindPopup(html);
 					}
 				});
 			});

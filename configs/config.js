@@ -118,11 +118,20 @@ var config = {
 		           {
 		        	   init: "L.Control.GuidePopup",
 		        	   options: {
+		        		   layerId: "intressepunkter",
 		        		   attrTxtTitle: "namn",
 		        		   attrTxtIntro: "starttext",
 		        		   attrImgStart: "picture",
 		        		   attrId: "namn",
+		        		   
 		        		   media: {
+		        			   "Jörgen Kocks hus": {
+		        				   mediaType: "audio",
+		        				   sources: [
+		        				             "http://xyz.malmo.se/temp/regis1330/video/video1.mp3"
+		        				   ]
+		        				   
+		        			   },
 		        			   "Stortorget": [
 									{
 										label: "Alla bilder från Stortorget",

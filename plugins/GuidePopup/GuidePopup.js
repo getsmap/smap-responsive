@@ -27,7 +27,15 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_onPopupClick: function(e) {
 		var props = $("#gp-btn-show").data("props");
-		this.createPopup(props);
+		var mediaArr = this.options.media[ props[this.options.attrId] ];
+		if (mediaArr && mediaArr instanceof Array) {
+			this.createPopup(props);
+		}
+		else if (mediaArr && mediaArr instanceof Object) {
+			// Show media in full-screen at once
+			var content = this._makeMediaContent(mediaArr.mediaType, mediaArr.sources);
+			this.showFullScreen(content);
+		}
 		return false;
 	},
 	
@@ -54,6 +62,46 @@ L.Control.GuidePopup = L.Control.extend({
 	_activate: function() {
 		var self = this;
 		
+		var layer;
+		for (var i=0,len=this.map._layers.length; i<len; i++) {
+			layer = this.map._layers[i];
+			if (layer.options.layerId === this.options.layerId) {
+				break;
+			}
+		}
+		if (!this.options.layerId || !layer) {
+			alert("No layerId specified for GuidePopup plugin OR vector layer not found.");
+			return false;
+		}
+		
+		var icons = {
+				audio: {
+					icon:L.icon({
+					    iconUrl: 'leaf-green.png',
+					    shadowUrl: 'leaf-shadow.png',
+	
+					    iconSize:     [38, 95], // size of the icon
+					    shadowSize:   [50, 64], // size of the shadow
+					    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+					    shadowAnchor: [4, 62],  // the same for the shadow
+					    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+					})
+				}
+		};
+		layer.setStyle(function(f) {
+			var m = self.options.media[ props[self.options.attrId] ];
+			if (m instanceof Object && !(m instanceof Array)) {
+				
+				
+				m.mediaType
+			}
+			
+	        switch (f.properties.party) {
+	            case 'Republican': return {color: "#ff0000"};
+	            case 'Democrat':   return {color: "#0000ff"};
+	        }
+		});
+			
 		this.map.on("popupopen", $.proxy(this._onPopupOpen, this));
 		this.map.on("popupclose", $.proxy(this._onPopupClose, this));
 	},
@@ -148,13 +196,17 @@ L.Control.GuidePopup = L.Control.extend({
 	_makeMediaList: function(arrMedia) {
 		arrMedia = arrMedia || [];
 		
-		var self = this;
-		var t,i,src,text,li,
+		var glyphs = {
+				image: "picture",
+				audio: "volume-up",
+				video: "facetime-video"
+				
+		};
+		var t,i,li,
 			list = $('<div id="gp-listmoreinfo" class="list-group" />');
-	
 		for (i=0,len=arrMedia.length; i<len; i++) {
 			t = arrMedia[i];
-			li = $('<a href="#" class="list-group-item">'+t.label+'</a>');
+			li = $('<a href="#" class="list-group-item"><span class="glyphicon glyphicon-'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+t.label+'</a>');
 			list.append(li);
 		}
 		return list;
@@ -169,7 +221,6 @@ L.Control.GuidePopup = L.Control.extend({
 				close();
 			}
 		};
-		
 		function close() {
 			$("body").off("keydown", onKeyDown);
 			$(".gp-fullscreen").removeClass("gp-fs-visible");
@@ -193,6 +244,25 @@ L.Control.GuidePopup = L.Control.extend({
 		setTimeout(function() {
 			div.addClass("gp-fs-visible");			
 		}, 1);
+	},
+	
+	
+	_makeMediaContent: function(mediaType, sources) {
+		switch (mediaType.toLowerCase()) {
+		case "image":
+			// Make a slideshow
+			content = this._makeCarousel(sources);
+			break;
+		case "audio":
+			content = this._makeAudioTag(sources);
+			break;
+		case "video":
+			content = this._makeVideoTag(sources);
+			break;
+		default:
+			break;
+		}
+		return content;
 	},
 	
 	createPopup: function(props) {
@@ -236,48 +306,15 @@ L.Control.GuidePopup = L.Control.extend({
 		
 		function onLiTap(e) {
 			var index = $(this).index(); // The tag's order corresponds to index in media array
-			var t = media[featureId][index],
-				content;
-			
-			switch (t.mediaType.toLowerCase()) {
-			case "image":
-				// Make a slideshow
-				content = self._makeCarousel(t.sources);
-				break;
-			case "audio":
-				content = self._makeAudioTag(t.sources);
-				break;
-			case "video":
-				content = self._makeVideoTag(t.sources);
-				break;
-			default:
-				break;
-			}
-//			var dialog = utils.drawDialog({
-//				theId: "gp-media",
-//				title: $(this).text(),
-//				titleBtnClose: true,
-//				content: content,
-//				footerBtnClose: true,
-//				onClose: function() {
-//					$(this).empty().remove();
-//				}
-//			});
-//			dialog.modal({
-//				backdrop: true,
-//				show: true
-//			});
-			
+			var t = media[featureId][index];
+			var content = self._makeMediaContent(t.mediaType, t.sources);
 			self.showFullScreen(content);
-			
-			
 			return false;
 		};
 		this.dialog.find("#gp-listmoreinfo").find(".list-group-item").on("tap click", onLiTap);
 		$("body").append(this.dialog);
 		
 		this.dialog.modal();
-		
 	}
 });
 
