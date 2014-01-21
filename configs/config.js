@@ -137,7 +137,7 @@ var config = {
 		        				             "http://www.youtube.com/embed/FvnGKI_rEoo"
 		        				   ]
 		        			   },
-		        			   '"Pitta huset"': {
+		        			   "\"Pitta huset\"": {
 		        				   mediaType: "video",
 		        				   sources: [
 	        				             "//player.vimeo.com/video/62057084"
