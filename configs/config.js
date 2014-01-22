@@ -119,6 +119,10 @@ var config = {
 		        	   }
 		           },
 		           {
+		        	   init: "L.Control.GuideIntroScreen",
+		        	   options: {}
+		           },
+		           {
 		        	   init: "L.Control.GuidePopup",
 		        	   options: {
 		        		   layerId: "intressepunkter",

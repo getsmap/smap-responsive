@@ -1,0 +1,25 @@
+.guide-introscreen {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 2000;
+	background-color: rgba(255,255,255,1);
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	overflow-x: hidden;
+}
+
+.guide-introscreen .container {
+	padding: 0;
+}
+
+.guide-introscreen .jumbotron {
+	background-color: rgba(255,255,255,1);
+}
+
+.guide-introscreen .row {
+	margin-top: 40px;	
+}
