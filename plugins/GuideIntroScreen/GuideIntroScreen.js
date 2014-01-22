@@ -42,9 +42,23 @@ L.Control.GuideIntroScreen = L.Control.extend({
 					'<button type="button" class="guideintro-btn-option btn btn-default">English</button>'+
 				'</div>'+
 				'<div class="row">'+
-			  		'<div class="col-xs-12 col-xs-offset-0 col-sm-4 col-sm-offset-2" style="margin-bottom:20px;"><button class="btn btn-default btn-lg">Industristaden</button></div>'+
-			  		'<div class="col-xs-12 col-xs-offset-0 col-sm-4 col-sm-offset-0"><button class="btn btn-default btn-lg">Västra hamnen</button></div>'+
+					'<div class="col-xs-5 col-xs-offset-1 col-md-4 col-md-offset-2 text-left">'+
+				  		'<h3>Industristaden</h3>'+
+				  		'<div style="margin-bottom:20px;">'+
+				  			'<p class="lead text-muted">Industrispåret guidar dig genom de gamla industrierna i Malmös innerstad.</p>'+
+				  			'<button class="btn btn-default btn-sm">Industristaden</button>'+
+				  		'</div>'+
+			  		'</div>'+
+			  		'<div class="col-xs-5 col-md-4 text-left">'+
+				  		'<h3>Västra hamnen</h3>'+
+				  		'<div style="margin-bottom:20px;">'+
+				  			'<p class="lead text-muted">Västra hamnen guidar dig genom Malmös mest välkända och omtalade stadsdel.</p>'+
+				  			'<button class="btn btn-default btn-sm">Industristaden</button>'+
+				  		'</div>'+
+			  		'</div>'+
 				'</div>'+
+					
+					
 		'</div>');
 		$content.find(".guideintro-btn-option").on("click", function() {
 			$(this).addClass(classActive).siblings().removeClass(classActive).addClass("btn-default");
