@@ -7,6 +7,16 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			"sv": "Svenska",
 			"en": "English"
 		},
+		
+		words: {
+			"sv": {
+				btnStartTour: "Starta turen"
+			},
+			"en": {
+				btnStartTour: "Start the tour"
+			}
+		},
+		
 		header: {
 			"sv": {
 				title: "Promenadstaden",
@@ -40,6 +50,17 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	        		  "en": {
 	        			  title: "Western harbor",
 			        	  description: "This tour guides you through the most modern part of Malmö."
+	        		  }
+		          },
+		          {
+		        	  configName: "guide-rosengard.js",
+	        		  "sv": {
+	        			  title: "Rosengård",
+			        	  description: "Den här turen tar dig genom Sveriges kanske mest omtalade stadsdel."
+	        		  },
+	        		  "en": {
+	        			  title: "Rose garden",
+	        			  description: "This tour will take you through the infamous Rosengård."
 	        		  }
 		          }
           ]
@@ -78,6 +99,9 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	
 	
 	_makeContent: function(langCode) {
+		
+		var words = this.options.words[langCode];
+		
 		var self = this;
 		var goToConfig = function() {
 			var configName = $(this).data("configName");
@@ -112,29 +136,29 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		$content.append(headerHtml);
 		$content.append(langBtns);
 		
-		var c, row, cTag,
+		var c, $cTag,
 			configName,
 			configs = this.options.configs;
+		var $row = $('<div class="row" />');
+		$content.append($row);
 		for (var i=0,len=configs.length; i<len; i++) {
 			c = configs[i];
 			configName = c.configName;
 			c = c[langCode];
-			if (i % 2 === 0) {
-				row = $('<div class="row" />');
-				$content.append(row);
-			}
-			cTag = $('<div class="col-xs-5 col-xs-offset-1 col-md-4 col-md-offset-2 text-left">'+
+			$cTag = $('<div class="gintro-box col-xs-5 col-md-4 col-lg-3 text-left">'+
 			  		'<h3>'+c.title+'</h3>'+
 			  		'<div style="margin-bottom:20px;">'+
 			  			'<p class="lead text-muted">'+c.description+'</p>'+
-			  			'<button class="btn btn-default btn-sm gintro-btn-configoption">'+c.title+'</button>'+
+			  			'<button class="btn btn-default btn-sm gintro-btn-configoption">'+words.btnStartTour+'</button>'+
 			  		'</div>'+
 		  		'</div>');
 			
-			var b = cTag.find("button");
+			$cTag.addClass("col-xs-offset-1 col-md-offset-1 col-lg-offset-1");
+			var b = $cTag.find("button");
 			b.data("configName", configName);
-			row.append(cTag);
+			$row.append($cTag);
 		}
+		
 		
 		$content.find(".guideintro-btn-option").on("click", function() {
 			var _langCode = $(this).data("langCode");
