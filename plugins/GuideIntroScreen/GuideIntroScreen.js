@@ -56,7 +56,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		        	  configName: "guide-rosengard.js",
 	        		  "sv": {
 	        			  title: "Rosengård",
-			        	  description: "Den här turen tar dig genom Sveriges kanske mest omtalade stadsdel."
+	        			  description: "Den här turen tar dig genom Sveriges kanske mest omtalade stadsdel."
 	        		  },
 	        		  "en": {
 	        			  title: "Rose garden",
@@ -90,13 +90,24 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	},
 
 	onRemove: function(map) {
-		
+		$(".guide-introscreen").empty().remove();
+		return this;
 	},
 	
-	_setLang: function(langCode) {
-		
+	toggle: function() {
+		if (  $(".guide-introscreen").is(":visible") ) {
+			this._hide();
+		}
+		else {
+			this._show();
+		}
 	},
-	
+	_show: function() {
+		$(".guide-introscreen").show();
+	},
+	_hide: function() {
+		$(".guide-introscreen").hide();
+	},
 	
 	_makeContent: function(langCode) {
 		
@@ -105,8 +116,9 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		var self = this;
 		var goToConfig = function() {
 			var configName = $(this).data("configName");
+			smap.map.removeControl(self);
 			// TODO: Apply config to map
-			alert("Apply this config: "+configName);
+			smap.cmd.applyConfig(configName);
 			return false;
 		};
 		

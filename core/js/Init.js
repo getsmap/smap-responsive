@@ -13,15 +13,55 @@ smap.core.Init = L.Class.extend({
 		smap.core.paramInst = new smap.core.Param(this.map);
 		
 		var params = smap.core.paramInst.getParams();
-
-		this.getConfig(params.CONFIG).done(function() {
+		
+		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
-				self.preProcessConfig(smap.config);
-				self.addPlugins(smap.config.plugins);
+				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
 		}).fail(function(a, text, c) {
 			console.log("Config not loaded because: "+text);
 		});
+	},
+	
+	applyConfig: function(theConfig) {
+		this.preProcessConfig(theConfig);
+		this.addPlugins(theConfig.plugins);
+	},
+	
+	resetMap: function() {
+		config = null;
+		smap.config = null;
+		delete smap.config;
+		
+		// Remove and destroy leaflet plugins
+		var p,
+			plugins = smap.core.controls || [];
+		for (var i=0,len=plugins.length; i<len; i++) {
+			p = plugins[i];
+			try {
+				smap.map.removeControl(p);				
+				if (p.destroy) {
+					p.destroy();				
+				}
+				p = null;
+			}
+			catch(e) {}
+		}
+		smap.core.controls = [];
+		
+		// Remove and destroy layers
+		var layers = smap.map._layers,
+			key, layer;
+		for (var key in layers) {
+			layer = layers[key];
+			smap.core.layerInst._removeLayer(layer);
+		}
+		smap.map.off();
+//		smap.map.remove();
+//		smap.map = null;
+//		this.map = null;
+//		delete smap.map;
+//		delete this.map;
 	},
 	
 	bindEvents: function(map) {
@@ -58,7 +98,7 @@ smap.core.Init = L.Class.extend({
 		smap.map = this.map;
 	},
 	
-	getConfig: function(configName) {
+	loadConfig: function(configName) {
 		configName = configName || "config.js";
 		
 		return $.ajax({
@@ -78,12 +118,15 @@ smap.core.Init = L.Class.extend({
 	
 	addPlugins: function(arr) {
 		var t, init;
+		
+		smap.core.controls = smap.core.controls || []; // Keep track of controls added to the map
 		for (var i=0,len=arr.length; i<len; i++) {
 			t = arr[i];
 			init = eval(t.init);
 			if (init) {
 				init = new init(t.options || {});
 				this.map.addControl(init);
+				smap.core.controls.push(init);
 			}
 		}
 	},
@@ -102,5 +145,5 @@ smap.core.Init = L.Class.extend({
 });
 
 $(document).ready(function() {
-	new smap.core.Init();	
+	smap.core.initInst = new smap.core.Init();
 });

@@ -76,6 +76,8 @@ smap.core.Layer = L.Class.extend({
 		var layer = this._layers[layerId];
 		if (this.map.hasLayer(layer)) {
 			this.map.removeLayer( layer );
+			delete this._layers[layerId];
+			layer = null;
 			return true;
 		}
 		return false;
@@ -88,10 +90,9 @@ smap.core.Layer = L.Class.extend({
 		var self = this;
 		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS2") {
 			layer.on("load", function(e) {
-				var html;
+				var html = layer.options.popup;
 				layer.eachLayer(function(f) {
 					if (!f._popup) {
-						html = layer.options.popup;
 						html = utils.extractToHtml(html, f.feature.properties);
 						f.bindPopup(html);
 					}

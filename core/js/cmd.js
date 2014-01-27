@@ -35,5 +35,32 @@ smap.cmd = {
 				}
 			}
 			return null;
+		},
+		
+		/**
+		 * Load a config file and apply it to the map.
+		 * Before the config file is applied, the map is reset:
+		 * 	- all layers removed
+		 * 	- all controls removed
+		 * 
+		 * @param c {String | Object} Config name or config object.
+		 * @param options {Object}
+		 */
+		applyConfig: function(c, options) {
+			options = options || {};
+			
+			if (typeof c === "string") {
+				smap.core.initInst.resetMap();
+				smap.core.initInst.loadConfig( c ).done(function() {
+					smap.config = config || window.config;
+					
+					smap.core.initInst.applyConfig(smap.config);
+					if (options.success) {
+						options.success(smap.config);
+					}
+				});
+			}
+			else if (typeof c === "object") {}
 		}
+		
 };
