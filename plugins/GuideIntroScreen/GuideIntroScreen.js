@@ -94,20 +94,20 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		return this;
 	},
 	
-	toggle: function() {
-		if (  $(".guide-introscreen").is(":visible") ) {
-			this._hide();
-		}
-		else {
-			this._show();
-		}
-	},
-	_show: function() {
-		$(".guide-introscreen").show();
-	},
-	_hide: function() {
-		$(".guide-introscreen").hide();
-	},
+//	toggle: function() {
+//		if (  $(".guide-introscreen").is(":visible") ) {
+//			this._hide();
+//		}
+//		else {
+//			this._show();
+//		}
+//	},
+//	_show: function() {
+//		$(".guide-introscreen").show();
+//	},
+//	_hide: function() {
+//		$(".guide-introscreen").hide();
+//	},
 	
 	_makeContent: function(langCode) {
 		
@@ -115,6 +115,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		
 		var self = this;
 		var goToConfig = function() {
+			smap.cmd.loading(true);
 			var configName = $(this).data("configName");
 			smap.map.removeControl(self);
 			// TODO: Apply config to map

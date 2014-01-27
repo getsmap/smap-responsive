@@ -7,6 +7,7 @@ smap.core.Init = L.Class.extend({
 		
 		// Instantiate core classes
 		smap.core.divInst = new smap.core.Div();
+		smap.cmd.loading(true); // needs the mapdiv to work :)
 		this.drawMap();
 		this.bindEvents(this.map);
 		smap.core.layerInst = new smap.core.Layer(this.map);
@@ -18,8 +19,10 @@ smap.core.Init = L.Class.extend({
 				smap.config = config || window.config;
 				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
+				smap.cmd.loading(false);
 		}).fail(function(a, text, c) {
 			console.log("Config not loaded because: "+text);
+			smap.cmd.loading(false);
 		});
 	},
 	

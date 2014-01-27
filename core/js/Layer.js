@@ -62,6 +62,7 @@ smap.core.Layer = L.Class.extend({
 	 * @param layer {Leaflet layer} with a (unique) layerId
 	 */
 	_addLayer: function(layer) {
+		smap.cmd.loading(true);
 		var layerId = layer.options.layerId;
 		if (this._layers[layerId]) {
 			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
@@ -97,6 +98,7 @@ smap.core.Layer = L.Class.extend({
 						f.bindPopup(html);
 					}
 				});
+				smap.cmd.loading(false);
 			});
 		}
 		return layer;

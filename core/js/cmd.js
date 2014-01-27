@@ -49,18 +49,43 @@ smap.cmd = {
 		applyConfig: function(c, options) {
 			options = options || {};
 			
+			smap.cmd.loading(true);
 			if (typeof c === "string") {
 				smap.core.initInst.resetMap();
 				smap.core.initInst.loadConfig( c ).done(function() {
 					smap.config = config || window.config;
 					
 					smap.core.initInst.applyConfig(smap.config);
+					smap.cmd.loading(false);
 					if (options.success) {
 						options.success(smap.config);
 					}
 				});
 			}
 			else if (typeof c === "object") {}
+		},
+		
+		
+		loading: function(show) {
+			if (show && show === true) {
+				if (!this.spinner) {
+					var opts = {
+							length: 20,
+							width: 15,
+							radius: 30
+					};
+					this.spinner = new Spinner(opts).spin();
+				}
+				this.spinner.spin();
+				$("#mapdiv").append(this.spinner.el);
+				$(this.spinner.el).css({
+					"left": "50%",
+					"top": "50%"
+				});
+			}
+			else {
+				this.spinner.stop();
+			}
 		}
 		
 };
