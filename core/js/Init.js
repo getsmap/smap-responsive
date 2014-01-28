@@ -1,20 +1,25 @@
 smap.core.Init = L.Class.extend({
 	
 	initialize: function() {
-		var self = this;
-		
 		this.defineProjs();
 		
 		// Instantiate core classes
 		smap.core.divInst = new smap.core.Div();
 		smap.cmd.loading(true); // needs the mapdiv to work :)
+		
+		this.init();
+		
+	},
+	
+	init: function(options) {
+		options = options || {};
+		
+		var self = this;
 		this.drawMap();
 		this.bindEvents(this.map);
 		smap.core.layerInst = new smap.core.Layer(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
-		
-		var params = smap.core.paramInst.getParams();
-		
+		var params = options.params || smap.core.paramInst.getParams();
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				self.applyConfig(smap.config);
@@ -32,39 +37,30 @@ smap.core.Init = L.Class.extend({
 	},
 	
 	resetMap: function() {
-		config = null;
+		// Destroy map
+		smap.map.off();
+		this.map.remove();
+		
+		this.map = null;
+		delete this.map;
+		
+		smap.map = null;
+		delete smap.map;
+		
+		
+		window.config = null;
+		delete window.config;
 		smap.config = null;
 		delete smap.config;
 		
-		// Remove and destroy leaflet plugins
-		var p,
-			plugins = smap.core.controls || [];
-		for (var i=0,len=plugins.length; i<len; i++) {
-			p = plugins[i];
-			try {
-				smap.map.removeControl(p);				
-				if (p.destroy) {
-					p.destroy();				
-				}
-				p = null;
-			}
-			catch(e) {}
-		}
+		smap.event.off();
 		smap.core.controls = [];
-		
-		// Remove and destroy layers
-		var layers = smap.map._layers,
-			key, layer;
-		for (var key in layers) {
-			layer = layers[key];
-			smap.core.layerInst._removeLayer(layer);
-		}
-		smap.map.off();
-//		smap.map.remove();
-//		smap.map = null;
-//		this.map = null;
-//		delete smap.map;
-//		delete this.map;
+		smap.core.layerInst = null;
+		smap.core.modInst = null;
+		smap.core.paramInst = null;
+		delete smap.core.layerInst;
+		delete smap.core.modInst;
+		delete smap.core.paramInst;
 	},
 	
 	bindEvents: function(map) {
@@ -120,8 +116,8 @@ smap.core.Init = L.Class.extend({
 	},
 	
 	addPlugins: function(arr) {
-		var t, init;
-		
+		var t, init,
+			autoActivates = [];
 		smap.core.controls = smap.core.controls || []; // Keep track of controls added to the map
 		for (var i=0,len=arr.length; i<len; i++) {
 			t = arr[i];
@@ -130,8 +126,15 @@ smap.core.Init = L.Class.extend({
 				init = new init(t.options || {});
 				this.map.addControl(init);
 				smap.core.controls.push(init);
+				if (init.options.autoActivate) {
+					autoActivates.push(init);
+				}
 			}
 		}
+		for (var i=0,len=autoActivates.length; i<len; i++) {
+			autoActivates[i].activate();
+		}
+		
 	},
 	
 	defineProjs: function() {

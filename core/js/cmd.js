@@ -43,26 +43,15 @@ smap.cmd = {
 		 * 	- all layers removed
 		 * 	- all controls removed
 		 * 
-		 * @param c {String | Object} Config name or config object.
 		 * @param options {Object}
+		 * 		- params {Object} CGI-parameters (Optional)
+		 * 	
 		 */
-		applyConfig: function(c, options) {
+		reloadCore: function(options) {
 			options = options || {};
 			
-			smap.cmd.loading(true);
-			if (typeof c === "string") {
-				smap.core.initInst.resetMap();
-				smap.core.initInst.loadConfig( c ).done(function() {
-					smap.config = config || window.config;
-					
-					smap.core.initInst.applyConfig(smap.config);
-					smap.cmd.loading(false);
-					if (options.success) {
-						options.success(smap.config);
-					}
-				});
-			}
-			else if (typeof c === "object") {}
+			smap.core.initInst.resetMap();
+			smap.core.initInst.init(options);
 		},
 		
 		

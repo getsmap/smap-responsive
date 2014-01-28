@@ -42,7 +42,9 @@ var config = {
 		plugins: [
 		           {
 		        	   init: "L.Control.GuideIntroScreen",
-		        	   options: {}
+		        	   options: {
+		        		   autoActivate: true
+		        	   }
 		           }
        ]
 		

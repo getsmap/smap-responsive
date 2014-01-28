@@ -1,5 +1,7 @@
 L.Control.GuideIntroScreen = L.Control.extend({
 	options: {
+		autoActivate: true,
+		
 		position: 'bottomright',
 		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>',
 		
@@ -83,15 +85,20 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		var $content = this._makeContent("sv"),
 			$container = $('<div class="guide-introscreen" />');
 		$container.append( $content );
-		
-		$("body").append( $container );
-
+		this.$container = $container;
 		return this._container;
 	},
 
 	onRemove: function(map) {
 		$(".guide-introscreen").empty().remove();
 		return this;
+	},
+	
+	activate: function() {
+		$("body").append( this.$container );
+	},
+	deactivate: function() {
+		this.$container.detach();
 	},
 	
 //	toggle: function() {
@@ -119,7 +126,13 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			var configName = $(this).data("configName");
 			smap.map.removeControl(self);
 			// TODO: Apply config to map
-			smap.cmd.applyConfig(configName);
+			smap.cmd.reloadCore({
+				params: {
+					CONFIG: configName,
+					CENTER: [13, 55.605],
+					ZOOM: 15					
+				}
+			});
 			return false;
 		};
 		
