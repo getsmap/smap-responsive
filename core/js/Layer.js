@@ -91,11 +91,12 @@ smap.core.Layer = L.Class.extend({
 		var self = this;
 		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS2") {
 			layer.on("load", function(e) {
-				var html = layer.options.popup;
+				var html;
 				layer.eachLayer(function(f) {
 					if (!f._popup) {
-						html = utils.extractToHtml(html, f.feature.properties);
+						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
 						f.bindPopup(html);
+						f._popup.options.autoPanPaddingTopLeft = [0, 50];
 					}
 				});
 				smap.cmd.loading(false);
