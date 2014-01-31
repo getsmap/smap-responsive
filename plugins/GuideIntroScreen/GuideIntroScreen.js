@@ -182,7 +182,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			$cTag.addClass("col-xs-offset-3 col-md-offset-1 col-lg-offset-1");
 			var b = $cTag.find("button");
 			b.data("configName", configName);
-			$row.append($cTag);
+			$row.append( $cTag );
 		}
 		
 		

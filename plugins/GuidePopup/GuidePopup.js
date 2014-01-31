@@ -115,7 +115,7 @@ L.Control.GuidePopup = L.Control.extend({
 	_makeCarousel: function(arrImageSources) {
 		arrImageSources = arrImageSources || [];
 		
-		var $carousel = $('<div id="carousel-example-generic" class="carousel slide">'),
+		var $carousel = $('<div id="guide-carousel" class="carousel slide">'),
 			src,
 			$indicators = $('<ol class="carousel-indicators" />'),
 			$inner = $('<div class="carousel-inner" />'),
@@ -134,6 +134,19 @@ L.Control.GuidePopup = L.Control.extend({
 		
 		// Append everything
 		$carousel.append($indicators).append($inner).append($controls);
+		
+		$carousel.swiperight(function() {  
+			$(this).carousel('prev');
+		});
+		$carousel.swipeleft(function() {  
+			$(this).carousel('next');  
+		});
+		
+		$(document).on("orientationchange", function() {
+			var ih = window.innerHeight;
+			$(".gp-fullscreen").height(ih);
+		});
+		
 		
 		return $carousel;
 		
