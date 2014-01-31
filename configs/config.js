@@ -83,20 +83,16 @@ var config = {
 		     
 		bl: [
   	 	{
-			init: "L.TileLayer.GWC",
-			url: 'http://{s}.malmo.se:8081/geoserver/gwc/service/tms/1.0.0/malmows:SMA_STADSOMRADEN_P/{z}/{x}/{y}.png',
-//			url: 'http://{s}.malmo.se:8081/geoserver/gwc/service/tms/1.0.0/malmows:SMA_STADSOMRADEN_P/EPSG_900913_{z}/{dir_x}_{dir_y}/{x}_{y}.png',
-//			url: 'http://tilecache.osgeo.org/wms-c/Basic.py/1.0.0/basic/{z}/{x}/{y}.png', //'http://{s}.malmo.se:8081/geoserver/gwc/service/tms/1.0.0/malmows:SMA_STADSOMRADEN_P/{z}/{x}/{y}.png',
+			init: "L.TileLayer.WMS",
+			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/
 			options: {
-				layerId: "stadsomraden",
+				layers: "malmows:MALMO_SMA_DELOMR_P_3857_TEST2",
 				format: 'image/png',
 				subdomains: ["xyz"],
-				displayName: "Stadsområden",
-				attribution: "© Malmö Stadsbyggnadskontor",
-				minZoom: 6,
-				maxZoom: 12,
-				tms: true
-//				,reuseTiles: true
+				transparent: true,
+				minZoom: 1,
+				maxZoom: 18,
+				tiled: true
 			}
 		}
 //	    {

@@ -171,7 +171,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			c = configs[i];
 			configName = c.configName;
 			c = c[langCode];
-			$cTag = $('<div class="gintro-box col-xs-5 col-md-4 col-lg-3 text-left">'+
+			$cTag = $('<div class="gintro-box col-xs-6 col-md-4 col-lg-3 text-left">'+
 			  		'<h3>'+c.title+'</h3>'+
 			  		'<div style="margin-bottom:20px;">'+
 			  			'<p class="lead text-muted">'+c.description+'</p>'+
@@ -179,7 +179,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			  		'</div>'+
 		  		'</div>');
 			
-			$cTag.addClass("col-xs-offset-1 col-md-offset-1 col-lg-offset-1");
+			$cTag.addClass("col-xs-offset-3 col-md-offset-1 col-lg-offset-1");
 			var b = $cTag.find("button");
 			b.data("configName", configName);
 			$row.append($cTag);
