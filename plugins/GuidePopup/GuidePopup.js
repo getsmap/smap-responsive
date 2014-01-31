@@ -120,12 +120,12 @@ L.Control.GuidePopup = L.Control.extend({
 			$indicators = $('<ol class="carousel-indicators" />'),
 			$inner = $('<div class="carousel-inner" />'),
 			$controls = $(
-					'<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"><span class="icon-prev"></span></a>'+
-			'<a class="right carousel-control" href="#carousel-example-generic" data-slide="next"><span class="icon-next"></span></a>');
+					'<a class="left carousel-control" href="#guide-carousel" data-slide="prev"><span class="icon-prev"></span></a>'+
+			'<a class="right carousel-control" href="#guide-carousel" data-slide="next"><span class="icon-next"></span></a>');
 			
 		for (var i=0,len=arrImageSources.length; i<len; i++) {
 			src = arrImageSources[i];
-			$indicators.append('<li data-target="#carousel-example-generic" data-slide-to="'+i+'"></li>');
+			$indicators.append('<li data-target="#guide-carousel" data-slide-to="'+i+'"></li>');
 			$inner.append('<div class="item"><img src="'+src+'"></img></div>');
 		}
 		
@@ -135,12 +135,13 @@ L.Control.GuidePopup = L.Control.extend({
 		// Append everything
 		$carousel.append($indicators).append($inner).append($controls);
 		
-		$carousel.swiperight(function() {  
-			$(this).carousel('prev');
-		});
-		$carousel.swipeleft(function() {  
-			$(this).carousel('next');  
-		});
+		$carousel
+			.swiperight(function() {  
+				$(this).carousel('prev');
+			})
+			.swipeleft(function() {  
+				$(this).carousel('next');  
+			});
 		
 		$(document).on("orientationchange", function() {
 			var ih = window.innerHeight;
