@@ -197,7 +197,6 @@ L.Control.GuidePopup = L.Control.extend({
 			$tagVideo = $('<iframe width="'+w+'" height="'+h+'" src="'+src+'" frameborder="0" allowfullscreen></iframe>');			
 		}
 		else if (src.search(/vimeo.com/i)) {
-			// TODO: Implement
 			$tagVideo = $('<iframe src="'+src+'" width="'+w+'" height="'+h+'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
 		}
 		
