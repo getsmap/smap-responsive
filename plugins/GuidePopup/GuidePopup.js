@@ -191,6 +191,9 @@ L.Control.GuidePopup = L.Control.extend({
 			w = h;
 			h = _w;
 		}
+		h /= 2;
+		w /= 2;
+		
 		var src = arrVideoSources[0];
 		var $tagVideo;
 		if (src.search(/youtu.be|youtube/i) > -1) {
