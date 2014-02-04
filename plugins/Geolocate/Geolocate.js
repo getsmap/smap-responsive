@@ -105,6 +105,6 @@ L.Control.Geolocate = L.Control.extend({
  * using "new" when instantiating the class. It
  * is a Leaflet convention and should be there.
  */
-L.control.Geolocate = function (options) {
+L.control.geolocate = function (options) {
 	return new L.Control.Geolocate(options);
 };
