@@ -1,7 +1,8 @@
-.leaflet-control-Geolocate .btn-primary img {
+.leaflet-control-Geolocate .btn {
+	outline: none;
 }
 
-.btn-primary img {
+.leaflet-control-Geolocate .btn-primary img {
 	-webkit-filter: brightness(400%);
 	filter: brightness(400%);
 }
