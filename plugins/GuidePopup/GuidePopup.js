@@ -175,7 +175,6 @@ L.Control.GuidePopup = L.Control.extend({
 			tagSrc = '<source src="'+src+'" type="'+type+'" />';
 			$tagAudio.append(tagSrc);
 		}
-		
 		return $tagAudio;
 	},
 	
@@ -197,10 +196,10 @@ L.Control.GuidePopup = L.Control.extend({
 		var src = arrVideoSources[0];
 		var $tagVideo;
 		if (src.search(/youtu.be|youtube/i) > -1) {
-			$tagVideo = $('<iframe width="'+w+'" height="'+h+'" src="'+src+'" frameborder="0" allowfullscreen></iframe>');			
+			$tagVideo = $('<iframe src="'+src+'" width="100%" height="80%" frameborder="0" allowfullscreen></iframe>');			
 		}
 		else if (src.search(/vimeo.com/i)) {
-			$tagVideo = $('<iframe src="'+src+'" width="'+w+'" height="'+h+'" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
+			$tagVideo = $('<iframe src="'+src+'" width="100%" height="80%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
 		}
 		
 //		var src,
