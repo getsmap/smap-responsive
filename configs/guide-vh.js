@@ -118,6 +118,12 @@ var config = {
 		        		   buffer: 5
 		        	   }
 		           },
+		           {
+		        	   init: "L.Control.Geolocate",
+		        	   options: {
+		        		   
+		        	   }
+		           },
 //		           {
 //		        	   init: "L.Control.GuideIntroScreen",
 //		        	   options: {
