@@ -83,6 +83,14 @@ var config = {
 		     
 		bl: [
   	 	{
+			init: "L.TileLayer",
+			url: "http://{s}.tile.cloudmade.com/f02f33a9158a425199542d3493b9189d/998/256/{z}/{x}/{y}.png",
+			options: {
+				layerId: "osm",
+				displayName: "OSM",
+			}
+		},
+		{
 			init: "L.TileLayer.WMS",
 			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/
 			options: {
@@ -112,6 +120,12 @@ var config = {
 		        	   init: "L.Control.Scale",
 		        	   options: {
 		        		   imperial: false
+		        	   }
+		           },
+		           {
+		        	   init: "L.Control.Geolocate",
+		        	   options: {
+		        		   
 		        	   }
 		           },
 		           {

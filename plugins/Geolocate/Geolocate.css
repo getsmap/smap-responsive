@@ -1,0 +1,7 @@
+.leaflet-control-Geolocate .btn-primary img {
+}
+
+.btn-primary img {
+	-webkit-filter: brightness(400%);
+	filter: brightness(400%);
+}

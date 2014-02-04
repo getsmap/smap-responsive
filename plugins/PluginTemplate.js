@@ -1,7 +1,6 @@
 L.Control.Template = L.Control.extend({
 	options: {
-		position: 'bottomright',
-		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'
+		position: 'bottomright' // just an example
 	},
 
 	initialize: function(options) {
@@ -25,7 +24,7 @@ L.Control.Template = L.Control.extend({
 	},
 
 	onRemove: function(map) {
-		// Do everything "opposite" of onAdd Ð e.g. unbind events and destroy things
+		// Do everything "opposite" of onAdd â€“ e.g. unbind events and destroy things
 		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
 	}
 });
