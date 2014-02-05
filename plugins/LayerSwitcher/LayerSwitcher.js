@@ -1,6 +1,14 @@
 L.Control.LayerSwitcher = L.Control.extend({
 	options: {
-//		position: "bottomleft"
+		
+	},
+	
+	showLayer: function(layerId) {
+		smap.core.layerInst.showLayer(layerId);
+	},
+	
+	hideLayer: function(layerId) {
+		smap.core.layerInst.hideLayer(layerId);
 	},
 
 	initialize: function(options) {
@@ -16,8 +24,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this.$container = $(this._container);
 		
 		this._addPanel();
+		this._addLayers(smap.config.bl, smap.config.ol);
 		this._addBtn();
 		this._bindEvents();
+		this.showPanel();
 		
 		$("#mapdiv").addClass("lswitch-panelslide");
 
@@ -29,11 +39,44 @@ L.Control.LayerSwitcher = L.Control.extend({
 		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
 	},
 	
+	_addLayers: function(bls, ols) {
+		bls = bls || [];
+		ols = ols || [];
+		
+		var t;
+		for (var i=0,len=bls.length; i<len; i++) {
+			t = bls[i];
+			this._addRow({
+				displayName: t.options.displayName,
+				layerId: t.options.layerId,
+				isBaseLayer: true
+			});
+		}
+		for (var i=0,len=ols.length; i<len; i++) {
+			t = ols[i];
+			this._addRow({
+				displayName: t.options.displayName,
+				layerId: t.options.layerId,
+				isBaseLayer: false
+			});
+		}
+	},
+	
 	_bindEvents: function() {
+		var self = this;
+		
 		$("#mapdiv").on("touchstart click", $.proxy(function() {
 			this.hidePanel();
 			return false;
 		}, this));
+		
+//		this.map.on("layeradd layerremove", function(e) {
+//			var layerId = e.layer.options.layerId;
+//			if (layerId) {
+//				var theId = self._makeId(layerId);
+//				$("#"+theId).toggleClass("active");
+//			}
+//		});
 	},
 	
 	_addBtn: function() {
@@ -50,6 +93,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this.$panel.swipeleft($.proxy(function() {  
 			this.hidePanel();
 		}, this));
+		this.$list = $('<div id="lswitch-cont"><div id="lswitch-blcont" class="list-group"></div><div id="lswitch-olcont" class="list-group"></div></div>');
+		this.$panel.append(this.$list);
 		$("body").append( this.$panel );
 	},
 	
@@ -66,6 +111,48 @@ L.Control.LayerSwitcher = L.Control.extend({
 		$("#mapdiv").css({
 			"margin-left": "0px"
 		});
+		setTimeout($.proxy(function() {
+			this.$panel.hide();
+		}, this), 300);
+	},
+	
+	_onRowTap: function(e) {
+		
+		var tag = $(e.target);
+		tag.toggleClass("active");
+		var theId = tag.attr("id");
+		var layerId = this._unMakeId(theId);
+		if ( tag.hasClass("active") ) {
+			// Show layer
+			this.showLayer(layerId);
+		}
+		else {
+			// Hide layer
+			this.hideLayer(layerId);	
+		}
+		return false;
+	},
+	
+	_makeId: function(layerId) {
+		return "lswitchrow-" + encodeURIComponent(layerId).replace(/%/g, "--pr--");
+	},
+	_unMakeId: function(theId) {
+		return decodeURIComponent( theId.replace("lswitchrow-", "").replace(/--pr--/g, "%") );
+	},
+	
+	_addRow: function(t) {
+		var row = $('<a class="list-group-item">'+t.displayName+'</a>');
+		row.attr("id", this._makeId(t.layerId));
+		row.on("tap", $.proxy(this._onRowTap, this));
+		
+		var parentTag;
+		if (t.isBaseLayer) {
+			parentTag = $("#lswitch-blcont");
+		}
+		else {
+			parentTag = $("#lswitch-olcont");
+		}
+		parentTag.append(row);
 	}
 });
 

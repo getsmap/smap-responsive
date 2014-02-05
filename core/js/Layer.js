@@ -64,13 +64,17 @@ smap.core.Layer = L.Class.extend({
 	_addLayer: function(layer) {
 		smap.cmd.loading(true);
 		var layerId = layer.options.layerId;
-		if (this._layers[layerId]) {
+		if (this.map.hasLayer(layerId)) {
 			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
 			return false;
 		}
 		this._layers[layerId] = layer;
 		this.map.addLayer(layer);
 		return layer;
+	},
+	
+	_getLayer: function(layerId) {
+		return this._layers[layerId];
 	},
 	
 	_removeLayer: function(layerId) {
@@ -103,7 +107,18 @@ smap.core.Layer = L.Class.extend({
 			});
 		}
 		return layer;
-
+	},
+	
+	showLayer: function(layerId) {
+		var t = smap.cmd.getLayerConfig(layerId);
+		var layer = this._getLayer(layerId) || this._createLayer(t);
+		this._addLayer(layer);
+	},
+	
+	hideLayer: function(layerId) {
+		// Just remove the layer from the map (still keep it in the ass. array).
+		var layer = this._getLayer(layerId);
+		this.map.removeLayer(layer);
 	},
 	
 	CLASS_NAME: "smap.core.Layer"

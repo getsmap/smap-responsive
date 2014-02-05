@@ -94,6 +94,8 @@ var config = {
 			init: "L.TileLayer.WMS",
 			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/
 			options: {
+				layerId: "wms",
+				displayName: "WMS",
 				layers: "malmows:MALMO_SMA_DELOMR_P_3857_TEST2",
 				format: 'image/png',
 				subdomains: ["xyz"],
