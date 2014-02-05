@@ -123,10 +123,12 @@ var config = {
 		        	   }
 		           },
 		           {
+		        	   init: "L.Control.LayerSwitcher",
+		        	   options: {}
+		           },
+		           {
 		        	   init: "L.Control.Geolocate",
-		        	   options: {
-		        		   
-		        	   }
+		        	   options: {}
 		           },
 		           {
 		        	   init: "L.Control.SelectWMS",
