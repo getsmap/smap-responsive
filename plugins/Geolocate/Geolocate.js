@@ -84,8 +84,7 @@ L.Control.Geolocate = L.Control.extend({
 	
 	_onLocationError: function(e) {
 		smap.cmd.loading(false);
-		alert("Could not find the position at the moment.\nError code: "+e.message);
-		console.log("Geolocate: +"+e.message);
+		console.log("Geolocate error: +"+e.message);
 	}
 	
 });
