@@ -26,9 +26,47 @@
 	width: 70%;
 	height: 100%;
 	max-width: 350px;
-	background-color: #fff;
+	background-color: #2E3941;
+	padding: 0 20px;
+	-moz-box-shadow: inset #000 -2px -2px 6px;
+	box-shadow: inset #000 -2px -2px 6px;
+	-webkit-box-shadow: inset #000 -2px -2px 6px;
 }
 
 .lswitch-panel a {
-	cursor: pointer;	
+	cursor: pointer;
+	background-color: #2E3941;
+	color: #eee;
+	border: none;
+	border-radius: 10px !important;
+	margin-top: 5px;
+}
+
+.lswitch-panel a:hover, .lswitch-panel a:active, .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
+	background-color: #000;
+	color: #fff;
+	border-radius: 10px;
+}
+
+.lswitch-panel a.active {
+	cursor: pointer;
+	background-color: #000;
+	color: #fff;
+	font-weight: normal;
+}
+
+
+.lswitch-panel .panel-default {
+	border: none;
+	background-color: #2E3941;
+}
+
+.lswitch-panel .panel-heading {
+	padding: 6px 15px;
+	border: none;
+	border-radius: 0;
+	font-weight: normal;
+	background-color: rgba(255,255,255,1) !important;
+	color: #000 !important;
+	
 }

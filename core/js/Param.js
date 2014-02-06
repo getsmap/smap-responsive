@@ -67,7 +67,7 @@ smap.core.Param = L.Class.extend({
 				bl: bl
 		};
 		
-		smap.event.trigger("paramscreate", p);
+		smap.event.trigger("smap.core.createparams", p);
 		
 		// Remove all undefined or null values
 		$.map(p, function(i, val) {

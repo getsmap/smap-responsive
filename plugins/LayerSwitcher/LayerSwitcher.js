@@ -62,6 +62,17 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}
 	},
 	
+	_onApplyParams: function(e) {
+		if (e.BL) {
+//			var t = smap.cmd.getLayerConfig( e.BL );
+			var theId = this._makeId(e.BL);			
+		}
+		else {
+			var theId = smap.config.bl[0].layerId;
+		}
+		$("#lswitch-blcont").find( "#"+theId ).addClass("active");
+	},
+	
 	_bindEvents: function() {
 		var self = this;
 		
@@ -69,6 +80,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 			this.hidePanel();
 			return false;
 		}, this));
+		
+		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
 		
 //		this.map.on("layeradd layerremove", function(e) {
 //			var layerId = e.layer.options.layerId;
@@ -93,7 +106,15 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this.$panel.swipeleft($.proxy(function() {  
 			this.hidePanel();
 		}, this));
-		this.$list = $('<div id="lswitch-cont"><div id="lswitch-blcont" class="list-group"></div><div id="lswitch-olcont" class="list-group"></div></div>');
+		this.$list = $(
+			'<div class="panel panel-default">'+
+//				'<div class="panel-heading">Baselayers</div>'+
+				'<div id="lswitch-blcont" class="list-group"></div>'+
+			'</div>'+
+			'<div class="panel panel-default">'+
+//				'<div class="panel-heading">Overlays</div>'+
+				'<div id="lswitch-olcont" class="list-group"></div>'+
+			'</div>');
 		this.$panel.append(this.$list);
 		$("body").append( this.$panel );
 	},
@@ -104,6 +125,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		$("#mapdiv").css({
 			"margin-left": this.$panel.outerWidth() + "px"
 		});
+		
+		setTimeout(function() {
+			$("#lswitch-btn").hide();
+		}, 300);
 	},
 	
 	hidePanel: function() {
@@ -113,6 +138,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		});
 		setTimeout($.proxy(function() {
 			this.$panel.hide();
+			$("#lswitch-btn").show();
 		}, this), 300);
 	},
 	
