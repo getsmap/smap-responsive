@@ -7,6 +7,8 @@
 	border: 1px solid #999;
 	border-width: 1px 1px 1px 0;
 	box-shadow: 1px 1px 4px 0 rgba(100,100,100,.5);
+	-moz-box-shadow: 1px 1px 4px 0 rgba(100,100,100,.5);
+	-webkit-box-shadow: 1px 1px 4px 0 rgba(100,100,100,.5);
 	background-color: rgba(255,255,255,.8);
 	cursor: pointer;
 	border-radius: 0 4px 4px 0;
@@ -16,6 +18,10 @@
 	-webkit-transition: margin-left 300ms ease;
 	-moz-transition: margin-left 300ms ease;
 	transition: margin-left 300ms ease;
+}
+
+.lswitch-panel .panel-default {
+	margin-top: 10px;
 }
 
 .lswitch-panel {
@@ -28,9 +34,9 @@
 	max-width: 350px;
 	background-color: #2E3941;
 	padding: 0 20px;
-	-moz-box-shadow: inset #000 -2px -2px 6px;
-	box-shadow: inset #000 -2px -2px 6px;
-	-webkit-box-shadow: inset #000 -2px -2px 6px;
+	-moz-box-shadow: inset #000 -1px -1px 7px;
+	box-shadow: inset #000 -1px -1px 7px;
+	-webkit-box-shadow: inset #000 -1px -1px 7px;
 }
 
 .lswitch-panel a {
@@ -38,23 +44,22 @@
 	background-color: #2E3941;
 	color: #eee;
 	border: none;
-	border-radius: 10px !important;
-	margin-top: 5px;
+	border-radius: 0px !important;
+	margin-top: 1px;
 }
 
 .lswitch-panel a:hover, .lswitch-panel a:active, .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
-	background-color: #000;
+	background-color: #212429;
 	color: #fff;
-	border-radius: 10px;
+	border-radius: 0;
 }
 
 .lswitch-panel a.active {
 	cursor: pointer;
-	background-color: #000;
+	background-color: #212429;
 	color: #fff;
 	font-weight: normal;
 }
-
 
 .lswitch-panel .panel-default {
 	border: none;
@@ -62,11 +67,13 @@
 }
 
 .lswitch-panel .panel-heading {
-	padding: 6px 15px;
-	border: none;
+	padding: 3px 15px;
+	border: 1px solid #222;
 	border-radius: 0;
 	font-weight: normal;
-	background-color: rgba(255,255,255,1) !important;
-	color: #000 !important;
-	
+	background-color: rgba(0,0,0,.5) !important;
+	color: #fff !important;
+	border-radius: 5px 5px 0px 0;
+	font-weight: bold;
+	font-size: 110%;
 }

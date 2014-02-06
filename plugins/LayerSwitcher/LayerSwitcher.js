@@ -28,9 +28,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this._addBtn();
 		this._bindEvents();
 		this.showPanel();
-		
 		$("#mapdiv").addClass("lswitch-panelslide");
-
 		return this._container;
 	},
 
@@ -63,13 +61,14 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	_onApplyParams: function(e) {
+		var theId;
 		if (e.BL) {
-//			var t = smap.cmd.getLayerConfig( e.BL );
-			var theId = this._makeId(e.BL);			
+			theId = e.BL;			
 		}
 		else {
-			var theId = smap.config.bl[0].layerId;
+			theId = smap.config.bl[0].options.layerId;
 		}
+		theId = this._makeId(theId);
 		$("#lswitch-blcont").find( "#"+theId ).addClass("active");
 	},
 	
@@ -102,17 +101,17 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	_addPanel: function() {
-		this.$panel = $('<div class="lswitch-panel" />');
+		this.$panel = $('<div class="lswitch-panel unselectable" />');
 		this.$panel.swipeleft($.proxy(function() {  
 			this.hidePanel();
 		}, this));
 		this.$list = $(
 			'<div class="panel panel-default">'+
-//				'<div class="panel-heading">Baselayers</div>'+
+				'<div class="panel-heading">Baselayers</div>'+
 				'<div id="lswitch-blcont" class="list-group"></div>'+
 			'</div>'+
 			'<div class="panel panel-default">'+
-//				'<div class="panel-heading">Overlays</div>'+
+				'<div class="panel-heading">Overlays</div>'+
 				'<div id="lswitch-olcont" class="list-group"></div>'+
 			'</div>');
 		this.$panel.append(this.$list);
@@ -142,19 +141,46 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}, this), 300);
 	},
 	
+	_setBaseLayer: function(layerId) {
+		var layers = this.map._layers,
+			layer;
+		
+		// Hide all baselayers
+		for (var key in layers) {
+			layer = layers[key];
+			if (layer.options.isBaseLayer) {
+				if (layer.options.layerId !== layerId) {
+					this.hideLayer(layer.options.layerId);					
+				}
+			}
+		}
+		this.showLayer(layerId);
+	},
+	
 	_onRowTap: function(e) {
 		
 		var tag = $(e.target);
-		tag.toggleClass("active");
+		
 		var theId = tag.attr("id");
-		var layerId = this._unMakeId(theId);
-		if ( tag.hasClass("active") ) {
+		var layerId = this._unMakeId(theId),
+			isBaseLayer = $("#"+theId).parent().attr("id") === "lswitch-blcont";
+		
+		if (isBaseLayer) {
+			tag.siblings().removeClass("active");
+			tag.addClass("active");
+			this._setBaseLayer(layerId);
+			return false;
+		}
+		tag.toggleClass("active");
+		var isActive = tag.hasClass("active");
+		
+		if ( isActive ) {
 			// Show layer
 			this.showLayer(layerId);
 		}
 		else {
 			// Hide layer
-			this.hideLayer(layerId);	
+			this.hideLayer(layerId);
 		}
 		return false;
 	},

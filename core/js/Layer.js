@@ -17,7 +17,7 @@ smap.core.Layer = L.Class.extend({
 			}
 			tBL.options.isBaseLayer = true;
 			self._addLayer( self._createLayer(tBL) );
-			
+
 			if (p.OL) {
 				var t, i;
 				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
@@ -62,7 +62,6 @@ smap.core.Layer = L.Class.extend({
 	 * @param layer {Leaflet layer} with a (unique) layerId
 	 */
 	_addLayer: function(layer) {
-		smap.cmd.loading(true);
 		var layerId = layer.options.layerId;
 		if (this.map.hasLayer(layerId)) {
 			console.log("Layer with "+layerId+" is already added to the map. Not added again.");

@@ -113,6 +113,11 @@ smap.core.Init = L.Class.extend({
 		} catch(e) {
 			config.log("smap.core.Init: config file's ws property not specified for domain: "+document.domain);
 		};
+		
+		var bls = config.bl || [];
+		for (var i=0,len=bls.length; i<len; i++) {
+			bls[i].options.isBaseLayer = true;
+		}
 	},
 	
 	addPlugins: function(arr) {
