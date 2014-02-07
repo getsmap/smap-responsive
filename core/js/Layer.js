@@ -30,6 +30,17 @@ smap.core.Layer = L.Class.extend({
 				}
 			}
 		});
+		
+		
+		
+		this.map.on("click", function() {
+			// On "click out" – unselect all features (applies to WFS-layers).
+			var arr = self._wfsLayers;
+			for (var i=0,len=arr.length; i<len; i++) {
+				self._resetStyle( arr[i] );
+			}
+		});
+		
 	},
 	
 	addOverlays: function(arr) {
@@ -87,12 +98,47 @@ smap.core.Layer = L.Class.extend({
 		return false;
 	},
 	
+	_setSelectStyle: function(e) {
+		var layer = e.target;
+
+		layer.setStyle({
+	    	weight: 5,
+	        color: '#666',
+	        dashArray: '',
+	        fillOpacity: 0.7
+	    });
+
+	    if (!L.Browser.ie && !L.Browser.opera) {
+	    	layer.bringToFront();
+	    }
+	},
+	
+	_resetStyle: function(layer) {
+		layer.eachLayer(function(lay) {
+			layer.resetStyle(lay);
+		});
+//		layer.options.style = layer.options.style;
+	},
+	
+	_wfsLayers: [],
+	
 	_createLayer: function(t) {
 		var init = eval(t.init);
 		var layer = new init(t.url, t.options);
 		
 		var self = this;
 		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS2") {
+			if (!t.options.style) {
+				var style = {
+						weight: 2,
+				        opacity: 1,
+				        color: '#fff',
+				        dashArray: '3',
+				        fillOpacity: 0.7
+					};
+				layer.setStyle(style);
+				layer.options.style = style;
+			}
 			layer.on("load", function(e) {
 				var html;
 				layer.eachLayer(function(f) {
@@ -108,9 +154,14 @@ smap.core.Layer = L.Class.extend({
 						if (f._popup) {
 							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
 						}
+						f.on("click", $.proxy(function(e) {
+							self._resetStyle(layer);
+							self._setSelectStyle(e);
+						}, self));
 					}
 				});
 			});
+			this._wfsLayers.push(layer);
 		}
 		
 		layer.on("loading", function(e) {
@@ -119,7 +170,6 @@ smap.core.Layer = L.Class.extend({
 		layer.on("load", function(e) {
 			smap.cmd.loading(false);
 		});
-		
 		
 		return layer;
 	},

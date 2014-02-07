@@ -62,7 +62,7 @@ var config = {
 				  options: {
 					  layerId: "malmows_ulf_stadsdel",
 					  displayName: "Stadsdel Malmö",
-					  featureType: "malmows:ulf_stadsdel",
+					  featureType: "malmows:SUM_KVARTER_P",
 					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:3008",
 					  reverseAxis: true,

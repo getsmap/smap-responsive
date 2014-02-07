@@ -1,7 +1,5 @@
 L.Control.LayerSwitcher = L.Control.extend({
-	options: {
-		
-	},
+	options: {},
 	
 	showLayer: function(layerId) {
 		smap.core.layerInst.showLayer(layerId);
@@ -27,7 +25,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this._addLayers(smap.config.bl, smap.config.ol);
 		this._addBtn();
 		this._bindEvents();
-		this.showPanel();
 		$("#mapdiv").addClass("lswitch-panelslide");
 		return this._container;
 	},
@@ -81,6 +78,13 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}, this));
 		
 		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
+
+		$(window).on("orientationchange", function() {
+			if (self.$panel.is(":visible")) {
+				self.showPanel();
+				window.scrollTo(0,0);
+			}
+		});
 		
 //		this.map.on("layeradd layerremove", function(e) {
 //			var layerId = e.layer.options.layerId;
@@ -132,9 +136,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 		$("#mapdiv").css({
 			"margin-left": "0px"
 		});
+		$("#lswitch-btn").show();
 		setTimeout($.proxy(function() {
 			this.$panel.hide();
-			$("#lswitch-btn").show();
 		}, this), 300);
 	},
 	
