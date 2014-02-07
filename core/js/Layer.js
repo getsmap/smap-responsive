@@ -120,6 +120,10 @@ smap.core.Layer = L.Class.extend({
 //		layer.options.style = layer.options.style;
 	},
 	
+	/**
+	 * Used for resetting style on map click – to avoid binding
+	 * multiple listeners for map click event.
+	 */
 	_wfsLayers: [],
 	
 	_createLayer: function(t) {
@@ -143,13 +147,7 @@ smap.core.Layer = L.Class.extend({
 				var html;
 				layer.eachLayer(function(f) {
 					if (!f._popup) {
-						// TODO – problem with polygons?
-						
 						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
-//						var popup = L.popup()
-//						    .setLatLng(latlng)
-//						    .setContent('<p>Hello world!<br />This is a nice popup.</p>')
-//						    .openOn(map);
 						f.bindPopup(html);
 						if (f._popup) {
 							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
