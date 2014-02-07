@@ -124,10 +124,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		$("#mapdiv").css({
 			"margin-left": this.$panel.outerWidth() + "px"
 		});
-		
-		setTimeout(function() {
-			$("#lswitch-btn").hide();
-		}, 300);
+		$("#lswitch-btn").hide();
 	},
 	
 	hidePanel: function() {
