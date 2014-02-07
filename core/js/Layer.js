@@ -97,9 +97,17 @@ smap.core.Layer = L.Class.extend({
 				var html;
 				layer.eachLayer(function(f) {
 					if (!f._popup) {
+						// TODO – problem with polygons?
+						
 						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
+//						var popup = L.popup()
+//						    .setLatLng(latlng)
+//						    .setContent('<p>Hello world!<br />This is a nice popup.</p>')
+//						    .openOn(map);
 						f.bindPopup(html);
-						f._popup.options.autoPanPaddingTopLeft = [0, 50];
+						if (f._popup) {
+							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
+						}
 					}
 				});
 			});
@@ -118,7 +126,10 @@ smap.core.Layer = L.Class.extend({
 	
 	showLayer: function(layerId) {
 		var t = smap.cmd.getLayerConfig(layerId);
-		var layer = this._getLayer(layerId) || this._createLayer(t);
+		var layer = this._getLayer(layerId);
+		if (!layer) {
+			layer = this._createLayer(t);
+		}
 		this._addLayer(layer);
 	},
 	

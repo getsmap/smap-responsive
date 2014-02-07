@@ -37,6 +37,7 @@
 	-moz-box-shadow: inset #000 -1px -1px 7px;
 	box-shadow: inset #000 -1px -1px 7px;
 	-webkit-box-shadow: inset #000 -1px -1px 7px;
+	overflow-y: auto;
 }
 
 .lswitch-panel a {

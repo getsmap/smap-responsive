@@ -105,7 +105,7 @@ L.Control.SelectWMS = L.Control.extend({
 	
 	_layerShouldBeAdded: function(layer) {
 		var isWmsLayer = layer._wmsVersion ? true : false;
-		if (layer.options.selectable && layer.options.selectable === true
+		if (layer.options && layer.options.selectable && layer.options.selectable === true
 				&& this._hasLayer(layer) === false
 				&& isWmsLayer === true) {
 			return true;
