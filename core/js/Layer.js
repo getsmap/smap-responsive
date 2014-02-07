@@ -90,7 +90,7 @@ smap.core.Layer = L.Class.extend({
 	_createLayer: function(t) {
 		var init = eval(t.init);
 		var layer = new init(t.url, t.options);
-
+		
 		var self = this;
 		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS2") {
 			layer.on("load", function(e) {
@@ -102,9 +102,17 @@ smap.core.Layer = L.Class.extend({
 						f._popup.options.autoPanPaddingTopLeft = [0, 50];
 					}
 				});
-				smap.cmd.loading(false);
 			});
 		}
+		
+		layer.on("loading", function(e) {
+			smap.cmd.loading(true);
+		});
+		layer.on("load", function(e) {
+			smap.cmd.loading(false);
+		});
+		
+		
 		return layer;
 	},
 	
