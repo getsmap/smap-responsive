@@ -60,8 +60,30 @@ var config = {
 				  init: "L.GeoJSON.WFS2",
 				  url: "http://geoserver.smap.se/geoserver/wfs",
 				  options: {
+					  layerId: "malmows_STADSDEL_L",
+					  displayName: "Stadsdel Linje",
+					  featureType: "malmows:STADSDEL_L",
+					  attribution: "Malmö stads WFS",
+					  inputCrs: "EPSG:3008",
+					  reverseAxis: true,
+					  selectable: true,
+					  popup: 'The FID: ${fid}',
+					  uniqueAttr: null,
+					  hoverColor: '#FF0',
+					  style: {
+						  weight: 2,
+						  color: '#F00',
+						  dashArray: '',
+						  fillOpacity: 0.5
+					  }
+				  }
+		     },
+		     {
+				  init: "L.GeoJSON.WFS2",
+				  url: "http://geoserver.smap.se/geoserver/wfs",
+				  options: {
 					  layerId: "malmows_ulf_stadsdel",
-					  displayName: "Stadsdel Malmö",
+					  displayName: "Stadsdel Yta",
 					  featureType: "malmows:SUM_KVARTER_P",
 					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:3008",
