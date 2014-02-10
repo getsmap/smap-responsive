@@ -67,8 +67,16 @@ var config = {
 					  inputCrs: "EPSG:3008",
 					  reverseAxis: true,
 					  selectable: true,
-					  popup: 'The FID: ${fid}'
-			  		}
+					  popup: 'The FID: ${fid}',
+					  uniqueAttr: "easting,northing",
+					  hoverColor: '#FF0',
+					  style: {
+						  weight: 2,
+						  color: '#F00',
+						  dashArray: '',
+						  fillOpacity: 0.5
+					  }
+				  }
 		     }
 //		     ,
 //		     {

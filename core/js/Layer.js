@@ -1,5 +1,14 @@
 smap.core.Layer = L.Class.extend({
 	
+	options: {
+		selectStyle: {
+			weight: 5,
+	        color: '#0066FF',
+	        dashArray: '',
+	        fillOpacity: .7
+		}
+	},
+	
 	_layers: {},
 	
 	initialize: function(map) {
@@ -101,12 +110,7 @@ smap.core.Layer = L.Class.extend({
 	_setSelectStyle: function(e) {
 		var layer = e.target;
 
-		layer.setStyle({
-	    	weight: 5,
-	        color: '#666',
-	        dashArray: '',
-	        fillOpacity: 0.7
-	    });
+		layer.setStyle(this.options.selectStyle);
 
 	    if (!L.Browser.ie && !L.Browser.opera) {
 	    	layer.bringToFront();
