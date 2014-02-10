@@ -3,9 +3,10 @@ smap.core.Layer = L.Class.extend({
 	options: {
 		selectStyle: {
 			weight: 5,
-	        color: '#0066FF',
+	        color: '#00DDFF',
 	        dashArray: '',
-	        fillOpacity: .7
+	        fillOpacity: .8,
+	        strokeOpacity: 1
 		}
 	},
 	

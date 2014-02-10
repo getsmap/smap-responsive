@@ -71,7 +71,7 @@ var config = {
 					  uniqueAttr: null,
 					  hoverColor: '#FF0',
 					  style: {
-						  weight: 2,
+						  weight: 6,
 						  color: '#F00',
 						  dashArray: '',
 						  fillOpacity: 0.5
