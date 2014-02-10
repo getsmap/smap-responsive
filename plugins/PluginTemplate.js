@@ -2,9 +2,17 @@ L.Control.Template = L.Control.extend({
 	options: {
 		position: 'bottomright' // just an example
 	},
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
+	},
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		this._setLang(options.langCode);
 	},
 
 	onAdd: function(map) {

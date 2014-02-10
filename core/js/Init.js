@@ -22,6 +22,7 @@ smap.core.Init = L.Class.extend({
 		var params = options.params || smap.core.paramInst.getParams();
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
+				smap.config.langCode = params.LANG || "en";
 				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
 				smap.cmd.loading(false);

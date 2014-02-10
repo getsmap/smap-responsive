@@ -107,6 +107,7 @@ smap.core.Param = L.Class.extend({
 		else {
 			this.map.fitWorld();
 		}
+		
 		smap.event.trigger("smap.core.applyparams", {
 			params: p
 		});

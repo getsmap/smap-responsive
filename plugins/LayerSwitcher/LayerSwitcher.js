@@ -1,6 +1,17 @@
 L.Control.LayerSwitcher = L.Control.extend({
 	options: {},
 	
+	_lang: {
+		"sv": {
+			baselayers: "Bakgrundslager",
+			overlays: "Kartskikt"
+		},
+		"en": {
+			baselayers: "Baselayers",
+			overlays: "Overlays"
+		}
+	},
+	
 	showLayer: function(layerId) {
 		smap.core.layerInst.showLayer(layerId);
 	},
@@ -8,9 +19,17 @@ L.Control.LayerSwitcher = L.Control.extend({
 	hideLayer: function(layerId) {
 		smap.core.layerInst.hideLayer(layerId);
 	},
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
+	},
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		this._setLang(options.lang);
 	},
 
 	onAdd: function(map) {
@@ -111,11 +130,11 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}, this));
 		this.$list = $(
 			'<div class="panel panel-default">'+
-				'<div class="panel-heading">Baselayers</div>'+
+				'<div class="panel-heading">'+this.lang.baselayers+'</div>'+
 				'<div id="lswitch-blcont" class="list-group"></div>'+
 			'</div>'+
 			'<div class="panel panel-default">'+
-				'<div class="panel-heading">Overlays</div>'+
+				'<div class="panel-heading">'+this.lang.overlays+'</div>'+
 				'<div id="lswitch-olcont" class="list-group"></div>'+
 			'</div>');
 		this.$panel.append(this.$list);
