@@ -140,7 +140,6 @@ smap.core.Init = L.Class.extend({
 		for (var i=0,len=autoActivates.length; i<len; i++) {
 			autoActivates[i].activate();
 		}
-		
 	},
 	
 	defineProjs: function() {

@@ -3,6 +3,15 @@ L.Control.Template = L.Control.extend({
 		position: 'bottomright' // just an example
 	},
 	
+	_lang: {
+		"sv": {
+			exampleLabel: "Ett exempel"
+		},
+		"en": {
+			exampleLabel: "An example"
+		}
+	},
+	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {

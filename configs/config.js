@@ -182,6 +182,10 @@ var config = {
 		        	   options: {
 		        		   buffer: 5
 		        	   }
+		           },
+		           {
+		        	   init: "L.Control.SharePosition",
+		        	   options: {}
 		           }
        ]
 		
