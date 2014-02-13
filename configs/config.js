@@ -3,13 +3,16 @@ var config = {
 		
 		ws: {
 			"localhost": {
-				proxy: "http://localhost/cgi-bin/proxy.py?url="
+				proxy: "http://localhost/cgi-bin/proxy.py?url=",
+				sharePosStore: "http://localhost/cgi-bin/smap-mobile/"
 			},
 			"xyz.malmo.se": {
-				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
+				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url=",
+				sharePosStore: "http://localhost/cgi-bin/smap-mobile/"
 			},
 			"91.123.201.52": {
-				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
+				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url=",
+				sharePosStore: "http://localhost/cgi-bin/smap-mobile/"
 			}
 		},
 		

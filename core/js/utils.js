@@ -3,7 +3,11 @@ var utils = {
 			return parseInt( text.replace(/px/gi, "").replace(/em/gi, "").replace(/pt/gi, "") );
 		},
 		
-		drawDialog: function(title, bodyContent, footerContent) {
+		drawDialog: function(title, bodyContent, footerContent, options) {
+			options = options || {};
+			
+			options.size = options.size || "";
+			
 			var d = $('<div class="modal fade"><div class="modal-dialog">'+
 			    '<div class="modal-content">'+
 		      '<div class="modal-header">'+
@@ -18,6 +22,13 @@ var utils = {
 				d.find(".modal-body").after(footer);
 				footer.append(footerContent);
 			}
+			
+			if (options.size) {
+				d.addClass("bs-modal-"+options.size);
+				d.find(".modal-dialog").addClass("modal-"+options.size);
+				
+			}
+			
 			return d;
 		},
 		

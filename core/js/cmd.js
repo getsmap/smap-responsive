@@ -3,12 +3,15 @@ smap.cmd = {
 		
 		getControl: function(controlName) {
 			// "Attribution" or "Scale"
-			
-			$.each(smap.core.controls, function(i, inst) {
+			var inst,
+				ctrls = smap.core.controls || [];
+			for (var i=0,len=ctrls.length; i<len; i++) {
+				inst = ctrls[i];
 				if (inst instanceof L.Control[controlName]) {
 					return inst;
 				}
-			});
+			}
+			return null;
 		},
 		
 		addLayerWithConfig: function(layerConfig) {
