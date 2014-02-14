@@ -42,6 +42,32 @@ var utils = {
 		},
 		
 		extractToHtml: function(html, props) {
+			function getFunctionEnd(text) {
+				var p = 1,
+		            found = false,
+		            startIndex = text.search(/\{/g); // get starting "{"
+		        text = text.substring(startIndex+1);
+		        var i=0;            
+		        for (i=0,len=text.length; i<len; i++) {
+		        	if (text.charAt(i) === "{") {
+		        		p += 1;
+		        	}
+		        	else if (text.charAt(i) === "}") {
+		        		p -= 1;
+		        	}
+		        	if (p === 0) {
+		        		found = true;
+		        		i = i + startIndex + 2;
+		        		break;
+		        	}
+		        }
+		        if (!found) {
+		        	i = -1;
+		        }
+		        return i;
+			};
+			
+			
 			function extractAttribute(a, txt) {
 				var index = txt.search(/\${/g);
 				if (index !== -1) {
@@ -51,7 +77,7 @@ var utils = {
 					var attr = html.substring(index + 2);
 					var endIndex = 0;
 					if (attr.substring(0, 8) === "function") {
-						endIndex = sMap.util.getFunctionEnd(attr);
+						endIndex = getFunctionEnd(attr);
 					}
 					else {
 						endIndex = attr.search(/\}/g);

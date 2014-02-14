@@ -87,7 +87,8 @@ L.Control.SharePosition = L.Control.extend({
 				inputCrs: "EPSG:4326",
 				reverseAxis: true,
 				selectable: true,
-				popup: 'The FID: ${text_text}',
+				popup: '<p class="lead">${text_text}</p>'+
+					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.dtime_created);return d.toLocaleString();}}</strong></p>',
 				uniqueAttr: null,
 				hoverColor: '#FF0',
 				style: {
