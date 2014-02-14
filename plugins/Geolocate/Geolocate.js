@@ -56,8 +56,10 @@ L.Control.Geolocate = L.Control.extend({
 		};
 		var options = $.extend(defaultOptions, this.options.locateOptions || {});
 		
+		// Bind listeners
 		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
 		this.map.on("locationerror", $.proxy(this._onLocationError, this));
+		this.map.on("dragstart", $.proxy(this._onDragStart, this));
 		
 		this.map.locate(options);
 	},
@@ -69,6 +71,11 @@ L.Control.Geolocate = L.Control.extend({
 		this.active = false;
 		smap.cmd.loading(false);
 		this.btn.removeClass("btn-primary");
+		
+		// Unbind listeners
+		this.map.off("locationfound", this._onLocationFound);
+		this.map.off("locationerror", this._onLocationError);
+		this.map.off("dragstart", this._onDragStart);
 		
 		this.map.stopLocate();
 		if (this.marker) {
@@ -87,8 +94,11 @@ L.Control.Geolocate = L.Control.extend({
 	_onLocationError: function(e) {
 		smap.cmd.loading(false);
 		console.log("Geolocate error: +"+e.message);
-	}
+	},
 	
+	_onDragStart: function() {
+		this.map._locateOptions.setView = false;
+	}
 });
 
 
