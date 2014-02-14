@@ -7,20 +7,20 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			btnShare: "Dela position",
+			btnAdd: "Kvittra",
 			btnUnshare: "Sluta dela position",
 			titleDialog: "Skriv nånting",
 			btnCancel: "Avbryt",
 			btnSubmit: "Skicka",
-			loading: "Hämtar din position..."
+			loading: "Arbetar..."
 		},
 		"en": {
-			btnShare: "Share position",
+			btnAdd: "Twitter",
 			btnUnshare: "Stop sharing position",
 			titleDialog: "Write something",
 			btnCancel: "Cancel",
 			btnSubmit: "Submit",
-			loading: "Loading your position..."
+			loading: "Working..."
 		}
 	},
 	
@@ -45,6 +45,12 @@ L.Control.SharePosition = L.Control.extend({
 		this.$container = $(this._container);
 		
 		this._drawBtn();
+		this._addWfsLayer();
+		
+		var self = this;
+		this.map.on("zoomend moveend", function() {
+			self.layer._refresh();
+		});
 		
 		return this._container;
 	},
@@ -68,20 +74,58 @@ L.Control.SharePosition = L.Control.extend({
 		$(".modal-body .sharepos-footer").before(msg);
 	},
 	
+	_addWfsLayer: function() {
+		this.cluster = new L.MarkerClusterGroup();
+		this.layer = smap.core.layerInst._createLayer({
+			init: "L.GeoJSON.WFS2",
+			url: this.options.wfsSource,
+			options: {
+				layerId: "sharepos-wfstlayer",
+				displayName: "Tweets",
+				featureType: this.options.wfsFeatureType,
+				attribution: "Malmö stads WFS",
+				inputCrs: "EPSG:4326",
+				reverseAxis: true,
+				selectable: true,
+				popup: 'The FID: ${text_text}',
+				uniqueAttr: null,
+				hoverColor: '#FF0',
+				style: {
+					weight: 6,
+					color: '#F00',
+					dashArray: '',
+					fillOpacity: 0.5
+				}
+			}
+		});
+		var self = this;
+		this.layer._map = this.map;
+		this.layer.on("load", function(e) {
+			e.layer.eachLayer(function(marker) {
+				self.cluster.addLayer(marker);
+			});
+			e.layer.clearLayers();
+			self.map.removeLayer(self.cluster);
+			self.map.addLayer(self.cluster);
+			smap.cmd.loading(false);
+		});
+		this.map.addLayer(this.cluster);
+	},
+	
 	_onLocationFound: function(e) {
 		// TODO: Send the position and the tweet to the web service.
 		smap.cmd.loading(false);
 		
 		var dec = 6;
 		
-		this.modal.find('form td[name="easting"]').text( utils.round( e.latlng.lng, dec ));
-		this.modal.find('form td[name="northing"]').text( utils.round( e.latlng.lat, dec ));
-		this.modal.find('form td[name="accuracy"]').text( utils.round( e.accuracy, 1 ) + " m");
-		this.modal.find("table").show();
-		
-		// Enable submit button
-		this.modal.find(".btn-primary").removeAttr("disabled").button('reset');
-//		this._onLocationError();
+		if (this.modal) {
+			this.modal.find('form td[name="easting"]').empty().text( utils.round( e.latlng.lng, dec ));
+			this.modal.find('form td[name="northing"]').empty().text( utils.round( e.latlng.lat, dec ));
+			this.modal.find('form td[name="accuracy"]').empty().text( utils.round( e.accuracy, 1 ) + " m");
+			
+			// Enable submit button
+			this.modal.find(".btn-primary").button('reset');
+		}
 	},
 	
 	_onLocationError: function(e) {
@@ -118,7 +162,7 @@ L.Control.SharePosition = L.Control.extend({
 		this.map.on("locationerror", $.proxy(this._onLocationError, this));
 		
 		this.map.locate({
-			watch: false,
+			watch: true, // TODO: Test with phone
 			setView: true,
 			enableHighAccuracy: true
 		});
@@ -126,7 +170,7 @@ L.Control.SharePosition = L.Control.extend({
 	},
 	
 	unSharePosition: function() {
-		$("#sharepos-btn").button(this.lang.btnShare);
+		$("#sharepos-btn").button(this.lang.btnAdd);
 		
 		// Unbind events
 		this.map.off("locationfound", $.proxy(this._onLocationFound, this));
@@ -137,7 +181,7 @@ L.Control.SharePosition = L.Control.extend({
 		var form = $(
 			'<form id="sharepos-form" role="form">'+
 				'<textarea class="form-control" rows="4" name="text" minlength="5" maxlength="140" required></textarea>'+	
-				'<table style="display:none;">'+
+				'<table>'+
 					'<tr><td>Easting:</td><td name="easting"></td></tr>'+
 					'<tr><td>Northing:</td><td name="northing"></td></tr>'+
 					'<tr style="font-weight:bold;"><td>Felmarginal:</td><td name="accuracy"></td></tr>'+
@@ -159,6 +203,13 @@ L.Control.SharePosition = L.Control.extend({
 			self._save(L.latLng(out.northing, out.easting), out.text);			
 			return false;
 		});
+		
+		// Spin to all td's
+		form.find("tr").each(function() {
+			var td = $(this).find("td:eq(1)");
+			td.text("");
+			self._addSpin( td );
+		});
 				
 		var modal = utils.drawDialog(this.lang.titleDialog, form, null, {
 			size: "sm"
@@ -173,18 +224,29 @@ L.Control.SharePosition = L.Control.extend({
 		modal.modal("show");
 		
 		modal.on("hidden.bs.modal", function() {
+			self.map.stopLocate();
 			self.modal.empty().remove();
 			self.modal = null;
-			$("#sharepos-btn").button(this.lang.btnShare);
+			$("#sharepos-btn").button(this.lang.btnAdd);
 			$("#sharepos-btn").removeClass("btn-primary");
 			delete self.modal;
 		});
 		return modal;
 	},
 	
+	_addSpin: function(tag) {
+		var opts = {
+				length: 5,
+				width: 1,
+				radius: 3
+		};
+		var spinner = new Spinner(opts).spin();
+		$(tag).append(spinner.el);
+	},
+	
 	_drawBtn: function() {
 		var self = this;
-		var btn = $('<button id="sharepos-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-eye-open"></span>  <span>'+this.lang.btnShare+'</span></button>');
+		var btn = $('<button id="sharepos-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-eye-open"></span>  <span>'+this.lang.btnAdd+'</span></button>');
 		btn.on("click", function() {
 			if ( $(this).hasClass("btn-primary") ) {
 				$(this).removeClass("btn-primary");
@@ -227,7 +289,13 @@ L.Control.SharePosition = L.Control.extend({
 	},
 	
 	_save: function(latLng, text) {
+		if (this.submitting) {
+			return false;
+		}
+		this.map.stopLocate();
+		this.submitting = true;
 		smap.cmd.loading(true);
+		this.modal.find(".btn-primary").button('loading');
 		
 		var xml = this._createRequest(latLng, {text: text});
 		
@@ -239,10 +307,14 @@ L.Control.SharePosition = L.Control.extend({
 			contentType: "text/xml",
 			dataType: "text",
 			success: function(resp) {
+				smap.cmd.loading(false);
 				var obj = $.xml2json(resp);
 				if (parseInt(obj.TransactionSummary.totalInserted) > 0) {
 					// success
 					this.deactivate();
+					this._reload();
+//					this.marker = L.marker(latLng, {text: text});
+//					this.cluster.addLayer(this.marker);
 				}
 				
 //				if (resp.success) {
@@ -256,9 +328,11 @@ L.Control.SharePosition = L.Control.extend({
 			},
 			error: function(a, text, c) {
 				this._notify("Kunde inte spara. Fel: <strong>"+text+"</strong>", "error");
+				smap.cmd.loading(false);
 			},
 			complete: function() {
-				smap.cmd.loading(false);
+				this.modal.find(".btn-primary").button('reset');
+				this.submitting = false;
 			}
 		});
 	},
@@ -268,6 +342,9 @@ L.Control.SharePosition = L.Control.extend({
 		// TODO: Refresh features and perhaps open popup of the just added one 
 		
 		callbacks = callbacks || {};
+		
+		smap.cmd.loading(true);
+		this.layer._refresh();
 		
 	}
 });

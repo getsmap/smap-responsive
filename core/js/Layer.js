@@ -111,9 +111,11 @@ smap.core.Layer = L.Class.extend({
 	_setSelectStyle: function(e) {
 		var layer = e.target;
 
-		layer.setStyle(this.options.selectStyle);
+		if (layer.setStyle) {
+			layer.setStyle(this.options.selectStyle);			
+		}
 
-	    if (!L.Browser.ie && !L.Browser.opera) {
+	    if (layer.bringToFront && !L.Browser.ie && !L.Browser.opera) {
 	    	layer.bringToFront();
 	    }
 	},
