@@ -1,6 +1,8 @@
 L.Control.SharePosition = L.Control.extend({
 	options: {
-		position: 'topright' // just an example
+		position: 'topright',
+		wfsSource: "http://localhost:8080/geoserver/wfs",
+		wfsFeatureType: "local:tweets"
 	},
 	
 	_lang: {
@@ -154,7 +156,7 @@ L.Control.SharePosition = L.Control.extend({
 			});
 			out["easting"] = parseFloat( $(this).find('[name="easting"]').text() );
 			out["northing"] = parseFloat( $(this).find('[name="northing"]').text() );
-			self._save(out.text, L.latLng(out.northing, out.easting));			
+			self._save(L.latLng(out.northing, out.easting), out.text);			
 			return false;
 		});
 				
@@ -197,23 +199,60 @@ L.Control.SharePosition = L.Control.extend({
 	},
 	
 	
-	_save: function(text, latLng) {
+	_createRequest: function(latLng, props) {
+		
+		var xml = '<wfs:Transaction\n'
+			  + '  service="WFS"\n'
+			  + '  version="1.1.0"\n'
+			  + '  xmlns:grp="http://localhost/"\n'
+			  + '  xmlns:wfs="http://www.opengis.net/wfs"\n'
+			  + '  xmlns:gml="http://www.opengis.net/gml"\n'
+			  + '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
+			  + '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
+			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
+			  + '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
+			  + '  <wfs:Insert>\n'
+			  + '    <grp:tweets>\n'
+			  + '      <grp:text_text>' + props.text + '</grp:text_text>\n'
+			  + '      <grp:the_geom>\n'
+			  + '        <gml:Point srsDimension="2" srsName="urn:x-ogc:def:crs:EPSG:4326">\n'
+			  + '          <gml:coordinates decimal="." cs="," ts=" ">' + latLng.lat + ',' + latLng.lng + '</gml:coordinates>\n'
+			  + '        </gml:Point>\n'
+			  + '      </grp:the_geom>\n'
+			  + '    </grp:tweets>\n'
+			  + '  </wfs:Insert>\n'
+			  + '</wfs:Transaction>';
+		
+		return xml;
+	},
+	
+	_save: function(latLng, text) {
 		smap.cmd.loading(true);
 		
+		var xml = this._createRequest(latLng, {text: text});
+		
 		$.ajax({
-			url: smap.config.ws.sharePosStore,
+			url: smap.config.ws.proxy + encodeURIComponent( this.options.wfsSource ),
 			type: "POST",
 			context: this,
-			dataType: "json",
+			data: xml,
+			contentType: "text/xml",
+			dataType: "text",
 			success: function(resp) {
-				if (resp.success) {
-					this._notify("Din text är sparad!", "success");
+				var obj = $.xml2json(resp);
+				if (parseInt(obj.TransactionSummary.totalInserted) > 0) {
+					// success
 					this.deactivate();
-					this._reload();
 				}
-				else {
-					this._notify("Kunde inte spara. Fel: <strong>"+resp.msg+"</strong>", "error");
-				}
+				
+//				if (resp.success) {
+//					this._notify("Din text är sparad!", "success");
+//					this.deactivate();
+//					this._reload();
+//				}
+//				else {
+//					this._notify("Kunde inte spara. Fel: <strong>"+resp.msg+"</strong>", "error");
+//				}
 			},
 			error: function(a, text, c) {
 				this._notify("Kunde inte spara. Fel: <strong>"+text+"</strong>", "error");
