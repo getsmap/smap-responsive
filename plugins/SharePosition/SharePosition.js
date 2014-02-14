@@ -7,7 +7,7 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			btnAdd: "Kvittra",
+			btnAdd: "Lägg till",
 			btnUnshare: "Sluta dela position",
 			titleDialog: "Skriv nånting",
 			btnCancel: "Avbryt",
@@ -15,7 +15,7 @@ L.Control.SharePosition = L.Control.extend({
 			loading: "Arbetar..."
 		},
 		"en": {
-			btnAdd: "Twitter",
+			btnAdd: "Add twitter",
 			btnUnshare: "Stop sharing position",
 			titleDialog: "Write something",
 			btnCancel: "Cancel",
@@ -247,7 +247,7 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_drawBtn: function() {
 		var self = this;
-		var btn = $('<button id="sharepos-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-eye-open"></span>  <span>'+this.lang.btnAdd+'</span></button>');
+		var btn = $('<button id="sharepos-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;&nbsp;<span>'+this.lang.btnAdd+'</span></button>');
 		btn.on("click", function() {
 			if ( $(this).hasClass("btn-primary") ) {
 				$(this).removeClass("btn-primary");
