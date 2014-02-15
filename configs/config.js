@@ -138,6 +138,54 @@ var config = {
 				displayName: "OSM",
 			}
 		},
+
+	 	{
+			init: "L.TileLayer",
+			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
+			options: {
+				layerId: "malmotile",
+				displayName: "Malmö karta",
+				attribution: "© Malmö Stadsbyggnadskontor",
+				minZoom: 6,
+				maxZoom: 18,
+				tms: true
+			}
+		},
+
+
+		
+		{
+			init: "L.TileLayer.WMS",
+			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
+			options: {
+				layerId: "wms-op",
+				displayName: "WMS-op",
+				layers: "malmows:smap-mobile-bakgrundskarta",
+				format: 'image/jpeg',
+				subdomains: ["xyz"],
+				transparent: true,
+				minZoom: 6,
+				maxZoom: 18,
+				tiled: true
+			}
+		},		
+
+		
+		{
+			init: "L.TileLayer.WMS",
+			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
+			options: {
+				layerId: "wms-topo",
+				displayName: "WMS-Topo (OBS! endast för test)",
+				layers: "malmows:smap-mobile-bakgrundskarta-topo",
+				format: 'image/jpeg',
+				subdomains: ["xyz"],
+				transparent: true,
+				minZoom: 6,
+				maxZoom: 18,
+				tiled: true
+			}
+		},
 		{
 			init: "L.TileLayer.WMS",
 			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/
@@ -192,6 +240,10 @@ var config = {
 		           },
 		           {
 		        	   init: "L.Control.SharePosition",
+		        	   options: {}
+		           },
+		           {
+		        	   init: "L.Control.Search",
 		        	   options: {}
 		           }
        ]
