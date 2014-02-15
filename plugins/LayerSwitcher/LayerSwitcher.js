@@ -1,5 +1,7 @@
 L.Control.LayerSwitcher = L.Control.extend({
-	options: {},
+	options: {
+		pxDesktop: 992
+	},
 	
 	_lang: {
 		"sv": {
@@ -91,16 +93,43 @@ L.Control.LayerSwitcher = L.Control.extend({
 	_bindEvents: function() {
 		var self = this;
 		
+		
+		
+		
+		
 		$("#mapdiv").on("touchstart click", $.proxy(function() {
-			this.hidePanel();
-			return false;
+			if ( $(window).width() < this.options.pxDesktop) {
+				this.hidePanel();
+				return false;
+			}
 		}, this));
 		
 		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
-
+		
+		var showPanel = $.proxy(this.showPanel, this),
+			hidePanel = $.proxy(this.hidePanel, this);
+		
+		var wasMobile = $("#lswitch-btn").is("visible")
+		$(window).on("resize", $.proxy(function() {
+			var isMobile = ( $(window).width() < this.options.pxDesktop );
+			var changed = wasMobile !== undefined && (wasMobile !== isMobile);
+			wasMobile = isMobile;
+			
+			if (changed) {
+				if (isMobile === false) {
+					showPanel();
+//					setTimeout(showPanel, 10);
+				}
+				else {
+					hidePanel();
+//					setTimeout(hidePanel, 10);
+				}
+			}
+		}, this));
+		
 		$(window).on("orientationchange", function() {
 			if (self.$panel.is(":visible")) {
-				self.showPanel();
+				showPanel();
 				window.scrollTo(0,0);
 			}
 		});
@@ -148,6 +177,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			"margin-left": this.$panel.outerWidth() + "px"
 		});
 		$("#lswitch-btn").hide();
+		console.log("show panel");
 	},
 	
 	hidePanel: function() {
@@ -159,6 +189,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		setTimeout($.proxy(function() {
 			this.$panel.hide();
 		}, this), 300);
+		console.log("hide panel");
 	},
 	
 	_setBaseLayer: function(layerId) {
