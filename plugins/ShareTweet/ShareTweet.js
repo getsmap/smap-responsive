@@ -15,7 +15,7 @@ L.Control.ShareTweet = L.Control.extend({
 			loading: "Arbetar..."
 		},
 		"en": {
-			btnAdd: "Add twitter",
+			btnAdd: "Add tweet",
 			btnUnshare: "Stop sharing position",
 			titleDialog: "Write something",
 			btnCancel: "Cancel",
