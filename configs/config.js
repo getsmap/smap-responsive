@@ -4,15 +4,15 @@ var config = {
 		ws: {
 			"localhost": {
 				proxy: "http://localhost/cgi-bin/proxy.py?url=",
-				sharePosStore: "http://localhost/cgi-bin/smap-mobile/"
+				sharePosStoreFetch: "http://localhost/cgi-bin/smap-mobile/"
 			},
 			"xyz.malmo.se": {
 				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url=",
-				sharePosStore: "http://localhost/cgi-bin/smap-mobile/"
+				sharePosStoreFetch: "http://localhost/cgi-bin/smap-mobile/"
 			},
 			"91.123.201.52": {
 				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url=",
-				sharePosStore: "http://localhost/cgi-bin/smap-mobile/"
+				sharePosStoreFetch: "http://localhost/cgi-bin/smap-mobile/"
 			}
 		},
 		
@@ -188,6 +188,10 @@ var config = {
 		           },
 		           {
 		        	   init: "L.Control.ShareTweet",
+		        	   options: {}
+		           },
+		           {
+		        	   init: "L.Control.SharePosition",
 		        	   options: {}
 		           }
        ]

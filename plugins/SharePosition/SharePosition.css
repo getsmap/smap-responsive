@@ -1,0 +1,22 @@
+
+#sharepos-gui {
+	position: relative;
+	z-index: 1001;
+	width: 330px;
+	float: left;
+	margin-right: 25px;
+	
+}
+#sharepos-gui input {
+	-webkit-transition: width .2s;
+	-moz-transition: width .2s;
+	-o-transition: width .2s;
+	transition: width .2s;
+}
+
+#sharepos-gui .active input {
+}
+
+
+#sharepos-gui .input-group {
+}

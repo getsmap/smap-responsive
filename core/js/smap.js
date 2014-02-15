@@ -5,6 +5,6 @@ var smap = {
 		
 //		modules: {},
 		
-		copyright: "© 2014 Malmš stad, Kristianstad kommun, Helsingborg stad, Lunds kommun"
+		copyright: "Â© 2014 MalmÃ¶ stad, Kristianstad kommun, Helsingborg stad, Lunds kommun"
 		
 };

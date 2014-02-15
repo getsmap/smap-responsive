@@ -47,8 +47,7 @@ L.Control.Template = L.Control.extend({
 });
 
 
-// Do something when the map initializes (example taken from Leaflet attribution control)
-
+// Do something when the map initializes
 //L.Map.addInitHook(function () {
 //	if (this.options.attributionControl) {
 //		this.attributionControl = (new L.Control.Template()).addTo(this);

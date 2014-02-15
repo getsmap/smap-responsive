@@ -48,7 +48,6 @@ smap.core.Init = L.Class.extend({
 		smap.map = null;
 		delete smap.map;
 		
-		
 		window.config = null;
 		delete window.config;
 		smap.config = null;
@@ -137,6 +136,7 @@ smap.core.Init = L.Class.extend({
 				}
 			}
 		}
+		smap.event.trigger("smap.core.pluginsadded");
 		for (var i=0,len=autoActivates.length; i<len; i++) {
 			autoActivates[i].activate();
 		}
