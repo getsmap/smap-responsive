@@ -187,7 +187,7 @@ var config = {
 		        	   }
 		           },
 		           {
-		        	   init: "L.Control.SharePosition",
+		        	   init: "L.Control.ShareTweet",
 		        	   options: {}
 		           }
        ]

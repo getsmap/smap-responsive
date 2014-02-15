@@ -1,4 +1,4 @@
-L.Control.SharePosition = L.Control.extend({
+L.Control.ShareTweet = L.Control.extend({
 	options: {
 		position: 'topright',
 		wfsSource: "http://localhost:8080/geoserver/wfs",
@@ -39,7 +39,7 @@ L.Control.SharePosition = L.Control.extend({
 	onAdd: function(map) {
 		this.map = map;
 		
-		this._container = L.DomUtil.create('div', 'leaflet-control-shareposition'); // second parameter is class name
+		this._container = L.DomUtil.create('div', 'leaflet-control-sharetweet'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		
 		this.$container = $(this._container);
@@ -71,7 +71,7 @@ L.Control.SharePosition = L.Control.extend({
 			"margin-top": "20px"
 		});
 		$(".modal-body").find(".alert").remove();
-		$(".modal-body .sharepos-footer").before(msg);
+		$(".modal-body .sharetweet-footer").before(msg);
 	},
 	
 	_addWfsLayer: function() {
@@ -80,7 +80,7 @@ L.Control.SharePosition = L.Control.extend({
 			init: "L.GeoJSON.WFS2",
 			url: this.options.wfsSource,
 			options: {
-				layerId: "sharepos-wfstlayer",
+				layerId: "sharetweet-wfstlayer",
 				displayName: "Tweets",
 				featureType: this.options.wfsFeatureType,
 				attribution: "Malmö stads WFS",
@@ -144,8 +144,8 @@ L.Control.SharePosition = L.Control.extend({
 		}			
 	},
 	
-	sharePosition: function() {
-		$("#sharepos-btn").button(this.lang.btnUnshare);
+	shareTweet: function() {
+		$("#sharetweet-btn").button(this.lang.btnUnshare);
 		
 		smap.cmd.loading(true);
 		
@@ -170,8 +170,8 @@ L.Control.SharePosition = L.Control.extend({
 		smap.cmd.loading(false); // Don't show loading indicator
 	},
 	
-	unSharePosition: function() {
-		$("#sharepos-btn").button(this.lang.btnAdd);
+	unShareTweet: function() {
+		$("#sharetweet-btn").button(this.lang.btnAdd);
 		
 		// Unbind events
 		this.map.off("locationfound", $.proxy(this._onLocationFound, this));
@@ -180,14 +180,14 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_showDialog: function() {
 		var form = $(
-			'<form id="sharepos-form" role="form">'+
+			'<form id="sharetweet-form" role="form">'+
 				'<textarea class="form-control" rows="4" name="text" minlength="5" maxlength="140" required></textarea>'+	
 				'<table>'+
 					'<tr><td>Easting:</td><td name="easting"></td></tr>'+
 					'<tr><td>Northing:</td><td name="northing"></td></tr>'+
 					'<tr style="font-weight:bold;"><td>Felmarginal:</td><td name="accuracy"></td></tr>'+
 				'</table>'+
-				'<div class="row sharepos-footer">'+
+				'<div class="row sharetweet-footer">'+
 					'<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.btnCancel+'</button>'+
 					'<button type="submit" class="btn btn-primary" data-loading-text="'+this.lang.loading+'">'+this.lang.btnSubmit+'</button>'+
 				'</div>'+
@@ -228,8 +228,8 @@ L.Control.SharePosition = L.Control.extend({
 			self.map.stopLocate();
 			self.modal.empty().remove();
 			self.modal = null;
-			$("#sharepos-btn").button(this.lang.btnAdd);
-			$("#sharepos-btn").removeClass("btn-primary");
+			$("#sharetweet-btn").button(this.lang.btnAdd);
+			$("#sharetweet-btn").removeClass("btn-primary");
 			delete self.modal;
 		});
 		return modal;
@@ -247,15 +247,15 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_drawBtn: function() {
 		var self = this;
-		var btn = $('<button id="sharepos-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;&nbsp;<span>'+this.lang.btnAdd+'</span></button>');
+		var btn = $('<button id="sharetweet-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;&nbsp;<span>'+this.lang.btnAdd+'</span></button>');
 		btn.on("click", function() {
 			if ( $(this).hasClass("btn-primary") ) {
 				$(this).removeClass("btn-primary");
-				self.unSharePosition();
+				self.unShareTweet();
 			}
 			else {
 				$(this).addClass("btn-primary");
-				self.sharePosition();
+				self.shareTweet();
 			}
 		});
 		this.$container.append(btn);
@@ -355,7 +355,7 @@ L.Control.SharePosition = L.Control.extend({
 
 //L.Map.addInitHook(function () {
 //	if (this.options.attributionControl) {
-//		this.attributionControl = (new L.Control.SharePosition()).addTo(this);
+//		this.attributionControl = (new L.Control.ShareTweet()).addTo(this);
 //	}
 //});
 
@@ -365,6 +365,6 @@ L.Control.SharePosition = L.Control.extend({
  * using "new" when instantiating the class. It
  * is a Leaflet convention and should be there.
  */
-L.control.sharePosition = function(options) {
-	return new L.Control.SharePosition(options);
+L.control.shareTweet = function(options) {
+	return new L.Control.ShareTweet(options);
 };

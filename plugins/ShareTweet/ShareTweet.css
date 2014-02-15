@@ -1,29 +1,29 @@
-#sharepos-btn {
+#sharetweet-btn {
 	-webkit-transition: width .2s ease-in-out;
 	-moz-transition: width .2s ease-in-out;
 	-o-transition: width .2s ease-in-out;
 	transition: width .2s ease-in-out;
 	width: 180px;
 }
-#sharepos-btn.btn-primary {
+#sharetweet-btn.btn-primary {
 	width: 230px;
 }
 
-#sharepos-form table {
+#sharetweet-form table {
 	margin-top: 20px;
 }
 
-#sharepos-form td {
+#sharetweet-form td {
 	padding: 2px 20px 2px 0;
 }
 
-.sharepos-footer {
+.sharetweet-footer {
 	width: 100%;
 	text-align: right;
 	margin: 0;
 	margin-top: 20px;
 }
 
-#sharepos-form .btn-primary {
+#sharetweet-form .btn-primary {
 	margin-left: 10px;
 }
