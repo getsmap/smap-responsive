@@ -3,7 +3,7 @@ L.Control.SharePosition = L.Control.extend({
 		position: 'bottomright', // just an example
 		autoActivate: false,
 		wfsSource: "http://localhost:8080/geoserver/wfs",
-		wfsFeatureType: "local:shared_positions"
+		wfsFeatureType: "local:sharedpositions"
 	},
 	
 	_lang: {
@@ -44,6 +44,8 @@ L.Control.SharePosition = L.Control.extend({
 	onRemove: function(map) {
 		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
 		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+		
+		map.stopLocate();
 	},
 	
 	_drawGui: function() {
@@ -65,8 +67,8 @@ L.Control.SharePosition = L.Control.extend({
 			init: "L.GeoJSON.WFS2",
 			url: this.options.wfsSource,
 			options: {
-				layerId: "sharetweet-wfstlayer",
-				displayName: "Tweets",
+				layerId: "shareposition",
+				displayName: "Shared locations",
 				featureType: this.options.wfsFeatureType,
 				attribution: "Malmö stads WFS",
 				inputCrs: "EPSG:4326",
@@ -85,6 +87,18 @@ L.Control.SharePosition = L.Control.extend({
 			}
 		});
 		this.map.addLayer(this.layer);
+		var self = this;
+		
+		// Fetch id (type serial) so we can update the row later
+//		this.layer.on("load", function() {
+//			self.layer.eachLayer(function(marker) {
+//				if (marker.feature.properties.text_username === self.uName) {
+//					self.uid = marker.feature.properties.id;
+//					return true;
+//				}
+//			});
+//		});
+		
 	},
 	
 	_bindEvents: function() {
@@ -119,14 +133,15 @@ L.Control.SharePosition = L.Control.extend({
 				$(this).text("Sharing...");
 				$("#sharepos-gui input").prop("readonly", true);
 				
-				this._addLayer();
+				self._addLayer();
 			}
 			else {
+				self._stopShare();
 				$(this).tooltip("destroy");
 				$(this).text("Share!");
 				$("#sharepos-gui input").prop("readonly", false);
 				
-				this.map.removeLayer(this.layer);
+				self.map.removeLayer(self.layer);
 			}
 		});
 	},
@@ -139,6 +154,18 @@ L.Control.SharePosition = L.Control.extend({
 	_onLocationError: function(e) {
 		smap.cmd.loading(false);
 		console.log("Geolocate error: +"+e.message);
+//		this._setLocateSettings();
+	},
+	
+	_setLocateSettings: function() {
+		var options = {
+				watch: true,
+				timeout: 30000,
+				enableHighAccuracy: true,
+				frequency: 3000
+		};
+		$.extend(this.map._locateOptions, options);
+		
 	},
 	
 	_startShare: function(uName) {
@@ -148,13 +175,14 @@ L.Control.SharePosition = L.Control.extend({
 		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
 		this.map.on("locationerror", $.proxy(this._onLocationError, this));
 		
-		this.storeAndFetchInterval = setInterval($.proxy(this._storeAndFetch, this), 5000);
+		this._storeAndFetchInterval = setInterval($.proxy(this._storeAndFetch, this), 5000);
+		this._setLocateSettings();
 	},
 	
 	_stopShare: function() {
 		smap.cmd.loading(false);
 		
-		clearInterval(this.storeAndFetchInterval);
+		clearInterval(this._storeAndFetchInterval);
 		
 		this.map.off("locationfound", this._onLocationFound, this);
 		this.map.off("locationerror", this._onLocationError, this);
@@ -163,63 +191,101 @@ L.Control.SharePosition = L.Control.extend({
 		this.uName = null;
 	},
 	
+	uid: null,
+	
 	_storeAndFetch: function() {
+		if (this._working || !this._location) {
+			return false;
+		}
+		this._working = true;
 		$.ajax({
 			url: smap.config.ws.proxy + encodeURIComponent( this.options.wfsSource ),
 			type: "POST",
 			context: this,
-			data: this._getXml(),
+			data: this._getXml(this._location.latlng, this._location.accuracy, this.uName, this.uid),
 			contentType: "text/xml",
 			dataType: "text",
 			success: function(resp) {
 				var obj = $.xml2json(resp);
-				if (parseInt(obj.TransactionSummary.totalInserted) > 0) {
-					
+				if (obj && obj.TransactionSummary && parseInt(obj.TransactionSummary.totalInserted) > 0) {
+					this.uid = parseInt(obj.InsertResults.Feature.FeatureId.fid.split(".")[1]);
 				}
 				this.layer._refresh(true);
+			},
+			complete: function() {
+				this._working = false;
 			}
 		});
 		
 	},
 	
-	_getXml: function(oldId) {
-		var deleteXml = "";
+	_getXml: function(latLng, accuracy, uName, oldId) {
+		var xml = "";
 		if (oldId) {
-			deleteXml = '<wfs:Delete typeName="grp:shared_positions">\n'
-			  + '    <ogc:Filter>\n'
-			  + '      <PropertyIsEqualTo>\n'
-			  + '        <PropertyName>id</PropertyName>\n'
-			  + '        <Literal>'+oldId+'</Literal>\n'
-			  + '      </PropertyIsEqualTo>\n'
-			  + '    </ogc:Filter>\n'
-			  + '  </wfs:Delete>\n';
-		}
-
-		var xml = '<wfs:Transaction\n'
+//			deleteXml = '<wfs:Delete typeName="grp:sharedpositions">\n'
+//			  + '    <ogc:Filter>\n'
+//			  + '      <PropertyIsEqualTo>\n'
+//			  + '        <PropertyName>id</PropertyName>\n'
+//			  + '        <Literal>'+oldId+'</Literal>\n'
+//			  + '      </PropertyIsEqualTo>\n'
+//			  + '    </ogc:Filter>\n'
+//			  + '  </wfs:Delete>\n';
+			
+			xml = '<wfs:Transaction\n'
 			  + '  service="WFS"\n'
 			  + '  version="1.1.0"\n'
 			  + '  xmlns:grp="http://localhost/"\n'
 			  + '  xmlns:wfs="http://www.opengis.net/wfs"\n'
+			  + '  xmlns:ogc="http://www.opengis.net/ogc"\n'
 			  + '  xmlns:gml="http://www.opengis.net/gml"\n'
 			  + '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
 			  + '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
-			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
-			  + '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
-			  + '  <wfs:Insert>\n'
-			  + '    <grp:shared_positions>\n'
-			  + '      <grp:text_text>' + props.text + '</grp:text_text>\n'
-			  + '      <grp:the_geom>\n'
+			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd">\n'
+			  + '  <wfs:Update typeName="grp:sharedpositions">\n'
+			  + '    <grp:text_username>' + uName + '</grp:text_username>\n'
+			  + '      <grp:int_accuracy>' + accuracy + '</grp:int_accuracy>\n'			  
+			  + '    <wfs:Property>\n'
+			  + '      <wfs:Name>the_geom</wfs:Name>\n'
+			  + '      <wfs:Value>\n'
 			  + '        <gml:Point srsDimension="2" srsName="urn:x-ogc:def:crs:EPSG:4326">\n'
 			  + '          <gml:coordinates decimal="." cs="," ts=" ">' + latLng.lat + ',' + latLng.lng + '</gml:coordinates>\n'
 			  + '        </gml:Point>\n'
-			  + '      </grp:the_geom>\n'
-			  + '    </grp:shared_positions>\n'
-			  + '  </wfs:Insert>\n'
-			  
-			  +		deleteXml
-			  
-			  + '  </wfs:Transaction>';
-		
+			  + '      </wfs:Value>\n'
+			  + '    </wfs:Property>\n'
+			  + '    <ogc:Filter>\n'
+			  + '      <PropertyIsEqualTo>\n'
+			  + '        <PropertyName>id</PropertyName>\n'
+			  + '        <Literal>' + oldId + '</Literal>\n'
+			  + '      </PropertyIsEqualTo>\n'
+			  + '    </ogc:Filter>\n'
+			  + '  </wfs:Update>\n'
+			  + '</wfs:Transaction>';
+		}
+		else {
+			xml = '<wfs:Transaction\n'
+				+ '  service="WFS"\n'
+				+ '  version="1.1.0"\n'
+				+ '  xmlns:grp="http://localhost/"\n'
+				+ '  xmlns:wfs="http://www.opengis.net/wfs"\n'
+				+ '  xmlns:gml="http://www.opengis.net/gml"\n'
+				+ '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
+				+ '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
+				+ '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
+				+ '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
+				+ '  <wfs:Insert>\n'
+				+ '    <grp:sharedpositions>\n'
+				+ '      <grp:text_username>' + uName + '</grp:text_username>\n'
+				+ '      <grp:int_accuracy>' + accuracy + '</grp:int_accuracy>\n'
+//			  + '      <grp:dtime_created></grp:dtime_created>\n'
+				+ '      <grp:the_geom>\n'
+				+ '        <gml:Point srsDimension="2" srsName="urn:x-ogc:def:crs:EPSG:4326">\n'
+				+ '          <gml:coordinates decimal="." cs="," ts=" ">' + latLng.lat + ',' + latLng.lng + '</gml:coordinates>\n'
+				+ '        </gml:Point>\n'
+				+ '      </grp:the_geom>\n'
+				+ '    </grp:sharedpositions>\n'
+				+ '  </wfs:Insert>\n'
+				+ '  </wfs:Transaction>';
+		}
 		return xml;
 	}
 	

@@ -109,23 +109,21 @@ L.Control.LayerSwitcher = L.Control.extend({
 		var showPanel = $.proxy(this.showPanel, this),
 			hidePanel = $.proxy(this.hidePanel, this);
 		
-		var wasMobile = $("#lswitch-btn").is("visible")
-		$(window).on("resize", $.proxy(function() {
-			var isMobile = ( $(window).width() < this.options.pxDesktop );
-			var changed = wasMobile !== undefined && (wasMobile !== isMobile);
-			wasMobile = isMobile;
-			
-			if (changed) {
-				if (isMobile === false) {
-					showPanel();
-//					setTimeout(showPanel, 10);
-				}
-				else {
-					hidePanel();
-//					setTimeout(hidePanel, 10);
-				}
-			}
-		}, this));
+//		var wasMobile = $("#lswitch-btn").is("visible")
+//		$(window).on("resize", $.proxy(function() {
+//			var isMobile = ( $(window).width() < this.options.pxDesktop );
+//			var changed = wasMobile !== undefined && (wasMobile !== isMobile);
+//			wasMobile = isMobile;
+//			
+//			if (changed) {
+//				if (isMobile === false) {
+//					showPanel();
+//				}
+//				else {
+//					hidePanel();
+//				}
+//			}
+//		}, this));
 		
 		$(window).on("orientationchange", function() {
 			if (self.$panel.is(":visible")) {
