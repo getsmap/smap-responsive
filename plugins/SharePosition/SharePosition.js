@@ -75,7 +75,7 @@ L.Control.SharePosition = L.Control.extend({
 				reverseAxis: true,
 				selectable: true,
 				popup: '<p class="lead">${text_text}</p>'+
-					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.dtime_created);return d.toLocaleString();}}</strong></p>',
+					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.dtime_updated);return d.toLocaleString();}}</strong></p>',
 				uniqueAttr: null,
 				hoverColor: '#FF0',
 				style: {
@@ -243,7 +243,8 @@ L.Control.SharePosition = L.Control.extend({
 			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd">\n'
 			  + '  <wfs:Update typeName="grp:sharedpositions">\n'
 			  + '    <grp:text_username>' + uName + '</grp:text_username>\n'
-			  + '      <grp:int_accuracy>' + accuracy + '</grp:int_accuracy>\n'			  
+			  + '    <grp:int_accuracy>' + accuracy + '</grp:int_accuracy>\n'
+//			  + '    <grp:dtime_updated></grp:dtime_updated>\n'
 			  + '    <wfs:Property>\n'
 			  + '      <wfs:Name>the_geom</wfs:Name>\n'
 			  + '      <wfs:Value>\n'
@@ -274,14 +275,14 @@ L.Control.SharePosition = L.Control.extend({
 				+ '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
 				+ '  <wfs:Insert>\n'
 				+ '    <grp:sharedpositions>\n'
-				+ '      <grp:text_username>' + uName + '</grp:text_username>\n'
-				+ '      <grp:int_accuracy>' + accuracy + '</grp:int_accuracy>\n'
-//			  + '      <grp:dtime_created></grp:dtime_created>\n'
 				+ '      <grp:the_geom>\n'
 				+ '        <gml:Point srsDimension="2" srsName="urn:x-ogc:def:crs:EPSG:4326">\n'
 				+ '          <gml:coordinates decimal="." cs="," ts=" ">' + latLng.lat + ',' + latLng.lng + '</gml:coordinates>\n'
 				+ '        </gml:Point>\n'
 				+ '      </grp:the_geom>\n'
+				+ '      <grp:int_accuracy>' + accuracy + '</grp:int_accuracy>\n'
+				+ '      <grp:text_username>' + uName + '</grp:text_username>\n'
+//				+ '      <grp:dtime_updated>null</grp:dtime_updated>\n'
 				+ '    </grp:sharedpositions>\n'
 				+ '  </wfs:Insert>\n'
 				+ '  </wfs:Transaction>';
