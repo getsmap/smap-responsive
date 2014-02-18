@@ -49,19 +49,14 @@ L.Control.Geolocate = L.Control.extend({
 		this.btn.addClass("btn-primary");
 		smap.cmd.loading(true);
 		
-		var defaultOptions = {
-				watch: true,
-				setView: true,
-				enableHighAccuracy: false
-		};
-		var options = $.extend(defaultOptions, this.options.locateOptions || {});
+		
 		
 		// Bind listeners
 		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
 		this.map.on("locationerror", $.proxy(this._onLocationError, this));
 		this.map.on("dragstart", $.proxy(this._onDragStart, this));
 		
-		this.map.locate(options);
+		this._startLocate(this.options.locateOptions);
 	},
 	
 	deactivate: function() {
@@ -77,11 +72,27 @@ L.Control.Geolocate = L.Control.extend({
 		this.map.off("locationerror", this._onLocationError);
 		this.map.off("dragstart", this._onDragStart);
 		
-		this.map.stopLocate();
+		this._stopLocate();
+		
 		if (this.marker) {
 			this.map.removeLayer(this.marker);
 			this.marker = null;
 		}
+	},
+	
+	_startLocate: function(options) {
+		options = options || {};
+		var defaultOptions = {
+				watch: true,
+				setView: true,
+				enableHighAccuracy: false
+		};
+		options = $.extend(defaultOptions, options);
+		this.map.locate(options);
+	},
+	
+	_stopLocate: function() {
+		this.map.stopLocate();
 	},
 	
 	_onLocationFound: function(e) {
@@ -89,6 +100,7 @@ L.Control.Geolocate = L.Control.extend({
 		this.marker = this.marker || L.userMarker(e.latlng, {pulsing:true}).addTo(this.map);
 		this.marker.setLatLng(e.latlng);
 		this.marker.setAccuracy(e.accuracy);
+		console.log("found location");
 	},
 	
 	_onLocationError: function(e) {
@@ -97,7 +109,12 @@ L.Control.Geolocate = L.Control.extend({
 	},
 	
 	_onDragStart: function() {
-		this.map._locateOptions.setView = false;
+		// Stop setting the view (requires "restart")
+		this._stopLocate();
+		this._startLocate({
+			setView: false
+		});
+		
 	}
 });
 
