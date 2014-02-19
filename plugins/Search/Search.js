@@ -33,7 +33,7 @@ L.Control.Search = L.Control.extend({
 	},
 
 	_makeSearchField: function() {
-		var field = $('<input id="smap-search-field" class="typeahead" data-provide="typeahead" type="text" value="Sök" />');
+		var field = $('<input id="smap-search-field" class="typeahead" data-provide="typeahead" style="text-transform: uppercase" type="text" value="Sök" />');
 		this.$container.append(field);
 		var self = this;
 

@@ -1,3 +1,20 @@
 #smap-control-search{
 	margin-right: 40px;
 }
+
+.tt-dataset-0 .tt-suggestions{
+	background-color: #fafafa !important;
+	text-decoration: none;
+	display: block;
+	padding: 2px .4em;
+	line-height: 1.5;
+	min-height: 0;
+	support: IE7;
+	font-weight: normal;
+	border: 1px solid #aaaaaa/*{borderColorContent}*/;
+	color: #222222/*{fcContent}*/;
+}
+
+.tt-dataset-0 .tt-suggestions p{
+	font-size: 10px;
+}
