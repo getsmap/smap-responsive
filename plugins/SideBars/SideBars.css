@@ -1,0 +1,8 @@
+.lorem {
+    font-style: italic;
+    color: #AAA;
+}
+
+.leaflet-sidebar  .leaflet-control {
+	background-color: rgba(255,255,255,0.8);
+}
