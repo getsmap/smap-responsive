@@ -41,14 +41,12 @@ L.Control.Search = L.Control.extend({
 			if ($(this).val() == self.options.dummyTxt) {
 				$(this).val("");
 			}
-		
+    		$(this).select();
 		}).on("focusout", function(){
 			if ($(this).val()=="") {
 				$(this).val(self.options.dummyTxt);
 			}
 		});
-
-  
 
 	var adresser = new Bloodhound({
     	datumTokenizer: function (d) { return Bloodhound.tokenizers.whitespace(d.value); },
