@@ -89,9 +89,13 @@ L.Control.Search = L.Control.extend({
 					var src = proj4.defs["EPSG:3008"];
 					var dest = proj4.defs["EPSG:4326"];			
 					p = proj4(src,dest,p);
-					var addressMarker = L.marker([p.y, p.x]).bindPopup("<button id=lala>Delete</button>");
-					//var addressMarker = L.Control.SideBars.createMarker([p.y, p.x]);
+					
+					var content = $("<button id=search-marker>Ta bort markör</button>").click(function() {
+    					self._rmAdressMarker(self.addressMarker);
+					})[0];
 
+					var addressMarker = L.marker([p.y, p.x]).bindPopup(content);
+					//var addressMarker = L.Control.SideBars.createMarker([p.y, p.x]);
 					addressMarker.addTo(self.map);
 					
 					self.addressMarker = addressMarker;
