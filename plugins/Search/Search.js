@@ -73,7 +73,8 @@ L.Control.Search = L.Control.extend({
 	// instantiate the typeahead UI
 	field.typeahead(null, {
 		minLength:2,
-		hint : false,
+		highlight: true,
+		hint: false,
 	    displayKey: 'value',
 	    template: '<p>{{value}} ({{country_code}})</p>',
 	    source: adresser.ttAdapter()
@@ -88,15 +89,11 @@ L.Control.Search = L.Control.extend({
 					var src = proj4.defs["EPSG:3008"];
 					var dest = proj4.defs["EPSG:4326"];			
 					p = proj4(src,dest,p);
-					var addressMarker = L.marker([p.y, p.x]).bindPopup("<button id=lala>Delete</button>");;
-					
+					var addressMarker = L.marker([p.y, p.x]).bindPopup("<button id=lala>Delete</button>");
+					//var addressMarker = L.Control.SideBars.createMarker([p.y, p.x]);
+
 					addressMarker.addTo(self.map);
 					
-					
-					$("#lala").click(function(){
-						alert("");
-					});
-				
 					self.addressMarker = addressMarker;
 				}
 			});

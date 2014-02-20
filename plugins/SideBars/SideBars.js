@@ -71,9 +71,10 @@ L.Control.SideBars = L.Control.extend({
 //		});
 	},
 	
-	createMarker: function(){
+	createMarker: function(coords){
 		var self = this;
-		var marker = L.marker([56.04422, 12.75044]);
+		var coords = arguments.length ? coords : [56.04422, 12.75044];
+		var marker = L.marker( [coords[0], coords[1] ]);
 				
 		marker.addTo(self.map).on('click', function (evt) {
 			self.sidebar.toggle();
