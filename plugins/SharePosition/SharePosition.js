@@ -63,6 +63,7 @@ L.Control.SharePosition = L.Control.extend({
 	},
 	
 	_addLayer: function() {
+		var self = this;
 		this.layer = smap.core.layerInst._createLayer({
 			init: "L.GeoJSON.WFS2",
 			url: this.options.wfsSource,
@@ -77,27 +78,32 @@ L.Control.SharePosition = L.Control.extend({
 				popup: '<p class="lead">${text_text}</p>'+
 					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.dtime_updated);return d.toLocaleString();}}</strong></p>',
 				uniqueAttr: null,
-				hoverColor: '#FF0',
-				style: {
-					weight: 6,
-					color: '#F00',
-					dashArray: '',
-					fillOpacity: 0.5
-				}
+				hoverColor: '#FF0'
+//				style: {
+//					weight: 6,
+//					color: '#F00',
+//					dashArray: '',
+//					fillOpacity: 0.5
+//				},
+				
 			}
+		});
+		this.layer.on("load", function() {
+//			var nbr = 0;
+			self.layer.eachLayer(function(marker) {
+				// Replace default marker with a fancy "userMarker".
+				var newMarker = L.userMarker(marker.getLatLng(), {pulsing: true});
+				self.layer.removeLayer(marker);
+				var uid = parseInt(marker.feature.id.split(".")[1]);
+				if (!self.uid || (self.uid && self.uid !== uid)) {
+					self.layer.addLayer(newMarker);					
+				}
+//				nbr += 1;
+			});
+//			console.log(nbr);
 		});
 		this.map.addLayer(this.layer);
 		var self = this;
-		
-		// Fetch id (type serial) so we can update the row later
-//		this.layer.on("load", function() {
-//			self.layer.eachLayer(function(marker) {
-//				if (marker.feature.properties.text_username === self.uName) {
-//					self.uid = marker.feature.properties.id;
-//					return true;
-//				}
-//			});
-//		});
 		
 	},
 	
