@@ -49,12 +49,15 @@ L.Control.Geolocate = L.Control.extend({
 		this.btn.addClass("btn-primary");
 		smap.cmd.loading(true);
 		
-		
+		// Define proxy functions so we can unbind them later.
+		this.__onLocationFound = this.__onLocationFound || $.proxy(this._onLocationFound, this);
+		this.__onLocationError = this.__onLocationError || $.proxy(this._onLocationError, this);
+		this.__onDragStart = this.__onDragStart || $.proxy(this._onDragStart, this);
 		
 		// Bind listeners
-		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
-		this.map.on("locationerror", $.proxy(this._onLocationError, this));
-		this.map.on("dragstart", $.proxy(this._onDragStart, this));
+		this.map.on("locationfound", this.__onLocationFound);
+		this.map.on("locationerror", this.__onLocationError);
+		this.map.on("dragstart", this.__onDragStart);
 		
 		this._startLocate(this.options.locateOptions);
 	},
@@ -68,9 +71,9 @@ L.Control.Geolocate = L.Control.extend({
 		this.btn.removeClass("btn-primary");
 		
 		// Unbind listeners
-		this.map.off("locationfound", this._onLocationFound);
-		this.map.off("locationerror", this._onLocationError);
-		this.map.off("dragstart", this._onDragStart);
+		this.map.off("locationfound", this.__onLocationFound);
+		this.map.off("locationerror", this.__onLocationError);
+		this.map.off("dragstart", this.__onDragStart);
 		
 		this._stopLocate();
 		
