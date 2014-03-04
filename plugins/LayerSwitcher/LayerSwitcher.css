@@ -39,9 +39,9 @@
 	max-width: 300px;
 	background-color: #2E3941;
 	padding: 0 20px;
-	-moz-box-shadow: inset #000 -1px -1px 7px;
-	box-shadow: inset #000 -1px -1px 7px;
-	-webkit-box-shadow: inset #000 -1px -1px 7px;
+	-moz-box-shadow: inset #000 -3px -1px 17px;
+	box-shadow: inset #000 -3px -1px 17px;
+	-webkit-box-shadow: inset #000 -3px -1px 17px;
 	overflow-y: auto;
 }
 
@@ -100,10 +100,11 @@
 	}
 	
 	#lswitch-btn {
-		display: none;
+		display: none !important;
 	}
 	
 	.lswitch-panel {
+		display: block !important;
 		background-color: rgba(255,255,255,0.8);
 		-moz-box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
 		box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
