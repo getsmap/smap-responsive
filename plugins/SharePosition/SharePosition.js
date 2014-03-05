@@ -10,10 +10,18 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			exampleLabel: "Ett exempel"
+			dTitle: "Dela position",
+			dShare: "Dela!",
+			yourName: "Ditt namn",
+			stopSharing: "Sluta dela",
+			btnCancel: "Avbryt"
 		},
 		"en": {
-			exampleLabel: "An example"
+			dTitle: "Share position",
+			dShare: "Share!",
+			yourName: "Your name",
+			stopSharing: "Stop sharing",
+			btnCancel: "Cancel"
 		}
 	},
 	
@@ -27,6 +35,15 @@ L.Control.SharePosition = L.Control.extend({
 	initialize: function(options) {
 		L.setOptions(this, options);
 		this._setLang(options.langCode);
+	},
+	
+	deactivate: function() {
+		clearInterval( self._refreshInterval );
+		
+		$("#sharepos-gui button").text(this.lang.dShare).removeClass("btn-danger")
+		this.dialog.find("input").val(null);
+		$("#sharepos-gui").hide();
+		self.map.removeLayer(self.layer);
 	},
 
 	onAdd: function(map) {
@@ -52,20 +69,27 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_drawGui: function() {
 		var $gui = $('<div id="sharepos-gui" />');
-		var $inpGroup =	
-			$('<div class="input-group input-group-lg">'+
-				'<input type="text" class="form-control" placeholder="Your name"></input>'+
-				'<span class="input-group-btn">'+
-					'<button class="btn btn-default" type="button">Share!</button>'+
-				'</span>'+
-			'</div>');
-		$gui.append($inpGroup);
+		var $btnShare =	$('<button class="btn btn-default btn-lg" type="button">'+this.lang.dShare+'</button>');
+		$gui.append($btnShare);
 		$(".leaflet-control-Geolocate").prepend( $gui );
 		$gui.hide();
+		
+		var bodyContent =
+				'<div class="form-group">'+
+					'<label>'+this.lang.yourName+'</label>'+
+					'<input type="text" class="form-control" placeholder="'+this.lang.yourName+'"></input>'+
+				'</div>';
+		
+		var footerContent =
+			$(
+				'<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.btnCancel+'</button>'+
+				'<button type="button" class="btn btn-primary">'+this.lang.dShare+'</button>'
+			);
+		this.dialog = utils.drawDialog(this.lang.dTitle, bodyContent, footerContent);
 	},
 	
 	_makeFilter: function() {
-		var maxAge = 5; // minutes
+		var maxAge = 60; // minutes
 		
 		var dNow = new Date();
 		var now = dNow.getTime();
@@ -140,46 +164,47 @@ L.Control.SharePosition = L.Control.extend({
 	},
 	
 	_bindEvents: function() {
+		var self = this;
 		smap.event.on("smap.core.pluginsadded", function() {
 			$("#smap-glocate-btn").on("click", function() {
 				if ( $(this).hasClass("btn-primary") ) {
 					// Show the GUI
 					$("#sharepos-gui").show();
+					self._addLayer();
+					self._refreshInterval = setInterval($.proxy(self._refresh, self), 5000);
 				}
 				else {
-					$("#sharepos-gui").hide();
+					self.deactivate();
 				}
 				return false;
 			});
 		});
 		
-		$("#sharepos-gui input").on("click", function() {
-			$(this).select();
+		this.dialog.find("input").on("click", function() {
+			$(this).focus();
 		});
 		
-		var self = this;
-		$("#sharepos-gui button").on("click", function() {
-			$(this).toggleClass("btn-success");
-			if ($(this).hasClass("btn-success")) {
-				
-				var uName = $.trim( $("#sharepos-gui input").val() );
-				self._startShare(uName);
-				$(this).tooltip({
-					placement: "top",
-					title: "Click to stop sharing"
-				});
-				$(this).text("Sharing...");
-				$("#sharepos-gui input").prop("readonly", true);
-				
-				self._addLayer();
+		this.dialog.find(".modal-footer .btn-primary").on("click", function() {
+			$("#sharepos-gui button").addClass("btn-danger").text(self.lang.stopSharing);
+			self.dialog.modal("hide");
+			
+			var uName = $.trim( self.dialog.find("input[type='text']").val() );
+			self._startShare(uName);
+		});
+		
+//		this.dialog.find(".modal-footer .btn-default").on("click", function() {
+//			$("#sharepos-gui button").addClass("btn-danger").text(self.lang.stopSharing);
+//		});
+		
+		$("#sharepos-gui button").data("active", true).on("click", function() {
+			var isActive = $(this).hasClass("btn-danger");
+			if ( !isActive ) {
+				self.dialog.modal("show");
 			}
 			else {
+				$(this).removeClass("btn-danger");
 				self._stopShare();
-				$(this).tooltip("destroy");
-				$(this).text("Share!");
-				$("#sharepos-gui input").prop("readonly", false);
-				
-				self.map.removeLayer(self.layer);
+				$(this).text(self.lang.dShare); // Restore label 
 			}
 		});
 	},
@@ -213,14 +238,14 @@ L.Control.SharePosition = L.Control.extend({
 		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
 		this.map.on("locationerror", $.proxy(this._onLocationError, this));
 		
-		this._storeAndFetchInterval = setInterval($.proxy(this._storeAndFetch, this), 5000);
+		this._storeInterval = setInterval($.proxy(this._store, this), 5000);
 		this._setLocateSettings();
 	},
 	
 	_stopShare: function() {
 		smap.cmd.loading(false);
 		
-		clearInterval(this._storeAndFetchInterval);
+		clearInterval(this._storeInterval);
 		
 		this.map.off("locationfound", this._onLocationFound, this);
 		this.map.off("locationerror", this._onLocationError, this);
@@ -231,7 +256,7 @@ L.Control.SharePosition = L.Control.extend({
 	
 	uid: null,
 	
-	_storeAndFetch: function() {
+	_store: function() {
 		if (this._working || !this._location) {
 			return false;
 		}
@@ -249,16 +274,17 @@ L.Control.SharePosition = L.Control.extend({
 				if (obj && obj.TransactionSummary && parseInt(obj.TransactionSummary.totalInserted) > 0) {
 					this.uid = parseInt(obj.InsertResults.Feature.FeatureId.fid.split(".")[1]);
 				}
-				
-				// Before refresh - update the age filter
-				this.layer.params.filter = this._makeFilter();
-				this.layer._refresh(true);
 			},
 			complete: function() {
 				this._working = false;
 			}
 		});
-		
+	},
+	
+	_refresh: function() {
+		// Before refresh - update the age filter
+		this.layer.params.filter = this._makeFilter();
+		this.layer._refresh(true);
 	},
 	
 	_getXml: function(latLng, accuracy, uName, oldId) {
