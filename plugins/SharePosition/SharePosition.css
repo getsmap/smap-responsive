@@ -4,6 +4,8 @@
 	z-index: 1001;
 	float: left;
 	margin-right: 25px;
+	min-width: 220px;
+	white-space: nowrap;
 	
 }
 #sharepos-gui input {
@@ -11,11 +13,4 @@
 	-moz-transition: width .2s;
 	-o-transition: width .2s;
 	transition: width .2s;
-}
-
-#sharepos-gui .active input {
-}
-
-
-#sharepos-gui .input-group {
 }
