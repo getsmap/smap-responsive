@@ -43,7 +43,7 @@ L.Control.SharePosition = L.Control.extend({
 		$("#sharepos-gui button").text(this.lang.dShare).removeClass("btn-danger")
 		this.dialog.find("input").val(null);
 		$("#sharepos-gui").hide();
-		self.map.removeLayer(self.layer);
+		this.map.removeLayer(this.layer);
 	},
 
 	onAdd: function(map) {
@@ -123,7 +123,7 @@ L.Control.SharePosition = L.Control.extend({
 				inputCrs: "EPSG:4326",
 				reverseAxis: true,
 				selectable: true,
-				popup: '<p><strong>${text_username}</strong> was here <span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);var dNow = new Date(); var dDiff = new Date( Math.abs(dNow.getTime() - d.getTime()) ); return dDiff.getMinutes(); }}</span> minutes ago.</p>',
+				popup: '<p><strong>${text_username}</strong> (<span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);var dNow = new Date(); var dDiff = new Date( Math.abs(dNow.getTime() - d.getTime()) ); return dDiff.getMinutes(); }}</span> minutes ago)</p>',
 				uniqueAttr: null, //"id",
 				hoverColor: '#FF0'
 //				style: {
@@ -210,7 +210,7 @@ L.Control.SharePosition = L.Control.extend({
 	},
 	
 	_onLocationFound: function(e) {
-		smap.cmd.loading(false);
+//		smap.cmd.loading(false);
 		this._location = e;
 	},
 	
@@ -234,7 +234,7 @@ L.Control.SharePosition = L.Control.extend({
 	_startShare: function(uName) {
 		this.uName = uName;
 		
-		smap.cmd.loading(true);
+//		smap.cmd.loading(true);
 		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
 		this.map.on("locationerror", $.proxy(this._onLocationError, this));
 		
