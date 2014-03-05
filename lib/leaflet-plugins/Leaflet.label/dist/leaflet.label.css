@@ -20,6 +20,12 @@
 	pointer-events: none;
 	white-space: nowrap;
 	z-index: 6;
+	
+	/* Johans mods */
+	background-color: rgba(0,0,0,.6);
+	border-color: rgba(0,0,0,.6);
+	border: none;
+	color: #fff;
 }
 
 .leaflet-label.leaflet-clickable {
@@ -38,13 +44,13 @@
 
 .leaflet-label:before {
 	border-right: 6px solid black;
-	border-right-color: rgba(0,0,0,.5);
+	border-right-color: rgba(0,0,0,.6);
 	left: -6px;
 }
 
 .leaflet-label:after {
 	border-left: 6px solid black;
-	border-left-color: rgba(0,0,0,.5);
+	border-left-color: rgba(0,0,0,.6);
 	right: -6px;
 }
 
