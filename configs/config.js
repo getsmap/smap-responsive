@@ -231,10 +231,10 @@ var config = {
 		        		   buffer: 5
 		        	   }
 		           },
-		           {
-		        	   init: "L.Control.ShareTweet",
-		        	   options: {}
-		           },
+//		           {
+//		        	   init: "L.Control.ShareTweet",
+//		        	   options: {}
+//		           },
 		           {
 		        	   init: "L.Control.SharePosition",
 		        	   options: {}
