@@ -153,7 +153,7 @@ smap.core.Layer = L.Class.extend({
 			layer.on("load", function(e) {
 				var html;
 				layer.eachLayer(function(f) {
-					if (!f._popup) {
+					if (!f._popup && f.feature) {
 						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
 						f.bindPopup(html);
 						if (f._popup) {
@@ -165,15 +165,17 @@ smap.core.Layer = L.Class.extend({
 						}, self));
 					}
 				});
+				smap.cmd.loading(false);
 			});
 			this._wfsLayers.push(layer);
 		}
-		
+		else {
+			layer.on("load", function(e) {
+				smap.cmd.loading(false);
+			});
+		}
 		layer.on("loading", function(e) {
 			smap.cmd.loading(true);
-		});
-		layer.on("load", function(e) {
-			smap.cmd.loading(false);
 		});
 		
 		return layer;

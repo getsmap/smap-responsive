@@ -77,9 +77,9 @@ L.Control.SharePosition = L.Control.extend({
 				inputCrs: "EPSG:4326",
 				reverseAxis: true,
 				selectable: true,
-				popup: '<p class="lead">${text_text}</p>'+
-					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.datetime_changed);return d.toLocaleString();}}</strong></p>',
-				uniqueAttr: null,
+				popup: '<p class="lead">${text_username} '+
+					'was here at <strong style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);return d.toLocaleString();}}</strong></p>',
+				uniqueAttr: "id",
 				hoverColor: '#FF0'
 //				style: {
 //					weight: 6,
@@ -90,19 +90,25 @@ L.Control.SharePosition = L.Control.extend({
 				
 			}
 		});
+		this.layer.off("load");
 		this.layer.on("load", function() {
-//			var nbr = 0;
 			self.layer.eachLayer(function(marker) {
 				// Replace default marker with a fancy "userMarker".
 				var newMarker = L.userMarker(marker.getLatLng(), {pulsing: true});
 				self.layer.removeLayer(marker);
-				var uid = parseInt(marker.feature.id.split(".")[1]);
-				if (!self.uid || (self.uid && self.uid !== uid)) {
-					self.layer.addLayer(newMarker);					
+				if (marker.feature) {
+					var uid = parseInt(marker.feature.id.split(".")[1]);
+					if (!self.uid || (self.uid && self.uid !== uid)) {
+						self.layer.addLayer(newMarker);
+					}
+					var html = utils.extractToHtml(self.layer.options.popup, marker.feature.properties);
+					marker.bindLabel("Look revealing label!", {
+						noHide: true,
+						direction: "auto"
+					});
 				}
-//				nbr += 1;
 			});
-//			console.log(nbr);
+			smap.cmd.loading(false);
 		});
 		this.map.addLayer(this.layer);
 		var self = this;
