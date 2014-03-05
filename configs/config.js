@@ -7,7 +7,7 @@ var config = {
 				sharePosStoreFetch: "http://localhost/cgi-bin/smap-mobile/"
 			},
 			"xyz.malmo.se": {
-				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url=",
+				proxy: "http://localhost/myproxy/proxy.py?url=",
 				sharePosStoreFetch: "http://localhost/cgi-bin/smap-mobile/"
 			},
 			"91.123.201.52": {

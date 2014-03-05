@@ -207,7 +207,7 @@ L.Control.SharePosition = L.Control.extend({
 		this._working = true;
 		console.log("Storing position");
 		$.ajax({
-			url: smap.config.ws.proxy + encodeURIComponent( this.options.wfsSource ),
+			url: this.options.useProxy ? smap.config.ws.proxy + encodeURIComponent( this.options.wfsSource ) : this.options.wfsSource,
 			type: "POST",
 			context: this,
 			data: this._getXml(this._location.latlng, this._location.accuracy, this.uName, this.uid),
