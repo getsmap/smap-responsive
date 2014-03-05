@@ -90,6 +90,8 @@ L.Control.SharePosition = L.Control.extend({
 			init: "L.GeoJSON.WFS2",
 			url: this.options.wfsSource,
 			options: {
+				noBindZoom: true,
+				noBindDrag: true,
 				layerId: "shareposition",
 				displayName: "Shared locations",
 				featureType: this.options.wfsFeatureType,
