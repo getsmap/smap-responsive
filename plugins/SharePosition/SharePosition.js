@@ -2,8 +2,9 @@ L.Control.SharePosition = L.Control.extend({
 	options: {
 		position: 'bottomright', // just an example
 		autoActivate: false,
-		wfsSource: "http://localhost:8080/geoserver/wfs",
-		wfsFeatureType: "local:sharedpositions"
+		wfsSource: "http://xyz.malmo.se:8081/geoserver/wfs",
+		wfsFeatureType: "sandbox:sharedpositions",
+		wfsUri: "http://www.malmo.se/sandbox/"
 	},
 	
 	_lang: {
@@ -76,7 +77,7 @@ L.Control.SharePosition = L.Control.extend({
 				reverseAxis: true,
 				selectable: true,
 				popup: '<p class="lead">${text_text}</p>'+
-					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.dtime_updated);return d.toLocaleString();}}</strong></p>',
+					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.datetime_changed);return d.toLocaleString();}}</strong></p>',
 				uniqueAttr: null,
 				hoverColor: '#FF0'
 //				style: {
@@ -204,6 +205,7 @@ L.Control.SharePosition = L.Control.extend({
 			return false;
 		}
 		this._working = true;
+		console.log("Storing position");
 		$.ajax({
 			url: smap.config.ws.proxy + encodeURIComponent( this.options.wfsSource ),
 			type: "POST",
@@ -227,8 +229,9 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_getXml: function(latLng, accuracy, uName, oldId) {
 		var xml = "";
+		var dbName = this.options.wfsFeatureType.split(":")[1];
 		if (oldId) {
-//			deleteXml = '<wfs:Delete typeName="grp:sharedpositions">\n'
+//			deleteXml = '<wfs:Delete typeName="grp:'+dbName+'">\n'
 //			  + '    <ogc:Filter>\n'
 //			  + '      <PropertyIsEqualTo>\n'
 //			  + '        <PropertyName>id</PropertyName>\n'
@@ -240,17 +243,17 @@ L.Control.SharePosition = L.Control.extend({
 			xml = '<wfs:Transaction\n'
 			  + '  service="WFS"\n'
 			  + '  version="1.1.0"\n'
-			  + '  xmlns:grp="http://localhost/"\n'
+			  + '  xmlns:grp="'+this.options.wfsUri+'"\n'
 			  + '  xmlns:wfs="http://www.opengis.net/wfs"\n'
 			  + '  xmlns:ogc="http://www.opengis.net/ogc"\n'
 			  + '  xmlns:gml="http://www.opengis.net/gml"\n'
 			  + '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
 			  + '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
 			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd">\n'
-			  + '  <wfs:Update typeName="grp:sharedpositions">\n'
+			  + '  <wfs:Update typeName="grp:'+dbName+'">\n'
 			  + '    <grp:text_username>' + uName + '</grp:text_username>\n'
 			  + '    <grp:int_accuracy>' + accuracy + '</grp:int_accuracy>\n'
-//			  + '    <grp:dtime_updated></grp:dtime_updated>\n'
+//			  + '    <grp:datetime_changed></grp:datetime_changed>\n'
 			  + '    <wfs:Property>\n'
 			  + '      <wfs:Name>the_geom</wfs:Name>\n'
 			  + '      <wfs:Value>\n'
@@ -272,7 +275,7 @@ L.Control.SharePosition = L.Control.extend({
 			xml = '<wfs:Transaction\n'
 				+ '  service="WFS"\n'
 				+ '  version="1.1.0"\n'
-				+ '  xmlns:grp="http://localhost/"\n'
+				+ '  xmlns:grp="'+this.options.wfsUri+'"\n'
 				+ '  xmlns:wfs="http://www.opengis.net/wfs"\n'
 				+ '  xmlns:gml="http://www.opengis.net/gml"\n'
 				+ '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
@@ -280,16 +283,16 @@ L.Control.SharePosition = L.Control.extend({
 				+ '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
 				+ '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
 				+ '  <wfs:Insert>\n'
-				+ '    <grp:sharedpositions>\n'
+				+ '    <grp:'+dbName+'>\n'
 				+ '      <grp:the_geom>\n'
 				+ '        <gml:Point srsDimension="2" srsName="urn:x-ogc:def:crs:EPSG:4326">\n'
 				+ '          <gml:coordinates decimal="." cs="," ts=" ">' + latLng.lat + ',' + latLng.lng + '</gml:coordinates>\n'
 				+ '        </gml:Point>\n'
 				+ '      </grp:the_geom>\n'
 				+ '      <grp:int_accuracy>' + accuracy + '</grp:int_accuracy>\n'
+//				+ '  	 <grp:datetime_changed></grp:datetime_changed>\n'
 				+ '      <grp:text_username>' + uName + '</grp:text_username>\n'
-//				+ '      <grp:dtime_updated>null</grp:dtime_updated>\n'
-				+ '    </grp:sharedpositions>\n'
+				+ '    </grp:'+dbName+'>\n'
 				+ '  </wfs:Insert>\n'
 				+ '  </wfs:Transaction>';
 		}
