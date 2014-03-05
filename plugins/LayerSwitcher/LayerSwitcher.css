@@ -39,9 +39,9 @@
 	max-width: 300px;
 	background-color: #2E3941;
 	padding: 0 20px;
-	-moz-box-shadow: inset #000 -3px -1px 17px;
-	box-shadow: inset #000 -3px -1px 17px;
-	-webkit-box-shadow: inset #000 -3px -1px 17px;
+	-moz-box-shadow: inset #000 -3px 0px 17px;
+	box-shadow: inset #000 -3px 0px 17px;
+	-webkit-box-shadow: inset #000 -3px 0px 17px;
 	overflow-y: auto;
 }
 
