@@ -58,6 +58,7 @@ L.Control.Geolocate = L.Control.extend({
 		this.map.on("locationfound", this.__onLocationFound);
 		this.map.on("locationerror", this.__onLocationError);
 		this.map.on("dragstart", this.__onDragStart);
+		this.map.on("zoomstart", this.__onDragStart);
 		
 		this._startLocate(this.options.locateOptions);
 	},
@@ -74,6 +75,7 @@ L.Control.Geolocate = L.Control.extend({
 		this.map.off("locationfound", this.__onLocationFound);
 		this.map.off("locationerror", this.__onLocationError);
 		this.map.off("dragstart", this.__onDragStart);
+		this.map.off("zoomstart", this.__onDragStart);
 		
 		this._stopLocate();
 		
