@@ -98,7 +98,7 @@ L.Control.SharePosition = L.Control.extend({
 				reverseAxis: true,
 				selectable: true,
 				popup: '<p><strong>${text_username}</strong> was here <span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);var dNow = new Date(); var dDiff = new Date( Math.abs(dNow.getTime() - d.getTime()) ); return dDiff.getMinutes(); }}</span> minutes ago.</p>',
-				uniqueAttr: "id",
+				uniqueAttr: null, //"id",
 				hoverColor: '#FF0'
 //				style: {
 //					weight: 6,
