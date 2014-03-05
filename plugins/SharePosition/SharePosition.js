@@ -4,7 +4,8 @@ L.Control.SharePosition = L.Control.extend({
 		autoActivate: false,
 		wfsSource: "http://xyz.malmo.se:8081/geoserver/wfs",
 		wfsFeatureType: "sandbox:sharedpositions",
-		wfsUri: "http://www.malmo.se/sandbox/"
+		wfsUri: "http://www.malmo.se/sandbox/",
+		useProxy: true
 	},
 	
 	_lang: {
