@@ -26,6 +26,11 @@
 	border-color: rgba(0,0,0,.6);
 	border: none;
 	color: #fff;
+	
+	/*background-color: rgba(255,255,255,.5);
+	border-color: rgba(0,0,0, .5);
+	border-width: 2px;
+	color: #000;*/
 }
 
 .leaflet-label.leaflet-clickable {

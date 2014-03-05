@@ -6,7 +6,7 @@ L.Control.SharePosition = L.Control.extend({
 		wfsFeatureType: "sandbox:sharedpositions",
 		wfsUri: "http://www.malmo.se/sandbox/",
 		useProxy: true,
-		maxAge: 60
+		maxAge: 45
 	},
 	
 	_lang: {
