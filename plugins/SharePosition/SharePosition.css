@@ -14,3 +14,11 @@
 	-o-transition: width .2s;
 	transition: width .2s;
 }
+
+
+.leaflet-label {
+	background-color: rgba(0,0,0,.6);
+	border-color: rgba(0,0,0,.6);
+	border: none;
+	color: #fff;	
+}

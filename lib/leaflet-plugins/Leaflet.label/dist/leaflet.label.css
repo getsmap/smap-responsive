@@ -38,14 +38,14 @@
 
 .leaflet-label:before {
 	border-right: 6px solid black;
-	border-right-color: inherit;
-	left: -10px;
+	border-right-color: rgba(0,0,0,.5);
+	left: -6px;
 }
 
 .leaflet-label:after {
 	border-left: 6px solid black;
-	border-left-color: inherit;
-	right: -10px;
+	border-left-color: rgba(0,0,0,.5);
+	right: -6px;
 }
 
 .leaflet-label-right:before,

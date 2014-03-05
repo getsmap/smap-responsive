@@ -5,7 +5,8 @@ L.Control.SharePosition = L.Control.extend({
 		wfsSource: "http://xyz.malmo.se:8081/geoserver/wfs",
 		wfsFeatureType: "sandbox:sharedpositions",
 		wfsUri: "http://www.malmo.se/sandbox/",
-		useProxy: true
+		useProxy: true,
+		maxAge: 60
 	},
 	
 	_lang: {
@@ -89,7 +90,7 @@ L.Control.SharePosition = L.Control.extend({
 	},
 	
 	_makeFilter: function() {
-		var maxAge = 60; // minutes
+		var maxAge = this.options.maxAge; // minutes
 		
 		var dNow = new Date();
 		var now = dNow.getTime();
@@ -123,7 +124,7 @@ L.Control.SharePosition = L.Control.extend({
 				inputCrs: "EPSG:4326",
 				reverseAxis: true,
 				selectable: true,
-				popup: '<p><strong>${text_username}</strong> (<span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);var dNow = new Date(); var dDiff = new Date( Math.abs(dNow.getTime() - d.getTime()) ); return dDiff.getMinutes(); }}</span> minutes ago)</p>',
+				popup: '<span><strong>${text_username}</strong>&nbsp;&nbsp;(<span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);var dNow = new Date(); var dDiff = new Date( Math.abs(dNow.getTime() - d.getTime()) ); return dDiff.getMinutes(); }}</span> min ago)</span>',
 				uniqueAttr: null, //"id",
 				hoverColor: '#FF0'
 //				style: {
@@ -152,8 +153,9 @@ L.Control.SharePosition = L.Control.extend({
 					var html = utils.extractToHtml(self.layer.options.popup, marker.feature.properties);
 					newMarker.bindLabel(html, {
 						noHide: true,
-						direction: "auto"
+						direction: "right"
 					}).showLabel();
+					
 				}
 			});
 			smap.cmd.loading(false);
