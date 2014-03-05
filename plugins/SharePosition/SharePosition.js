@@ -196,7 +196,7 @@ L.Control.SharePosition = L.Control.extend({
 //			$("#sharepos-gui button").addClass("btn-danger").text(self.lang.stopSharing);
 //		});
 		
-		$("#sharepos-gui button").data("active", true).on("click", function() {
+		$("#sharepos-gui button").on("click", function() {
 			var isActive = $(this).hasClass("btn-danger");
 			if ( !isActive ) {
 				self.dialog.modal("show");
@@ -246,11 +246,13 @@ L.Control.SharePosition = L.Control.extend({
 		smap.cmd.loading(false);
 		
 		clearInterval(this._storeInterval);
+		this._storeInterval = null;
 		
 		this.map.off("locationfound", this._onLocationFound, this);
 		this.map.off("locationerror", this._onLocationError, this);
 		
 		this._location = null;
+		this.uid = null;
 		this.uName = null;
 	},
 	
