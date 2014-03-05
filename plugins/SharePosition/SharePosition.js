@@ -97,7 +97,7 @@ L.Control.SharePosition = L.Control.extend({
 				inputCrs: "EPSG:4326",
 				reverseAxis: true,
 				selectable: true,
-				popup: '<p><strong>${text_username}</strong> was here at <span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);return d.toLocaleString();}}</span></p>',
+				popup: '<p><strong>${text_username}</strong> was here <span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);var dNow = new Date(); var dDiff = new Date( Math.abs(dNow.getTime() - d.getTime()) ); return dDiff.getMinutes(); }}</span> minutes ago.</p>',
 				uniqueAttr: "id",
 				hoverColor: '#FF0'
 //				style: {
@@ -109,6 +109,7 @@ L.Control.SharePosition = L.Control.extend({
 				
 			}
 		});
+		
 		this.layer.params.filter = this._makeFilter();
 		
 		this.layer.off("load");
@@ -246,6 +247,9 @@ L.Control.SharePosition = L.Control.extend({
 				if (obj && obj.TransactionSummary && parseInt(obj.TransactionSummary.totalInserted) > 0) {
 					this.uid = parseInt(obj.InsertResults.Feature.FeatureId.fid.split(".")[1]);
 				}
+				
+				// Before refresh - update the age filter
+				this.layer.params.filter = this._makeFilter();
 				this.layer._refresh(true);
 			},
 			complete: function() {
