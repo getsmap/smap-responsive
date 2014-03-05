@@ -171,7 +171,7 @@ L.Control.SharePosition = L.Control.extend({
 					// Show the GUI
 					$("#sharepos-gui").show();
 					self._addLayer();
-					self._refreshInterval = setInterval($.proxy(self._refresh, self), 5000);
+					self._refreshInterval = setInterval($.proxy(self._refresh, self), 10000);
 				}
 				else {
 					self.deactivate();
