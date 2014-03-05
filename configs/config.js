@@ -245,11 +245,12 @@ var config = {
 		           {
 		        	   init: "L.Control.Search",
 		        	   options: {}
-		           },
-		           {
-		           	   init: "L.Control.SideBars",
-		           	   options: {}
 		           }
+//		           ,
+//		           {
+//		           	   init: "L.Control.SideBars",
+//		           	   options: {}
+//		           }
 		           
        ]
 		
