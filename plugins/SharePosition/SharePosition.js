@@ -64,6 +64,26 @@ L.Control.SharePosition = L.Control.extend({
 		$gui.hide();
 	},
 	
+	_makeFilter: function() {
+		var maxAge = 5; // minutes
+		
+		var dNow = new Date();
+		var now = dNow.getTime();
+		var old = now - maxAge * 60 * 1000; // age in ms
+		var dOld = new Date(old);
+		
+		var filter = new OpenLayers.Filter.Comparison({
+				type: OpenLayers.Filter.Comparison.BETWEEN,
+				property: "datetime_changed",
+				lowerBoundary: dOld,
+				upperBoundary: dNow
+		});
+		var filterFormat = new OpenLayers.Format.Filter({version: "1.1.0"}),
+        	xml = new OpenLayers.Format.XML();
+		var filterString = xml.write(filterFormat.write( filter ));
+		return filterString;
+	},
+	
 	_addLayer: function() {
 		var self = this;
 		this.layer = smap.core.layerInst._createLayer({
@@ -77,8 +97,7 @@ L.Control.SharePosition = L.Control.extend({
 				inputCrs: "EPSG:4326",
 				reverseAxis: true,
 				selectable: true,
-				popup: '<p class="lead">${text_username} '+
-					'was here at <strong style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);return d.toLocaleString();}}</strong></p>',
+				popup: '<p><strong>${text_username}</strong> was here at <span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);return d.toLocaleString();}}</span></p>',
 				uniqueAttr: "id",
 				hoverColor: '#FF0'
 //				style: {
@@ -90,11 +109,13 @@ L.Control.SharePosition = L.Control.extend({
 				
 			}
 		});
+		this.layer.params.filter = this._makeFilter();
+		
 		this.layer.off("load");
 		this.layer.on("load", function() {
 			self.layer.eachLayer(function(marker) {
 				// Replace default marker with a fancy "userMarker".
-				var newMarker = L.userMarker(marker.getLatLng(), {pulsing: true});
+				var newMarker = L.userMarker(marker.getLatLng(), {pulsing: true, smallIcon:true});
 				self.layer.removeLayer(marker);
 				if (marker.feature) {
 					var uid = parseInt(marker.feature.id.split(".")[1]);
@@ -102,10 +123,10 @@ L.Control.SharePosition = L.Control.extend({
 						self.layer.addLayer(newMarker);
 					}
 					var html = utils.extractToHtml(self.layer.options.popup, marker.feature.properties);
-					marker.bindLabel("Look revealing label!", {
+					newMarker.bindLabel(html, {
 						noHide: true,
 						direction: "auto"
-					});
+					}).showLabel();
 				}
 			});
 			smap.cmd.loading(false);
