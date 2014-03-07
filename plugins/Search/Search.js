@@ -2,10 +2,9 @@ L.Control.Search = L.Control.extend({
 	options: {
 		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
 		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
-		wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
-		wsLocateUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
-		addressMarker : null,
-		position : "topright"
+		wsAcUrl: "http://xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
+		wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
+		whitespace: "%2B"
 	},
 	
 	_lang: {
@@ -47,64 +46,114 @@ L.Control.Search = L.Control.extend({
 	},
 
 	_makeSearchField: function() {
-		var $field = $('<input id="smap-search-field" class="typeahead" data-provide="typeahead" style="text-transform: uppercase" type="text" placeholder="'+this.lang.search+'" />');
-		this.$container.append($field);
 		var self = this;
+		
+		var $searchDiv = $('<div id="smap-search-div" class="input-group input-group-lg"><span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>'+
+				'<input autocomplete="off" data-provide="typeahead" type="text" class="form-control" placeholder="'+this.lang.search+'"></input></div>');
+		var $entry = $searchDiv.find("input");
+		
+		function activate() {
+			var $bg = $("#smap-search-bg");
+			if ( !$bg.length ) {
+				$bg = $('<div id="smap-search-bg" />');				
+				$searchDiv.addClass("search-active");
+				$("#mapdiv").append($bg);
+			}
+		};
+		function deactivate() {
+			$searchDiv.removeClass("search-active");
+			$("#smap-search-bg").remove();
+		};
+		
+		function prevDefault(e) {
+//			e.preventDefault();
+			e.stopPropagation();
+		};
+		
+		$entry.on("keypress", activate);
+		$entry.on("dblclick", prevDefault);
+		$entry.on("mousedown", prevDefault);
+		$entry.on("blur", deactivate);
+		
+		$("#mapdiv").append( $searchDiv );
+		
+//		var bHound = new Bloodhound({
+//			datumTokenizer: Bloodhound.tokenizers.whitespace,
+//			queryTokenizer: Bloodhound.tokenizers.whitespace,
+////			local:  ["Alabama","Alaska","Arizona","Arkansas","Arkansas2","Barkansas"]
+//	    	remote: {
+//	      		url: smap.config.ws.proxy + encodeURIComponent( this.options.wsAcUrl ),
+//	        	filter: function(text) {
+//					text = text.split("\n");
+//					var vals = [];
+//	            	for (var i=0; i<text.length; i++) {
+//	            		vals.push({
+//		                    value: text[i]
+//		                });
+//	            	}
+//	            	return vals;
+//				}
+//	    	}
+//		});
+//		bHound.initialize();
+		
+		var whitespace = this.options.whitespace;
 
-		var adresser = new Bloodhound({
-	    	datumTokenizer: function(d) {
-				return Bloodhound.tokenizers.whitespace(d.value);
+		// instantiate the typeahead UI
+		$entry.typeahead({
+			items: 10,
+			minLength: 2,
+			highlight: true,
+			hint: true,
+			updater: function(val) {
+				deactivate();
+				return val;
 			},
-	    	queryTokenizer: Bloodhound.tokenizers.whitespace,
-	    	remote: {
-	      		url : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=%QUERY",
-	        	filter: function(parsedResponse) {
-	            	retval = [];
-	            	for (var i = 0; i < parsedResponse.length; i++) {
-		                retval.push({
-		                    value: parsedResponse[i]
-		                });
-	            	}
-	            return retval;
-	        	}
-	    	}
-		});
-
-	// initialize the bloodhound suggestion engine
-	adresser.initialize();
-
-	// instantiate the typeahead UI
-	$field.typeahead(null, {
-		minLength:2,
-		highlight: true,
-		hint: false,
-	    displayKey: 'value',
-	    template: '<p>{{value}} ({{country_code}})</p>',
-	    source: adresser.ttAdapter()
-		}).on('typeahead:selected', function(event, datum) {
-			$.ajax({
-				url : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakt.py",
-				data:{ "q" : datum.value },
-				type:"POST",
-				success: function( json ){
-					self._rmAdressMarker(self.addressMarker);
-					var p = new proj4.Point(json.features[0].geometry.coordinates[0],json.features[0].geometry.coordinates[1]);
-					var src = proj4.defs["EPSG:3008"];
-					var dest = proj4.defs["EPSG:4326"];			
-					p = proj4(src,dest,p);
-					
-					var content = $("<button id=search-marker>Ta bort markör</button>").click(function() {
-    					self._rmAdressMarker(self.addressMarker);
-					})[0];
-
-					var addressMarker = L.marker([p.y, p.x]).bindPopup(content);
-					//var addressMarker = L.Control.SideBars.createMarker([p.y, p.x]);
-					addressMarker.addTo(self.map);
-					
-					self.addressMarker = addressMarker;
+//		    displayKey: 'value',
+//		    source: bHound.ttAdapter(),
+			source: function(q, process) {
+				var url = encodeURIComponent( self.options.wsAcUrl + "?q="+q);
+				if (whitespace) {
+					url = url.replace(/%20/g, self.options.whitespace);					
 				}
-			});
-	});
+				if (self.proxyInst) {
+					self.proxyInst.abort();
+				}
+				self.proxyInst = $.ajax({
+					type: "GET",
+					url: smap.config.ws.proxy + url,
+					dataType: "text",
+					success: function(resp) {
+						var arr = resp.split("\n");
+						process(arr);
+					},
+					error: function() {}
+				});
+			}
+//		    template: '<p>{{value}} ({{country_code}})</p>',
+		}).on('typeahead:selected', function(e, datum) {
+				
+				$.ajax({
+					url : smap.config.ws.proxy + encodeURIComponent( this.options.wsLocateUrl ),
+					data:{ "q" : datum.value },
+					type:"POST",
+					dataType: "json",
+					success: function(json) {
+						self._rmAdressMarker(self.addressMarker);
+						var p = new proj4.Point(json.features[0].geometry.coordinates[0],json.features[0].geometry.coordinates[1]);
+						var src = proj4.defs["EPSG:3008"];
+						var dest = proj4.defs["EPSG:4326"];			
+						p = proj4(src, dest, p);
+						var content = $('<button id="search-marker">Ta bort markör</button>').click(function() {
+							self._rmAdressMarker(self.addressMarker);
+						})[0];
+						var addressMarker = L.marker([p.y, p.x]).bindPopup(content);
+						//var addressMarker = L.Control.SideBars.createMarker([p.y, p.x]);
+						addressMarker.addTo(self.map);
+						self.addressMarker = addressMarker;
+					}
+				});
+		});
 
 	},
 	

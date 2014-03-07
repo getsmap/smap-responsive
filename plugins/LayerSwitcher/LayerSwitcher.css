@@ -110,9 +110,9 @@
 		box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
 		-webkit-box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
 		z-index: 1000;
-		-webkit-transition: all 500ms;
+		/*-webkit-transition: all 500ms;
 		-moz-transition: all 500ms;
-		transition: all 500ms;
+		transition: all 500ms;*/
 	}
 	.lswitch-panel .panel-heading {
 		background-color: rgba(40,40,40,.5) !important;
