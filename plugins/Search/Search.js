@@ -1,16 +1,32 @@
 L.Control.Search = L.Control.extend({
 	options: {
-		//autocompleteScriptUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
-		//autocompleteScriptUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
-		autocompleteScriptUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
-		exaktScriptUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
-		dummyTxt : "Sök",
+		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
+		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
+		wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
+		wsLocateUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
 		addressMarker : null,
 		position : "topright"
+	},
+	
+	_lang: {
+		"sv": {
+			search: "Sök"
+		},
+		"en": {
+			search: "Search"
+		}
+	},
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
 	},
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		this._setLang(options.langCode);
 	},
 
 	onAdd: function(map) {
@@ -18,9 +34,7 @@ L.Control.Search = L.Control.extend({
 		self.map = map;
 		self._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
-		
 		self.$container = $(self._container);
-		self.$container.prop({"id":"smap-control-search"});
 		self._makeSearchField();
 		return self._container;
 	},
@@ -33,45 +47,34 @@ L.Control.Search = L.Control.extend({
 	},
 
 	_makeSearchField: function() {
-		var field = $('<input id="smap-search-field" class="typeahead" data-provide="typeahead" style="text-transform: uppercase" type="text" value="Sök" />');
-		this.$container.append(field);
+		var $field = $('<input id="smap-search-field" class="typeahead" data-provide="typeahead" style="text-transform: uppercase" type="text" placeholder="'+this.lang.search+'" />');
+		this.$container.append($field);
 		var self = this;
 
-		field.on("focus", function() {
-			if ($(this).val() == self.options.dummyTxt) {
-				$(this).val("");
-			}
-    		$(this).select();
-		}).on("focusout", function(){
-			if ($(this).val()=="") {
-				$(this).val(self.options.dummyTxt);
-			}
+		var adresser = new Bloodhound({
+	    	datumTokenizer: function(d) {
+				return Bloodhound.tokenizers.whitespace(d.value);
+			},
+	    	queryTokenizer: Bloodhound.tokenizers.whitespace,
+	    	remote: {
+	      		url : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=%QUERY",
+	        	filter: function(parsedResponse) {
+	            	retval = [];
+	            	for (var i = 0; i < parsedResponse.length; i++) {
+		                retval.push({
+		                    value: parsedResponse[i]
+		                });
+	            	}
+	            return retval;
+	        	}
+	    	}
 		});
-
-	var adresser = new Bloodhound({
-    	datumTokenizer: function (d) { return Bloodhound.tokenizers.whitespace(d.value); },
-    	queryTokenizer: Bloodhound.tokenizers.whitespace,
-    	remote: {
-      		url : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=%QUERY",
-   
-        	filter: function (parsedResponse) {
-            	retval = [];
-            
-            	for (var i = 0; i < parsedResponse.length; i++) {
-	                retval.push({
-	                    value: parsedResponse[i]
-	                });
-            	}
-            return retval;
-        	}
-    	}
-	});
 
 	// initialize the bloodhound suggestion engine
 	adresser.initialize();
 
 	// instantiate the typeahead UI
-	field.typeahead(null, {
+	$field.typeahead(null, {
 		minLength:2,
 		highlight: true,
 		hint: false,
