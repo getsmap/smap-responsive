@@ -4,7 +4,8 @@ L.Control.Search = L.Control.extend({
 		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
 		wsAcUrl: "http://xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
 		wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
-		whitespace: "%2B"
+		whitespace: "%2B",
+		wsOrgProj: "EPSG:3006" //"EPSG:3008"
 	},
 	
 	_lang: {
@@ -58,11 +59,17 @@ L.Control.Search = L.Control.extend({
 				$bg = $('<div id="smap-search-bg" />');				
 				$searchDiv.addClass("search-active");
 				$("#mapdiv").append($bg);
+				setTimeout(function() {
+					$bg.addClass("search-bg-visible");					
+				}, 1);
 			}
 		};
 		function deactivate() {
 			$searchDiv.removeClass("search-active");
-			$("#smap-search-bg").remove();
+			$("#smap-search-bg").removeClass("search-bg-visible");
+			setTimeout(function() {
+				$("#smap-search-bg").remove();			
+			}, 300);
 		};
 		
 		function prevDefault(e) {
@@ -99,13 +106,18 @@ L.Control.Search = L.Control.extend({
 		
 		var whitespace = this.options.whitespace;
 
-		// instantiate the typeahead UI
+		var geoLocate = this._geoLocate;
 		$entry.typeahead({
 			items: 10,
 			minLength: 2,
 			highlight: true,
 			hint: true,
 			updater: function(val) {
+			
+				smap.cmd.loading(true);
+				
+				geoLocate.call(self, val);
+				
 				deactivate();
 				return val;
 			},
@@ -114,7 +126,7 @@ L.Control.Search = L.Control.extend({
 			source: function(q, process) {
 				var url = encodeURIComponent( self.options.wsAcUrl + "?q="+q);
 				if (whitespace) {
-					url = url.replace(/%20/g, self.options.whitespace);					
+					url = url.replace(/%20/g, whitespace);					
 				}
 				if (self.proxyInst) {
 					self.proxyInst.abort();
@@ -154,7 +166,49 @@ L.Control.Search = L.Control.extend({
 					}
 				});
 		});
-
+	},
+	
+	
+	_geoLocate: function(q) {
+		var url = encodeURIComponent( this.options.wsLocateUrl + "?q="+q);
+		var whitespace = this.options.whitespace;
+		if (whitespace) {
+			url = url.replace(/%20/g, whitespace);					
+		}
+		$.ajax({
+			url: smap.config.ws.proxy + url,
+			type: "GET",
+			dataType: "json",
+			context: this,
+			success: function(json) {
+				if (this.marker) {
+					this.map.removeLayer(this.marker);
+					this.marker = null;
+				}
+				var coords = json.features[0].geometry.coordinates;
+				var latLng = L.latLng( coords[1], coords[0] );
+				
+				var wgs84 = "EPSG:4326";
+				if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
+					// project the response
+					var arr = proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
+					latLng = L.latLng(arr[1], arr[0]);
+				}
+				this.marker = L.marker(latLng).addTo(this.map);
+				this.map.setView(latLng, 15);
+				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
+				this.marker.openPopup();
+				var self = this;
+				$("#smap-search-popupbtn").on("click", function() {
+					self.map.removeLayer(self.marker);
+					$("#smap-search-div input").val(null);
+					return false;
+				});
+				
+			}
+		});
+		
+				
 	},
 	
 
