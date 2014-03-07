@@ -181,6 +181,7 @@ L.Control.Search = L.Control.extend({
 			dataType: "json",
 			context: this,
 			success: function(json) {
+				var self = this;
 				if (this.marker) {
 					this.map.removeLayer(this.marker);
 					this.marker = null;
@@ -194,16 +195,21 @@ L.Control.Search = L.Control.extend({
 					var arr = proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
 					latLng = L.latLng(arr[1], arr[0]);
 				}
+				function onPopupOpen(e) {
+					$("#smap-search-popupbtn").off("click").on("click", function() {
+						self.map.removeLayer(self.marker);
+						$("#smap-search-div input").val(null);
+						return false;
+					});
+				};
+				this.map.off("popupopen", onPopupOpen);
+				this.map.on("popupopen", onPopupOpen);
+				
 				this.marker = L.marker(latLng).addTo(this.map);
 				this.map.setView(latLng, 15);
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
 				this.marker.openPopup();
-				var self = this;
-				$("#smap-search-popupbtn").on("click", function() {
-					self.map.removeLayer(self.marker);
-					$("#smap-search-div input").val(null);
-					return false;
-				});
+				
 				
 			}
 		});
