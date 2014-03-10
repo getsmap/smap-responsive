@@ -119,12 +119,10 @@ L.Control.Search = L.Control.extend({
 			highlight: true,
 			hint: true,
 			updater: function(val) {
-				setTimeout(function() {
-					$("#smap-search-div input").blur();
-				}, 100);
 				smap.cmd.loading(true);
 				geoLocate.call(self, val);
 				deactivate();
+				$("#smap-search-div input").blur();
 				return val;
 			},
 //		    displayKey: 'value',
@@ -149,28 +147,6 @@ L.Control.Search = L.Control.extend({
 				});
 			}
 //		    template: '<p>{{value}} ({{country_code}})</p>',
-		}).on('typeahead:selected', function(e, datum) {
-				
-				$.ajax({
-					url : smap.config.ws.proxy + encodeURIComponent( this.options.wsLocateUrl ),
-					data:{ "q" : datum.value },
-					type:"POST",
-					dataType: "json",
-					success: function(json) {
-						self._rmAdressMarker(self.addressMarker);
-						var p = new proj4.Point(json.features[0].geometry.coordinates[0],json.features[0].geometry.coordinates[1]);
-						var src = proj4.defs["EPSG:3008"];
-						var dest = proj4.defs["EPSG:4326"];			
-						p = proj4(src, dest, p);
-						var content = $('<button id="search-marker">Ta bort markör</button>').click(function() {
-							self._rmAdressMarker(self.addressMarker);
-						})[0];
-						var addressMarker = L.marker([p.y, p.x]).bindPopup(content);
-						//var addressMarker = L.Control.SideBars.createMarker([p.y, p.x]);
-						addressMarker.addTo(self.map);
-						self.addressMarker = addressMarker;
-					}
-				});
 		});
 	},
 	
