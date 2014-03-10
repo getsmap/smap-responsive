@@ -14,40 +14,12 @@ var config = {
 		},
 		
 		ol: [
-	    	 {
-	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://geoserver.smap.se/geoserver/wms",
-	    		 options: {
-	    			 layerId: "gangstig",
-	    			 displayName: "Gångstig",
-	    			 layers: 'sandboxws:regisln',
-	    			 format: 'image/png',
-	    			 selectable: true,
-	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor",
-	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
-	    		 }
-		     },
-		     {
-	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://geoserver.smap.se/geoserver/wms",
-	    		 options: {
-	    			 layerId: "gangstig2",
-	    			 displayName: "Gångstig2",
-	    			 layers: 'sandboxws:regisln',
-	    			 format: 'image/png',
-	    			 selectable: true,
-	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor",
-	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
-	    		 }
-		     },
 		     {
 	    		 init: "L.TileLayer.WMS",
 	    		 url: "http://geoserver.smap.se/geoserver/wms",
 	    		 options: {
 	    			 layerId: "cykelvag",
-	    			 displayName: "Cykelväg",
+	    			 displayName: "WMS (Cykelväg)",
 	    			 layers: 'malmows:GK_CYKELVAG_L',
 	    			 format: 'image/png',
 	    			 selectable: true,
@@ -57,11 +29,25 @@ var config = {
 	    		 }
 		     },
 		     {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "malmo_dp",
+	    			 displayName: "WMS (Detaljplan)",
+	    			 layers: 'malmows:SMA_DP_ADP_YTOR_P',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${plan}</h3><a target="_blank" href="${url}">Länk till plan</a>'
+	    		 }
+		     },
+		     {
 				  init: "L.GeoJSON.WFS2",
 				  url: "http://geoserver.smap.se/geoserver/wfs",
 				  options: {
 					  layerId: "malmows_STADSDEL_L",
-					  displayName: "Stadsdel Linje",
+					  displayName: "WFS (Stadsdel linje)",
 					  featureType: "malmows:STADSDEL_L",
 					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:3008",
@@ -83,7 +69,7 @@ var config = {
 				  url: "http://geoserver.smap.se/geoserver/wfs",
 				  options: {
 					  layerId: "malmows_ulf_stadsdel",
-					  displayName: "Stadsdel Yta",
+					  displayName: "WFS (Stadsdel yta)",
 					  featureType: "malmows:SUM_KVARTER_P",
 					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:3008",

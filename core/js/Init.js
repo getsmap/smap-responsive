@@ -73,9 +73,14 @@ smap.core.Init = L.Class.extend({
 				for (var typeName in props) {}
 				
 				// Get popup html for this typename
-				var t = smap.cmd.getLayerConfigBy("layers", typeName, {
+				var typeNameArr = typeName.split(":");
+				var cutTypeName = typeNameArr[typeNameArr.length-1];
+				var t = smap.cmd.getLayerConfigBy("layers", cutTypeName, {
 					inText: true
 				});
+				if (!t) {
+					return false;
+				}
 				props = props[typeName][0];
 				props._displayName = t.options.displayName;
 				var html = utils.extractToHtml(t.options.popup, props);
