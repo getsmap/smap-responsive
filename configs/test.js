@@ -238,11 +238,11 @@ var config = {
 		           {
 		        	   init: "L.Control.SharePosition",
 		        	   options: {}
+		           },
+		           {
+		        	   init: "L.Control.Search",
+		        	   options: {}
 		           }
-//		           {
-//		        	   init: "L.Control.Search",
-//		        	   options: {}
-//		           }
 //		           ,
 //		           {
 //		           	   init: "L.Control.SideBars",
