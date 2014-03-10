@@ -15,13 +15,18 @@
 
 #smap-search-div input {
 	max-width: 400px;
-	width: 95%;
+	width: 96%;
 	border-left: none;
+	/*border: none;
+	border: 1px solid #ccc;
+	border-width: 1px 1px 1px 0;*/
 	box-shadow: none;
 	-webkit-box-shadow: none;
+	-webkit-appearance: none;
 	border-radius: 0 !important;
 	transition: max-width .3s;
 	-webkit-transition: max-width .3s;
+	
 }
 
 #smap-search-div input:focus {

@@ -20,7 +20,7 @@ L.Control.Search = L.Control.extend({
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;			
+			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
 
@@ -80,6 +80,12 @@ L.Control.Search = L.Control.extend({
 		$entry.on("keypress", activate);
 		$entry.on("dblclick", prevDefault);
 		$entry.on("mousedown", prevDefault);
+		$entry.on("touchstart", function() {
+			$(this).focus();
+		});
+		$searchDiv.on("touchstart", function() {
+			$(this).find("input").focus();
+		});
 		$entry.on("blur", deactivate);
 		
 		$("#mapdiv").append( $searchDiv );
@@ -108,16 +114,16 @@ L.Control.Search = L.Control.extend({
 
 		var geoLocate = this._geoLocate;
 		$entry.typeahead({
-			items: 10,
+			items: 5,
 			minLength: 2,
 			highlight: true,
 			hint: true,
 			updater: function(val) {
-			
+				setTimeout(function() {
+					$("#smap-search-div input").blur();
+				}, 100);
 				smap.cmd.loading(true);
-				
 				geoLocate.call(self, val);
-				
 				deactivate();
 				return val;
 			},
@@ -198,7 +204,6 @@ L.Control.Search = L.Control.extend({
 				function onPopupOpen(e) {
 					$("#smap-search-popupbtn").off("click").on("click", function() {
 						self.map.removeLayer(self.marker);
-						$("#smap-search-div input").val(null);
 						return false;
 					});
 				};
@@ -209,8 +214,10 @@ L.Control.Search = L.Control.extend({
 				this.map.setView(latLng, 15);
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
 				this.marker.openPopup();
-				
-				
+				$("#smap-search-div input").val(null);
+			},
+			complete: function() {
+				smap.cmd.loading(false);
 			}
 		});
 		
