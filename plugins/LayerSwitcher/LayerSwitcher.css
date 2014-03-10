@@ -37,7 +37,7 @@
 	width: 70%;
 	height: 100%;
 	max-width: 300px;
-	background-color: #2E3941;
+	background-color: #38454E;
 	padding: 0 20px;
 	-moz-box-shadow: inset #000 -3px 0px 17px;
 	box-shadow: inset #000 -3px 0px 17px;
@@ -47,7 +47,7 @@
 
 .lswitch-panel a {
 	cursor: pointer;
-	background-color: #2E3941;
+	background-color: #38454E;
 	color: #eee;
 	border: none;
 	border-radius: 0px !important;
@@ -55,34 +55,34 @@
 }
 
 .lswitch-panel a:hover, .lswitch-panel a:active {
-	background-color: #2E3941; /* For mobile screens - use same background-color during hover as for default */
+	background-color: #38454E; /* For mobile screens - use same background-color during hover as for default */
 	color: #fff;
 	border-radius: 0;
 }
 
 .lswitch-panel a.active {
 	cursor: pointer;
-	background-color: #212429;
+	background-color: rgba(0,0,0,.4);
 	color: #fff;
 	font-weight: normal;
 }
 
 .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
-	background-color: #212429;
+	background-color: rgba(0,0,0,.4);
 	color: #fff;
 }
 
 .lswitch-panel .panel-default {
 	border: none;
-	background-color: #2E3941;
+	background-color: #38454E;
 }
 
 .lswitch-panel .panel-heading {
 	padding: 3px 15px;
-	border: 1px solid #222;
+	border: none;
 	border-radius: 0;
 	font-weight: normal;
-	background-color: rgba(0,0,0,.5) !important;
+	background-color: rgba(0,0,0,.4) !important;
 	color: #fff !important;
 	border-radius: 5px 5px 0px 0;
 	font-weight: bold;
