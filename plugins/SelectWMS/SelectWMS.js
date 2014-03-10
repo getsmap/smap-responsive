@@ -197,7 +197,15 @@ L.Control.SelectWMS = L.Control.extend({
 						}
 					}
 					t = row.split("=");
-					val = $.trim(t[1]);
+					if (t.length > 2) {
+						// There were some "=" in the value – join again.
+						var tempArr = t.slice(1);
+						val = tempArr.join("=");
+					}
+					else {
+						val = t[1];			
+					}
+					val = $.trim(val);
 					
 					// Convert string to number if possible
 					try {
