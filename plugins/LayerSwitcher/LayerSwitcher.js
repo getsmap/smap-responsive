@@ -93,10 +93,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 	_bindEvents: function() {
 		var self = this;
 		
-		
-		
-		
-		
 		$("#mapdiv").on("touchstart click", $.proxy(function() {
 			if ( $(window).width() < this.options.pxDesktop) {
 				this.hidePanel();
@@ -144,7 +140,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	_addBtn: function() {
 		var btn = $('<div id="lswitch-btn"><img src="img/glyphicons_113_wide.png"></img></div>');
 		$("#mapdiv").prepend(btn);
-		btn.on("click touchstart mousedown", $.proxy(function() {
+		btn.on("click tap mousedown", $.proxy(function() {
 			this.showPanel();
 			return false;
 		}, this));
