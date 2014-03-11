@@ -118,7 +118,7 @@ var config = {
 			url: "http://{s}.tile.cloudmade.com/f02f33a9158a425199542d3493b9189d/998/256/{z}/{x}/{y}.png",
 			options: {
 				layerId: "osm",
-				displayName: "OSM",
+				displayName: "OSM"
 			}
 		},
 
