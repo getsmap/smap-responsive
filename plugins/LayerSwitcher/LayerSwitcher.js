@@ -144,7 +144,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	_addBtn: function() {
 		var btn = $('<div id="lswitch-btn"><img src="img/glyphicons_113_wide.png"></img></div>');
 		$("#mapdiv").prepend(btn);
-		btn.on("touchstart mousedown", $.proxy(function() {
+		btn.on("click touchstart mousedown", $.proxy(function() {
 			this.showPanel();
 			return false;
 		}, this));
