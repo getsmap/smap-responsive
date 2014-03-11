@@ -39,7 +39,7 @@ var config = {
 	    			 selectable: true,
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor",
-	    			 popup: '<h3>${plan}</h3><a target="_blank" href="${url}">Länk till plan</a>'
+	    			 popup: '<h3>${plan}</h3><a href="${url}">LÄNK</a>'   //<p onclick="window.open(\'http://www.malmo.se\')">Länk till plan</p>'
 	    		 }
 		     },
 		     {

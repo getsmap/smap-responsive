@@ -85,6 +85,15 @@ smap.core.Init = L.Class.extend({
 				props._displayName = t.options.displayName;
 				var html = utils.extractToHtml(t.options.popup, props);
 				html = html.replace("${_displayName}", t.options.displayName);
+				
+				var $html = $("<div>"+html+"</div>");
+				$html.find("a").each(function() {
+					var href = $(this).attr("href");
+					// Get the anchor href value and set it to the onclick value.
+					$(this).attr("onclick", 'window.open("'+href+'", "_blank")');
+					$(this).removeAttr("href");
+					html = $html.html();
+				});
 				map.closePopup();
 				var popup = L.popup()
 					.setLatLng(resp.latLng)
