@@ -140,7 +140,7 @@ smap.core.Layer = L.Class.extend({
 		 * Avoid baselayers appearing on top of overlays.
 		 */
 		if (t.options.isBaseLayer) {
-			t.options.zIndex = t.options.zIndex || 0;			
+			t.options.zIndex = t.options.zIndex || 0;
 		}
 		else {
 			t.options.zIndex = t.options.zIndex || 10;
