@@ -179,13 +179,14 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	hidePanel: function() {
-		$("body").css("overflow", "auto"); // restore overflow
 		$("#mapdiv").css({
 			"margin-left": "0px"
 		});
 		$("#lswitch-btn").show();
+		$("body").css("overflow", "hidden !important");
 		setTimeout($.proxy(function() {
 			this.$panel.hide();
+			$("body").css("overflow", "auto");
 		}, this), 300);
 		console.log("hide panel");
 	},
