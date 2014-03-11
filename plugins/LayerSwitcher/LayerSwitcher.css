@@ -15,7 +15,10 @@
 }
 
 .lswitch-btn-big {
-	padding: 15px 10px 15px 0px;
+	padding: 20px 25px 20px 0px !important;
+}
+.lswitch-btn-big img {
+	width: 30px;
 }
 
 .lswitch-panel .panel {
