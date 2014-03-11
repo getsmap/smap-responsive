@@ -89,9 +89,9 @@ L.Control.Search = L.Control.extend({
 		$entry.on("touchstart", function() {
 			$(this).focus();
 		});
-		$searchDiv.on("click touchstart", function() {
+		$searchDiv.on("click touchstart", function(e) {
 			$(this).find("input").focus();
-			return false;
+			e.stopImmediatePropagation(); // Don't stop event totally since select from autocomplete won't work
 		});
 		$entry.on("blur", deactivate);
 		
