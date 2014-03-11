@@ -25,11 +25,28 @@ var utils = {
 			
 			if (options.size) {
 				d.addClass("bs-modal-"+options.size);
-				d.find(".modal-dialog").addClass("modal-"+options.size);
-				
+				d.find(".modal-dialog").addClass("modal-"+options.size);	
 			}
 			
 			return d;
+		},
+		
+		notify: function(text, msgType, options) {
+			options = options || {};
+			
+			options.parent = options.parent || $("body");
+			switch(msgType) {
+			case "success":
+				msgType = "alert-success";
+				break;
+			case "error":
+				msgType = "alert-danger";
+				break;
+			}
+			var msg = $('<div class="alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
+			options.parent.find(".alert").remove();
+			options.parent.append(msg);
+			return msg;
 		},
 		
 		round: function(val, nbrOfDecimals) {

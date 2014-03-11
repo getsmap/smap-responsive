@@ -5,9 +5,27 @@ L.Control.Geolocate = L.Control.extend({
 		locateOptions: {}
 		
 	},
+	
+	_lang: {
+		"sv": {
+			errorGeolocate: "Kunde inte hitta din position"
+		},
+		"en": {
+			errorGeolocate: "The browser could not detect your position"
+		}
+	},
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;
+		}
+	},
+	
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		this._setLang(options.langCode);
 	},
 
 	onAdd: function(map) {
@@ -110,7 +128,13 @@ L.Control.Geolocate = L.Control.extend({
 	
 	_onLocationError: function(e) {
 		smap.cmd.loading(false);
-		console.log("Geolocate error: +"+e.message);
+		var msgTag = utils.notify(this.lang.errorGeolocate+": "+e.message, "error");
+		msgTag.on("touchstart", function() {
+			$("body").find(".alert").remove();
+		});
+		console.log("Geolocate error: "+e.message);
+		this.deactivate();
+		
 	},
 	
 	_onDragStart: function() {
