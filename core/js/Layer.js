@@ -135,6 +135,17 @@ smap.core.Layer = L.Class.extend({
 	
 	_createLayer: function(t) {
 		var init = eval(t.init);
+		
+		/**
+		 * Avoid baselayers appearing on top of overlays.
+		 */
+		if (t.options.isBaseLayer) {
+			t.options.zIndex = t.options.zIndex || 0;			
+		}
+		else {
+			t.options.zIndex = t.options.zIndex || 10;
+		}
+		
 		var layer = new init(t.url, t.options);
 		
 		var self = this;
