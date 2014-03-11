@@ -86,12 +86,18 @@ smap.core.Init = L.Class.extend({
 				var html = utils.extractToHtml(t.options.popup, props);
 				html = html.replace("${_displayName}", t.options.displayName);
 				
+				// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
+				// (This issue was only found for touch devices.)
 				var $html = $("<div>"+html+"</div>");
 				$html.find("a").each(function() {
-					var href = $(this).attr("href");
+					var href = $(this).attr("href"),
+						text = $(this).text();
+					var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
 					// Get the anchor href value and set it to the onclick value.
-					$(this).attr("onclick", 'window.open("'+href+'", "_blank")');
-					$(this).removeAttr("href");
+					$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
+//					$(this).removeAttr("href");
+					$(this).after($btn);
+					$(this).remove();
 					html = $html.html();
 				});
 				map.closePopup();
