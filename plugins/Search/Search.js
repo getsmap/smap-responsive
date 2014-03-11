@@ -53,6 +53,12 @@ L.Control.Search = L.Control.extend({
 				'<input autocomplete="off" data-provide="typeahead" type="text" class="form-control" placeholder="'+this.lang.search+'"></input></div>');
 		var $entry = $searchDiv.find("input");
 		
+		/**
+		 * Force keyboard to appear on Windows Phone: 
+		 * http://stackoverflow.com/questions/11855609/forcing-numeric-keyboard-in-internet-explorer-on-windows-phone-7-5
+		 */
+		$entry.attr("pattern", "[0-9]");
+		
 		function activate() {
 			var $bg = $("#smap-search-bg");
 			if ( !$bg.length ) {
@@ -83,8 +89,9 @@ L.Control.Search = L.Control.extend({
 		$entry.on("touchstart", function() {
 			$(this).focus();
 		});
-		$searchDiv.on("touchstart", function() {
+		$searchDiv.on("click touchstart", function() {
 			$(this).find("input").focus();
+			return false;
 		});
 		$entry.on("blur", deactivate);
 		
