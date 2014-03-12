@@ -186,7 +186,7 @@ L.Control.Search = L.Control.extend({
 				var wgs84 = "EPSG:4326";
 				if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
 					// project the response
-					var arr = proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
+					var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
 					latLng = L.latLng(arr[1], arr[0]);
 				}
 				function onPopupOpen(e) {

@@ -125,7 +125,6 @@ L.Control.Geolocate = L.Control.extend({
 		this.marker = this.marker || L.userMarker(e.latlng, {pulsing:true}).addTo(this.map);
 		this.marker.setLatLng(e.latlng);
 		this.marker.setAccuracy(e.accuracy);
-		console.log("found location");
 	},
 	
 	_onLocationError: function(e) {
@@ -134,9 +133,7 @@ L.Control.Geolocate = L.Control.extend({
 		msgTag.on("touchstart", function() {
 			$("body").find(".alert").remove();
 		});
-		console.log("Geolocate error: "+e.message);
 		this.deactivate();
-		
 	},
 	
 	_onDragStart: function() {
