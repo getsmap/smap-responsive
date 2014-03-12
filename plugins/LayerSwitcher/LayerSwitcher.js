@@ -48,17 +48,19 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this._bindEvents();
 		$("#mapdiv").addClass("lswitch-panelslide");
 		
-		function touchScroll(selector){
-		      var scrollStartPos = 0;
-		      $(selector).on('touchstart', function(event) {
-		        scrollStartPos = this.scrollTop + event.originalEvent.touches[0].pageY;
-		      });
-		      $(selector).on('touchmove', function(event) {
-		        this.scrollTop = scrollStartPos - event.originalEvent.touches[0].pageY;
-		      });
+		// Fix for Android 3 and lower (make div scrollable)
+		if (L.Browser.android) {  // L.Browser.android23 is better?
+			function touchScroll(selector){
+			      var scrollStartPos = 0;
+			      $(selector).on('touchstart', function(event) {
+			        scrollStartPos = this.scrollTop + event.originalEvent.touches[0].pageY;
+			      });
+			      $(selector).on('touchmove', function(event) {
+			        this.scrollTop = scrollStartPos - event.originalEvent.touches[0].pageY;
+			      });
+			}
+			touchScroll($('.lswitch-panel'));
 		}
-		touchScroll($('.lswitch-panel'))
-		
 		return this._container;
 	},
 
