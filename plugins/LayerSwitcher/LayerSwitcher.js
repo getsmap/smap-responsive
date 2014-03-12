@@ -50,10 +50,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		
 		function touchScroll(selector){
 		      var scrollStartPos = 0;
-		      $(selector).live('touchstart', function(event) {
+		      $(selector).on('touchstart', function(event) {
 		        scrollStartPos = this.scrollTop + event.originalEvent.touches[0].pageY;
 		      });
-		      $(selector).live('touchmove', function(event) {
+		      $(selector).on('touchmove', function(event) {
 		        this.scrollTop = scrollStartPos - event.originalEvent.touches[0].pageY;
 		      });
 		}
