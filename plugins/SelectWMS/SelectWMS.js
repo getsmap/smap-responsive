@@ -221,7 +221,6 @@ L.Control.SelectWMS = L.Control.extend({
 					// Store the old result and create a new dict
 					out[featureType].push($.extend({}, dict));
 				}
-				console.log(out);
 				options.onSuccess(out, {
 					latLng: this.latLng,
 					map: this.map,
