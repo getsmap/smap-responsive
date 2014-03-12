@@ -174,7 +174,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 			"margin-left": this.$panel.outerWidth() + "px"
 		});
 		$("#lswitch-btn").hide();
-		console.log("show panel");
 	},
 	
 	hidePanel: function() {
@@ -187,7 +186,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 			this.$panel.hide();
 			$("body").css("overflow", "auto");
 		}, this), 300);
-		console.log("hide panel");
 	},
 	
 	_setBaseLayer: function(layerId) {
