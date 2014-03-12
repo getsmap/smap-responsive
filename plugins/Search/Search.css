@@ -5,6 +5,9 @@
 	z-index: 2000;
 	transition: left .3s;
 	-webkit-transition: left .3s;
+	max-width: 450px;
+	transition: max-width .3s;
+	-webkit-transition: max-width .3s;
 }
 
 #smap-search-div .input-group-addon {
@@ -14,8 +17,7 @@
 }
 
 #smap-search-div input {
-	max-width: 400px;
-	width: 96%;
+	width: 100%;
 	border-left: none;
 	/*border: none;
 	border: 1px solid #ccc;
@@ -24,9 +26,6 @@
 	-webkit-box-shadow: none;
 	-webkit-appearance: none;
 	border-radius: 0 !important;
-	transition: max-width .3s;
-	-webkit-transition: max-width .3s;
-	
 }
 
 #smap-search-div input:focus {
@@ -61,8 +60,6 @@
 
 .search-active {
 	left: 2% !important;
-}
-.search-active input {
 	max-width: 600px !important;
 }
 .search-active ul {
