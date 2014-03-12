@@ -5,6 +5,7 @@
 	z-index: 2000;
 	transition: left .3s;
 	-webkit-transition: left .3s;
+	width: 96%;
 	max-width: 450px;
 	transition: max-width .3s;
 	-webkit-transition: max-width .3s;

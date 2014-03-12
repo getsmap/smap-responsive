@@ -60,6 +60,9 @@ L.Control.Search = L.Control.extend({
 		$entry.attr("pattern", "[0-9]");
 		
 		function activate() {
+			if (!L.Browser.touch) {
+				return;
+			}
 			var $bg = $("#smap-search-bg");
 			if ( !$bg.length ) {
 				$bg = $('<div id="smap-search-bg" />');				
@@ -71,6 +74,9 @@ L.Control.Search = L.Control.extend({
 			}
 		};
 		function deactivate() {
+			if (!L.Browser.touch) {
+				return;
+			}
 			$searchDiv.removeClass("search-active");
 			$("#smap-search-bg").removeClass("search-bg-visible");
 			setTimeout(function() {
@@ -129,7 +135,6 @@ L.Control.Search = L.Control.extend({
 				smap.cmd.loading(true);
 				geoLocate.call(self, val);
 				deactivate();
-				$("#smap-search-div input").blur();
 				return val;
 			},
 //		    displayKey: 'value',
@@ -198,6 +203,9 @@ L.Control.Search = L.Control.extend({
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
 				this.marker.openPopup();
 				$("#smap-search-div input").val(null);
+				setTimeout(function() {
+					$("#smap-search-div input").blur();
+				}, 100);
 			},
 			complete: function() {
 				smap.cmd.loading(false);
