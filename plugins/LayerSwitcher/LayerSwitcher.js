@@ -48,7 +48,16 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this._bindEvents();
 		$("#mapdiv").addClass("lswitch-panelslide");
 		
-		this.touchScroll( $(".lswitch-panel")[0] )
+		function touchScroll(selector){
+		      var scrollStartPos = 0;
+		      $(selector).live('touchstart', function(event) {
+		        scrollStartPos = this.scrollTop + event.originalEvent.touches[0].pageY;
+		      });
+		      $(selector).live('touchmove', function(event) {
+		        this.scrollTop = scrollStartPos - event.originalEvent.touches[0].pageY;
+		      });
+		}
+		touchScroll($('.lswitch-panel'))
 		
 		return this._container;
 	},
@@ -178,22 +187,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 		});
 		$("#lswitch-btn").hide();
 	},
-	
-	touchScroll: function(tag){
-		if(isTouchDevice()){ //if touch events exist...
-			var scrollStartPos=0;
-	 
-			tag.addEventListener("touchstart", function(event) {
-				scrollStartPos=this.scrollTop+event.touches[0].pageY;
-				event.preventDefault();
-			},false);
-	 
-			tag.addEventListener("touchmove", function(event) {
-				this.scrollTop=scrollStartPos-event.touches[0].pageY;
-				event.preventDefault();
-			},false);
-		}
-	}
 	
 	hidePanel: function() {
 		$("#mapdiv").css({
