@@ -114,6 +114,13 @@ L.Control.LayerSwitcher = L.Control.extend({
 			}
 		}, this));
 		
+		if ( L.Browser.ielt9 ) {
+			var self = this;
+			this.map.on("click", function() {
+				self.hidePanel();
+			});
+		}
+		
 		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
 		
 		var showPanel = $.proxy(this.showPanel, this),
