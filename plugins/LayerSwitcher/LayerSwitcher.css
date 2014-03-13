@@ -69,12 +69,14 @@
 
 .lswitch-panel a.active {
 	cursor: pointer;
+	background-color: #333;
 	background-color: rgba(0,0,0,.4);
 	color: #fff;
 	font-weight: normal;
 }
 
 .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
+	background-color: #333;
 	background-color: rgba(0,0,0,.4);
 	color: #fff;
 }
@@ -89,6 +91,7 @@
 	border: none;
 	border-radius: 0;
 	font-weight: normal;
+	background-color: #333;
 	background-color: rgba(0,0,0,.4) !important;
 	color: #fff !important;
 	border-radius: 5px 5px 0px 0;
@@ -112,6 +115,7 @@
 	
 	.lswitch-panel {
 		display: block !important;
+		background-color: #eee;
 		background-color: rgba(255,255,255,0.8);
 		-moz-box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
 		box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
@@ -122,6 +126,7 @@
 		transition: all 500ms;*/
 	}
 	.lswitch-panel .panel-heading {
+		background-color: #555;
 		background-color: rgba(40,40,40,.5) !important;
 		color: #000;
 		border: none;
@@ -135,15 +140,18 @@
 		transition: all 200ms;
 	}
 	.lswitch-panel a:hover, .lswitch-panel a:active {
+		background-color: #bbb;
 		background-color: rgba(200,200,200,.5);
 		color: #000;
 	}
 	.lswitch-panel a.active:hover, .lswitch-panel a.active:active {
+		background-color: #333;
 		background-color: rgba(40,40,40,.5);
 		color: #fff;
 	}
 	.lswitch-panel a.active {
 		cursor: pointer;
+		background-color: #333;
 		background-color: rgba(40,40,40,.5);
 		color: #fff;
 		font-weight: normal;
