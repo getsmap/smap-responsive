@@ -1,18 +1,50 @@
 L.Control.Info = L.Control.extend({
 	options: {
-//		position: 'bottomright',
-		bodyContent: '<h3>Vad är det här?</h3>'+
-			'<p>Den här kartan är byggd med sMap-mobile – ett JavaScript-ramverk utvecklat av Stadsbyggnadskontoret i Malmö.</p>'+
-			'<p>Ramverket bygger på…</p>'
+		autoActivate: true,
+		position: 'topright',
+		_lang: {
+			"sv": {
+				titleInfo: "Välkommen till smap-mobile!",
+				bodyContent:
+					'<h4>Vad?</h4>'+
+			  		'<p>Smap-mobile är ett ramverk för att skapa kartor med responsiv design. '+
+			  			'Responsiv design betyder att kartorna anpassar sitt innehåll efter skärmens storlek. '+
+			  			'Smap-mobile är i första hand utvecklat för att göra enkla, avskalade kartor – med ett visst fokus på mobila plattformar.</p>'+
+		  			'<h4>Var?</h4>'+
+		  			'<p>Koden är öppen och kan laddas ner gratis från <a href="https://github.com/getsmap/smap-mobile/">GitHub</a>.</p>'+
+			  		'<h4>Hur?</h4>'+
+			  		'<p>Ramverket har hittills utvecklats av Malmö Stadsbyggnadskontor men kommer ingå '+
+					  'i sMap-samarbetet – där även kommunerna Kristianstad, Helsingborg och Lund är delaktiga.'+
+			  		'<h4>Kontakt</h4>'+
+					'<p>Är du intresserad av att använda koden eller hjälpa till med utvecklingen? Kontakta GIT-utvecklare <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
+					'<p>Vill du veta mer om sMap-samarbetet eller publicering av geodata? Kontakta projektsamordnade <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
+					'<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
+			},
+			"en": {
+				titleInfo: "Välkommen till smap-mobile!",
+				bodyContent:
+					'<h4>Vad?</h4>'+
+			  		'<p>Smap-mobile är ett ramverk för att skapa kartor med responsiv design. '+
+			  			'Responsiv design betyder att kartorna anpassar sitt innehåll efter skärmens storlek. '+
+			  			'Smap-mobile är utvecklat för enklare, avskalade applikationer med ett visst fokus på mobila plattformar</p>'+
+		  			'<h4>Var?</h4>'+
+		  			'<p>Koden är öppen och kan laddas ner gratis från <a href="https://github.com/getsmap/smap-mobile/">GitHub</a>.</p>'+
+			  		'<h4>Hur?</h4>'+
+			  		'<p>Ramverket har hittills utvecklats av Malmö Stadsbyggnadskontor men kommer ingå '+
+					  'i "sMap"-samarbetet – där även kommunerna i Kristianstad, Helsingborg och Lund är med.'+
+			  		'<h4>Kontakt</h4>'+
+					'<p>Är du intresserad av att använda koden eller hjälpa till med utvecklingen? Kontakta GIT-utvecklare <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
+					'<p>Vill du veta mer om sMap-samarbetet eller publicering av geodata? Kontakta <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
+					'<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
+			}
+		}
 	},
 	
 	_lang: {
 		"sv": {
-			titleInfo: "Info",
 			close: "Stäng"
 		},
 		"en": {
-			titleInfo: "Info",
 			close: "Close"
 		}
 	},
@@ -26,6 +58,9 @@ L.Control.Info = L.Control.extend({
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		if (this.options._lang) {
+			$.extend(true, this._lang, this.options._lang);
+		}
 		this._setLang(options.langCode);
 	},
 
@@ -35,15 +70,9 @@ L.Control.Info = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'leaflet-control-info'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		
-		// Use $ prefix for all jQuery objects to make it easier to sort out all
-		// jQuery dependencies when sharing the code in future.
 		this.$container = $(this._container);
-		
 		this._drawBtn();
 		
-		// Binding an event (example)
-		// this.map.on('layeradd', this._onLayerAdd, this).on('layerremove', this._onLayerRemove, this);
-
 		return this._container;
 	},
 
@@ -55,7 +84,7 @@ L.Control.Info = L.Control.extend({
 	activate: function() {
 		if (!this._$dialog) {
 			var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
-			this._$dialog = utils.drawDialog(this.lang.titleInfo, this.options.bodyContent, footerContent);
+			this._$dialog = utils.drawDialog(this.lang.titleInfo, this.lang.bodyContent, footerContent);
 		}
 		this._$dialog.modal("show");
 	},
@@ -64,11 +93,12 @@ L.Control.Info = L.Control.extend({
 	_drawBtn: function() {
 		var self = this;
 		var $btn = $('<button id="smap-info-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-info-sign"></span></button>');
-		$("#mapdiv").append($btn);
+//		$("#mapdiv").append($btn);
 		$btn.on("click", function() {
 			self.activate();
 			return false;
 		});
+		this.$container.append($btn);
 	}
 });
 

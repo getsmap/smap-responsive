@@ -3,7 +3,8 @@ L.Control.Geolocate = L.Control.extend({
 		position: 'bottomright',
 		_btnImageSrc: "img/glyphish-icons/PNG-icons/193-location-arrow.png",
 		locateOptions: {
-			maxZoom: 12
+			maxZoom: 12,
+			enableHighAccuracy: true
 		}
 		
 	},
