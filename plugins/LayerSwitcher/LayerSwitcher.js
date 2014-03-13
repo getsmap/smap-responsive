@@ -174,7 +174,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	
 	_addPanel: function() {
 		this.$panel = $('<div class="lswitch-panel unselectable" />');
-		this.$panel.swipeleft($.proxy(function() {  
+		this.$panel.swipeleft($.proxy(function() {
 			this.hidePanel();
 		}, this));
 		this.$list = $(
@@ -218,7 +218,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		// Hide all baselayers
 		for (var key in layers) {
 			layer = layers[key];
-			if (layer.options.isBaseLayer) {
+			if (layer && layer.options && layer.options.isBaseLayer) {
 				if (layer.options.layerId !== layerId) {
 					this.hideLayer(layer.options.layerId);					
 				}
