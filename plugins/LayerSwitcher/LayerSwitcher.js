@@ -142,12 +142,14 @@ L.Control.LayerSwitcher = L.Control.extend({
 //			}
 //		}, this));
 		
-		$(window).on("orientationchange", function() {
-			if (self.$panel.is(":visible")) {
-				showPanel();
-				window.scrollTo(0,0);
-			}
-		});
+		if (L.Browser.touch) {
+			$(window).on("orientationchange", function() {
+				if (self.$panel.is(":visible")) {
+					showPanel();
+					window.scrollTo(0,0);
+				}
+			});			
+		}
 		
 //		this.map.on("layeradd layerremove", function(e) {
 //			var layerId = e.layer.options.layerId;
