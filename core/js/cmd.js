@@ -73,9 +73,9 @@ smap.cmd = {
 			if (show && show === true) {
 				if (!this.spinner) {
 					var opts = {
-							length: 20,
-							width: 15,
-							radius: 30
+							length: 10,
+							width: 8,
+							radius: 15
 					};
 					this.spinner = new Spinner(opts).spin();
 				}
