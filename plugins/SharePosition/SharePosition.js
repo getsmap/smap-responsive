@@ -240,6 +240,8 @@ L.Control.SharePosition = L.Control.extend({
 		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
 		this.map.on("locationerror", $.proxy(this._onLocationError, this));
 		
+		this.uid = localStorage.share_uid || null;
+		
 		this._storeInterval = setInterval($.proxy(this._store, this), 5000);
 		this._setLocateSettings();
 	},
@@ -275,8 +277,9 @@ L.Control.SharePosition = L.Control.extend({
 			dataType: "text",
 			success: function(resp) {
 				var obj = $.xml2json(resp);
-				if (obj && obj.TransactionSummary && parseInt(obj.TransactionSummary.totalInserted) > 0) {
+				if (!this.uid && obj && obj.TransactionSummary && parseInt(obj.TransactionSummary.totalInserted) > 0) {
 					this.uid = parseInt(obj.InsertResults.Feature.FeatureId.fid.split(".")[1]);
+					localStorage.share_uid = this.uid;
 				}
 			},
 			complete: function() {

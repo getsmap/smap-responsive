@@ -1,7 +1,7 @@
 L.Control.Info = L.Control.extend({
 	options: {
-		autoActivate: true,
-		position: 'topright',
+		autoActivate: false,
+		position: 'bottomright',
 		_lang: {
 			"sv": {
 				titleInfo: "<h4>Välkommen till smap-mobile!</h4>",
