@@ -250,6 +250,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}
 		else {
 			// Hide layer
+			this.map.closePopup();
 			this.hideLayer(layerId);
 		}
 		return false;
