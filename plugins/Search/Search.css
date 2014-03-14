@@ -3,13 +3,17 @@
 	left: 2%;
 	top: 8px;
 	z-index: 1001;
-	transition: left .3s;
-	-webkit-transition: left .3s;
+	transition: left .3s, max-width .3s;
+	-webkit-transition: left .3s, max-width .3s;
 	width: 96%;
-	max-width: 450px;
+	max-width: 380px;
 	transition: max-width .3s;
 	-webkit-transition: max-width .3s;
 }
+.smap-search-div-focused {
+	max-width: 450px !important;
+}
+
 
 #smap-search-div .input-group-addon {
 	background-color: #fff !important;

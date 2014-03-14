@@ -5,7 +5,8 @@ L.Control.Search = L.Control.extend({
 		wsAcUrl: "http://xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
 		wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
 		whitespace: "%2B",
-		wsOrgProj: "EPSG:3006" //"EPSG:3008"
+		wsOrgProj: "EPSG:3006", //"EPSG:3008"
+		pxDesktop: 992
 	},
 	
 	_lang: {
@@ -60,7 +61,9 @@ L.Control.Search = L.Control.extend({
 		$entry.attr("pattern", "[0-9]");
 		
 		function activate() {
-			if (!L.Browser.touch) {
+			// Note! This is the breakpoint for small devices
+			var w = $(window).width();
+			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
 				return;
 			}
 			var $bg = $("#smap-search-bg");
@@ -74,7 +77,8 @@ L.Control.Search = L.Control.extend({
 			}
 		};
 		function deactivate() {
-			if (!L.Browser.touch) {
+			var w = $(window).width();
+			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
 				return;
 			}
 			$searchDiv.removeClass("search-active");
@@ -89,12 +93,18 @@ L.Control.Search = L.Control.extend({
 			e.stopPropagation();
 		};
 		
-		$entry.on("keypress", activate);
-		$entry.on("dblclick", prevDefault);
-		$entry.on("mousedown", prevDefault);
-		$entry.on("touchstart", function() {
-			$(this).focus();
-		});
+		$entry.on("keypress", activate)
+			.on("dblclick", prevDefault)
+			.on("mousedown", prevDefault)
+			.on("focus", function() {
+				$(this).parent().addClass("smap-search-div-focused");
+			})
+			.on("blur", function() {
+				$(this).parent().removeClass("smap-search-div-focused");
+			})
+			.on("touchstart", function() {
+				$(this).focus();
+			});
 		$searchDiv.on("click touchstart", function(e) {
 			$(this).find("input").focus();
 			e.stopImmediatePropagation(); // Don't stop event totally since select from autocomplete won't work
