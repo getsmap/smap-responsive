@@ -9,6 +9,8 @@ L.Control.SharePosition = L.Control.extend({
 		maxAge: 5
 	},
 	
+	_refreshIntervalMs: 15000,
+	
 	_lang: {
 		"sv": {
 			dTitle: "Dela position",
@@ -173,7 +175,7 @@ L.Control.SharePosition = L.Control.extend({
 					// Show the GUI
 					$("#sharepos-gui").show();
 					self._addLayer();
-					self._refreshInterval = setInterval($.proxy(self._refresh, self), 10000);
+					self._refreshInterval = setInterval($.proxy(self._refresh, self), self._refreshIntervalMs);
 				}
 				else {
 					self.deactivate();
@@ -244,6 +246,8 @@ L.Control.SharePosition = L.Control.extend({
 		
 		this._storeInterval = setInterval($.proxy(this._store, this), 5000);
 		this._setLocateSettings();
+		this.map.fire("drag");
+		
 	},
 	
 	_stopShare: function() {
