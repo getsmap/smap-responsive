@@ -1,9 +1,9 @@
-smap-mobile
+sMap-mobile
 ===========
 
 ###Introduction
 
-sMap-mobile is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which supports a range of different browsers and devices (specified in the wiki). The framework can be extended by Leaflet controls.
+sMap-mobile is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which supports a range of different browsers and devices (specified in the wiki). The framework can be extended with Leaflet controls.
 
 For more information about smap-mobile, contact Johan Lahti (see below).
 
