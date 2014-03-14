@@ -84,22 +84,40 @@ L.Control.SelectWMS = L.Control.extend({
 		}
 		var latLng = e.latlng;
 		var layerNames = [];
+		
+		var t, url, URL,
+			ts = {};
 		$.each(layers, function(i, layer) {
-			layerNames.push(layer.options.layers);
+			url = layer._url;
+			URL = url.toUpperCase();
+			if (!ts[URL]) {
+				ts[URL] = {
+						layerNames: [],
+						url: url,
+						wmsVersion: layer._wmsVersion
+				};
+			}
+			ts[URL].layerNames.push(layer.options.layers);
 		});
 //		var bounds = L.latLngBounds(southWest, northEast);
-		var params = this._makeParams({
-				layers: layerNames.join(","),
-				version: this.options.wmsVersion || layers[0]._wmsVersion,   // this.options.wmsVersion || 
-				info_format: this.options.info_format,
-				latLng: latLng
-		});
 //		params.latLng = latLng;
 		this.latLng = latLng;
-		this.request(layers[0]._url, params, {
-			onSuccess: this.options.onSuccess,
-			onError: function() {}
-		});
+
+		var params;
+		for (var URL in ts) {
+			t = ts[URL];
+			params = this._makeParams({
+				layers: t.layerNames.join(","),
+				version: t._wmsVersion || this.options.wmsVersion, 
+				info_format: this.options.info_format,
+				latLng: latLng
+			});
+			this.request(t.url, params, {
+				onSuccess: this.options.onSuccess,
+				onError: function() {}
+			});		
+		}
+		
 		
 	},
 	
