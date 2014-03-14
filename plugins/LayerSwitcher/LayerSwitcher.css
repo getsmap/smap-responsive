@@ -1,5 +1,5 @@
 #lswitch-btn {
-	z-index: 1001;
+	z-index: 999;
 	position: absolute;
 	left: 0px;
 	bottom: 80px;
@@ -128,7 +128,7 @@
 	}
 	.lswitch-panel .panel-heading {
 		background-color: #555;
-		background-color: rgba(40,40,40,.5) !important;
+		background-color: rgba(0, 0, 0, 0.45) !important;
 		color: #000;
 		border: none;
 	}
@@ -147,13 +147,13 @@
 	}
 	.lswitch-panel a.active:hover, .lswitch-panel a.active:active {
 		background-color: #333;
-		background-color: rgba(40,40,40,.5);
+		background-color: rgba(0, 0, 0, 0.45);
 		color: #fff;
 	}
 	.lswitch-panel a.active {
 		cursor: pointer;
 		background-color: #333;
-		background-color: rgba(40,40,40,.5);
+		background-color: rgba(0, 0, 0, 0.45);
 		color: #fff;
 		font-weight: normal;
 	}

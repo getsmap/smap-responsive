@@ -146,7 +146,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 			$(window).on("orientationchange", function() {
 				if (self.$panel.is(":visible")) {
 					hidePanel();
-					window.scrollTo(0,0);
 				}
 			});			
 		}
