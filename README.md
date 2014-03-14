@@ -34,6 +34,8 @@ If you are using sMap mobile to make your own map, or if you change it, we would
 
 ###Questions or suggestions?
 
-We are happy for any type of feed-back. If you have questions regarding smap-mobile, contact Johan Lahti (johan.lahti (at) malmo.se).
+We are happy for any type of feed-back.
+
+If you have questions regarding smap-mobile, contact Johan Lahti (johan.lahti (at) malmo.se).
 
 For more generic questions about the sMap project – contact our project administrators Ulf Minör (ulf.minor (at) malmo.se) or Karl-Magnus Jönsson (karl-magnus.jonsson (at) kristianstad.se).
