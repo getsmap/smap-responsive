@@ -23,11 +23,11 @@ L.Control.Info = L.Control.extend({
 				bodyContent:
 					'<h4>What?</h4>'+
 			  		'<p>Smap-mobile is a framework for creating maps with a "responsive design". '+
-			  			'This means the maps adapt the content according to the screen size. The framework can be extended with plugins (Leaflet controls).</p>'+
+			  			'This means the site adapts the content to the screen size. The framework can be extended with plugins (Leaflet controls).</p>'+
 		  			'<p>The code is open source and can be downloaded free from <a target="_blank" href="https://github.com/getsmap/smap-mobile/">GitHub</a>.</p>'+
 		  			'<h4>Who?</h4>'+
-			  		'<p>The framework has so far been developed by Malmö Stadsbyggnadskontor but will be used by '+
-					  'the sMap project – where the municipalities of Kristianstad, Helsingborg and Lund participate.'+
+			  		'<p>The framework has so far been developed by Malmö Stadsbyggnadskontor but will be used in '+
+					  'the sMap project – where the municipalities of Kristianstad, Helsingborg and Lund will participate.'+
 			  		'<h4>Feed-back!</h4>'+
 					'<p>Do you have suggestions, or are you interested in contributing with the development of sMap mobile? Please contact GIT-developer <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
 					'<p>Do you want more info about the sMap project or publishing geographic data? Then contact the project administrators <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> or '+
