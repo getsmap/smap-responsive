@@ -17,11 +17,12 @@ The sMap package (i.e. the contents of this repository) consists of the sMap pro
 
 ###Important information regarding data sources
 
-Data sources – whether belonging to the sMap project or the participants of the sMap project, or anyone else – is not included, neither in the product, nor in the package. You need to seek permission to use these data – from the publisher and/or from the copyright owner. This also applies if the data is linked from any other code.
+Data sources – whether belonging to the sMap project or the participants of the sMap project, or anyone else – are not included, neither in the product, nor in the package. You need to seek permission to use these data – from the publisher and/or from the copyright owner. This also applies if the data is linked from any other code.
 
 ###Get started
 
 To get started, follow these steps:
+
 1. Clone or download the source code of this repository
 2. Adapt the file configs/config.js so that it refers to already published data (e.g. WMS or WFS)
 3. Upload the entire repository to a web server and point the browser to the index.html file
