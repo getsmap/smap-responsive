@@ -10,9 +10,6 @@ var config = {
 			},
 			"91.123.201.52": {
 				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
-			},
-			"karta.jonkoping.se:8080": {
-				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
 			}
 		},
 		
@@ -75,7 +72,6 @@ var config = {
 					displayName: "Jönköpings kommunkarta",
 					layers: "commonws:Jonkoping_Kommunkartan_1330",
 					format: 'image/jpeg',
-					subdomains: ["xyz"],
 					transparent: true,
 					minZoom: 6,
 					maxZoom: 18,
@@ -90,7 +86,6 @@ var config = {
 					displayName: "Jönköpings ortofoto",
 					layers: "commonws:SBK_orto_25",
 					format: 'image/jpeg',
-					subdomains: ["xyz"],
 					transparent: true,
 					minZoom: 6,
 					maxZoom: 18,
