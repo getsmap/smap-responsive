@@ -51,7 +51,7 @@ L.Control.Search = L.Control.extend({
 		var self = this;
 		
 		var $searchDiv = $('<div id="smap-search-div" class="input-group input-group-lg"><span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>'+
-				'<input autocomplete="off" data-provide="typeahead" type="text" class="form-control" placeholder="'+this.lang.search+'"></input></div>');
+				'<input autocorrect="off" autocomplete="off" data-provide="typeahead" type="text" class="form-control" placeholder="'+this.lang.search+'"></input></div>');
 		var $entry = $searchDiv.find("input");
 		
 		/**
