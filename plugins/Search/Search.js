@@ -68,7 +68,7 @@ L.Control.Search = L.Control.extend({
 			}
 			var $bg = $("#smap-search-bg");
 			if ( !$bg.length ) {
-				$bg = $('<div id="smap-search-bg" />');				
+				$bg = $('<div id="smap-search-bg" />');
 				$searchDiv.addClass("search-active");
 				$("#mapdiv").append($bg);
 				setTimeout(function() {

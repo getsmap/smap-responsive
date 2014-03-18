@@ -22,6 +22,14 @@ L.Control.GuidePopup = L.Control.extend({
 
 	onRemove: function(map) {
 		this._deactivate();
+		
+		if ( windowWidth < 950 ) {
+			// iPad or small desktop
+			this.hideTheTag();
+		}
+		else {
+			this.showTheTag();
+		}
 	},
 	
 	
