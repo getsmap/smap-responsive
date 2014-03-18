@@ -34,7 +34,8 @@
 		"plugins/ShareTweet/ShareTweet.js",
 		"plugins/SharePosition/SharePosition.js",
 		"plugins/Search/Search.js",
-		"plugins/Info/Info.js"
+		"plugins/Info/Info.js",
+		"builder/overrides.js"
     ],
     
     "css": [

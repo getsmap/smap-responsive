@@ -20031,4 +20031,4 @@ L.control.search = function (options) {
  */
 L.control.info = function (options) {
 	return new L.Control.Info(options);
-};
+};L.Icon.Default.imagePath = "lib/leaflet-0.7.1/images/";
