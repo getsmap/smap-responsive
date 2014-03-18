@@ -19,7 +19,7 @@ var config = {
 	    		 url: "http://geoserver.smap.se/geoserver/wms",
 	    		 options: {
 	    			 layerId: "cykelvag",
-	    			 displayName: "WMS (Cykelväg)",
+	    			 displayName: "Cykelvägar",
 	    			 layers: 'malmows:GK_CYKELVAG_L',
 	    			 format: 'image/png',
 	    			 selectable: true,
@@ -28,18 +28,213 @@ var config = {
 	    			 popup: "<h3>${_displayName}</h3><p>Typ: ${typ}</p><p>Geom: ${geom}</p>"
 	    		 }
 		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se/geoserver/wms",
+	    		 options: {
+	    			 layerId: "cykelp",
+	    			 displayName: "Cykelpumpar",
+	    			 layers: 'malmows:GK_CYKELPUMP_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: "<p>Typ: ${typ}</p>"
+	    		 }
+		     },
 		     {
 	    		 init: "L.TileLayer.WMS",
 	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
 	    		 options: {
 	    			 layerId: "malmo_dp",
-	    			 displayName: "WMS (Detaljplan)",
+	    			 displayName: "Detaljplaner",
 	    			 layers: 'malmows:SMA_DP_ADP_YTOR_P',
 	    			 format: 'image/png',
 	    			 selectable: true,
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor",
 	    			 popup: '<h3>${plan}</h3><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "malmo_pdp",
+	    			 displayName: "Pågende detaljplaner",
+	    			 layers: 'malmows:SMA_PAGAENDE_PLANER_P',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${plan}</h3><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "bibliotek",
+	    			 displayName: "Bibliotek",
+	    			 layers: 'malmows:POI_KULTUR_BIBLIOTEK_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${objektnamn}</h3><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "kom_fsk",
+	    			 displayName: "Kommunala förskolor",
+	    			 layers: 'malmows:V_POI_EXTENS_FORSKOLOR_KOMMUNAL_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${namn}</h3><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "ej_kom_fsk",
+	    			 displayName: "Icke kommunala förskolor",
+	    			 layers: 'malmows:V_POI_EXTENS_FORSKOLOR_PRIVAT_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${namn}</h3><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "temalekp",
+	    			 displayName: "Temalekplatser",
+	    			 layers: 'malmows:POI_FRITID_TEMALEKPLATS_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${objektnamn}</h3><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "lekp",
+	    			 displayName: "Lekplatser",
+	    			 layers: 'malmows:POI_FRITID_LEKPLATS_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${objektnamn}</h3><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "stadsomr",
+	    			 displayName: "Stadsområden",
+	    			 layers: 'malmows:SMA_STADSOMRADEN_P',
+	    			 format: 'image/png',
+	    			 selectable: false,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor"
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://geoserver.smap.se/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "offtoa",
+	    			 displayName: "Offentliga toaletter",
+	    			 layers: 'malmows:V_GK_TOA_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: "<h3>${namn}</h3><p>Avgift: ${avgift}</p><p>Handikapptoalett: ${handikapptoalett}</p><p>Skötbord: ${skotbord}</p>"
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://geoserver.smap.se/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "hallp",
+	    			 displayName: "Hållplatser",
+	    			 layers: 'commonws:skanetrafiken3008',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${caption}</h3><a href="http://www.skanetrafiken.se">www.skanetrafiken.se</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "bad",
+	    			 displayName: "Bad",
+	    			 layers: 'malmows:POI_FRITID_BAD_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${objektnamn}</h3><p>${objekttyp3}</p><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "ip",
+	    			 displayName: "Idrottsplatser",
+	    			 layers: 'malmows:POI_FRITID_IDROTTSPLATS_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${objektnamn}</h3><p>${objekttyp2}</p><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "sporth",
+	    			 displayName: "Sporthallar",
+	    			 layers: 'malmows:POI_FRITID_SPORTHALL_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${objektnamn}</h3><p>${objekttyp3}</p><a href="${url}">Länk</a>'
+	    		 }
+		     },
+			 {
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "ish",
+	    			 displayName: "Ishallar",
+	    			 layers: 'malmows:POI_FRITID_ISHALL_PT',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${objektnamn}</h3><p>${objekttyp2}</p><a href="${url}">Länk</a>'
 	    		 }
 		     }
 		     

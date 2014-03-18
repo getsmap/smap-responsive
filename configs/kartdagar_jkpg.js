@@ -10,6 +10,9 @@ var config = {
 			},
 			"91.123.201.52": {
 				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
+			},
+			"karta.jonkoping.se:8080": {
+				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
 			}
 		},
 		
@@ -91,15 +94,16 @@ var config = {
 					maxZoom: 18,
 					tiled: true
 				}
-			},
-			{
-				init: "L.TileLayer",
-				url: "http://{s}.tile.cloudmade.com/f02f33a9158a425199542d3493b9189d/998/256/{z}/{x}/{y}.png",
-				options: {
-					layerId: "osm",
-					displayName: "OSM",
-				}
 			}
+			// ,
+			// {
+				// init: "L.TileLayer",
+				// url: "http://{s}.tile.cloudmade.com/f02f33a9158a425199542d3493b9189d/998/256/{z}/{x}/{y}.png",
+				// options: {
+					// layerId: "osm",
+					// displayName: "OSM",
+				// }
+			// }
 		],
 		
 		plugins: [
