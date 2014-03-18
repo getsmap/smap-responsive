@@ -1,8 +1,6 @@
 {   
     "js": [
-    	"lib/es5-shim/es5-shim.min.js",
-		"lib/es5-shim/es5-sham.min.js",
-		"//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js",
+		"lib/jquery-1.11.0.min.js",
 		"lib/bootstrap-3/js/bootstrap.min.js",
 		"lib/jquery.mobile.custom/jquery.mobile.custom.min.js",
 		"lib/proj4js-2.1.0/dist/proj4-src.js",
@@ -41,7 +39,6 @@
     
     "css": [
     	"lib/normalize.css",
-		"lib/bootstrap-3/css/bootstrap.min.css",
 		"lib/leaflet-0.7.1/leaflet.css",
 		"lib/add2home/add2home.css",
 		"core/css/app.css",
