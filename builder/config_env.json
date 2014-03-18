@@ -1,0 +1,11 @@
+{
+	"yuiPath": "yuicompressor-2.4.7.jar",
+	
+	"tempPathJS": "../../sMap_uncompressed.js",
+	"tempPathCSS": "../../sMap_uncompressed.css",
+	
+	"outPathJS": "../../sMap_comp.js",
+	"outPathCSS": "../../sMap_comp.css",
+	
+	"basePath": "../../"
+}
