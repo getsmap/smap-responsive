@@ -1582,11 +1582,22 @@ Version: 1.0
 	font-size: 110%;
 }
 
+/* Added to html and body temporarily to avoid scrollbars during transitions */
+.lswitch-overflow-hidden {
+	overflow: hidden !important;	
+}
+
 
 
 
 @media (min-width: 992px) {
 	/* For desktop computers */
+	
+	
+	/* Avoid things appearing under the switcher */
+	.leaflet-left {
+		left: 310px;
+	}
 	
 	#mapdiv {
 		margin-left: 0px !important;

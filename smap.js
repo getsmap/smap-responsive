@@ -18804,7 +18804,6 @@ L.control.guidePopup = function (options) {
 	},
 	
 	showPanel: function() {
-		$("body").css("overflow", "hidden"); // To avoid scroll bars
 		this.$panel.show();
 		$("#mapdiv").css({
 			"margin-left": this.$panel.outerWidth() + "px"
@@ -18817,10 +18816,10 @@ L.control.guidePopup = function (options) {
 			"margin-left": "0px"
 		});
 		$("#lswitch-btn").show();
-		$("body").css("overflow", "hidden !important");
+		$("html, body").addClass("lswitch-overflow-hidden");
 		setTimeout($.proxy(function() {
 			this.$panel.hide();
-			$("body").css("overflow", "auto");
+			$("html, body").removeClass("lswitch-overflow-hidden");
 		}, this), 300);
 	},
 	
