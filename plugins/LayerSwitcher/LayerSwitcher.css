@@ -128,7 +128,7 @@
 	.lswitch-panel {
 		display: block !important;
 		background-color: #eee;
-		background-color: rgba(255,255,255,0.8);
+		background-color: rgba(255,255,255,0.6);
 		-moz-box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
 		box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
 		-webkit-box-shadow: rgba(0,0,0,0.3) -1px -1px 4px;
