@@ -139,7 +139,7 @@
 	}
 	.lswitch-panel .panel-heading {
 		background-color: #555;
-		background-color: rgba(0, 0, 0, 0.45) !important;
+		background-color: rgba(88, 112, 143, 1) !important;
 		color: #000;
 		border: none;
 	}
@@ -158,13 +158,13 @@
 	}
 	.lswitch-panel a.active:hover, .lswitch-panel a.active:active {
 		background-color: #333;
-		background-color: rgba(0, 0, 0, 0.45);
+		background-color: rgba(88, 112, 143, 1);
 		color: #fff;
 	}
 	.lswitch-panel a.active {
 		cursor: pointer;
 		background-color: #333;
-		background-color: rgba(0, 0, 0, 0.45);
+		background-color: rgba(88, 112, 143, 1);
 		color: #fff;
 		font-weight: normal;
 	}
