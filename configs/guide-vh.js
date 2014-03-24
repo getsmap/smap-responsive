@@ -13,96 +13,34 @@ var config = {
 		},
 		
 		ol: [
-	    	 {
-	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://geoserver.smap.se/geoserver/wms",
-	    		 options: {
-	    			 layerId: "gangstig",
-	    			 displayName: "Gångstig",
-	    			 layers: 'sandboxws:regisln',
-	    			 format: 'image/png',
-	    			 selectable: true,
-	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor",
-	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
-	    		 }
-		     },
-		     {
-	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://geoserver.smap.se/geoserver/wms",
-	    		 options: {
-	    			 layerId: "gangstig2",
-	    			 displayName: "Gångstig2",
-	    			 layers: 'sandboxws:regisln',
-	    			 format: 'image/png',
-	    			 selectable: true,
-	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor",
-	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
-	    		 }
-		     },
-		     {
-	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://geoserver.smap.se/geoserver/wms",
-	    		 options: {
-	    			 layerId: "cykelvag",
-	    			 displayName: "Cykelväg",
-	    			 layers: 'malmows:GK_CYKELVAG_L',
-	    			 format: 'image/png',
-	    			 selectable: true,
-	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor",
-	    			 popup: "<h3>${_displayName}</h3><p>Typ: ${typ}</p><p>Geom: ${geom}</p>"
-	    		 }
-		     },
 		     {
 				  init: "L.GeoJSON.WFS2",
-				  url: "http://geoserver.smap.se/geoserver/wfs",
+				  url: "http://xyz.malmo.se:8081/geoserver/wfs",
 				  options: {
-					  layerId: "intressepunkter",
-					  displayName: "Intressepunkter",
-					  featureType: "sandboxws:regispt",
+					  layerId: "vhamnen_pt",
+					  displayName: "Punkter av intresse",
+					  featureType: "malmows:GUIDE_VHAMNEN_PT",
 					  attribution: "Malmö stads WFS",
-					  inputCrs: "EPSG:3008",
+					  inputCrs: "EPSG:4326",
 					  reverseAxis: true,
-					  popup: '<h1>${namn}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="${picture}"></img>',
-					  bigPopup: {
-						  headerHtml: "${namn}",
-						  srcVideo: '<video controls="controls" autoplay width="240" height="135">' +
-				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.m4v" type="video/mp4" />' +
-				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.webm" type="video/webm" />' +
-				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.ogg" type="video/ogg" />' +
-			        	   			'</video>',
-			        	   	srcImage: '${pictures}',
-			        	   	srcAudio: '${video}'
+					  popup: '<h1>${namn}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
 			        }
 		  		}
-		     }
 		     ],
 			
 		bl: [
-  	 	{
-			init: "L.TileLayer",
-			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
-			options: {
-				layerId: "malmotile",
-				displayName: "Malmö karta",
-				attribution: "© Malmö Stadsbyggnadskontor",
-				minZoom: 6,
-				maxZoom: 18,
-				tms: true
+	  	 	{
+				init: "L.TileLayer",
+				url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
+				options: {
+					layerId: "malmotile",
+					displayName: "Malmö karta",
+					attribution: "© Malmö Stadsbyggnadskontor",
+					minZoom: 6,
+					maxZoom: 18,
+					tms: true
+				}
 			}
-		}
-//	    {
-//			init: "L.TileLayer",
-//			url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-//			options: {
-//				layerId: "osm",
-//				displayName: "OSM",
-//				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
-//				maxZoom: 18
-//			}
-//		}
 		],
 		
 		plugins: [
@@ -120,27 +58,29 @@ var config = {
 		           },
 		           {
 		        	   init: "L.Control.Geolocate",
+		        	   options: {}
+		           },
+		           {
+		        	   init: "L.Control.GuideIntroScreen",
 		        	   options: {
-		        		   
+		        		   autoActivate: false
 		        	   }
 		           },
-//		           {
-//		        	   init: "L.Control.GuideIntroScreen",
-//		        	   options: {
-//		        		   autoActivate: false
-//		        	   }
-//		           },
 		           {
 		        	   init: "L.Control.GuidePopup",
 		        	   options: {
 		        		   autoActivate: false,
-		        		   layerId: "intressepunkter",
+		        		   layerId: "vhamnen_pt",
 		        		   attrTxtTitle: "namn",
 		        		   attrTxtIntro: "starttext",
 		        		   attrImgStart: "picture",
 		        		   attrId: "namn",
 		        		   
-		        		   media: {
+		        		   // The folder and the attribute key for fetching the filename
+		        		   tabIntroFolderUrl: "http://maja-k.com/promenad/vh/text/",
+		        		   attrTabIntro: "urltext",
+		        		   
+		           		   tabMedia: {
 		        			   "Jörgen Kocks hus": {
 		        				   mediaType: "audio",
 		        				   sources: [
