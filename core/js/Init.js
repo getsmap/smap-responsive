@@ -34,6 +34,10 @@ smap.core.Init = L.Class.extend({
 	
 	applyConfig: function(theConfig) {
 		this.preProcessConfig(theConfig);
+		
+		// Extend map options
+		$.extend(this.map.options, theConfig.mapOptions || {});
+		
 		this.addPlugins(theConfig.plugins);
 	},
 	
