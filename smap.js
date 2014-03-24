@@ -17419,6 +17419,10 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 	
 	applyConfig: function(theConfig) {
 		this.preProcessConfig(theConfig);
+		
+		// Extend map options
+		$.extend(this.map.options, theConfig.mapOptions || {});
+		
 		this.addPlugins(theConfig.plugins);
 	},
 	
@@ -18269,7 +18273,7 @@ L.control.guideIntroScreen = function (options) {
 	
 	_onPopupClick: function(e) {
 		var props = $("#gp-btn-show").data("props");
-		var mediaArr = this.options.media[ props[this.options.attrId] ];
+		var mediaArr = this.options.tabMedia[ props[this.options.attrId] ];
 		if (mediaArr && mediaArr instanceof Array) {
 			this.createPopup(props);
 		}
@@ -18335,7 +18339,7 @@ L.control.guideIntroScreen = function (options) {
 		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
 		layerConfig.options.pointToLayer = function(f, latLng) {
 			var props = f.properties;
-			var m = self.options.media[ props[self.options.attrId] ];
+			var m = self.options.tabMedia[ props[self.options.attrId] ];
 			if (m instanceof Object && !(m instanceof Array) && m.mediaType) {
 				return L.marker(latLng, icons[m.mediaType]);
 			}
@@ -18554,16 +18558,14 @@ L.control.guideIntroScreen = function (options) {
 		'</ul>'+
 		'<div class="tab-content gp-popup">'+
 		  '<div class="tab-pane active" id="gp-intro">'+
-//		  		'<h1>${'+this.attrTxtTitle+'}</h1>'+
-	  			'<img src="${'+this.options.attrImgStart+'}">'+
-		  		'<p>${'+this.options.attrTxtIntro+'}</p>'+
+		  		// Add loading icon here
 			'</div>'+
 		  '<div class="tab-pane" id="gp-moreinfo"></div>'+
 		'</div>';
 		
 		content = utils.extractToHtml(content, props);
 		var featureId = props[this.options.attrId];
-		var list = this._makeMediaList(this.options.media[featureId]);
+		var list = this._makeMediaList(this.options.tabMedia[featureId]);
 		
 		content = $(content);
 		content.find("#gp-moreinfo").append(list);
@@ -18579,20 +18581,35 @@ L.control.guideIntroScreen = function (options) {
 		});
 		this.dialog.attr("id", "gp-popup");
 		
-		var media = self.options.media;
+		// Fetch bigpopup config for this feature
+		var data = self.options.data[featureId];
 		
 		function onLiTap(e) {
-			var index = $(this).index(); // The tag's order corresponds to index in media array
-			var t = media[featureId][index];
-			var content = self._makeMediaContent(t.mediaType, t.sources);
+			var index = $(this).index(); // The tag's order corresponds to index in tabMedia array
+			var t = data.tabMedia[index];
+			var content = self._makeMediaContent(t.mediaType, t.sources.split(","));
 			self.showFullScreen(content);
 			return false;
 		};
 		this.dialog.find("#gp-listmoreinfo").find(".list-group-item").on("tap click", onLiTap);
 		$("body").append(this.dialog);
-		
 		this.dialog.modal();
-	}
+		
+		var url = (this.options.tabIntroFolderUrl || "") + props[this.options.attrTabIntro];
+		this._getIntroContent(url);
+	},
+	
+	_getIntroContent: function(url) {
+		var div = $('<div />');
+		
+		smap.cmd.loading(true);
+//		utils.extractToHtml(html, props)		
+		div.load(url, function() {
+			$("#gp-intro").append( $(this).html() );
+			smap.cmd.loading(false);
+		});
+	},
+	
 });
 
 
