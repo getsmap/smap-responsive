@@ -13,6 +13,10 @@ var config = {
 			}
 		},
 		
+		mapOptions: {
+			maxZoom: 11
+		},
+		
 		ol: [
 		     {
 	    		 init: "L.TileLayer.WMS",
@@ -260,15 +264,15 @@ var config = {
 			init: "L.TileLayer.WMS",
 			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
 			options: {
-				layerId: "wms-topo",
-				displayName: "WMS-Topo (OBS! endast för test)",
-				layers: "malmows:smap-mobile-bakgrundskarta-topo",
+				layerId: "fotokarta",
+				displayName: "Malmö fotokarta",
+				layers: "malmows:ortofoto_2012",
 				format: 'image/jpeg',
 				subdomains: ["xyz"],
-				transparent: true,
+				transparent: false,
 				minZoom: 6,
-				maxZoom: 18,
-				tiled: true
+				maxZoom: 17,
+				tiled: false
 			}
 		}
 		],
