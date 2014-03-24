@@ -23,7 +23,7 @@ var config = {
 					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:4326",
 					  reverseAxis: true,
-					  popup: '<h1>${namn}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
+					  popup: '<h1>${namn}: ${id}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
 			        }
 		  		}
 		     ],
@@ -71,69 +71,73 @@ var config = {
 		        	   options: {
 		        		   autoActivate: false,
 		        		   layerId: "vhamnen_pt",
-		        		   attrTxtTitle: "namn",
-		        		   attrTxtIntro: "starttext",
-		        		   attrImgStart: "picture",
-		        		   attrId: "namn",
+		        		   
+		        		   dialogTitle: "${namn}",
 		        		   
 		        		   // The folder and the attribute key for fetching the filename
-		        		   tabIntroFolderUrl: "http://maja-k.com/promenad/vh/text/",
-		        		   attrTabIntro: "urltext",
+		        		   tabIntroFolderUrl: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        		   useProxy: false,
 		        		   
-		           		   tabMedia: {
-		        			   "Jörgen Kocks hus": {
-		        				   mediaType: "audio",
-		        				   sources: [
-		        				             "http://xyz.malmo.se/temp/regis1330/video/video1.mp3"
-		        				   ]
-		        			   },
-		        			   "Frans Suell staty": {
-		        				   mediaType: "video",
-		        				   sources: [
-		        				             "http://www.youtube.com/embed/FvnGKI_rEoo"
-		        				   ]
-		        			   },
-		        			   "\"Pitta huset\"": {
-		        				   mediaType: "video",
-		        				   sources: [
-	        				             "//player.vimeo.com/video/62057084"
-		        				   ]
-		        			   },
-		        			   "Stora Nygatan": {
-		        				   mediaType: "image",
-		        				   sources: [
-										"http://xyz.malmo.se/temp/regis1330/images/img616.jpg",
-										"http://xyz.malmo.se/temp/regis1330/images/img604.jpg"
-		        				   ]
-		        				   
-		        			   },
-		        			   "Stortorget": [
-									{
-										label: "Alla bilder från Stortorget",
-										mediaType: "image",
-										sources: [
-										          "http://xyz.malmo.se/temp/regis1330/images/img616.jpg",
-										          "http://xyz.malmo.se/temp/regis1330/images/img604.jpg"
-									    ]
-									},
-									{
-										label: "Lyssna på en häst",
-										mediaType: "audio",
-										sources: [
-										          "http://xyz.malmo.se/temp/regis1330/audio/horse.mp3",
-										          "http://xyz.malmo.se/temp/regis1330/audio/horse.ogg"
-									    ]
-									},
-									{
-										label: "Se en film från Stortorget",
-										mediaType: "video",
-										sources: [
-										          "http://vimeo.com/62057084"
-									    ]
-									}
-									
-								]
-		        		   }
+		        		   attrId: "id",
+		        		   data: {
+		        	   			1: {
+		        	   				dialogTitle: "${namn}",
+		        	   				tabIntro: "plugins/GuidePopup/testFolder/${urltext}",
+		        	   				tabMedia: {
+		        	   					mediaType: "audio",
+		        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+		           					}
+		           				},
+		           				2: {
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "plugins/GuidePopup/testFolder/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: "Lyssna på ljud",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			           						label: "Se på en bild",
+			        	   					mediaType: "image",
+			        	   					sources: "http://maja-k.com/promenad/vh/popup/${picture}"
+			           					}
+		           					]
+		           				},
+		           				3: {
+		           					dialogTitle: "${namn}",
+		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: {
+		        	   					mediaType: "audio",
+		        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+		           					}
+		           				},
+		           				4: {
+		           					dialogTitle: "${namn}",
+		        	   				tabIntro: "${urltext}",
+		        	   				tabMedia: {
+		        	   					mediaType: "audio",
+		        	   					sources: "${urlsound}"
+		           					}
+		           				},
+		           				5: {
+		           					dialogTitle: "${namn}",
+		        	   				tabIntro: "${urltext}",
+		        	   				tabMedia: {
+		        	   					mediaType: "audio",
+		        	   					sources: "${urlsound}"
+		           					}
+		           				},
+		           				6: {
+		           					dialogTitle: "${namn}",
+		        	   				tabIntro: "${urltext}",
+		        	   				tabMedia: {
+		        	   					mediaType: "audio",
+		        	   					sources: "${urlsound}"
+		           					}
+		           				}
+		           		   }
+		        		   
 		        	   }
 		           }
        ]

@@ -35,13 +35,14 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_onPopupClick: function(e) {
 		var props = $("#gp-btn-show").data("props");
-		var mediaArr = this.options.tabMedia[ props[this.options.attrId] ];
+		var t = this.options.data[ props[this.options.attrId] ] || {};
+		var mediaArr = t.tabMedia;
 		if (mediaArr && mediaArr instanceof Array) {
 			this.createPopup(props);
 		}
 		else if (mediaArr && mediaArr instanceof Object) {
 			// Show media in full-screen at once
-			var content = this._makeMediaContent(mediaArr.mediaType, mediaArr.sources);
+			var content = this._makeMediaContent(mediaArr.mediaType, utils.extractToHtml(mediaArr.sources, props).split(","));
 			this.showFullScreen(content);
 		}
 		return false;
@@ -50,16 +51,17 @@ L.Control.GuidePopup = L.Control.extend({
 	_onPopupOpen: function(e) {
 		if (e.popup._source.feature) {
 			var props = e.popup._source.feature.properties;
-			self.layerId = e.popup.layerId;
-			self.properties = props; // properties for filling the dialog
+//			this.layerId = e.popup.layerId;
+//			this.properties = props; // properties for filling the dialog
 			
-			var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-primary">Visa mer</button>');
-			$(".leaflet-popup-content").append(btn);
+			var t = this.options.data[ props[this.options.attrId] ];
+			if (t && t instanceof Object) {
+				var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-primary">Visa mer</button>');
+				$(".leaflet-popup-content").append(btn);
+				btn.data("props", props);
+				btn.on("touchstart click", $.proxy(this._onPopupClick, this));
+			}
 			
-//			$(".leaflet-popup-content-wrapper").css("cursor", "pointer");
-//			$(".leaflet-popup-content-wrapper").on("touchstart click", onPopupClick);
-			btn.data("props", props);
-			btn.on("touchstart click", $.proxy(this._onPopupClick, this));
 		}
 	},
 	
@@ -100,8 +102,9 @@ L.Control.GuidePopup = L.Control.extend({
 	
 		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
 		layerConfig.options.pointToLayer = function(f, latLng) {
-			var props = f.properties;
-			var m = self.options.tabMedia[ props[self.options.attrId] ];
+			var props = f.properties || {};
+			var t = self.options.data[ props[self.options.attrId] ] || {};
+			var m = t.tabMedia;
 			if (m instanceof Object && !(m instanceof Array) && m.mediaType) {
 				return L.marker(latLng, icons[m.mediaType]);
 			}
@@ -325,15 +328,21 @@ L.Control.GuidePopup = L.Control.extend({
 		  '<div class="tab-pane" id="gp-moreinfo"></div>'+
 		'</div>';
 		
-		content = utils.extractToHtml(content, props);
-		var featureId = props[this.options.attrId];
-		var list = this._makeMediaList(this.options.tabMedia[featureId]);
-		
+//		content = utils.extractToHtml(content, props);
 		content = $(content);
+		
+		var featureId = props[this.options.attrId];
+		// Fetch bigpopup config for this feature
+		var data = self.options.data[featureId];
+		
+		// Fill media-tab content
+		var list = this._makeMediaList(data.tabMedia);
 		content.find("#gp-moreinfo").append(list);
 		
+		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);
+		
 		this.dialog = utils.drawDialog(
-				props[this.options.attrTxtTitle],
+				dialogTitle,
 				content
 		);
 		this.dialog.on("hidden.bs.modal", function() {
@@ -343,12 +352,11 @@ L.Control.GuidePopup = L.Control.extend({
 		});
 		this.dialog.attr("id", "gp-popup");
 		
-		var tabMedia = self.options.tabMedia;
-		
 		function onLiTap(e) {
 			var index = $(this).index(); // The tag's order corresponds to index in tabMedia array
-			var t = tabMedia[featureId][index];
-			var content = self._makeMediaContent(t.mediaType, t.sources);
+			var t = data.tabMedia[index];
+			var sources = utils.extractToHtml(t.sources, props);
+			var content = self._makeMediaContent(t.mediaType, sources.split(","));
 			self.showFullScreen(content);
 			return false;
 		};
@@ -356,17 +364,27 @@ L.Control.GuidePopup = L.Control.extend({
 		$("body").append(this.dialog);
 		this.dialog.modal();
 		
-		var url = (this.options.tabIntroFolderUrl || "") + props[this.options.attrTabIntro];
+		// Fill intro-tab content after modal dialog has already opened
+		var url;
+		if (data.tabIntro) {
+			// If a path is specified explicitly for this feature
+			url = utils.extractToHtml( data.tabIntro, props);			
+		}
+		else {
+			// Use the general path for intro text
+			url = utils.extractToHtml(this.options.tabIntroFolderUrl, props);
+		}
 		this._getIntroContent(url);
 	},
 	
-	_getIntroContent: function(url) {
+	_getIntroContent: function(url, props) {
 		var div = $('<div />');
 		
 		smap.cmd.loading(true);
-//		utils.extractToHtml(html, props)		
+//		utils.extractToHtml(html, props)
+		url = this.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url) : url;
 		div.load(url, function() {
-			$("#gp-intro").append( $(this).html() );
+			$("#gp-intro").append( utils.extractToHtml($(this).html(), props) );
 			smap.cmd.loading(false);
 		});
 	},
