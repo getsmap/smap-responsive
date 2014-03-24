@@ -13,8 +13,8 @@ var config = {
 			}
 		},
 		
-		mapOptions: {
-			maxZoom: 11
+		mapConfig: {
+			maxZoom: 17
 		},
 		
 		ol: [
@@ -258,8 +258,10 @@ var config = {
 				maxZoom: 18,
 				tms: true
 			}
-		},
+		}
 		
+		,
+				
 		{
 			init: "L.TileLayer.WMS",
 			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
@@ -271,10 +273,12 @@ var config = {
 				subdomains: ["xyz"],
 				transparent: false,
 				minZoom: 6,
-				maxZoom: 17,
+				maxZoom: 18,
 				tiled: false
 			}
 		}
+	
+
 		],
 		
 		plugins: [
@@ -307,6 +311,10 @@ var config = {
 							wsOrgProj: "EPSG:3008", 
 							pxDesktop: 992
 					   }
+		           },
+				   {
+		        	   init: "L.Control.SharePosition",
+		        	   options: {}
 		           },
 		           {
 		        	   init: "L.Control.Info",

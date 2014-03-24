@@ -35,7 +35,7 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_onPopupClick: function(e) {
 		var props = $("#gp-btn-show").data("props");
-		var mediaArr = this.options.media[ props[this.options.attrId] ];
+		var mediaArr = this.options.tabMedia[ props[this.options.attrId] ];
 		if (mediaArr && mediaArr instanceof Array) {
 			this.createPopup(props);
 		}
@@ -101,7 +101,7 @@ L.Control.GuidePopup = L.Control.extend({
 		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
 		layerConfig.options.pointToLayer = function(f, latLng) {
 			var props = f.properties;
-			var m = self.options.media[ props[self.options.attrId] ];
+			var m = self.options.tabMedia[ props[self.options.attrId] ];
 			if (m instanceof Object && !(m instanceof Array) && m.mediaType) {
 				return L.marker(latLng, icons[m.mediaType]);
 			}
@@ -320,16 +320,14 @@ L.Control.GuidePopup = L.Control.extend({
 		'</ul>'+
 		'<div class="tab-content gp-popup">'+
 		  '<div class="tab-pane active" id="gp-intro">'+
-//		  		'<h1>${'+this.attrTxtTitle+'}</h1>'+
-	  			'<img src="${'+this.options.attrImgStart+'}">'+
-		  		'<p>${'+this.options.attrTxtIntro+'}</p>'+
+		  		// Add loading icon here
 			'</div>'+
 		  '<div class="tab-pane" id="gp-moreinfo"></div>'+
 		'</div>';
 		
 		content = utils.extractToHtml(content, props);
 		var featureId = props[this.options.attrId];
-		var list = this._makeMediaList(this.options.media[featureId]);
+		var list = this._makeMediaList(this.options.tabMedia[featureId]);
 		
 		content = $(content);
 		content.find("#gp-moreinfo").append(list);
@@ -345,20 +343,34 @@ L.Control.GuidePopup = L.Control.extend({
 		});
 		this.dialog.attr("id", "gp-popup");
 		
-		var media = self.options.media;
+		var tabMedia = self.options.tabMedia;
 		
 		function onLiTap(e) {
-			var index = $(this).index(); // The tag's order corresponds to index in media array
-			var t = media[featureId][index];
+			var index = $(this).index(); // The tag's order corresponds to index in tabMedia array
+			var t = tabMedia[featureId][index];
 			var content = self._makeMediaContent(t.mediaType, t.sources);
 			self.showFullScreen(content);
 			return false;
 		};
 		this.dialog.find("#gp-listmoreinfo").find(".list-group-item").on("tap click", onLiTap);
 		$("body").append(this.dialog);
-		
 		this.dialog.modal();
-	}
+		
+		var url = (this.options.tabIntroFolderUrl || "") + props[this.options.attrTabIntro];
+		this._getIntroContent(url);
+	},
+	
+	_getIntroContent: function(url) {
+		var div = $('<div />');
+		
+		smap.cmd.loading(true);
+//		utils.extractToHtml(html, props)		
+		div.load(url, function() {
+			$("#gp-intro").append( $(this).html() );
+			smap.cmd.loading(false);
+		});
+	},
+	
 });
 
 
