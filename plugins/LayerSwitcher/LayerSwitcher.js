@@ -25,7 +25,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;			
+			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
 
