@@ -14,6 +14,32 @@ smap.cmd = {
 			return null;
 		},
 		
+		/**
+		 * Notify user about something, error or success.
+		 * @param text {String} The message
+		 * @param msgType {String} The message type (affects only the color of the msg)
+		 * 		"success"|"error"
+		 * @param options {Object}
+		 * @returns {jQuery tag}
+		 */
+		notify: function(text, msgType, options) {
+			options = options || {};
+			
+			options.parent = options.parent || $("body");
+			switch(msgType) {
+			case "success":
+				msgType = "alert-success";
+				break;
+			case "error":
+				msgType = "alert-danger";
+				break;
+			}
+			var msg = $('<div class="alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
+			options.parent.find(".alert").remove();
+			options.parent.append(msg);
+			return msg;
+		},
+		
 		addLayerWithConfig: function(layerConfig) {
 			return smap.core.layerInst._addLayerWithConfig(layerConfig);
 		},

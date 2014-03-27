@@ -130,7 +130,7 @@ L.Control.Geolocate = L.Control.extend({
 	
 	_onLocationError: function(e) {
 		smap.cmd.loading(false);
-		var msgTag = utils.notify(this.lang.errorGeolocate+": "+e.message, "error", {parent: $("body")});
+		var msgTag = smap.cmd.notify(this.lang.errorGeolocate+": "+e.message, "error", {parent: $("body")});
 		msgTag.on("touchstart", function() {
 			$("body").find(".alert").remove();
 		});

@@ -11,10 +11,12 @@ L.Control.Search = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			search: "Sök"
+			search: "Sök",
+			addressNotFound: "Den sökta adressen hittades inte"
 		},
 		"en": {
-			search: "Search"
+			search: "Search",
+			addressNotFound: "The searched address was not found"
 		}
 	},
 	
@@ -203,6 +205,11 @@ L.Control.Search = L.Control.extend({
 				if (this.marker) {
 					this.map.removeLayer(this.marker);
 					this.marker = null;
+				}
+				if (!json.features.length) {
+					// This means the searched place does not exist – inform user
+					smap.cmd.notify(this.lang.addressNotFound, "error");
+					return;
 				}
 				var coords = json.features[0].geometry.coordinates;
 				var latLng = L.latLng( coords[1], coords[0] );
