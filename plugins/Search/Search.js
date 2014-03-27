@@ -37,7 +37,21 @@ L.Control.Search = L.Control.extend({
 		L.DomEvent.disableClickPropagation(this._container);
 		self.$container = $(self._container);
 		self._makeSearchField();
+		
+		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
+		smap.event.on("smap.core.applyparams", this.__onApplyParams);
+			
 		return self._container;
+	},
+	
+	onRemove: function(map) {
+		smap.event.off("smap.core.applyparams", this.__onApplyParams);
+	},
+	
+	_onApplyParams: function(e, obj) {
+		if (obj.params.POI) {
+			this._geoLocate(decodeURIComponent( obj.params.POI ));
+		}
 	},
 
 	_rmAdressMarker: function(marker){
@@ -225,11 +239,6 @@ L.Control.Search = L.Control.extend({
 				
 	},
 	
-
-	onRemove: function(map) {
-		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
-		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
-	},
 	CLASS_NAME: "L.Control.Search"
 });
 
