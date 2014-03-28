@@ -81,6 +81,7 @@ var config = {
 		        		   attrId: "id",
 		        		   data: {
 		        	   			1: {
+		        	   				iconType: "audio",
 		        	   				dialogTitle: "${namn}",
 		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: {
@@ -89,6 +90,7 @@ var config = {
 		           					}
 		           				},
 		           				2: {
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
@@ -105,6 +107,7 @@ var config = {
 		           					]
 		           				},
 		           				3: {
+		           					iconType: "audio",
 		           					dialogTitle: "${namn}",
 		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: {
@@ -113,6 +116,7 @@ var config = {
 		           					}
 		           				},
 		           				4: {
+		           					iconType: "image",
 		           					dialogTitle: "${namn}",
 		        	   				tabIntro: "${urltext}",
 		        	   				tabMedia: {
@@ -121,6 +125,7 @@ var config = {
 		           					}
 		           				},
 		           				5: {
+		           					iconType: "video",
 		           					dialogTitle: "${namn}",
 		        	   				tabIntro: "${urltext}",
 		        	   				tabMedia: {
@@ -129,6 +134,7 @@ var config = {
 		           					}
 		           				},
 		           				6: {
+		           					iconType: "audio",
 		           					dialogTitle: "${namn}",
 		        	   				tabIntro: "${urltext}",
 		        	   				tabMedia: {

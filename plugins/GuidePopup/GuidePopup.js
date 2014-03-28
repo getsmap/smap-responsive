@@ -36,8 +36,9 @@ L.Control.GuidePopup = L.Control.extend({
 	_onPopupClick: function(e) {
 		var props = $("#gp-btn-show").data("props");
 		var t = this.options.data[ props[this.options.attrId] ] || {};
-		var mediaArr = t.tabMedia;
-		if (mediaArr && mediaArr instanceof Array) {
+		var mediaArr = t.tabMedia,
+			tabIntro = t.tabIntro;
+		if (tabIntro) {   //mediaArr && mediaArr instanceof Array) {
 			this.createPopup(props);
 		}
 		else if (mediaArr && mediaArr instanceof Object) {
@@ -105,8 +106,8 @@ L.Control.GuidePopup = L.Control.extend({
 			var props = f.properties || {};
 			var t = self.options.data[ props[self.options.attrId] ] || {};
 			var m = t.tabMedia;
-			if (m instanceof Object && !(m instanceof Array) && m.mediaType) {
-				return L.marker(latLng, icons[m.mediaType]);
+			if (t.iconType && icons[t.iconType]) {
+				return L.marker(latLng, icons[t.iconType]);
 			}
 			else {
 				return L.marker(latLng);
