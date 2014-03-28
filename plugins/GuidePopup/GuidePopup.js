@@ -240,7 +240,7 @@ L.Control.GuidePopup = L.Control.extend({
 		return $tagVideo;
 	},
 	
-	_makeMediaList: function(arrMedia) {
+	_makeMediaList: function(arrMedia, props) {
 		arrMedia = arrMedia || [];
 		
 		var glyphs = {
@@ -253,7 +253,7 @@ L.Control.GuidePopup = L.Control.extend({
 			list = $('<div id="gp-listmoreinfo" class="list-group" />');
 		for (i=0,len=arrMedia.length; i<len; i++) {
 			t = arrMedia[i];
-			li = $('<a href="#" class="list-group-item"><span class="glyphicon glyphicon-'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+t.label+'</a>');
+			li = $('<a href="#" class="list-group-item"><span class="glyphicon glyphicon-'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
 			list.append(li);
 		}
 		return list;
@@ -337,7 +337,7 @@ L.Control.GuidePopup = L.Control.extend({
 		var data = self.options.data[featureId];
 		
 		// Fill media-tab content
-		var list = this._makeMediaList(data.tabMedia);
+		var list = this._makeMediaList(data.tabMedia, props);
 		content.find("#gp-moreinfo").append(list);
 		
 		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);
