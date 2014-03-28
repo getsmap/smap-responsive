@@ -52,6 +52,10 @@ smap.core.Param = L.Class.extend({
 			ols = [];
 		for (var lid in layers) {
 			layer = layers[lid];
+			if (!layer || !layer.options || !layer.options.layerId) {
+				continue;
+			}
+			
 			if (layer.options.isBaseLayer) {
 				bl = layer.options.layerId;
 			}
@@ -66,21 +70,27 @@ smap.core.Param = L.Class.extend({
 				ol: ols,
 				bl: bl
 		};
+		if (smap.config.configName) {
+			p.config = smap.config.configName;
+		}
 		
 		smap.event.trigger("smap.core.createparams", p);
 		
 		// Remove all undefined or null values
 		$.map(p, function(i, val) {
-			if (!val || val.length === 0) {
-				return null;
-			}
-			return val;
+			
 		});
+		
+		
+		
 		var pString = "",
 			val;
 		for (var key in p) {
 			val = p[key];
 			if (val instanceof Array) {
+				if (!val.length) {
+					continue;
+				}
 				val = val.join(",");
 			}
 			pString += "&" + key + "=" + val;

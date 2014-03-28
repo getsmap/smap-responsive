@@ -42,6 +42,9 @@ L.Control.Search = L.Control.extend({
 		
 		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
 		smap.event.on("smap.core.applyparams", this.__onApplyParams);
+		
+		this.__onCreateParams = this.__onCreateParams || $.proxy( this._onCreateParams, this );
+		smap.event.on("smap.core.createparams", this.__onCreateParams);
 			
 		return self._container;
 	},
@@ -53,6 +56,12 @@ L.Control.Search = L.Control.extend({
 	_onApplyParams: function(e, obj) {
 		if (obj.params.POI) {
 			this._geoLocate(decodeURIComponent( obj.params.POI ));
+		}
+	},
+	
+	_onCreateParams: function(e, obj) {
+		if (this.marker && this.marker.options.q) {
+			obj.POI = encodeURIComponent( this.marker.options.q );
 		}
 	},
 
@@ -230,6 +239,8 @@ L.Control.Search = L.Control.extend({
 				this.map.on("popupopen", onPopupOpen);
 				
 				this.marker = L.marker(latLng).addTo(this.map);
+				this.marker.options.q = q; // Store for creating link to map
+				
 				this.map.setView(latLng, 15);
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
 				this.marker.openPopup();
