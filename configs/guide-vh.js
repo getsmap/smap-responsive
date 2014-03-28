@@ -76,13 +76,13 @@ var config = {
 		        		   
 		        		   // The folder and the attribute key for fetching the filename
 		        		   tabIntroFolderUrl: "http://maja-k.com/promenad/vh/text/${urltext}",
-		        		   useProxy: false,
+		        		   useProxy: true,
 		        		   
 		        		   attrId: "id",
 		        		   data: {
 		        	   			1: {
 		        	   				dialogTitle: "${namn}",
-		        	   				tabIntro: "plugins/GuidePopup/testFolder/${urltext}",
+		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: {
 		        	   					mediaType: "audio",
 		        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
@@ -90,7 +90,7 @@ var config = {
 		           				},
 		           				2: {
 		           					dialogTitle: "${namn}",
-		           					tabIntro: "plugins/GuidePopup/testFolder/${urltext}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
 			        	   				{
 			        	   					label: "Lyssna på ljud",
