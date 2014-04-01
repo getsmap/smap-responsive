@@ -228,11 +228,11 @@ var config = {
 		           {
 		        	   init: "L.Control.Search",
 		        	   options: {}
-		           },
-		           {
-		        	   init: "L.Control.Info",
-		        	   options: {}
 		           }
+//		           {
+//		        	   init: "L.Control.Info",
+//		        	   options: {}
+//		           }
 //		           ,
 //		           {
 //		           	   init: "L.Control.SideBars",
