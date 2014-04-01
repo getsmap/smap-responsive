@@ -95,7 +95,7 @@ var config = {
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
 			        	   				{
-			        	   					label: "Lyssna på ljud",
+			        	   					label: "Lyssna på ljud från ${namn}",
 			        	   					mediaType: "audio",
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
