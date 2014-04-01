@@ -38,6 +38,10 @@
 		"builder/overrides.js"
     ],
     
+    "scss": [
+		"core/css/app.scss"
+    ],
+    
     "css": [
     	"lib/normalize.css",
 		"lib/leaflet-0.7.1/leaflet.css",

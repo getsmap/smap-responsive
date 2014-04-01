@@ -98,6 +98,27 @@ def main():
             arr = configSources[customBuildJs]
             configSources["js"].extend(arr)
     
+    if configSources.has_key("scss"):
+        # Try to compile scss into css before merging css
+        basePath = configEnv["basePath"]
+        arr = configSources["scss"]
+        for path in arr:
+            pathCss = os.path.splitext(path)[0] + ".css"
+            pathCss = basePath + pathCss
+            path = basePath + path
+            
+            if os.path.isfile( path ) == True:
+                print "Compiling path: %s" %(path)
+                cmd = "sass %s %s" %(path, pathCss)
+                p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                result = p.stdout.readlines()
+                if p.wait() > 0:
+                    print "Error compiling SCSS file %s" %(os.path.basename( path ))
+                
+            else:
+                print "Kunde inte hitta filen: %s" %(path)
+            
+        
     
     # Iterate through all JS- and CSS-files and merge then into two files.
     for i in ["js", "css"]:
