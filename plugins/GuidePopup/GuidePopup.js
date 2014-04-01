@@ -3,6 +3,25 @@ L.Control.GuidePopup = L.Control.extend({
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		this._setLang();
+	},
+	
+	
+	
+	_lang: {
+		"sv": {
+			mediaHeader: "Avbryt"
+		},
+		"en": {
+			mediaHeader: "Cancel"
+		}
+	},
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
 	},
 
 	onAdd: function(map) {
@@ -320,7 +339,7 @@ L.Control.GuidePopup = L.Control.extend({
 		var content = 
 		'<ul class="nav nav-tabs">' +
 			'<li class="active"><a href="#gp-intro" data-toggle="tab">Intro</a></li>'+
-			'<li><a href="#gp-moreinfo" data-toggle="tab">Mer info</a></li>'+
+			'<li><a href="#gp-moreinfo" data-toggle="tab">'+this.lang.mediaHeader+'</a></li>'+
 		'</ul>'+
 		'<div class="tab-content gp-popup">'+
 		  '<div class="tab-pane active" id="gp-intro">'+
