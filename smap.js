@@ -16824,24 +16824,6 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 			return d;
 		},
 		
-		notify: function(text, msgType, options) {
-			options = options || {};
-			
-			options.parent = options.parent || $("body");
-			switch(msgType) {
-			case "success":
-				msgType = "alert-success";
-				break;
-			case "error":
-				msgType = "alert-danger";
-				break;
-			}
-			var msg = $('<div class="alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
-			options.parent.find(".alert").remove();
-			options.parent.append(msg);
-			return msg;
-		},
-		
 		round: function(val, nbrOfDecimals) {
 			var exp = Math.pow(10, nbrOfDecimals || 0);
 			return Math.round(val * exp) / exp;
@@ -17227,6 +17209,10 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 			ols = [];
 		for (var lid in layers) {
 			layer = layers[lid];
+			if (!layer || !layer.options || !layer.options.layerId) {
+				continue;
+			}
+			
 			if (layer.options.isBaseLayer) {
 				bl = layer.options.layerId;
 			}
@@ -17241,21 +17227,27 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 				ol: ols,
 				bl: bl
 		};
+		if (smap.config.configName) {
+			p.config = smap.config.configName;
+		}
 		
 		smap.event.trigger("smap.core.createparams", p);
 		
 		// Remove all undefined or null values
 		$.map(p, function(i, val) {
-			if (!val || val.length === 0) {
-				return null;
-			}
-			return val;
+			
 		});
+		
+		
+		
 		var pString = "",
 			val;
 		for (var key in p) {
 			val = p[key];
 			if (val instanceof Array) {
+				if (!val.length) {
+					continue;
+				}
 				val = val.join(",");
 			}
 			pString += "&" + key + "=" + val;
@@ -17304,6 +17296,32 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 				}
 			}
 			return null;
+		},
+		
+		/**
+		 * Notify user about something, error or success.
+		 * @param text {String} The message
+		 * @param msgType {String} The message type (affects only the color of the msg)
+		 * 		"success"|"error"
+		 * @param options {Object}
+		 * @returns {jQuery tag}
+		 */
+		notify: function(text, msgType, options) {
+			options = options || {};
+			
+			options.parent = options.parent || $("body");
+			switch(msgType) {
+			case "success":
+				msgType = "alert-success";
+				break;
+			case "error":
+				msgType = "alert-danger";
+				break;
+			}
+			var msg = $('<div class="alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
+			options.parent.find(".alert").remove();
+			options.parent.append(msg);
+			return msg;
 		},
 		
 		addLayerWithConfig: function(layerConfig) {
@@ -17407,6 +17425,7 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 		var params = options.params || smap.core.paramInst.getParams();
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
+				smap.config.configName = params.CONFIG; // Store for creating params
 				smap.config.langCode = params.LANG || "en";
 				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
@@ -17980,7 +17999,7 @@ L.control.selectWMS = function (options) {
 	
 	_onLocationError: function(e) {
 		smap.cmd.loading(false);
-		var msgTag = utils.notify(this.lang.errorGeolocate+": "+e.message, "error", {parent: $("body")});
+		var msgTag = smap.cmd.notify(this.lang.errorGeolocate+": "+e.message, "error", {parent: $("body")});
 		msgTag.on("touchstart", function() {
 			$("body").find(".alert").remove();
 		});
@@ -18241,6 +18260,25 @@ L.control.guideIntroScreen = function (options) {
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		this._setLang();
+	},
+	
+	
+	
+	_lang: {
+		"sv": {
+			mediaHeader: "Avbryt"
+		},
+		"en": {
+			mediaHeader: "Cancel"
+		}
+	},
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
 	},
 
 	onAdd: function(map) {
@@ -18274,8 +18312,9 @@ L.control.guideIntroScreen = function (options) {
 	_onPopupClick: function(e) {
 		var props = $("#gp-btn-show").data("props");
 		var t = this.options.data[ props[this.options.attrId] ] || {};
-		var mediaArr = t.tabMedia;
-		if (mediaArr && mediaArr instanceof Array) {
+		var mediaArr = t.tabMedia,
+			tabIntro = t.tabIntro;
+		if (tabIntro) {   //mediaArr && mediaArr instanceof Array) {
 			this.createPopup(props);
 		}
 		else if (mediaArr && mediaArr instanceof Object) {
@@ -18343,8 +18382,8 @@ L.control.guideIntroScreen = function (options) {
 			var props = f.properties || {};
 			var t = self.options.data[ props[self.options.attrId] ] || {};
 			var m = t.tabMedia;
-			if (m instanceof Object && !(m instanceof Array) && m.mediaType) {
-				return L.marker(latLng, icons[m.mediaType]);
+			if (t.iconType && icons[t.iconType]) {
+				return L.marker(latLng, icons[t.iconType]);
 			}
 			else {
 				return L.marker(latLng);
@@ -18477,7 +18516,7 @@ L.control.guideIntroScreen = function (options) {
 		return $tagVideo;
 	},
 	
-	_makeMediaList: function(arrMedia) {
+	_makeMediaList: function(arrMedia, props) {
 		arrMedia = arrMedia || [];
 		
 		var glyphs = {
@@ -18490,7 +18529,7 @@ L.control.guideIntroScreen = function (options) {
 			list = $('<div id="gp-listmoreinfo" class="list-group" />');
 		for (i=0,len=arrMedia.length; i<len; i++) {
 			t = arrMedia[i];
-			li = $('<a href="#" class="list-group-item"><span class="glyphicon glyphicon-'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+t.label+'</a>');
+			li = $('<a href="#" class="list-group-item"><span class="glyphicon glyphicon-'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
 			list.append(li);
 		}
 		return list;
@@ -18557,7 +18596,7 @@ L.control.guideIntroScreen = function (options) {
 		var content = 
 		'<ul class="nav nav-tabs">' +
 			'<li class="active"><a href="#gp-intro" data-toggle="tab">Intro</a></li>'+
-			'<li><a href="#gp-moreinfo" data-toggle="tab">Mer info</a></li>'+
+			'<li><a href="#gp-moreinfo" data-toggle="tab">'+this.lang.mediaHeader+'</a></li>'+
 		'</ul>'+
 		'<div class="tab-content gp-popup">'+
 		  '<div class="tab-pane active" id="gp-intro">'+
@@ -18574,7 +18613,7 @@ L.control.guideIntroScreen = function (options) {
 		var data = self.options.data[featureId];
 		
 		// Fill media-tab content
-		var list = this._makeMediaList(data.tabMedia);
+		var list = this._makeMediaList(data.tabMedia, props);
 		content.find("#gp-moreinfo").append(list);
 		
 		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);
@@ -19717,10 +19756,12 @@ L.control.sharePosition = function (options) {
 	
 	_lang: {
 		"sv": {
-			search: "Sök"
+			search: "Sök",
+			addressNotFound: "Den sökta adressen hittades inte"
 		},
 		"en": {
-			search: "Search"
+			search: "Search",
+			addressNotFound: "The searched address was not found"
 		}
 	},
 	
@@ -19743,7 +19784,30 @@ L.control.sharePosition = function (options) {
 		L.DomEvent.disableClickPropagation(this._container);
 		self.$container = $(self._container);
 		self._makeSearchField();
+		
+		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
+		smap.event.on("smap.core.applyparams", this.__onApplyParams);
+		
+		this.__onCreateParams = this.__onCreateParams || $.proxy( this._onCreateParams, this );
+		smap.event.on("smap.core.createparams", this.__onCreateParams);
+			
 		return self._container;
+	},
+	
+	onRemove: function(map) {
+		smap.event.off("smap.core.applyparams", this.__onApplyParams);
+	},
+	
+	_onApplyParams: function(e, obj) {
+		if (obj.params.POI) {
+			this._geoLocate(decodeURIComponent( obj.params.POI ));
+		}
+	},
+	
+	_onCreateParams: function(e, obj) {
+		if (this.marker && this.marker.options.q) {
+			obj.POI = encodeURIComponent( this.marker.options.q );
+		}
 	},
 
 	_rmAdressMarker: function(marker){
@@ -19896,6 +19960,11 @@ L.control.sharePosition = function (options) {
 					this.map.removeLayer(this.marker);
 					this.marker = null;
 				}
+				if (!json.features.length) {
+					// This means the searched place does not exist – inform user
+					smap.cmd.notify(this.lang.addressNotFound, "error");
+					return;
+				}
 				var coords = json.features[0].geometry.coordinates;
 				var latLng = L.latLng( coords[1], coords[0] );
 				
@@ -19915,6 +19984,8 @@ L.control.sharePosition = function (options) {
 				this.map.on("popupopen", onPopupOpen);
 				
 				this.marker = L.marker(latLng).addTo(this.map);
+				this.marker.options.q = q; // Store for creating link to map
+				
 				this.map.setView(latLng, 15);
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
 				this.marker.openPopup();
@@ -19931,11 +20002,6 @@ L.control.sharePosition = function (options) {
 				
 	},
 	
-
-	onRemove: function(map) {
-		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
-		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
-	},
 	CLASS_NAME: "L.Control.Search"
 });
 
