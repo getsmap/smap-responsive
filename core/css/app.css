@@ -1,7 +1,6 @@
 body {
   margin: 0;
-  padding: 0;
-  font-size: 100%; }
+  padding: 0; }
 
 #mapdiv {
   position: absolute;
