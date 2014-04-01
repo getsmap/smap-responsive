@@ -39,7 +39,8 @@
     ],
     
     "scss": [
-		"core/css/app.scss"
+		"core/css/app.scss",
+		"plugins/LayerSwitcher/LayerSwitcher.scss"
     ],
     
     "css": [

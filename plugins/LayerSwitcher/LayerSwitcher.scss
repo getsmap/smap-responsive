@@ -1,0 +1,164 @@
+@import '../../core/css/css3.scss';
+
+#lswitch-btn {
+	z-index: 999;
+	position: absolute;
+	left: 0px;
+	bottom: 80px;
+	padding: 8px 3px 5px 0px;
+	border: 1px solid #999;
+	border-width: 1px 1px 1px 0;
+	@include box-shadow(1px 1px 4px 0 rgba(100,100,100,.5));
+	background-color: #fff;
+	background-color: rgba(255,255,255,.8);
+	cursor: pointer;
+	@include border-radius(0 4px 4px 0);
+}
+
+.lswitch-btn-big {
+	padding: 18px 14px 18px 0px !important;
+}
+.lswitch-btn-big img {
+	width: 30px;
+}
+
+.lswitch-panel .panel {
+	@include box-shadow(none);
+}
+
+.lswitch-panelslide {
+	@include transition(margin-left 300ms ease);
+}
+
+.lswitch-panel .panel-default {
+	margin-top: 10px;
+}
+
+.lswitch-panel {
+	z-index: -1;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 70%;
+	height: 100%;
+	max-width: 300px;
+	background-color: #38454E;
+	padding: 0 20px;
+	@include box-shadow(inset #000 -3px 0px 17px);
+	overflow: auto;
+}
+
+.lswitch-panel a {
+	cursor: pointer;
+	background-color: #38454E;
+	color: #eee;
+	border: none;
+	@include border-radius(0px !important);
+	margin-top: 1px;
+}
+
+.lswitch-panel a:hover, .lswitch-panel a:active {
+	background-color: #38454E; /* For mobile screens - use same background-color during hover as for default */
+	color: #fff;
+	@include border-radius(0);
+}
+
+.lswitch-panel a.active {
+	cursor: pointer;
+	background-color: #333;
+	background-color: rgba(0,0,0,.4);
+	color: #fff;
+	font-weight: normal;
+}
+
+.lswitch-panel a.active:hover, .lswitch-panel a.active:active {
+	background-color: #333;
+	background-color: rgba(0,0,0,.4);
+	color: #fff;
+}
+
+.lswitch-panel .panel-default {
+	border: none;
+	background-color: #38454E;
+}
+
+.lswitch-panel .panel-heading {
+	padding: 3px 15px;
+	border: none;
+	font-weight: normal;
+	background-color: #333;
+	background-color: rgba(0,0,0,.4) !important;
+	color: #fff !important;
+	@include border-radius(5px 5px 0px 0);
+	font-weight: bold;
+	font-size: 110%;
+}
+
+/* Added to html and body temporarily to avoid scrollbars during transitions */
+.lswitch-overflow-hidden {
+	overflow: hidden !important;	
+}
+
+
+
+
+@media (min-width: 992px) {
+	/* For desktop computers */
+	
+	
+	/* Avoid things appearing under the switcher */
+	.leaflet-left {
+		left: 310px;
+	}
+	
+	#mapdiv {
+		margin-left: 0px !important;
+	}
+	
+	#lswitch-btn {
+		display: none !important;
+	}
+	
+	.lswitch-panel {
+		display: block !important;
+		background-color: #eee;
+		background-color: rgba(255,255,255,0.6);
+		@include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);
+		z-index: 1000;
+		
+		//@include transition(all 500ms);
+	}
+	.lswitch-panel .panel-heading {
+		background-color: #555;
+		background-color: rgba(88, 112, 143, 1) !important;
+		color: #000;
+		border: none;
+	}
+	
+	.lswitch-panel a {
+		background: none;
+		color: #444;
+		@include transition(all 200ms);
+	}
+	.lswitch-panel a:hover, .lswitch-panel a:active {
+		background-color: #bbb;
+		background-color: rgba(200,200,200,.5);
+		color: #000;
+	}
+	.lswitch-panel a.active:hover, .lswitch-panel a.active:active {
+		background-color: #333;
+		background-color: rgba(88, 112, 143, 1);
+		color: #fff;
+	}
+	.lswitch-panel a.active {
+		cursor: pointer;
+		background-color: #333;
+		background-color: rgba(88, 112, 143, 1);
+		color: #fff;
+		font-weight: normal;
+	}
+	.lswitch-panel .panel-default {
+		border: none;
+		background: none;
+	}
+}
