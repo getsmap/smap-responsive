@@ -1,7 +1,6 @@
 L.Control.Geolocate = L.Control.extend({
 	options: {
 		position: 'bottomright',
-		_btnImageSrc: "img/glyphish-icons/PNG-icons/193-location-arrow.png",
 		locateOptions: {
 			maxZoom: 12,
 			enableHighAccuracy: true
@@ -47,7 +46,7 @@ L.Control.Geolocate = L.Control.extend({
 	},
 	
 	_drawButton: function() {
-		var btn = $('<button id="smap-glocate-btn" class="btn btn-default btn-lg"><img class="glyphicon icon-locate" src="'+this.options._btnImageSrc+'"></img></button>');
+		var btn = $('<button id="smap-glocate-btn" class="btn btn-default btn-lg"><span class="fa fa-location-arrow fa-lg"></span></button>');
 		this.$container.append(btn);
 		this.btn = btn;
 		btn.on("click", $.proxy(function() {

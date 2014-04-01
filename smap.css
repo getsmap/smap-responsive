@@ -1390,11 +1390,7 @@ Version: 1.0
 .leaflet-control-Geolocate .btn {
 	outline: none;
 }
-
-.leaflet-control-Geolocate .btn-primary img {
-	-webkit-filter: brightness(400%);
-	filter: brightness(400%);
-}.guide-introscreen {
+.guide-introscreen {
 	position: absolute;
 	left: 0px;
 	top: 0px;
