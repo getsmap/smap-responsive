@@ -57,7 +57,7 @@ var config = {
 	    		 }
 		     },
 		     {
-				  init: "L.GeoJSON.WFS2",
+				  init: "L.GeoJSON.WFS",
 				  url: "http://geoserver.smap.se/geoserver/wfs",
 				  options: {
 					  layerId: "malmows_STADSDEL_L",
@@ -79,7 +79,7 @@ var config = {
 				  }
 		     },
 		     {
-				  init: "L.GeoJSON.WFS2",
+				  init: "L.GeoJSON.WFS",
 				  url: "http://geoserver.smap.se/geoserver/wfs",
 				  options: {
 					  layerId: "malmows_ulf_stadsdel",
@@ -102,7 +102,7 @@ var config = {
 		     }
 //		     ,
 //		     {
-//				  init: "L.GeoJSON.WFS2",
+//				  init: "L.GeoJSON.WFS",
 //				  url: "http://geoserver.smap.se/geoserver/wfs",
 //				  options: {
 //					  layerId: "intressepunkter",
@@ -276,7 +276,7 @@ var config = {
 };
 
 // Set proxy for WFS
-L.GeoJSON.WFS2.proxy = config.ws[document.domain].proxy;
+L.GeoJSON.WFS.proxy = config.ws[document.domain].proxy;
 
 // Set proxy for SelectWMS
 L.Control.SelectWMS.proxy = config.ws[document.domain].proxy;

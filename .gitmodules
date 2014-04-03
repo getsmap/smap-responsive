@@ -1,0 +1,3 @@
+[submodule "lib/leaflet-plugins/azgs-leaflet"]
+	path = lib/leaflet-plugins/azgs-leaflet
+	url = https://github.com/johanlahti/azgs-leaflet.git
