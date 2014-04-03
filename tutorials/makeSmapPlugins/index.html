@@ -37,12 +37,12 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 			    <section>
-					<h2>Utveckla pluginer f√∂r smap-mobile</h2>
-					<p>Johan Lahti<br>Malm√∂ stad<br>2014-04-02</p>
+					<h2>Utveckla pluginer för smap-mobile</h2>
+					<p>Johan Lahti<br>Malmö stad<br>2014-04-02</p>
 				</section>
 				
 				<section>
-					<h1>F√∂rberedande steg</h1>
+					<h1>Förberedande steg</h1>
 					<ol>
 					    <li>Installera texthanterare</li>
 					    <li>Klona/checka ut koden</li>
@@ -50,7 +50,7 @@
                             <pre><code>svn co https://github.com/getsmap/smap-mobile/trunk smap-mobile</code></pre>
 					    <li>Checka ut server-side script (mappen ws i projektet)</li>
                             <pre><code>svn co https://github.com/getsmap/smap-mobile/trunk/ws smap-ws</code></pre>
-                        <li>Testa s√• att f√∂ljande l√§nkar fungerar:</li>
+                        <li>Testa så att följande länkar fungerar:</li>
                         <ul>
                             <a target="_blank" href="http://localhost/smap-mobile/index.html">http://localhost/smap-mobile/index.html</a>
                             <a target="_blank" href="http://localhost/cgi-bin/proxy.py">http://localhost/cgi-bin/proxy.py</a>
@@ -61,18 +61,18 @@
 				<section>
 					<h1>Skapa plugin</h1>
 					<ol>
-					    <li>Skapa f√∂ljande mappar och filer </li>
+					    <li>Skapa följande mappar och filer </li>
 					    <pre><code>plugins/MyModule                 // ny mapp
-plugins/MyModule/MyModule.js    // kopiera och d√∂p om PluginTemplate.js
+plugins/MyModule/MyModule.js    // kopiera och döp om PluginTemplate.js
 plugins/MyModule/MyModule.css   // ny tom fil</code></pre></li>
-					    <li>L√§nka in ovan n√§mnda filer i index.html</li>
-					    <li>L√§gg till f√∂ljande kod i configs/config.js</li>
+					    <li>Länka in ovan nämnda filer i index.html</li>
+					    <li>Lägg till följande kod i configs/config.js</li>
 					    <pre><code>{
     init: "L.Control.MyModule",
     options: {}
 }</code></pre>
-                        <li>√ñppna MyModule.js och ers√§tt alla <code>"Template"</code> med modulens namn <code>"MyModule"</code></li>
-					    <li>B√∂rja koda!</li>
+                        <li>√ñppna MyModule.js och ersätt alla <code>"Template"</code> med modulens namn <code>"MyModule"</code></li>
+					    <li>Börja koda!</li>
 					</ol>
 				</section>
 				
@@ -100,30 +100,30 @@ onAdd: function(map) {
                 <section>
                     <h1>Koda plugin - Steg 2</h1>
                     <ul>
-                        <li>Tv√• filer att k√§nna till:</li>
+                        <li>Två filer att känna till:</li>
                         <pre><code>
-- core/utils.js  // Anv√§ndbara funktioner
-- core/cmd.js    // Ramverkets funktioner, anrop till "k√§rnan"
+- core/utils.js  // Användbara funktioner
+- core/cmd.js    // Ramverkets funktioner, anrop till "kärnan"
                         </code></pre>
-                        <li>Exempel p√• anv√§ndning:</li>
+                        <li>Exempel på användning:</li>
                         <pre><code>
 
-// 1. Ers√§tt alla ${...} med ett v√§rde
+// 1. Ersätt alla ${...} med ett värde
 
-var html = utils.extractToHtml("Objektets ID √§r ${id} och namnet ${name}.", {id: 2, name: "Me"});
-// Resultat: "Objektets ID √§r 2 och namnet Me."
+var html = utils.extractToHtml("Objektets ID är ${id} och namnet ${name}.", {id: 2, name: "Me"});
+// Resultat: "Objektets ID är 2 och namnet Me."
 
 
-// 2. Visa och g√∂m laddningsikonen
+// 2. Visa och göm laddningsikonen
 
 smap.cmd.loading(true);  // Laddar...
 smap.cmd.loading(false); // Laddat klart...
 
 
-// 3. H√§mta config f√∂r ett lager i config-filen
+// 3. Hämta config för ett lager i config-filen
 
-var layer = this.map._layers[21]; // h√§mta ett lager fr√•n kartan
-var layerId = layer.options.layerId; // h√§mta layerId (skapat av smap)
+var layer = this.map._layers[21]; // hämta ett lager från kartan
+var layerId = layer.options.layerId; // hämta layerId (skapat av smap)
 var t = smap.cmd.getLayerConfig(layerId);  // Laddar...
 // t.displayName, t.name ...
 
@@ -137,9 +137,9 @@ var t = smap.cmd.getLayerConfig(layerId);  // Laddar...
 					<h1>Exempel</h1>
 					<ul>
 					    <li>Vi ska utveckla en plugin som skapar en knapp</li>
-					    <li>Om man trycker p√• knappen kommer det upp ett dialogf√∂nster med info om alla lager i kartan</li>
-					    <li>Knappens position ska kunna konfigureras fr√•n config-filen</li>
-					    <li>St√∂d f√∂r flera spr√•k</li>
+					    <li>Om man trycker på knappen kommer det upp ett dialogfönster med info om alla lager i kartan</li>
+					    <li>Knappens position ska kunna konfigureras från config-filen</li>
+					    <li>Stöd för flera språk</li>
 					</ul>
 				</section>
 				
@@ -149,9 +149,9 @@ var t = smap.cmd.getLayerConfig(layerId);  // Laddar...
 					    <p>Fem steg:</p>
 					    <li>Skapa knapp</li>
 					    <li>Koppla funktion till knapptryckning</li>
-					    <li>G√∂r konfigurerbar</li>
-					    <li>St√∂d f√∂r flera spr√•k</li>
-					    <li>St√§da upp efter oss</li>
+					    <li>Gör konfigurerbar</li>
+					    <li>Stöd för flera språk</li>
+					    <li>Städa upp efter oss</li>
 					    
 					</ol>
 				</section>
@@ -213,7 +213,7 @@ _createButton: function() {
 				
 				
 				<section>
-					<h2>3. G√∂r konfigurerbar</h2>
+					<h2>3. Gör konfigurerbar</h2>
 					<ol>
                         <li>I config-filen</li>
                         <pre><code>
@@ -242,9 +242,9 @@ var position = this.options.position // "bottomright"
 				
 				
 				<section>
-					<h2>4. St√∂d f√∂r spr√•k</h2>
+					<h2>4. Stöd för språk</h2>
 					<ol>
-                        <li>Ange etiketter f√∂r olika spr√•k</li>
+                        <li>Ange etiketter för olika språk</li>
                         <pre><code>
 _lang: {
     "sv": {
@@ -255,7 +255,7 @@ _lang: {
     }
 },
                         </code></pre>
-                        <li>L√§gg in spr√•kvariabeln</li>
+                        <li>Lägg in språkvariabeln</li>
 					    <pre><code>
 // Open content in a "modal window"
 var modal = utils.drawDialog("Some layers", self.lang.modalTitle);
@@ -267,22 +267,22 @@ var modal = utils.drawDialog("Some layers", self.lang.modalTitle);
 				
 				
 				<section>
-					<h2>St√§da upp efter oss<br><small>‚Äì anv√§nd onRemove</small></h2>
+					<h2>Städa upp efter oss<br><small>‚Äì använd onRemove</small></h2>
 					<ul>
-					    <li><span style="color:#f98;">onRemove</span> exekveras n√§r kontrollen tas bort fr√•n kartan</li>
-					    <li><span style="color:#f98;">onRemove</span> √§r motsatsen till <span style="color:#f98;">onAdd</span> och ska d√§rmed:</li>
+					    <li><span style="color:#f98;">onRemove</span> exekveras när kontrollen tas bort från kartan</li>
+					    <li><span style="color:#f98;">onRemove</span> är motsatsen till <span style="color:#f98;">onAdd</span> och ska därmed:</li>
                         <ul>
                             <li>Avregistrera lyssnare</li>
                             <li>Ta bort HTML-element</li>
-                            <li>Nollst√§lla variabler</li>
+                            <li>Nollställa variabler</li>
                             <li>Till exempel:</li>
                             <pre><code>
 this.map.off("drag", this._onDrag);
-this._someProperty = null; // Rensa bort det som variabeln pekar p√• (frig√∂r minne)
-delete this._someProperty; // Ta bort pekaren (lagrar endast ett "null"-v√§rde)
+this._someProperty = null; // Rensa bort det som variabeln pekar på (frigör minne)
+delete this._someProperty; // Ta bort pekaren (lagrar endast ett "null"-värde)
                         </code></pre>
                         </ul>
-                        <li>I v√•rt exempel beh√∂vs endast</li>
+                        <li>I vårt exempel behövs endast</li>
 					</ul>
                     <pre><code>
 onRemove: function(map) {
