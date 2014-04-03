@@ -30,12 +30,7 @@ L.Control.Template = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'leaflet-control-template'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		
-		// Use $ prefix for all jQuery objects to make it easier to sort out all
-		// jQuery dependencies when sharing the code in future.
 		this.$container = $(this._container);
-		
-		// Binding an event (example)
-		// this.map.on('layeradd', this._onLayerAdd, this).on('layerremove', this._onLayerRemove, this);
 
 		return this._container;
 	},
@@ -46,19 +41,9 @@ L.Control.Template = L.Control.extend({
 	}
 });
 
-
-// Do something when the map initializes
-//L.Map.addInitHook(function () {
-//	if (this.options.attributionControl) {
-//		this.attributionControl = (new L.Control.Template()).addTo(this);
-//	}
-//});
-
-
 /*
- * This code just makes removes the need for
- * using "new" when instantiating the class. It
- * is a Leaflet convention and should be there.
+ * This code lets us skip "new" before the
+ * Class name when instantiating it.
  */
 L.control.template = function (options) {
 	return new L.Control.Template(options);

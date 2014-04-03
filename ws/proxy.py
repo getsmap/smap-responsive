@@ -15,16 +15,7 @@ import sys, os
 
 # Designed to prevent Open Proxy type stuff.
 
-allowedHosts = ['www.openlayers.org', 'openlayers.org', 
-                'labs.metacarta.com', 'world.freemap.in', 
-                'prototype.openmnnd.org', 'geo.openplans.org',
-                'sigma.openplans.org', 'demo.opengeo.org',
-                'www.openstreetmap.org', 'sample.azavea.com',
-                'v2.suite.opengeo.org', 'v-swe.uni-muenster.de:8080', 
-                'vmap0.tiles.osgeo.org', 'www.openrouteservice.org',
-                'localhost', 'localhost:8080', 'localhost:8080', 'localhost:80',
-                'sdi.mycompany.com', 'http://sdi.mycompany.com', 
-                'www.opengeospatial.net/cite', 'localhost', 'localhost:8080',
+allowedHosts = ['localhost', 'localhost:8080', 'localhost:80',
                 'kartor.smap.se', 'www.smap.se', 'www.smap.se:8080', 'geoserver.smap.se', 'geoserver.smap.se:8080',
                 'www.smap.se', 'www.smap.se:8080', 'sandbox.smap.se',
                 'http://sandbox.smap.se', 'xyz.malmo.se', 'xyz.malmo.se:8081', '91.123.201.52', '91.123.201.52:8080',
