@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js - The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+			    <section>
+					<h2>Utveckla pluginer för smap-mobile</h2>
+					<p>Johan Lahti<br>Malmö stad<br>2014-04-02</p>
+				</section>
+				
+				<section>
+					<h1>Förberedande steg</h1>
+					<ol>
+					    <li>Installera texthanterare</li>
+					    <li>Klona/checka ut koden</li>
+                            <pre><code>git clone https://github.com/getsmap/smap-mobile.git</code></pre>
+                            <pre><code>svn co https://github.com/getsmap/smap-mobile/trunk smap-mobile</code></pre>
+					    <li>Checka ut server-side script (mappen ws i projektet)</li>
+                            <pre><code>svn co https://github.com/getsmap/smap-mobile/trunk/ws smap-ws</code></pre>
+                        <li>Testa så att följande länkar fungerar:</li>
+                        <ul>
+                            <a target="_blank" href="http://localhost/smap-mobile/index.html">http://localhost/smap-mobile/index.html</a>
+                            <a target="_blank" href="http://localhost/cgi-bin/proxy.py">http://localhost/cgi-bin/proxy.py</a>
+                        </ul>
+					</ol>
+				</section>
+				
+				<section>
+					<h1>Skapa plugin</h1>
+					<ol>
+					    <li>Skapa följande mappar och filer </li>
+					    <pre><code>plugins/MyModule                 // ny mapp
+plugins/MyModule/MyModule.js    // kopiera och döp om PluginTemplate.js
+plugins/MyModule/MyModule.css   // ny tom fil</code></pre></li>
+					    <li>Länka in ovan nämnda filer i index.html</li>
+					    <li>Lägg till följande kod i configs/config.js</li>
+					    <pre><code>{
+    init: "L.Control.MyModule",
+    options: {}
+}</code></pre>
+                        <li>Öppna MyModule.js och ersätt alla <code>"Template"</code> med modulens namn <code>"MyModule"</code></li>
+					    <li>Börja koda!</li>
+					</ol>
+				</section>
+				
+				
+				<section>
+					<h1>Koda plugin - Steg 1</h1>
+					<pre><code>
+onAdd: function(map) {
+    this.map = map;
+    
+    this._container = L.DomUtil.create('div', 'leaflet-control-template'); // second parameter is class name
+    L.DomEvent.disableClickPropagation(this._container);
+    this.$container = $(this._container); // use this div if u like – or just let it be
+    
+    // -- YOUR CODE HERE! -- //
+
+    return this._container;
+},
+					</code></pre>
+					
+				</section>
+
+                
+                
+                <section>
+                    <h1>Koda plugin - Steg 2</h1>
+                    <ul>
+                        <li>Två filer att känna till:</li>
+                        <pre><code>
+- core/utils.js  // Användbara funktioner
+- core/cmd.js    // Ramverkets funktioner, anrop till "kärnan"
+                        </code></pre>
+                        <li>Exempel på användning:</li>
+                        <pre><code>
+
+// 1. Ersätt alla ${...} med ett värde
+
+var html = utils.extractToHtml("Objektets ID är ${id} och namnet ${name}.", {id: 2, name: "Me"});
+// Resultat: "Objektets ID är 2 och namnet Me."
+
+
+// 2. Visa och göm laddningsikonen
+
+smap.cmd.loading(true);  // Laddar...
+smap.cmd.loading(false); // Laddat klart...
+
+
+// 3. Hämta config för ett lager i config-filen
+
+var layer = this.map._layers[21]; // hämta ett lager från kartan
+var layerId = layer.options.layerId; // hämta layerId (skapat av smap)
+var t = smap.cmd.getLayerConfig(layerId);  // Laddar...
+// t.displayName, t.name ...
+
+
+
+                        </code></pre>
+                    </ul>
+                </section>
+
+                <section>
+					<h1>Exempel</h1>
+					<ul>
+					    <li>Vi ska utveckla en plugin som skapar en knapp</li>
+					    <li>Om man trycker på knappen kommer det upp ett dialogfönster med info om alla lager i kartan</li>
+					    <li>Knappens position ska kunna konfigureras från config-filen</li>
+					    <li>Stöd för flera språk</li>
+					</ul>
+				</section>
+				
+				<section>
+				    <h1>Exempel</h1>
+					<ol>
+					    <p>Fem steg:</p>
+					    <li>Skapa knapp</li>
+					    <li>Koppla funktion till knapptryckning</li>
+					    <li>Gör konfigurerbar</li>
+					    <li>Stöd för flera språk</li>
+					    <li>Städa upp efter oss</li>
+					    
+					</ol>
+				</section>
+
+
+
+				<section>
+					<h2>1. Skapa knapp</h2>
+					<pre><code>
+onAdd: function(map) {
+    this.map = map;
+    
+    this._container = L.DomUtil.create('div', 'leaflet-control-myplugin');
+    L.DomEvent.disableClickPropagation(this._container);
+    this.$container = $(this._container);
+    
+    this._createButton();
+    
+    return this._container;
+},
+
+_createButton: function() {
+    var btn = $('<button class="btn btn-default"><span class="fa fa-bars fa-2x"></span></button>');
+    this.$container.append(btn);
+    
+    // -- TODO: Do something when clicking the button --
+},
+				    </code></pre>
+				</section>
+				
+				
+				<section>
+					<h2>2. Koppla klickfunktion</h2>
+					<pre><code>
+    btn.on("click", function() {
+        
+        // Create HTML from the layers to display inside the "modal window"
+        var htmlLayers = "",
+            layer;
+        for (var key in self.map._layers) {
+            layer = self.map._layers[key];
+            var t = smap.cmd.getLayerConfig(layer.options.layerId);
+            htmlLayers += '<p>'+t.options.displayName+'</p>';
+        }
+        
+        // Open content in a "modal window"
+        var modal = utils.drawDialog("Some layers", htmlLayers);
+        
+        // Destroy on close
+        modal.on("hidden.bs.modal", function() {
+            $(this).remove();
+        });
+        
+        // Show dialog
+        modal.modal("show");
+    });
+				    </code></pre>
+				</section>
+				
+				
+				<section>
+					<h2>3. Gör konfigurerbar</h2>
+					<ol>
+                        <li>I config-filen</li>
+                        <pre><code>
+{
+    init: "L.Control.MyPlugin",
+    options: {
+        position: "bottomright"
+    }
+},
+                        </code></pre>
+                        
+                        <li>I plugin-koden</li>
+                        <pre><code>
+options: {
+    position: 'bottomright'
+},
+                        </code></pre>
+                    </ol>
+                    <pre><code>
+// I pluginen finns alla options i variabeln options, t ex:
+var position = this.options.position // "bottomright"
+                    </code></pre>
+				</section>
+				
+				
+				
+				
+				<section>
+					<h2>4. Stöd för språk</h2>
+					<ol>
+                        <li>Ange etiketter för olika språk</li>
+                        <pre><code>
+_lang: {
+    "sv": {
+        modalTitle: "Lager i kartan"
+    },
+    "en": {
+        modalTitle: "Layers in the map"
+    }
+},
+                        </code></pre>
+                        <li>Lägg in språkvariabeln</li>
+					    <pre><code>
+// Open content in a "modal window"
+var modal = utils.drawDialog("Some layers", self.lang.modalTitle);
+				        </code></pre>
+				    </ol>
+				</section>
+				
+				
+				
+				
+				<section>
+					<h2>Städa upp efter oss<br><small>– använd onRemove</small></h2>
+					<ul>
+					    <li><span style="color:#f98;">onRemove</span> exekveras när kontrollen tas bort från kartan</li>
+					    <li><span style="color:#f98;">onRemove</span> är motsatsen till <span style="color:#f98;">onAdd</span> och ska därmed:</li>
+                        <ul>
+                            <li>Avregistrera lyssnare</li>
+                            <li>Ta bort HTML-element</li>
+                            <li>Nollställa variabler</li>
+                            <li>Till exempel:</li>
+                            <pre><code>
+this.map.off("drag", this._onDrag);
+this._someProperty = null; // Rensa bort det som variabeln pekar på (frigör minne)
+delete this._someProperty; // Ta bort pekaren (lagrar endast ett "null"-värde)
+                        </code></pre>
+                        </ul>
+                        <li>I vårt exempel behövs endast</li>
+					</ul>
+                    <pre><code>
+onRemove: function(map) {
+    this.$container.empty();
+}
+                    </pre></code>
+                </section>
+                
+                
+                
+                
+                
+                <section>
+					<h2>Sammanfattat (all kod)</h2>					
+                    <pre><code>
+options: {
+    position: 'bottomright'
+},
+      
+_lang: {
+    "sv": {
+        modalTitle: "Lager i kartan"
+    },
+    "en": {
+        modalTitle: "Layers in the map"
+    }
+},
+                    
+onAdd: function(map) {
+    this.map = map;
+    
+    this._container = L.DomUtil.create('div', 'leaflet-control-myplugin');
+    L.DomEvent.disableClickPropagation(this._container);
+    this.$container = $(this._container);
+    
+    this._createButton();
+    
+    return this._container;
+},
+
+onRemove: function(map) {
+    this.$container.empty();
+},
+
+_createButton: function() {
+    // Create a button and add to the container of this plugin
+    var btn = $('<button class="btn btn-default"><span class="fa fa-bars fa-2x"></span></button>');
+    this.$container.append(btn);
+    
+    // Bind click function
+    var self = this;
+    btn.on("click", function() {
+        
+        // Create HTML from the layers to display inside the "modal window"
+        var htmlLayers = "",
+            layer;
+        for (var key in self.map._layers) {
+            layer = self.map._layers[key];
+            var t = smap.cmd.getLayerConfig(layer.options.layerId);
+            htmlLayers += '<p>'+t.options.displayName+'</p>';
+        }
+        
+        // Open content in a "modal window"
+        var modal = utils.drawDialog("Some layers", self.lang.modalTitle);
+        
+        // Destroy on close
+        modal.on("hidden.bs.modal", function() {
+            $(this).remove();
+        });
+        
+        // Show dialog
+        modal.modal("show");
+    });
+},
+                    
+                    </code></pre>
+
+				</section>
+				
+				
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: 'none', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

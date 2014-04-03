@@ -68,8 +68,7 @@ L.Control.MyPlugin = L.Control.extend({
 	},
 
 	onRemove: function(map) {
-		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
-		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+		this.$container.empty();
 	}
 });
 
