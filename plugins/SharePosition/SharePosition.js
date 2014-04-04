@@ -114,7 +114,7 @@ L.Control.SharePosition = L.Control.extend({
 	_addLayer: function() {
 		var self = this;
 		this.layer = smap.core.layerInst._createLayer({
-			init: "L.GeoJSON.WFS2",
+			init: "L.GeoJSON.WFS",
 			url: this.options.wfsSource,
 			options: {
 				noBindZoom: true,

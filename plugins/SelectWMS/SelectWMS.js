@@ -74,11 +74,12 @@ L.Control.SelectWMS = L.Control.extend({
 	},
 	
 	onMapClick: function(e) {
+		
 		this.latLng = null;
 		if (this.xhr) {
 			this.xhr.abort();
 		}
-		var layers = this._layers;
+		var layers = e._layers || this._layers;
 		if (!layers.length) {
 			return;
 		}
@@ -170,6 +171,67 @@ L.Control.SelectWMS = L.Control.extend({
 		return params;
 	},
 	
+	
+	_parseText: function(resp) {
+		var out = {},
+			dict = {},
+			row, t, val, nbr, featureType,
+			rows = resp.split("\n");
+		
+		for (var i=0,len=rows.length; i<len; i++) {
+			row = rows[i];
+			if (row.search("=") === -1) {
+				var index = row.search(/'/);
+				if (index > -1) {
+					row = row.substring(index+1);
+					index = row.search(/'/);
+					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+						// Store the old result and create a new dict
+						out[featureType].push($.extend({}, dict));
+						dict = {};
+					}
+					featureType = row.substring(0, index);
+					if (!out[featureType]) {
+						out[featureType] = [];
+					}
+					continue;
+				}
+				else {
+					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+						out[featureType].push($.extend({}, dict));
+						dict = {};
+					}
+					continue;						
+				}
+			}
+			t = row.split("=");
+			if (t.length > 2) {
+				// There were some "=" in the value – join again.
+				var tempArr = t.slice(1);
+				val = tempArr.join("=");
+			}
+			else {
+				val = t[1];			
+			}
+			val = $.trim(val);
+			
+			// Convert string to number if possible
+			try {
+				nbr = parseFloat(val);
+			}
+			catch (e) {}
+			if (nbr && nbr !== NaN) {
+				val = nbr;
+			}
+			dict[ $.trim(t[0]) ] = val;
+		}
+		if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+			// Store the old result and create a new dict
+			out[featureType].push($.extend({}, dict));
+		}
+		return out;
+	},
+	
 	request: function(url, params, options) {
 		params = params || {};
 		options = options || {};
@@ -183,62 +245,7 @@ L.Control.SelectWMS = L.Control.extend({
 			dataType: "text",
 			context: this,
 			success: function(resp, textStatus, jqXHR) {
-				var out = {},
-					dict = {},
-					rows = resp.split("\n"),
-					row, t, val, nbr, featureType;
-				
-				for (var i=0,len=rows.length; i<len; i++) {
-					row = rows[i];
-					if (row.search("=") === -1) {
-						var index = row.search(/'/);
-						if (index > -1) {
-							row = row.substring(index+1);
-							index = row.search(/'/);
-							if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-								// Store the old result and create a new dict
-								out[featureType].push($.extend({}, dict));
-								dict = {};
-							}
-							featureType = row.substring(0, index);
-							if (!out[featureType]) {
-								out[featureType] = [];
-							}
-							continue;
-						}
-						else {
-							if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-								out[featureType].push($.extend({}, dict));
-								dict = {};
-							}
-							continue;						
-						}
-					}
-					t = row.split("=");
-					if (t.length > 2) {
-						// There were some "=" in the value – join again.
-						var tempArr = t.slice(1);
-						val = tempArr.join("=");
-					}
-					else {
-						val = t[1];			
-					}
-					val = $.trim(val);
-					
-					// Convert string to number if possible
-					try {
-						nbr = parseFloat(val);
-					}
-					catch (e) {}
-					if (nbr && nbr !== NaN) {
-						val = nbr;
-					}
-					dict[ $.trim(t[0]) ] = val;
-				}
-				if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-					// Store the old result and create a new dict
-					out[featureType].push($.extend({}, dict));
-				}
+				var out = this._parseText(resp);
 				options.onSuccess(out, {
 					latLng: this.latLng,
 					map: this.map,

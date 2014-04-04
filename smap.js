@@ -16424,7 +16424,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	CLASS_NAME: "L.GeoJSON.WFS",
 	 
 	options: {
-		uniqueAttr: "",
+		uniqueKey: "",
 		noBindZoom: true,
 		noBindDrag: false
 	},
@@ -16549,7 +16549,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	addData: function (geojson) {
 		var features = L.Util.isArray(geojson) ? geojson : geojson.features,
 		    i, len, feature, fid,
-		    uniqueAttr = this.options.uniqueAttr;
+		    uniqueKey = this.options.uniqueKey;
 		
 		if (features) {
 			var featureIndexes = this._featureIndexes,
@@ -16558,10 +16558,10 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				// Only add this if geometry or geometries are set and not null
 				feature = features[i];
 				var uniqueVal = "";
-				if (uniqueAttr) {
-					uniqueAttrArr = uniqueAttr.split(",");
+				if (uniqueKey) {
+					uniqueKeyArr = uniqueKey.split(",");
 					var props = feature.properties;
-					$.each(uniqueAttrArr, function(i, val) {
+					$.each(uniqueKeyArr, function(i, val) {
 						uniqueVal += (""+props[val]);
 					});
 				}
@@ -16603,7 +16603,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		}
 		var bounds = this._map.getBounds();
 		this.getFeature(bounds, function() {
-			if (self.options.uniqueAttr === null) {
+			if (self.options.uniqueKey === null) {
 				self.clearLayers();
 			}
 			self.addData(self.jsonData);
@@ -17096,7 +17096,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		var layer = new init(t.url, t.options);
 		
 		var self = this;
-		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS2") {
+		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS") {
 			if (!t.options.style) {
 				var style = {
 						weight: 2,
@@ -17149,6 +17149,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			layer = this._createLayer(t);
 		}
 		this._addLayer(layer);
+		return layer;
 	},
 	
 	hideLayer: function(layerId) {
@@ -17312,11 +17313,73 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				});
 			}
 		}
-		this._setLang();
+		
+		if (p.SEL) {
+			this._handleSelect(p.SEL);
+		}
 		
 		smap.event.trigger("smap.core.applyparams", {
 			params: p
 		});
+	},
+	
+	_handleSelect: function(sel) {
+		var arrSels = sel instanceof Array ? sel : sel.split(","),
+			s,
+			self = this,
+			layer;
+		for (var i=0,len=arrSels.length; i<len; i++) {
+			arrSel = arrSels[i].split(":");
+			
+			var layerId = arrSel[0],
+				key = arrSel[1],
+				val = arrSel[2];
+//			var t = smap.cmd.getLayerConfig(layerId);
+			
+			layer = smap.core.layerInst.showLayer(layerId);
+			layer._key = key;
+			layer._val = val;
+			
+			function onLoadWfs() {
+				var selFeature = null,
+					layer = this;
+				$.each(layer._layers, function(i, f) {
+					if (f.feature) {
+						var props = f.feature.properties;
+						if (!props[layer._key]) {
+							return false; // No such property, no use iterating
+						}
+						if (props[layer._key].toString() === val) {
+							selFeature = f; // This is the feature we want to select
+							return false; // break
+						}
+					}
+				});
+				if (selFeature) {
+					selFeature.fire("click", {
+						properties: selFeature.feature.properties
+					});
+					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
+				}
+				this.off("load", onLoadWfs);
+			};
+			
+			
+			function onLoadWms() {
+				// This is a WMS
+				self.map.fire("click", {
+					latlng: L.latLng(parseFloat(this._val), parseFloat(this._key)), // val is lat, key is lon
+					_layers: [this]
+				});
+				this.off("load", onLoadWms);
+				
+			};
+			
+			var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
+			layer.on("load", onLoad);
+			
+			
+		}
 	},
 	
 	CLASS_NAME: "smap.core.Param"
@@ -17703,11 +17766,12 @@ $(document).ready(function() {
 	},
 	
 	onMapClick: function(e) {
+		
 		this.latLng = null;
 		if (this.xhr) {
 			this.xhr.abort();
 		}
-		var layers = this._layers;
+		var layers = e._layers || this._layers;
 		if (!layers.length) {
 			return;
 		}
@@ -17799,6 +17863,67 @@ $(document).ready(function() {
 		return params;
 	},
 	
+	
+	_parseText: function(resp) {
+		var out = {},
+			dict = {},
+			row, t, val, nbr, featureType,
+			rows = resp.split("\n");
+		
+		for (var i=0,len=rows.length; i<len; i++) {
+			row = rows[i];
+			if (row.search("=") === -1) {
+				var index = row.search(/'/);
+				if (index > -1) {
+					row = row.substring(index+1);
+					index = row.search(/'/);
+					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+						// Store the old result and create a new dict
+						out[featureType].push($.extend({}, dict));
+						dict = {};
+					}
+					featureType = row.substring(0, index);
+					if (!out[featureType]) {
+						out[featureType] = [];
+					}
+					continue;
+				}
+				else {
+					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+						out[featureType].push($.extend({}, dict));
+						dict = {};
+					}
+					continue;						
+				}
+			}
+			t = row.split("=");
+			if (t.length > 2) {
+				// There were some "=" in the value – join again.
+				var tempArr = t.slice(1);
+				val = tempArr.join("=");
+			}
+			else {
+				val = t[1];			
+			}
+			val = $.trim(val);
+			
+			// Convert string to number if possible
+			try {
+				nbr = parseFloat(val);
+			}
+			catch (e) {}
+			if (nbr && nbr !== NaN) {
+				val = nbr;
+			}
+			dict[ $.trim(t[0]) ] = val;
+		}
+		if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+			// Store the old result and create a new dict
+			out[featureType].push($.extend({}, dict));
+		}
+		return out;
+	},
+	
 	request: function(url, params, options) {
 		params = params || {};
 		options = options || {};
@@ -17812,62 +17937,7 @@ $(document).ready(function() {
 			dataType: "text",
 			context: this,
 			success: function(resp, textStatus, jqXHR) {
-				var out = {},
-					dict = {},
-					rows = resp.split("\n"),
-					row, t, val, nbr, featureType;
-				
-				for (var i=0,len=rows.length; i<len; i++) {
-					row = rows[i];
-					if (row.search("=") === -1) {
-						var index = row.search(/'/);
-						if (index > -1) {
-							row = row.substring(index+1);
-							index = row.search(/'/);
-							if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-								// Store the old result and create a new dict
-								out[featureType].push($.extend({}, dict));
-								dict = {};
-							}
-							featureType = row.substring(0, index);
-							if (!out[featureType]) {
-								out[featureType] = [];
-							}
-							continue;
-						}
-						else {
-							if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-								out[featureType].push($.extend({}, dict));
-								dict = {};
-							}
-							continue;						
-						}
-					}
-					t = row.split("=");
-					if (t.length > 2) {
-						// There were some "=" in the value – join again.
-						var tempArr = t.slice(1);
-						val = tempArr.join("=");
-					}
-					else {
-						val = t[1];			
-					}
-					val = $.trim(val);
-					
-					// Convert string to number if possible
-					try {
-						nbr = parseFloat(val);
-					}
-					catch (e) {}
-					if (nbr && nbr !== NaN) {
-						val = nbr;
-					}
-					dict[ $.trim(t[0]) ] = val;
-				}
-				if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-					// Store the old result and create a new dict
-					out[featureType].push($.extend({}, dict));
-				}
+				var out = this._parseText(resp);
 				options.onSuccess(out, {
 					latLng: this.latLng,
 					map: this.map,
@@ -19098,7 +19168,7 @@ L.control.layerSwitcher = function (options) {
 	_addWfsLayer: function() {
 		this.cluster = new L.MarkerClusterGroup();
 		this.layer = smap.core.layerInst._createLayer({
-			init: "L.GeoJSON.WFS2",
+			init: "L.GeoJSON.WFS",
 			url: this.options.wfsSource,
 			options: {
 				layerId: "sharetweet-wfstlayer",
@@ -19504,7 +19574,7 @@ L.control.shareTweet = function(options) {
 	_addLayer: function() {
 		var self = this;
 		this.layer = smap.core.layerInst._createLayer({
-			init: "L.GeoJSON.WFS2",
+			init: "L.GeoJSON.WFS",
 			url: this.options.wfsSource,
 			options: {
 				noBindZoom: true,

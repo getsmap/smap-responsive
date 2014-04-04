@@ -77,7 +77,7 @@ L.Control.ShareTweet = L.Control.extend({
 	_addWfsLayer: function() {
 		this.cluster = new L.MarkerClusterGroup();
 		this.layer = smap.core.layerInst._createLayer({
-			init: "L.GeoJSON.WFS2",
+			init: "L.GeoJSON.WFS",
 			url: this.options.wfsSource,
 			options: {
 				layerId: "sharetweet-wfstlayer",

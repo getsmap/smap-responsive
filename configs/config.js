@@ -23,6 +23,7 @@ var config = {
 	    			 layers: 'sandboxws:regisln',
 	    			 format: 'image/png',
 	    			 selectable: true,
+	    			 uniqueKey: "objectid",
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor",
 	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
@@ -68,7 +69,7 @@ var config = {
 					  reverseAxis: true,
 					  selectable: true,
 					  popup: 'The FID: ${fid}',
-					  uniqueAttr: null,
+					  uniqueKey: null,
 					  hoverColor: '#FF0',
 					  style: {
 						  weight: 6,
@@ -90,7 +91,7 @@ var config = {
 					  reverseAxis: true,
 					  selectable: true,
 					  popup: 'The FID: ${fid}',
-					  uniqueAttr: "easting,northing",
+					  uniqueKey: "easting,northing",
 					  hoverColor: '#FF0',
 					  style: {
 						  weight: 2,
