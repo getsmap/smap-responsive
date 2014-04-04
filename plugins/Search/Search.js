@@ -40,17 +40,26 @@ L.Control.Search = L.Control.extend({
 		self.$container = $(self._container);
 		self._makeSearchField();
 		
+		// Bind events
 		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
 		smap.event.on("smap.core.applyparams", this.__onApplyParams);
 		
 		this.__onCreateParams = this.__onCreateParams || $.proxy( this._onCreateParams, this );
 		smap.event.on("smap.core.createparams", this.__onCreateParams);
+		
+		this.map.on("click", this._blurSearch);
 			
 		return self._container;
 	},
 	
+	_blurSearch: function() {
+		$("#smap-search-div input").blur();
+	},
+	
 	onRemove: function(map) {
 		smap.event.off("smap.core.applyparams", this.__onApplyParams);
+		smap.event.off("smap.core.createparams", this.__onCreateParams);
+		this.map.off("click", this._blurSearch);
 	},
 	
 	_onApplyParams: function(e, obj) {
@@ -135,6 +144,7 @@ L.Control.Search = L.Control.extend({
 			e.stopImmediatePropagation(); // Don't stop event totally since select from autocomplete won't work
 		});
 		$entry.on("blur", deactivate);
+		
 		
 		$("#mapdiv").append( $searchDiv );
 		
@@ -241,9 +251,10 @@ L.Control.Search = L.Control.extend({
 				this.marker = L.marker(latLng).addTo(this.map);
 				this.marker.options.q = q; // Store for creating link to map
 				
-				this.map.setView(latLng, 15);
+				
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
 				this.marker.openPopup();
+				this.map.setView(latLng, 15);
 				$("#smap-search-div input").val(null);
 				setTimeout(function() {
 					$("#smap-search-div input").blur();
