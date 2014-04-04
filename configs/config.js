@@ -231,12 +231,12 @@ var config = {
 		        		   buffer: 5
 		        	   }
 		           },
-		           {
-		        	   init: "L.Control.MyPlugin",
-		        	   options: {
-		        	   		position: "bottomright"
-		        	   }
-		           },
+//		           {
+//		        	   init: "L.Control.MyPlugin",
+//		        	   options: {
+//		        	   		position: "bottomright"
+//		        	   }
+//		           },
 //		           {
 //		        	   init: "L.Control.ShareTweet",
 //		        	   options: {}

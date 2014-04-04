@@ -16419,16 +16419,16 @@ return node;},CLASS_NAME:"OpenLayers.Format.Filter.v1_1_0"});/*
         return new L.UserMarker(latlng, options);
     };
 })(window);
-L.GeoJSON.WFS2 = L.GeoJSON.extend({
+L.GeoJSON.WFS = L.GeoJSON.extend({
 	
-	CLASS_NAME: "L.GeoJSON.WFS2",
-	
+	CLASS_NAME: "L.GeoJSON.WFS",
+	 
 	options: {
 		uniqueAttr: "",
 		noBindZoom: true,
 		noBindDrag: false
 	},
-	
+
 	initialize: function(serviceUrl, options) {
 		options = options || {};
 		
@@ -16437,8 +16437,8 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 		L.GeoJSON.prototype.initialize.call(this, null, options);
 		
 		// JL: Added proxy here.
-		if (options.proxy || L.GeoJSON.WFS2.proxy) {
-			this.proxy = options.proxy || L.GeoJSON.WFS2.proxy || null;
+		if (options.proxy || L.GeoJSON.WFS.proxy) {
+			this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
 		}
 		
 		var wfsVersion = options.wfsVersion || "1.1.0";
@@ -16612,6 +16612,9 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 	
 	/**
 	 * Code borrowed from OpenLayers 2.13.1
+	 * Copyright (c) 2005-2014 OpenLayers Contributors
+	 * License: BSD-license
+	 * 
 	 * @param bounds {Leaflet bounds}
 	 * @param reverseAxisOrder {Boolean}
 	 * @returns {String}
@@ -16711,9 +16714,9 @@ L.GeoJSON.WFS2 = L.GeoJSON.extend({
 				case "MultiPoint":
 					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
 						coords = geom.coordinates[p];
-//						if (this.options.reverseAxis) {
-//							coords = this.swapCoords(coords);
-//						}
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords(coords);
+						}
 						projectedCoords = projectPoint(coords, inputCrs);
 						features[i].geometry.coordinates[p] = projectedCoords;
 					}
