@@ -12,11 +12,13 @@ L.Control.Search = L.Control.extend({
 	_lang: {
 		"sv": {
 			search: "Sök",
-			addressNotFound: "Den sökta adressen hittades inte"
+			addressNotFound: "Den sökta adressen hittades inte",
+			remove: "Ta bort"
 		},
 		"en": {
 			search: "Search",
-			addressNotFound: "The searched address was not found"
+			addressNotFound: "The searched address was not found",
+			remove: "Remove"
 		}
 	},
 	
@@ -252,10 +254,11 @@ L.Control.Search = L.Control.extend({
 				this.marker.options.q = q; // Store for creating link to map
 				
 				
-				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
+				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 				this.marker.openPopup();
 				this.map.setView(latLng, 15);
 				$("#smap-search-div input").val(null);
+				$("#smap-search-div input").blur();
 				setTimeout(function() {
 					$("#smap-search-div input").blur();
 				}, 100);
@@ -271,21 +274,6 @@ L.Control.Search = L.Control.extend({
 	CLASS_NAME: "L.Control.Search"
 });
 
-
-// Do something when the map initializes (example taken from Leaflet attribution control)
-
-//L.Map.addInitHook(function () {
-//	if (this.options.attributionControl) {
-//		this.attributionControl = (new L.Control.Template()).addTo(this);
-//	}
-//});
-
-
-/*
- * This code just makes removes the need for
- * using "new" when instantiating the class. It
- * is a Leaflet convention and should be there.
- */
 L.control.search = function (options) {
 	return new L.Control.Search(options);
 };

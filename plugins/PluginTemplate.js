@@ -13,7 +13,7 @@ L.Control.Template = L.Control.extend({
 	},
 	
 	_setLang: function(langCode) {
-		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
+		langCode = langCode || smap.config.langCode;
 		if (this._lang) {
 			this.lang = this._lang ? this._lang[langCode] : null;			
 		}

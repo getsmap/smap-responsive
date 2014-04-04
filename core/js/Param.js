@@ -4,6 +4,22 @@ smap.core.Param = L.Class.extend({
 		this.map = map;
 	},
 	
+	_lang: {
+		"sv": {
+			remove: "Ta bort"
+		},
+		"en": {
+			remove: "Remove"
+		}
+	},
+	
+	_setLang: function() {
+		langCode = smap.config.langCode;
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;
+		}
+	},
+	
 	getParams: function() {
 		var sep = "?";
 		var p = location.href.split(sep);
@@ -105,6 +121,10 @@ smap.core.Param = L.Class.extend({
 	applyParams: function(p) {
 		p = p || {};
 		
+		var self = this;
+		
+		this._setLang();
+		
 		var zoom = p.ZOOM ? parseInt(p.ZOOM) : 0,
 			center = p.CENTER ? L.latLng([parseFloat(p.CENTER[1]), parseFloat(p.CENTER[0])]) : null;
 		
@@ -117,6 +137,22 @@ smap.core.Param = L.Class.extend({
 		else {
 			this.map.fitWorld();
 		}
+		
+		if (p.XY) {
+			/*
+			 * e.g. xy=13.0,55.0,A%popup%20text (third parameter is optional)
+			 */ 
+			var marker = L.marker( L.latLng(parseFloat(p.XY[1]), parseFloat(p.XY[0])) );
+			this.map.addLayer(marker);
+			if (p.XY.length > 2) {
+				var html = '<p>'+p.XY[2]+'</p><button class="btn btn-default smap-core-btn-popup">'+this.lang.remove+'</button>';
+				marker.bindPopup(html).openPopup();
+				$(".smap-core-btn-popup").on("click", function() {
+					self.map.removeLayer(marker);
+				});
+			}
+		}
+		this._setLang();
 		
 		smap.event.trigger("smap.core.applyparams", {
 			params: p

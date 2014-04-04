@@ -17164,6 +17164,22 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this.map = map;
 	},
 	
+	_lang: {
+		"sv": {
+			remove: "Ta bort"
+		},
+		"en": {
+			remove: "Remove"
+		}
+	},
+	
+	_setLang: function() {
+		langCode = smap.config.langCode;
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;
+		}
+	},
+	
 	getParams: function() {
 		var sep = "?";
 		var p = location.href.split(sep);
@@ -17265,6 +17281,10 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	applyParams: function(p) {
 		p = p || {};
 		
+		var self = this;
+		
+		this._setLang();
+		
 		var zoom = p.ZOOM ? parseInt(p.ZOOM) : 0,
 			center = p.CENTER ? L.latLng([parseFloat(p.CENTER[1]), parseFloat(p.CENTER[0])]) : null;
 		
@@ -17277,6 +17297,22 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		else {
 			this.map.fitWorld();
 		}
+		
+		if (p.XY) {
+			/*
+			 * e.g. xy=13.0,55.0,A%popup%20text (third parameter is optional)
+			 */ 
+			var marker = L.marker( L.latLng(parseFloat(p.XY[1]), parseFloat(p.XY[0])) );
+			this.map.addLayer(marker);
+			if (p.XY.length > 2) {
+				var html = '<p>'+p.XY[2]+'</p><button class="btn btn-default smap-core-btn-popup">'+this.lang.remove+'</button>';
+				marker.bindPopup(html).openPopup();
+				$(".smap-core-btn-popup").on("click", function() {
+					self.map.removeLayer(marker);
+				});
+			}
+		}
+		this._setLang();
 		
 		smap.event.trigger("smap.core.applyparams", {
 			params: p
@@ -17429,7 +17465,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				smap.config.configName = params.CONFIG; // Store for creating params
-				smap.config.langCode = params.LANG || "en";
+				smap.config.langCode = params.LANG || navigator.language.split("-")[0] || "en";
 				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
 				smap.cmd.loading(false);
@@ -19759,11 +19795,13 @@ L.control.sharePosition = function (options) {
 	_lang: {
 		"sv": {
 			search: "Sök",
-			addressNotFound: "Den sökta adressen hittades inte"
+			addressNotFound: "Den sökta adressen hittades inte",
+			remove: "Ta bort"
 		},
 		"en": {
 			search: "Search",
-			addressNotFound: "The searched address was not found"
+			addressNotFound: "The searched address was not found",
+			remove: "Remove"
 		}
 	},
 	
@@ -19999,10 +20037,11 @@ L.control.sharePosition = function (options) {
 				this.marker.options.q = q; // Store for creating link to map
 				
 				
-				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">Ta bort</button></div>');
+				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 				this.marker.openPopup();
 				this.map.setView(latLng, 15);
 				$("#smap-search-div input").val(null);
+				$("#smap-search-div input").blur();
 				setTimeout(function() {
 					$("#smap-search-div input").blur();
 				}, 100);
@@ -20018,21 +20057,6 @@ L.control.sharePosition = function (options) {
 	CLASS_NAME: "L.Control.Search"
 });
 
-
-// Do something when the map initializes (example taken from Leaflet attribution control)
-
-//L.Map.addInitHook(function () {
-//	if (this.options.attributionControl) {
-//		this.attributionControl = (new L.Control.Template()).addTo(this);
-//	}
-//});
-
-
-/*
- * This code just makes removes the need for
- * using "new" when instantiating the class. It
- * is a Leaflet convention and should be there.
- */
 L.control.search = function (options) {
 	return new L.Control.Search(options);
 };L.Control.Info = L.Control.extend({
