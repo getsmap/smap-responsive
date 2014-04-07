@@ -1,0 +1,21 @@
+
+
+// To use these methods in your scss-file, type (e.g.): 
+// @include border-radius(2px 3px 0 10px);
+
+@mixin border-radius($radius) {
+          border-radius: $radius;
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+}
+
+@mixin box-shadow($param) {
+	box-shadow: $param;
+	-moz-box-shadow: $param;
+	-webkit-box-shadow: $param;
+}
+@mixin transition($param) {
+	transition: $param;
+	-webkit-transition: $param;
+	-moz-transition: $param;
