@@ -1,14 +1,15 @@
 smap.core.Init = L.Class.extend({
 	
+	_selectedFeatures: [],
+	
+	
 	initialize: function() {
 		this.defineProjs();
 		
 		// Instantiate core classes
 		smap.core.divInst = new smap.core.Div();
 		smap.cmd.loading(true); // needs the mapdiv to work :)
-		
 		this.init();
-		
 	},
 	
 	init: function(options) {
@@ -71,11 +72,15 @@ smap.core.Init = L.Class.extend({
 	bindEvents: function(map) {
 		var self = this;
 		map.on("selected", function(resp) {
-			var props = resp.properties;
+			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
 			
-			var isMarker = false;
-			if (isMarker === false) {
-				for (var typeName in props) {}
+			var props = resp.properties,
+				layerId = resp.layerId;
+			
+			var item;
+			if (resp.latLng) {
+				// This selection is a result of WMS GetFeatureInfo 
+				for (var typeName in props) {} // because of the way typename is stored
 				
 				// Get popup html for this typename
 				var typeNameArr = typeName.split(":");
@@ -100,7 +105,7 @@ smap.core.Init = L.Class.extend({
 					var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
 					// Get the anchor href value and set it to the onclick value.
 					$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
-//					$(this).removeAttr("href");
+	//					$(this).removeAttr("href");
 					$(this).after($btn);
 					$(this).remove();
 					html = $html.html();
@@ -110,7 +115,16 @@ smap.core.Init = L.Class.extend({
 					.setLatLng(resp.latLng)
 					.setContent(html)
 					.openOn(map);
+				
+				// This is WMS – so store layerId together with the clicked coordinates
+				item = [layerId, resp.latLng.lng, resp.latLng.lat];
 			}
+			else {
+				// This is WFS – so store layerId together with unqie key and value of this feature 
+				item = [layerId, resp.latLng.lng, resp.latLng.lat];
+			}
+			self._selectedFeatures.push(item);
+			
 		});
 	},
 	

@@ -7,10 +7,18 @@ L.Control.SelectWMS = L.Control.extend({
 		featureCount: 1,
 		buffer: 5,
 		onSuccess: function(props, other) {
+			var self = other.context;
+			
+			// Fetch layerId
+			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
+			var layerId = t.options.layerId;
+			
 			if (props && $.isEmptyObject(props) === false) {
+				self._selectedFeatures.push([layerId, self.latLng.lng, self.latLng.lat]);
 				other.map.fire("selected", {
 					properties: props,
-					latLng: other.latLng
+					latLng: other.latLng,
+					layerId: layerId
 				});				
 			}
 		},
@@ -20,6 +28,7 @@ L.Control.SelectWMS = L.Control.extend({
 	},
 	
 	_layers: [],
+	_selectedFeatures: [],
 
 	initialize: function(options) {
 		L.setOptions(this, options);
@@ -73,9 +82,17 @@ L.Control.SelectWMS = L.Control.extend({
 		}
 	},
 	
+	/**
+	 * Prepare and execute the WMS GetFeatureInfo request.
+	 * @param e {Object}
+	 * @returns {void}
+	 */
 	onMapClick: function(e) {
 		
+		// Reset properties
 		this.latLng = null;
+		this._selectedFeatures = [];
+		
 		if (this.xhr) {
 			this.xhr.abort();
 		}
@@ -249,7 +266,8 @@ L.Control.SelectWMS = L.Control.extend({
 				options.onSuccess(out, {
 					latLng: this.latLng,
 					map: this.map,
-					context: this
+					context: this,
+					params: params
 				});
 				
 			},

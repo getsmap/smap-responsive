@@ -58,9 +58,7 @@ smap.core.Param = L.Class.extend({
 	    return out;
 	},
 	
-	createParams: function(addRoot) {
-		addRoot = addRoot || false;
-		
+	createParamsAsObject: function() {
 		var c = this.map.getCenter(),
 			bl, layer;
 		
@@ -93,11 +91,17 @@ smap.core.Param = L.Class.extend({
 		smap.event.trigger("smap.core.createparams", p);
 		
 		// Remove all undefined or null values
-		$.map(p, function(i, val) {
-			
-		});
+//		$.map(p, function(i, val) {
+//			
+//		});
 		
+		return p;
+	},
+	
+	createParams: function(addRoot) {
+		addRoot = addRoot || false;
 		
+		var p = this.createParamsAsObject();
 		
 		var pString = "",
 			val;
@@ -163,62 +167,89 @@ smap.core.Param = L.Class.extend({
 	},
 	
 	_handleSelect: function(sel) {
-		var arrSels = sel instanceof Array ? sel : sel.split(","),
-			s,
-			self = this,
-			layer;
-		for (var i=0,len=arrSels.length; i<len; i++) {
-			arrSel = arrSels[i].split(":");
+//		var arrSels = sel instanceof Array ? sel : sel.split(","),
+//			s,
+//			self = this,
+//			layer;
+//		for (var i=0,len=arrSels.length; i<len; i++) {
+//			arrSel = arrSels[i].split(":");
+//			
+//			var layerId = arrSel[0],
+//				key = arrSel[1],
+//				val = arrSel[2];
+////			var t = smap.cmd.getLayerConfig(layerId);
+//			
+//			layer = smap.core.layerInst.showLayer(layerId);
+//			layer._key = key;
+//			layer._val = val;
+//			
+//			function onLoadWfs() {
+//				var selFeature = null,
+//					_layer = this;
+//				$.each(_layer._layers, function(i, f) {
+//					if (f.feature) {
+//						var props = f.feature.properties;
+//						if (!props[_layer._key]) {
+//							return false; // No such property, no use iterating
+//						}
+//						if (props[_layer._key].toString() === val) {
+//							selFeature = f; // This is the feature we want to select
+//							return false; // break
+//						}
+//					}
+//				});
+//				if (selFeature) {
+//					selFeature.fire("click", {
+//						properties: selFeature.feature.properties
+//					});
+//					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
+//				}
+//				this.off("load", onLoadWfs);
+//			};
+//			
+//			
+//			function onLoadWms() {
+//				// This is a WMS
+//				var _layer = this;
+//				var latLng = null;
+//				try {
+//					latLng = L.latLng(parseFloat(this._val), parseFloat(this._key)); // val is lat, key is lon
+//				}
+//				catch(e) {}
+//				
+//				if (latLng) {
+//					self.map.fire("click", {
+//						latlng: latLng,
+//						_layers: [_layer]
+//					});
+//				}
+//				_layer.off("load", onLoadWms);
+//			};
+//		}
 			
-			var layerId = arrSel[0],
-				key = arrSel[1],
-				val = arrSel[2];
-//			var t = smap.cmd.getLayerConfig(layerId);
+//			var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
+//			layer.on("load", onLoad);
 			
-			layer = smap.core.layerInst.showLayer(layerId);
-			layer._key = key;
-			layer._val = val;
+		
+		var selArr = sel instanceof Array ? sel : sel.split(",");
+		var selItem = selArr[0];
+		var itemArr = selItem.split(":"); // We support only one selected feature at this time
+		var layerId = itemArr[0],
+			lng = parseFloat(itemArr[1]);
+			lat = parseFloat(itemArr[2]);
+		var layer = smap.core.layerInst.showLayer(layerId),
+			cPoint = this.map.latLngToContainerPoint(L.latLng(lat, lng));
+		
+		layer.on("load", function() {
+			var clickEvent= document.createEvent('MouseEvents');
+		    clickEvent.initMouseEvent(
+			    'click', true, true, window, 0,
+			    0, 0, cPoint.x, cPoint.y, false, false,
+			    false, false, 0, null
+		    );
+		    document.elementFromPoint(cPoint.x, cPoint.y).dispatchEvent(clickEvent);
+		});
 			
-			function onLoadWfs() {
-				var selFeature = null,
-					layer = this;
-				$.each(layer._layers, function(i, f) {
-					if (f.feature) {
-						var props = f.feature.properties;
-						if (!props[layer._key]) {
-							return false; // No such property, no use iterating
-						}
-						if (props[layer._key].toString() === val) {
-							selFeature = f; // This is the feature we want to select
-							return false; // break
-						}
-					}
-				});
-				if (selFeature) {
-					selFeature.fire("click", {
-						properties: selFeature.feature.properties
-					});
-					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
-				}
-				this.off("load", onLoadWfs);
-			};
-			
-			
-			function onLoadWms() {
-				// This is a WMS
-				self.map.fire("click", {
-					latlng: L.latLng(parseFloat(this._val), parseFloat(this._key)), // val is lat, key is lon
-					_layers: [this]
-				});
-				this.off("load", onLoadWms);
-				
-			};
-			
-			var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
-			layer.on("load", onLoad);
-			
-			
-		}
 	},
 	
 	CLASS_NAME: "smap.core.Param"

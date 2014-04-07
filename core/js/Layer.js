@@ -80,6 +80,10 @@ smap.core.Layer = L.Class.extend({
 	 * 
 	 * Note! The layer to be added must have a layerId (layer.options.layerId)
 	 * Note 2! If the layer is removed – it must be done through this._removeLayer
+	 * 
+	 * TODO: Smarter to build this as a listener to leaflet event "layeradded"? Then
+	 * one doesn't need to go through this API.
+	 * 
 	 * @param layer {Leaflet layer} with a (unique) layerId
 	 */
 	_addLayer: function(layer) {
@@ -163,6 +167,17 @@ smap.core.Layer = L.Class.extend({
 			}
 			layer.on("load", function(e) {
 				var html;
+				var onFeatureClick = $.proxy(function(evt) {
+					var f = evt.target.feature;
+					self.map.fire("selected", {
+						layerId: evt.layer.options.layerId,
+						properties: f.properties,
+						latLng: evt.latlng
+					});
+					self._resetStyle(layer);
+					self._setSelectStyle(evt);
+				}, this);
+				
 				layer.eachLayer(function(f) {
 					if (!f._popup && f.feature) {
 						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
@@ -173,10 +188,7 @@ smap.core.Layer = L.Class.extend({
 						if (f._popup) {
 							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
 						}
-						f.on("click", $.proxy(function(e) {
-							self._resetStyle(layer);
-							self._setSelectStyle(e);
-						}, self));
+						f.on("click", onFeatureClick);
 					}
 				});
 				smap.cmd.loading(false);
