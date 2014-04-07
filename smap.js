@@ -17027,6 +17027,10 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	 * 
 	 * Note! The layer to be added must have a layerId (layer.options.layerId)
 	 * Note 2! If the layer is removed – it must be done through this._removeLayer
+	 * 
+	 * TODO: Smarter to build this as a listener to leaflet event "layeradded"? Then
+	 * one doesn't need to go through this API.
+	 * 
 	 * @param layer {Leaflet layer} with a (unique) layerId
 	 */
 	_addLayer: function(layer) {
@@ -17110,6 +17114,17 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			}
 			layer.on("load", function(e) {
 				var html;
+				var onFeatureClick = $.proxy(function(evt) {
+					var f = evt.target.feature;
+					self.map.fire("selected", {
+						layerId: evt.layer.options.layerId,
+						properties: f.properties,
+						latLng: evt.latlng
+					});
+					self._resetStyle(layer);
+					self._setSelectStyle(evt);
+				}, this);
+				
 				layer.eachLayer(function(f) {
 					if (!f._popup && f.feature) {
 						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
@@ -17120,10 +17135,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 						if (f._popup) {
 							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
 						}
-						f.on("click", $.proxy(function(e) {
-							self._resetStyle(layer);
-							self._setSelectStyle(e);
-						}, self));
+						f.on("click", onFeatureClick);
 					}
 				});
 				smap.cmd.loading(false);
@@ -17219,9 +17231,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	    return out;
 	},
 	
-	createParams: function(addRoot) {
-		addRoot = addRoot || false;
-		
+	createParamsAsObject: function() {
 		var c = this.map.getCenter(),
 			bl, layer;
 		
@@ -17254,11 +17264,17 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		smap.event.trigger("smap.core.createparams", p);
 		
 		// Remove all undefined or null values
-		$.map(p, function(i, val) {
-			
-		});
+//		$.map(p, function(i, val) {
+//			
+//		});
 		
+		return p;
+	},
+	
+	createParams: function(addRoot) {
+		addRoot = addRoot || false;
 		
+		var p = this.createParamsAsObject();
 		
 		var pString = "",
 			val;
@@ -17324,62 +17340,89 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	},
 	
 	_handleSelect: function(sel) {
-		var arrSels = sel instanceof Array ? sel : sel.split(","),
-			s,
-			self = this,
-			layer;
-		for (var i=0,len=arrSels.length; i<len; i++) {
-			arrSel = arrSels[i].split(":");
+//		var arrSels = sel instanceof Array ? sel : sel.split(","),
+//			s,
+//			self = this,
+//			layer;
+//		for (var i=0,len=arrSels.length; i<len; i++) {
+//			arrSel = arrSels[i].split(":");
+//			
+//			var layerId = arrSel[0],
+//				key = arrSel[1],
+//				val = arrSel[2];
+////			var t = smap.cmd.getLayerConfig(layerId);
+//			
+//			layer = smap.core.layerInst.showLayer(layerId);
+//			layer._key = key;
+//			layer._val = val;
+//			
+//			function onLoadWfs() {
+//				var selFeature = null,
+//					_layer = this;
+//				$.each(_layer._layers, function(i, f) {
+//					if (f.feature) {
+//						var props = f.feature.properties;
+//						if (!props[_layer._key]) {
+//							return false; // No such property, no use iterating
+//						}
+//						if (props[_layer._key].toString() === val) {
+//							selFeature = f; // This is the feature we want to select
+//							return false; // break
+//						}
+//					}
+//				});
+//				if (selFeature) {
+//					selFeature.fire("click", {
+//						properties: selFeature.feature.properties
+//					});
+//					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
+//				}
+//				this.off("load", onLoadWfs);
+//			};
+//			
+//			
+//			function onLoadWms() {
+//				// This is a WMS
+//				var _layer = this;
+//				var latLng = null;
+//				try {
+//					latLng = L.latLng(parseFloat(this._val), parseFloat(this._key)); // val is lat, key is lon
+//				}
+//				catch(e) {}
+//				
+//				if (latLng) {
+//					self.map.fire("click", {
+//						latlng: latLng,
+//						_layers: [_layer]
+//					});
+//				}
+//				_layer.off("load", onLoadWms);
+//			};
+//		}
 			
-			var layerId = arrSel[0],
-				key = arrSel[1],
-				val = arrSel[2];
-//			var t = smap.cmd.getLayerConfig(layerId);
+//			var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
+//			layer.on("load", onLoad);
 			
-			layer = smap.core.layerInst.showLayer(layerId);
-			layer._key = key;
-			layer._val = val;
+		
+		var selArr = sel instanceof Array ? sel : sel.split(",");
+		var selItem = selArr[0];
+		var itemArr = selItem.split(":"); // We support only one selected feature at this time
+		var layerId = itemArr[0],
+			lng = parseFloat(itemArr[1]);
+			lat = parseFloat(itemArr[2]);
+		var layer = smap.core.layerInst.showLayer(layerId),
+			cPoint = this.map.latLngToContainerPoint(L.latLng(lat, lng));
+		
+		layer.on("load", function() {
+			var clickEvent= document.createEvent('MouseEvents');
+		    clickEvent.initMouseEvent(
+			    'click', true, true, window, 0,
+			    0, 0, cPoint.x, cPoint.y, false, false,
+			    false, false, 0, null
+		    );
+		    document.elementFromPoint(cPoint.x, cPoint.y).dispatchEvent(clickEvent);
+		});
 			
-			function onLoadWfs() {
-				var selFeature = null,
-					layer = this;
-				$.each(layer._layers, function(i, f) {
-					if (f.feature) {
-						var props = f.feature.properties;
-						if (!props[layer._key]) {
-							return false; // No such property, no use iterating
-						}
-						if (props[layer._key].toString() === val) {
-							selFeature = f; // This is the feature we want to select
-							return false; // break
-						}
-					}
-				});
-				if (selFeature) {
-					selFeature.fire("click", {
-						properties: selFeature.feature.properties
-					});
-					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
-				}
-				this.off("load", onLoadWfs);
-			};
-			
-			
-			function onLoadWms() {
-				// This is a WMS
-				self.map.fire("click", {
-					latlng: L.latLng(parseFloat(this._val), parseFloat(this._key)), // val is lat, key is lon
-					_layers: [this]
-				});
-				this.off("load", onLoadWms);
-				
-			};
-			
-			var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
-			layer.on("load", onLoad);
-			
-			
-		}
 	},
 	
 	CLASS_NAME: "smap.core.Param"
@@ -17505,15 +17548,16 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		
 };smap.core.Init = L.Class.extend({
 	
+	_selectedFeatures: [],
+	
+	
 	initialize: function() {
 		this.defineProjs();
 		
 		// Instantiate core classes
 		smap.core.divInst = new smap.core.Div();
 		smap.cmd.loading(true); // needs the mapdiv to work :)
-		
 		this.init();
-		
 	},
 	
 	init: function(options) {
@@ -17576,11 +17620,15 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	bindEvents: function(map) {
 		var self = this;
 		map.on("selected", function(resp) {
-			var props = resp.properties;
+			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
 			
-			var isMarker = false;
-			if (isMarker === false) {
-				for (var typeName in props) {}
+			var props = resp.properties,
+				layerId = resp.layerId;
+			
+			var item;
+			if (resp.latLng) {
+				// This selection is a result of WMS GetFeatureInfo 
+				for (var typeName in props) {} // because of the way typename is stored
 				
 				// Get popup html for this typename
 				var typeNameArr = typeName.split(":");
@@ -17605,7 +17653,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 					var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
 					// Get the anchor href value and set it to the onclick value.
 					$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
-//					$(this).removeAttr("href");
+	//					$(this).removeAttr("href");
 					$(this).after($btn);
 					$(this).remove();
 					html = $html.html();
@@ -17615,7 +17663,16 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 					.setLatLng(resp.latLng)
 					.setContent(html)
 					.openOn(map);
+				
+				// This is WMS – so store layerId together with the clicked coordinates
+				item = [layerId, resp.latLng.lng, resp.latLng.lat];
 			}
+			else {
+				// This is WFS – so store layerId together with unqie key and value of this feature 
+				item = [layerId, resp.latLng.lng, resp.latLng.lat];
+			}
+			self._selectedFeatures.push(item);
+			
 		});
 	},
 	
@@ -17699,10 +17756,18 @@ $(document).ready(function() {
 		featureCount: 1,
 		buffer: 5,
 		onSuccess: function(props, other) {
+			var self = other.context;
+			
+			// Fetch layerId
+			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
+			var layerId = t.options.layerId;
+			
 			if (props && $.isEmptyObject(props) === false) {
+				self._selectedFeatures.push([layerId, self.latLng.lng, self.latLng.lat]);
 				other.map.fire("selected", {
 					properties: props,
-					latLng: other.latLng
+					latLng: other.latLng,
+					layerId: layerId
 				});				
 			}
 		},
@@ -17712,6 +17777,7 @@ $(document).ready(function() {
 	},
 	
 	_layers: [],
+	_selectedFeatures: [],
 
 	initialize: function(options) {
 		L.setOptions(this, options);
@@ -17765,9 +17831,17 @@ $(document).ready(function() {
 		}
 	},
 	
+	/**
+	 * Prepare and execute the WMS GetFeatureInfo request.
+	 * @param e {Object}
+	 * @returns {void}
+	 */
 	onMapClick: function(e) {
 		
+		// Reset properties
 		this.latLng = null;
+		this._selectedFeatures = [];
+		
 		if (this.xhr) {
 			this.xhr.abort();
 		}
@@ -17941,7 +18015,8 @@ $(document).ready(function() {
 				options.onSuccess(out, {
 					latLng: this.latLng,
 					map: this.map,
-					context: this
+					context: this,
+					params: params
 				});
 				
 			},
