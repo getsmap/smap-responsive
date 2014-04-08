@@ -18,10 +18,9 @@ import sys, os
 allowedHosts = ['localhost', 'localhost:8080', 'localhost:80',
                 'kartor.smap.se', 'www.smap.se', 'www.smap.se:8080', 'geoserver.smap.se', 'geoserver.smap.se:8080',
                 'www.smap.se', 'www.smap.se:8080', 'sandbox.smap.se',
-                'http://sandbox.smap.se', 'xyz.malmo.se', 'xyz.malmo.se:8081', '91.123.201.52', '91.123.201.52:8080',
+                'xyz.malmo.se', 'xyz.malmo.se:8081',
                 "webapps05.malmo.se", "sbkspace.malmo.se", "141.255.184.63", "141.255.184.63:8080",
-                "161.52.9.230", "161.52.9.230:8080", "sbkvmgeoserver.sbkmalmo.local:8080", "sbkvmgeoserver.sbkmalmo.local",
-                "www.travpad.org", "www.travpad.org:8080", "mobile.travpad.org", "mobile.travpad.org:8080"]
+                "161.52.9.230", "161.52.9.230:8080", "sbkvmgeoserver.sbkmalmo.local:8080", "sbkvmgeoserver.sbkmalmo.local"]
 
 method = os.environ["REQUEST_METHOD"]
 
