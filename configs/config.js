@@ -255,10 +255,10 @@ var config = {
 		        	   options: {}
 		           },
 		          
-		           // {
-		        	   // init: "L.Control.TestUlf",
-		        	   // options: {}
-		           // }
+		           {
+		        	   init: "L.Control.TestUlf",
+		        	   options: {}
+		           }
 
 				  
 //		           ,
