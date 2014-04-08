@@ -253,8 +253,14 @@ var config = {
 		           {
 		        	   init: "L.Control.Info",
 		        	   options: {}
-		           }
-		           
+		           },
+		          
+		           // {
+		        	   // init: "L.Control.TestUlf",
+		        	   // options: {}
+		           // }
+
+				  
 //		           ,
 //		           {
 //		           	   init: "L.Control.SideBars",
