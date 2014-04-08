@@ -88,7 +88,7 @@ L.Control.Info = L.Control.extend({
 	
 	_drawBtn: function() {
 		var self = this;
-		var $btn = $('<button id="smap-info-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-info-sign"></span></button>');
+		var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info-circle"></span></button>');
 //		$("#mapdiv").append($btn);
 		$btn.on("click", function() {
 			self.activate();

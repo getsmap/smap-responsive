@@ -1,0 +1,21 @@
+.btn-default {
+    color: #333;
+    background-color: #FFF;
+    border-color: #CCC;
+}
+.btn {
+    display: inline-block;
+    margin-bottom: 0px;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 10px;
+    font-size: 18px;
+    line-height: 1.42857;
+    border-radius: 4px;
+    -moz-user-select: none;
+}
