@@ -52,7 +52,7 @@
                             <pre><code>svn co https://github.com/getsmap/smap-mobile/trunk/ws smap-ws</code></pre>
                         <li>Testa så att följande länkar fungerar:</li>
                         <ul>
-                            <a target="_blank" href="http://localhost/smap-mobile/index.html">http://localhost/smap-mobile/index.html</a>
+                            <a target="_blank" href="http://localhost/smap-mobile/index_dev.html">http://localhost/smap-mobile/index_dev.html</a>
                             <a target="_blank" href="http://localhost/cgi-bin/proxy.py">http://localhost/cgi-bin/proxy.py</a>
                         </ul>
 					</ol>
@@ -65,13 +65,14 @@
 					    <pre><code>plugins/MyModule                 // ny mapp
 plugins/MyModule/MyModule.js    // kopiera och döp om PluginTemplate.js
 plugins/MyModule/MyModule.css   // ny tom fil</code></pre></li>
-					    <li>Länka in ovan nämnda filer i index.html</li>
+					    <li>Länka in ovan nämnda filer i index_dev.html</li>
 					    <li>Lägg till följande kod i configs/config.js</li>
 					    <pre><code>{
     init: "L.Control.MyModule",
     options: {}
 }</code></pre>
-                        <li>Öppna MyModule.js och ersätt alla <code>"Template"</code> med modulens namn <code>"MyModule"</code></li>
+                        <li>Öppna MyModule.js och ersätt alla <code>"Template"</code> med modulens namn <code>"MyModule"</code> (och
+                        alla <code>"template"</code> med <code>"myModule"</code>)</li>
 					    <li>Börja koda!</li>
 					</ol>
 				</section>
@@ -258,7 +259,7 @@ _lang: {
                         <li>Lägg in språkvariabeln</li>
 					    <pre><code>
 // Open content in a "modal window"
-var modal = utils.drawDialog("Some layers", self.lang.modalTitle);
+var modal = utils.drawDialog(self.lang.modalTitle, htmlLayers);
 				        </code></pre>
 				    </ol>
 				</section>

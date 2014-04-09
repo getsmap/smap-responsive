@@ -17,6 +17,18 @@ L.Control.Template = L.Control.extend({
 		if (this._lang) {
 			this.lang = this._lang ? this._lang[langCode] : null;			
 		}
+		
+		smap.cmd.callMod("navbar", [{
+			onClick: function() {
+			
+			}
+		}]);
+		
+		smap.cmd.addToolBtn("My button", {
+			onClick: function() {
+			
+			}
+		});
 	},
 
 	initialize: function(options) {
@@ -31,6 +43,8 @@ L.Control.Template = L.Control.extend({
 		L.DomEvent.disableClickPropagation(this._container);
 		
 		this.$container = $(this._container);
+		
+		alert(this.lang.exampleLabel);
 
 		return this._container;
 	},
