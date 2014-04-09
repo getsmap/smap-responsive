@@ -103,7 +103,7 @@ var config = {
 		     },
 			 {
 				init: "L.GeoJSON.Custom",
-				url: '/vakant/gis_json.aspx?',
+				url: 'http://www.vakant.nu/vakant/gis_json.aspx?',
 				options: {
 					layerId: "vakant_mark",
 					displayName: "Vakant Mark",
