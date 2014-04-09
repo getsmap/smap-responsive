@@ -153,7 +153,7 @@ smap.core.Layer = L.Class.extend({
 		var layer = new init(t.url, t.options);
 		
 		var self = this;
-		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS") {
+		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS" || layer.CLASS_NAME === "L.GeoJSON.Custom") {
 			if (!t.options.style) {
 				var style = {
 						weight: 2,
