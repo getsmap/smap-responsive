@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 
 """This is a blind proxy that we use to get around browser
@@ -16,7 +16,7 @@ import sys, os
 # Designed to prevent Open Proxy type stuff.
 
 allowedHosts = ['localhost', 'localhost:8080', 'localhost:80',
-                'kartor.smap.se', 'www.smap.se', 'www.smap.se:8080', 'geoserver.smap.se', 'geoserver.smap.se:8080',
+                'kartor.smap.se', 'www.smap.se', 'mobile.smap.se', 'www.smap.se:8080', 'geoserver.smap.se', 'geoserver.smap.se:8080',
                 'www.smap.se', 'www.smap.se:8080', 'sandbox.smap.se',
                 'xyz.malmo.se', 'xyz.malmo.se:8081',
                 "webapps05.malmo.se", "sbkspace.malmo.se", "141.255.184.63", "141.255.184.63:8080",
