@@ -5,6 +5,10 @@ var config = {
 			"localhost": {
 				proxy: "http://localhost/cgi-bin/proxy.py?url="
 			},
+            "mobile.smap.se": {
+                proxy: "http://mobile.smap.se/cgi-bin/proxy.py?url="
+            },
+
 			"xyz.malmo.se": {
 				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
 			},
