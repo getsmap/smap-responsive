@@ -261,9 +261,17 @@ var config = {
                     {
                         init: "L.Control.Zoombar",
                         options: {
-                            position: 'topright'
+                            position: 'bottomright'
                         }
+                    },
+                    {
+                        init: "L.Control.MatsModule",
+                        options: {}
                     }
+
+
+
+
 //		           ,
 //		           {
 //		           	   init: "L.Control.SideBars",
