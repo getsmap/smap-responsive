@@ -263,10 +263,6 @@ var config = {
                         options: {
                             position: 'bottomright'
                         }
-                    },
-                    {
-                        init: "L.Control.MatsModule",
-                        options: {}
                     }
 
 
