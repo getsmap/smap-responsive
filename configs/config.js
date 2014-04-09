@@ -5,10 +5,6 @@ var config = {
 			"localhost": {
 				proxy: "http://localhost/cgi-bin/proxy.py?url="
 			},
-            "mobile.smap.se": {
-                proxy: "http://mobile.smap.se/cgi-bin/proxy.py?url="
-            },
-
 			"xyz.malmo.se": {
 				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
 			},
@@ -104,7 +100,29 @@ var config = {
 						  fillOpacity: 0.5
 					  }
 				  }
-		     }
+		     },
+			 {
+				init: "L.GeoJSON.Custom",
+				url: 'http://www.vakant.nu/gis_json.aspx?',
+				options: {
+					layerId: "vakant_mark",
+					displayName: "Vakant Mark",
+					params: {
+						mId : "1290",
+						type : "Mark"
+					},
+					selectable: true,
+					popup: 'Owner: ${owner_name}',
+					style: {
+						radius: 8,
+						fillColor: "#ff7800",
+						color: "#f00",
+						weight: 1,
+						opacity: 1,
+						fillOpacity: 0.8
+					}
+				}
+			}
 //		     ,
 //		     {
 //				  init: "L.GeoJSON.WFS",
@@ -137,7 +155,7 @@ var config = {
 			url: "http://{s}.tile.cloudmade.com/f02f33a9158a425199542d3493b9189d/998/256/{z}/{x}/{y}.png",
 			options: {
 				layerId: "osm",
-				displayName: "OSM"
+				displayName: "OSM",
 			}
 		},
 
@@ -257,21 +275,7 @@ var config = {
 		           {
 		        	   init: "L.Control.Info",
 		        	   options: {}
-		           },
-                    {
-                        init: "L.Control.Zoombar",
-                        options: {
-                            position: 'bottomright'
-                        }
-                    },
-                    {
-                        init: "L.Control.MatsModule",
-                        options: {}
-                    }
-
-
-
-
+		           }
 //		           ,
 //		           {
 //		           	   init: "L.Control.SideBars",
