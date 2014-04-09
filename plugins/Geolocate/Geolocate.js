@@ -46,7 +46,7 @@ L.Control.Geolocate = L.Control.extend({
 	},
 	
 	_drawButton: function() {
-		var btn = $('<button id="smap-glocate-btn" class="btn btn-default btn-lg"><span class="fa fa-location-arrow fa-lg"></span></button>');
+		var btn = $('<button id="smap-glocate-btn" class="btn btn-default"><span class="fa fa-location-arrow"></span></button>');
 		this.$container.append(btn);
 		this.btn = btn;
 		btn.on("click", $.proxy(function() {
