@@ -1,6 +1,15 @@
 smap.cmd = {
 		
 		
+		/**
+		 * Create params as a string.
+		 * @param addRoot {Boolean}
+		 * @returns {String} URL (or just params) recreating the map.
+		 */
+		createParams: function(addRoot) {
+			smap.core.paramInst.createParams(addRoot);
+		},
+		
 		getControl: function(controlName) {
 			// "Attribution" or "Scale"
 			var inst,
