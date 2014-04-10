@@ -297,7 +297,7 @@ var config = {
                     }
                     ,
                     {
-                        init: "L.Control.SharePos",
+                        init: "L.Control.ShareLink",
                         options: {}
                     }
 //		           ,

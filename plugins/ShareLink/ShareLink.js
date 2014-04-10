@@ -1,4 +1,4 @@
-L.Control.SharePos = L.Control.extend({
+L.Control.ShareLink = L.Control.extend({
     options: {
         position: 'bottomright' // just an example
     },
@@ -28,11 +28,11 @@ L.Control.SharePos = L.Control.extend({
 
         this.map = map;
 
-        this._container = L.DomUtil.create('div', 'leaflet-control-SharePos'); // second parameter is class name
+        this._container = L.DomUtil.create('div', 'leaflet-control-ShareLink'); // second parameter is class name
         L.DomEvent.disableClickPropagation(this._container);
 
         this.$container = $(this._container);
-        this._createSharePos();
+        this._createBtn();
 
         return this._container;
     },
@@ -54,7 +54,7 @@ L.Control.SharePos = L.Control.extend({
 
     },
 
-    _createSharePos: function() {
+    _createBtn: function() {
 
         var self = this;
         var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-share-square-o"></span></button>');
