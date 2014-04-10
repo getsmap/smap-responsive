@@ -1059,7 +1059,8 @@ th {
 }
 body {
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  font-size: 100% !important; }
 
 #mapdiv {
   position: absolute;
@@ -1485,10 +1486,10 @@ Version: 1.0
   background-color: #fff;
   background-color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
+  border-radius: 0 4px 4px 0;
   -webkit-border-radius: 0 4px 4px 0;
   -moz-border-radius: 0 4px 4px 0;
-  -ms-border-radius: 0 4px 4px 0;
-  border-radius: 0 4px 4px 0; }
+  -ms-border-radius: 0 4px 4px 0; }
 
 .lswitch-btn-big {
   padding: 18px 14px 18px 0px !important; }
@@ -1497,13 +1498,14 @@ Version: 1.0
   width: 30px; }
 
 .lswitch-panel .panel {
-  -webkit-box-shadow: none;
-  box-shadow: none; }
+  box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none; }
 
 .lswitch-panelslide {
+  transition: margin-left 300ms ease;
   -webkit-transition: margin-left 300ms ease;
-  -moz-transition: margin-left 300ms ease;
-  transition: margin-left 300ms ease; }
+  -moz-transition: margin-left 300ms ease; }
 
 .lswitch-panel .panel-default {
   margin-top: 10px; }
@@ -1518,30 +1520,31 @@ Version: 1.0
   max-width: 300px;
   background-color: #38454E;
   padding: 0 20px;
-  -moz-box-shadow: inset #000 -3px 0px 17px;
-  box-shadow: inset #000 -3px 0px 17px;
-  -webkit-box-shadow: inset #000 -3px 0px 17px;
-  overflow: auto; }
+  box-shadow: inset black -3px 0px 17px;
+  -moz-box-shadow: inset black -3px 0px 17px;
+  -webkit-box-shadow: inset black -3px 0px 17px;
+  overflow: auto;
+  font-size: 1.4em; }
 
 .lswitch-panel a {
   cursor: pointer;
   background-color: #38454E;
   color: #eee;
   border: none;
+  border-radius: 0px !important;
   -webkit-border-radius: 0px !important;
   -moz-border-radius: 0px !important;
   -ms-border-radius: 0px !important;
-  border-radius: 0px !important;
   margin-top: 1px; }
 
 .lswitch-panel a:hover, .lswitch-panel a:active {
   background-color: #38454E;
   /* For mobile screens - use same background-color during hover as for default */
   color: #fff;
+  border-radius: 0;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  border-radius: 0; }
+  -ms-border-radius: 0; }
 
 .lswitch-panel a.active {
   cursor: pointer;
@@ -1566,10 +1569,10 @@ Version: 1.0
   background-color: #333;
   background-color: rgba(0, 0, 0, 0.4) !important;
   color: #fff !important;
+  border-radius: 5px 5px 0px 0;
   -webkit-border-radius: 5px 5px 0px 0;
   -moz-border-radius: 5px 5px 0px 0;
   -ms-border-radius: 5px 5px 0px 0;
-  border-radius: 5px 5px 0px 0;
   font-weight: bold;
   font-size: 110%; }
 
@@ -1593,13 +1596,10 @@ Version: 1.0
     display: block !important;
     background-color: #eee;
     background-color: rgba(255, 255, 255, 0.6);
-    -moz-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
     box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
+    -moz-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
-    z-index: 1000;
-    /*-webkit-transition: all 500ms;
-    -moz-transition: all 500ms;
-    transition: all 500ms;*/ }
+    z-index: 1000; }
 
   .lswitch-panel .panel-heading {
     background-color: #555;
@@ -1610,9 +1610,9 @@ Version: 1.0
   .lswitch-panel a {
     background: none;
     color: #444;
+    transition: all 200ms;
     -webkit-transition: all 200ms;
-    -moz-transition: all 200ms;
-    transition: all 200ms; }
+    -moz-transition: all 200ms; }
 
   .lswitch-panel a:hover, .lswitch-panel a:active {
     background-color: #bbb;

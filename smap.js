@@ -16424,15 +16424,26 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	CLASS_NAME: "L.GeoJSON.WFS",
 	 
 	options: {
-		uniqueKey: "",
+		uniqueAttr: "",
 		noBindZoom: true,
-		noBindDrag: false
+		noBindDrag: false,
+		params: {
+				typeName: null, // required
+				service: "WFS",
+				version: "1.1.0",
+				request: "GetFeature",
+				srsName: "EPSG:4326",
+				format: "text/geojson",
+				maxFeatures: 10000,
+				outputFormat: "json"
+		}
 	},
 
 	initialize: function(serviceUrl, options) {
 		options = options || {};
 		
-		var featureType = options.featureType; // required
+		
+		options = $.extend(true, this.options, options);
 		
 		L.GeoJSON.prototype.initialize.call(this, null, options);
 		
@@ -16441,22 +16452,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
 		}
 		
-		var wfsVersion = options.wfsVersion || "1.1.0";
-		this.getFeatureUrl = serviceUrl;   //+ "?request=GetFeature&outputformat=json&version=" + wfsVersion + "&typeName=" + featureType;
-		
-		this.params = {
-				typeName: featureType,
-				service: "WFS",
-				version: wfsVersion,
-				request: "GetFeature",
-				srsName: "EPSG:4326",
-				format: "text/geojson",
-				maxFeatures: 10000,
-				outputFormat: "json"
-		};
-		
-//		if (options.filter && options.filter instanceof DateFilter) { this.getFeatureUrl += "&CQL_FILTER=" + options.filter.cql; }
-		
+		this.getFeatureUrl = serviceUrl;
 		
 		this.on("featureparse", function(e) {
 			if (e.geometryType != 'Point' && e.geometryType != 'MultiPoint') {
@@ -16549,7 +16545,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	addData: function (geojson) {
 		var features = L.Util.isArray(geojson) ? geojson : geojson.features,
 		    i, len, feature, fid,
-		    uniqueKey = this.options.uniqueKey;
+		    uniqueAttr = this.options.uniqueAttr;
 		
 		if (features) {
 			var featureIndexes = this._featureIndexes,
@@ -16558,10 +16554,10 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				// Only add this if geometry or geometries are set and not null
 				feature = features[i];
 				var uniqueVal = "";
-				if (uniqueKey) {
-					uniqueKeyArr = uniqueKey.split(",");
+				if (uniqueAttr) {
+					uniqueAttrArr = uniqueAttr.split(",");
 					var props = feature.properties;
-					$.each(uniqueKeyArr, function(i, val) {
+					$.each(uniqueAttrArr, function(i, val) {
 						uniqueVal += (""+props[val]);
 					});
 				}
@@ -16603,7 +16599,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		}
 		var bounds = this._map.getBounds();
 		this.getFeature(bounds, function() {
-			if (self.options.uniqueKey === null) {
+			if (self.options.uniqueAttr === null) {
 				self.clearLayers();
 			}
 			self.addData(self.jsonData);
@@ -16612,9 +16608,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	/**
 	 * Code borrowed from OpenLayers 2.13.1
-	 * Copyright (c) 2005-2014 OpenLayers Contributors
-	 * License: BSD-license
-	 * 
 	 * @param bounds {Leaflet bounds}
 	 * @param reverseAxisOrder {Boolean}
 	 * @returns {String}
@@ -16651,15 +16644,15 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
     },
 	
 	getFeature: function(bounds, callback) {
-		if (bounds && !this.params.filter) {
+		if (bounds && !this.options.params.filter) {
 			// Make a filter so that we only fetch features within current viewport.
 			// Don't use bbox if filter is specified (wfs does not support a combination)
 			
 			if (this.options.inputCrs) {
 				bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
-				this.params.srsName = this.options.inputCrs;
+				this.options.params.srsName = this.options.inputCrs;
 			}
-			this.params.bbox = this._boundsToBbox(bounds, this.options.reverseAxis);
+			this.options.params.bbox = this._boundsToBbox(bounds, this.options.reverseAxis);
 		}
 		
 		var url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
@@ -16670,7 +16663,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this.xhr = $.ajax({
 			url: url,
 			type: "POST",
-			data: this.params,
+			data: this.options.params,
 			context: this,
 			success: function(response) {
 				if (response.type && response.type == "FeatureCollection") {
@@ -16714,9 +16707,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				case "MultiPoint":
 					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
 						coords = geom.coordinates[p];
-						if (this.options.reverseAxis) {
-							coords = this.swapCoords(coords);
-						}
+//						if (this.options.reverseAxis) {
+//							coords = this.swapCoords(coords);
+//						}
 						projectedCoords = projectPoint(coords, inputCrs);
 						features[i].geometry.coordinates[p] = projectedCoords;
 					}
@@ -16753,33 +16746,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 					break;
 			}
 		}
-	}
-});L.Control.Hover = L.Control.extend({
-	options: {
-		position: "hover",
-		offset: new L.Point(30,-16)
-	},
-	
-	initialize: function(point, content, options) {
-		this._point = point;
-		this._content = content;
-				
-		L.Util.setOptions(this, options);
-	},
-	
-	onAdd: function (map) {
-		if (!map._controlCorners.hasOwnProperty("hover")) {
-			map._controlCorners["hover"] = L.DomUtil.create("div", "custom-hover", map._controlContainer);
-		}
-		this._container = L.DomUtil.create('div', 'custom-control-hover-label');
-		this._container.innerHTML = this._content;
-		
-		if (this.options.position == "hover") {
-			this._container.style.top = this._point.y + this.options.offset.y + "px";
-			this._container.style.left = this._point.x + this.options.offset.x + "px";
-		}
-		
-		return this._container;
 	}
 });/*
  Leaflet.markercluster, Provides Beautiful Animated Marker Clustering functionality for Leaflet, a JS library for interactive maps.
@@ -16963,6 +16929,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this.map = map;
 		
 		var self = this;
+		
+		map.on("layeradd", $.proxy(this.onLayerAdd, this));
+		map.on("layerremove", $.proxy(this.onLayerRemove, this));
 		smap.event.on("smap.core.applyparams", function(e, obj) {
 			var p = obj.params,
 				tBL;
@@ -16973,7 +16942,8 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				tBL = smap.config.bl[0];
 			}
 			tBL.options.isBaseLayer = true;
-			self._addLayer( self._createLayer(tBL) );
+			self.map.addLayer(self._createLayer(tBL));
+//			self._addLayer( self._createLayer(tBL) );
 
 			if (p.OL) {
 				var t, i;
@@ -16983,7 +16953,8 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 					if (!t || !t.init) {
 						continue;
 					}
-					self._addLayer( self._createLayer(t) );
+					self.map.addLayer(self._createLayer(t));
+//					self._addLayer( self._createLayer(t) );
 				}
 			}
 		});
@@ -17016,7 +16987,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	_addLayerWithConfig: function(t) {
 		var layer = this._createLayer(t);
-		return this._addLayer(layer);
+//		return this._addLayer(layer);
+		this.map.addLayer(layer);
+		return layer;
 	},
 	
 	/**
@@ -17033,31 +17006,55 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	 * 
 	 * @param layer {Leaflet layer} with a (unique) layerId
 	 */
-	_addLayer: function(layer) {
-		var layerId = layer.options.layerId;
-		if (this.map.hasLayer(layerId)) {
-			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
-			return false;
+//	_addLayer: function(layer) {
+//		var layerId = layer.options.layerId;
+//		if (this.map.hasLayer(layerId)) {
+//			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
+//			return false;
+//		}
+//		this._layers[layerId] = layer;
+//		this.map.addLayer(layer);
+//		return layer;
+//	},
+	
+	onLayerAdd: function(e) {
+		var layer = e.layer;
+		if (!layer.options || !layer.options.layerId || layer.feature) {
+			return;
 		}
-		this._layers[layerId] = layer;
-		this.map.addLayer(layer);
-		return layer;
+		var layerId = layer.options.layerId;
+//		if (this.map.hasLayer(layerId)) {
+//			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
+//			return false;
+//		}
+		this._layers[layerId] = layer; // Store in object so we can fetch it when needed.
+	},
+	
+	onLayerRemove: function(e) {
+		var layer = e.layer;
+		if (!layer.options || !layer.options.layerId || layer.feature) {
+			return;
+		}
+		var layerId = layer.options.layerId;
+		if (this._layers[layerId]) {
+			delete this._layers[layerId];
+		}
 	},
 	
 	_getLayer: function(layerId) {
 		return this._layers[layerId];
 	},
 	
-	_removeLayer: function(layerId) {
-		var layer = this._layers[layerId];
-		if (this.map.hasLayer(layer)) {
-			this.map.removeLayer( layer );
-			delete this._layers[layerId];
-			layer = null;
-			return true;
-		}
-		return false;
-	},
+//	_removeLayer: function(layerId) {
+//		var layer = this._layers[layerId];
+//		if (this.map.hasLayer(layer)) {
+//			this.map.removeLayer( layer );
+//			delete this._layers[layerId];
+//			layer = null;
+//			return true;
+//		}
+//		return false;
+//	},
 	
 	_setSelectStyle: function(e) {
 		var layer = e.target;
@@ -17100,7 +17097,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		var layer = new init(t.url, t.options);
 		
 		var self = this;
-		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS") {
+		if (layer._layers) {   // i.e. is a vector layer //layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS" || layer.CLASS_NAME === "L.GeoJSON.Custom") {
 			if (!t.options.style) {
 				var style = {
 						weight: 2,
@@ -17117,9 +17114,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				var onFeatureClick = $.proxy(function(evt) {
 					var f = evt.target.feature;
 					self.map.fire("selected", {
-						layerId: evt.layer.options.layerId,
-						properties: f.properties,
-						latLng: evt.latlng
+						layerId: evt.target._options.layerId,
+						properties: f.properties
+//						latLng: evt.latlng || evt.target.feature.geometry.coordinates[0]
 					});
 					self._resetStyle(layer);
 					self._setSelectStyle(evt);
@@ -17160,7 +17157,8 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		if (!layer) {
 			layer = this._createLayer(t);
 		}
-		this._addLayer(layer);
+		this.map.addLayer(layer);
+//		this._addLayer(layer);
 		return layer;
 	},
 	
@@ -17340,88 +17338,87 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	},
 	
 	_handleSelect: function(sel) {
-//		var arrSels = sel instanceof Array ? sel : sel.split(","),
-//			s,
-//			self = this,
-//			layer;
-//		for (var i=0,len=arrSels.length; i<len; i++) {
-//			arrSel = arrSels[i].split(":");
-//			
-//			var layerId = arrSel[0],
-//				key = arrSel[1],
-//				val = arrSel[2];
-////			var t = smap.cmd.getLayerConfig(layerId);
-//			
-//			layer = smap.core.layerInst.showLayer(layerId);
-//			layer._key = key;
-//			layer._val = val;
-//			
-//			function onLoadWfs() {
-//				var selFeature = null,
-//					_layer = this;
-//				$.each(_layer._layers, function(i, f) {
-//					if (f.feature) {
-//						var props = f.feature.properties;
-//						if (!props[_layer._key]) {
-//							return false; // No such property, no use iterating
-//						}
-//						if (props[_layer._key].toString() === val) {
-//							selFeature = f; // This is the feature we want to select
-//							return false; // break
-//						}
-//					}
-//				});
-//				if (selFeature) {
-//					selFeature.fire("click", {
-//						properties: selFeature.feature.properties
-//					});
-//					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
-//				}
-//				this.off("load", onLoadWfs);
-//			};
-//			
-//			
-//			function onLoadWms() {
-//				// This is a WMS
-//				var _layer = this;
-//				var latLng = null;
-//				try {
-//					latLng = L.latLng(parseFloat(this._val), parseFloat(this._key)); // val is lat, key is lon
-//				}
-//				catch(e) {}
-//				
-//				if (latLng) {
-//					self.map.fire("click", {
-//						latlng: latLng,
-//						_layers: [_layer]
-//					});
-//				}
-//				_layer.off("load", onLoadWms);
-//			};
-//		}
+		var arrSels = sel instanceof Array ? sel : sel.split(","),
+			s,
+			self = this,
+			layer;
+		for (var i=0,len=arrSels.length; i<len; i++) {
+			arrSel = arrSels[i].split(":");
 			
-//			var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
-//			layer.on("load", onLoad);
+			var layerId = arrSel[0],
+				key = arrSel[1],
+				val = arrSel[2];
+//			var t = smap.cmd.getLayerConfig(layerId);
+			
+			layer = smap.core.layerInst.showLayer(layerId);
+			layer._key = key;
+			layer._val = val;
+			
+			function onLoadWfs() {
+				var selFeature = null,
+					_layer = this;
+				$.each(_layer._layers, function(i, f) {
+					if (f.feature) {
+						var props = f.feature.properties;
+						if (!props[_layer._key]) {
+							return false; // No such property, no use iterating
+						}
+						if (props[_layer._key].toString() === val) {
+							selFeature = f; // This is the feature we want to select
+							return false; // break
+						}
+					}
+				});
+				if (selFeature) {
+					selFeature.fire("click", {
+						properties: selFeature.feature.properties
+					});
+					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
+				}
+				this.off("load", onLoadWfs);
+			};
+			
+			
+			function onLoadWms() {
+				// This is a WMS
+				var _layer = this;
+				var latLng = null;
+				try {
+					latLng = L.latLng(parseFloat(this._val), parseFloat(this._key)); // val is lat, key is lon
+				}
+				catch(e) {}
+				
+				if (latLng) {
+					self.map.fire("click", {
+						latlng: latLng,
+						_layers: [_layer]
+					});
+				}
+				_layer.off("load", onLoadWms);
+			};
+		}
+		var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
+		layer.on("load", onLoad);
 			
 		
-		var selArr = sel instanceof Array ? sel : sel.split(",");
-		var selItem = selArr[0];
-		var itemArr = selItem.split(":"); // We support only one selected feature at this time
-		var layerId = itemArr[0],
-			lng = parseFloat(itemArr[1]);
-			lat = parseFloat(itemArr[2]);
-		var layer = smap.core.layerInst.showLayer(layerId),
-			cPoint = this.map.latLngToContainerPoint(L.latLng(lat, lng));
-		
-		layer.on("load", function() {
-			var clickEvent= document.createEvent('MouseEvents');
-		    clickEvent.initMouseEvent(
-			    'click', true, true, window, 0,
-			    0, 0, cPoint.x, cPoint.y, false, false,
-			    false, false, 0, null
-		    );
-		    document.elementFromPoint(cPoint.x, cPoint.y).dispatchEvent(clickEvent);
-		});
+//		var selArr = sel instanceof Array ? sel : sel.split(",");
+//		var selItem = selArr[0];
+//		var itemArr = selItem.split(":"); // We support only one selected feature at this time
+//		var layerId = itemArr[0],
+//			lng = parseFloat(itemArr[1]);
+//			lat = parseFloat(itemArr[2]);
+//		var layer = smap.core.layerInst.showLayer(layerId),
+//			cPoint = this.map.latLngToContainerPoint(L.latLng(lat, lng));
+//		
+//		layer.on("load", function() {
+//			var clickEvent= document.createEvent('MouseEvents');
+//		    clickEvent.initMouseEvent(
+//			    'click', true, true, window, 0,
+//			    0, 0, cPoint.x, cPoint.y, false, false,
+//			    false, false, 0, null
+//		    );
+//		    document.elementFromPoint(cPoint.x, cPoint.y).dispatchEvent(clickEvent);
+//		});
 			
 	},
 	
@@ -17429,6 +17426,15 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		
 });smap.cmd = {
 		
+		
+		/**
+		 * Create params as a string.
+		 * @param addRoot {Boolean}
+		 * @returns {String} URL (or just params) recreating the map.
+		 */
+		createParams: function(addRoot) {
+			smap.core.paramInst.createParams(addRoot);
+		},
 		
 		getControl: function(controlName) {
 			// "Attribution" or "Scale"
@@ -17669,7 +17675,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			}
 			else {
 				// This is WFS – so store layerId together with unqie key and value of this feature 
-				item = [layerId, resp.latLng.lng, resp.latLng.lat];
+//				item = [layerId, resp.latLng.lng, resp.latLng.lat];
 			}
 			self._selectedFeatures.push(item);
 			
@@ -18099,7 +18105,7 @@ L.control.selectWMS = function (options) {
 	},
 	
 	_drawButton: function() {
-		var btn = $('<button id="smap-glocate-btn" class="btn btn-default btn-lg"><span class="fa fa-location-arrow fa-lg"></span></button>');
+		var btn = $('<button id="smap-glocate-btn" class="btn btn-default"><span class="fa fa-location-arrow"></span></button>');
 		this.$container.append(btn);
 		this.btn = btn;
 		btn.on("click", $.proxy(function() {
@@ -18962,18 +18968,6 @@ L.control.guidePopup = function (options) {
 		}
 	},
 	
-	_onApplyParams: function(e) {
-		var theId;
-		if (e.BL) {
-			theId = e.BL;			
-		}
-		else {
-			theId = smap.config.bl[0].options.layerId;
-		}
-		theId = this._makeId(theId);
-		$("#lswitch-blcont").find( "#"+theId ).addClass("active");
-	},
-	
 	_bindEvents: function() {
 		var self = this;
 		
@@ -18991,26 +18985,8 @@ L.control.guidePopup = function (options) {
 			});
 		}
 		
-		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
-		
 		var showPanel = $.proxy(this.showPanel, this),
 			hidePanel = $.proxy(this.hidePanel, this);
-		
-//		var wasMobile = $("#lswitch-btn").is("visible")
-//		$(window).on("resize", $.proxy(function() {
-//			var isMobile = ( $(window).width() < this.options.pxDesktop );
-//			var changed = wasMobile !== undefined && (wasMobile !== isMobile);
-//			wasMobile = isMobile;
-//			
-//			if (changed) {
-//				if (isMobile === false) {
-//					showPanel();
-//				}
-//				else {
-//					hidePanel();
-//				}
-//			}
-//		}, this));
 		
 		if (L.Browser.touch) {
 			$(window).on("orientationchange", function() {
@@ -19020,13 +18996,23 @@ L.control.guidePopup = function (options) {
 			});			
 		}
 		
-//		this.map.on("layeradd layerremove", function(e) {
-//			var layerId = e.layer.options.layerId;
-//			if (layerId) {
-//				var theId = self._makeId(layerId);
-//				$("#"+theId).toggleClass("active");
-//			}
-//		});
+		this.map.on("layeradd layerremove", function(e) {
+			if (!e.layer.options || !e.layer.options.layerId || e.layer.feature) {
+				return;
+			}
+			var layerId = e.layer.options.layerId;
+			var rowId = self._makeId(layerId);
+			var row = $("#"+rowId);
+			var isActive = row.hasClass("active");
+			if (row.length) {
+				if (e.type === "layeradd" && isActive === false) {
+					row.addClass("active");						
+				}
+				else if (e.type === "layerremove" && isActive === true) {
+					row.removeClass("active");
+				}
+			}
+		});
 	},
 	
 	_addBtn: function() {
@@ -20294,7 +20280,7 @@ L.control.search = function (options) {
 	
 	_drawBtn: function() {
 		var self = this;
-		var $btn = $('<button id="smap-info-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-info-sign"></span></button>');
+		var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info-circle"></span></button>');
 //		$("#mapdiv").append($btn);
 		$btn.on("click", function() {
 			self.activate();
