@@ -7,7 +7,7 @@ smap.cmd = {
 		 * @returns {String} URL (or just params) recreating the map.
 		 */
 		createParams: function(addRoot) {
-			smap.core.paramInst.createParams(addRoot);
+			return smap.core.paramInst.createParams(addRoot);
 		},
 		
 		getControl: function(controlName) {
