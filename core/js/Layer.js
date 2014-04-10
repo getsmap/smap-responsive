@@ -16,6 +16,8 @@ smap.core.Layer = L.Class.extend({
 		this.map = map;
 		
 		var self = this;
+		
+		map.on("layeradded", $.proxy(this.onLayerAdded, this));
 		smap.event.on("smap.core.applyparams", function(e, obj) {
 			var p = obj.params,
 				tBL;
@@ -26,7 +28,8 @@ smap.core.Layer = L.Class.extend({
 				tBL = smap.config.bl[0];
 			}
 			tBL.options.isBaseLayer = true;
-			self._addLayer( self._createLayer(tBL) );
+			self.map.addLayer(self._createLayer(tBL));
+//			self._addLayer( self._createLayer(tBL) );
 
 			if (p.OL) {
 				var t, i;
@@ -36,7 +39,8 @@ smap.core.Layer = L.Class.extend({
 					if (!t || !t.init) {
 						continue;
 					}
-					self._addLayer( self._createLayer(t) );
+					self.map.addLayer(self._createLayer(t));
+//					self._addLayer( self._createLayer(t) );
 				}
 			}
 		});
@@ -69,7 +73,9 @@ smap.core.Layer = L.Class.extend({
 	
 	_addLayerWithConfig: function(t) {
 		var layer = this._createLayer(t);
-		return this._addLayer(layer);
+//		return this._addLayer(layer);
+		this.map.addLayer(layer);
+		return layer;
 	},
 	
 	/**
@@ -86,15 +92,27 @@ smap.core.Layer = L.Class.extend({
 	 * 
 	 * @param layer {Leaflet layer} with a (unique) layerId
 	 */
-	_addLayer: function(layer) {
-		var layerId = layer.options.layerId;
-		if (this.map.hasLayer(layerId)) {
-			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
-			return false;
+//	_addLayer: function(layer) {
+//		var layerId = layer.options.layerId;
+//		if (this.map.hasLayer(layerId)) {
+//			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
+//			return false;
+//		}
+//		this._layers[layerId] = layer;
+//		this.map.addLayer(layer);
+//		return layer;
+//	},
+	
+	onLayerAdded: function(e) {
+		if (!e.layer.options || !e.layer.options.layerId || e.layer.feature) {
+			return;
 		}
-		this._layers[layerId] = layer;
-		this.map.addLayer(layer);
-		return layer;
+		var layerId = e.layer.options.layerId;
+//		if (this.map.hasLayer(layerId)) {
+//			console.log("Layer with "+layerId+" is already added to the map. Not added again.");
+//			return false;
+//		}
+		this._layers[layerId] = layer; // Store in object so we can fetch it when needed.
 	},
 	
 	_getLayer: function(layerId) {
@@ -213,7 +231,8 @@ smap.core.Layer = L.Class.extend({
 		if (!layer) {
 			layer = this._createLayer(t);
 		}
-		this._addLayer(layer);
+		this.map.addLayer(layer);
+//		this._addLayer(layer);
 		return layer;
 	},
 	

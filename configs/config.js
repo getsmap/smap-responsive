@@ -74,12 +74,9 @@ var config = {
 		    	 	uniqueKey: null,
 		    	 	params: {
 			    	 	typeName: "malmows:STADSDEL_L",
-						service: "WFS",
 						version: "1.1.0",
-						request: "GetFeature",
-						srsName: "EPSG:4326",
-						format: "text/geojson",
 						maxFeatures: 10000,
+						format: "text/geojson",
 						outputFormat: "json"
 		     		},
 		     		hoverColor: '#FF0',
@@ -96,14 +93,20 @@ var config = {
 				  url: "http://geoserver.smap.se/geoserver/wfs",
 				  options: {
 					  layerId: "malmows_ulf_stadsdel",
-					  displayName: "Stadsdel Yta",
-					  featureType: "malmows:SUM_KVARTER_P",
+					  displayName: "Kvarter",
 					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:3008",
 					  reverseAxis: true,
 					  selectable: true,
 					  popup: 'The FID: ${fid}',
 					  uniqueKey: "easting,northing",
+					  params: {
+				    	 	typeName: "malmows:SUM_KVARTER_P",
+							version: "1.1.0",
+							maxFeatures: 10000,
+							format: "text/geojson",
+							outputFormat: "json"
+			     		},
 					  hoverColor: '#FF0',
 					  style: {
 						  weight: 2,
