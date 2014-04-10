@@ -121,7 +121,7 @@ smap.core.Init = L.Class.extend({
 			}
 			else {
 				// This is WFS – so store layerId together with unqie key and value of this feature 
-				item = [layerId, resp.latLng.lng, resp.latLng.lat];
+//				item = [layerId, resp.latLng.lng, resp.latLng.lat];
 			}
 			self._selectedFeatures.push(item);
 			

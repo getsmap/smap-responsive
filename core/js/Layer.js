@@ -153,7 +153,7 @@ smap.core.Layer = L.Class.extend({
 		var layer = new init(t.url, t.options);
 		
 		var self = this;
-		if (layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS" || layer.CLASS_NAME === "L.GeoJSON.Custom") {
+		if (layer._layers) {   // i.e. is a vector layer //layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS" || layer.CLASS_NAME === "L.GeoJSON.Custom") {
 			if (!t.options.style) {
 				var style = {
 						weight: 2,
@@ -170,9 +170,9 @@ smap.core.Layer = L.Class.extend({
 				var onFeatureClick = $.proxy(function(evt) {
 					var f = evt.target.feature;
 					self.map.fire("selected", {
-						layerId: evt.layer.options.layerId,
-						properties: f.properties,
-						latLng: evt.latlng
+						layerId: evt.target._options.layerId,
+						properties: f.properties
+//						latLng: evt.latlng || evt.target.feature.geometry.coordinates[0]
 					});
 					self._resetStyle(layer);
 					self._setSelectStyle(evt);
