@@ -61,26 +61,35 @@ var config = {
 	    		 }
 		     },
 		     {
-				  init: "L.GeoJSON.WFS",
-				  url: "http://geoserver.smap.se/geoserver/wfs",
-				  options: {
-					  layerId: "malmows_STADSDEL_L",
-					  displayName: "Stadsdel Linje",
-					  featureType: "malmows:STADSDEL_L",
-					  attribution: "Malmö stads WFS",
-					  inputCrs: "EPSG:3008",
-					  reverseAxis: true,
-					  selectable: true,
-					  popup: 'The FID: ${fid}',
-					  uniqueKey: null,
-					  hoverColor: '#FF0',
-					  style: {
-						  weight: 6,
-						  color: '#F00',
-						  dashArray: '',
-						  fillOpacity: 0.5
-					  }
-				  }
+		    	 init: "L.GeoJSON.WFS",
+		    	 url: "http://geoserver.smap.se/geoserver/wfs",
+		    	 options: {
+		    	 	layerId: "malmows_STADSDEL_L",
+		    	 	displayName: "Stadsdel Linje",
+		    	 	attribution: "Malmö stads WFS",
+		    	 	inputCrs: "EPSG:3008",
+		    	 	reverseAxis: true,
+		    	 	selectable: true,
+		    	 	popup: 'The FID: ${fid}',
+		    	 	uniqueKey: null,
+		    	 	params: {
+			    	 	typeName: "malmows:STADSDEL_L",
+						service: "WFS",
+						version: "1.1.0",
+						request: "GetFeature",
+						srsName: "EPSG:4326",
+						format: "text/geojson",
+						maxFeatures: 10000,
+						outputFormat: "json"
+		     		},
+		     		hoverColor: '#FF0',
+		     		style: {
+		     			weight: 6,
+		     			color: '#F00',
+		     			dashArray: '',
+		     			fillOpacity: 0.5
+		     		}
+		     	}
 		     },
 		     {
 				  init: "L.GeoJSON.WFS",
