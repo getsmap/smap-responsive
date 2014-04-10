@@ -295,6 +295,11 @@ var config = {
                         init: "L.Control.Zoombar",
                         options: {}
                     }
+                    ,
+                    {
+                        init: "L.Control.SharePos",
+                        options: {}
+                    }
 //		           ,
 //		           {
 //		           	   init: "L.Control.SideBars",
