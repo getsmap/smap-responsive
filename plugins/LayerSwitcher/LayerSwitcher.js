@@ -92,18 +92,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}
 	},
 	
-	_onApplyParams: function(e) {
-		var theId;
-		if (e.BL) {
-			theId = e.BL;			
-		}
-		else {
-			theId = smap.config.bl[0].options.layerId;
-		}
-		theId = this._makeId(theId);
-		$("#lswitch-blcont").find( "#"+theId ).addClass("active");
-	},
-	
 	_bindEvents: function() {
 		var self = this;
 		
@@ -121,26 +109,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 			});
 		}
 		
-		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
-		
 		var showPanel = $.proxy(this.showPanel, this),
 			hidePanel = $.proxy(this.hidePanel, this);
-		
-//		var wasMobile = $("#lswitch-btn").is("visible")
-//		$(window).on("resize", $.proxy(function() {
-//			var isMobile = ( $(window).width() < this.options.pxDesktop );
-//			var changed = wasMobile !== undefined && (wasMobile !== isMobile);
-//			wasMobile = isMobile;
-//			
-//			if (changed) {
-//				if (isMobile === false) {
-//					showPanel();
-//				}
-//				else {
-//					hidePanel();
-//				}
-//			}
-//		}, this));
 		
 		if (L.Browser.touch) {
 			$(window).on("orientationchange", function() {
@@ -150,13 +120,23 @@ L.Control.LayerSwitcher = L.Control.extend({
 			});			
 		}
 		
-//		this.map.on("layeradd layerremove", function(e) {
-//			var layerId = e.layer.options.layerId;
-//			if (layerId) {
-//				var theId = self._makeId(layerId);
-//				$("#"+theId).toggleClass("active");
-//			}
-//		});
+		this.map.on("layeradd layerremove", function(e) {
+			if (!e.layer.options || !e.layer.options.layerId || e.layer.feature) {
+				return;
+			}
+			var layerId = e.layer.options.layerId;
+			var rowId = self._makeId(layerId);
+			var row = $("#"+rowId);
+			var isActive = row.hasClass("active");
+			if (row.length) {
+				if (e.type === "layeradd" && isActive === false) {
+					row.addClass("active");						
+				}
+				else if (e.type === "layerremove" && isActive === true) {
+					row.removeClass("active");
+				}
+			}
+		});
 	},
 	
 	_addBtn: function() {
