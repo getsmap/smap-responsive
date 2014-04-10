@@ -14,7 +14,7 @@ L.Control.SelectWMS = L.Control.extend({
 			var layerId = t.options.layerId;
 			
 			if (props && $.isEmptyObject(props) === false) {
-				self._selectedFeatures.push([layerId, self.latLng.lng, self.latLng.lat]);
+				self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
 				other.map.fire("selected", {
 					properties: props,
 					latLng: other.latLng,
@@ -51,8 +51,32 @@ L.Control.SelectWMS = L.Control.extend({
 		this._unbindEvents();
 	},
 	
+	_applyParam: function(sel) {
+		var s,
+			layer;
+		var arrSel = sel.split(":");
+		var layerId = arrSel[0],
+			east = arrSel[1],
+			north = arrSel[2];
+		layer = smap.core.layerInst.showLayer(layerId);
+		latLng = L.latLng(parseFloat(north), parseFloat(east)); // val is lat, key is lon
+		this.onMapClick({
+			latlng: latLng,
+			_layers: [layer]
+		});
+	},
+	
 	_bindEvents: function() {
 		var self = this;
+		smap.event.on("smap.core.createparams", function(e, p) {
+			if (self._selectedFeatures.length) {
+				p.SELWMS = self._selectedFeatures[0].join(":");				
+			}
+		});
+		smap.event.on("smap.core.applyparams", function(e, p) {
+			self._applyParam(p.SELWMS);
+		});
+		
 		this.map
 			.on("layeradd", this.onLayerAdd, this)
 			.on("layerremove", this.onLayerRemove, this)
@@ -85,13 +109,15 @@ L.Control.SelectWMS = L.Control.extend({
 	/**
 	 * Prepare and execute the WMS GetFeatureInfo request.
 	 * @param e {Object}
+	 * 		- latlng {L.LatLng}
+	 * 
 	 * @returns {void}
 	 */
 	onMapClick: function(e) {
 		
 		// Reset properties
-		this.latLng = null;
 		this._selectedFeatures = [];
+		var latLng = e.latlng;
 		
 		if (this.xhr) {
 			this.xhr.abort();
@@ -100,7 +126,6 @@ L.Control.SelectWMS = L.Control.extend({
 		if (!layers.length) {
 			return;
 		}
-		var latLng = e.latlng;
 		var layerNames = [];
 		
 		var t, url, URL,
@@ -112,14 +137,12 @@ L.Control.SelectWMS = L.Control.extend({
 				ts[URL] = {
 						layerNames: [],
 						url: url,
-						wmsVersion: layer._wmsVersion
+						wmsVersion: layer._wmsVersion,
+						layerId: layer.options.layerId
 				};
 			}
 			ts[URL].layerNames.push(layer.options.layers);
 		});
-//		var bounds = L.latLngBounds(southWest, northEast);
-//		params.latLng = latLng;
-		this.latLng = latLng;
 
 		var params;
 		for (var URL in ts) {
@@ -132,7 +155,9 @@ L.Control.SelectWMS = L.Control.extend({
 			});
 			this.request(t.url, params, {
 				onSuccess: this.options.onSuccess,
-				onError: function() {}
+				onError: function() {},
+				layerId: t.layerId,
+				latLng: latLng
 			});		
 		}
 		
@@ -264,7 +289,7 @@ L.Control.SelectWMS = L.Control.extend({
 			success: function(resp, textStatus, jqXHR) {
 				var out = this._parseText(resp);
 				options.onSuccess(out, {
-					latLng: this.latLng,
+					latLng: options.latLng,
 					map: this.map,
 					context: this,
 					params: params

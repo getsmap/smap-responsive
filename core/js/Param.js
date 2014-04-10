@@ -156,79 +156,9 @@ smap.core.Param = L.Class.extend({
 				});
 			}
 		}
-		
-		if (p.SEL) {
-			this._handleSelect(p.SEL);
-		}
-		
-		smap.event.trigger("smap.core.applyparams", {
-			params: p
-		});
+		smap.event.trigger("smap.core.applyparams", p);
 	},
 	
-	_handleSelect: function(sel) {
-		var arrSels = sel instanceof Array ? sel : sel.split(","),
-			s,
-			self = this,
-			layer;
-		for (var i=0,len=arrSels.length; i<len; i++) {
-			arrSel = arrSels[i].split(":");
-			
-			var layerId = arrSel[0],
-				key = arrSel[1],
-				val = arrSel[2];
-//			var t = smap.cmd.getLayerConfig(layerId);
-			
-			layer = smap.core.layerInst.showLayer(layerId);
-			layer._key = key;
-			layer._val = val;
-			
-			function onLoadWfs() {
-				var selFeature = null,
-					_layer = this;
-				$.each(_layer._layers, function(i, f) {
-					if (f.feature) {
-						var props = f.feature.properties;
-						if (!props[_layer._key]) {
-							return false; // No such property, no use iterating
-						}
-						if (props[_layer._key].toString() === val) {
-							selFeature = f; // This is the feature we want to select
-							return false; // break
-						}
-					}
-				});
-				if (selFeature) {
-					selFeature.fire("click", {
-						properties: selFeature.feature.properties
-					});
-					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
-				}
-				this.off("load", onLoadWfs);
-			};
-			
-			
-			function onLoadWms() {
-				// This is a WMS
-				var _layer = this;
-				var latLng = null;
-				try {
-					latLng = L.latLng(parseFloat(this._val), parseFloat(this._key)); // val is lat, key is lon
-				}
-				catch(e) {}
-				
-				if (latLng) {
-					self.map.fire("click", {
-						latlng: latLng,
-						_layers: [_layer]
-					});
-				}
-				_layer.off("load", onLoadWms);
-			};
-		}
-		var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
-		layer.on("load", onLoad);
-			
 		
 //		var selArr = sel instanceof Array ? sel : sel.split(",");
 //		var selItem = selArr[0];
@@ -249,8 +179,6 @@ smap.core.Param = L.Class.extend({
 //		    document.elementFromPoint(cPoint.x, cPoint.y).dispatchEvent(clickEvent);
 //		});
 			
-	},
-	
 	CLASS_NAME: "smap.core.Param"
 		
 });

@@ -204,23 +204,21 @@ var config = {
 				tiled: true
 			}
 		},		
-
-		
-		{
-			init: "L.TileLayer.WMS",
-			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
-			options: {
-				layerId: "wms-topo",
-				displayName: "WMS-Topo (OBS! endast för test)",
-				layers: "malmows:smap-mobile-bakgrundskarta-topo",
-				format: 'image/jpeg',
-				subdomains: ["xyz"],
-				transparent: true,
-				minZoom: 6,
-				maxZoom: 18,
-				tiled: true
-			}
-		},
+//		{
+//			init: "L.TileLayer.WMS",
+//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
+//			options: {
+//				layerId: "wms-topo",
+//				displayName: "WMS-Topo (OBS! endast för test)",
+//				layers: "malmows:smap-mobile-bakgrundskarta-topo",
+//				format: 'image/jpeg',
+//				subdomains: ["xyz"],
+//				transparent: true,
+//				minZoom: 6,
+//				maxZoom: 18,
+//				tiled: true
+//			}
+//		},
 		{
 			init: "L.TileLayer.WMS",
 			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/

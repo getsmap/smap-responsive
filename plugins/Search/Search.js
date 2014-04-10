@@ -64,9 +64,9 @@ L.Control.Search = L.Control.extend({
 		this.map.off("click", this._blurSearch);
 	},
 	
-	_onApplyParams: function(e, obj) {
-		if (obj.params.POI) {
-			this._geoLocate(decodeURIComponent( obj.params.POI ));
+	_onApplyParams: function(e, p) {
+		if (p.POI) {
+			this._geoLocate(decodeURIComponent( p.POI ));
 		}
 	},
 	

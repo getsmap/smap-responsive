@@ -12,16 +12,23 @@ smap.core.Layer = L.Class.extend({
 	
 	_layers: {},
 	
-	initialize: function(map) {
-		this.map = map;
-		
+	_selectedFeatures: [],
+	
+	_bindEvents: function() {
 		var self = this;
+		var map = this.map;
 		
 		map.on("layeradd", $.proxy(this.onLayerAdd, this));
 		map.on("layerremove", $.proxy(this.onLayerRemove, this));
-		smap.event.on("smap.core.applyparams", function(e, obj) {
-			var p = obj.params,
-				tBL;
+		
+		smap.event.on("smap.core.createparams", function(e, p) {
+			if (self._selectedFeatures.length) {
+				p.SELVEC = self._selectedFeatures[0].join(":");
+			}
+		});
+		
+		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
+			var tBL;
 			if (p.BL) {
 				tBL = smap.cmd.getLayerConfig( p.BL );
 			}
@@ -29,7 +36,7 @@ smap.core.Layer = L.Class.extend({
 				tBL = smap.config.bl[0];
 			}
 			tBL.options.isBaseLayer = true;
-			self.map.addLayer(self._createLayer(tBL));
+			map.addLayer(this._createLayer(tBL));
 //			self._addLayer( self._createLayer(tBL) );
 
 			if (p.OL) {
@@ -40,22 +47,59 @@ smap.core.Layer = L.Class.extend({
 					if (!t || !t.init) {
 						continue;
 					}
-					self.map.addLayer(self._createLayer(t));
+					map.addLayer(this._createLayer(t));
 //					self._addLayer( self._createLayer(t) );
 				}
 			}
-		});
-		
-		
-		
-		this.map.on("click", function() {
+			if (p.SELVEC) {
+				var sel = p.SELVEC;
+					s,
+					self = this,
+					layer;
+				var arrSel = sel.split(":");
+				var layerId = arrSel[0],
+					key = arrSel[1],
+					val = arrSel[2];
+				layer = smap.core.layerInst.showLayer(layerId);
+				
+				function onLoad() {
+					var selFeature = null,
+						_layer = this;
+					$.each(_layer._layers, function(i, f) {
+						if (f.feature) {
+							var props = f.feature.properties;
+							if (!props[_layer._key]) {
+								return false; // No such property, no use iterating
+							}
+							if (props[_layer._key].toString() === val) {
+								selFeature = f; // This is the feature we want to select
+								return false; // break
+							}
+						}
+					});
+					if (selFeature) {
+						selFeature.fire("click", {
+							properties: selFeature.feature.properties
+						});
+						selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
+					}
+					this.off("load", onLoad);
+				};
+				layer.on("load", onLoad);
+			}
+		}, this));
+		map.on("click", function() {
 			// On "click out" – unselect all features (applies to WFS-layers).
 			var arr = self._wfsLayers;
 			for (var i=0,len=arr.length; i<len; i++) {
 				self._resetStyle( arr[i] );
 			}
 		});
-		
+	},
+	
+	initialize: function(map) {
+		this.map = map;
+		this._bindEvents();
 	},
 	
 	addOverlays: function(arr) {
@@ -199,7 +243,18 @@ smap.core.Layer = L.Class.extend({
 			layer.on("load", function(e) {
 				var html;
 				var onFeatureClick = $.proxy(function(evt) {
+					this._selectedFeatures = []; // TODO: Resetting array here, this allows only one selected feature at a time...
+					
 					var f = evt.target.feature;
+					var key = t.uniqueKey;
+					if (key) {
+						var val = f.properties[key];
+						var layerId = t.options.layerId || evt.target.options.layerId;
+						if (layerId && val) {
+							this._selectedFeatures.push([t.layerId, key, val]);
+						}
+						
+					}
 					self.map.fire("selected", {
 						layerId: evt.target._options.layerId,
 						properties: f.properties
