@@ -71,7 +71,7 @@ var config = {
 		    	 	reverseAxis: true,
 		    	 	selectable: true,
 		    	 	popup: 'The FID: ${fid}',
-		    	 	uniqueKey: null,
+		    	 	uniqueKey: "typ",
 		    	 	params: {
 			    	 	typeName: "malmows:STADSDEL_L",
 						version: "1.1.0",

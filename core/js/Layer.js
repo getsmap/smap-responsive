@@ -21,11 +21,11 @@ smap.core.Layer = L.Class.extend({
 		map.on("layeradd", $.proxy(this.onLayerAdd, this));
 		map.on("layerremove", $.proxy(this.onLayerRemove, this));
 		
-		smap.event.on("smap.core.createparams", function(e, p) {
-			if (self._selectedFeatures.length) {
-				p.SELVEC = self._selectedFeatures[0].join(":");
-			}
-		});
+//		smap.event.on("smap.core.createparams", function(e, p) {
+//			if (self._selectedFeatures.length) {
+//				p.SEL = self._selectedFeatures[0].join(":");
+//			}
+//		});
 		
 		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
 			var tBL;
@@ -51,41 +51,50 @@ smap.core.Layer = L.Class.extend({
 //					self._addLayer( self._createLayer(t) );
 				}
 			}
-			if (p.SELVEC) {
-				var sel = p.SELVEC;
+			if (p.SEL) {
+				var sel = p.SEL,
 					s,
 					self = this,
 					layer;
 				var arrSel = sel.split(":");
 				var layerId = arrSel[0],
 					key = arrSel[1],
-					val = arrSel[2];
-				layer = smap.core.layerInst.showLayer(layerId);
+					val = arrSel[2],
+					isWms = true;
 				
-				function onLoad() {
-					var selFeature = null,
-						_layer = this;
-					$.each(_layer._layers, function(i, f) {
-						if (f.feature) {
-							var props = f.feature.properties;
-							if (!props[_layer._key]) {
-								return false; // No such property, no use iterating
+				// Test if the params are parsable (int/float). If so - this is a WMS. (WFS/vector uses key/val)
+				var tryKey = parseFloat(key),
+					tryVal = parseFloat(val);
+				if (isNaN(tryKey) || isNaN(tryVal)) {
+					isWms = false;
+				}
+				if (isWms === false) {
+					layer = smap.core.layerInst.showLayer(layerId);
+					function onLoad() {
+						var selFeature = null,
+							_layer = this;
+						$.each(_layer._layers, function(i, f) {
+							if (f.feature) {
+								var props = f.feature.properties;
+								if (!props[key]) {
+									return false; // No such property, no use iterating
+								}
+								if (props[key].toString() === val) {
+									selFeature = f; // This is the feature we want to select
+									return false; // break
+								}
 							}
-							if (props[_layer._key].toString() === val) {
-								selFeature = f; // This is the feature we want to select
-								return false; // break
-							}
-						}
-					});
-					if (selFeature) {
-						selFeature.fire("click", {
-							properties: selFeature.feature.properties
 						});
-						selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
-					}
-					this.off("load", onLoad);
-				};
-				layer.on("load", onLoad);
+						if (selFeature) {
+							selFeature.fire("click", {
+								properties: selFeature.feature.properties
+							});
+							selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
+						}
+						this.off("load", onLoad);
+					};
+					layer.on("load", onLoad);
+				}
 			}
 		}, this));
 		map.on("click", function() {
@@ -246,16 +255,17 @@ smap.core.Layer = L.Class.extend({
 					this._selectedFeatures = []; // TODO: Resetting array here, this allows only one selected feature at a time...
 					
 					var f = evt.target.feature;
-					var key = t.uniqueKey;
+					var key = t.options.uniqueKey || "-";
 					if (key) {
 						var val = f.properties[key];
 						var layerId = t.options.layerId || evt.target.options.layerId;
 						if (layerId && val) {
-							this._selectedFeatures.push([t.layerId, key, val]);
+							this._selectedFeatures.push([layerId, key, val]);
 						}
-						
 					}
 					self.map.fire("selected", {
+						layerType: "vector",
+						paramVal: this._selectedFeatures[0].join(":"),
 						layerId: evt.target._options.layerId,
 						properties: f.properties
 //						latLng: evt.latlng || evt.target.feature.geometry.coordinates[0]

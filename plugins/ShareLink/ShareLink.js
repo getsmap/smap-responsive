@@ -50,6 +50,7 @@ L.Control.ShareLink = L.Control.extend({
         this._$dialog.modal("show");
         this._$dialog.on("shown.bs.modal",function(){
             $(this).find("input[type=text]").select();
+            
         });
 
     },

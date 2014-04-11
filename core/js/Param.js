@@ -63,18 +63,22 @@ smap.core.Param = L.Class.extend({
 			bl, layer;
 		
 		var layers = this.map._layers,
+			layerId,
 			ols = [];
 		for (var lid in layers) {
 			layer = layers[lid];
 			if (!layer || !layer.options || !layer.options.layerId) {
 				continue;
 			}
+			layerId = layer.options.layerId;
 			
 			if (layer.options.isBaseLayer) {
-				bl = layer.options.layerId;
+				bl = layerId;
 			}
 			else {
-				ols.push(layer.options.layerId);
+				if ($.inArray(layer.options.layerId, ols) === -1) {
+					ols.push(layerId);					
+				}
 			}
 		}
 		

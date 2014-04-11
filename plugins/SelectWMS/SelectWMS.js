@@ -15,11 +15,14 @@ L.Control.SelectWMS = L.Control.extend({
 			
 			if (props && $.isEmptyObject(props) === false) {
 				self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
+				var latLng = other.latLng;
 				other.map.fire("selected", {
+					layerType: "wms",
+					paramVal: [layerId, latLng.lng, latLng.lat].join(":"),
 					properties: props,
-					latLng: other.latLng,
+					latLng: latLng,
 					layerId: layerId
-				});				
+				});
 			}
 		},
 		onError: function() {
@@ -57,24 +60,36 @@ L.Control.SelectWMS = L.Control.extend({
 		var arrSel = sel.split(":");
 		var layerId = arrSel[0],
 			east = arrSel[1],
-			north = arrSel[2];
-		layer = smap.core.layerInst.showLayer(layerId);
-		latLng = L.latLng(parseFloat(north), parseFloat(east)); // val is lat, key is lon
-		this.onMapClick({
-			latlng: latLng,
-			_layers: [layer]
-		});
+			north = arrSel[2],
+			isWms = true;
+		
+		// Test if the params are parsable (int/float). If so - this is a WMS. (WFS uses key/val)
+		var tryKey = parseFloat(east),
+			tryVal = parseFloat(north);
+		if (isNaN(tryKey) || isNaN(tryVal)) {
+			isWms = false;
+		}
+		if (isWms === true) {
+			layer = smap.core.layerInst.showLayer(layerId);
+			latLng = L.latLng(parseFloat(north), parseFloat(east)); // val is lat, key is lon
+			this.onMapClick({
+				latlng: latLng,
+				_layers: [layer]
+			});
+		}
 	},
 	
 	_bindEvents: function() {
 		var self = this;
-		smap.event.on("smap.core.createparams", function(e, p) {
-			if (self._selectedFeatures.length) {
-				p.SELWMS = self._selectedFeatures[0].join(":");				
-			}
-		});
+//		smap.event.on("smap.core.createparams", function(e, p) {
+//			if (self._selectedFeatures.length) {
+//				p.SEL = self._selectedFeatures[0].join(":");				
+//			}
+//		});
 		smap.event.on("smap.core.applyparams", function(e, p) {
-			self._applyParam(p.SELWMS);
+			if (p.SEL) {
+				self._applyParam(p.SEL);				
+			}
 		});
 		
 		this.map
@@ -262,7 +277,7 @@ L.Control.SelectWMS = L.Control.extend({
 				nbr = parseFloat(val);
 			}
 			catch (e) {}
-			if (nbr && nbr !== NaN) {
+			if (nbr && isNaN(nbr) === false) {
 				val = nbr;
 			}
 			dict[ $.trim(t[0]) ] = val;

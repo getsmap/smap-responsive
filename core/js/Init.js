@@ -71,15 +71,27 @@ smap.core.Init = L.Class.extend({
 	
 	bindEvents: function(map) {
 		var self = this;
+		
+		smap.event.on("smap.core.createparams", function(e, p) {
+			if (self._selectedFeatures && self._selectedFeatures.length) {
+				p.SEL = self._selectedFeatures[0];
+			}
+		});
+		
 		map.on("selected", function(resp) {
 			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
 			
 			var props = resp.properties,
 				layerId = resp.layerId;
 			
-			var item;
-			if (resp.latLng) {
-				// This selection is a result of WMS GetFeatureInfo 
+			var paramVal = resp.paramVal;
+			self._selectedFeatures.push(paramVal);
+			
+			
+			/**
+			 * If WMS GetFeatureInfo – create a popup with the response.
+			 */
+			if (resp.layerType === "wms" && resp.latLng) { 
 				for (var typeName in props) {} // because of the way typename is stored
 				
 				// Get popup html for this typename
@@ -115,16 +127,7 @@ smap.core.Init = L.Class.extend({
 					.setLatLng(resp.latLng)
 					.setContent(html)
 					.openOn(map);
-				
-				// This is WMS – so store layerId together with the clicked coordinates
-				item = [layerId, resp.latLng.lng, resp.latLng.lat];
 			}
-			else {
-				// This is WFS – so store layerId together with unqie key and value of this feature 
-//				item = [layerId, resp.latLng.lng, resp.latLng.lat];
-			}
-			self._selectedFeatures.push(item);
-			
 		});
 	},
 	
