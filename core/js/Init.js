@@ -78,6 +78,12 @@ smap.core.Init = L.Class.extend({
 			}
 		});
 		
+		map.on("unselected", function() {
+			self._selectedFeatures = [];
+		});
+		map.on("click", function() {
+			map.fire("unselected", {});
+		});
 		map.on("selected", function(resp) {
 			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
 			
