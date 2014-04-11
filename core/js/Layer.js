@@ -58,7 +58,7 @@ smap.core.Layer = L.Class.extend({
 					layer;
 				var arrSel = sel.split(":");
 				var layerId = arrSel[0],
-					key = arrSel[1],
+					key = decodeURIComponent(arrSel[1]),
 					val = arrSel[2],
 					isWms = true;
 				
@@ -76,7 +76,14 @@ smap.core.Layer = L.Class.extend({
 						$.each(_layer._layers, function(i, f) {
 							if (f.feature) {
 								var props = f.feature.properties;
-								if (!props[key]) {
+								if (key.split(",").length > 1) {
+									var keyArr = key.split(",");
+									val = f.properties[keyArr[0]] + "" + f.properties[keyArr[1]];
+								}
+								else {
+									val = f.properties[key];
+								}
+								if (!val) {
 									return false; // No such property, no use iterating
 								}
 								if (props[key].toString() === val) {
@@ -102,6 +109,68 @@ smap.core.Layer = L.Class.extend({
 			var arr = self._wfsLayers;
 			for (var i=0,len=arr.length; i<len; i++) {
 				self._resetStyle( arr[i] );
+			}
+			map.fire("unselected", {});
+		});
+		
+		map.on("unselected", function() {
+			self._selectedFeatures = [];
+		});
+		
+		map.on("selected", function(resp) {
+			var arr = self._wfsLayers;
+			for (var i=0,len=arr.length; i<len; i++) {
+				arr[i].resetStyle(arr[i]);
+			}
+			
+			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
+			
+			var props = resp.properties,
+				layerId = resp.layerId;
+			
+			var paramVal = resp.paramVal;
+			self._selectedFeatures.push(paramVal);
+			
+			
+			/**
+			 * If WMS GetFeatureInfo – create a popup with the response.
+			 */
+			if (resp.layerType === "wms" && resp.latLng) { 
+				for (var typeName in props) {} // because of the way typename is stored
+				
+				// Get popup html for this typename
+				var typeNameArr = typeName.split(":");
+				var cutTypeName = typeNameArr[typeNameArr.length-1];
+				var t = smap.cmd.getLayerConfigBy("layers", cutTypeName, {
+					inText: true
+				});
+				if (!t) {
+					return false;
+				}
+				props = props[typeName][0];
+				props._displayName = t.options.displayName;
+				var html = utils.extractToHtml(t.options.popup, props);
+				html = html.replace("${_displayName}", t.options.displayName);
+				
+				// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
+				// (This issue was only found for touch devices.)
+				var $html = $("<div>"+html+"</div>");
+				$html.find("a").each(function() {
+					var href = $(this).attr("href"),
+						text = $(this).text();
+					var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
+					// Get the anchor href value and set it to the onclick value.
+					$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
+	//					$(this).removeAttr("href");
+					$(this).after($btn);
+					$(this).remove();
+					html = $html.html();
+				});
+				map.closePopup();
+				var popup = L.popup()
+					.setLatLng(resp.latLng)
+					.setContent(html)
+					.openOn(map);
 			}
 		});
 	},
@@ -251,29 +320,6 @@ smap.core.Layer = L.Class.extend({
 			}
 			layer.on("load", function(e) {
 				var html;
-				var onFeatureClick = $.proxy(function(evt) {
-					this._selectedFeatures = []; // TODO: Resetting array here, this allows only one selected feature at a time...
-					
-					var f = evt.target.feature;
-					var key = t.options.uniqueKey || "-";
-					if (key) {
-						var val = f.properties[key];
-						var layerId = t.options.layerId || evt.target.options.layerId;
-						if (layerId && val) {
-							this._selectedFeatures.push([layerId, key, val]);
-						}
-					}
-					self.map.fire("selected", {
-						layerType: "vector",
-						paramVal: this._selectedFeatures[0].join(":"),
-						layerId: evt.target._options.layerId,
-						properties: f.properties
-//						latLng: evt.latlng || evt.target.feature.geometry.coordinates[0]
-					});
-					self._resetStyle(layer);
-					self._setSelectStyle(evt);
-				}, this);
-				
 				layer.eachLayer(function(f) {
 					if (!f._popup && f.feature) {
 						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
@@ -284,7 +330,6 @@ smap.core.Layer = L.Class.extend({
 						if (f._popup) {
 							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
 						}
-						f.on("click", onFeatureClick);
 					}
 				});
 				smap.cmd.loading(false);
@@ -311,9 +356,8 @@ smap.core.Layer = L.Class.extend({
 		}
 		if (this.map.hasLayer(layer) === false) {
 			this.map.addLayer(layer);			
-			return layer;
 		}
-		return false;
+		return layer;
 	},
 	
 	hideLayer: function(layerId) {

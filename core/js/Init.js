@@ -74,65 +74,9 @@ smap.core.Init = L.Class.extend({
 		
 		smap.event.on("smap.core.createparams", function(e, p) {
 			if (self._selectedFeatures && self._selectedFeatures.length) {
-				p.SEL = self._selectedFeatures[0];
-			}
-		});
-		
-		map.on("unselected", function() {
-			self._selectedFeatures = [];
-		});
-		map.on("click", function() {
-			map.fire("unselected", {});
-		});
-		map.on("selected", function(resp) {
-			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
-			
-			var props = resp.properties,
-				layerId = resp.layerId;
-			
-			var paramVal = resp.paramVal;
-			self._selectedFeatures.push(paramVal);
-			
-			
-			/**
-			 * If WMS GetFeatureInfo – create a popup with the response.
-			 */
-			if (resp.layerType === "wms" && resp.latLng) { 
-				for (var typeName in props) {} // because of the way typename is stored
-				
-				// Get popup html for this typename
-				var typeNameArr = typeName.split(":");
-				var cutTypeName = typeNameArr[typeNameArr.length-1];
-				var t = smap.cmd.getLayerConfigBy("layers", cutTypeName, {
-					inText: true
-				});
-				if (!t) {
-					return false;
-				}
-				props = props[typeName][0];
-				props._displayName = t.options.displayName;
-				var html = utils.extractToHtml(t.options.popup, props);
-				html = html.replace("${_displayName}", t.options.displayName);
-				
-				// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
-				// (This issue was only found for touch devices.)
-				var $html = $("<div>"+html+"</div>");
-				$html.find("a").each(function() {
-					var href = $(this).attr("href"),
-						text = $(this).text();
-					var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
-					// Get the anchor href value and set it to the onclick value.
-					$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
-	//					$(this).removeAttr("href");
-					$(this).after($btn);
-					$(this).remove();
-					html = $html.html();
-				});
-				map.closePopup();
-				var popup = L.popup()
-					.setLatLng(resp.latLng)
-					.setContent(html)
-					.openOn(map);
+				var sel = self._selectedFeatures[0];
+				var arr = sel.split(":");
+				p.SEL = arr[0] + ":" + encodeURIComponent(arr[1]) + ":" + arr[2];
 			}
 		});
 	},

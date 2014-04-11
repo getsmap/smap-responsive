@@ -85,7 +85,7 @@ var config = {
 							weight: 2,
 							color: '#F00',
 							dashArray: '',
-							fillOpacity: 0.5
+							opacity: .5
 						}
 					}
 				},
@@ -101,7 +101,7 @@ var config = {
 		    	 	reverseAxisBbox: true,
 		    	 	selectable: true,
 		    	 	popup: 'The FID: ${fid}',
-		    	 	uniqueKey: "typ",
+		    	 	uniqueKey: null,
 		    	 	params: {
 			    	 	typeName: "malmows:STADSDEL_L",
 						version: "1.1.0",
@@ -114,8 +114,13 @@ var config = {
 		     			weight: 6,
 		     			color: '#F00',
 		     			dashArray: '',
-		     			fillOpacity: 0.5
-		     		}
+		     			opacity: 0.1
+		     		},
+		     		selectStyle: {
+		    			weight: 5,
+		    	        color: '#00FF00',
+		    	        opacity: 1
+		    		}
 		     	}
 		     },
 		     {
