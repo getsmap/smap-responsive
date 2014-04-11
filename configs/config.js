@@ -1,6 +1,6 @@
 
 var config = {
-		
+		 
 		ws: {
 			"localhost": {
 				proxy: "http://localhost/cgi-bin/proxy.py?url="
