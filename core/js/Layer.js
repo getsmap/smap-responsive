@@ -19,7 +19,7 @@ smap.core.Layer = L.Class.extend({
 		var map = this.map;
 		
 		map.on("layeradd", $.proxy(this.onLayerAdd, this));
-		map.on("layerremove", $.proxy(this.onLayerRemove, this));
+//		map.on("layerremove", $.proxy(this.onLayerRemove, this));
 		
 //		smap.event.on("smap.core.createparams", function(e, p) {
 //			if (self._selectedFeatures.length) {
@@ -170,19 +170,19 @@ smap.core.Layer = L.Class.extend({
 		this._layers[layerId] = layer; // Store in object so we can fetch it when needed.
 	},
 	
-	onLayerRemove: function(e) {
-		var layer = e.layer;
-		if (!layer.options || !layer.options.layerId || layer.feature) {
-			return;
-		}
-		var layerId = layer.options.layerId;
-		if (this._layers[layerId]) {
-			delete this._layers[layerId];
-		}
-	},
+//	onLayerRemove: function(e) {
+//		var layer = e.layer;
+//		if (!layer.options || !layer.options.layerId || layer.feature || !(layer._tileContainer || layer._layers)) {
+//			return;
+//		}
+//		var layerId = layer.options.layerId;
+//		if (this._layers[layerId]) {
+//			delete this._layers[layerId];
+//		}
+//	},
 	
 	_getLayer: function(layerId) {
-		return this._layers[layerId];
+		return this._layers[layerId] || null;
 	},
 	
 //	_removeLayer: function(layerId) {
