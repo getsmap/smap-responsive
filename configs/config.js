@@ -61,6 +61,35 @@ var config = {
 	    		 }
 		     },
 		     {
+					init: "L.GeoJSON.WFS",
+					url: "http://193.17.67.229/sbkqgis/cgi-bin/externt/kkarta/qgis_mapserv.fcgi",
+					options: {
+						layerId: "wfstest_qgis_server",
+						displayName: "Elnät Kristianstad",
+						attribution: "Kristianstads WFS",
+						inputCrs: "EPSG:3008",
+						reverseAxis: false,
+						reverseAxisBbox: false,
+						selectable: true,
+						popup: 'agare: ${agare}',
+						uniqueKey: "id",
+						params: {
+							typeName: "c4elnat",
+							srsName: "EPSG:3008",
+							format: "text/geojson",
+							maxFeatures: 10000,
+							outputFormat: "GeoJSON"
+						},
+						hoverColor: '#FF0',
+						style: {
+							weight: 2,
+							color: '#F00',
+							dashArray: '',
+							fillOpacity: 0.5
+						}
+					}
+				},
+		     {
 		    	 init: "L.GeoJSON.WFS",
 		    	 url: "http://geoserver.smap.se/geoserver/wfs",
 		    	 options: {
