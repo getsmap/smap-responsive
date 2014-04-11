@@ -159,7 +159,7 @@ smap.core.Layer = L.Class.extend({
 	
 	onLayerAdd: function(e) {
 		var layer = e.layer;
-		if (!layer.options || !layer.options.layerId || layer.feature) {
+		if (!layer.options || !layer.options.layerId || layer.feature || !(layer._tileContainer || layer._layers)) {
 			return;
 		}
 		var layerId = layer.options.layerId;
@@ -309,9 +309,11 @@ smap.core.Layer = L.Class.extend({
 		if (!layer) {
 			layer = this._createLayer(t);
 		}
-		this.map.addLayer(layer);
-//		this._addLayer(layer);
-		return layer;
+		if (this.map.hasLayer(layer) === false) {
+			this.map.addLayer(layer);			
+			return layer;
+		}
+		return false;
 	},
 	
 	hideLayer: function(layerId) {

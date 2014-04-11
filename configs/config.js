@@ -98,6 +98,7 @@ var config = {
 					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:3008",
 					  reverseAxis: false,
+					  reverseAxisBbox: true,
 					  selectable: true,
 					  popup: 'The FID: ${fid}',
 					  uniqueKey: "easting,northing",
