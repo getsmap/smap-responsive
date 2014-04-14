@@ -80,7 +80,6 @@ var config = {
 							maxFeatures: 10000,
 							outputFormat: "GeoJSON"
 						},
-						hoverColor: '#FF0',
 						style: {
 							weight: 2,
 							color: '#F00',
@@ -109,7 +108,6 @@ var config = {
 						format: "text/geojson",
 						outputFormat: "json"
 		     		},
-		     		hoverColor: '#FF0',
 		     		style: {
 		     			weight: 6,
 		     			color: '#F00',
