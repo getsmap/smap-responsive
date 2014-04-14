@@ -70,15 +70,7 @@ smap.core.Init = L.Class.extend({
 	},
 	
 	bindEvents: function(map) {
-		var self = this;
 		
-		smap.event.on("smap.core.createparams", function(e, p) {
-			if (self._selectedFeatures && self._selectedFeatures.length) {
-				var sel = self._selectedFeatures[0];
-				var arr = sel.split(":");
-				p.SEL = arr[0] + ":" + encodeURIComponent(arr[1]) + ":" + arr[2];
-			}
-		});
 	},
 	
 	drawMap: function(options) {

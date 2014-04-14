@@ -24,3 +24,6 @@ body {
   display: block;
   bottom: 0px;
   right: 100px; }
+
+.modal-dialog {
+  font-size: 1.4em; }

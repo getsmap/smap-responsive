@@ -88,7 +88,7 @@ L.Control.SelectWMS = L.Control.extend({
 //		});
 		smap.event.on("smap.core.applyparams", function(e, p) {
 			if (p.SEL) {
-				self._applyParam(p.SEL);				
+				self._applyParam( decodeURIComponent(p.SEL) );				
 			}
 		});
 		

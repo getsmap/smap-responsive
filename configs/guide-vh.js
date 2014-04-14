@@ -11,7 +11,6 @@ var config = {
 				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
 			}
 		},
-		
 		ol: [
 		     {
 				  init: "L.GeoJSON.WFS",
@@ -19,17 +18,26 @@ var config = {
 				  options: {
 					  layerId: "vhamnen_pt",
 					  displayName: "Punkter av intresse",
-					  featureType: "malmows:GUIDE_VHAMNEN_PT",
 					  attribution: "Malmö stads WFS",
+					  params: {
+		    	 			typeName: "malmows:GUIDE_VHAMNEN_PT",
+							version: "1.1.0",
+							maxFeatures: 10000,
+							format: "text/geojson",
+							outputFormat: "json"
+			 		  },
+			 		  reverseAxis: false,
+			 		  reverseAxisBbox: true,
+			 		  uniqueKey: "id",
+			 		  selectable: true,
 					  inputCrs: "EPSG:4326",
-					  reverseAxis: true,
 					  popup: '<h1>${namn}: ${id}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
 			        }
 		  		}
 		     ],
 			
 		bl: [
-	  	 	{
+			{
 				init: "L.TileLayer",
 				url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
 				options: {

@@ -221,10 +221,10 @@ var config = {
 //		        	   init: "L.Control.ShareTweet",
 //		        	   options: {}
 //		           },
-//		           {
-//		        	   init: "L.Control.SharePosition",
-//		        	   options: {}
-//		           },
+		           {
+		        	   init: "L.Control.SharePosition",
+		        	   options: {}
+		           },
 		           {
 		        	   init: "L.Control.Search",
 		        	   options: {}

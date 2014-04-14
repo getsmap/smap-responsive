@@ -19,13 +19,14 @@ smap.core.Layer = L.Class.extend({
 		var map = this.map;
 		
 		map.on("layeradd", $.proxy(this.onLayerAdd, this));
-//		map.on("layerremove", $.proxy(this.onLayerRemove, this));
 		
-//		smap.event.on("smap.core.createparams", function(e, p) {
-//			if (self._selectedFeatures.length) {
-//				p.SEL = self._selectedFeatures[0].join(":");
-//			}
-//		});
+		smap.event.on("smap.core.createparams", function(e, p) {
+			if (self._selectedFeatures && self._selectedFeatures.length) {
+				var sel = self._selectedFeatures[0];
+				var arr = sel.split(":");
+				p.SEL = encodeURIComponent(arr[0] + ":" + arr[1] + ":" + arr[2]);
+			}
+		});
 		
 		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
 			var tBL;
@@ -37,7 +38,6 @@ smap.core.Layer = L.Class.extend({
 			}
 			tBL.options.isBaseLayer = true;
 			map.addLayer(this._createLayer(tBL));
-//			self._addLayer( self._createLayer(tBL) );
 
 			if (p.OL) {
 				var t, i;
@@ -52,13 +52,13 @@ smap.core.Layer = L.Class.extend({
 				}
 			}
 			if (p.SEL) {
-				var sel = p.SEL,
+				var sel = decodeURIComponent(p.SEL),
 					s,
 					self = this,
 					layer;
 				var arrSel = sel.split(":");
 				var layerId = arrSel[0],
-					key = decodeURIComponent(arrSel[1]),
+					key = arrSel[1],
 					val = arrSel[2],
 					isWms = true;
 				
@@ -72,21 +72,22 @@ smap.core.Layer = L.Class.extend({
 					layer = smap.core.layerInst.showLayer(layerId);
 					function onLoad() {
 						var selFeature = null,
-							_layer = this;
+							_layer = this,
+							_val;
 						$.each(_layer._layers, function(i, f) {
 							if (f.feature) {
 								var props = f.feature.properties;
 								if (key.split(",").length > 1) {
 									var keyArr = key.split(",");
-									val = f.properties[keyArr[0]] + "" + f.properties[keyArr[1]];
+									_val = props[keyArr[0]] + "_" + props[keyArr[1]];
 								}
 								else {
-									val = f.properties[key];
+									_val = f.properties[key];
 								}
-								if (!val) {
+								if (!_val) {
 									return false; // No such property, no use iterating
 								}
-								if (props[key].toString() === val) {
+								if (_val.toString() === val) {
 									selFeature = f; // This is the feature we want to select
 									return false; // break
 								}

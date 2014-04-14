@@ -10,10 +10,10 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			mediaHeader: "Avbryt"
+			mediaHeader: "Media"
 		},
 		"en": {
-			mediaHeader: "Cancel"
+			mediaHeader: "Media"
 		}
 	},
 	
