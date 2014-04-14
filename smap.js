@@ -16424,7 +16424,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	CLASS_NAME: "L.GeoJSON.WFS",
 	 
 	options: {
-		uniqueAttr: "",
+		uniqueKey: "",
 		noBindZoom: true,
 		noBindDrag: false,
 		params: {
@@ -16436,6 +16436,11 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				format: "text/geojson",
 				maxFeatures: 10000,
 				outputFormat: "json"
+		},
+		selectStyle: {
+			weight: 5,
+	        color: '#00FFFF',
+	        opacity: 1
 		}
 	},
 
@@ -16443,7 +16448,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		options = options || {};
 		
 		
-		options = $.extend(true, this.options, options);
+		options = $.extend(true, {}, this.options, options);
 		
 		L.GeoJSON.prototype.initialize.call(this, null, options);
 		
@@ -16545,7 +16550,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	addData: function (geojson) {
 		var features = L.Util.isArray(geojson) ? geojson : geojson.features,
 		    i, len, feature, fid,
-		    uniqueAttr = this.options.uniqueAttr;
+		    uniqueKey = this.options.uniqueKey;
 		
 		if (features) {
 			var featureIndexes = this._featureIndexes,
@@ -16554,10 +16559,10 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				// Only add this if geometry or geometries are set and not null
 				feature = features[i];
 				var uniqueVal = "";
-				if (uniqueAttr) {
-					uniqueAttrArr = uniqueAttr.split(",");
+				if (uniqueKey) {
+					uniqueKeyArr = uniqueKey.split(",");
 					var props = feature.properties;
-					$.each(uniqueAttrArr, function(i, val) {
+					$.each(uniqueKeyArr, function(i, val) {
 						uniqueVal += (""+props[val]);
 					});
 				}
@@ -16599,10 +16604,52 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		}
 		var bounds = this._map.getBounds();
 		this.getFeature(bounds, function() {
-			if (self.options.uniqueAttr === null) {
+			if (self.options.uniqueKey === null) {
 				self.clearLayers();
 			}
 			self.addData(self.jsonData);
+			
+			var html;
+			var onFeatureClick = $.proxy(function(evt) {
+				var f = evt.target.feature,
+					target = evt.target;
+				var key = self.options.uniqueKey || "-";
+				var paramVal = null;
+				var layerId = self.options.layerId || target.options.layerId;
+				if (key) {
+					var val;
+					if (key.split(",").length > 1) {
+						var keyArr = key.split(",");
+						val = f.properties[keyArr[0]] + "_" + f.properties[keyArr[1]];
+					}
+					else {
+						val = f.properties[key];						
+					}
+					if (layerId && val) {
+						paramVal = [layerId, key, val].join(":");
+					}
+				}
+				// TODO: temp hack. Get layer id some other way
+				self._map.fire("selected", {
+					layerType: "vector",
+					paramVal: paramVal,
+					layerId: layerId,
+					properties: f.properties
+				});					
+				self.eachLayer(function(lay) {
+					self.resetStyle(lay);
+				});
+				if (target.setStyle) {
+					target.setStyle(self.options.selectStyle);					
+				}
+			    if (self.bringToFront && !L.Browser.ie && !L.Browser.opera) {
+			    	self.bringToFront();
+			    }
+			    
+			}, this);
+			self.eachLayer(function(f) {
+				f.on("click", onFeatureClick);
+			});
 		});
 	},
 	
@@ -16647,12 +16694,12 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		if (bounds && !this.options.params.filter) {
 			// Make a filter so that we only fetch features within current viewport.
 			// Don't use bbox if filter is specified (wfs does not support a combination)
-			
+			var reverseBbox = this.options.hasOwnProperty("reverseAxisBbox") ? this.options.reverseAxisBbox : this.options.reverseAxis;
 			if (this.options.inputCrs) {
 				bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
 				this.options.params.srsName = this.options.inputCrs;
 			}
-			this.options.params.bbox = this._boundsToBbox(bounds, this.options.reverseAxis);
+			this.options.params.bbox = this._boundsToBbox(bounds, reverseBbox);
 		}
 		
 		var url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
@@ -16660,6 +16707,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			this.xhr.abort();
 			this.xhr = null;
 		}
+		this.fire("loading", {layer: this});
 		this.xhr = $.ajax({
 			url: url,
 			type: "POST",
@@ -16668,10 +16716,10 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			success: function(response) {
 				if (response.type && response.type == "FeatureCollection") {
 					this.jsonData = response;
-					this.toGeographicCoords(this.options.inputCrs || "EPSG:3857");
+					this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
 					callback();
 					this.fire("load", {layer: this});
-				}				
+				}
 			},
 			dataType: "json"
 		});
@@ -16684,7 +16732,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	toGeographicCoords: function(inputCrs) {
 		function projectPoint(coordinates /*[easting, northing]*/, inputCrs) {
-			var source = inputCrs || "EPSG:3857",
+			var source = inputCrs || "EPSG:4326",
 				dest = "EPSG:4326",
 				x = coordinates[0], 
 				y = coordinates[1];
@@ -16698,7 +16746,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			switch (geom.type) {
 				case "Point":
 					coords = geom.coordinates;
-					if (!this.options.reverseAxis) {
+					if (this.options.reverseAxis) {
 						coords = this.swapCoords(coords);
 					}
 					projectedCoords = projectPoint(coords, inputCrs);
@@ -16707,9 +16755,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				case "MultiPoint":
 					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
 						coords = geom.coordinates[p];
-//						if (this.options.reverseAxis) {
-//							coords = this.swapCoords(coords);
-//						}
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords(coords);
+						}
 						projectedCoords = projectPoint(coords, inputCrs);
 						features[i].geometry.coordinates[p] = projectedCoords;
 					}
@@ -16722,7 +16770,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 						coordsArr = geom.coordinates[p];
 						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
 							coords = coordsArr[pp];
-							if (!this.options.reverseAxis) {
+							if (this.options.reverseAxis) {
 								coords = this.swapCoords( coords );								
 							}
 							projectedCoords = projectPoint(coords, inputCrs);
@@ -16735,7 +16783,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 					coordsArr = geom.coordinates[0][0];
 					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
 						coords = coordsArr[p];
-						if (!this.options.reverseAxis) {
+						if (this.options.reverseAxis) {
 							coords = this.swapCoords( coords );								
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
@@ -16925,16 +16973,24 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	_layers: {},
 	
-	initialize: function(map) {
-		this.map = map;
-		
+	_selectedFeatures: [],
+	
+	_bindEvents: function() {
 		var self = this;
+		var map = this.map;
 		
 		map.on("layeradd", $.proxy(this.onLayerAdd, this));
-		map.on("layerremove", $.proxy(this.onLayerRemove, this));
-		smap.event.on("smap.core.applyparams", function(e, obj) {
-			var p = obj.params,
-				tBL;
+		
+		smap.event.on("smap.core.createparams", function(e, p) {
+			if (self._selectedFeatures && self._selectedFeatures.length) {
+				var sel = self._selectedFeatures[0];
+				var arr = sel.split(":");
+				p.SEL = encodeURIComponent(arr[0] + ":" + arr[1] + ":" + arr[2]);
+			}
+		});
+		
+		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
+			var tBL;
 			if (p.BL) {
 				tBL = smap.cmd.getLayerConfig( p.BL );
 			}
@@ -16942,8 +16998,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				tBL = smap.config.bl[0];
 			}
 			tBL.options.isBaseLayer = true;
-			self.map.addLayer(self._createLayer(tBL));
-//			self._addLayer( self._createLayer(tBL) );
+			map.addLayer(this._createLayer(tBL));
 
 			if (p.OL) {
 				var t, i;
@@ -16953,22 +17008,138 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 					if (!t || !t.init) {
 						continue;
 					}
-					self.map.addLayer(self._createLayer(t));
+					map.addLayer(this._createLayer(t));
 //					self._addLayer( self._createLayer(t) );
 				}
 			}
-		});
-		
-		
-		
-		this.map.on("click", function() {
+			if (p.SEL) {
+				var sel = decodeURIComponent(p.SEL),
+					s,
+					self = this,
+					layer;
+				var arrSel = sel.split(":");
+				var layerId = arrSel[0],
+					key = arrSel[1],
+					val = arrSel[2],
+					isWms = true;
+				
+				// Test if the params are parsable (int/float). If so - this is a WMS. (WFS/vector uses key/val)
+				var tryKey = parseFloat(key),
+					tryVal = parseFloat(val);
+				if (isNaN(tryKey) || isNaN(tryVal)) {
+					isWms = false;
+				}
+				if (isWms === false) {
+					layer = smap.core.layerInst.showLayer(layerId);
+					function onLoad() {
+						var selFeature = null,
+							_layer = this,
+							_val;
+						$.each(_layer._layers, function(i, f) {
+							if (f.feature) {
+								var props = f.feature.properties;
+								if (key.split(",").length > 1) {
+									var keyArr = key.split(",");
+									_val = props[keyArr[0]] + "_" + props[keyArr[1]];
+								}
+								else {
+									_val = f.properties[key];
+								}
+								if (!_val) {
+									return false; // No such property, no use iterating
+								}
+								if (_val.toString() === val) {
+									selFeature = f; // This is the feature we want to select
+									return false; // break
+								}
+							}
+						});
+						if (selFeature) {
+							selFeature.fire("click", {
+								properties: selFeature.feature.properties
+							});
+							selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
+						}
+						this.off("load", onLoad);
+					};
+					layer.on("load", onLoad);
+				}
+			}
+		}, this));
+		map.on("click", function() {
 			// On "click out" – unselect all features (applies to WFS-layers).
 			var arr = self._wfsLayers;
 			for (var i=0,len=arr.length; i<len; i++) {
 				self._resetStyle( arr[i] );
 			}
+			map.fire("unselected", {});
 		});
 		
+		map.on("unselected", function() {
+			self._selectedFeatures = [];
+		});
+		
+		map.on("selected", function(resp) {
+			var arr = self._wfsLayers;
+			for (var i=0,len=arr.length; i<len; i++) {
+				arr[i].resetStyle(arr[i]);
+			}
+			
+			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
+			
+			var props = resp.properties,
+				layerId = resp.layerId;
+			
+			var paramVal = resp.paramVal;
+			self._selectedFeatures.push(paramVal);
+			
+			
+			/**
+			 * If WMS GetFeatureInfo – create a popup with the response.
+			 */
+			if (resp.layerType === "wms" && resp.latLng) { 
+				for (var typeName in props) {} // because of the way typename is stored
+				
+				// Get popup html for this typename
+				var typeNameArr = typeName.split(":");
+				var cutTypeName = typeNameArr[typeNameArr.length-1];
+				var t = smap.cmd.getLayerConfigBy("layers", cutTypeName, {
+					inText: true
+				});
+				if (!t) {
+					return false;
+				}
+				props = props[typeName][0];
+				props._displayName = t.options.displayName;
+				var html = utils.extractToHtml(t.options.popup, props);
+				html = html.replace("${_displayName}", t.options.displayName);
+				
+				// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
+				// (This issue was only found for touch devices.)
+				var $html = $("<div>"+html+"</div>");
+				$html.find("a").each(function() {
+					var href = $(this).attr("href"),
+						text = $(this).text();
+					var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
+					// Get the anchor href value and set it to the onclick value.
+					$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
+	//					$(this).removeAttr("href");
+					$(this).after($btn);
+					$(this).remove();
+					html = $html.html();
+				});
+				map.closePopup();
+				var popup = L.popup()
+					.setLatLng(resp.latLng)
+					.setContent(html)
+					.openOn(map);
+			}
+		});
+	},
+	
+	initialize: function(map) {
+		this.map = map;
+		this._bindEvents();
 	},
 	
 	addOverlays: function(arr) {
@@ -17019,7 +17190,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	onLayerAdd: function(e) {
 		var layer = e.layer;
-		if (!layer.options || !layer.options.layerId || layer.feature) {
+		if (!layer.options || !layer.options.layerId || layer.feature || !(layer._tileContainer || layer._layers)) {
 			return;
 		}
 		var layerId = layer.options.layerId;
@@ -17030,19 +17201,19 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this._layers[layerId] = layer; // Store in object so we can fetch it when needed.
 	},
 	
-	onLayerRemove: function(e) {
-		var layer = e.layer;
-		if (!layer.options || !layer.options.layerId || layer.feature) {
-			return;
-		}
-		var layerId = layer.options.layerId;
-		if (this._layers[layerId]) {
-			delete this._layers[layerId];
-		}
-	},
+//	onLayerRemove: function(e) {
+//		var layer = e.layer;
+//		if (!layer.options || !layer.options.layerId || layer.feature || !(layer._tileContainer || layer._layers)) {
+//			return;
+//		}
+//		var layerId = layer.options.layerId;
+//		if (this._layers[layerId]) {
+//			delete this._layers[layerId];
+//		}
+//	},
 	
 	_getLayer: function(layerId) {
-		return this._layers[layerId];
+		return this._layers[layerId] || null;
 	},
 	
 //	_removeLayer: function(layerId) {
@@ -17111,17 +17282,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			}
 			layer.on("load", function(e) {
 				var html;
-				var onFeatureClick = $.proxy(function(evt) {
-					var f = evt.target.feature;
-					self.map.fire("selected", {
-						layerId: evt.target._options.layerId,
-						properties: f.properties
-//						latLng: evt.latlng || evt.target.feature.geometry.coordinates[0]
-					});
-					self._resetStyle(layer);
-					self._setSelectStyle(evt);
-				}, this);
-				
 				layer.eachLayer(function(f) {
 					if (!f._popup && f.feature) {
 						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
@@ -17132,7 +17292,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 						if (f._popup) {
 							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
 						}
-						f.on("click", onFeatureClick);
 					}
 				});
 				smap.cmd.loading(false);
@@ -17157,8 +17316,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		if (!layer) {
 			layer = this._createLayer(t);
 		}
-		this.map.addLayer(layer);
-//		this._addLayer(layer);
+		if (this.map.hasLayer(layer) === false) {
+			this.map.addLayer(layer);			
+		}
 		return layer;
 	},
 	
@@ -17234,18 +17394,22 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			bl, layer;
 		
 		var layers = this.map._layers,
+			layerId,
 			ols = [];
 		for (var lid in layers) {
 			layer = layers[lid];
 			if (!layer || !layer.options || !layer.options.layerId) {
 				continue;
 			}
+			layerId = layer.options.layerId;
 			
 			if (layer.options.isBaseLayer) {
-				bl = layer.options.layerId;
+				bl = layerId;
 			}
 			else {
-				ols.push(layer.options.layerId);
+				if ($.inArray(layer.options.layerId, ols) === -1) {
+					ols.push(layerId);					
+				}
 			}
 		}
 		
@@ -17327,79 +17491,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				});
 			}
 		}
-		
-		if (p.SEL) {
-			this._handleSelect(p.SEL);
-		}
-		
-		smap.event.trigger("smap.core.applyparams", {
-			params: p
-		});
+		smap.event.trigger("smap.core.applyparams", p);
 	},
 	
-	_handleSelect: function(sel) {
-		var arrSels = sel instanceof Array ? sel : sel.split(","),
-			s,
-			self = this,
-			layer;
-		for (var i=0,len=arrSels.length; i<len; i++) {
-			arrSel = arrSels[i].split(":");
-			
-			var layerId = arrSel[0],
-				key = arrSel[1],
-				val = arrSel[2];
-//			var t = smap.cmd.getLayerConfig(layerId);
-			
-			layer = smap.core.layerInst.showLayer(layerId);
-			layer._key = key;
-			layer._val = val;
-			
-			function onLoadWfs() {
-				var selFeature = null,
-					_layer = this;
-				$.each(_layer._layers, function(i, f) {
-					if (f.feature) {
-						var props = f.feature.properties;
-						if (!props[_layer._key]) {
-							return false; // No such property, no use iterating
-						}
-						if (props[_layer._key].toString() === val) {
-							selFeature = f; // This is the feature we want to select
-							return false; // break
-						}
-					}
-				});
-				if (selFeature) {
-					selFeature.fire("click", {
-						properties: selFeature.feature.properties
-					});
-					selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
-				}
-				this.off("load", onLoadWfs);
-			};
-			
-			
-			function onLoadWms() {
-				// This is a WMS
-				var _layer = this;
-				var latLng = null;
-				try {
-					latLng = L.latLng(parseFloat(this._val), parseFloat(this._key)); // val is lat, key is lon
-				}
-				catch(e) {}
-				
-				if (latLng) {
-					self.map.fire("click", {
-						latlng: latLng,
-						_layers: [_layer]
-					});
-				}
-				_layer.off("load", onLoadWms);
-			};
-		}
-		var onLoad = layer && layer._layers ? onLoadWfs : onLoadWms;
-		layer.on("load", onLoad);
-			
 		
 //		var selArr = sel instanceof Array ? sel : sel.split(",");
 //		var selItem = selArr[0];
@@ -17420,8 +17514,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 //		    document.elementFromPoint(cPoint.x, cPoint.y).dispatchEvent(clickEvent);
 //		});
 			
-	},
-	
 	CLASS_NAME: "smap.core.Param"
 		
 });smap.cmd = {
@@ -17433,7 +17525,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		 * @returns {String} URL (or just params) recreating the map.
 		 */
 		createParams: function(addRoot) {
-			smap.core.paramInst.createParams(addRoot);
+			return smap.core.paramInst.createParams(addRoot);
 		},
 		
 		getControl: function(controlName) {
@@ -17624,62 +17716,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	},
 	
 	bindEvents: function(map) {
-		var self = this;
-		map.on("selected", function(resp) {
-			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
-			
-			var props = resp.properties,
-				layerId = resp.layerId;
-			
-			var item;
-			if (resp.latLng) {
-				// This selection is a result of WMS GetFeatureInfo 
-				for (var typeName in props) {} // because of the way typename is stored
-				
-				// Get popup html for this typename
-				var typeNameArr = typeName.split(":");
-				var cutTypeName = typeNameArr[typeNameArr.length-1];
-				var t = smap.cmd.getLayerConfigBy("layers", cutTypeName, {
-					inText: true
-				});
-				if (!t) {
-					return false;
-				}
-				props = props[typeName][0];
-				props._displayName = t.options.displayName;
-				var html = utils.extractToHtml(t.options.popup, props);
-				html = html.replace("${_displayName}", t.options.displayName);
-				
-				// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
-				// (This issue was only found for touch devices.)
-				var $html = $("<div>"+html+"</div>");
-				$html.find("a").each(function() {
-					var href = $(this).attr("href"),
-						text = $(this).text();
-					var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
-					// Get the anchor href value and set it to the onclick value.
-					$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
-	//					$(this).removeAttr("href");
-					$(this).after($btn);
-					$(this).remove();
-					html = $html.html();
-				});
-				map.closePopup();
-				var popup = L.popup()
-					.setLatLng(resp.latLng)
-					.setContent(html)
-					.openOn(map);
-				
-				// This is WMS – so store layerId together with the clicked coordinates
-				item = [layerId, resp.latLng.lng, resp.latLng.lat];
-			}
-			else {
-				// This is WFS – so store layerId together with unqie key and value of this feature 
-//				item = [layerId, resp.latLng.lng, resp.latLng.lat];
-			}
-			self._selectedFeatures.push(item);
-			
-		});
+		
 	},
 	
 	drawMap: function(options) {
@@ -17769,12 +17806,15 @@ $(document).ready(function() {
 			var layerId = t.options.layerId;
 			
 			if (props && $.isEmptyObject(props) === false) {
-				self._selectedFeatures.push([layerId, self.latLng.lng, self.latLng.lat]);
+				self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
+				var latLng = other.latLng;
 				other.map.fire("selected", {
+					layerType: "wms",
+					paramVal: [layerId, latLng.lng, latLng.lat].join(":"),
 					properties: props,
-					latLng: other.latLng,
+					latLng: latLng,
 					layerId: layerId
-				});				
+				});
 			}
 		},
 		onError: function() {
@@ -17806,8 +17846,44 @@ $(document).ready(function() {
 		this._unbindEvents();
 	},
 	
+	_applyParam: function(sel) {
+		var s,
+			layer;
+		var arrSel = sel.split(":");
+		var layerId = arrSel[0],
+			east = arrSel[1],
+			north = arrSel[2],
+			isWms = true;
+		
+		// Test if the params are parsable (int/float). If so - this is a WMS. (WFS uses key/val)
+		var tryKey = parseFloat(east),
+			tryVal = parseFloat(north);
+		if (isNaN(tryKey) || isNaN(tryVal)) {
+			isWms = false;
+		}
+		if (isWms === true) {
+			layer = smap.core.layerInst.showLayer(layerId);
+			latLng = L.latLng(parseFloat(north), parseFloat(east)); // val is lat, key is lon
+			this.onMapClick({
+				latlng: latLng,
+				_layers: [layer]
+			});
+		}
+	},
+	
 	_bindEvents: function() {
 		var self = this;
+//		smap.event.on("smap.core.createparams", function(e, p) {
+//			if (self._selectedFeatures.length) {
+//				p.SEL = self._selectedFeatures[0].join(":");				
+//			}
+//		});
+		smap.event.on("smap.core.applyparams", function(e, p) {
+			if (p.SEL) {
+				self._applyParam( decodeURIComponent(p.SEL) );				
+			}
+		});
+		
 		this.map
 			.on("layeradd", this.onLayerAdd, this)
 			.on("layerremove", this.onLayerRemove, this)
@@ -17840,13 +17916,15 @@ $(document).ready(function() {
 	/**
 	 * Prepare and execute the WMS GetFeatureInfo request.
 	 * @param e {Object}
+	 * 		- latlng {L.LatLng}
+	 * 
 	 * @returns {void}
 	 */
 	onMapClick: function(e) {
 		
 		// Reset properties
-		this.latLng = null;
 		this._selectedFeatures = [];
+		var latLng = e.latlng;
 		
 		if (this.xhr) {
 			this.xhr.abort();
@@ -17855,7 +17933,6 @@ $(document).ready(function() {
 		if (!layers.length) {
 			return;
 		}
-		var latLng = e.latlng;
 		var layerNames = [];
 		
 		var t, url, URL,
@@ -17867,14 +17944,12 @@ $(document).ready(function() {
 				ts[URL] = {
 						layerNames: [],
 						url: url,
-						wmsVersion: layer._wmsVersion
+						wmsVersion: layer._wmsVersion,
+						layerId: layer.options.layerId
 				};
 			}
 			ts[URL].layerNames.push(layer.options.layers);
 		});
-//		var bounds = L.latLngBounds(southWest, northEast);
-//		params.latLng = latLng;
-		this.latLng = latLng;
 
 		var params;
 		for (var URL in ts) {
@@ -17887,7 +17962,9 @@ $(document).ready(function() {
 			});
 			this.request(t.url, params, {
 				onSuccess: this.options.onSuccess,
-				onError: function() {}
+				onError: function() {},
+				layerId: t.layerId,
+				latLng: latLng
 			});		
 		}
 		
@@ -17992,7 +18069,7 @@ $(document).ready(function() {
 				nbr = parseFloat(val);
 			}
 			catch (e) {}
-			if (nbr && nbr !== NaN) {
+			if (nbr && isNaN(nbr) === false) {
 				val = nbr;
 			}
 			dict[ $.trim(t[0]) ] = val;
@@ -18019,7 +18096,7 @@ $(document).ready(function() {
 			success: function(resp, textStatus, jqXHR) {
 				var out = this._parseText(resp);
 				options.onSuccess(out, {
-					latLng: this.latLng,
+					latLng: options.latLng,
 					map: this.map,
 					context: this,
 					params: params
@@ -18456,10 +18533,10 @@ L.control.guideIntroScreen = function (options) {
 	
 	_lang: {
 		"sv": {
-			mediaHeader: "Avbryt"
+			mediaHeader: "Media"
 		},
 		"en": {
-			mediaHeader: "Cancel"
+			mediaHeader: "Media"
 		}
 	},
 	
@@ -19978,9 +20055,9 @@ L.control.sharePosition = function (options) {
 		this.map.off("click", this._blurSearch);
 	},
 	
-	_onApplyParams: function(e, obj) {
-		if (obj.params.POI) {
-			this._geoLocate(decodeURIComponent( obj.params.POI ));
+	_onApplyParams: function(e, p) {
+		if (p.POI) {
+			this._geoLocate(decodeURIComponent( p.POI ));
 		}
 	},
 	
