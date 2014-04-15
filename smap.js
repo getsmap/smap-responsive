@@ -16459,50 +16459,50 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		
 		this.getFeatureUrl = serviceUrl;
 		
-		this.on("featureparse", function(e) {
-			if (e.geometryType != 'Point' && e.geometryType != 'MultiPoint') {
-				if (options.style) {
-					e.layer._originalStyle = options.style;
-					e.layer.setStyle(options.style);
-				} else if (options.filteredStyles) {
-					var fld = options.filteredStyles.propName;
-					var itemVal = e.properties[fld];
-					var style = L.Util.extend({}, options.filteredStyles['default'], options.filteredStyles.styles[itemVal]); 
-					e.layer._originalStyle = style;
-					e.layer.setStyle(style);
-				}
-			}
-			if (options.popupObj && options.popupOptions) {
-				e.layer.on("click", function(evt) {
-					e.layer._map.openPopup(options.popupObj.generatePopup(e, options.popupOptions));
-					if (options.popupFn) { options.popupFn(e); }
-				});			
-			}
-			else if (options.popupFld && e.properties.hasOwnProperty(options.popupFld)) {
-				e.layer.bindPopup(e.properties[options.popupFld], { maxWidth: 600 });
-			}
-			if (options.hoverObj || options.hoverFld) {
-				e.layer.on("mouseover", function(evt) {
-					hoverContent = options.hoverObj ? options.hoverObj.generateContent(e) : e.properties[options.hoverFld] || "Invalid field name" ;
-					hoverPoint = e.layer._map.latLngToContainerPoint(evt.target._latlng);
-					e.layer._hoverControl = new L.Control.Hover(hoverPoint, hoverContent);
-					e.layer._map.addControl(e.layer._hoverControl);	
-				});
-				e.layer.on("mouseout", function(evt) {
-					e.layer._map.removeControl(e.layer._hoverControl);
-				});
-			}
-			if (options.hoverColor) {
-				e.layer.on("mouseover", function(evt) {
-					var hoverStyle = L.Util.extend({}, e.layer._originalStyle, { stroke: true, color: options.hoverColor, weight: 3 });
-					e.layer.setStyle(hoverStyle);
-				});
-				e.layer.on("mouseout", function(evt) {
-					e.layer.setStyle(e.layer._originalStyle);
-				});
-			}
-			if (e.layer instanceof L.Marker.AttributeFilter) { e.layer.setIcon(e); }
-		});
+//		this.on("featureparse", function(e) {
+//			if (e.geometryType != 'Point' && e.geometryType != 'MultiPoint') {
+//				if (options.style) {
+//					e.layer._originalStyle = options.style;
+//					e.layer.setStyle(options.style);
+//				} else if (options.filteredStyles) {
+//					var fld = options.filteredStyles.propName;
+//					var itemVal = e.properties[fld];
+//					var style = L.Util.extend({}, options.filteredStyles['default'], options.filteredStyles.styles[itemVal]); 
+//					e.layer._originalStyle = style;
+//					e.layer.setStyle(style);
+//				}
+//			}
+//			if (options.popupObj && options.popupOptions) {
+//				e.layer.on("click", function(evt) {
+//					e.layer._map.openPopup(options.popupObj.generatePopup(e, options.popupOptions));
+//					if (options.popupFn) { options.popupFn(e); }
+//				});			
+//			}
+//			else if (options.popupFld && e.properties.hasOwnProperty(options.popupFld)) {
+//				e.layer.bindPopup(e.properties[options.popupFld], { maxWidth: 600 });
+//			}
+//			if (options.hoverObj || options.hoverFld) {
+//				e.layer.on("mouseover", function(evt) {
+//					hoverContent = options.hoverObj ? options.hoverObj.generateContent(e) : e.properties[options.hoverFld] || "Invalid field name" ;
+//					hoverPoint = e.layer._map.latLngToContainerPoint(evt.target._latlng);
+//					e.layer._hoverControl = new L.Control.Hover(hoverPoint, hoverContent);
+//					e.layer._map.addControl(e.layer._hoverControl);	
+//				});
+//				e.layer.on("mouseout", function(evt) {
+//					e.layer._map.removeControl(e.layer._hoverControl);
+//				});
+//			}
+//			if (options.hoverColor) {
+//				e.layer.on("mouseover", function(evt) {
+//					var hoverStyle = L.Util.extend({}, e.layer._originalStyle, { stroke: true, color: options.hoverColor, weight: 3 });
+//					e.layer.setStyle(hoverStyle);
+//				});
+//				e.layer.on("mouseout", function(evt) {
+//					e.layer.setStyle(e.layer._originalStyle);
+//				});
+//			}
+//			if (e.layer instanceof L.Marker.AttributeFilter) { e.layer.setIcon(e); }
+//		});
 	},
 	
 	onAdd: function(map) {
@@ -17516,6 +17516,105 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			
 	CLASS_NAME: "smap.core.Param"
 		
+});smap.core.PluginHandler = L.Class.extend({
+	
+	
+	initialize: function(map) {
+		this.map = map;
+		
+		var self = this;
+		smap.event.on("smap.core.pluginsadded", function() {
+			self._processQueue();
+		});
+	},
+	
+	getPlugin: function(pluginName) {
+		// e.g. "Attribution" or "Scale"
+		var inst,
+			ctrls = smap.core.controls || [];
+		for (var i=0,len=ctrls.length; i<len; i++) {
+			inst = ctrls[i];
+			if (inst instanceof L.Control[controlName]) {
+				return inst;
+			}
+		}
+		return null;
+	},
+	
+	addPlugins: function(arr) {
+		var t, init,
+			autoActivates = [];
+		smap.core.controls = smap.core.controls || []; // Keep track of controls added to the map
+		for (var i=0,len=arr.length; i<len; i++) {
+			t = arr[i];
+			init = eval(t.init);
+			if (init) {
+				init = new init(t.options || {});
+				this.map.addControl(init);
+				smap.core.controls.push(init);
+				if (init.options.autoActivate) {
+					autoActivates.push(init);
+				}
+			}
+		}
+		smap.event.trigger("smap.core.pluginsadded");
+		smap.event.pluginsadded = true;
+		for (var i=0,len=autoActivates.length; i<len; i++) {
+			autoActivates[i].activate();
+		}
+	},
+	
+	_callQueue: [],
+	
+	callPlugin: function(pluginName, methodName, params, callback) {
+		params = params || [];
+
+		var plugin = L.Control[pluginName];
+		
+		if (smap.event.pluginsadded) {
+			this._callPlugin(plugin, methodName, params, callback);
+		}
+		else {
+			this._callQueue.push([plugin, methodName, params, callback]);
+		}
+	},
+	
+	_callPlugin: function(plugin, methodName, params, callback) {
+		if (!plugin)
+			return null;
+		var ctrls = smap.core.controls || [],
+			ctrl,
+			resp = null;
+		for (var i=0,len=ctrls.length; i<len; i++) {
+			ctrl = ctrls[i];
+			if (ctrl instanceof plugin) {
+				resp = ctrl[methodName].apply(ctrl, params || []);
+				break;
+			}
+		}
+		if (callback) {
+			return callback(resp);
+		}
+		return resp;
+	},
+	
+	/**
+	 */
+	_processQueue: function() {
+		var arrQueue = this._callQueue || [],
+			item, i, params, resp;
+		for (i=0,len=arrQueue.length; i<len; i++) {
+			item = arrQueue[i];
+			resp = this._callPlugin.apply(this, item);
+		}
+		this._callQueue = [];
+		return resp;
+	},
+	
+	
+	
+	
+	CLASS_NAME: "smap.core.PluginHandler"
 });smap.cmd = {
 		
 		
@@ -17666,6 +17765,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this.bindEvents(this.map);
 		smap.core.layerInst = new smap.core.Layer(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
+		smap.core.pluginHandlerInst = new smap.core.PluginHandler(this.map);
 		var params = options.params || smap.core.paramInst.getParams();
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
@@ -17686,7 +17786,8 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		// Extend map options
 		$.extend(this.map.options, theConfig.mapOptions || {});
 		
-		this.addPlugins(theConfig.plugins);
+		smap.core.pluginHandlerInst.callPlugin("ShareLink", "activate", []);
+		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
 	
 	resetMap: function() {
@@ -17747,28 +17848,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		var bls = config.bl || [];
 		for (var i=0,len=bls.length; i<len; i++) {
 			bls[i].options.isBaseLayer = true;
-		}
-	},
-	
-	addPlugins: function(arr) {
-		var t, init,
-			autoActivates = [];
-		smap.core.controls = smap.core.controls || []; // Keep track of controls added to the map
-		for (var i=0,len=arr.length; i<len; i++) {
-			t = arr[i];
-			init = eval(t.init);
-			if (init) {
-				init = new init(t.options || {});
-				this.map.addControl(init);
-				smap.core.controls.push(init);
-				if (init.options.autoActivate) {
-					autoActivates.push(init);
-				}
-			}
-		}
-		smap.event.trigger("smap.core.pluginsadded");
-		for (var i=0,len=autoActivates.length; i<len; i++) {
-			autoActivates[i].activate();
 		}
 	},
 	

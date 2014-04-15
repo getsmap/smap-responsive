@@ -20,6 +20,7 @@ smap.core.Init = L.Class.extend({
 		this.bindEvents(this.map);
 		smap.core.layerInst = new smap.core.Layer(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
+		smap.core.pluginHandlerInst = new smap.core.PluginHandler(this.map);
 		var params = options.params || smap.core.paramInst.getParams();
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
@@ -40,7 +41,8 @@ smap.core.Init = L.Class.extend({
 		// Extend map options
 		$.extend(this.map.options, theConfig.mapOptions || {});
 		
-		this.addPlugins(theConfig.plugins);
+		smap.core.pluginHandlerInst.callPlugin("ShareLink", "activate", []);
+		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
 	
 	resetMap: function() {
@@ -101,28 +103,6 @@ smap.core.Init = L.Class.extend({
 		var bls = config.bl || [];
 		for (var i=0,len=bls.length; i<len; i++) {
 			bls[i].options.isBaseLayer = true;
-		}
-	},
-	
-	addPlugins: function(arr) {
-		var t, init,
-			autoActivates = [];
-		smap.core.controls = smap.core.controls || []; // Keep track of controls added to the map
-		for (var i=0,len=arr.length; i<len; i++) {
-			t = arr[i];
-			init = eval(t.init);
-			if (init) {
-				init = new init(t.options || {});
-				this.map.addControl(init);
-				smap.core.controls.push(init);
-				if (init.options.autoActivate) {
-					autoActivates.push(init);
-				}
-			}
-		}
-		smap.event.trigger("smap.core.pluginsadded");
-		for (var i=0,len=autoActivates.length; i<len; i++) {
-			autoActivates[i].activate();
 		}
 	},
 	

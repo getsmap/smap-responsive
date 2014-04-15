@@ -23,6 +23,7 @@
 		"core/js/Div.js",
 		"core/js/Layer.js",
 		"core/js/Param.js",
+		"core/js/PluginHandler.js",
 		"core/js/cmd.js",
 		"core/js/Init.js",
 		"plugins/SelectWMS/SelectWMS.js",
