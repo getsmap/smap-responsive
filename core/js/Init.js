@@ -41,7 +41,6 @@ smap.core.Init = L.Class.extend({
 		// Extend map options
 		$.extend(this.map.options, theConfig.mapOptions || {});
 		
-		smap.core.pluginHandlerInst.callPlugin("ShareLink", "activate", []);
 		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
 	
