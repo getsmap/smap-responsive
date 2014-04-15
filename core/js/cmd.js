@@ -1,5 +1,26 @@
 smap.cmd = {
 		
+		/**
+		 * A proxy method for the plugin responsible for adding 
+		 * toolbar buttons to the map. If no such plugin is added to the map,
+		 * then it will fail silently.
+		 * 
+		 * @param label {String}
+		 * @param iconClass {String}
+		 * @param onClick {Function}
+		 * @param options {Object}
+		 * @returns {void}
+		 */
+		addToolButton: function(label, iconClass, onClick, options) {
+			var pluginToolbar = "Navbar";
+			options = options || {
+				index: null,
+				toggle: false,
+				callback: null // function called when the toolbar plugin is done creating the button
+			};
+			smap.core.pluginHandlerInst.callPlugin(pluginToolbar, "addButton", [label, iconClass, onClick, options]); 
+		},
+		
 		
 		/**
 		 * Create params as a string.

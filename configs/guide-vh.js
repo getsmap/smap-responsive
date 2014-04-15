@@ -89,66 +89,552 @@ var config = {
 		        		   attrId: "id",
 		        		   data: {
 		        	   			1: {
-		        	   				iconType: "audio",
+		        	   			// Hållbar utveckling i Malmö och omvärlden
+		        	   				iconType: null,
 		        	   				dialogTitle: "${namn}",
 		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
-		        	   				tabMedia: {
-		        	   					mediaType: "audio",
-		        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
-		           					}
+		        	   				tabMedia: [
+		        	   					{
+		        	   						label: 'Om "${namn}"',
+		        	   						mediaType: "audio",
+		        	   						sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+		           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+										}
+									]
 		           				},
 		           				2: {
+		           				// Lärande för hållbar utveckling
 		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
 			        	   				{
-			        	   					label: "Lyssna på ljud från ${namn}",
+			        	   					label: 'Om "${namn}"',
 			        	   					mediaType: "audio",
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			           						label: "Se på en bild",
-			        	   					mediaType: "image",
-			        	   					sources: "http://maja-k.com/promenad/vh/popup/${picture}"
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
 			           					}
+			           					
 		           					]
 		           				},
 		           				3: {
-		           					iconType: "audio",
+		           				// Västra hamnens historia
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
-		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
-		        	   				tabMedia: {
-		        	   					mediaType: "audio",
-		        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
-		           					}
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
 		           				},
 		           				4: {
-		           					iconType: "image",
+		           				// Ekonomisk hållbarhet
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
-		        	   				tabIntro: "${urltext}",
-		        	   				tabMedia: {
-		        	   					mediaType: "audio",
-		        	   					sources: "${urlsound}"
-		           					}
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
 		           				},
 		           				5: {
+		           				// Social Hållbarhet
 		           					iconType: "video",
 		           					dialogTitle: "${namn}",
-		        	   				tabIntro: "${urltext}",
-		        	   				tabMedia: {
-		        	   					mediaType: "audio",
-		        	   					sources: "${urlsound}"
-		           					}
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					mediaType: "video",
+			        	   					sources: "http://www.youtube.com/embed/f0r_JsnIRJY"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
 		           				},
 		           				6: {
-		           					iconType: "audio",
+		           				// Fullriggaren och Kappseglaren
+		        	   				iconType: null,
+		        	   				dialogTitle: "${namn}",
+		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+		        	   					{
+		        	   						label: 'Om "${namn}"',
+		        	   						mediaType: "audio",
+		        	   						sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+		           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+										}
+									]
+		           				},
+		           				7: {
+		           				// Varvsparken och ekologisk lekplats
+		           					iconType: "video",
 		           					dialogTitle: "${namn}",
-		        	   				tabIntro: "${urltext}",
-		        	   				tabMedia: {
-		        	   					mediaType: "audio",
-		        	   					sources: "${urlsound}"
-		           					}
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					mediaType: "video",
+			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				8: {
+		           				// Det goda samtalet
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				9: {
+		           				// Havet
+		           					iconType: "video",
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					mediaType: "video",
+			        	   					sources: "http://player.vimeo.com/video/24584160"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				10: {
+		           				// Cykling
+		           					iconType: "video",
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					mediaType: "video",
+			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				11: {
+		           				// Turning Torso
+		           					iconType: "video",
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					mediaType: "video",
+			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				12: {
+		           				// Kollektivtrafik
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				13: {
+		           				// Marksanering
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				14: {
+		           				// Parkerna
+		           					iconType: "video",
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					mediaType: "video",
+			        	   					sources: "http://www.youtube.com/embed/WnEJ5SmJtm0"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				15: {
+		           				//Skanskas trähus
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				16: {
+		           				// Arkitektur
+		        	   				iconType: null,
+		        	   				dialogTitle: "${namn}",
+		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+		        	   					{
+		        	   						label: 'Om "${namn}"',
+		        	   						mediaType: "audio",
+		        	   						sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+		           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+										}
+									]
+		           				},
+		           				17: {
+		           				// Energisnåla hus
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				18: {
+		           				// 100 procent lokalt förnybar energi
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				19: {
+		           				// Konst
+		           					iconType: "video",
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					mediaType: "video",
+			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				20: {
+		           				// Det gröna
+		           					iconType: "video",
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					mediaType: "video",
+			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				21: {
+		           				// Öppet dagvattensystem
+		        	   				iconType: null,
+		        	   				dialogTitle: "${namn}",
+		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+		        	   					{
+		        	   						label: 'Om "${namn}"',
+		        	   						mediaType: "audio",
+		        	   						sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+		           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+										}
+									]
+		           				},
+		           				22: {
+		           				// Rättvist, ekologiskt och nära
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				23: {
+		           				// Sol, vind och vatten
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				24: {
+		           				//Kretslopp
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				25: {
+		           				// Kockum Fritid
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
+		           				},
+		           				26: {
+		           				// Masthusen
+		        	   				iconType: null,
+		        	   				dialogTitle: "${namn}",
+		        	   				tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+		        	   					{
+		        	   						label: 'Om "${namn}"',
+		        	   						mediaType: "audio",
+		        	   						sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+		           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+										}
+									]
+		           				},
+		           				27:  {
+		           				// Varvsstaden
+		           					iconType: null,
+		           					dialogTitle: "${namn}",
+		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
+		        	   				tabMedia: [
+			        	   				{
+			        	   					label: 'Om "${namn}"',
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
+			           					},
+			           					{
+			        	   					label: "Introduktion till Västra Hamnen-spåret",
+			        	   					mediaType: "audio",
+			        	   					sources: "http://maja-k.com/promenad/vh/mp3/00_Introtext_VO.mp3"
+			           					}
+			           					
+		           					]
 		           				}
 		           		   }
 		        		   
