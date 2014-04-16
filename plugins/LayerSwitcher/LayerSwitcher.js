@@ -142,9 +142,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 	_addBtn: function() {
 		var btn = $('<div id="lswitch-btn"><span class="fa fa-bars fa-2x"></span></div>');
 		$("#mapdiv").prepend(btn);
-//		if (L.Browser.msPointer) {
-//			btn.addClass("lswitch-btn-big");
-//		}
 		btn.on("click mousedown "+L.DomEvent._touchstart, $.proxy(function() {
 			this.showPanel();
 			return false;

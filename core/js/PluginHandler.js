@@ -48,6 +48,14 @@ smap.core.PluginHandler = L.Class.extend({
 	
 	_callQueue: [],
 	
+	/**
+	 * 
+	 * @param pluginName {String} The plugin's class name excluding "L.Control.". E.g. "Scale"
+	 * @param methodName {String} The method name.
+	 * @param params {Array} An array of params to call the method with.
+	 * @param callback {Function} Called after the method has been called (if the method was found).
+	 * @returns {void}
+	 */
 	callPlugin: function(pluginName, methodName, params, callback) {
 		params = params || [];
 

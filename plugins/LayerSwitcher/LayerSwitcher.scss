@@ -15,13 +15,6 @@
 	@include border-radius(0 4px 4px 0);
 }
 
-.lswitch-btn-big {
-	padding: 18px 14px 18px 0px !important;
-}
-.lswitch-btn-big img {
-	width: 30px;
-}
-
 .lswitch-panel .panel {
 	@include box-shadow(none);
 }
