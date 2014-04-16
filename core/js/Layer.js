@@ -57,7 +57,14 @@ smap.core.Layer = L.Class.extend({
 				var layerId = decodeURIComponent(arrSel[0]),
 					key = decodeURIComponent(arrSel[1]),
 					val = decodeURIComponent(arrSel[2]),
-					isWms = true;
+					isWms = true,
+					latLng;
+				if (arrSel.length === 5) {
+					// Coords of click were also included
+					var east = parseFloat(arrSel[3]),
+						north = parseFloat(arrSel[4]);
+					latLng = L.latLng(north, east);
+				}
 				
 				// Test if the params are parsable (int/float). If so - this is a WMS. (WFS/vector uses key/val)
 				var tryKey = parseFloat(key),
@@ -74,8 +81,8 @@ smap.core.Layer = L.Class.extend({
 						$.each(_layer._layers, function(i, f) {
 							if (f.feature) {
 								var props = f.feature.properties;
-								if (key.split(",").length > 1) {
-									var keyArr = key.split(",");
+								if (key.split(";").length > 1) {
+									var keyArr = key.split(";");
 									_val = props[keyArr[0]] + ";" + props[keyArr[1]];
 								}
 								else {
@@ -92,9 +99,16 @@ smap.core.Layer = L.Class.extend({
 						});
 						if (selFeature) {
 							selFeature.fire("click", {
-								properties: selFeature.feature.properties
+								properties: selFeature.feature.properties,
+								latlng: latLng
 							});
-							selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
+//							self.map.fire("selected", {
+//								feature: selFeature.feature,
+//								selectedFeatures: [selFeature.feature],
+//								layer: _layer,
+//								clickEvent: {originalEvent: {}}
+//							});
+//							selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
 						}
 						this.off("load", onLoad);
 					};
@@ -128,14 +142,14 @@ smap.core.Layer = L.Class.extend({
 			var layerId = layer.options.layerId,
 				selectedFeature = e.feature,
 				pKey = layer.options.uniqueKey || "-",
-				shiftKeyWasPressed = e.clickEvent.originalEvent ? e.clickEvent.originalEvent.shiftKey : false,
-				latLng = e.clickEvent.latlng;
+				shiftKeyWasPressed = e.clickEvent.originalEvent ? e.clickEvent.originalEvent.shiftKey || false : false,
+				latLng = e.latLng;
 			var props = selectedFeature.properties;
 			
 			var paramVal = null;
 			if (layer._layers) {
 				// This is a vector layer
-				paramVal = self._makeVectorParam(layerId, props, pKey);
+				paramVal = self._makeVectorParam(layerId, props, pKey, latLng);
 			}
 			else if (latLng && props.hasOwnProperty(pKey)) {
 				// This is a wms layer
@@ -195,7 +209,7 @@ smap.core.Layer = L.Class.extend({
 		});
 	},
 	
-	_makeVectorParam: function(layerId, props, key) {
+	_makeVectorParam: function(layerId, props, key, latLng) {
 		var val,
 			props = props || {};
 			paramVal = null;
@@ -207,7 +221,7 @@ smap.core.Layer = L.Class.extend({
 			val = props[key];						
 		}
 		if (layerId && val) {
-			paramVal = [encodeURIComponent(layerId), encodeURIComponent(key), encodeURIComponent(val)].join(":");
+			paramVal = [encodeURIComponent(layerId), encodeURIComponent(key), encodeURIComponent(val), utils.round(latLng.lng, 5), utils.round(latLng.lat, 5)].join(":");
 		}
 		return paramVal;
 	},
