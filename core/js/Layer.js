@@ -12,7 +12,7 @@ smap.core.Layer = L.Class.extend({
 	
 	_layers: {},
 	
-	_selectedFeatures: [],
+	_selectedFeatureParam: null,
 	
 	_bindEvents: function() {
 		var self = this;
@@ -21,8 +21,8 @@ smap.core.Layer = L.Class.extend({
 		map.on("layeradd", $.proxy(this.onLayerAdd, this));
 		
 		smap.event.on("smap.core.createparams", function(e, p) {
-			if (self._selectedFeatures && self._selectedFeatures.length) {
-				var sel = self._selectedFeatures[0];
+			if (self._selectedFeatureParam && self._selectedFeatureParam.length) {
+				var sel = self._selectedFeatureParam;
 				var arr = sel.split(":");
 				p.SEL = encodeURIComponent(arr[0] + ":" + arr[1] + ":" + arr[2]);
 			}
@@ -115,28 +115,49 @@ smap.core.Layer = L.Class.extend({
 		});
 		
 		map.on("unselected", function() {
-			self._selectedFeatures = [];
+			map.closePopup();
+			self._selectedFeatureParam = null;
 		});
 		
-		map.on("selected", function(resp) {
-			var arr = self._wfsLayers;
-			for (var i=0,len=arr.length; i<len; i++) {
-				arr[i].resetStyle(arr[i]);
+		map.on("selected", function(e) {
+//			var arr = self._wfsLayers;
+//			for (var i=0,len=arr.length; i<len; i++) {
+//				arr[i].resetStyle(arr[i]);
+//			}
+			
+			self._selectedFeatureParam = null;
+			
+			var layer = e.layer;
+			var layerId = layer.options.layerId,
+				selectedFeature = e.feature,
+				pKey = layer.options.uniqueKey || "-",
+				shiftKeyWasPressed = e.originalEvent.shiftKey;
+			var props = selectedFeature.properties;
+			
+			var paramVal = null;
+			if (e.layer._layers) {
+				// This is a vector layer
+				paramVal = self._makeVectorParam(layerId, props, pKey);
 			}
+			else if (e.latLng && props.hasOwnProperty(pKey)) {
+				// This is a wms layer
+				paramVal = [layerId, pKey, props[pKey]].join(":");
+			}
+			self._selectedFeatureParam = paramVal;
 			
-			self._selectedFeatures = []; // TODO: This means we will only allow one selected feature at a time - change if necessary
-			
-			var props = resp.properties,
-				layerId = resp.layerId;
-			
-			var paramVal = resp.paramVal;
-			self._selectedFeatures.push(paramVal);
-			
+			self.map.closePopup();
+			if (layer._layers && !shiftKeyWasPressed && e.selectedFeatures.length <= 1) { //(e.selectedFeatures.length <= 1 && layer._layers) {
+				var html = utils.extractToHtml(layer.options.popup, props);
+				var lay = utils.getLayerFromFeature(selectedFeature, layer);
+				lay.bindPopup(html, {autoPan: false});
+//				lay._popup.options.autoPanPaddingTopLeft = [0, 50];							
+				lay.openPopup(e.latLng);
+			}
 			
 			/**
 			 * If WMS GetFeatureInfo – create a popup with the response.
 			 */
-			if (resp.layerType === "wms" && resp.latLng) { 
+			if (!layer._layers && e.latLng) { 
 				for (var typeName in props) {} // because of the way typename is stored
 				
 				// Get popup html for this typename
@@ -169,11 +190,28 @@ smap.core.Layer = L.Class.extend({
 				});
 				map.closePopup();
 				var popup = L.popup()
-					.setLatLng(resp.latLng)
+					.setLatLng(e.latLng)
 					.setContent(html)
 					.openOn(map);
 			}
 		});
+	},
+	
+	_makeVectorParam: function(layerId, props, key) {
+		var val,
+			props = props || {};
+			paramVal = null;
+		if (key.split(",").length > 1) {
+			var keyArr = key.split(",");
+			val = props[keyArr[0]] + "_" + props[keyArr[1]];
+		}
+		else {
+			val = props[key];						
+		}
+		if (layerId && val) {
+			paramVal = [layerId, key, val].join(":");
+		}
+		return paramVal;
 	},
 	
 	initialize: function(map) {
@@ -320,19 +358,19 @@ smap.core.Layer = L.Class.extend({
 				layer.options.style = style;
 			}
 			layer.on("load", function(e) {
-				var html;
-				layer.eachLayer(function(f) {
-					if (!f._popup && f.feature) {
-						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
-						
-						// Do not use autoPan because this will set center around the popup
-						// when panning the map, making it impossible to pan away from the popup.
-						f.bindPopup(html, {autoPan: false});
-						if (f._popup) {
-							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
-						}
-					}
-				});
+//				var html;
+//				layer.eachLayer(function(f) {
+//					if (!f._popup && f.feature) {
+//						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
+//						
+//						// Do not use autoPan because this will set center around the popup
+//						// when panning the map, making it impossible to pan away from the popup.
+//						f.bindPopup(html, {autoPan: false});
+//						if (f._popup) {
+//							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
+//						}
+//					}
+//				});
 				smap.cmd.loading(false);
 			});
 			this._wfsLayers.push(layer);

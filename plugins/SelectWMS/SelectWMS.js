@@ -10,18 +10,25 @@ L.Control.SelectWMS = L.Control.extend({
 			var self = other.context;
 			
 			// Fetch layerId
-			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
-			var layerId = t.options.layerId;
+//			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
+//			var layerId = t.options.layerId;
+			
+			layerId = self.options.layerId;
 			
 			if (props && $.isEmptyObject(props) === false) {
 				self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
 				var latLng = other.latLng;
-				other.map.fire("selected", {
-					layerType: "wms",
-					paramVal: [layerId, latLng.lng, latLng.lat].join(":"),
-					properties: props,
+				
+				// Create a pseudo feature based on properties and latLng
+				var f = {
+					geometry: {coordinates: [latLng.lng, latLng.lat]},
 					latLng: latLng,
-					layerId: layerId
+					properties: props
+				};
+				other.map.fire("selected", {
+					layer: self,
+					feature: f,
+					selectedFeatures: [f],
 				});
 			}
 		},

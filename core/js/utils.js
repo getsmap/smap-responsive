@@ -31,6 +31,26 @@ var utils = {
 			return d;
 		},
 		
+		/**
+		 * Due to the way Leaflet is designed, a feature is packed inside
+		 * a layer (which is actually more like "true" feature). To be able to
+		 * do anything with the feature, one must find its layer – which is the
+		 * purpose of this function.
+		 * @param parentLayer {L.Layer} The layer containing other layers, of which one layer must contain our feature.
+		 * @param feature {Object} A Leaflet feature, who's layer we want to find. This layer must be added to the parentLayer.
+		 * @returns {L.Layer | null}
+		 */
+		getLayerFromFeature: function(feature, parentLayer) {
+			var layersObj = parentLayer._layers;
+			for (var nbr in layersObj) {
+				var _lay = layersObj[nbr];
+				if (_lay.feature === feature) {
+					return _lay;
+				}
+			}
+			return null;
+		},
+		
 		round: function(val, nbrOfDecimals) {
 			var exp = Math.pow(10, nbrOfDecimals || 0);
 			return Math.round(val * exp) / exp;
