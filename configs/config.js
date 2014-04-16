@@ -133,7 +133,7 @@ var config = {
 					  reverseAxisBbox: true,
 					  selectable: true,
 					  popup: 'The FID: ${fid}',
-					  uniqueKey: "easting,northing",
+					  uniqueKey: "easting;northing",
 					  params: {
 				    	 	typeName: "malmows:SUM_KVARTER_P",
 							version: "1.1.0",

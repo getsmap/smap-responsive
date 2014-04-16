@@ -21,10 +21,8 @@ smap.core.Layer = L.Class.extend({
 		map.on("layeradd", $.proxy(this.onLayerAdd, this));
 		
 		smap.event.on("smap.core.createparams", function(e, p) {
-			if (self._selectedFeatureParam && self._selectedFeatureParam.length) {
-				var sel = self._selectedFeatureParam;
-				var arr = sel.split(":");
-				p.SEL = encodeURIComponent(arr[0] + ":" + arr[1] + ":" + arr[2]);
+			if (self._selectedFeatureParam) {
+				p.SEL = self._selectedFeatureParam;
 			}
 		});
 		
@@ -52,14 +50,13 @@ smap.core.Layer = L.Class.extend({
 				}
 			}
 			if (p.SEL) {
-				var sel = decodeURIComponent(p.SEL),
+				var arrSel = p.SEL.split(":"),
 					s,
 					self = this,
 					layer;
-				var arrSel = sel.split(":");
-				var layerId = arrSel[0],
-					key = arrSel[1],
-					val = arrSel[2],
+				var layerId = decodeURIComponent(arrSel[0]),
+					key = decodeURIComponent(arrSel[1]),
+					val = decodeURIComponent(arrSel[2]),
 					isWms = true;
 				
 				// Test if the params are parsable (int/float). If so - this is a WMS. (WFS/vector uses key/val)
@@ -79,7 +76,7 @@ smap.core.Layer = L.Class.extend({
 								var props = f.feature.properties;
 								if (key.split(",").length > 1) {
 									var keyArr = key.split(",");
-									_val = props[keyArr[0]] + "_" + props[keyArr[1]];
+									_val = props[keyArr[0]] + ";" + props[keyArr[1]];
 								}
 								else {
 									_val = f.properties[key];
@@ -131,17 +128,18 @@ smap.core.Layer = L.Class.extend({
 			var layerId = layer.options.layerId,
 				selectedFeature = e.feature,
 				pKey = layer.options.uniqueKey || "-",
-				shiftKeyWasPressed = e.originalEvent.shiftKey;
+				shiftKeyWasPressed = e.clickEvent.originalEvent ? e.clickEvent.originalEvent.shiftKey : false,
+				latLng = e.clickEvent.latlng;
 			var props = selectedFeature.properties;
 			
 			var paramVal = null;
-			if (e.layer._layers) {
+			if (layer._layers) {
 				// This is a vector layer
 				paramVal = self._makeVectorParam(layerId, props, pKey);
 			}
-			else if (e.latLng && props.hasOwnProperty(pKey)) {
+			else if (latLng && props.hasOwnProperty(pKey)) {
 				// This is a wms layer
-				paramVal = [layerId, pKey, props[pKey]].join(":");
+				paramVal = [encodeURIComponent(layerId), encodeURIComponent(pKey), encodeURIComponent(props[pKey])].join(":");
 			}
 			self._selectedFeatureParam = paramVal;
 			
@@ -151,13 +149,13 @@ smap.core.Layer = L.Class.extend({
 				var lay = utils.getLayerFromFeature(selectedFeature, layer);
 				lay.bindPopup(html, {autoPan: false});
 //				lay._popup.options.autoPanPaddingTopLeft = [0, 50];							
-				lay.openPopup(e.latLng);
+				lay.openPopup(latLng);
 			}
 			
 			/**
 			 * If WMS GetFeatureInfo – create a popup with the response.
 			 */
-			if (!layer._layers && e.latLng) { 
+			if (!layer._layers && latLng) {
 				for (var typeName in props) {} // because of the way typename is stored
 				
 				// Get popup html for this typename
@@ -190,7 +188,7 @@ smap.core.Layer = L.Class.extend({
 				});
 				map.closePopup();
 				var popup = L.popup()
-					.setLatLng(e.latLng)
+					.setLatLng(latLng)
 					.setContent(html)
 					.openOn(map);
 			}
@@ -201,15 +199,15 @@ smap.core.Layer = L.Class.extend({
 		var val,
 			props = props || {};
 			paramVal = null;
-		if (key.split(",").length > 1) {
-			var keyArr = key.split(",");
-			val = props[keyArr[0]] + "_" + props[keyArr[1]];
+		if (key.split(";").length > 1) {
+			var keyArr = key.split(";");
+			val = props[keyArr[0]] + ";" + props[keyArr[1]];
 		}
 		else {
 			val = props[key];						
 		}
 		if (layerId && val) {
-			paramVal = [layerId, key, val].join(":");
+			paramVal = [encodeURIComponent(layerId), encodeURIComponent(key), encodeURIComponent(val)].join(":");
 		}
 		return paramVal;
 	},
