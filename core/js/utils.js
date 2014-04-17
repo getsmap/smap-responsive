@@ -3,6 +3,21 @@ var utils = {
 			return parseInt( text.replace(/px/gi, "").replace(/em/gi, "").replace(/pt/gi, "") );
 		},
 		
+		/**
+		 * Remove all duplicates in the array.
+		 * @param arr {Array}
+		 * @returns {Array} A new array containing only unique values.
+		 */
+		makeUniqueArr: function(arr) {
+			var newArr = [];
+			$.each(arr, function(i, val) {
+				if ( $.inArray(val, newArr) === -1) {
+					newArr.push(val);
+				}
+			});
+			return newArr;
+		},
+		
 		drawDialog: function(title, bodyContent, footerContent, options) {
 			options = options || {};
 			

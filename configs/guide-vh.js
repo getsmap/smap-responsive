@@ -31,7 +31,24 @@ var config = {
 			 		  uniqueKey: "id",
 			 		  selectable: true,
 					  inputCrs: "EPSG:4326",
-					  popup: '<h1>${namn}: ${id}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
+					  popup: 
+						  '<div>${function(p) {'+
+							    'var out = "";'+
+							    'var style="margin-right:.3em;";'+
+							    'if (p.urlvideo) {'+
+							    '    out += \'<span style="\'+style+\'" class="fa fa-video-camera fa-2x"></span>\';'+
+							    '}'+
+							    'if (p.urlsound) {'+
+							    '    out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-2x"></span>\';'+
+							    '}'+
+							    'if (p.picture && p.picture.split(",").length > 1) {'+
+							    '    out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-2x"></span>\';'+
+							    '}'+
+							    'return out;'+
+							'}'+
+						  '}</div>'+
+						  
+						  '<h4>${id}: ${namn} </h4><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
 			        }
 		  		}
 		     ],

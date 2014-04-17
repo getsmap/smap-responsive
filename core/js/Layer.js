@@ -12,7 +12,11 @@ smap.core.Layer = L.Class.extend({
 	
 	_layers: {},
 	
-	_selectedFeatureParam: null,
+	/**
+	 * Containers for selected features (Vector and WMS).
+	 */
+	_selectedFeaturesVector: [],
+	_selectedFeaturesWms: [],
 	
 	_bindEvents: function() {
 		var self = this;
@@ -21,9 +25,47 @@ smap.core.Layer = L.Class.extend({
 		map.on("layeradd", $.proxy(this.onLayerAdd, this));
 		
 		smap.event.on("smap.core.createparams", function(e, p) {
-			if (self._selectedFeatureParam) {
-				p.SEL = self._selectedFeatureParam;
+			/*
+			 * Make SEL param.
+			 */
+			var selObj = {};
+			
+			/**
+			 * Add an item to the object. Adapt key name depending on layer type
+			 * (either xy or vals (for key-val)).
+			 */
+			function addToObject(layerId, vk, item) {
+				if (!selObj[layerId]) {
+					selObj[layerId] = {};
+				}
+				if (!selObj[layerId][vk]) {
+					selObj[layerId][vk] = [];
+				}
+				selObj[layerId][vk].push(item);
+			};
+			
+			// -- Iterate through vector features --
+			var f, layer, item, fs;
+			if (self._selectedFeaturesVector && self._selectedFeaturesVector.length) {
+				fs = self._selectedFeaturesVector;
+				for (var i=0,len=fs.length; i<len; i++) {
+					f = fs[i];
+					item = self._getVectorVal(f.properties, f.uniqueKey);
+					addToObject(f.layerId, "vals", item);
+					selObj[f.layerId]["key"] = f.uniqueKey;
+				}
 			}
+			
+			// -- Iterate through WMS pseudo-features --
+			if (self._selectFeaturesWms && self._selectFeaturesWms.length) {
+				fs = self._selectFeaturesWms;
+				for (var i=0,len=fs.length; i<len; i++) {
+					item = [pKey, props[pKey]];
+					addToObject(f.layerId, "xy", item);
+				}
+			}
+			console.log(selObj);
+			p.sel = encodeURIComponent( JSON.stringify(selObj) );
 		});
 		
 		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
@@ -50,69 +92,68 @@ smap.core.Layer = L.Class.extend({
 				}
 			}
 			if (p.SEL) {
-				var arrSel = p.SEL.split(":"),
-					s,
+				var obj = JSON.parse(decodeURIComponent( p.SEL )),
 					self = this,
-					layer;
-				var layerId = decodeURIComponent(arrSel[0]),
-					key = decodeURIComponent(arrSel[1]),
-					val = decodeURIComponent(arrSel[2]),
-					isWms = true,
-					latLng;
-				if (arrSel.length === 5) {
-					// Coords of click were also included
-					var east = parseFloat(arrSel[3]),
-						north = parseFloat(arrSel[4]);
-					latLng = L.latLng(north, east);
-				}
+					isWms = false,
+					latLng, s, layer,
+					item, xy, layerId;
 				
-				// Test if the params are parsable (int/float). If so - this is a WMS. (WFS/vector uses key/val)
-				var tryKey = parseFloat(key),
-					tryVal = parseFloat(val);
-				if (isNaN(tryKey) || isNaN(tryVal)) {
-					isWms = false;
-				}
-				if (isWms === false) {
-					layer = smap.core.layerInst.showLayer(layerId);
-					function onLoad() {
-						var selFeature = null,
-							_layer = this,
-							_val;
-						$.each(_layer._layers, function(i, f) {
+				/**
+				 * Called when the Vector layer is loaded so we can iterate through
+				 * the features in order to select them.
+				 */
+				function onLoadWfs() {
+					var thisLayer = this,
+						thisLayerId = this.options.layerId,
+						thisKey = this.options.uniqueKey,
+						selFeature;
+					
+					var item = obj[thisLayerId];
+					var valsArr = item["vals"],
+						paramVal, i, props, keyArr, val;
+					
+					// Iterate through the layers features until we find the feature
+					// with the given key and value.
+					for (i=0,len=valsArr.length; i<len; i++) {
+						paramVal = valsArr[i];
+						selFeature = null;
+						$.each(thisLayer._layers, function(i, f) {
 							if (f.feature) {
-								var props = f.feature.properties;
-								if (key.split(";").length > 1) {
-									var keyArr = key.split(";");
-									_val = props[keyArr[0]] + ";" + props[keyArr[1]];
+								props = f.feature.properties;
+								if (thisKey.split(";").length > 1) {
+									keyArr = thisKey.split(";");
+									val = props[keyArr[0]] + ";" + props[keyArr[1]];
 								}
 								else {
-									_val = f.properties[key];
+									val = f.feature.properties[thisKey];
 								}
-								if (!_val) {
+								if (!val) {
 									return false; // No such property, no use iterating
 								}
-								if (_val.toString() === val) {
+								if (val === paramVal) {
 									selFeature = f; // This is the feature we want to select
 									return false; // break
 								}
 							}
 						});
 						if (selFeature) {
+							// Select
 							selFeature.fire("click", {
 								properties: selFeature.feature.properties,
-								latlng: latLng
+								latlng: latLng,
+								originalEvent: {shiftKey: true}
 							});
-//							self.map.fire("selected", {
-//								feature: selFeature.feature,
-//								selectedFeatures: [selFeature.feature],
-//								layer: _layer,
-//								clickEvent: {originalEvent: {}}
-//							});
-//							selFeature.openPopup(); // TODO: Could render error if popup not defined! "Try statement" or if (selFeature._layers[XX]._popup)?
 						}
-						this.off("load", onLoad);
-					};
-					layer.on("load", onLoad);
+					}
+					thisLayer.off("load", onLoadWfs);
+				};
+				
+				for (layerId in obj) {
+					item = obj[layerId];
+					if (item["key"]) {
+						layer = smap.core.layerInst.showLayer(layerId);
+						layer.on("load", onLoadWfs);
+					}
 				}
 			}
 		}, this));
@@ -125,9 +166,16 @@ smap.core.Layer = L.Class.extend({
 			map.fire("unselected", {});
 		});
 		
-		map.on("unselected", function() {
+		map.on("unselected", function(e) {
 			map.closePopup();
-			self._selectedFeatureParam = null;
+			
+			if (e.feature) {
+				self._selectedFeaturesVector.splice(e.feature, 1);
+			}
+			else {
+				self._selectedFeaturesVector = [];				
+				self._selectedFeaturesWms = [];
+			}
 		});
 		
 		map.on("selected", function(e) {
@@ -136,26 +184,30 @@ smap.core.Layer = L.Class.extend({
 //				arr[i].resetStyle(arr[i]);
 //			}
 			
-			self._selectedFeatureParam = null;
-			
 			var layer = e.layer;
 			var layerId = layer.options.layerId,
 				selectedFeature = e.feature,
-				pKey = layer.options.uniqueKey || "-",
+				selectedFeatures = e.selectedFeatures || [],
+				uniqueKey = layer.options.uniqueKey || "-",
 				shiftKeyWasPressed = e.clickEvent.originalEvent ? e.clickEvent.originalEvent.shiftKey || false : false,
 				latLng = e.latLng;
 			var props = selectedFeature.properties;
 			
-			var paramVal = null;
+			// Assign layerId to all features for fetching when creating SEL param
+			$.each(selectedFeatures, function(i, f) {
+				f.layerId = layerId;
+				f.uniqueKey = uniqueKey;
+			});
+			
 			if (layer._layers) {
-				// This is a vector layer
-				paramVal = self._makeVectorParam(layerId, props, pKey, latLng);
+				// Extend vector array and remove duplicates.
+				self._selectedFeaturesVector = utils.makeUniqueArr( self._selectedFeaturesVector.concat(selectedFeatures) );
 			}
-			else if (latLng && props.hasOwnProperty(pKey)) {
-				// This is a wms layer
-				paramVal = [encodeURIComponent(layerId), encodeURIComponent(pKey), encodeURIComponent(props[pKey])].join(":");
+			else {
+				// Do same as for above – but assign to WMS property
+				self._selectedFeaturesWms = utils.makeUniqueArr( self._selectedFeaturesWms.concat(selectedFeatures) );
 			}
-			self._selectedFeatureParam = paramVal;
+			
 			
 			self.map.closePopup();
 			if (layer._layers && !shiftKeyWasPressed && e.selectedFeatures.length <= 1) { //(e.selectedFeatures.length <= 1 && layer._layers) {
@@ -209,7 +261,7 @@ smap.core.Layer = L.Class.extend({
 		});
 	},
 	
-	_makeVectorParam: function(layerId, props, key, latLng) {
+	_getVectorVal: function(props, key) {
 		var val,
 			props = props || {};
 			paramVal = null;
@@ -220,10 +272,7 @@ smap.core.Layer = L.Class.extend({
 		else {
 			val = props[key];						
 		}
-		if (layerId && val) {
-			paramVal = [encodeURIComponent(layerId), encodeURIComponent(key), encodeURIComponent(val), utils.round(latLng.lng, 5), utils.round(latLng.lat, 5)].join(":");
-		}
-		return paramVal;
+		return val;
 	},
 	
 	initialize: function(map) {

@@ -88,6 +88,71 @@ var config = {
 						}
 					}
 				},
+				
+				{
+			    	 init: "L.GeoJSON.WFS",
+			    	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+			    	 options: {
+			    	 	layerId: "busstation",
+			    	 	displayName: "Busstationer",
+			    	 	attribution: "Malmö stads WFS",
+			    	 	inputCrs: "EPSG:3008",
+			    	 	reverseAxis: false,
+			    	 	reverseAxisBbox: true,
+			    	 	selectable: true,
+			    	 	popup: '${id}',
+			    	 	uniqueKey: "id",
+			    	 	params: {
+				    	 	typeName: "malmows:busstation",
+							version: "1.1.0",
+							maxFeatures: 10000,
+							format: "text/geojson",
+							outputFormat: "json"
+			     		},
+			     		style: {
+			     			radius: 8,
+			     		    fillColor: "#ff7800",
+			     		    color: "#000",
+			     		    weight: 1,
+			     		    opacity: 1,
+			     		    fillOpacity: 0.8
+			     		},
+			     		selectStyle: {
+			     			radius: 8,
+			     		    fillColor: "#0FF",
+			     		    color: "#0FF",
+			     		    weight: 1,
+			     		    opacity: 1,
+			     		    fillOpacity: 0.5
+			    		}
+			     	}
+			     },
+				{
+			    	 init: "L.GeoJSON.WFS",
+			    	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+			    	 options: {
+			    	 	layerId: "stadsdel",
+			    	 	displayName: "Stadsdel",
+			    	 	attribution: "Malmö stads WFS",
+			    	 	inputCrs: "EPSG:3008",
+			    	 	reverseAxis: false,
+			    	 	reverseAxisBbox: true,
+			    	 	selectable: true,
+			    	 	popup: '${id}',
+			    	 	uniqueKey: "gid",
+			    	 	params: {
+				    	 	typeName: "malmows:stadsdel",
+							version: "1.1.0",
+							maxFeatures: 10000,
+							format: "text/geojson",
+							outputFormat: "json"
+			     		},
+			     		style: {
+			     			color: '#00F',
+			     			fillOpacity: 0.3
+			     		}
+			     	},
+			     },
 		     {
 		    	 init: "L.GeoJSON.WFS",
 		    	 url: "http://geoserver.smap.se/geoserver/wfs",
