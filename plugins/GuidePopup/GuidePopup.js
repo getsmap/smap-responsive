@@ -76,7 +76,7 @@ L.Control.GuidePopup = L.Control.extend({
 			
 			var t = this.options.data[ props[this.options.attrId] ];
 			if (t && t instanceof Object) {
-				var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-primary">Visa mer</button>');
+				var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-default">Visa mer</button>');
 				$(".leaflet-popup-content").append(btn);
 				btn.data("props", props);
 				btn.on("touchstart click", $.proxy(this._onPopupClick, this));
@@ -227,7 +227,7 @@ L.Control.GuidePopup = L.Control.extend({
 		var src = arrVideoSources[0];
 		var $tagVideo;
 		if (src.search(/youtu.be|youtube/i) > -1) {
-			$tagVideo = $('<iframe src="'+src+'" width="100%" height="80%" frameborder="0" allowfullscreen></iframe>');			
+			$tagVideo = $('<iframe src="'+src+'?rel=0" width="100%" height="80%" frameborder="0" allowfullscreen></iframe>');			
 		}
 		else if (src.search(/vimeo.com/i)) {
 			$tagVideo = $('<iframe src="'+src+'" width="100%" height="80%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
