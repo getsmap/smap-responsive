@@ -204,7 +204,11 @@ smap.core.Select = L.Class.extend({
 		 */
 		smap.event.on("smap.core.createparams", function(e, p) {
 			/*
-			 * Make SEL param.
+			 * Make SEL param. It will look like this (schematic code):
+			 * var obj = {
+			 * 		"theLayerId": {vals: [2,6,11,172], key: "fid"}, // For WFS
+			 * 		"theLayerIdWms": {xy: [[13.1,55.2]} // For WMS
+			 * }
 			 */
 			var selObj = {};
 			
