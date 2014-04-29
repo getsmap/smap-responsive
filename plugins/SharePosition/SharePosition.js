@@ -139,7 +139,7 @@ L.Control.SharePosition = L.Control.extend({
 			}
 		});
 		
-		this.layer.params.filter = this._makeFilter();
+		this.layer.options.params.filter = this._makeFilter();
 		
 		this.layer.off("load");
 		this.layer.on("load", function() {
@@ -220,7 +220,6 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_onLocationError: function(e) {
 		smap.cmd.loading(false);
-		console.log("Geolocate error: +"+e.message);
 //		this._setLocateSettings();
 	},
 	
@@ -271,7 +270,6 @@ L.Control.SharePosition = L.Control.extend({
 			return false;
 		}
 		this._working = true;
-		console.log("Storing position");
 		$.ajax({
 			url: this.options.useProxy ? smap.config.ws.proxy + encodeURIComponent( this.options.wfsSource ) : this.options.wfsSource,
 			type: "POST",
@@ -294,7 +292,7 @@ L.Control.SharePosition = L.Control.extend({
 	
 	_refresh: function() {
 		// Before refresh - update the age filter
-		this.layer.params.filter = this._makeFilter();
+		this.layer.options.params.filter = this._makeFilter();
 		this.layer._refresh(true);
 	},
 	
