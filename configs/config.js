@@ -188,9 +188,42 @@ var config = {
 		     },
 		     {
 				  init: "L.GeoJSON.WFS",
+				  url: "http://xyz.malmo.se:8081/geoserver/wfs",
+				  options: {
+					  layerId: "vhamnen_pt",
+					  displayName: "Punkter av intresse",
+					  params: {
+				    	 typeName: "malmows:POI_VHAMN_PT"
+		     		  },
+					  attribution: "Malmö stads WFS",
+					  inputCrs: "EPSG:4326",
+					  uniqueKey: "gid",
+					  reverseAxis: false,
+					  reverseAxisBbox: true,
+					  popup: 
+ 						'<div>${function(p) {'+
+   							'var out = "";'+
+   							'var style="margin-right:.3em;";'+
+   							'if (p.urlvideo) {'+
+   								'    out += \'<span style="\'+style+\'" class="fa fa-film fa-2x"></span>\';'+
+   								'}'+
+   							'if (p.urlsound) {'+
+   							'    out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-2x"></span>\';'+
+   							'}'+
+   						'if (p.picture && p.picture.split(",").length > 1) {'+
+   						'    out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-2x"></span>\';'+
+   						'}'+
+   					'return out;'+
+						'}'+
+ 					'}</div>'+
+	  				'<h4>${id}: ${namn} </h4><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
+			        }
+		  		},
+		     {
+				  init: "L.GeoJSON.WFS",
 				  url: "http://geoserver.smap.se/geoserver/wfs",
 				  options: {
-					  layerId: "malmows_ulf_stadsdel",
+					  layerId: "malmows_kvarter",
 					  displayName: "Kvarter",
 					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:3008",

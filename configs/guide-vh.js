@@ -11,6 +11,7 @@ var config = {
 				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
 			}
 		},
+		
 		ol: [
 		     {
 				  init: "L.GeoJSON.WFS",
@@ -18,43 +19,37 @@ var config = {
 				  options: {
 					  layerId: "vhamnen_pt",
 					  displayName: "Punkter av intresse",
-					  attribution: "Malmö stads WFS",
 					  params: {
-		    	 			typeName: "malmows:GUIDE_VHAMNEN_PT",
-							version: "1.1.0",
-							maxFeatures: 10000,
-							format: "text/geojson",
-							outputFormat: "json"
-			 		  },
-			 		  reverseAxis: false,
-			 		  reverseAxisBbox: true,
-			 		  uniqueKey: "id",
-			 		  selectable: true,
+				    	 typeName: "malmows:POI_VHAMN_PT"
+		     		  },
+					  attribution: "Malmö stads WFS",
 					  inputCrs: "EPSG:4326",
+					  uniqueKey: "gid",
+					  reverseAxis: false,
+					  reverseAxisBbox: false,
 					  popup: 
-						  '<div>${function(p) {'+
-							    'var out = "";'+
-							    'var style="margin-right:.3em;";'+
-							    'if (p.urlvideo) {'+
-							    '    out += \'<span style="\'+style+\'" class="fa fa-video-camera fa-2x"></span>\';'+
-							    '}'+
-							    'if (p.urlsound) {'+
-							    '    out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-2x"></span>\';'+
-							    '}'+
-							    'if (p.picture && p.picture.split(",").length > 1) {'+
-							    '    out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-2x"></span>\';'+
-							    '}'+
-							    'return out;'+
-							'}'+
-						  '}</div>'+
-						  
-						  '<h4>${id}: ${namn} </h4><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
+  						'<div>${function(p) {'+
+    							'var out = "";'+
+    							'var style="margin-right:.3em;";'+
+    							'if (p.urlvideo) {'+
+    								'    out += \'<span style="\'+style+\'" class="fa fa-film fa-2x"></span>\';'+
+    								'}'+
+    							'if (p.urlsound) {'+
+    							'    out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-2x"></span>\';'+
+    							'}'+
+    						'if (p.picture && p.picture.split(",").length > 1) {'+
+    						'    out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-2x"></span>\';'+
+    						'}'+
+    					'return out;'+
+						'}'+
+  					'}</div>'+
+	  				'<h4>${id}: ${namn} </h4><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
 			        }
 		  		}
 		     ],
 			
 		bl: [
-			{
+	  	 	{
 				init: "L.TileLayer",
 				url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
 				options: {
@@ -182,7 +177,7 @@ var config = {
 		           				},
 		           				5: {
 		           				// Social Hållbarhet
-		           					iconType: "video",
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
@@ -224,7 +219,7 @@ var config = {
 		           				},
 		           				7: {
 		           				// Varvsparken och ekologisk lekplats
-		           					iconType: "video",
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
@@ -267,7 +262,7 @@ var config = {
 		           				},
 		           				9: {
 		           				// Havet
-		           					iconType: "video",
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
@@ -291,7 +286,7 @@ var config = {
 		           				},
 		           				10: {
 		           				// Cykling
-		           					iconType: "video",
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
@@ -315,7 +310,7 @@ var config = {
 		           				},
 		           				11: {
 		           				// Turning Torso
-		           					iconType: "video",
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
@@ -377,7 +372,7 @@ var config = {
 		           				},
 		           				14: {
 		           				// Parkerna
-		           					iconType: "video",
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
@@ -476,7 +471,7 @@ var config = {
 		           				},
 		           				19: {
 		           				// Konst
-		           					iconType: "video",
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [
@@ -500,7 +495,7 @@ var config = {
 		           				},
 		           				20: {
 		           				// Det gröna
-		           					iconType: "video",
+		           					iconType: null,
 		           					dialogTitle: "${namn}",
 		           					tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 		        	   				tabMedia: [

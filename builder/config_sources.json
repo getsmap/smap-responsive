@@ -22,6 +22,7 @@
 		"core/js/mainConfig.js",
 		"core/js/Div.js",
 		"core/js/Layer.js",
+		"core/js/Select.js",
 		"core/js/Param.js",
 		"core/js/PluginHandler.js",
 		"core/js/cmd.js",

@@ -19,6 +19,7 @@ smap.core.Init = L.Class.extend({
 		this.drawMap();
 		this.bindEvents(this.map);
 		smap.core.layerInst = new smap.core.Layer(this.map);
+		smap.core.selectInst = new smap.core.Select(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
 		smap.core.pluginHandlerInst = new smap.core.PluginHandler(this.map);
 		var params = options.params || smap.core.paramInst.getParams();
