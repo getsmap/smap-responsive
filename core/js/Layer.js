@@ -85,23 +85,6 @@ smap.core.Layer = L.Class.extend({
 		return this._layers[layerId] || null;
 	},
 	
-	_setSelectStyle: function(e) {
-		var layer = e.target;
-
-		if (layer.setStyle) {
-			layer.setStyle(this.options.selectStyle);			
-		}
-
-	    if (layer.bringToFront && !L.Browser.ie && !L.Browser.opera) {
-	    	layer.bringToFront();
-	    }
-	},
-	
-	_resetStyle: function(layer) {
-		layer.eachLayer(function(lay) {
-			layer.resetStyle(lay);
-		});
-	},
 	
 	/**
 	 * Used for resetting style on map click – to avoid binding
