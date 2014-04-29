@@ -245,8 +245,9 @@ smap.core.Select = L.Class.extend({
 					addToObject(f.layerId, "xy", item);
 				}
 			}
-			console.log(selObj);
-			p.sel = encodeURIComponent( JSON.stringify(selObj) );
+			if ($.isEmptyObject(selObj) === false) {
+				p.sel = encodeURIComponent( JSON.stringify(selObj) );				
+			}
 		});
 		
 		/**
@@ -272,7 +273,7 @@ smap.core.Select = L.Class.extend({
 					
 					var item = obj[thisLayerId];
 					var valsArr = item["vals"],
-					paramVal, i, props, keyArr, val;
+						paramVal, i, props, keyArr, val;
 					
 					// Iterate through the layers features until we find the feature
 					// with the given key and value.

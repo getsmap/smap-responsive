@@ -277,11 +277,20 @@ L.Control.SelectWMS = L.Control.extend({
 			}
 			val = $.trim(val);
 			
-			var onlyNumbers = /^[0-9]+$/.test(val);
-			if ( onlyNumbers === true) {
+			var onlyNumbers = /^[0-9.]+$/.test(val);
+			var s = val.split(".");
+			var commaIsOk = s.length <= 2 && s[0].length > 0 && (s.length === 1 || s.length === 2 && s[1].length > 0);
+			if ( onlyNumbers === true && commaIsOk) {
 				// Convert string to number if possible
 				try {
-					nbr = parseFloat(val);
+					switch(s.length) {
+					case 1:
+						nbr = parseInt(val);						
+						break;
+					case 2:
+						nbr = parseFloat(val);						
+						break;
+					}
 				}
 				catch (e) {}
 				if (nbr && isNaN(nbr) === false) {
