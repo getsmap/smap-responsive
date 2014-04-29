@@ -10,10 +10,8 @@ L.Control.SelectWMS = L.Control.extend({
 			var self = other.context;
 			
 			// Fetch layerId
-//			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
-//			var layerId = t.options.layerId;
-			
-			layerId = self.options.layerId;
+			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
+			var layerId = t.options.layerId;
 			
 			if (props && $.isEmptyObject(props) === false) {
 				self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
@@ -23,12 +21,15 @@ L.Control.SelectWMS = L.Control.extend({
 				var f = {
 					geometry: {coordinates: [latLng.lng, latLng.lat]},
 					latLng: latLng,
-					properties: props
+					properties: props,
+					layerId: layerId,
+					uniqueKey: t.options.uniqueKey
 				};
 				other.map.fire("selected", {
 					layer: self,
 					feature: f,
-					selectedFeatures: [f],
+					latLng: latLng,
+					selectedFeatures: [f]
 				});
 			}
 		},
@@ -62,28 +63,25 @@ L.Control.SelectWMS = L.Control.extend({
 	},
 	
 	_applyParam: function(sel) {
-		var s,
-			layer;
-		var arrSel = sel.split(":");
-		var layerId = arrSel[0],
-			east = arrSel[1],
-			north = arrSel[2],
-			isWms = true;
+		var layer,
+			obj = JSON.parse(decodeURIComponent( sel ));
 		
-		// Test if the params are parsable (int/float). If so - this is a WMS. (WFS uses key/val)
-		var tryKey = parseFloat(east),
-			tryVal = parseFloat(north);
-		if (isNaN(tryKey) || isNaN(tryVal)) {
-			isWms = false;
+		for (layerId in obj) {
+			item = obj[layerId];
+			if (item["xy"]) {
+				layer = smap.core.layerInst.showLayer(layerId);
+				
+				var xyArr = item["xy"][0]; 
+				latLng = L.latLng(xyArr[1], xyArr[0]); // val is lat, key is lon
+				
+				this.onMapClick({
+					latlng: latLng,
+					_layers: [layer]
+				});
+				
+			}
 		}
-		if (isWms === true) {
-			layer = smap.core.layerInst.showLayer(layerId);
-			latLng = L.latLng(parseFloat(north), parseFloat(east)); // val is lat, key is lon
-			this.onMapClick({
-				latlng: latLng,
-				_layers: [layer]
-			});
-		}
+		
 	},
 	
 	_bindEvents: function() {

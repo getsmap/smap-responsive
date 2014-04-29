@@ -91,13 +91,13 @@ smap.core.Select = L.Class.extend({
 				latLng = e.latLng;
 			var props = selectedFeature.properties;
 			
-			// Assign layerId to all features to enable fetching a feature during SEL param creation
-			$.each(selectedFeatures, function(i, f) {
-				f.layerId = layerId;
-				f.uniqueKey = uniqueKey;
-			});
 			
 			if (isWfs) {
+				// Assign layerId to all features to enable fetching a feature during SEL param creation
+				$.each(selectedFeatures, function(i, f) {
+					f.layerId = layerId;
+					f.uniqueKey = uniqueKey;
+				});
 				if (shiftKeyWasPressed) {
 					// Extend vector array and remove duplicates.
 					self._selectedFeaturesVector = utils.makeUniqueArr( self._selectedFeaturesVector.concat(selectedFeatures) );
@@ -160,7 +160,7 @@ smap.core.Select = L.Class.extend({
 			/**
 			 * If WMS GetFeatureInfo – create a popup with the response.
 			 */
-			if (!layer._layers && latLng) {
+			if (!isWfs && latLng) {
 				for (var typeName in props) {} // because of the way typename is stored
 				
 				// Get popup html for this typename
@@ -235,10 +235,13 @@ smap.core.Select = L.Class.extend({
 			}
 			
 			// -- Iterate through WMS pseudo-features --
-			if (self._selectFeaturesWms && self._selectFeaturesWms.length) {
-				fs = self._selectFeaturesWms;
+			if (self._selectedFeaturesWms && self._selectedFeaturesWms.length) {
+				fs = self._selectedFeaturesWms;
 				for (var i=0,len=fs.length; i<len; i++) {
-					item = [pKey, props[pKey]];
+					f = fs[i];
+//					for (var typeName in f.properties) {}
+//					item = [f.uniqueKey, f.properties[typeName][0][f.uniqueKey]];
+					item = [f.latLng.lng, f.latLng.lat];
 					addToObject(f.layerId, "xy", item);
 				}
 			}
@@ -252,10 +255,10 @@ smap.core.Select = L.Class.extend({
 		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
 			if (p.SEL) {
 				var obj = JSON.parse(decodeURIComponent( p.SEL )),
-				self = this,
-				isWms = false,
-				latLng, s, layer,
-				item, xy, layerId;
+					self = this,
+					isWms = false,
+					latLng, s, layer,
+					item, xy, layerId;
 				
 				/**
 				 * Called when the Vector layer is loaded so we can iterate through
