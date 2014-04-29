@@ -277,13 +277,16 @@ L.Control.SelectWMS = L.Control.extend({
 			}
 			val = $.trim(val);
 			
-			// Convert string to number if possible
-			try {
-				nbr = parseFloat(val);
-			}
-			catch (e) {}
-			if (nbr && isNaN(nbr) === false) {
-				val = nbr;
+			var onlyNumbers = /^[0-9]+$/.test(val);
+			if ( onlyNumbers === true) {
+				// Convert string to number if possible
+				try {
+					nbr = parseFloat(val);
+				}
+				catch (e) {}
+				if (nbr && isNaN(nbr) === false) {
+					val = nbr;
+				}
 			}
 			dict[ $.trim(t[0]) ] = val;
 		}
