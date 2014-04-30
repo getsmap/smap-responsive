@@ -1,5 +1,6 @@
 L.Control.Info = L.Control.extend({
 	options: {
+        addToMenu: true,
 		autoActivate: false,
 		position: 'bottomright',
 		_lang: {
@@ -88,13 +89,24 @@ L.Control.Info = L.Control.extend({
 	
 	_drawBtn: function() {
 		var self = this;
-		var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info-circle"></span></button>');
+
+        if(this.options.addToMenu) {
+            smap.cmd.addToolButton( "", "fa fa-info-circle", function () {
+                self.activate();
+                return false;
+            },null);
+        }
+
+        else {
+            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info-circle"></span></button>');
 //		$("#mapdiv").append($btn);
-		$btn.on("click", function() {
-			self.activate();
-			return false;
-		});
-		this.$container.append($btn);
+            $btn.on("click", function () {
+                self.activate();
+                return false;
+            });
+            this.$container.append($btn);
+        }
+
 	}
 });
 

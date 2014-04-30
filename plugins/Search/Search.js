@@ -148,7 +148,8 @@ L.Control.Search = L.Control.extend({
 		$entry.on("blur", deactivate);
 		
 		
-		$("#mapdiv").append( $searchDiv );
+		//$("#mapdiv").append( $searchDiv );
+
 		
 //		var bHound = new Bloodhound({
 //			datumTokenizer: Bloodhound.tokenizers.whitespace,

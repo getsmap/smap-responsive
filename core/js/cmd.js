@@ -12,7 +12,7 @@ smap.cmd = {
 		 * @returns {void}
 		 */
 		addToolButton: function(label, iconClass, onClick, options) {
-			var pluginToolbar = "Navbar";
+			var pluginToolbar = "Menu";
 			options = options || {
 				index: null,
 				toggle: false,
@@ -20,8 +20,8 @@ smap.cmd = {
 			};
 			smap.core.pluginHandlerInst.callPlugin(pluginToolbar, "addButton", [label, iconClass, onClick, options]); 
 		},
-		
-		
+
+
 		/**
 		 * Create params as a string.
 		 * @param addRoot {Boolean}

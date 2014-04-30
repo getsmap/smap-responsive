@@ -1,6 +1,7 @@
 L.Control.ShareLink = L.Control.extend({
     options: {
-        position: 'bottomright' // just an example
+        position: 'bottomright', // just an example
+        addToMenu: true
     },
 
     _lang: {
@@ -57,14 +58,23 @@ L.Control.ShareLink = L.Control.extend({
 
     _createBtn: function() {
 
+
         var self = this;
-        var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-share-square-o"></span></button>');
-//		$("#mapdiv").append($btn);
-        $btn.on("click", function() {
-            self.activate();
-            return false;
-        });
-        this.$container.append($btn);
+        if(this.options.addToMenu) {
+            smap.cmd.addToolButton( "", "fa fa-share-square-o", function () {
+                self.activate();
+                return false;
+            },null);
+        }
+
+        else {
+            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-share-square-o"></span></button>');
+            $btn.on("click", function () {
+                self.activate();
+                return false;
+            });
+            this.$container.append($btn);
+        }
 
     },
 
