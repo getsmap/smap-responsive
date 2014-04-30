@@ -20,7 +20,8 @@ allowedHosts = ['localhost', 'localhost:8080', 'localhost:80',
                 'www.smap.se', 'www.smap.se:8080', 'sandbox.smap.se',
                 'xyz.malmo.se', 'xyz.malmo.se:8081',
                 "webapps05.malmo.se", "sbkspace.malmo.se", "141.255.184.63", "141.255.184.63:8080",
-                "161.52.9.230", "161.52.9.230:8080", "sbkvmgeoserver.sbkmalmo.local:8080", "sbkvmgeoserver.sbkmalmo.local"]
+                "161.52.9.230", "161.52.9.230:8080", "sbkvmgeoserver.sbkmalmo.local:8080", "sbkvmgeoserver.sbkmalmo.local",
+                "www.vakant.nu"]
 
 method = os.environ["REQUEST_METHOD"]
 
