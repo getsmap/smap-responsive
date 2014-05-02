@@ -1,1 +1,1 @@
-L.Icon.Default.imagePath = "lib/leaflet-0.7.1/images/";
+L.Icon.Default.imagePath = "lib/leaflet-0.7.2/images/";

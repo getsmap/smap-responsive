@@ -62,7 +62,7 @@ var config = {
 		     },
 		     {
 					init: "L.GeoJSON.WFS",
-					url: "http://193.17.67.229/sbkqgis/cgi-bin/externt/kkarta/qgis_mapserv.fcgi",
+					url: "http://193.17.67.229/cgi-bin/externt/kkarta/qgis_mapserv.fcgi",
 					options: {
 						layerId: "wfstest_qgis_server",
 						displayName: "Elnät Kristianstad",
@@ -70,12 +70,15 @@ var config = {
 						inputCrs: "EPSG:3008",
 						reverseAxis: false,
 						reverseAxisBbox: false,
+						xhrType: "GET",
 						selectable: true,
 						popup: 'agare: ${agare}',
 						uniqueKey: "id",
 						params: {
+//		    	 			version: "1.0.0"
 							typeName: "c4elnat",
-							format: "text/geojson",
+							format: "text/xml",
+//							srs: "EPSG:3008",
 							maxFeatures: 10000,
 							outputFormat: "GeoJSON"
 						},
@@ -296,15 +299,16 @@ var config = {
 		     ],
 		     
 		bl: [
-  	 	{
+		{
 			init: "L.TileLayer",
-			url: "http://{s}.tile.cloudmade.com/f02f33a9158a425199542d3493b9189d/998/256/{z}/{x}/{y}.png",
+			url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 			options: {
 				layerId: "osm",
-				displayName: "OSM"
+				displayName: "OSM",
+				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
+				maxZoom: 18
 			}
 		},
-
 	 	{
 			init: "L.TileLayer",
 			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
@@ -317,9 +321,6 @@ var config = {
 				tms: true
 			}
 		},
-
-
-		
 		{
 			init: "L.TileLayer.WMS",
 			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/

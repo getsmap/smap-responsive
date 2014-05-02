@@ -1,4 +1,5 @@
 L.Control.Menu = L.Control.extend({
+
     options: {
         position: 'topright' // just an example
     },
@@ -25,11 +26,9 @@ L.Control.Menu = L.Control.extend({
     },
 
     onAdd: function(map) {
-
-
         this.map = map;
-
         this._container = L.DomUtil.create('div', 'leaflet-control-Menu'); // second parameter is class name
+
         L.DomEvent.disableClickPropagation(this._container);
 
         this.$container = $(this._container);
@@ -38,48 +37,59 @@ L.Control.Menu = L.Control.extend({
         return this._container;
     },
 
+    
+
     addButton: function(id, iconClass, clickFunc, options){
-        var $btn = $('<button type="button" id="bapp" class="btn btn-default"><span class="' + iconClass + '"></span></button>');
+        var $btn = $('<li><a href=""><span class="'+iconClass+'"></span> Getting started</a></li>');
         $btn.on("click", clickFunc);
         $("#btns").append($btn);
     },
 
     _createMenu: function() {
 
-        var $div = $('<nav id="smap-menu-div"  class="navbar navbar-default" role="navigation" style="border:none; background-color: transparent; background: transparent;>' +
-            '<div class="container-fluid">' +
-            '<div class="navbar-header" >' +
-            '<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">' +
-            '<span class="sr-only">Toggle navigation</span>' +
-            '<span class="icon-bar"></span>' +
-            '<span class="icon-bar"></span>' +
-            '<span class="icon-bar"></span>' +
-            '</button>' +
-            '</div>' +
-            '<div class="collapse navbar-collapse" id="theNavBar">' +
-            '<ul id="btns" class="nav navbar-nav">' +
-            '</ul>' +
-            '</div>' +
-            '</div>' +
-            '</nav>');
+	    var $div = $(
+	
+	    '<header id="smap-menu-div" class="navbar navbar-static-top bs-docs-nav" role="banner">'+
+	      '<div class="container">'+
+	        '<div class="navbar-header">'+
+	      '    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">'+
+	      '      <span class="sr-only">Toggle navigation</span>'+
+	      '      <span class="fa fa-bars"></span>'+
+	      '    </button>'+
+	      '  </div>'+
+	      '  <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">'+
+	      '    <ul id="btns" class="nav navbar-nav navbar-right">'+
+	      '    </ul>'+
+	//      '    <ul class="nav navbar-nav navbar-right">'+
+	//      '      <li><a href="http://expo.getbootstrap.com" onclick="_gaq.push(['_trackEvent', 'Navbar', 'Community links', 'Expo']);">Expo</a></li>'+
+	//      '      <li><a href="http://blog.getbootstrap.com" onclick="_gaq.push(['_trackEvent', 'Navbar', 'Community links', 'Blog']);">Blog</a></li>'+
+	//      '    </ul>'+
+	      '  </nav>'+
+	      '</div>'+
+	    '</header>'
+	    );
 
-
-        $("#mapdiv").append($div);
+        $("body").append($div);
         //this.$container.append($div);
 
     },
 
 
+
+
+
     onRemove: function(map) {
+
         // Do everything "opposite" of onAdd – e.g. unbind events and destroy things
         // map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
     }
 });
 
+
 /*
  * This code lets us skip "new" before the
  * Class name when instantiating it.
  */
-L.control.SharePos = function (options) {
+L.control.menu = function (options) {
     return new L.Control.Menu(options);
 };

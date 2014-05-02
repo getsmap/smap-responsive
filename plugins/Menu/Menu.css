@@ -1,23 +1,11 @@
 #smap-menu-div {
-    position: relative;
-    float:left;
-    left: 2%;
-    top: 2px;
-    z-index: 1001;
-    transition: left .3s, max-width .3s;
-    -webkit-transition: left .3s, max-width .3s;
-    width: 96%;
-    transition: max-width .3s;
-    -webkit-transition: max-width .3s;
-
-
+	z-index: 1001;
+	background-color: rgba(255,255,255,.6);
 }
 
 @media (min-width: 992px) {
-
     #smap-menu-div {
-        left: 310px;
-    }
+        left: 300px;
+	}
+
 }
-
-
