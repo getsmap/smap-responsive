@@ -75,7 +75,6 @@ var config = {
 						uniqueKey: "id",
 						params: {
 							typeName: "c4elnat",
-							srsName: "EPSG:3008",
 							format: "text/geojson",
 							maxFeatures: 10000,
 							outputFormat: "GeoJSON"
@@ -440,15 +439,5 @@ var config = {
 //		           	   init: "L.Control.SideBars",
 //		           	   options: {}
 //		           }
-
-		           
        ]
-		
-		
 };
-
-// Set proxy for WFS
-L.GeoJSON.WFS.proxy = config.ws[document.domain].proxy;
-
-// Set proxy for SelectWMS
-L.Control.SelectWMS.proxy = config.ws[document.domain].proxy;

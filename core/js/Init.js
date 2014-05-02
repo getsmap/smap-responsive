@@ -26,6 +26,7 @@ smap.core.Init = L.Class.extend({
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				smap.config.configName = params.CONFIG; // Store for creating params
+				
 				smap.config.langCode = params.LANG || navigator.language.split("-")[0] || "en";
 				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
@@ -38,6 +39,13 @@ smap.core.Init = L.Class.extend({
 	
 	applyConfig: function(theConfig) {
 		this.preProcessConfig(theConfig);
+		
+		
+		// Set proxy for layers and controls
+		var proxy = smap.config.ws.proxy;
+		L.GeoJSON.WFS.prototype.proxy = proxy;
+		L.GeoJSON.Custom.prototype.proxy = proxy;
+		L.Control.SelectWMS.prototype.proxy = proxy;
 		
 		// Extend map options
 		$.extend(this.map.options, theConfig.mapOptions || {});
