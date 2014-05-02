@@ -399,6 +399,12 @@ var config = {
 		        		   buffer: 5
 		        	   }
 		           },
+		           {
+		        	   init: "L.Control.SelectVector",
+		        	   options: {
+		        		   buffer: 5
+		        	   }
+		           },
 //		           {
 //		        	   init: "L.Control.MyPlugin",
 //		        	   options: {

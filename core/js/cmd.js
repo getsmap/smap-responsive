@@ -74,6 +74,17 @@ smap.cmd = {
 			return smap.core.layerInst._addLayerWithConfig(layerConfig);
 		},
 		
+		/**
+		 * Get the layer with given layerId (must be specified in layer's
+		 * options object for this to work).
+		 * 
+		 * @param layerId {String}
+		 * @returns {L.ILayer}
+		 */
+		getLayer: function(layerId) {
+			return smap.core.layerInst._getLayer(layerId);
+		},
+		
 		getLayerConfig: function(layerId) {
 			return this.getLayerConfigBy("layerId", layerId);
 		},

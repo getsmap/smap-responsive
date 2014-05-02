@@ -82,7 +82,7 @@ smap.core.Select = L.Class.extend({
 //			}
 			
 			var layer = e.layer;
-			var isWfs = layer.hasOwnProperty("_layers"),
+			var isVector = layer.hasOwnProperty("_layers"),
 				layerId = layer.options.layerId,
 				selectedFeature = e.feature,
 				selectedFeatures = e.selectedFeatures || [],
@@ -92,7 +92,7 @@ smap.core.Select = L.Class.extend({
 			var props = selectedFeature.properties;
 			
 			
-			if (isWfs) {
+			if (isVector) {
 				// Assign layerId to all features to enable fetching a feature during SEL param creation
 				$.each(selectedFeatures, function(i, f) {
 					f.layerId = layerId;
@@ -129,7 +129,7 @@ smap.core.Select = L.Class.extend({
 			}
 			self.map.closePopup();
 			
-			if (isWfs && !shiftKeyWasPressed) {
+			if (isVector && !shiftKeyWasPressed) {
 				if (self._selectedFeaturesVector.length <= 1) {
 					var arr = self._wfsLayers,
 						lay;
@@ -160,7 +160,7 @@ smap.core.Select = L.Class.extend({
 			/**
 			 * If WMS GetFeatureInfo – create a popup with the response.
 			 */
-			if (!isWfs && latLng) {
+			if (!isVector && latLng) {
 				for (var typeName in props) {} // because of the way typename is stored
 				
 				// Get popup html for this typename

@@ -28,6 +28,7 @@
 		"core/js/cmd.js",
 		"core/js/Init.js",
 		"plugins/SelectWMS/SelectWMS.js",
+		"plugins/SelectVector/SelectVector.js",
 		"plugins/Geolocate/Geolocate.js",
 		"plugins/GuideIntroScreen/GuideIntroScreen.js",
 		"plugins/GuidePopup/GuidePopup.js",
