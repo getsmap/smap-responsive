@@ -191,6 +191,8 @@ L.Control.SelectVector = L.Control.extend({
 			parentLayer.resetStyle.call(parentLayer, lay);
 		}
 		else {
+			f.layerId = layerId;
+			f.uniqueKey = parentLayer.options.uniqueKey;
 			this._selectedFeatures.push(f);
 			var _lay = this._layerFromFeature(f, parentLayer);
 			if (_lay.setStyle) {
@@ -203,6 +205,7 @@ L.Control.SelectVector = L.Control.extend({
 				latLng: e.latlng,
 				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
 			});
+			console.log(this._selectedFeatures.length);
 		}
 		
 	},

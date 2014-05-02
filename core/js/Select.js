@@ -94,10 +94,10 @@ smap.core.Select = L.Class.extend({
 			
 			if (isVector) {
 				// Assign layerId to all features to enable fetching a feature during SEL param creation
-				$.each(selectedFeatures, function(i, f) {
-					f.layerId = layerId;
-					f.uniqueKey = uniqueKey;
-				});
+//				$.each(selectedFeatures, function(i, f) {
+//					f.layerId = layerId;
+//					f.uniqueKey = uniqueKey;
+//				});
 				if (shiftKeyWasPressed) {
 					// Extend vector array and remove duplicates.
 					self._selectedFeaturesVector = utils.makeUniqueArr( self._selectedFeaturesVector.concat(selectedFeatures) );
