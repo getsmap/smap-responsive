@@ -14,6 +14,7 @@
 		"lib/OpenLayers-smap.js",
 		"lib/leaflet-plugins/Leaflet.awesome-markers-2.0/dist/leaflet.awesome-markers.min.js",
 		"lib/leaflet-plugins/leaflet-usermarker/src/leaflet.usermarker.js",
+		"lib/leaflet-plugins/GeoJSON.Custom.js",
 		"lib/leaflet-plugins/GeoJSON.WFS.js",
 		"lib/leaflet-plugins/Leaflet.markercluster/dist/leaflet.markercluster.js",
 		"lib/leaflet-plugins/Leaflet.label/dist/leaflet.label.js",
@@ -27,17 +28,19 @@
 		"core/js/PluginHandler.js",
 		"core/js/cmd.js",
 		"core/js/Init.js",
-		"plugins/SelectWMS/SelectWMS.js",
-		"plugins/SelectVector/SelectVector.js",
 		"plugins/Geolocate/Geolocate.js",
 		"plugins/GuideIntroScreen/GuideIntroScreen.js",
 		"plugins/GuidePopup/GuidePopup.js",
 		"plugins/LayerSwitcher/LayerSwitcher.js",
-		"plugins/ShareTweet/ShareTweet.js",
-		"plugins/SharePosition/SharePosition.js",
 		"plugins/Search/Search.js",
+		"plugins/SelectVector/SelectVector.js",
+		"plugins/SelectWMS/SelectWMS.js",
+		"plugins/ShareLink/ShareLink.js",
+		"plugins/SharePosition/SharePosition.js",
+		"plugins/ShareTweet/ShareTweet.js",
 		"plugins/Info/Info.js",
 		"plugins/Menu/Menu.js",
+		"plugins/Zoombar/Zoombar.js",
 		"builder/overrides.js"
     ],
     
@@ -64,7 +67,8 @@
 		"plugins/SharePosition/SharePosition.css",
 		"plugins/Search/Search.css",
 		"plugins/Info/Info.css",
-		"plugins/Menu/Menu.css"
+		"plugins/Menu/Menu.css",
+		"plugins/Zoombar/Zoombar.css"
     ]
     
     

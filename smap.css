@@ -1768,4 +1768,10 @@ Version: 1.0
         left: 300px;
 	}
 
+}.leaflet-control-zoombar button {
+
+    display: block;
+    margin: 2px;
+
+
 }

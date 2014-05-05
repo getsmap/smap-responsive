@@ -16408,7 +16408,166 @@ return node;},CLASS_NAME:"OpenLayers.Format.Filter.v1_1_0"});/*
         return new L.UserMarker(latlng, options);
     };
 })(window);
-L.GeoJSON.WFS = L.GeoJSON.extend({
+L.GeoJSON.Custom = L.GeoJSON.extend({
+	
+	CLASS_NAME: "L.GeoJSON.Custom",
+	
+	options: {
+		params: {},
+		style: {},
+		inputCrs: "EPSG:4326",
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, this.style);
+		}
+	},
+	
+	initialize: function(serviceUrl, options) {
+		options = options || {};
+		
+		L.GeoJSON.prototype.initialize.call(this, null, options);
+//		$.each(options.params, function(param){
+//			var tempString = "&" + param + "=" + options.params[param];
+//			serviceUrl += tempString;
+//		});
+		serviceUrl += $.param(options.params);
+		this.serviceUrl = serviceUrl;
+		
+		var self = this;
+		this.getFeature(function() {
+			var layer = self.addData(self.jsonData);
+		});
+		
+	},
+	
+	//onAdd: function(map) {
+	//	L.LayerGroup.prototype.onAdd.call(this, map);
+	//},
+    
+    /*_projectBounds: function(bounds, fromEpsg, toEpsg) {
+    	this.centerLonLat = null;
+    	
+    	var sw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getSouth()]),
+    		se = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getSouth()]),
+    		ne = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getNorth()]),
+    		nw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getNorth()]);
+
+        var left   = Math.min(sw[0], se[0]),
+        	bottom = Math.min(sw[1], se[1]),
+        	right  = Math.max(nw[0], ne[0]),
+        	top    = Math.max(nw[1], ne[1]);
+        
+        bounds = L.latLngBounds(L.latLng(bottom, left), L.latLng(top, right));
+        return bounds;
+    },*/
+	
+	getFeature: function(callback) {
+		var url = this.proxy ? this.proxy + encodeURIComponent(this.serviceUrl) : this.serviceUrl;
+		this.fire("loading", {layer: this});
+		if (this.xhr) {
+			this.xhr.abort();
+			this.xhr = null;
+		}
+		this.xhr = $.ajax({
+			url: url,
+			type: "POST",
+			data: this.options.params,
+			context: this,
+			success: function(response) {
+				if (response.type && response.type == "FeatureCollection") {
+					this.jsonData = response;
+					if (this.options.inputCrs !== "EPSG:4326") {
+						this.toGeographicCoords(this.options.inputCrs);
+					}
+					callback();
+					this.fire("load", {layer: this});
+				}				
+			},
+			dataType: "json"
+		});
+	},
+	
+	swapCoords: function(coords) {
+		coords = [coords[1], coords[0]];
+		return coords;
+	},
+	
+	toGeographicCoords: function(inputCrs) {
+		function projectPoint(coordinates /*[easting, northing]*/, inputCrs) {
+			var source = inputCrs || "EPSG:4326",
+				dest = "EPSG:4326",
+				x = coordinates[0], 
+				y = coordinates[1];
+			return window.proj4(source, dest, [x, y]); // [easting, northing]
+		};
+		
+		var coords, coordsArr, projectedCoords, i, p, geom,
+			features = this.jsonData.features || [];
+		for (i=0,len=features.length; i<len; i++) {
+			geom = features[i].geometry;
+			switch (geom.type) {
+				case "Point":
+					coords = geom.coordinates;
+					if (this.options.reverseAxis) {
+						coords = this.swapCoords(coords);
+					}
+					projectedCoords = projectPoint(coords, inputCrs);
+					geom.coordinates = projectedCoords;
+					break;
+				case "MultiPoint":
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coords = geom.coordinates[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords(coords);
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						features[i].geometry.coordinates[p] = projectedCoords;
+					}
+					break;
+				case "MultiLineString":
+					coordsArr = [];
+					var pp, ii,
+						newCoords = [];
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coordsArr = geom.coordinates[p];
+						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
+							coords = coordsArr[pp];
+							if (this.options.reverseAxis) {
+								coords = this.swapCoords( coords );								
+							}
+							projectedCoords = projectPoint(coords, inputCrs);
+							coordsArr[pp] = projectedCoords;
+						}
+						geom.coordinates[p] = coordsArr; // needed?
+					}
+					break;
+				case "Polygon":
+					coordsArr = geom.coordinates[0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+					
+					break;
+				case "MultiPolygon":
+					coordsArr = geom.coordinates[0][0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+//					geom.coordinates[0][0] = coordsArr; // needed?
+					break;
+			}
+		}
+	}
+});L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	CLASS_NAME: "L.GeoJSON.WFS",
 	 
@@ -18036,591 +18195,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 
 $(document).ready(function() {
 	smap.core.initInst = new smap.core.Init();	
-});L.Control.SelectWMS = L.Control.extend({
-	options: {
-		wmsVersion: "1.3",
-		outputFormat: "GML2",
-		srs: "EPSG:4326",
-		info_format: "text/plain",
-		featureCount: 1,
-		buffer: 5,
-		onSuccess: function(props, other) {
-			var self = other.context;
-			
-			// Fetch layerId
-			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
-			var layerId = t.options.layerId;
-			
-			if (props && $.isEmptyObject(props) === false) {
-				self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
-				var latLng = other.latLng;
-				
-				// Create a pseudo feature based on properties and latLng
-				var f = {
-					geometry: {coordinates: [latLng.lng, latLng.lat]},
-					latLng: latLng,
-					properties: props,
-					layerId: layerId,
-					uniqueKey: t.options.uniqueKey
-				};
-				other.map.fire("selected", {
-					layer: self,
-					feature: f,
-					latLng: latLng,
-					selectedFeatures: [f]
-				});
-			}
-		},
-		onError: function() {
-			
-		}
-	},
-	
-	_layers: [],
-	_selectedFeatures: [],
-
-	initialize: function(options) {
-		L.setOptions(this, options);
-	},
-
-	onAdd: function(map) {
-		this.map = map;
-		
-		this._bindEvents();
-		
-		this._container = L.DomUtil.create('div', 'leaflet-control-selectwms'); // second parameter is class name
-		L.DomEvent.disableClickPropagation(this._container);
-		return this._container;
-	},
-
-	onRemove: function(map) {
-		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
-		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
-		
-		this._unbindEvents();
-	},
-	
-	_applyParam: function(sel) {
-		var layer,
-			obj = JSON.parse(decodeURIComponent( sel ));
-		
-		for (layerId in obj) {
-			item = obj[layerId];
-			if (item["xy"]) {
-				layer = smap.core.layerInst.showLayer(layerId);
-				
-				var xyArr = item["xy"][0]; 
-				latLng = L.latLng(xyArr[1], xyArr[0]); // val is lat, key is lon
-				
-				this.onMapClick({
-					latlng: latLng,
-					_layers: [layer]
-				});
-				
-			}
-		}
-		
-	},
-	
-	_bindEvents: function() {
-		var self = this;
-//		smap.event.on("smap.core.createparams", function(e, p) {
-//			if (self._selectedFeatures.length) {
-//				p.SEL = self._selectedFeatures[0].join(":");				
-//			}
-//		});
-		smap.event.on("smap.core.applyparams", function(e, p) {
-			if (p.SEL) {
-				self._applyParam( decodeURIComponent(p.SEL) );				
-			}
-		});
-		
-		this.map
-			.on("layeradd", this.onLayerAdd, this)
-			.on("layerremove", this.onLayerRemove, this)
-			.on("click", this.onMapClick, this);
-	},
-	_unbindEvents: function() {
-		this.map
-			.off("layeradd", this.onLayerAdd, this)
-			.off("layerremove", this.onLayerRemove, this)
-			.off("click", this.onMapClick, this);
-	},
-	
-	onLayerAdd: function(e) {
-		var layer = e.layer;
-		if (this._layerShouldBeAdded(layer) === true) {
-			// Add the layer to the selectable layers array
-			this._layers.push(layer);
-		}
-	},
-	
-	onLayerRemove: function(e) {
-		var layer = e.layer;
-		var index = this._hasLayer(layer);
-		if (index !== false) {
-			// Remove the layer from the selectable layers array
-			this._layers.splice(index, 1);
-		}
-	},
-	
-	/**
-	 * Prepare and execute the WMS GetFeatureInfo request.
-	 * @param e {Object}
-	 * 		- latlng {L.LatLng}
-	 * 
-	 * @returns {void}
-	 */
-	onMapClick: function(e) {
-		
-		// Reset properties
-		this._selectedFeatures = [];
-		var latLng = e.latlng;
-		
-		if (this.xhr) {
-			this.xhr.abort();
-		}
-		var layers = e._layers || this._layers;
-		if (!layers.length) {
-			return;
-		}
-		var layerNames = [];
-		
-		var t, url, URL,
-			ts = {};
-		$.each(layers, function(i, layer) {
-			url = layer._url;
-			URL = url.toUpperCase();
-			if (!ts[URL]) {
-				ts[URL] = {
-						layerNames: [],
-						url: url,
-						wmsVersion: layer._wmsVersion,
-						layerId: layer.options.layerId
-				};
-			}
-			ts[URL].layerNames.push(layer.options.layers);
-		});
-
-		var params;
-		for (var URL in ts) {
-			t = ts[URL];
-			params = this._makeParams({
-				layers: t.layerNames.join(","),
-				version: t._wmsVersion || this.options.wmsVersion, 
-				info_format: this.options.info_format,
-				latLng: latLng
-			});
-			this.request(t.url, params, {
-				onSuccess: this.options.onSuccess,
-				onError: function() {},
-				layerId: t.layerId,
-				latLng: latLng
-			});		
-		}
-		
-		
-	},
-	
-	_layerShouldBeAdded: function(layer) {
-		var isWmsLayer = layer._wmsVersion ? true : false;
-		if (layer.options && layer.options.selectable && layer.options.selectable === true
-				&& this._hasLayer(layer) === false
-				&& isWmsLayer === true) {
-			return true;
-		}
-		return false;
-	},
-	
-	_hasLayer: function(layer) {
-		var layers = this._layers;
-		for (var i=0,len=layers.length; i<len; i++) {
-			if (layer === layers[i]) {
-				return i;
-			}
-		}
-		return false;
-	},
-	
-	_makeParams: function(options) {
-		options = options || {};
-		
-		
-		var px = this.map.latLngToContainerPoint(options.latLng);
-		
-		var b = this.map.getBounds();
-		var params = {
-				service: "WMS",
-				request: "GetFeatureInfo",
-				version: "1.1.1", //options.version,
-				bbox: b.toBBoxString(), //b.getSouth() +","+ b.getWest() +","+ b.getNorth() +","+ b.getEast(),
-				layers: options.layers,
-//				typename: options.layers,
-				query_layers: options.layers,
-				info_format: options.info_format,
-				format: "image/png",
-				feature_count: this.options.featureCount,
-				x: px.x,
-				y: px.y,
-				buffer: this.options.buffer,
-				width: this.map.getSize().x,
-				height: this.map.getSize().y,
-				srs: this.options.srs || "EPSG:4326",
-				exceptions: "application%2Fvnd.ogc.se_xml"
-		};
-		return params;
-	},
-	
-	
-	_parseText: function(resp) {
-		var out = {},
-			dict = {},
-			row, t, val, nbr, featureType,
-			rows = resp.split("\n");
-		
-		for (var i=0,len=rows.length; i<len; i++) {
-			row = rows[i];
-			if (row.search("=") === -1) {
-				var index = row.search(/'/);
-				if (index > -1) {
-					row = row.substring(index+1);
-					index = row.search(/'/);
-					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-						// Store the old result and create a new dict
-						out[featureType].push($.extend({}, dict));
-						dict = {};
-					}
-					featureType = row.substring(0, index);
-					if (!out[featureType]) {
-						out[featureType] = [];
-					}
-					continue;
-				}
-				else {
-					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-						out[featureType].push($.extend({}, dict));
-						dict = {};
-					}
-					continue;						
-				}
-			}
-			t = row.split("=");
-			if (t.length > 2) {
-				// There were some "=" in the value – join again.
-				var tempArr = t.slice(1);
-				val = tempArr.join("=");
-			}
-			else {
-				val = t[1];			
-			}
-			val = $.trim(val);
-			
-			var onlyNumbers = /^[0-9.]+$/.test(val);
-			var s = val.split(".");
-			var commaIsOk = s.length <= 2 && s[0].length > 0 && (s.length === 1 || s.length === 2 && s[1].length > 0);
-			if ( onlyNumbers === true && commaIsOk) {
-				// Convert string to number if possible
-				try {
-					switch(s.length) {
-					case 1:
-						nbr = parseInt(val);						
-						break;
-					case 2:
-						nbr = parseFloat(val);						
-						break;
-					}
-				}
-				catch (e) {}
-				if (nbr && isNaN(nbr) === false) {
-					val = nbr;
-				}
-			}
-			dict[ $.trim(t[0]) ] = val;
-		}
-		if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
-			// Store the old result and create a new dict
-			out[featureType].push($.extend({}, dict));
-		}
-		return out;
-	},
-	
-	request: function(url, params, options) {
-		params = params || {};
-		options = options || {};
-		
-		var proxy = this.proxy || L.Control.SelectWMS.proxy;
-		
-		this.xhr = $.ajax({
-			url: (proxy ? proxy + encodeURIComponent(url) : url),
-			data: params,
-			type: "POST",
-			dataType: "text",
-			context: this,
-			success: function(resp, textStatus, jqXHR) {
-				var out = this._parseText(resp);
-				options.onSuccess(out, {
-					latLng: options.latLng,
-					map: this.map,
-					context: this,
-					params: params
-				});
-				
-			},
-			error: function() {
-				options.onError();
-			},
-			complete: function() {
-//				this.xhr = null;
-			}
-		});
-		
-	},
-	
-	
-	CLASS_NAME: "L.Control.SelectWMS"
-});
-
-
-// Do something when the map initializes (example taken from Leaflet attribution control)
-
-//L.Map.addInitHook(function () {
-//	if (this.options.attributionControl) {
-//		this.attributionControl = (new L.Control.SelectWMS()).addTo(this);
-//	}
-//});
-
-
-/*
- * This code just makes removes the need for
- * using "new" when instantiating the class. It
- * is a Leaflet convention and should be there.
- */
-L.control.selectWMS = function (options) {
-	return new L.Control.SelectWMS(options);
-};L.Control.SelectVector = L.Control.extend({
-	options: {
-		position: 'bottomright', // just an example
-		selectStyle: {
-			weight: 5,
-	        color: '#00FFFF',
-	        fillColor: '#00FFFF',
-	        opacity: 1,
-	        fillOpacity: .5
-		}
-	},
-	
-	_lang: {
-		"sv": {
-			exampleLabel: "Ett exempel"
-		},
-		"en": {
-			exampleLabel: "An example"
-		}
-	},
-	
-	/**
-	 * Keeps track of which vector features have been selected.
-	 */
-	_selectedFeatures: [],
-	
-	_setLang: function(langCode) {
-		langCode = langCode || smap.config.langCode;
-		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;			
-		}
-	},
-
-	initialize: function(options) {
-		L.setOptions(this, options);
-		this._setLang(options.langCode);
-		
-		// Func with proxy to be bound to individual features.
-		var self = this;
-		this._onFeatureClick = function(e) {
-			self.onFeatureClick(e);
-		};
-		
-	},
-
-	onAdd: function(map) {
-		this.map = map;
-		
-		this._container = L.DomUtil.create('div', 'leaflet-control-selectvector'); // second parameter is class name
-		L.DomEvent.disableClickPropagation(this._container);
-		this.$container = $(this._container);
-		
-		this._bindEvents();
-
-		return this._container;
-	},
-
-	onRemove: function(map) {
-		// Unbind them all!
-		this.map.off("layeradd", this._onLayerAdded);
-		this.map.off("click", this._onMapClick);
-	},
-	
-	_bindEvents: function() {
-		
-		// Funcs with proxy
-		this._onLayerAdded = $.proxy(this.onLayerAdded, this);
-		this._onLayerRemoved = $.proxy(this.onLayerRemoved, this);
-		this._onMapClick = $.proxy(this.onMapClick, this);
-		
-		// Bind them all!
-		this.map.on("layeradd", this._onLayerAdded);
-		this.map.on("layerremove", this._onLayerRemoved);
-		this.map.on("click", this._onMapClick);
-		
-	},
-	
-	/*
-	 * --- Event listeners ------------------------------------------------------------
-	 */
-	
-	
-	onMapClick: function() {
-		this._selectedFeatures = [];
-	},
-	
-	_vectorLayers: [],
-	
-	onLayerAdded: function(e) {
-		var self = this;
-		var layer = e.layer;
-		var isVector = layer.hasOwnProperty("_layers") && layer.resetStyle;
-		if (!isVector)
-			return;
-		
-		layer.on("load", function() {
-			this.eachLayer(function(lay) {
-				lay.options = lay.options || {};
-				lay.options.layerId = layer.options.layerId;
-				lay.off("click", self._onFeatureClick).on("click", self._onFeatureClick);
-			});			
-		});
-		this._vectorLayers.push(layer);
-	},
-	
-	onLayerRemoved: function(e) {
-		var layerId = e.layer.options.layerId;
-		if (layerId && e.layer._layers) {
-			var index = $.inArray(e.layer, this._vectorLayers);
-			if (index > -1) {
-				this._vectorLayers.splice(index, 1);
-			}
-//			var fs = this._selectedFeatures.slice(),
-//				f,
-//				newArr = [];
-//			for (var i=0,len=fs.length; i<len; i++) {
-//				f = fs[i];
-//				if (f.layerId === layerId) {
-//					// Remove this feature from the array
-//					this.unselect(f);	
-//				}
-//			}			
-		}
-		
-	},
-	
-	_layerFromFeature: function(_f, theLay) {
-		var layersObj = theLay._layers;
-		for (var nbr in layersObj) {
-			var _lay = layersObj[nbr];
-			if (_lay.feature === _f) {
-				return _lay;					
-			}
-		}
-		return null;
-	},
-	
-	unselect: function(f) {
-		var layerId = f.layerId;
-		var parentLayer = smap.cmd.getLayer(layerId);
-		var indexOfFeature = $.inArray(f, this._selectedFeatures);
-		// Remove the feature from selected arr and reset style
-		this._selectedFeatures.splice(indexOfFeature, 1);
-		
-		var lay = this._layerFromFeature(f, parentLayer) || parentLayer;
-//		if (!lay.resetStyle) {
-//			lay = parentLayer;
-//		}
-		parentLayer.resetStyle.call(parentLayer, lay);
-		
-		this._map.fire("unselected", {
-			feature: f
-		});
-
-	},
-	
-	onFeatureClick: function(e) {
-		var f = e.target.feature,
-			shiftKeyWasPressed = e.originalEvent ? e.originalEvent.shiftKey || false : false, 
-			target = e.target,
-			paramVal = null;
-		var layerId = target.options.layerId || e.layer.options.layerId;
-		var parentLayer = smap.core.layerInst._getLayer(layerId);
-		
-		if (parentLayer && shiftKeyWasPressed === false) {
-			this._selectedFeatures = [];
-			var resetStyle = parentLayer.resetStyle;
-			parentLayer.eachLayer(function(lay) {
-				resetStyle.call(parentLayer, lay);
-			});
-			
-			// Reset other vector layer's selection.
-			var arr = this._vectorLayers;
-			for (var i=0,len=arr.length; i<len; i++) {
-				lay = arr[i];
-				if (lay !== parentLayer) {
-					lay.resetStyle(lay);
-				}
-			}
-		}
-		
-		
-		var indexOfFeature = $.inArray(f, this._selectedFeatures);
-		if (shiftKeyWasPressed === true && indexOfFeature > -1) {
-			// Remove the feature from selected arr and reset style
-			this._selectedFeatures.splice(indexOfFeature, 1);
-			this._map.fire("unselected", {
-				feature: f
-			});
-			var lay = this._layerFromFeature(f, parentLayer);
-			parentLayer.resetStyle.call(parentLayer, lay);
-		}
-		else {
-			f.layerId = layerId;
-			f.uniqueKey = parentLayer.options.uniqueKey;
-			this._selectedFeatures.push(f);
-			var _lay = this._layerFromFeature(f, parentLayer);
-			if (_lay.setStyle) {
-				_lay.setStyle(parentLayer.options.selectStyle || this.options.selectStyle);
-			}
-			this._map.fire("selected", {
-				feature: f,
-				selectedFeatures: this._selectedFeatures,
-				layer: parentLayer,
-				latLng: e.latlng,
-				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
-			});
-			console.log(this._selectedFeatures.length);
-		}
-		
-	},
-	
-	
-	A: 1
-	
-});
-
-/*
- * This code lets us skip "new" before the
- * Class name when instantiating it.
- */
-L.control.selectVector = function (options) {
-	return new L.Control.SelectVector(options);
-};L.Control.Geolocate = L.Control.extend({
+});L.Control.Geolocate = L.Control.extend({
 	options: {
 		position: 'bottomright',
 		locateOptions: {
@@ -19710,36 +19285,34 @@ L.control.guidePopup = function (options) {
  */
 L.control.layerSwitcher = function (options) {
 	return new L.Control.LayerSwitcher(options);
-};L.Control.ShareTweet = L.Control.extend({
+};L.Control.Search = L.Control.extend({
 	options: {
-		position: 'topright',
-		wfsSource: "http://localhost:8080/geoserver/wfs",
-		wfsFeatureType: "local:tweets"
+		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
+		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
+		wsAcUrl: "http://xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
+		wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
+		whitespace: "%2B",
+		wsOrgProj: "EPSG:3006", //"EPSG:3008"
+		pxDesktop: 992
 	},
 	
 	_lang: {
 		"sv": {
-			btnAdd: "Lägg till",
-			btnUnshare: "Sluta dela position",
-			titleDialog: "Skriv nånting",
-			btnCancel: "Avbryt",
-			btnSubmit: "Skicka",
-			loading: "Arbetar..."
+			search: "Sök",
+			addressNotFound: "Den sökta adressen hittades inte",
+			remove: "Ta bort"
 		},
 		"en": {
-			btnAdd: "Add tweet",
-			btnUnshare: "Stop sharing position",
-			titleDialog: "Write something",
-			btnCancel: "Cancel",
-			btnSubmit: "Submit",
-			loading: "Working..."
+			search: "Search",
+			addressNotFound: "The searched address was not found",
+			remove: "Remove"
 		}
 	},
 	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;			
+			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
 
@@ -19749,317 +19322,813 @@ L.control.layerSwitcher = function (options) {
 	},
 
 	onAdd: function(map) {
-		this.map = map;
-		
-		this._container = L.DomUtil.create('div', 'leaflet-control-sharetweet'); // second parameter is class name
-		L.DomEvent.disableClickPropagation(this._container);
-		
-		this.$container = $(this._container);
-		
-		this._drawBtn();
-		this._addWfsLayer();
-		
 		var self = this;
-		this.map.on("zoomend moveend", function() {
-			self.layer._refresh();
+		self.map = map;
+		self._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
+		L.DomEvent.disableClickPropagation(this._container);
+		self.$container = $(self._container);
+		self._makeSearchField();
+		
+		// Bind events
+		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
+		smap.event.on("smap.core.applyparams", this.__onApplyParams);
+		
+		this.__onCreateParams = this.__onCreateParams || $.proxy( this._onCreateParams, this );
+		smap.event.on("smap.core.createparams", this.__onCreateParams);
+		
+		this.map.on("click", this._blurSearch);
+			
+		return self._container;
+	},
+	
+	_blurSearch: function() {
+		$("#smap-search-div input").blur();
+	},
+	
+	onRemove: function(map) {
+		smap.event.off("smap.core.applyparams", this.__onApplyParams);
+		smap.event.off("smap.core.createparams", this.__onCreateParams);
+		this.map.off("click", this._blurSearch);
+	},
+	
+	_onApplyParams: function(e, p) {
+		if (p.POI) {
+			this._geoLocate(decodeURIComponent( p.POI ));
+		}
+	},
+	
+	_onCreateParams: function(e, obj) {
+		if (this.marker && this.marker.options.q) {
+			obj.POI = encodeURIComponent( this.marker.options.q );
+		}
+	},
+
+	_rmAdressMarker: function(marker){
+		if(marker != null){ 
+			this.map.removeLayer(marker);
+			this.addressMarker = null;
+		}
+	},
+
+	_makeSearchField: function() {
+		var self = this;
+		
+		var $searchDiv = $('<div id="smap-search-div" class="input-group input-group-lg"><span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>'+
+				'<input autocorrect="off" autocomplete="off" data-provide="typeahead" type="text" class="form-control" placeholder="'+this.lang.search+'"></input></div>');
+		var $entry = $searchDiv.find("input");
+		
+		/**
+		 * Force keyboard to appear on Windows Phone: 
+		 * http://stackoverflow.com/questions/11855609/forcing-numeric-keyboard-in-internet-explorer-on-windows-phone-7-5
+		 */
+		$entry.attr("pattern", "[0-9]");
+		
+		function activate() {
+			// Note! This is the breakpoint for small devices
+			var w = $(window).width();
+			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
+				return;
+			}
+			var $bg = $("#smap-search-bg");
+			if ( !$bg.length ) {
+				$bg = $('<div id="smap-search-bg" />');
+				$searchDiv.addClass("search-active");
+				$("#mapdiv").append($bg);
+				setTimeout(function() {
+					$bg.addClass("search-bg-visible");					
+				}, 1);
+			}
+		};
+		function deactivate() {
+			var w = $(window).width();
+			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
+				return;
+			}
+			$searchDiv.removeClass("search-active");
+			$("#smap-search-bg").removeClass("search-bg-visible");
+			setTimeout(function() {
+				$("#smap-search-bg").remove();			
+			}, 300);
+		};
+		
+		function prevDefault(e) {
+//			e.preventDefault();
+			e.stopPropagation();
+		};
+		
+		$entry.on("keypress", activate)
+			.on("dblclick", prevDefault)
+			.on("mousedown", prevDefault)
+			.on("focus", function() {
+				$(this).parent().addClass("smap-search-div-focused");
+			})
+			.on("blur", function() {
+				$(this).parent().removeClass("smap-search-div-focused");
+			})
+			.on("touchstart", function() {
+				$(this).focus();
+			});
+		$searchDiv.on("click touchstart", function(e) {
+			$(this).find("input").focus();
+			e.stopImmediatePropagation(); // Don't stop event totally since select from autocomplete won't work
+		});
+		$entry.on("blur", deactivate);
+		
+		
+		//$("#mapdiv").append( $searchDiv );
+
+		
+//		var bHound = new Bloodhound({
+//			datumTokenizer: Bloodhound.tokenizers.whitespace,
+//			queryTokenizer: Bloodhound.tokenizers.whitespace,
+////			local:  ["Alabama","Alaska","Arizona","Arkansas","Arkansas2","Barkansas"]
+//	    	remote: {
+//	      		url: smap.config.ws.proxy + encodeURIComponent( this.options.wsAcUrl ),
+//	        	filter: function(text) {
+//					text = text.split("\n");
+//					var vals = [];
+//	            	for (var i=0; i<text.length; i++) {
+//	            		vals.push({
+//		                    value: text[i]
+//		                });
+//	            	}
+//	            	return vals;
+//				}
+//	    	}
+//		});
+//		bHound.initialize();
+		
+		var whitespace = this.options.whitespace;
+
+		var geoLocate = this._geoLocate;
+		$entry.typeahead({
+			items: 5,
+			minLength: 2,
+			highlight: true,
+			hint: true,
+			updater: function(val) {
+				smap.cmd.loading(true);
+				geoLocate.call(self, val);
+				deactivate();
+				return val;
+			},
+//		    displayKey: 'value',
+//		    source: bHound.ttAdapter(),
+			source: function(q, process) {
+				var url = encodeURIComponent( self.options.wsAcUrl + "?q="+q);
+				if (whitespace) {
+					url = url.replace(/%20/g, whitespace);					
+				}
+				if (self.proxyInst) {
+					self.proxyInst.abort();
+				}
+				self.proxyInst = $.ajax({
+					type: "GET",
+					url: smap.config.ws.proxy + url,
+					dataType: "text",
+					success: function(resp) {
+						var arr = resp.split("\n");
+						process(arr);
+					},
+					error: function() {}
+				});
+			}
+//		    template: '<p>{{value}} ({{country_code}})</p>',
+		});
+	},
+	
+	
+	_geoLocate: function(q) {
+		var url = encodeURIComponent( this.options.wsLocateUrl + "?q="+q);
+		var whitespace = this.options.whitespace;
+		if (whitespace) {
+			url = url.replace(/%20/g, whitespace);					
+		}
+		$.ajax({
+			url: smap.config.ws.proxy + url,
+			type: "GET",
+			dataType: "json",
+			context: this,
+			success: function(json) {
+				var self = this;
+				if (this.marker) {
+					this.map.removeLayer(this.marker);
+					this.marker = null;
+				}
+				if (!json.features.length) {
+					// This means the searched place does not exist – inform user
+					smap.cmd.notify(this.lang.addressNotFound, "error");
+					return;
+				}
+				var coords = json.features[0].geometry.coordinates;
+				var latLng = L.latLng( coords[1], coords[0] );
+				
+				var wgs84 = "EPSG:4326";
+				if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
+					// project the response
+					var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
+					latLng = L.latLng(arr[1], arr[0]);
+				}
+				function onPopupOpen(e) {
+					$("#smap-search-popupbtn").off("click").on("click", function() {
+						self.map.removeLayer(self.marker);
+						return false;
+					});
+				};
+				this.map.off("popupopen", onPopupOpen);
+				this.map.on("popupopen", onPopupOpen);
+				
+				this.marker = L.marker(latLng).addTo(this.map);
+				this.marker.options.q = q; // Store for creating link to map
+				
+				
+				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
+				this.marker.openPopup();
+				this.map.setView(latLng, 15);
+				$("#smap-search-div input").val(null);
+				$("#smap-search-div input").blur();
+				setTimeout(function() {
+					$("#smap-search-div input").blur();
+				}, 100);
+			},
+			complete: function() {
+				smap.cmd.loading(false);
+			}
 		});
 		
+				
+	},
+	
+	CLASS_NAME: "L.Control.Search"
+});
+
+L.control.search = function (options) {
+	return new L.Control.Search(options);
+};L.Control.SelectVector = L.Control.extend({
+	options: {
+		position: 'bottomright', // just an example
+		selectStyle: {
+			weight: 5,
+	        color: '#00FFFF',
+	        fillColor: '#00FFFF',
+	        opacity: 1,
+	        fillOpacity: .5
+		}
+	},
+	
+	_lang: {
+		"sv": {
+			exampleLabel: "Ett exempel"
+		},
+		"en": {
+			exampleLabel: "An example"
+		}
+	},
+	
+	/**
+	 * Keeps track of which vector features have been selected.
+	 */
+	_selectedFeatures: [],
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode;
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
+	},
+
+	initialize: function(options) {
+		L.setOptions(this, options);
+		this._setLang(options.langCode);
+		
+		// Func with proxy to be bound to individual features.
+		var self = this;
+		this._onFeatureClick = function(e) {
+			self.onFeatureClick(e);
+		};
+		
+	},
+
+	onAdd: function(map) {
+		this.map = map;
+		
+		this._container = L.DomUtil.create('div', 'leaflet-control-selectvector'); // second parameter is class name
+		L.DomEvent.disableClickPropagation(this._container);
+		this.$container = $(this._container);
+		
+		this._bindEvents();
+
 		return this._container;
 	},
 
-	onRemove: function(map) {},
-	
-	_notify: function(text, msgType) {
-		switch(msgType) {
-		case "success":
-			msgType = "alert-success";
-			break;
-		case "error":
-			msgType = "alert-danger";
-			break;
-		}
-		var msg = $('<div class="alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
-		msg.css({
-			"margin-top": "20px"
-		});
-		$(".modal-body").find(".alert").remove();
-		$(".modal-body .sharetweet-footer").before(msg);
+	onRemove: function(map) {
+		// Unbind them all!
+		this.map.off("layeradd", this._onLayerAdded);
+		this.map.off("click", this._onMapClick);
 	},
 	
-	_addWfsLayer: function() {
-		this.cluster = new L.MarkerClusterGroup();
-		this.layer = smap.core.layerInst._createLayer({
-			init: "L.GeoJSON.WFS",
-			url: this.options.wfsSource,
-			options: {
-				layerId: "sharetweet-wfstlayer",
-				displayName: "Tweets",
-				featureType: this.options.wfsFeatureType,
-				attribution: "Malmö stads WFS",
-				inputCrs: "EPSG:4326",
-				reverseAxis: true,
-				selectable: true,
-				popup: '<p class="lead">${text_text}</p>'+
-					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.dtime_created);return d.toLocaleString();}}</strong></p>',
-				uniqueAttr: null,
-				hoverColor: '#FF0',
-				style: {
-					weight: 6,
-					color: '#F00',
-					dashArray: '',
-					fillOpacity: 0.5
+	_bindEvents: function() {
+		
+		// Funcs with proxy
+		this._onLayerAdded = $.proxy(this.onLayerAdded, this);
+		this._onLayerRemoved = $.proxy(this.onLayerRemoved, this);
+		this._onMapClick = $.proxy(this.onMapClick, this);
+		
+		// Bind them all!
+		this.map.on("layeradd", this._onLayerAdded);
+		this.map.on("layerremove", this._onLayerRemoved);
+		this.map.on("click", this._onMapClick);
+		
+	},
+	
+	/*
+	 * --- Event listeners ------------------------------------------------------------
+	 */
+	
+	
+	onMapClick: function() {
+		this._selectedFeatures = [];
+	},
+	
+	_vectorLayers: [],
+	
+	onLayerAdded: function(e) {
+		var self = this;
+		var layer = e.layer;
+		var isVector = layer.hasOwnProperty("_layers") && layer.resetStyle;
+		if (!isVector)
+			return;
+		
+		layer.on("load", function() {
+			this.eachLayer(function(lay) {
+				lay.options = lay.options || {};
+				lay.options.layerId = layer.options.layerId;
+				lay.off("click", self._onFeatureClick).on("click", self._onFeatureClick);
+			});			
+		});
+		this._vectorLayers.push(layer);
+	},
+	
+	onLayerRemoved: function(e) {
+		var layerId = e.layer.options.layerId;
+		if (layerId && e.layer._layers) {
+			var index = $.inArray(e.layer, this._vectorLayers);
+			if (index > -1) {
+				this._vectorLayers.splice(index, 1);
+			}
+//			var fs = this._selectedFeatures.slice(),
+//				f,
+//				newArr = [];
+//			for (var i=0,len=fs.length; i<len; i++) {
+//				f = fs[i];
+//				if (f.layerId === layerId) {
+//					// Remove this feature from the array
+//					this.unselect(f);	
+//				}
+//			}			
+		}
+		
+	},
+	
+	_layerFromFeature: function(_f, theLay) {
+		var layersObj = theLay._layers;
+		for (var nbr in layersObj) {
+			var _lay = layersObj[nbr];
+			if (_lay.feature === _f) {
+				return _lay;					
+			}
+		}
+		return null;
+	},
+	
+	unselect: function(f) {
+		var layerId = f.layerId;
+		var parentLayer = smap.cmd.getLayer(layerId);
+		var indexOfFeature = $.inArray(f, this._selectedFeatures);
+		// Remove the feature from selected arr and reset style
+		this._selectedFeatures.splice(indexOfFeature, 1);
+		
+		var lay = this._layerFromFeature(f, parentLayer) || parentLayer;
+//		if (!lay.resetStyle) {
+//			lay = parentLayer;
+//		}
+		parentLayer.resetStyle.call(parentLayer, lay);
+		
+		this._map.fire("unselected", {
+			feature: f
+		});
+
+	},
+	
+	onFeatureClick: function(e) {
+		var f = e.target.feature,
+			shiftKeyWasPressed = e.originalEvent ? e.originalEvent.shiftKey || false : false, 
+			target = e.target,
+			paramVal = null;
+		var layerId = target.options.layerId || e.layer.options.layerId;
+		var parentLayer = smap.core.layerInst._getLayer(layerId);
+		
+		if (parentLayer && shiftKeyWasPressed === false) {
+			this._selectedFeatures = [];
+			var resetStyle = parentLayer.resetStyle;
+			parentLayer.eachLayer(function(lay) {
+				resetStyle.call(parentLayer, lay);
+			});
+			
+			// Reset other vector layer's selection.
+			var arr = this._vectorLayers;
+			for (var i=0,len=arr.length; i<len; i++) {
+				lay = arr[i];
+				if (lay !== parentLayer) {
+					lay.resetStyle(lay);
 				}
 			}
-		});
-		var self = this;
-		this.layer._map = this.map;
-		this.layer.on("load", function(e) {
-			e.layer.eachLayer(function(marker) {
-				self.cluster.addLayer(marker);
+		}
+		
+		
+		var indexOfFeature = $.inArray(f, this._selectedFeatures);
+		if (shiftKeyWasPressed === true && indexOfFeature > -1) {
+			// Remove the feature from selected arr and reset style
+			this._selectedFeatures.splice(indexOfFeature, 1);
+			this._map.fire("unselected", {
+				feature: f
 			});
-			e.layer.clearLayers();
-			self.map.removeLayer(self.cluster);
-			self.map.addLayer(self.cluster);
-			smap.cmd.loading(false);
-		});
-		this.map.addLayer(this.cluster);
+			var lay = this._layerFromFeature(f, parentLayer);
+			parentLayer.resetStyle.call(parentLayer, lay);
+		}
+		else {
+			f.layerId = layerId;
+			f.uniqueKey = parentLayer.options.uniqueKey;
+			this._selectedFeatures.push(f);
+			var _lay = this._layerFromFeature(f, parentLayer);
+			if (_lay.setStyle) {
+				_lay.setStyle(parentLayer.options.selectStyle || this.options.selectStyle);
+			}
+			this._map.fire("selected", {
+				feature: f,
+				selectedFeatures: this._selectedFeatures,
+				layer: parentLayer,
+				latLng: e.latlng,
+				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
+			});
+			console.log(this._selectedFeatures.length);
+		}
+		
 	},
 	
-	_onLocationFound: function(e) {
-		// TODO: Send the position and the tweet to the web service.
-		smap.cmd.loading(false);
-		
-		var dec = 6;
-		
-		if (this.modal) {
-			this.modal.find('form td[name="easting"]').empty().text( utils.round( e.latlng.lng, dec ));
-			this.modal.find('form td[name="northing"]').empty().text( utils.round( e.latlng.lat, dec ));
-			this.modal.find('form td[name="accuracy"]').empty().text( utils.round( e.accuracy, 1 ) + " m");
+	
+	A: 1
+	
+});
+
+/*
+ * This code lets us skip "new" before the
+ * Class name when instantiating it.
+ */
+L.control.selectVector = function (options) {
+	return new L.Control.SelectVector(options);
+};L.Control.SelectWMS = L.Control.extend({
+	options: {
+		wmsVersion: "1.3",
+		outputFormat: "GML2",
+		srs: "EPSG:4326",
+		info_format: "text/plain",
+		featureCount: 1,
+		buffer: 5,
+		onSuccess: function(props, other) {
+			var self = other.context;
 			
-			// Enable submit button
-			this.modal.find(".btn-primary").button('reset');
-		}
-	},
-	
-	_onLocationError: function(e) {
-		var self = this;
-		
-		this._notify("Your position could not be determined", "error");
-		setTimeout(function() {
-			self.deactivate();
-		}, 3000);
-	},
-	
-	deactivate: function() {
-		if (this.modal) {
-			this.modal.modal("hide");
-		}			
-	},
-	
-	shareTweet: function() {
-		$("#sharetweet-btn").button(this.lang.btnUnshare);
-		
-		smap.cmd.loading(true);
-		
-		this.modal = this._showDialog();
-		this.modal.find(".btn-primary").button('loading');
-		
-		// Deactivate locate control
-		var geolocate = smap.cmd.getControl("Geolocate");
-		if (geolocate) {
-			geolocate.deactivate();		
-		}
-		
-		// Bind events
-		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
-		this.map.on("locationerror", $.proxy(this._onLocationError, this));
-		
-		this.map.locate({
-			watch: true, // TODO: Test with phone
-			setView: true,
-			enableHighAccuracy: true
-		});
-		smap.cmd.loading(false); // Don't show loading indicator
-	},
-	
-	unShareTweet: function() {
-		$("#sharetweet-btn").button(this.lang.btnAdd);
-		
-		// Unbind events
-		this.map.off("locationfound", $.proxy(this._onLocationFound, this));
-		this.map.off("locationerror", $.proxy(this._onLocationError, this));
-	},
-	
-	_showDialog: function() {
-		var form = $(
-			'<form id="sharetweet-form" role="form">'+
-				'<textarea class="form-control" rows="4" name="text" minlength="5" maxlength="140" required></textarea>'+	
-				'<table>'+
-					'<tr><td>Easting:</td><td name="easting"></td></tr>'+
-					'<tr><td>Northing:</td><td name="northing"></td></tr>'+
-					'<tr style="font-weight:bold;"><td>Felmarginal:</td><td name="accuracy"></td></tr>'+
-				'</table>'+
-				'<div class="row sharetweet-footer">'+
-					'<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.btnCancel+'</button>'+
-					'<button type="submit" class="btn btn-primary" data-loading-text="'+this.lang.loading+'">'+this.lang.btnSubmit+'</button>'+
-				'</div>'+
-			'</form>');
-		var self = this;
-		form.on("submit", function(e) {
-			var arr = $(this).serializeArray(),
-				out = {};
-			$.each(arr, function(i, t) {
-				out[t.name] = t.value;
-			});
-			out["easting"] = parseFloat( $(this).find('[name="easting"]').text() );
-			out["northing"] = parseFloat( $(this).find('[name="northing"]').text() );
-			self._save(L.latLng(out.northing, out.easting), out.text);			
-			return false;
-		});
-		
-		// Spin to all td's
-		form.find("tr").each(function() {
-			var td = $(this).find("td:eq(1)");
-			td.text("");
-			self._addSpin( td );
-		});
+			// Fetch layerId
+			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
+			var layerId = t.options.layerId;
+			
+			if (props && $.isEmptyObject(props) === false) {
+				self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
+				var latLng = other.latLng;
 				
-		var modal = utils.drawDialog(this.lang.titleDialog, form, null, {
-			size: "sm"
-		});
-		form.find(".btn-default").on("click", function() {
-			modal.modal("hide");
-			return false;
-		}).find(".btn-primary").on("click", function() {
-			// Submit the text and the position
-			return false;
-		});
-		modal.modal("show");
+				// Create a pseudo feature based on properties and latLng
+				var f = {
+					geometry: {coordinates: [latLng.lng, latLng.lat]},
+					latLng: latLng,
+					properties: props,
+					layerId: layerId,
+					uniqueKey: t.options.uniqueKey
+				};
+				other.map.fire("selected", {
+					layer: self,
+					feature: f,
+					latLng: latLng,
+					selectedFeatures: [f]
+				});
+			}
+		},
+		onError: function() {
+			
+		}
+	},
+	
+	_layers: [],
+	_selectedFeatures: [],
+
+	initialize: function(options) {
+		L.setOptions(this, options);
+	},
+
+	onAdd: function(map) {
+		this.map = map;
 		
-		modal.on("hidden.bs.modal", function() {
-			self.map.stopLocate();
-			self.modal.empty().remove();
-			self.modal = null;
-			$("#sharetweet-btn").button(this.lang.btnAdd);
-			$("#sharetweet-btn").removeClass("btn-primary");
-			delete self.modal;
-		});
-		return modal;
+		this._bindEvents();
+		
+		this._container = L.DomUtil.create('div', 'leaflet-control-selectwms'); // second parameter is class name
+		L.DomEvent.disableClickPropagation(this._container);
+		return this._container;
+	},
+
+	onRemove: function(map) {
+		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
+		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+		
+		this._unbindEvents();
 	},
 	
-	_addSpin: function(tag) {
-		var opts = {
-				length: 5,
-				width: 1,
-				radius: 3
-		};
-		var spinner = new Spinner(opts).spin();
-		$(tag).append(spinner.el);
+	_applyParam: function(sel) {
+		var layer,
+			obj = JSON.parse(decodeURIComponent( sel ));
+		
+		for (layerId in obj) {
+			item = obj[layerId];
+			if (item["xy"]) {
+				layer = smap.core.layerInst.showLayer(layerId);
+				
+				var xyArr = item["xy"][0]; 
+				latLng = L.latLng(xyArr[1], xyArr[0]); // val is lat, key is lon
+				
+				this.onMapClick({
+					latlng: latLng,
+					_layers: [layer]
+				});
+				
+			}
+		}
+		
 	},
 	
-	_drawBtn: function() {
+	_bindEvents: function() {
 		var self = this;
-		var btn = $('<button id="sharetweet-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;&nbsp;<span>'+this.lang.btnAdd+'</span></button>');
-		btn.on("click", function() {
-			if ( $(this).hasClass("btn-primary") ) {
-				$(this).removeClass("btn-primary");
-				self.unShareTweet();
+//		smap.event.on("smap.core.createparams", function(e, p) {
+//			if (self._selectedFeatures.length) {
+//				p.SEL = self._selectedFeatures[0].join(":");				
+//			}
+//		});
+		smap.event.on("smap.core.applyparams", function(e, p) {
+			if (p.SEL) {
+				self._applyParam( decodeURIComponent(p.SEL) );				
+			}
+		});
+		
+		this.map
+			.on("layeradd", this.onLayerAdd, this)
+			.on("layerremove", this.onLayerRemove, this)
+			.on("click", this.onMapClick, this);
+	},
+	_unbindEvents: function() {
+		this.map
+			.off("layeradd", this.onLayerAdd, this)
+			.off("layerremove", this.onLayerRemove, this)
+			.off("click", this.onMapClick, this);
+	},
+	
+	onLayerAdd: function(e) {
+		var layer = e.layer;
+		if (this._layerShouldBeAdded(layer) === true) {
+			// Add the layer to the selectable layers array
+			this._layers.push(layer);
+		}
+	},
+	
+	onLayerRemove: function(e) {
+		var layer = e.layer;
+		var index = this._hasLayer(layer);
+		if (index !== false) {
+			// Remove the layer from the selectable layers array
+			this._layers.splice(index, 1);
+		}
+	},
+	
+	/**
+	 * Prepare and execute the WMS GetFeatureInfo request.
+	 * @param e {Object}
+	 * 		- latlng {L.LatLng}
+	 * 
+	 * @returns {void}
+	 */
+	onMapClick: function(e) {
+		
+		// Reset properties
+		this._selectedFeatures = [];
+		var latLng = e.latlng;
+		
+		if (this.xhr) {
+			this.xhr.abort();
+		}
+		var layers = e._layers || this._layers;
+		if (!layers.length) {
+			return;
+		}
+		var layerNames = [];
+		
+		var t, url, URL,
+			ts = {};
+		$.each(layers, function(i, layer) {
+			url = layer._url;
+			URL = url.toUpperCase();
+			if (!ts[URL]) {
+				ts[URL] = {
+						layerNames: [],
+						url: url,
+						wmsVersion: layer._wmsVersion,
+						layerId: layer.options.layerId
+				};
+			}
+			ts[URL].layerNames.push(layer.options.layers);
+		});
+
+		var params;
+		for (var URL in ts) {
+			t = ts[URL];
+			params = this._makeParams({
+				layers: t.layerNames.join(","),
+				version: t._wmsVersion || this.options.wmsVersion, 
+				info_format: this.options.info_format,
+				latLng: latLng
+			});
+			this.request(t.url, params, {
+				onSuccess: this.options.onSuccess,
+				onError: function() {},
+				layerId: t.layerId,
+				latLng: latLng
+			});		
+		}
+		
+		
+	},
+	
+	_layerShouldBeAdded: function(layer) {
+		var isWmsLayer = layer._wmsVersion ? true : false;
+		if (layer.options && layer.options.selectable && layer.options.selectable === true
+				&& this._hasLayer(layer) === false
+				&& isWmsLayer === true) {
+			return true;
+		}
+		return false;
+	},
+	
+	_hasLayer: function(layer) {
+		var layers = this._layers;
+		for (var i=0,len=layers.length; i<len; i++) {
+			if (layer === layers[i]) {
+				return i;
+			}
+		}
+		return false;
+	},
+	
+	_makeParams: function(options) {
+		options = options || {};
+		
+		
+		var px = this.map.latLngToContainerPoint(options.latLng);
+		
+		var b = this.map.getBounds();
+		var params = {
+				service: "WMS",
+				request: "GetFeatureInfo",
+				version: "1.1.1", //options.version,
+				bbox: b.toBBoxString(), //b.getSouth() +","+ b.getWest() +","+ b.getNorth() +","+ b.getEast(),
+				layers: options.layers,
+//				typename: options.layers,
+				query_layers: options.layers,
+				info_format: options.info_format,
+				format: "image/png",
+				feature_count: this.options.featureCount,
+				x: px.x,
+				y: px.y,
+				buffer: this.options.buffer,
+				width: this.map.getSize().x,
+				height: this.map.getSize().y,
+				srs: this.options.srs || "EPSG:4326",
+				exceptions: "application%2Fvnd.ogc.se_xml"
+		};
+		return params;
+	},
+	
+	
+	_parseText: function(resp) {
+		var out = {},
+			dict = {},
+			row, t, val, nbr, featureType,
+			rows = resp.split("\n");
+		
+		for (var i=0,len=rows.length; i<len; i++) {
+			row = rows[i];
+			if (row.search("=") === -1) {
+				var index = row.search(/'/);
+				if (index > -1) {
+					row = row.substring(index+1);
+					index = row.search(/'/);
+					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+						// Store the old result and create a new dict
+						out[featureType].push($.extend({}, dict));
+						dict = {};
+					}
+					featureType = row.substring(0, index);
+					if (!out[featureType]) {
+						out[featureType] = [];
+					}
+					continue;
+				}
+				else {
+					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+						out[featureType].push($.extend({}, dict));
+						dict = {};
+					}
+					continue;						
+				}
+			}
+			t = row.split("=");
+			if (t.length > 2) {
+				// There were some "=" in the value – join again.
+				var tempArr = t.slice(1);
+				val = tempArr.join("=");
 			}
 			else {
-				$(this).addClass("btn-primary");
-				self.shareTweet();
+				val = t[1];			
 			}
-		});
-		this.$container.append(btn);
-	},
-	
-	
-	_createRequest: function(latLng, props) {
-		
-		var xml = '<wfs:Transaction\n'
-			  + '  service="WFS"\n'
-			  + '  version="1.1.0"\n'
-			  + '  xmlns:grp="http://localhost/"\n'
-			  + '  xmlns:wfs="http://www.opengis.net/wfs"\n'
-			  + '  xmlns:gml="http://www.opengis.net/gml"\n'
-			  + '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
-			  + '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
-			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
-			  + '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
-			  + '  <wfs:Insert>\n'
-			  + '    <grp:tweets>\n'
-			  + '      <grp:text_text>' + props.text + '</grp:text_text>\n'
-			  + '      <grp:the_geom>\n'
-			  + '        <gml:Point srsDimension="2" srsName="urn:x-ogc:def:crs:EPSG:4326">\n'
-			  + '          <gml:coordinates decimal="." cs="," ts=" ">' + latLng.lat + ',' + latLng.lng + '</gml:coordinates>\n'
-			  + '        </gml:Point>\n'
-			  + '      </grp:the_geom>\n'
-			  + '    </grp:tweets>\n'
-			  + '  </wfs:Insert>\n'
-			  + '</wfs:Transaction>';
-		
-		return xml;
-	},
-	
-	_save: function(latLng, text) {
-		if (this.submitting) {
-			return false;
-		}
-		this.map.stopLocate();
-		this.submitting = true;
-		smap.cmd.loading(true);
-		this.modal.find(".btn-primary").button('loading');
-		
-		var xml = this._createRequest(latLng, {text: text});
-		
-		$.ajax({
-			url: smap.config.ws.proxy + encodeURIComponent( this.options.wfsSource ),
-			type: "POST",
-			context: this,
-			data: xml,
-			contentType: "text/xml",
-			dataType: "text",
-			success: function(resp) {
-				smap.cmd.loading(false);
-				var obj = $.xml2json(resp);
-				if (parseInt(obj.TransactionSummary.totalInserted) > 0) {
-					// success
-					this.deactivate();
-					this._reload();
-//					this.marker = L.marker(latLng, {text: text});
-//					this.cluster.addLayer(this.marker);
+			val = $.trim(val);
+			
+			var onlyNumbers = /^[0-9.]+$/.test(val);
+			var s = val.split(".");
+			var commaIsOk = s.length <= 2 && s[0].length > 0 && (s.length === 1 || s.length === 2 && s[1].length > 0);
+			if ( onlyNumbers === true && commaIsOk) {
+				// Convert string to number if possible
+				try {
+					switch(s.length) {
+					case 1:
+						nbr = parseInt(val);						
+						break;
+					case 2:
+						nbr = parseFloat(val);						
+						break;
+					}
 				}
+				catch (e) {}
+				if (nbr && isNaN(nbr) === false) {
+					val = nbr;
+				}
+			}
+			dict[ $.trim(t[0]) ] = val;
+		}
+		if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+			// Store the old result and create a new dict
+			out[featureType].push($.extend({}, dict));
+		}
+		return out;
+	},
+	
+	request: function(url, params, options) {
+		params = params || {};
+		options = options || {};
+		
+		var proxy = this.proxy || L.Control.SelectWMS.proxy;
+		
+		this.xhr = $.ajax({
+			url: (proxy ? proxy + encodeURIComponent(url) : url),
+			data: params,
+			type: "POST",
+			dataType: "text",
+			context: this,
+			success: function(resp, textStatus, jqXHR) {
+				var out = this._parseText(resp);
+				options.onSuccess(out, {
+					latLng: options.latLng,
+					map: this.map,
+					context: this,
+					params: params
+				});
 				
-//				if (resp.success) {
-//					this._notify("Din text är sparad!", "success");
-//					this.deactivate();
-//					this._reload();
-//				}
-//				else {
-//					this._notify("Kunde inte spara. Fel: <strong>"+resp.msg+"</strong>", "error");
-//				}
 			},
-			error: function(a, text, c) {
-				this._notify("Kunde inte spara. Fel: <strong>"+text+"</strong>", "error");
-				smap.cmd.loading(false);
+			error: function() {
+				options.onError();
 			},
 			complete: function() {
-				this.modal.find(".btn-primary").button('reset');
-				this.submitting = false;
+//				this.xhr = null;
 			}
 		});
+		
 	},
 	
 	
-	_reload: function(callbacks) {
-		// TODO: Refresh features and perhaps open popup of the just added one 
-		
-		callbacks = callbacks || {};
-		
-		smap.cmd.loading(true);
-		this.layer._refresh();
-		
-	}
+	CLASS_NAME: "L.Control.SelectWMS"
 });
 
 
@@ -20067,7 +20136,7 @@ L.control.layerSwitcher = function (options) {
 
 //L.Map.addInitHook(function () {
 //	if (this.options.attributionControl) {
-//		this.attributionControl = (new L.Control.ShareTweet()).addTo(this);
+//		this.attributionControl = (new L.Control.SelectWMS()).addTo(this);
 //	}
 //});
 
@@ -20077,8 +20146,101 @@ L.control.layerSwitcher = function (options) {
  * using "new" when instantiating the class. It
  * is a Leaflet convention and should be there.
  */
-L.control.shareTweet = function(options) {
-	return new L.Control.ShareTweet(options);
+L.control.selectWMS = function (options) {
+	return new L.Control.SelectWMS(options);
+};L.Control.ShareLink = L.Control.extend({
+    options: {
+        position: 'bottomright', // just an example
+        addToMenu: true
+    },
+
+    _lang: {
+        "sv": {
+            caption: "Dela länk till positionen"
+        },
+        "en": {
+            caption: "Share position link"
+        }
+    },
+
+    _setLang: function(langCode) {
+        langCode = langCode || smap.config.langCode;
+        if (this._lang) {
+            this.lang = this._lang ? this._lang[langCode] : null;
+        }
+    },
+
+    initialize: function(options) {
+        L.setOptions(this, options);
+        this._setLang(options.langCode);
+    },
+
+    onAdd: function(map) {
+
+        this.map = map;
+
+        this._container = L.DomUtil.create('div', 'leaflet-control-ShareLink'); // second parameter is class name
+        L.DomEvent.disableClickPropagation(this._container);
+
+        this.$container = $(this._container);
+        this._createBtn();
+
+        return this._container;
+    },
+
+    activate: function() {
+
+        var url = smap.cmd.createParams(true);
+        var input = '<div class="form-group"><input type="text" class="form-control" id="exampleInputEmail1" value="' + url + '" placeholder=""></div>'
+        this._$dialog=null;
+
+        if (!this._$dialog) {
+            var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+            this._$dialog = utils.drawDialog(this.lang.caption, input, "");
+        }
+        this._$dialog.modal("show");
+        this._$dialog.on("shown.bs.modal",function(){
+            $(this).find("input[type=text]").select();
+            
+        });
+
+    },
+
+    _createBtn: function() {
+
+
+        var self = this;
+        if(this.options.addToMenu) {
+            smap.cmd.addToolButton( "", "fa fa-share-square-o", function () {
+                self.activate();
+                return false;
+            },null);
+        }
+
+        else {
+            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-share-square-o"></span></button>');
+            $btn.on("click", function () {
+                self.activate();
+                return false;
+            });
+            this.$container.append($btn);
+        }
+
+    },
+
+
+    onRemove: function(map) {
+        // Do everything "opposite" of onAdd – e.g. unbind events and destroy things
+        // map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+    }
+});
+
+/*
+ * This code lets us skip "new" before the
+ * Class name when instantiating it.
+ */
+L.control.sharePos = function (options) {
+    return new L.Control.SharePos(options);
 };L.Control.SharePosition = L.Control.extend({
 	options: {
 		position: 'bottomright', // just an example
@@ -20470,34 +20632,36 @@ L.control.shareTweet = function(options) {
  */
 L.control.sharePosition = function (options) {
 	return new L.Control.SharePosition(options);
-};L.Control.Search = L.Control.extend({
+};L.Control.ShareTweet = L.Control.extend({
 	options: {
-		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
-		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
-		wsAcUrl: "http://xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
-		wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
-		whitespace: "%2B",
-		wsOrgProj: "EPSG:3006", //"EPSG:3008"
-		pxDesktop: 992
+		position: 'topright',
+		wfsSource: "http://localhost:8080/geoserver/wfs",
+		wfsFeatureType: "local:tweets"
 	},
 	
 	_lang: {
 		"sv": {
-			search: "Sök",
-			addressNotFound: "Den sökta adressen hittades inte",
-			remove: "Ta bort"
+			btnAdd: "Lägg till",
+			btnUnshare: "Sluta dela position",
+			titleDialog: "Skriv nånting",
+			btnCancel: "Avbryt",
+			btnSubmit: "Skicka",
+			loading: "Arbetar..."
 		},
 		"en": {
-			search: "Search",
-			addressNotFound: "The searched address was not found",
-			remove: "Remove"
+			btnAdd: "Add tweet",
+			btnUnshare: "Stop sharing position",
+			titleDialog: "Write something",
+			btnCancel: "Cancel",
+			btnSubmit: "Submit",
+			loading: "Working..."
 		}
 	},
 	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;
+			this.lang = this._lang ? this._lang[langCode] : null;			
 		}
 	},
 
@@ -20507,248 +20671,336 @@ L.control.sharePosition = function (options) {
 	},
 
 	onAdd: function(map) {
-		var self = this;
-		self.map = map;
-		self._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
+		this.map = map;
+		
+		this._container = L.DomUtil.create('div', 'leaflet-control-sharetweet'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
-		self.$container = $(self._container);
-		self._makeSearchField();
+		
+		this.$container = $(this._container);
+		
+		this._drawBtn();
+		this._addWfsLayer();
+		
+		var self = this;
+		this.map.on("zoomend moveend", function() {
+			self.layer._refresh();
+		});
+		
+		return this._container;
+	},
+
+	onRemove: function(map) {},
+	
+	_notify: function(text, msgType) {
+		switch(msgType) {
+		case "success":
+			msgType = "alert-success";
+			break;
+		case "error":
+			msgType = "alert-danger";
+			break;
+		}
+		var msg = $('<div class="alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
+		msg.css({
+			"margin-top": "20px"
+		});
+		$(".modal-body").find(".alert").remove();
+		$(".modal-body .sharetweet-footer").before(msg);
+	},
+	
+	_addWfsLayer: function() {
+		this.cluster = new L.MarkerClusterGroup();
+		this.layer = smap.core.layerInst._createLayer({
+			init: "L.GeoJSON.WFS",
+			url: this.options.wfsSource,
+			options: {
+				layerId: "sharetweet-wfstlayer",
+				displayName: "Tweets",
+				featureType: this.options.wfsFeatureType,
+				attribution: "Malmö stads WFS",
+				inputCrs: "EPSG:4326",
+				reverseAxis: true,
+				selectable: true,
+				popup: '<p class="lead">${text_text}</p>'+
+					'<p>Skrivet den: <strong>${function(p) {var d = new Date(p.dtime_created);return d.toLocaleString();}}</strong></p>',
+				uniqueAttr: null,
+				hoverColor: '#FF0',
+				style: {
+					weight: 6,
+					color: '#F00',
+					dashArray: '',
+					fillOpacity: 0.5
+				}
+			}
+		});
+		var self = this;
+		this.layer._map = this.map;
+		this.layer.on("load", function(e) {
+			e.layer.eachLayer(function(marker) {
+				self.cluster.addLayer(marker);
+			});
+			e.layer.clearLayers();
+			self.map.removeLayer(self.cluster);
+			self.map.addLayer(self.cluster);
+			smap.cmd.loading(false);
+		});
+		this.map.addLayer(this.cluster);
+	},
+	
+	_onLocationFound: function(e) {
+		// TODO: Send the position and the tweet to the web service.
+		smap.cmd.loading(false);
+		
+		var dec = 6;
+		
+		if (this.modal) {
+			this.modal.find('form td[name="easting"]').empty().text( utils.round( e.latlng.lng, dec ));
+			this.modal.find('form td[name="northing"]').empty().text( utils.round( e.latlng.lat, dec ));
+			this.modal.find('form td[name="accuracy"]').empty().text( utils.round( e.accuracy, 1 ) + " m");
+			
+			// Enable submit button
+			this.modal.find(".btn-primary").button('reset');
+		}
+	},
+	
+	_onLocationError: function(e) {
+		var self = this;
+		
+		this._notify("Your position could not be determined", "error");
+		setTimeout(function() {
+			self.deactivate();
+		}, 3000);
+	},
+	
+	deactivate: function() {
+		if (this.modal) {
+			this.modal.modal("hide");
+		}			
+	},
+	
+	shareTweet: function() {
+		$("#sharetweet-btn").button(this.lang.btnUnshare);
+		
+		smap.cmd.loading(true);
+		
+		this.modal = this._showDialog();
+		this.modal.find(".btn-primary").button('loading');
+		
+		// Deactivate locate control
+		var geolocate = smap.cmd.getControl("Geolocate");
+		if (geolocate) {
+			geolocate.deactivate();		
+		}
 		
 		// Bind events
-		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
-		smap.event.on("smap.core.applyparams", this.__onApplyParams);
+		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
+		this.map.on("locationerror", $.proxy(this._onLocationError, this));
 		
-		this.__onCreateParams = this.__onCreateParams || $.proxy( this._onCreateParams, this );
-		smap.event.on("smap.core.createparams", this.__onCreateParams);
+		this.map.locate({
+			watch: true, // TODO: Test with phone
+			setView: true,
+			enableHighAccuracy: true
+		});
+		smap.cmd.loading(false); // Don't show loading indicator
+	},
+	
+	unShareTweet: function() {
+		$("#sharetweet-btn").button(this.lang.btnAdd);
 		
-		this.map.on("click", this._blurSearch);
-			
-		return self._container;
+		// Unbind events
+		this.map.off("locationfound", $.proxy(this._onLocationFound, this));
+		this.map.off("locationerror", $.proxy(this._onLocationError, this));
 	},
 	
-	_blurSearch: function() {
-		$("#smap-search-div input").blur();
-	},
-	
-	onRemove: function(map) {
-		smap.event.off("smap.core.applyparams", this.__onApplyParams);
-		smap.event.off("smap.core.createparams", this.__onCreateParams);
-		this.map.off("click", this._blurSearch);
-	},
-	
-	_onApplyParams: function(e, p) {
-		if (p.POI) {
-			this._geoLocate(decodeURIComponent( p.POI ));
-		}
-	},
-	
-	_onCreateParams: function(e, obj) {
-		if (this.marker && this.marker.options.q) {
-			obj.POI = encodeURIComponent( this.marker.options.q );
-		}
-	},
-
-	_rmAdressMarker: function(marker){
-		if(marker != null){ 
-			this.map.removeLayer(marker);
-			this.addressMarker = null;
-		}
-	},
-
-	_makeSearchField: function() {
+	_showDialog: function() {
+		var form = $(
+			'<form id="sharetweet-form" role="form">'+
+				'<textarea class="form-control" rows="4" name="text" minlength="5" maxlength="140" required></textarea>'+	
+				'<table>'+
+					'<tr><td>Easting:</td><td name="easting"></td></tr>'+
+					'<tr><td>Northing:</td><td name="northing"></td></tr>'+
+					'<tr style="font-weight:bold;"><td>Felmarginal:</td><td name="accuracy"></td></tr>'+
+				'</table>'+
+				'<div class="row sharetweet-footer">'+
+					'<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.btnCancel+'</button>'+
+					'<button type="submit" class="btn btn-primary" data-loading-text="'+this.lang.loading+'">'+this.lang.btnSubmit+'</button>'+
+				'</div>'+
+			'</form>');
 		var self = this;
-		
-		var $searchDiv = $('<div id="smap-search-div" class="input-group input-group-lg"><span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>'+
-				'<input autocorrect="off" autocomplete="off" data-provide="typeahead" type="text" class="form-control" placeholder="'+this.lang.search+'"></input></div>');
-		var $entry = $searchDiv.find("input");
-		
-		/**
-		 * Force keyboard to appear on Windows Phone: 
-		 * http://stackoverflow.com/questions/11855609/forcing-numeric-keyboard-in-internet-explorer-on-windows-phone-7-5
-		 */
-		$entry.attr("pattern", "[0-9]");
-		
-		function activate() {
-			// Note! This is the breakpoint for small devices
-			var w = $(window).width();
-			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
-				return;
-			}
-			var $bg = $("#smap-search-bg");
-			if ( !$bg.length ) {
-				$bg = $('<div id="smap-search-bg" />');
-				$searchDiv.addClass("search-active");
-				$("#mapdiv").append($bg);
-				setTimeout(function() {
-					$bg.addClass("search-bg-visible");					
-				}, 1);
-			}
-		};
-		function deactivate() {
-			var w = $(window).width();
-			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
-				return;
-			}
-			$searchDiv.removeClass("search-active");
-			$("#smap-search-bg").removeClass("search-bg-visible");
-			setTimeout(function() {
-				$("#smap-search-bg").remove();			
-			}, 300);
-		};
-		
-		function prevDefault(e) {
-//			e.preventDefault();
-			e.stopPropagation();
-		};
-		
-		$entry.on("keypress", activate)
-			.on("dblclick", prevDefault)
-			.on("mousedown", prevDefault)
-			.on("focus", function() {
-				$(this).parent().addClass("smap-search-div-focused");
-			})
-			.on("blur", function() {
-				$(this).parent().removeClass("smap-search-div-focused");
-			})
-			.on("touchstart", function() {
-				$(this).focus();
+		form.on("submit", function(e) {
+			var arr = $(this).serializeArray(),
+				out = {};
+			$.each(arr, function(i, t) {
+				out[t.name] = t.value;
 			});
-		$searchDiv.on("click touchstart", function(e) {
-			$(this).find("input").focus();
-			e.stopImmediatePropagation(); // Don't stop event totally since select from autocomplete won't work
+			out["easting"] = parseFloat( $(this).find('[name="easting"]').text() );
+			out["northing"] = parseFloat( $(this).find('[name="northing"]').text() );
+			self._save(L.latLng(out.northing, out.easting), out.text);			
+			return false;
 		});
-		$entry.on("blur", deactivate);
 		
+		// Spin to all td's
+		form.find("tr").each(function() {
+			var td = $(this).find("td:eq(1)");
+			td.text("");
+			self._addSpin( td );
+		});
+				
+		var modal = utils.drawDialog(this.lang.titleDialog, form, null, {
+			size: "sm"
+		});
+		form.find(".btn-default").on("click", function() {
+			modal.modal("hide");
+			return false;
+		}).find(".btn-primary").on("click", function() {
+			// Submit the text and the position
+			return false;
+		});
+		modal.modal("show");
 		
-		//$("#mapdiv").append( $searchDiv );
-
-		
-//		var bHound = new Bloodhound({
-//			datumTokenizer: Bloodhound.tokenizers.whitespace,
-//			queryTokenizer: Bloodhound.tokenizers.whitespace,
-////			local:  ["Alabama","Alaska","Arizona","Arkansas","Arkansas2","Barkansas"]
-//	    	remote: {
-//	      		url: smap.config.ws.proxy + encodeURIComponent( this.options.wsAcUrl ),
-//	        	filter: function(text) {
-//					text = text.split("\n");
-//					var vals = [];
-//	            	for (var i=0; i<text.length; i++) {
-//	            		vals.push({
-//		                    value: text[i]
-//		                });
-//	            	}
-//	            	return vals;
-//				}
-//	    	}
-//		});
-//		bHound.initialize();
-		
-		var whitespace = this.options.whitespace;
-
-		var geoLocate = this._geoLocate;
-		$entry.typeahead({
-			items: 5,
-			minLength: 2,
-			highlight: true,
-			hint: true,
-			updater: function(val) {
-				smap.cmd.loading(true);
-				geoLocate.call(self, val);
-				deactivate();
-				return val;
-			},
-//		    displayKey: 'value',
-//		    source: bHound.ttAdapter(),
-			source: function(q, process) {
-				var url = encodeURIComponent( self.options.wsAcUrl + "?q="+q);
-				if (whitespace) {
-					url = url.replace(/%20/g, whitespace);					
-				}
-				if (self.proxyInst) {
-					self.proxyInst.abort();
-				}
-				self.proxyInst = $.ajax({
-					type: "GET",
-					url: smap.config.ws.proxy + url,
-					dataType: "text",
-					success: function(resp) {
-						var arr = resp.split("\n");
-						process(arr);
-					},
-					error: function() {}
-				});
+		modal.on("hidden.bs.modal", function() {
+			self.map.stopLocate();
+			self.modal.empty().remove();
+			self.modal = null;
+			$("#sharetweet-btn").button(this.lang.btnAdd);
+			$("#sharetweet-btn").removeClass("btn-primary");
+			delete self.modal;
+		});
+		return modal;
+	},
+	
+	_addSpin: function(tag) {
+		var opts = {
+				length: 5,
+				width: 1,
+				radius: 3
+		};
+		var spinner = new Spinner(opts).spin();
+		$(tag).append(spinner.el);
+	},
+	
+	_drawBtn: function() {
+		var self = this;
+		var btn = $('<button id="sharetweet-btn" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;&nbsp;<span>'+this.lang.btnAdd+'</span></button>');
+		btn.on("click", function() {
+			if ( $(this).hasClass("btn-primary") ) {
+				$(this).removeClass("btn-primary");
+				self.unShareTweet();
 			}
-//		    template: '<p>{{value}} ({{country_code}})</p>',
+			else {
+				$(this).addClass("btn-primary");
+				self.shareTweet();
+			}
 		});
+		this.$container.append(btn);
 	},
 	
 	
-	_geoLocate: function(q) {
-		var url = encodeURIComponent( this.options.wsLocateUrl + "?q="+q);
-		var whitespace = this.options.whitespace;
-		if (whitespace) {
-			url = url.replace(/%20/g, whitespace);					
+	_createRequest: function(latLng, props) {
+		
+		var xml = '<wfs:Transaction\n'
+			  + '  service="WFS"\n'
+			  + '  version="1.1.0"\n'
+			  + '  xmlns:grp="http://localhost/"\n'
+			  + '  xmlns:wfs="http://www.opengis.net/wfs"\n'
+			  + '  xmlns:gml="http://www.opengis.net/gml"\n'
+			  + '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
+			  + '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
+			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
+			  + '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
+			  + '  <wfs:Insert>\n'
+			  + '    <grp:tweets>\n'
+			  + '      <grp:text_text>' + props.text + '</grp:text_text>\n'
+			  + '      <grp:the_geom>\n'
+			  + '        <gml:Point srsDimension="2" srsName="urn:x-ogc:def:crs:EPSG:4326">\n'
+			  + '          <gml:coordinates decimal="." cs="," ts=" ">' + latLng.lat + ',' + latLng.lng + '</gml:coordinates>\n'
+			  + '        </gml:Point>\n'
+			  + '      </grp:the_geom>\n'
+			  + '    </grp:tweets>\n'
+			  + '  </wfs:Insert>\n'
+			  + '</wfs:Transaction>';
+		
+		return xml;
+	},
+	
+	_save: function(latLng, text) {
+		if (this.submitting) {
+			return false;
 		}
+		this.map.stopLocate();
+		this.submitting = true;
+		smap.cmd.loading(true);
+		this.modal.find(".btn-primary").button('loading');
+		
+		var xml = this._createRequest(latLng, {text: text});
+		
 		$.ajax({
-			url: smap.config.ws.proxy + url,
-			type: "GET",
-			dataType: "json",
+			url: smap.config.ws.proxy + encodeURIComponent( this.options.wfsSource ),
+			type: "POST",
 			context: this,
-			success: function(json) {
-				var self = this;
-				if (this.marker) {
-					this.map.removeLayer(this.marker);
-					this.marker = null;
+			data: xml,
+			contentType: "text/xml",
+			dataType: "text",
+			success: function(resp) {
+				smap.cmd.loading(false);
+				var obj = $.xml2json(resp);
+				if (parseInt(obj.TransactionSummary.totalInserted) > 0) {
+					// success
+					this.deactivate();
+					this._reload();
+//					this.marker = L.marker(latLng, {text: text});
+//					this.cluster.addLayer(this.marker);
 				}
-				if (!json.features.length) {
-					// This means the searched place does not exist – inform user
-					smap.cmd.notify(this.lang.addressNotFound, "error");
-					return;
-				}
-				var coords = json.features[0].geometry.coordinates;
-				var latLng = L.latLng( coords[1], coords[0] );
 				
-				var wgs84 = "EPSG:4326";
-				if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
-					// project the response
-					var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
-					latLng = L.latLng(arr[1], arr[0]);
-				}
-				function onPopupOpen(e) {
-					$("#smap-search-popupbtn").off("click").on("click", function() {
-						self.map.removeLayer(self.marker);
-						return false;
-					});
-				};
-				this.map.off("popupopen", onPopupOpen);
-				this.map.on("popupopen", onPopupOpen);
-				
-				this.marker = L.marker(latLng).addTo(this.map);
-				this.marker.options.q = q; // Store for creating link to map
-				
-				
-				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
-				this.marker.openPopup();
-				this.map.setView(latLng, 15);
-				$("#smap-search-div input").val(null);
-				$("#smap-search-div input").blur();
-				setTimeout(function() {
-					$("#smap-search-div input").blur();
-				}, 100);
+//				if (resp.success) {
+//					this._notify("Din text är sparad!", "success");
+//					this.deactivate();
+//					this._reload();
+//				}
+//				else {
+//					this._notify("Kunde inte spara. Fel: <strong>"+resp.msg+"</strong>", "error");
+//				}
+			},
+			error: function(a, text, c) {
+				this._notify("Kunde inte spara. Fel: <strong>"+text+"</strong>", "error");
+				smap.cmd.loading(false);
 			},
 			complete: function() {
-				smap.cmd.loading(false);
+				this.modal.find(".btn-primary").button('reset');
+				this.submitting = false;
 			}
 		});
-		
-				
 	},
 	
-	CLASS_NAME: "L.Control.Search"
+	
+	_reload: function(callbacks) {
+		// TODO: Refresh features and perhaps open popup of the just added one 
+		
+		callbacks = callbacks || {};
+		
+		smap.cmd.loading(true);
+		this.layer._refresh();
+		
+	}
 });
 
-L.control.search = function (options) {
-	return new L.Control.Search(options);
+
+// Do something when the map initializes (example taken from Leaflet attribution control)
+
+//L.Map.addInitHook(function () {
+//	if (this.options.attributionControl) {
+//		this.attributionControl = (new L.Control.ShareTweet()).addTo(this);
+//	}
+//});
+
+
+/*
+ * This code just makes removes the need for
+ * using "new" when instantiating the class. It
+ * is a Leaflet convention and should be there.
+ */
+L.control.shareTweet = function(options) {
+	return new L.Control.ShareTweet(options);
 };L.Control.Info = L.Control.extend({
 	options: {
         addToMenu: true,
@@ -20963,4 +21215,76 @@ L.control.info = function (options) {
  */
 L.control.menu = function (options) {
     return new L.Control.Menu(options);
+};L.Control.Zoombar = L.Control.extend({
+	options: {
+		position: 'bottomright' // just an example
+	},
+	
+	_lang: {
+		"sv": {
+			exampleLabel: "Ett exempel"
+		},
+		"en": {
+			exampleLabel: "An example"
+		}
+	},
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode;
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
+	},
+
+	initialize: function(options) {
+		L.setOptions(this, options);
+		this._setLang(options.langCode);
+	},
+
+	onAdd: function(map) {
+		this.map = map;
+		
+		this._container = L.DomUtil.create('div', 'leaflet-control-zoombar'); // second parameter is class name
+		L.DomEvent.disableClickPropagation(this._container);
+		
+		this.$container = $(this._container);
+
+        this._createButtonZoomIn();
+        this._createButtonZoomUt();
+
+		return this._container;
+	},
+
+    _createButtonZoomIn: function() {
+        var btn = $('<button class="btn btn-default"><span class="fa fa-plus-circle"></span></button>');
+        this.$container.append(btn);
+        // -- TODO: Do something when clicking the button --
+        var self = this;
+        btn.on("click", function() {
+            self.map.zoomIn();
+        });
+    },
+
+    _createButtonZoomUt: function() {
+        var btn = $('<button class="btn btn-default"><span class="fa fa-minus-circle"></span></button>');
+        this.$container.append(btn);
+        // -- TODO: Do something when clicking the button --
+        var self = this;
+        btn.on("click", function() {
+            self.map.zoomOut();
+        });
+    },
+
+	onRemove: function(map) {
+		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
+		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+	}
+});
+
+/*
+ * This code lets us skip "new" before the
+ * Class name when instantiating it.
+ */
+L.control.zoombar = function (options) {
+	return new L.Control.Zoombar(options);
 };L.Icon.Default.imagePath = "lib/leaflet-0.7.2/images/";
