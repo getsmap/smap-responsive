@@ -61,6 +61,13 @@ L.Control.LayerSwitcher = L.Control.extend({
 			}
 			touchScroll($('.lswitch-panel'));
 		}
+		
+		if (L.Browser.msTouch) {  // L.Browser.android23 is better?
+			this.$container.css({
+				"overflow-y": "scroll !important"
+			});
+		}
+		
 		return this._container;
 	},
 

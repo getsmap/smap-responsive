@@ -39,6 +39,7 @@
 	padding: 0 20px;
 	@include box-shadow(inset #000 -3px 0px 17px);
 	overflow: auto;
+	-ms-touch-action: none !important; /* Bug fix - allow scroll on WindowsPhone */
 	font-size: 1.4em;
 }
 

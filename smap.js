@@ -19075,6 +19075,13 @@ L.control.guidePopup = function (options) {
 			}
 			touchScroll($('.lswitch-panel'));
 		}
+		
+		if (L.Browser.msTouch) {  // L.Browser.android23 is better?
+			this.$container.css({
+				"overflow-y": "scroll !important"
+			});
+		}
+		
 		return this._container;
 	},
 
@@ -19531,6 +19538,7 @@ L.control.layerSwitcher = function (options) {
 				function onPopupOpen(e) {
 					$("#smap-search-popupbtn").off("click").on("click", function() {
 						self.map.removeLayer(self.marker);
+						self.marker = null;
 						return false;
 					});
 				};
@@ -20155,10 +20163,10 @@ L.control.selectWMS = function (options) {
 
     _lang: {
         "sv": {
-            caption: "Dela länk till positionen"
+            caption: "Länk till kartan"
         },
         "en": {
-            caption: "Share position link"
+            caption: "Link to the map"
         }
     },
 
