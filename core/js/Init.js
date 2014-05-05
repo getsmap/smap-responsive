@@ -27,7 +27,7 @@ smap.core.Init = L.Class.extend({
 				smap.config = config || window.config;
 				smap.config.configName = params.CONFIG; // Store for creating params
 				
-				smap.config.langCode = params.LANG || navigator.language.split("-")[0] || "en";
+				smap.config.langCode = params.LANG || navigator.language ? navigator.language.split("-")[0] : "en";
 				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
 				smap.cmd.loading(false);
