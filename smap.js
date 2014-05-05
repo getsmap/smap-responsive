@@ -19434,8 +19434,7 @@ L.control.layerSwitcher = function (options) {
 		});
 		$entry.on("blur", deactivate);
 		
-		
-		//$("#mapdiv").append( $searchDiv );
+		$("#mapdiv").append( $searchDiv );
 
 		
 //		var bHound = new Bloodhound({

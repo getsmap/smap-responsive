@@ -272,7 +272,21 @@ var config = {
 						fillOpacity: 0.8
 					}
 				}
-			}
+			},
+			{
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "malmo_dp",
+	    			 displayName: "WMS (Detaljplan)",
+	    			 layers: 'malmows:SMA_DP_ADP_YTOR_P',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${plan}</h3><a href="${url}">Länk</a>'   //<p onclick="window.open(\'http://www.malmo.se\')">Länk till plan</p>'
+	    		 }
+		     }
 //		     ,
 //		     {
 //				  init: "L.GeoJSON.WFS",
