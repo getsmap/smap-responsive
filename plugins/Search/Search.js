@@ -244,6 +244,7 @@ L.Control.Search = L.Control.extend({
 				function onPopupOpen(e) {
 					$("#smap-search-popupbtn").off("click").on("click", function() {
 						self.map.removeLayer(self.marker);
+						self.marker = null;
 						return false;
 					});
 				};
