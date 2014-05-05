@@ -256,6 +256,7 @@ var config = {
 				options: {
 					layerId: "vakant_mark",
 					displayName: "Vakant Mark",
+					uniqueKey: "id",
 					params: {
 						mId : "1290",
 						type : "Mark"
@@ -299,18 +300,6 @@ var config = {
 		     ],
 		     
 		bl: [
-		 {
-			 init: "L.TileLayer",
-			 url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
-			 options: {
-				 layerId: "malmotile",
-				 displayName: "Malmö karta",
-				 attribution: "© Malmö Stadsbyggnadskontor",
-				 minZoom: 6,
-				 maxZoom: 18,
-				 tms: true
-			 }
-		 },
 		{
 			init: "L.TileLayer",
 			url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -319,6 +308,18 @@ var config = {
 				displayName: "OSM",
 				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
 				maxZoom: 18
+			}
+		},
+		{
+			init: "L.TileLayer",
+			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
+			options: {
+				layerId: "malmotile",
+				displayName: "Malmö karta",
+				attribution: "© Malmö Stadsbyggnadskontor",
+				minZoom: 6,
+				maxZoom: 18,
+				tms: true
 			}
 		},
 		{
@@ -414,12 +415,14 @@ var config = {
                     ,
                     {
                         init: "L.Control.ShareLink",
-                        options: {}
+                        options: {
+                    		addToMenu: false
+                    	}
                     }
-                    ,
-                    {
-                        init: "L.Control.Menu",
-                        options: {}
-                    }
+//                    ,
+//                    {
+//                        init: "L.Control.Menu",
+//                        options: {}
+//                    }
        ]
 };

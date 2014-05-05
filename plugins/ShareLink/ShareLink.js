@@ -89,6 +89,6 @@ L.Control.ShareLink = L.Control.extend({
  * This code lets us skip "new" before the
  * Class name when instantiating it.
  */
-L.control.SharePos = function (options) {
+L.control.sharePos = function (options) {
     return new L.Control.SharePos(options);
 };
