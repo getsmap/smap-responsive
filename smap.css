@@ -1758,4 +1758,14 @@ Version: 1.0
 	}	
 }#smap-info-btn {
 	margin-top: 30px;
+}#smap-menu-div {
+	z-index: 1001;
+	background-color: rgba(255,255,255,.6);
+}
+
+@media (min-width: 992px) {
+    #smap-menu-div {
+        left: 300px;
+	}
+
 }

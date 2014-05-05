@@ -5400,7 +5400,7 @@ module.exports = function(proj4){
 var oldL = window.L,
     L = {};
 
-L.version = '0.7.1';
+L.version = '0.7.2';
 
 // define Leaflet for Node module pattern loaders, including Browserify
 if (typeof module === 'object' && typeof module.exports === 'object') {
@@ -8288,7 +8288,7 @@ L.TileLayer = L.Class.extend({
 	_getWrapTileNum: function () {
 		var crs = this._map.options.crs,
 		    size = crs.getSize(this._map.getZoom());
-		return size.divideBy(this.options.tileSize);
+		return size.divideBy(this._getTileSize())._floor();
 	},
 
 	_adjustTilePoint: function (tilePoint) {
@@ -11922,26 +11922,15 @@ L.DomEvent = {
 	},
 
 	getMousePosition: function (e, container) {
-		var body = document.body,
-		    docEl = document.documentElement,
-		    //gecko makes scrollLeft more negative as you scroll in rtl, other browsers don't
-			//ref: https://code.google.com/p/closure-library/source/browse/closure/goog/style/bidi.js
-			x = L.DomUtil.documentIsLtr() ?
-					(e.pageX ? e.pageX - body.scrollLeft - docEl.scrollLeft : e.clientX) :
-						(L.Browser.gecko ? e.pageX - body.scrollLeft - docEl.scrollLeft :
-						 e.pageX ? e.pageX - body.scrollLeft + docEl.scrollLeft : e.clientX),
-		    y = e.pageY ? e.pageY - body.scrollTop - docEl.scrollTop: e.clientY,
-		    pos = new L.Point(x, y);
-
 		if (!container) {
-			return pos;
+			return new L.Point(e.clientX, e.clientY);
 		}
 
-		var rect = container.getBoundingClientRect(),
-		    left = rect.left - container.clientLeft,
-		    top = rect.top - container.clientTop;
+		var rect = container.getBoundingClientRect();
 
-		return pos._subtract(new L.Point(left, top));
+		return new L.Point(
+			e.clientX - rect.left - container.clientLeft,
+			e.clientY - rect.top - container.clientTop);
 	},
 
 	getWheelDelta: function (e) {
@@ -16427,6 +16416,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		uniqueKey: "",
 		noBindZoom: false,
 		noBindDrag: false,
+		xhrType: "POST",
 		params: {
 			typeName: null, // required
 			service: "WFS",
@@ -16450,12 +16440,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	 */
 	_featureIndexes: [],
 	
-	/**
-	 * Keeps track of which features have been selected.
-	 */
-	_selectedFeatures: [],
-	
-
 	initialize: function(serviceUrl, options) {
 		options = options || {};
 		
@@ -16467,11 +16451,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
 		}
 		this._featureIndexes = [];
-		this._selectedFeatures = [];
-		
 		this.getFeatureUrl = serviceUrl;
-		this.__onFeatureClick = $.proxy(this._onFeatureClick, this);
-
 	},
 	
 	onAdd: function(map) {
@@ -16481,13 +16461,17 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this._bindEvents(map);
 	},
 	
+	onRemove: function(map) {
+		if (this.xhr) {
+			this.xhr.abort();
+			this.xhr = null;
+			this.fire("loadcancel", {layer: this});
+		}
+		L.GeoJSON.prototype.onRemove.call(this, map);
+	},
+	
 	_bindEvents: function(map) {
 		var self = this;
-		
-		map.on("click", function() {
-			// Reset array on click out
-			self._selectedFeatures = [];
-		});
 		
 		if (!this.options.noBindDrag) {
 			map.on("dragend", function() {
@@ -16588,68 +16572,8 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				self.clearLayers();
 			}
 			self.addData(self.jsonData);
-			
-			self.eachLayer(function(f) {
-				f.off("click", self.__onFeatureClick).on("click", self.__onFeatureClick);
-			});
 		});
 	},
-	
-	_onFeatureClick: function(e) {
-		var f = e.target.feature,
-			shiftKeyWasPressed = e.originalEvent ? e.originalEvent.shiftKey || false : false, 
-			target = e.target,
-			paramVal = null,
-			layerId = this.options.layerId || target.options.layerId,
-			self = this;
-		
-		if (shiftKeyWasPressed === false) {
-			this._selectedFeatures = [];
-			var resetStyle = this.resetStyle;
-			this.eachLayer(function(lay) {
-				resetStyle.call(self, lay);
-			});
-		}
-		
-		function layerFromFeature(_f, theLay) {
-			var layersObj = theLay._layers;
-			for (var nbr in layersObj) {
-				var _lay = layersObj[nbr];
-				if (_lay.feature === _f) {
-					return _lay;					
-				}
-			}
-			return null;
-		};
-		
-		var indexOfFeature = $.inArray(f, this._selectedFeatures);
-		if (shiftKeyWasPressed === true && indexOfFeature > -1) {
-			// Remove the feature from selected arr and reset style
-			this._selectedFeatures.splice(indexOfFeature, 1);
-			this._map.fire("unselected", {
-				feature: f
-			});
-			var lay = layerFromFeature(f, this);
-			this.resetStyle.call(this, lay);
-		}
-		else {
-			this._selectedFeatures.push(f);
-			var _lay = layerFromFeature(f, this);
-			if (_lay.setStyle) {
-				_lay.setStyle(this.options.selectStyle);
-			}
-			this._map.fire("selected", {
-				feature: f,
-				selectedFeatures: this._selectedFeatures,
-				layer: this,
-				latLng: e.latlng,
-				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
-			});
-		}
-		
-		
-	},
-	
 	
 	/**
 	 * Code borrowed from OpenLayers 2.13.1
@@ -16699,8 +16623,18 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			}
 			this.options.params.bbox = this._boundsToBbox(bounds, reverseBbox);
 		}
+		var url,
+			params = null;
+		if (this.options.xhrType === "GET") {
+			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
+			params = null;
+		}
+		else {
+			// POST
+			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
+			params = this.options.params;
+		}
 		
-		var url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
 		if (this.xhr) {
 			this.xhr.abort();
 			this.xhr = null;
@@ -16708,8 +16642,8 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this.fire("loading", {layer: this});
 		this.xhr = $.ajax({
 			url: url,
-			type: "POST",
-			data: this.options.params,
+			type: this.options.xhrType,
+			data: params,
 			context: this,
 			success: function(response) {
 				if (response.type && response.type == "FeatureCollection") {
@@ -16718,6 +16652,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 					callback();
 					this.fire("load", {layer: this});
 				}
+			},
+			error: function() {
+				this.fire("loaderror", {layer: this});
 			},
 			dataType: "json"
 		});
@@ -17141,6 +17078,10 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 //				});
 				smap.cmd.loading(false);
 			});
+			// Listen to these "home-made" events added to our own L.GeoJSON.WFS layer class.
+			layer.on("loadcancel loaderror", function(e) {
+				smap.cmd.loading(false);
+			});
 			this._wfsLayers.push(layer);
 		}
 		else {
@@ -17258,7 +17199,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 //			}
 			
 			var layer = e.layer;
-			var isWfs = layer.hasOwnProperty("_layers"),
+			var isVector = layer.hasOwnProperty("_layers"),
 				layerId = layer.options.layerId,
 				selectedFeature = e.feature,
 				selectedFeatures = e.selectedFeatures || [],
@@ -17268,12 +17209,12 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			var props = selectedFeature.properties;
 			
 			
-			if (isWfs) {
+			if (isVector) {
 				// Assign layerId to all features to enable fetching a feature during SEL param creation
-				$.each(selectedFeatures, function(i, f) {
-					f.layerId = layerId;
-					f.uniqueKey = uniqueKey;
-				});
+//				$.each(selectedFeatures, function(i, f) {
+//					f.layerId = layerId;
+//					f.uniqueKey = uniqueKey;
+//				});
 				if (shiftKeyWasPressed) {
 					// Extend vector array and remove duplicates.
 					self._selectedFeaturesVector = utils.makeUniqueArr( self._selectedFeaturesVector.concat(selectedFeatures) );
@@ -17305,7 +17246,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			}
 			self.map.closePopup();
 			
-			if (isWfs && !shiftKeyWasPressed) {
+			if (isVector && !shiftKeyWasPressed) {
 				if (self._selectedFeaturesVector.length <= 1) {
 					var arr = self._wfsLayers,
 						lay;
@@ -17336,7 +17277,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			/**
 			 * If WMS GetFeatureInfo – create a popup with the response.
 			 */
-			if (!isWfs && latLng) {
+			if (!isVector && latLng) {
 				for (var typeName in props) {} // because of the way typename is stored
 				
 				// Get popup html for this typename
@@ -17380,7 +17321,11 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		 */
 		smap.event.on("smap.core.createparams", function(e, p) {
 			/*
-			 * Make SEL param.
+			 * Make SEL param. It will look like this (schematic code):
+			 * var obj = {
+			 * 		"theLayerId": {vals: [2,6,11,172], key: "fid"}, // For WFS
+			 * 		"theLayerIdWms": {xy: [[13.1,55.2]} // For WMS
+			 * }
 			 */
 			var selObj = {};
 			
@@ -17811,7 +17756,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		 * @returns {void}
 		 */
 		addToolButton: function(label, iconClass, onClick, options) {
-			var pluginToolbar = "Navbar";
+			var pluginToolbar = "Menu";
 			options = options || {
 				index: null,
 				toggle: false,
@@ -17819,8 +17764,8 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			};
 			smap.core.pluginHandlerInst.callPlugin(pluginToolbar, "addButton", [label, iconClass, onClick, options]); 
 		},
-		
-		
+
+
 		/**
 		 * Create params as a string.
 		 * @param addRoot {Boolean}
@@ -17871,6 +17816,17 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		
 		addLayerWithConfig: function(layerConfig) {
 			return smap.core.layerInst._addLayerWithConfig(layerConfig);
+		},
+		
+		/**
+		 * Get the layer with given layerId (must be specified in layer's
+		 * options object for this to work).
+		 * 
+		 * @param layerId {String}
+		 * @returns {L.ILayer}
+		 */
+		getLayer: function(layerId) {
+			return smap.core.layerInst._getLayer(layerId);
 		},
 		
 		getLayerConfig: function(layerId) {
@@ -17974,6 +17930,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				smap.config.configName = params.CONFIG; // Store for creating params
+				
 				smap.config.langCode = params.LANG || navigator.language.split("-")[0] || "en";
 				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
@@ -17986,6 +17943,13 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	applyConfig: function(theConfig) {
 		this.preProcessConfig(theConfig);
+		
+		
+		// Set proxy for layers and controls
+		var proxy = smap.config.ws.proxy;
+		L.GeoJSON.WFS.prototype.proxy = proxy;
+		L.GeoJSON.Custom.prototype.proxy = proxy;
+		L.Control.SelectWMS.prototype.proxy = proxy;
 		
 		// Extend map options
 		$.extend(this.map.options, theConfig.mapOptions || {});
@@ -18433,6 +18397,229 @@ $(document).ready(function() {
  */
 L.control.selectWMS = function (options) {
 	return new L.Control.SelectWMS(options);
+};L.Control.SelectVector = L.Control.extend({
+	options: {
+		position: 'bottomright', // just an example
+		selectStyle: {
+			weight: 5,
+	        color: '#00FFFF',
+	        fillColor: '#00FFFF',
+	        opacity: 1,
+	        fillOpacity: .5
+		}
+	},
+	
+	_lang: {
+		"sv": {
+			exampleLabel: "Ett exempel"
+		},
+		"en": {
+			exampleLabel: "An example"
+		}
+	},
+	
+	/**
+	 * Keeps track of which vector features have been selected.
+	 */
+	_selectedFeatures: [],
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode;
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
+	},
+
+	initialize: function(options) {
+		L.setOptions(this, options);
+		this._setLang(options.langCode);
+		
+		// Func with proxy to be bound to individual features.
+		var self = this;
+		this._onFeatureClick = function(e) {
+			self.onFeatureClick(e);
+		};
+		
+	},
+
+	onAdd: function(map) {
+		this.map = map;
+		
+		this._container = L.DomUtil.create('div', 'leaflet-control-selectvector'); // second parameter is class name
+		L.DomEvent.disableClickPropagation(this._container);
+		this.$container = $(this._container);
+		
+		this._bindEvents();
+
+		return this._container;
+	},
+
+	onRemove: function(map) {
+		// Unbind them all!
+		this.map.off("layeradd", this._onLayerAdded);
+		this.map.off("click", this._onMapClick);
+	},
+	
+	_bindEvents: function() {
+		
+		// Funcs with proxy
+		this._onLayerAdded = $.proxy(this.onLayerAdded, this);
+		this._onLayerRemoved = $.proxy(this.onLayerRemoved, this);
+		this._onMapClick = $.proxy(this.onMapClick, this);
+		
+		// Bind them all!
+		this.map.on("layeradd", this._onLayerAdded);
+		this.map.on("layerremove", this._onLayerRemoved);
+		this.map.on("click", this._onMapClick);
+		
+	},
+	
+	/*
+	 * --- Event listeners ------------------------------------------------------------
+	 */
+	
+	
+	onMapClick: function() {
+		this._selectedFeatures = [];
+	},
+	
+	_vectorLayers: [],
+	
+	onLayerAdded: function(e) {
+		var self = this;
+		var layer = e.layer;
+		var isVector = layer.hasOwnProperty("_layers") && layer.resetStyle;
+		if (!isVector)
+			return;
+		
+		layer.on("load", function() {
+			this.eachLayer(function(lay) {
+				lay.options = lay.options || {};
+				lay.options.layerId = layer.options.layerId;
+				lay.off("click", self._onFeatureClick).on("click", self._onFeatureClick);
+			});			
+		});
+		this._vectorLayers.push(layer);
+	},
+	
+	onLayerRemoved: function(e) {
+		var layerId = e.layer.options.layerId;
+		if (layerId && e.layer._layers) {
+			var index = $.inArray(e.layer, this._vectorLayers);
+			if (index > -1) {
+				this._vectorLayers.splice(index, 1);
+			}
+//			var fs = this._selectedFeatures.slice(),
+//				f,
+//				newArr = [];
+//			for (var i=0,len=fs.length; i<len; i++) {
+//				f = fs[i];
+//				if (f.layerId === layerId) {
+//					// Remove this feature from the array
+//					this.unselect(f);	
+//				}
+//			}			
+		}
+		
+	},
+	
+	_layerFromFeature: function(_f, theLay) {
+		var layersObj = theLay._layers;
+		for (var nbr in layersObj) {
+			var _lay = layersObj[nbr];
+			if (_lay.feature === _f) {
+				return _lay;					
+			}
+		}
+		return null;
+	},
+	
+	unselect: function(f) {
+		var layerId = f.layerId;
+		var parentLayer = smap.cmd.getLayer(layerId);
+		var indexOfFeature = $.inArray(f, this._selectedFeatures);
+		// Remove the feature from selected arr and reset style
+		this._selectedFeatures.splice(indexOfFeature, 1);
+		
+		var lay = this._layerFromFeature(f, parentLayer) || parentLayer;
+//		if (!lay.resetStyle) {
+//			lay = parentLayer;
+//		}
+		parentLayer.resetStyle.call(parentLayer, lay);
+		
+		this._map.fire("unselected", {
+			feature: f
+		});
+
+	},
+	
+	onFeatureClick: function(e) {
+		var f = e.target.feature,
+			shiftKeyWasPressed = e.originalEvent ? e.originalEvent.shiftKey || false : false, 
+			target = e.target,
+			paramVal = null;
+		var layerId = target.options.layerId || e.layer.options.layerId;
+		var parentLayer = smap.core.layerInst._getLayer(layerId);
+		
+		if (parentLayer && shiftKeyWasPressed === false) {
+			this._selectedFeatures = [];
+			var resetStyle = parentLayer.resetStyle;
+			parentLayer.eachLayer(function(lay) {
+				resetStyle.call(parentLayer, lay);
+			});
+			
+			// Reset other vector layer's selection.
+			var arr = this._vectorLayers;
+			for (var i=0,len=arr.length; i<len; i++) {
+				lay = arr[i];
+				if (lay !== parentLayer) {
+					lay.resetStyle(lay);
+				}
+			}
+		}
+		
+		
+		var indexOfFeature = $.inArray(f, this._selectedFeatures);
+		if (shiftKeyWasPressed === true && indexOfFeature > -1) {
+			// Remove the feature from selected arr and reset style
+			this._selectedFeatures.splice(indexOfFeature, 1);
+			this._map.fire("unselected", {
+				feature: f
+			});
+			var lay = this._layerFromFeature(f, parentLayer);
+			parentLayer.resetStyle.call(parentLayer, lay);
+		}
+		else {
+			f.layerId = layerId;
+			f.uniqueKey = parentLayer.options.uniqueKey;
+			this._selectedFeatures.push(f);
+			var _lay = this._layerFromFeature(f, parentLayer);
+			if (_lay.setStyle) {
+				_lay.setStyle(parentLayer.options.selectStyle || this.options.selectStyle);
+			}
+			this._map.fire("selected", {
+				feature: f,
+				selectedFeatures: this._selectedFeatures,
+				layer: parentLayer,
+				latLng: e.latlng,
+				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
+			});
+			console.log(this._selectedFeatures.length);
+		}
+		
+	},
+	
+	
+	A: 1
+	
+});
+
+/*
+ * This code lets us skip "new" before the
+ * Class name when instantiating it.
+ */
+L.control.selectVector = function (options) {
+	return new L.Control.SelectVector(options);
 };L.Control.Geolocate = L.Control.extend({
 	options: {
 		position: 'bottomright',
@@ -20433,7 +20620,8 @@ L.control.sharePosition = function (options) {
 		$entry.on("blur", deactivate);
 		
 		
-		$("#mapdiv").append( $searchDiv );
+		//$("#mapdiv").append( $searchDiv );
+
 		
 //		var bHound = new Bloodhound({
 //			datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -20563,6 +20751,7 @@ L.control.search = function (options) {
 	return new L.Control.Search(options);
 };L.Control.Info = L.Control.extend({
 	options: {
+        addToMenu: true,
 		autoActivate: false,
 		position: 'bottomright',
 		_lang: {
@@ -20651,13 +20840,24 @@ L.control.search = function (options) {
 	
 	_drawBtn: function() {
 		var self = this;
-		var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info-circle"></span></button>');
+
+        if(this.options.addToMenu) {
+            smap.cmd.addToolButton( "", "fa fa-info-circle", function () {
+                self.activate();
+                return false;
+            },null);
+        }
+
+        else {
+            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info-circle"></span></button>');
 //		$("#mapdiv").append($btn);
-		$btn.on("click", function() {
-			self.activate();
-			return false;
-		});
-		this.$container.append($btn);
+            $btn.on("click", function () {
+                self.activate();
+                return false;
+            });
+            this.$container.append($btn);
+        }
+
 	}
 });
 
@@ -20669,4 +20869,98 @@ L.control.search = function (options) {
  */
 L.control.info = function (options) {
 	return new L.Control.Info(options);
-};L.Icon.Default.imagePath = "lib/leaflet-0.7.1/images/";
+};L.Control.Menu = L.Control.extend({
+
+    options: {
+        position: 'topright' // just an example
+    },
+
+    _lang: {
+        "sv": {
+            caption: "Dela länk till positionen"
+        },
+        "en": {
+            caption: "Share position link"
+        }
+    },
+
+    _setLang: function(langCode) {
+        langCode = langCode || smap.config.langCode;
+        if (this._lang) {
+            this.lang = this._lang ? this._lang[langCode] : null;
+        }
+    },
+
+    initialize: function(options) {
+        L.setOptions(this, options);
+        this._setLang(options.langCode);
+    },
+
+    onAdd: function(map) {
+        this.map = map;
+        this._container = L.DomUtil.create('div', 'leaflet-control-Menu'); // second parameter is class name
+
+        L.DomEvent.disableClickPropagation(this._container);
+
+        this.$container = $(this._container);
+        this._createMenu();
+
+        return this._container;
+    },
+
+    
+
+    addButton: function(id, iconClass, clickFunc, options){
+        var $btn = $('<li><a href=""><span class="'+iconClass+'"></span> Getting started</a></li>');
+        $btn.on("click", clickFunc);
+        $("#btns").append($btn);
+    },
+
+    _createMenu: function() {
+
+	    var $div = $(
+	
+	    '<header id="smap-menu-div" class="navbar navbar-static-top bs-docs-nav" role="banner">'+
+	      '<div class="container">'+
+	        '<div class="navbar-header">'+
+	      '    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">'+
+	      '      <span class="sr-only">Toggle navigation</span>'+
+	      '      <span class="fa fa-bars"></span>'+
+	      '    </button>'+
+	      '  </div>'+
+	      '  <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">'+
+	      '    <ul id="btns" class="nav navbar-nav navbar-right">'+
+	      '    </ul>'+
+	//      '    <ul class="nav navbar-nav navbar-right">'+
+	//      '      <li><a href="http://expo.getbootstrap.com" onclick="_gaq.push(['_trackEvent', 'Navbar', 'Community links', 'Expo']);">Expo</a></li>'+
+	//      '      <li><a href="http://blog.getbootstrap.com" onclick="_gaq.push(['_trackEvent', 'Navbar', 'Community links', 'Blog']);">Blog</a></li>'+
+	//      '    </ul>'+
+	      '  </nav>'+
+	      '</div>'+
+	    '</header>'
+	    );
+
+        $("body").append($div);
+        //this.$container.append($div);
+
+    },
+
+
+
+
+
+    onRemove: function(map) {
+
+        // Do everything "opposite" of onAdd – e.g. unbind events and destroy things
+        // map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+    }
+});
+
+
+/*
+ * This code lets us skip "new" before the
+ * Class name when instantiating it.
+ */
+L.control.menu = function (options) {
+    return new L.Control.Menu(options);
+};L.Icon.Default.imagePath = "lib/leaflet-0.7.2/images/";
