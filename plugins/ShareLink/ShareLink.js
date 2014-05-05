@@ -6,10 +6,10 @@ L.Control.ShareLink = L.Control.extend({
 
     _lang: {
         "sv": {
-            caption: "Dela länk till positionen"
+            caption: "Länk till kartan"
         },
         "en": {
-            caption: "Share position link"
+            caption: "Link to the map"
         }
     },
 
