@@ -3,6 +3,12 @@ var utils = {
 			return parseInt( text.replace(/px/gi, "").replace(/em/gi, "").replace(/pt/gi, "") );
 		},
 		
+		log: function(msg) {
+			if (window.console) {
+				console.log(msg);
+			}
+		},
+		
 		/**
 		 * Remove all duplicates in the array.
 		 * @param arr {Array}
