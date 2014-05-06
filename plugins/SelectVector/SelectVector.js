@@ -205,7 +205,7 @@ L.Control.SelectVector = L.Control.extend({
 				latLng: e.latlng,
 				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
 			});
-			console.log(this._selectedFeatures.length);
+			utils.log("selected a feature");
 		}
 		
 	},
