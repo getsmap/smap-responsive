@@ -207,7 +207,6 @@ L.Control.SelectVector = L.Control.extend({
 			});
 			utils.log("selected a feature");
 		}
-		
 	},
 	
 	

@@ -63,15 +63,15 @@ L.Control.SelectWMS = L.Control.extend({
 	},
 	
 	_applyParam: function(sel) {
-		var layer,
+		var layer, layerId, theItem, xyArr, latLng,
 			obj = JSON.parse(decodeURIComponent( sel ));
 		
 		for (layerId in obj) {
-			item = obj[layerId];
-			if (item["xy"]) {
+			theItem = obj[layerId];
+			if (theItem["xy"]) {
 				layer = smap.core.layerInst.showLayer(layerId);
 				
-				var xyArr = item["xy"][0]; 
+				xyArr = theItem["xy"][0]; 
 				latLng = L.latLng(xyArr[1], xyArr[0]); // val is lat, key is lon
 				
 				this.onMapClick({

@@ -216,24 +216,24 @@ smap.core.Select = L.Class.extend({
 			 * Add an item to the object. Adapt key name depending on layer type
 			 * (either xy or vals (for key-val)).
 			 */
-			function addToObject(layerId, vk, item) {
+			function addToObject(layerId, vk, theItem) {
 				if (!selObj[layerId]) {
 					selObj[layerId] = {};
 				}
 				if (!selObj[layerId][vk]) {
 					selObj[layerId][vk] = [];
 				}
-				selObj[layerId][vk].push(item);
+				selObj[layerId][vk].push(theItem);
 			};
 			
 			// -- Iterate through vector features --
-			var f, layer, item, fs;
+			var f, layer, theItem, fs;
 			if (self._selectedFeaturesVector && self._selectedFeaturesVector.length) {
 				fs = self._selectedFeaturesVector;
 				for (var i=0,len=fs.length; i<len; i++) {
 					f = fs[i];
-					item = self._getVectorVal(f.properties, f.uniqueKey);
-					addToObject(f.layerId, "vals", item);
+					theItem = self._getVectorVal(f.properties, f.uniqueKey);
+					addToObject(f.layerId, "vals", theItem);
 					selObj[f.layerId]["key"] = f.uniqueKey;
 				}
 			}
@@ -244,9 +244,9 @@ smap.core.Select = L.Class.extend({
 				for (var i=0,len=fs.length; i<len; i++) {
 					f = fs[i];
 //					for (var typeName in f.properties) {}
-//					item = [f.uniqueKey, f.properties[typeName][0][f.uniqueKey]];
-					item = [f.latLng.lng, f.latLng.lat];
-					addToObject(f.layerId, "xy", item);
+//					theItem = [f.uniqueKey, f.properties[typeName][0][f.uniqueKey]];
+					theItem = [f.latLng.lng, f.latLng.lat];
+					addToObject(f.layerId, "xy", theItem);
 				}
 			}
 			if ($.isEmptyObject(selObj) === false) {
@@ -263,7 +263,7 @@ smap.core.Select = L.Class.extend({
 					self = this,
 					isWms = false,
 					latLng, s, layer,
-					item, xy, layerId;
+					theItem, xy, layerId;
 				
 				/**
 				 * Called when the Vector layer is loaded so we can iterate through
@@ -275,8 +275,8 @@ smap.core.Select = L.Class.extend({
 					thisKey = this.options.uniqueKey,
 					selFeature;
 					
-					var item = obj[thisLayerId];
-					var valsArr = item["vals"],
+					var theItem = obj[thisLayerId];
+					var valsArr = theItem["vals"],
 						paramVal, i, props, keyArr, val;
 					
 					// Iterate through the layers features until we find the feature
@@ -316,8 +316,8 @@ smap.core.Select = L.Class.extend({
 				};
 				
 				for (layerId in obj) {
-					item = obj[layerId];
-					if (item["key"]) {
+					theItem = obj[layerId];
+					if (theItem["key"]) {
 						smap.core.layerInst.showLayer(layerId).on("load", onLoadWfs);
 					}
 				}
