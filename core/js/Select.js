@@ -318,8 +318,7 @@ smap.core.Select = L.Class.extend({
 				for (layerId in obj) {
 					item = obj[layerId];
 					if (item["key"]) {
-						layer = smap.core.layerInst.showLayer(layerId);
-						layer.on("load", onLoadWfs);
+						smap.core.layerInst.showLayer(layerId).on("load", onLoadWfs);
 					}
 				}
 			}
