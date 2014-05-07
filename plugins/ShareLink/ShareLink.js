@@ -6,10 +6,12 @@ L.Control.ShareLink = L.Control.extend({
 
     _lang: {
         "sv": {
-            caption: "Länk till kartan"
+            caption: "Länk till kartan",
+            close: "Stäng"
         },
         "en": {
-            caption: "Link to the map"
+            caption: "Link to the map",
+            close: "Close"
         }
     },
 
@@ -39,20 +41,44 @@ L.Control.ShareLink = L.Control.extend({
     },
 
     activate: function() {
-
+    	var self = this;
         var url = smap.cmd.createParams(true);
-        var input = '<div class="form-group"><input type="text" class="form-control" id="exampleInputEmail1" value="' + url + '" placeholder=""></div>'
-        this._$dialog=null;
+        var inputDiv = $('<div class="form-group"><input type="text" class="form-control" placeholder="'+this.lang.caption+'"></div>');
+        var input = inputDiv.find("input");
+        input.val(url);
 
+        var select = function(tag) {
+//        	tag.selectionStart = 0;
+//        	tag.selectionEnd = 9999;
+        	tag.setSelectionRange(0, 9999);
+//        	$(tag).select();
+        };
+        
         if (!this._$dialog) {
             var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
-            this._$dialog = utils.drawDialog(this.lang.caption, input, "");
+            this._$dialog = utils.drawDialog(this.lang.caption, inputDiv, footerContent);
+            this._$dialog.attr("id", "slink-modal");
+            
+            input.on("tap click", function() {
+            	select(this);
+//            	return false;
+            });
+//            this._$dialog.on("shown.bs.modal", function() {
+//            	setTimeout(function() {
+//            		select(input[0]);
+//            	}, 100);
+//        	});
+            this._$dialog.on("hide.bs.modal", function() {
+            	// Hide keyboard on touch devices
+            	$(this).find('input[type=text]').blur();
+            });
+            this._$dialog.on("hidden.bs.modal", function() {
+            	self._$dialog.empty().remove();
+            	self._$dialog = null;
+            });
+            
         }
         this._$dialog.modal("show");
-        this._$dialog.on("shown.bs.modal",function(){
-            $(this).find("input[type=text]").select();
-            
-        });
 
     },
 
