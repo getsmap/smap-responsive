@@ -18153,6 +18153,9 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 	drawMap: function(options) {
 		options = options || {};
 		
+		if (L.Browser.touch && L.Browser.ie) {
+			options.tapTolerance = 30;
+		}
 		var defaultOptions = smap.core.mainConfig.mapConfig || {};
 		this.map = L.map("mapdiv", $.extend(defaultOptions, options));
 		smap.map = this.map;
@@ -19590,10 +19593,10 @@ L.control.layerSwitcher = function (options) {
 				this.marker = L.marker(latLng).addTo(this.map);
 				this.marker.options.q = q; // Store for creating link to map
 				
-				
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
+				
+				this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59
 				this.marker.openPopup();
-				this.map.setView(latLng, 15);
 				$("#smap-search-div input").val(null);
 				$("#smap-search-div input").blur();
 				setTimeout(function() {
@@ -20059,11 +20062,11 @@ L.control.selectVector = function (options) {
 				info_format: options.info_format,
 				format: "image/png",
 				feature_count: this.options.featureCount,
-				x: px.x,
-				y: px.y,
+				x: utils.round(px.x),
+				y: utils.round(px.y),
 				buffer: this.options.buffer,
-				width: this.map.getSize().x,
-				height: this.map.getSize().y,
+				width: utils.round(this.map.getSize().x),
+				height: utils.round(this.map.getSize().y),
 				srs: this.options.srs || "EPSG:4326",
 				exceptions: "application%2Fvnd.ogc.se_xml"
 		};
@@ -20204,10 +20207,12 @@ L.control.selectWMS = function (options) {
 
     _lang: {
         "sv": {
-            caption: "Länk till kartan"
+            caption: "Länk till kartan",
+            close: "Stäng"
         },
         "en": {
-            caption: "Link to the map"
+            caption: "Link to the map",
+            close: "Close"
         }
     },
 
@@ -20237,20 +20242,44 @@ L.control.selectWMS = function (options) {
     },
 
     activate: function() {
-
+    	var self = this;
         var url = smap.cmd.createParams(true);
-        var input = '<div class="form-group"><input type="text" class="form-control" id="exampleInputEmail1" value="' + url + '" placeholder=""></div>'
-        this._$dialog=null;
+        var inputDiv = $('<div class="form-group"><input type="text" class="form-control" placeholder="'+this.lang.caption+'"></div>');
+        var input = inputDiv.find("input");
+        input.val(url);
 
+        var select = function(tag) {
+//        	tag.selectionStart = 0;
+//        	tag.selectionEnd = 9999;
+        	tag.setSelectionRange(0, 9999);
+//        	$(tag).select();
+        };
+        
         if (!this._$dialog) {
             var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
-            this._$dialog = utils.drawDialog(this.lang.caption, input, "");
+            this._$dialog = utils.drawDialog(this.lang.caption, inputDiv, footerContent);
+            this._$dialog.attr("id", "slink-modal");
+            
+            input.on("tap click", function() {
+            	select(this);
+//            	return false;
+            });
+//            this._$dialog.on("shown.bs.modal", function() {
+//            	setTimeout(function() {
+//            		select(input[0]);
+//            	}, 100);
+//        	});
+            this._$dialog.on("hide.bs.modal", function() {
+            	// Hide keyboard on touch devices
+            	$(this).find('input[type=text]').blur();
+            });
+            this._$dialog.on("hidden.bs.modal", function() {
+            	self._$dialog.empty().remove();
+            	self._$dialog = null;
+            });
+            
         }
         this._$dialog.modal("show");
-        this._$dialog.on("shown.bs.modal",function(){
-            $(this).find("input[type=text]").select();
-            
-        });
 
     },
 

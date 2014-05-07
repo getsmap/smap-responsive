@@ -27,10 +27,6 @@
   -webkit-transition: margin-left 300ms ease;
   -moz-transition: margin-left 300ms ease; }
 
-.lswitch-panel .panel-default:first-child {
-  margin-top: 1em;
-  /*10px;*/ }
-
 .lswitch-panel {
   box-shadow: inset black -3px 0px 17px;
   -moz-box-shadow: inset black -3px 0px 17px;
@@ -44,6 +40,7 @@
   max-width: 300px;
   background-color: #38454E;
   padding: 0 20px;
+  padding-top: 1em;
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar !important;
   /* Nasty bug fix: Required for WP8 IE10!!! */

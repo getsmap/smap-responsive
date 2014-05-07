@@ -172,10 +172,10 @@ var config = {
 		        		   autoActivate: false
 		        	   }
 		           },
-                   {
-                       init: "L.Control.Menu",
-                       options: {}
-                   },
+//                   {
+//                       init: "L.Control.Menu",
+//                       options: {}
+//                   },
 		           {
 		        	   init: "L.Control.GuidePopup",
 		        	   options: {
