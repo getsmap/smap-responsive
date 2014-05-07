@@ -19094,7 +19094,7 @@ L.control.guidePopup = function (options) {
 		$("#mapdiv").addClass("lswitch-panelslide");
 		
 		// Fix for Android 3 and lower (make div scrollable)
-		if (L.Browser.android || L.Browser.msTouch) {  // L.Browser.android23 is better?
+		if (L.Browser.android) {  // L.Browser.android23 is better?
 			function touchScroll(selector){
 			      var scrollStartPos = 0;
 			      $(selector).on('touchstart', function(event) {
@@ -19106,13 +19106,6 @@ L.control.guidePopup = function (options) {
 			}
 			touchScroll($('.lswitch-panel'));
 		}
-		
-		if (L.Browser.msTouch) {  // L.Browser.android23 is better?
-			this.$container.css({
-				"overflow-y": "scroll !important"
-			});
-		}
-		
 		return this._container;
 	},
 

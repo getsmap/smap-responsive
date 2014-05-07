@@ -1525,9 +1525,9 @@ Version: 1.0
   max-width: 300px;
   background-color: #38454E;
   padding: 0 20px;
-  overflow: auto;
-  -ms-touch-action: none !important;
-  /* Bug fix - allow scroll on WindowsPhone */
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar !important;
+  /* Nasty bug fix: Required for WP8 IE10!!! */
   font-size: 1.4em; }
 
 .lswitch-panel a {
