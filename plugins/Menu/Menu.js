@@ -56,6 +56,7 @@ L.Control.Menu = L.Control.extend({
 	      '      <span class="sr-only">Toggle navigation</span>'+
 	      '      <span class="fa fa-bars"></span>'+
 	      '    </button>'+
+	      		'<a class="navbar-brand" href="#">Stadsatlas</a>'+
 	      '  </div>'+
 	      '  <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">'+
 	      '    <ul id="btns" class="nav navbar-nav navbar-right">'+

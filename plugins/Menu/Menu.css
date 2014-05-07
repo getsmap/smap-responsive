@@ -1,11 +1,22 @@
 #smap-menu-div {
 	z-index: 1001;
-	background-color: rgba(255,255,255,.6);
+	background-color: #58708f;
+	color: #fff;
+	padding-left: 0;
+}
+
+#smap-menu-div .container {
+	padding-left: 0;
+	margin-left: 2em;
+}
+
+#smap-menu-div a {
+	color: #fff;
 }
 
 @media (min-width: 992px) {
     #smap-menu-div {
-        left: 300px;
+		left: 0px;
 	}
 
 }
