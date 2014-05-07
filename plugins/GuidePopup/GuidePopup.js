@@ -10,17 +10,19 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			mediaHeader: "Media"
+			mediaHeader: "Media",
+			accessHeader: "Tillgänglighet"
 		},
 		"en": {
-			mediaHeader: "Media"
+			mediaHeader: "Media",
+			accessHeader: "Accessibility"
 		}
 	},
 	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;			
+			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
 
@@ -33,6 +35,9 @@ L.Control.GuidePopup = L.Control.extend({
 		// Use $ prefix for all jQuery objects to make it easier to sort out all
 		// jQuery dependencies when sharing the code in future.
 		this.$container = $(this._container);
+		
+		// Define proxy functions
+		this.__onPopupClick = this.__onPopupClick || $.proxy(this._onPopupClick, this);
 		
 		this._activate();
 
@@ -65,8 +70,15 @@ L.Control.GuidePopup = L.Control.extend({
 			var content = this._makeMediaContent(mediaArr.mediaType, utils.extractToHtml(mediaArr.sources, props).split(","));
 			this.showFullScreen(content);
 		}
+		
+		// On media icons click - open media tab when dialog opens
+		if ($(e.target).hasClass("gp-mediaicons") || $(e.target).parent().hasClass("gp-mediaicons")) {
+			$('[href="#gp-moreinfo"]').click();
+		}
+		
 		return false;
 	},
+	
 	
 	_onPopupOpen: function(e) {
 		if (e.popup._source.feature) {
@@ -74,12 +86,13 @@ L.Control.GuidePopup = L.Control.extend({
 //			this.layerId = e.popup.layerId;
 //			this.properties = props; // properties for filling the dialog
 			
+			$(".leaflet-popup-content").find(".gp-mediaicons").on("touchstart click", this.__onPopupClick);
 			var t = this.options.data[ props[this.options.attrId] ];
 			if (t && t instanceof Object) {
 				var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-default">Visa mer</button>');
 				$(".leaflet-popup-content").append(btn);
 				btn.data("props", props);
-				btn.on("touchstart click", $.proxy(this._onPopupClick, this));
+				btn.on("touchstart click", this.__onPopupClick);
 			}
 			
 		}
@@ -259,6 +272,13 @@ L.Control.GuidePopup = L.Control.extend({
 		return $tagVideo;
 	},
 	
+	_makeAccessContent: function(props) {
+		
+		var content = this.options.tabAccess;
+		content = utils.extractToHtml(content, props);
+		return content;
+	},
+	
 	_makeMediaList: function(arrMedia, props) {
 		arrMedia = arrMedia || [];
 		
@@ -340,12 +360,14 @@ L.Control.GuidePopup = L.Control.extend({
 		'<ul class="nav nav-tabs">' +
 			'<li class="active"><a href="#gp-intro" data-toggle="tab">Intro</a></li>'+
 			'<li><a href="#gp-moreinfo" data-toggle="tab">'+this.lang.mediaHeader+'</a></li>'+
+			'<li><a href="#gp-access" data-toggle="tab">'+this.lang.accessHeader+'</a></li>'+
 		'</ul>'+
 		'<div class="tab-content gp-popup">'+
 		  '<div class="tab-pane active" id="gp-intro">'+
 		  		// Add loading icon here
 			'</div>'+
 		  '<div class="tab-pane" id="gp-moreinfo"></div>'+
+		  '<div class="tab-pane" id="gp-access"></div>'+
 		'</div>';
 		
 //		content = utils.extractToHtml(content, props);
@@ -358,6 +380,11 @@ L.Control.GuidePopup = L.Control.extend({
 		// Fill media-tab content
 		var list = this._makeMediaList(data.tabMedia, props);
 		content.find("#gp-moreinfo").append(list);
+		
+		// Fill access-tag content
+		var accessContent = this._makeAccessContent(props);
+		content.find("#gp-access").append(accessContent);
+		
 		
 		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);
 		
