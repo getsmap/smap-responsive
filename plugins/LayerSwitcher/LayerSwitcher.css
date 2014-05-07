@@ -27,10 +27,14 @@
   -webkit-transition: margin-left 300ms ease;
   -moz-transition: margin-left 300ms ease; }
 
-.lswitch-panel .panel-default {
-  margin-top: 10px; }
+.lswitch-panel .panel-default:first-child {
+  margin-top: 5em;
+  /*10px;*/ }
 
 .lswitch-panel {
+  box-shadow: inset black -3px 0px 17px;
+  -moz-box-shadow: inset black -3px 0px 17px;
+  -webkit-box-shadow: inset black -3px 0px 17px;
   z-index: -1;
   position: absolute;
   left: 0px;
@@ -40,9 +44,6 @@
   max-width: 300px;
   background-color: #38454E;
   padding: 0 20px;
-  box-shadow: inset black -3px 0px 17px;
-  -moz-box-shadow: inset black -3px 0px 17px;
-  -webkit-box-shadow: inset black -3px 0px 17px;
   overflow: auto;
   -ms-touch-action: none !important;
   /* Bug fix - allow scroll on WindowsPhone */
@@ -102,6 +103,19 @@
 .lswitch-overflow-hidden {
   overflow: hidden !important; }
 
+@media (max-width: 991px) {
+  .lswitch-panel .panel {
+    transition: all 400ms;
+    -webkit-transition: all 400ms;
+    -moz-transition: all 400ms;
+    transform: translate(-20%, 0) scale(0.95);
+    -webkit-transform: translate(-20%, 0) scale(0.95);
+    -ms-transform: translate(-20%, 0) scale(0.95); }
+
+  .lswitch-panel.panel-visible .panel {
+    transform: translate(0, 0) scale(1) !important;
+    -webkit-transform: translate(0, 0) scale(1) !important;
+    -ms-transform: translate(0, 0) scale(1) !important; } }
 @media (min-width: 992px) {
   /* For desktop computers */
   /* Avoid things appearing under the switcher */
@@ -115,16 +129,34 @@
     display: none !important; }
 
   .lswitch-panel {
+    /*@include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);*/
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    transition: all 300ms;
+    -webkit-transition: all 300ms;
+    -moz-transition: all 300ms;
     display: block !important;
-    background-color: #eee;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0);
+    z-index: 1000;
+    overflow: hidden; }
+
+  .lswitch-panel:hover {
     box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
     -moz-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
-    z-index: 1000; }
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow-y: auto; }
 
   .lswitch-panel .panel-heading {
-    background-color: #555;
+    background-color: #bbbbbb;
+    background-color: #58708f !important;
+    color: #000;
+    border: none; }
+
+  .lswitch-panel:hover .panel-heading {
+    background-color: #bbbbbb;
     background-color: #58708f !important;
     color: #000;
     border: none; }
@@ -132,27 +164,32 @@
   .lswitch-panel a {
     background: none;
     color: #444;
-    transition: all 200ms;
-    -webkit-transition: all 200ms;
-    -moz-transition: all 200ms; }
+    transition: all 100ms;
+    -webkit-transition: all 100ms;
+    -moz-transition: all 100ms; }
 
   .lswitch-panel a:hover, .lswitch-panel a:active {
-    background-color: #bbb;
-    background-color: rgba(200, 200, 200, 0.5);
+    background-color: #eeeeee;
     color: #000; }
 
   .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
-    background-color: #333;
+    background-color: #bbbbbb;
     background-color: #58708f;
     color: #fff; }
 
   .lswitch-panel a.active {
     cursor: pointer;
-    background-color: #333;
+    background-color: #bbbbbb;
     background-color: #58708f;
     color: #fff;
     font-weight: normal; }
 
   .lswitch-panel .panel-default {
     border: none;
-    background: none; } }
+    background: none; }
+
+  #lswitch-olcont, #lswitch-blcont {
+    background-color: rgba(255, 255, 255, 0.4); }
+
+  .lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont {
+    background-color: none; } }

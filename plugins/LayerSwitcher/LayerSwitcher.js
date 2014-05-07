@@ -81,13 +81,18 @@ L.Control.LayerSwitcher = L.Control.extend({
 		ols = ols || [];
 		
 		var t;
-		for (var i=0,len=bls.length; i<len; i++) {
-			t = bls[i];
-			this._addRow({
-				displayName: t.options.displayName,
-				layerId: t.options.layerId,
-				isBaseLayer: true
-			});
+		if (bls.length > 1) {
+			for (var i=0,len=bls.length; i<len; i++) {
+				t = bls[i];
+				this._addRow({
+					displayName: t.options.displayName,
+					layerId: t.options.layerId,
+					isBaseLayer: true
+				});
+			}
+		}
+		else {
+			$(".lswitch-panel-bl").hide();
 		}
 		for (var i=0,len=ols.length; i<len; i++) {
 			t = ols[i];
@@ -160,12 +165,19 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this.$panel.swipeleft($.proxy(function() {
 			this.hidePanel();
 		}, this));
+		
+		// Allow immeditate scrolling on touch devices by enabling scrolling right after touchstart
+		this.$panel.on("touchstart", function() {
+			$(this).css("overflow-y", "auto");
+		});
+		
+		
 		this.$list = $(
-			'<div class="panel panel-default">'+
+			'<div class="panel panel-default lswitch-panel-bl">'+
 				'<div class="panel-heading">'+this.lang.baselayers+'</div>'+
 				'<div id="lswitch-blcont" class="list-group"></div>'+
 			'</div>'+
-			'<div class="panel panel-default">'+
+			'<div class="panel panel-default lswitch-panel-ol">'+
 				'<div class="panel-heading">'+this.lang.overlays+'</div>'+
 				'<div id="lswitch-olcont" class="list-group"></div>'+
 			'</div>');
@@ -175,6 +187,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 	
 	showPanel: function() {
 		this.$panel.show();
+		setTimeout(function() {
+			$(".lswitch-panel").addClass("panel-visible");
+		}, 10);
+		
 		$("#mapdiv").css({
 			"margin-left": this.$panel.outerWidth() + "px"
 		});
@@ -186,6 +202,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 			"margin-left": "0px"
 		});
 		$("#lswitch-btn").show();
+		$(".lswitch-panel").removeClass("panel-visible");
+		
 		$("html, body").addClass("lswitch-overflow-hidden");
 		setTimeout($.proxy(function() {
 			this.$panel.hide();

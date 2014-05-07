@@ -1,5 +1,13 @@
 @import '../../core/css/css3.scss';
 
+$select-color-hex: #bbb;
+$select-color: rgba(88, 112, 143, 1);
+
+$header-color-hex: #bbb;	
+$header-color: rgba(88, 112, 143, 1);
+	
+$hover-color-hex: #eee;
+
 #lswitch-btn {
 	z-index: 999;
 	position: absolute;
@@ -23,11 +31,13 @@
 	@include transition(margin-left 300ms ease);
 }
 
-.lswitch-panel .panel-default {
-	margin-top: 10px;
+.lswitch-panel .panel-default:first-child {
+	margin-top: 5em; /*10px;*/
 }
 
 .lswitch-panel {
+	@include box-shadow(inset #000 -3px 0px 17px);
+	
 	z-index: -1;
 	position: absolute;
 	left: 0px;
@@ -37,7 +47,6 @@
 	max-width: 300px;
 	background-color: #38454E;
 	padding: 0 20px;
-	@include box-shadow(inset #000 -3px 0px 17px);
 	overflow: auto;
 	-ms-touch-action: none !important; /* Bug fix - allow scroll on WindowsPhone */
 	font-size: 1.4em;
@@ -96,6 +105,16 @@
 
 
 
+@media (max-width: 991px) {
+	// Zoom-in-effect when showing and hiding the panel
+	.lswitch-panel .panel {
+		@include transition(all 400ms);
+		@include transform(translate(-20%,0) scale(0.95));
+	}
+	.lswitch-panel.panel-visible .panel {
+		@include transform(translate(0,0) scale(1) !important);
+	}
+}
 
 @media (min-width: 992px) {
 	/* For desktop computers */
@@ -115,17 +134,34 @@
 	}
 	
 	.lswitch-panel {
+		/*@include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);*/
+		@include box-shadow(none);
+		@include transition(all 300ms);
+		
 		display: block !important;
-		background-color: #eee;
-		background-color: rgba(255,255,255,0.6);
-		@include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);
+		background-color: #fff;
+		background-color: rgba(255,255,255, 0);
 		z-index: 1000;
 		
-		//@include transition(all 500ms);
+		overflow: hidden;
 	}
+	
+	.lswitch-panel:hover {
+		@include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);
+		background-color: rgba(255,255,255, .9);
+		
+		overflow-y: auto;
+	}
+	
 	.lswitch-panel .panel-heading {
-		background-color: #555;
-		background-color: rgba(88, 112, 143, 1) !important;
+		background-color: $header-color-hex;
+		background-color: $header-color !important;
+		color: #000;
+		border: none;
+	}
+	.lswitch-panel:hover .panel-heading {
+		background-color: $header-color-hex;
+		background-color: $header-color !important;
 		color: #000;
 		border: none;
 	}
@@ -133,22 +169,22 @@
 	.lswitch-panel a {
 		background: none;
 		color: #444;
-		@include transition(all 200ms);
+		@include transition(all 100ms);
 	}
 	.lswitch-panel a:hover, .lswitch-panel a:active {
-		background-color: #bbb;
-		background-color: rgba(200,200,200,.5);
+		background-color: $hover-color-hex;
 		color: #000;
 	}
 	.lswitch-panel a.active:hover, .lswitch-panel a.active:active {
-		background-color: #333;
-		background-color: rgba(88, 112, 143, 1);
+		background-color: $select-color-hex;
+		background-color: $select-color;
 		color: #fff;
 	}
+	
 	.lswitch-panel a.active {
 		cursor: pointer;
-		background-color: #333;
-		background-color: rgba(88, 112, 143, 1);
+		background-color: $select-color-hex;
+		background-color: $select-color;
 		color: #fff;
 		font-weight: normal;
 	}
@@ -156,4 +192,14 @@
 		border: none;
 		background: none;
 	}
+	
+	
+	
+	#lswitch-olcont, #lswitch-blcont {
+		background-color: rgba(255,255,255,.4);
+	}
+	.lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont {
+		background-color: none;
+	} 
+	
 }
