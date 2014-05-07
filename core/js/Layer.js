@@ -108,32 +108,19 @@ smap.core.Layer = L.Class.extend({
 		var layer = new init(t.url, t.options);
 		
 		var self = this;
-		if (layer._layers) {   // i.e. is a vector layer //layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS" || layer.CLASS_NAME === "L.GeoJSON.Custom") {
-			if (!t.options.style) {
-				var style = {
-						weight: 2,
-				        opacity: 1,
-				        color: '#fff',
-				        dashArray: '3',
-				        fillOpacity: 0.7
-					};
-				layer.setStyle(style);
-				layer.options.style = style;
-			}
+		if (layer._layers) {
+//			if (!t.options.style) {
+//				var style = {
+//						weight: 2,
+//				        opacity: 1,
+//				        color: '#fff',
+//				        dashArray: '3',
+//				        fillOpacity: 0.7
+//					};
+//				layer.setStyle(style);
+//				layer.options.style = style;
+//			}
 			layer.on("load", function(e) {
-//				var html;
-//				layer.eachLayer(function(f) {
-//					if (!f._popup && f.feature) {
-//						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
-//						
-//						// Do not use autoPan because this will set center around the popup
-//						// when panning the map, making it impossible to pan away from the popup.
-//						f.bindPopup(html, {autoPan: false});
-//						if (f._popup) {
-//							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
-//						}
-//					}
-//				});
 				smap.cmd.loading(false);
 			});
 			// Listen to these "home-made" events added to our own L.GeoJSON.WFS layer class.

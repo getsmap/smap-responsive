@@ -16696,10 +16696,22 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		if (options.filter && !options.filter(geojson)) { return; }
 		
 		var isPointLayer = !options.pointToLayer && geojson.geometry && (geojson.geometry.type === "MultiPoint" || geojson.geometry.type === "Point");
-		if (isPointLayer && !options.pointToLayer) {
-			options.pointToLayer = function(feature, latLng) {
-				return L.circleMarker(latLng, options.style);
-			};
+		if (isPointLayer && !options.pointToLayer && options.style) {
+			var func;
+			if (options.style.icon) {
+				// Create a marker with an icon with given options
+				func = function(feature, latLng) {
+					return L.marker(latLng, {
+	     				icon: L.icon(options.style.icon)
+	     			});
+				}
+			}
+			else {
+				func = function(feature, latLng) {
+					return L.circleMarker(latLng, options.style);
+				};
+			}
+			options.pointToLayer = func;
 	    }
 		
 		var layer = L.GeoJSON.geometryToLayer(geojson, options.pointToLayer, options.coordsToLatLng, options);
@@ -16916,6 +16928,12 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 (function(){L.labelVersion="0.2.2-dev",L.Label=L.Class.extend({includes:L.Mixin.Events,options:{className:"",clickable:!1,direction:"right",noHide:!1,offset:[12,-15],opacity:1,zoomAnimation:!0},initialize:function(t,e){L.setOptions(this,t),this._source=e,this._animated=L.Browser.any3d&&this.options.zoomAnimation,this._isOpen=!1},onAdd:function(t){this._map=t,this._pane=this._source instanceof L.Marker?t._panes.markerPane:t._panes.popupPane,this._container||this._initLayout(),this._pane.appendChild(this._container),this._initInteraction(),this._update(),this.setOpacity(this.options.opacity),t.on("moveend",this._onMoveEnd,this).on("viewreset",this._onViewReset,this),this._animated&&t.on("zoomanim",this._zoomAnimation,this),L.Browser.touch&&!this.options.noHide&&L.DomEvent.on(this._container,"click",this.close,this)},onRemove:function(t){this._pane.removeChild(this._container),t.off({zoomanim:this._zoomAnimation,moveend:this._onMoveEnd,viewreset:this._onViewReset},this),this._removeInteraction(),this._map=null},setLatLng:function(t){return this._latlng=L.latLng(t),this._map&&this._updatePosition(),this},setContent:function(t){return this._previousContent=this._content,this._content=t,this._updateContent(),this},close:function(){var t=this._map;t&&(L.Browser.touch&&!this.options.noHide&&L.DomEvent.off(this._container,"click",this.close),t.removeLayer(this))},updateZIndex:function(t){this._zIndex=t,this._container&&this._zIndex&&(this._container.style.zIndex=t)},setOpacity:function(t){this.options.opacity=t,this._container&&L.DomUtil.setOpacity(this._container,t)},_initLayout:function(){this._container=L.DomUtil.create("div","leaflet-label "+this.options.className+" leaflet-zoom-animated"),this.updateZIndex(this._zIndex)},_update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updatePosition(),this._container.style.visibility="")},_updateContent:function(){this._content&&this._map&&this._prevContent!==this._content&&"string"==typeof this._content&&(this._container.innerHTML=this._content,this._prevContent=this._content,this._labelWidth=this._container.offsetWidth)},_updatePosition:function(){var t=this._map.latLngToLayerPoint(this._latlng);this._setPosition(t)},_setPosition:function(t){var e=this._map,i=this._container,n=e.latLngToContainerPoint(e.getCenter()),o=e.layerPointToContainerPoint(t),s=this.options.direction,a=this._labelWidth,l=L.point(this.options.offset);"right"===s||"auto"===s&&o.x<n.x?(L.DomUtil.addClass(i,"leaflet-label-right"),L.DomUtil.removeClass(i,"leaflet-label-left"),t=t.add(l)):(L.DomUtil.addClass(i,"leaflet-label-left"),L.DomUtil.removeClass(i,"leaflet-label-right"),t=t.add(L.point(-l.x-a,l.y))),L.DomUtil.setPosition(i,t)},_zoomAnimation:function(t){var e=this._map._latLngToNewLayerPoint(this._latlng,t.zoom,t.center).round();this._setPosition(e)},_onMoveEnd:function(){this._animated&&"auto"!==this.options.direction||this._updatePosition()},_onViewReset:function(t){t&&t.hard&&this._update()},_initInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.addClass(t,"leaflet-clickable"),L.DomEvent.on(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.on(t,e[i],this._fireMouseEvent,this)}},_removeInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.removeClass(t,"leaflet-clickable"),L.DomEvent.off(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.off(t,e[i],this._fireMouseEvent,this)}},_onMouseClick:function(t){this.hasEventListeners(t.type)&&L.DomEvent.stopPropagation(t),this.fire(t.type,{originalEvent:t})},_fireMouseEvent:function(t){this.fire(t.type,{originalEvent:t}),"contextmenu"===t.type&&this.hasEventListeners(t.type)&&L.DomEvent.preventDefault(t),"mousedown"!==t.type?L.DomEvent.stopPropagation(t):L.DomEvent.preventDefault(t)}}),L.BaseMarkerMethods={showLabel:function(){return this.label&&this._map&&(this.label.setLatLng(this._latlng),this._map.showLabel(this.label)),this},hideLabel:function(){return this.label&&this.label.close(),this},setLabelNoHide:function(t){this._labelNoHide!==t&&(this._labelNoHide=t,t?(this._removeLabelRevealHandlers(),this.showLabel()):(this._addLabelRevealHandlers(),this.hideLabel()))},bindLabel:function(t,e){var i=this.options.icon?this.options.icon.options.labelAnchor:this.options.labelAnchor,n=L.point(i)||L.point(0,0);return n=n.add(L.Label.prototype.options.offset),e&&e.offset&&(n=n.add(e.offset)),e=L.Util.extend({offset:n},e),this._labelNoHide=e.noHide,this.label||(this._labelNoHide||this._addLabelRevealHandlers(),this.on("remove",this.hideLabel,this).on("move",this._moveLabel,this).on("add",this._onMarkerAdd,this),this._hasLabelHandlers=!0),this.label=new L.Label(e,this).setContent(t),this},unbindLabel:function(){return this.label&&(this.hideLabel(),this.label=null,this._hasLabelHandlers&&(this._labelNoHide||this._removeLabelRevealHandlers(),this.off("remove",this.hideLabel,this).off("move",this._moveLabel,this).off("add",this._onMarkerAdd,this)),this._hasLabelHandlers=!1),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},getLabel:function(){return this.label},_onMarkerAdd:function(){this._labelNoHide&&this.showLabel()},_addLabelRevealHandlers:function(){this.on("mouseover",this.showLabel,this).on("mouseout",this.hideLabel,this),L.Browser.touch&&this.on("click",this.showLabel,this)},_removeLabelRevealHandlers:function(){this.off("mouseover",this.showLabel,this).off("mouseout",this.hideLabel,this),L.Browser.touch&&this.off("click",this.showLabel,this)},_moveLabel:function(t){this.label.setLatLng(t.latlng)}},L.Icon.Default.mergeOptions({labelAnchor:new L.Point(9,-20)}),L.Marker.mergeOptions({icon:new L.Icon.Default}),L.Marker.include(L.BaseMarkerMethods),L.Marker.include({_originalUpdateZIndex:L.Marker.prototype._updateZIndex,_updateZIndex:function(t){var e=this._zIndex+t;this._originalUpdateZIndex(t),this.label&&this.label.updateZIndex(e)},_originalSetOpacity:L.Marker.prototype.setOpacity,setOpacity:function(t,e){this.options.labelHasSemiTransparency=e,this._originalSetOpacity(t)},_originalUpdateOpacity:L.Marker.prototype._updateOpacity,_updateOpacity:function(){var t=0===this.options.opacity?0:1;this._originalUpdateOpacity(),this.label&&this.label.setOpacity(this.options.labelHasSemiTransparency?this.options.opacity:t)},_originalSetLatLng:L.Marker.prototype.setLatLng,setLatLng:function(t){return this.label&&!this._labelNoHide&&this.hideLabel(),this._originalSetLatLng(t)}}),L.CircleMarker.mergeOptions({labelAnchor:new L.Point(0,0)}),L.CircleMarker.include(L.BaseMarkerMethods),L.Path.include({bindLabel:function(t,e){return this.label&&this.label.options===e||(this.label=new L.Label(e,this)),this.label.setContent(t),this._showLabelAdded||(this.on("mouseover",this._showLabel,this).on("mousemove",this._moveLabel,this).on("mouseout remove",this._hideLabel,this),L.Browser.touch&&this.on("click",this._showLabel,this),this._showLabelAdded=!0),this},unbindLabel:function(){return this.label&&(this._hideLabel(),this.label=null,this._showLabelAdded=!1,this.off("mouseover",this._showLabel,this).off("mousemove",this._moveLabel,this).off("mouseout remove",this._hideLabel,this)),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},_showLabel:function(t){this.label.setLatLng(t.latlng),this._map.showLabel(this.label)},_moveLabel:function(t){this.label.setLatLng(t.latlng)},_hideLabel:function(){this.label.close()}}),L.Map.include({showLabel:function(t){return this.addLayer(t)}}),L.FeatureGroup.include({clearLayers:function(){return this.unbindLabel(),this.eachLayer(this.removeLayer,this),this},bindLabel:function(t,e){return this.invoke("bindLabel",t,e)},unbindLabel:function(){return this.invoke("unbindLabel")},updateLabelContent:function(t){this.invoke("updateLabelContent",t)}})})(this,document);var utils = {
 		rmPx: function(text) {
 			return parseInt( text.replace(/px/gi, "").replace(/em/gi, "").replace(/pt/gi, "") );
+		},
+		
+		log: function(msg) {
+			if (window.console) {
+				console.log(msg);
+			}
 		},
 		
 		/**
@@ -17209,32 +17227,19 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		var layer = new init(t.url, t.options);
 		
 		var self = this;
-		if (layer._layers) {   // i.e. is a vector layer //layer.CLASS_NAME && layer.CLASS_NAME === "L.GeoJSON.WFS" || layer.CLASS_NAME === "L.GeoJSON.Custom") {
-			if (!t.options.style) {
-				var style = {
-						weight: 2,
-				        opacity: 1,
-				        color: '#fff',
-				        dashArray: '3',
-				        fillOpacity: 0.7
-					};
-				layer.setStyle(style);
-				layer.options.style = style;
-			}
+		if (layer._layers) {
+//			if (!t.options.style) {
+//				var style = {
+//						weight: 2,
+//				        opacity: 1,
+//				        color: '#fff',
+//				        dashArray: '3',
+//				        fillOpacity: 0.7
+//					};
+//				layer.setStyle(style);
+//				layer.options.style = style;
+//			}
 			layer.on("load", function(e) {
-//				var html;
-//				layer.eachLayer(function(f) {
-//					if (!f._popup && f.feature) {
-//						html = utils.extractToHtml(layer.options.popup, f.feature.properties);
-//						
-//						// Do not use autoPan because this will set center around the popup
-//						// when panning the map, making it impossible to pan away from the popup.
-//						f.bindPopup(html, {autoPan: false});
-//						if (f._popup) {
-//							f._popup.options.autoPanPaddingTopLeft = [0, 50];							
-//						}
-//					}
-//				});
 				smap.cmd.loading(false);
 			});
 			// Listen to these "home-made" events added to our own L.GeoJSON.WFS layer class.
@@ -17492,24 +17497,24 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 			 * Add an item to the object. Adapt key name depending on layer type
 			 * (either xy or vals (for key-val)).
 			 */
-			function addToObject(layerId, vk, item) {
+			function addToObject(layerId, vk, theItem) {
 				if (!selObj[layerId]) {
 					selObj[layerId] = {};
 				}
 				if (!selObj[layerId][vk]) {
 					selObj[layerId][vk] = [];
 				}
-				selObj[layerId][vk].push(item);
+				selObj[layerId][vk].push(theItem);
 			};
 			
 			// -- Iterate through vector features --
-			var f, layer, item, fs;
+			var f, layer, theItem, fs;
 			if (self._selectedFeaturesVector && self._selectedFeaturesVector.length) {
 				fs = self._selectedFeaturesVector;
 				for (var i=0,len=fs.length; i<len; i++) {
 					f = fs[i];
-					item = self._getVectorVal(f.properties, f.uniqueKey);
-					addToObject(f.layerId, "vals", item);
+					theItem = self._getVectorVal(f.properties, f.uniqueKey);
+					addToObject(f.layerId, "vals", theItem);
 					selObj[f.layerId]["key"] = f.uniqueKey;
 				}
 			}
@@ -17520,9 +17525,9 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 				for (var i=0,len=fs.length; i<len; i++) {
 					f = fs[i];
 //					for (var typeName in f.properties) {}
-//					item = [f.uniqueKey, f.properties[typeName][0][f.uniqueKey]];
-					item = [f.latLng.lng, f.latLng.lat];
-					addToObject(f.layerId, "xy", item);
+//					theItem = [f.uniqueKey, f.properties[typeName][0][f.uniqueKey]];
+					theItem = [f.latLng.lng, f.latLng.lat];
+					addToObject(f.layerId, "xy", theItem);
 				}
 			}
 			if ($.isEmptyObject(selObj) === false) {
@@ -17539,7 +17544,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 					self = this,
 					isWms = false,
 					latLng, s, layer,
-					item, xy, layerId;
+					theItem, xy, layerId;
 				
 				/**
 				 * Called when the Vector layer is loaded so we can iterate through
@@ -17551,8 +17556,8 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 					thisKey = this.options.uniqueKey,
 					selFeature;
 					
-					var item = obj[thisLayerId];
-					var valsArr = item["vals"],
+					var theItem = obj[thisLayerId];
+					var valsArr = theItem["vals"],
 						paramVal, i, props, keyArr, val;
 					
 					// Iterate through the layers features until we find the feature
@@ -17592,10 +17597,9 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 				};
 				
 				for (layerId in obj) {
-					item = obj[layerId];
-					if (item["key"]) {
-						layer = smap.core.layerInst.showLayer(layerId);
-						layer.on("load", onLoadWfs);
+					theItem = obj[layerId];
+					if (theItem["key"]) {
+						smap.core.layerInst.showLayer(layerId).on("load", onLoadWfs);
 					}
 				}
 			}
@@ -18594,17 +18598,19 @@ L.control.guideIntroScreen = function (options) {
 	
 	_lang: {
 		"sv": {
-			mediaHeader: "Media"
+			mediaHeader: "Media",
+			accessHeader: "Tillgänglighet"
 		},
 		"en": {
-			mediaHeader: "Media"
+			mediaHeader: "Media",
+			accessHeader: "Accessibility"
 		}
 	},
 	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;			
+			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
 
@@ -18617,6 +18623,9 @@ L.control.guideIntroScreen = function (options) {
 		// Use $ prefix for all jQuery objects to make it easier to sort out all
 		// jQuery dependencies when sharing the code in future.
 		this.$container = $(this._container);
+		
+		// Define proxy functions
+		this.__onPopupClick = this.__onPopupClick || $.proxy(this._onPopupClick, this);
 		
 		this._activate();
 
@@ -18649,8 +18658,15 @@ L.control.guideIntroScreen = function (options) {
 			var content = this._makeMediaContent(mediaArr.mediaType, utils.extractToHtml(mediaArr.sources, props).split(","));
 			this.showFullScreen(content);
 		}
+		
+		// On media icons click - open media tab when dialog opens
+		if ($(e.target).hasClass("gp-mediaicons") || $(e.target).parent().hasClass("gp-mediaicons")) {
+			$('[href="#gp-moreinfo"]').click();
+		}
+		
 		return false;
 	},
+	
 	
 	_onPopupOpen: function(e) {
 		if (e.popup._source.feature) {
@@ -18658,12 +18674,13 @@ L.control.guideIntroScreen = function (options) {
 //			this.layerId = e.popup.layerId;
 //			this.properties = props; // properties for filling the dialog
 			
+			$(".leaflet-popup-content").find(".gp-mediaicons").on("touchstart click", this.__onPopupClick);
 			var t = this.options.data[ props[this.options.attrId] ];
 			if (t && t instanceof Object) {
 				var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-default">Visa mer</button>');
 				$(".leaflet-popup-content").append(btn);
 				btn.data("props", props);
-				btn.on("touchstart click", $.proxy(this._onPopupClick, this));
+				btn.on("touchstart click", this.__onPopupClick);
 			}
 			
 		}
@@ -18843,6 +18860,13 @@ L.control.guideIntroScreen = function (options) {
 		return $tagVideo;
 	},
 	
+	_makeAccessContent: function(props) {
+		
+		var content = this.options.tabAccess;
+		content = utils.extractToHtml(content, props);
+		return content;
+	},
+	
 	_makeMediaList: function(arrMedia, props) {
 		arrMedia = arrMedia || [];
 		
@@ -18924,12 +18948,14 @@ L.control.guideIntroScreen = function (options) {
 		'<ul class="nav nav-tabs">' +
 			'<li class="active"><a href="#gp-intro" data-toggle="tab">Intro</a></li>'+
 			'<li><a href="#gp-moreinfo" data-toggle="tab">'+this.lang.mediaHeader+'</a></li>'+
+			'<li><a href="#gp-access" data-toggle="tab">'+this.lang.accessHeader+'</a></li>'+
 		'</ul>'+
 		'<div class="tab-content gp-popup">'+
 		  '<div class="tab-pane active" id="gp-intro">'+
 		  		// Add loading icon here
 			'</div>'+
 		  '<div class="tab-pane" id="gp-moreinfo"></div>'+
+		  '<div class="tab-pane" id="gp-access"></div>'+
 		'</div>';
 		
 //		content = utils.extractToHtml(content, props);
@@ -18942,6 +18968,11 @@ L.control.guideIntroScreen = function (options) {
 		// Fill media-tab content
 		var list = this._makeMediaList(data.tabMedia, props);
 		content.find("#gp-moreinfo").append(list);
+		
+		// Fill access-tag content
+		var accessContent = this._makeAccessContent(props);
+		content.find("#gp-access").append(accessContent);
+		
 		
 		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);
 		
@@ -19063,7 +19094,7 @@ L.control.guidePopup = function (options) {
 		$("#mapdiv").addClass("lswitch-panelslide");
 		
 		// Fix for Android 3 and lower (make div scrollable)
-		if (L.Browser.android) {  // L.Browser.android23 is better?
+		if (L.Browser.android || L.Browser.msTouch) {  // L.Browser.android23 is better?
 			function touchScroll(selector){
 			      var scrollStartPos = 0;
 			      $(selector).on('touchstart', function(event) {
@@ -19095,13 +19126,18 @@ L.control.guidePopup = function (options) {
 		ols = ols || [];
 		
 		var t;
-		for (var i=0,len=bls.length; i<len; i++) {
-			t = bls[i];
-			this._addRow({
-				displayName: t.options.displayName,
-				layerId: t.options.layerId,
-				isBaseLayer: true
-			});
+		if (bls.length > 1) {
+			for (var i=0,len=bls.length; i<len; i++) {
+				t = bls[i];
+				this._addRow({
+					displayName: t.options.displayName,
+					layerId: t.options.layerId,
+					isBaseLayer: true
+				});
+			}
+		}
+		else {
+			$(".lswitch-panel-bl").hide();
 		}
 		for (var i=0,len=ols.length; i<len; i++) {
 			t = ols[i];
@@ -19174,12 +19210,19 @@ L.control.guidePopup = function (options) {
 		this.$panel.swipeleft($.proxy(function() {
 			this.hidePanel();
 		}, this));
+		
+		// Allow immeditate scrolling on touch devices by enabling scrolling right after touchstart
+		this.$panel.on("touchstart", function() {
+			$(this).css("overflow-y", "auto");
+		});
+		
+		
 		this.$list = $(
-			'<div class="panel panel-default">'+
+			'<div class="panel panel-default lswitch-panel-bl">'+
 				'<div class="panel-heading">'+this.lang.baselayers+'</div>'+
 				'<div id="lswitch-blcont" class="list-group"></div>'+
 			'</div>'+
-			'<div class="panel panel-default">'+
+			'<div class="panel panel-default lswitch-panel-ol">'+
 				'<div class="panel-heading">'+this.lang.overlays+'</div>'+
 				'<div id="lswitch-olcont" class="list-group"></div>'+
 			'</div>');
@@ -19189,6 +19232,10 @@ L.control.guidePopup = function (options) {
 	
 	showPanel: function() {
 		this.$panel.show();
+		setTimeout(function() {
+			$(".lswitch-panel").addClass("panel-visible");
+		}, 10);
+		
 		$("#mapdiv").css({
 			"margin-left": this.$panel.outerWidth() + "px"
 		});
@@ -19200,6 +19247,8 @@ L.control.guidePopup = function (options) {
 			"margin-left": "0px"
 		});
 		$("#lswitch-btn").show();
+		$(".lswitch-panel").removeClass("panel-visible");
+		
 		$("html, body").addClass("lswitch-overflow-hidden");
 		setTimeout($.proxy(function() {
 			this.$panel.hide();
@@ -19778,9 +19827,8 @@ L.control.search = function (options) {
 				latLng: e.latlng,
 				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
 			});
-			console.log(this._selectedFeatures.length);
+			utils.log("selected a feature");
 		}
-		
 	},
 	
 	
@@ -19859,15 +19907,15 @@ L.control.selectVector = function (options) {
 	},
 	
 	_applyParam: function(sel) {
-		var layer,
+		var layer, layerId, theItem, xyArr, latLng,
 			obj = JSON.parse(decodeURIComponent( sel ));
 		
 		for (layerId in obj) {
-			item = obj[layerId];
-			if (item["xy"]) {
+			theItem = obj[layerId];
+			if (theItem["xy"]) {
 				layer = smap.core.layerInst.showLayer(layerId);
 				
-				var xyArr = item["xy"][0]; 
+				xyArr = theItem["xy"][0]; 
 				latLng = L.latLng(xyArr[1], xyArr[0]); // val is lat, key is lon
 				
 				this.onMapClick({
@@ -21186,6 +21234,7 @@ L.control.info = function (options) {
 	      '      <span class="sr-only">Toggle navigation</span>'+
 	      '      <span class="fa fa-bars"></span>'+
 	      '    </button>'+
+	      		'<a class="navbar-brand" href="#">Stadsatlas</a>'+
 	      '  </div>'+
 	      '  <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">'+
 	      '    <ul id="btns" class="nav navbar-nav navbar-right">'+
