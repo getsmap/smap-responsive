@@ -222,11 +222,11 @@ L.Control.SelectWMS = L.Control.extend({
 				info_format: options.info_format,
 				format: "image/png",
 				feature_count: this.options.featureCount,
-				x: px.x,
-				y: px.y,
+				x: utils.round(px.x),
+				y: utils.round(px.y),
 				buffer: this.options.buffer,
-				width: this.map.getSize().x,
-				height: this.map.getSize().y,
+				width: utils.round(this.map.getSize().x),
+				height: utils.round(this.map.getSize().y),
 				srs: this.options.srs || "EPSG:4326",
 				exceptions: "application%2Fvnd.ogc.se_xml"
 		};

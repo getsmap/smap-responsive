@@ -86,6 +86,9 @@ smap.core.Init = L.Class.extend({
 	drawMap: function(options) {
 		options = options || {};
 		
+		if (L.Browser.touch && L.Browser.ie) {
+			options.tapTolerance = 30;
+		}
 		var defaultOptions = smap.core.mainConfig.mapConfig || {};
 		this.map = L.map("mapdiv", $.extend(defaultOptions, options));
 		smap.map = this.map;
