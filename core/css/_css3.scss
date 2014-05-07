@@ -20,3 +20,9 @@
 	-webkit-transition: $param;
 	-moz-transition: $param;
 }
+
+@mixin transform($param) {
+	transform: $param;
+	-webkit-transform: $param;
+	-ms-transform: $param;
+}
