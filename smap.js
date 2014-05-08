@@ -18499,7 +18499,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			smap.cmd.reloadCore({
 				params: {
 					CONFIG: configName,
-					CENTER: [13, 55.605],
+					CENTER: [12.985,55.613],
 					ZOOM: 15					
 				}
 			});
