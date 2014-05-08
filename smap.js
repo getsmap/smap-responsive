@@ -19203,6 +19203,15 @@ L.control.guidePopup = function (options) {
 	
 	_addPanel: function() {
 		this.$panel = $('<div class="lswitch-panel unselectable" />');
+		smap.event.on("smap.core.pluginsadded", function() {
+			if ( $("body > header.navbar").length ) {
+				// If body has an immediate child that is a <header>-tag, with class "navbar",
+				// then we assume we need to move the panel content down a little bit.
+				$(".lswitch-panel").addClass("panel-with-toolbar");
+			}
+		});
+		
+		
 		this.$panel.swipeleft($.proxy(function() {
 			this.hidePanel();
 		}, this));
@@ -19850,7 +19859,14 @@ L.control.selectVector = function (options) {
 			var self = other.context;
 			
 			// Fetch layerId
-			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
+			var paramLayers = other.params.layers;
+			if (paramLayers.split(",").length > 1) {
+				paramLayers = other.params.layers.split(",")[0];
+			}
+			var t = smap.cmd.getLayerConfigBy("layers", paramLayers);
+			if (!t || !t.options || !t.options.layerId) {
+				return false;
+			}
 			var layerId = t.options.layerId;
 			
 			if (props && $.isEmptyObject(props) === false) {

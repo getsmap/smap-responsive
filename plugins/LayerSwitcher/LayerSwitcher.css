@@ -100,6 +100,9 @@
 .lswitch-overflow-hidden {
   overflow: hidden !important; }
 
+.panel-with-toolbar {
+  padding-top: 5em; }
+
 @media (max-width: 991px) {
   .lswitch-panel .panel {
     transition: all 400ms;
@@ -171,13 +174,13 @@
 
   .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
     background-color: #bbbbbb;
-    background-color: #58708f;
+    background-color: rgba(48, 81, 100, 0.56);
     color: #fff; }
 
   .lswitch-panel a.active {
     cursor: pointer;
     background-color: #bbbbbb;
-    background-color: #58708f;
+    background-color: rgba(48, 81, 100, 0.56);
     color: #fff;
     font-weight: normal; }
 

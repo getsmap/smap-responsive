@@ -10,7 +10,14 @@ L.Control.SelectWMS = L.Control.extend({
 			var self = other.context;
 			
 			// Fetch layerId
-			var t = smap.cmd.getLayerConfigBy("layers", other.params.layers);
+			var paramLayers = other.params.layers;
+			if (paramLayers.split(",").length > 1) {
+				paramLayers = other.params.layers.split(",")[0];
+			}
+			var t = smap.cmd.getLayerConfigBy("layers", paramLayers);
+			if (!t || !t.options || !t.options.layerId) {
+				return false;
+			}
 			var layerId = t.options.layerId;
 			
 			if (props && $.isEmptyObject(props) === false) {

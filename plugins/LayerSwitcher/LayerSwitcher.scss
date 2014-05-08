@@ -1,7 +1,7 @@
 @import '../../core/css/css3.scss';
 
 $select-color-hex: #bbb;
-$select-color: rgba(88, 112, 143, 1);
+$select-color: rgba(48, 81, 100, 0.56);
 
 $header-color-hex: #bbb;	
 $header-color: rgba(88, 112, 143, 1);
@@ -100,6 +100,9 @@ $hover-color-hex: #eee;
 	overflow: hidden !important;	
 }
 
+.panel-with-toolbar {
+	padding-top: 5em;
+}
 
 
 @media (max-width: 991px) {

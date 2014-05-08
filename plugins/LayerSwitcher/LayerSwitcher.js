@@ -155,6 +155,15 @@ L.Control.LayerSwitcher = L.Control.extend({
 	
 	_addPanel: function() {
 		this.$panel = $('<div class="lswitch-panel unselectable" />');
+		smap.event.on("smap.core.pluginsadded", function() {
+			if ( $("body > header.navbar").length ) {
+				// If body has an immediate child that is a <header>-tag, with class "navbar",
+				// then we assume we need to move the panel content down a little bit.
+				$(".lswitch-panel").addClass("panel-with-toolbar");
+			}
+		});
+		
+		
 		this.$panel.swipeleft($.proxy(function() {
 			this.hidePanel();
 		}, this));
