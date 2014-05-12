@@ -127,7 +127,7 @@ smap.core.Select = L.Class.extend({
 				// Do same as for above – but assign to WMS property
 				self._selectedFeaturesWms = utils.makeUniqueArr( self._selectedFeaturesWms.concat(selectedFeatures) );
 			}
-			self.map.closePopup();
+//			self.map.closePopup();
 			
 			if (isVector && !shiftKeyWasPressed) {
 				if (self._selectedFeaturesVector.length <= 1) {
@@ -271,13 +271,15 @@ smap.core.Select = L.Class.extend({
 				 */
 				function onLoadWfs() {
 					var thisLayer = this,
-					thisLayerId = this.options.layerId,
-					thisKey = this.options.uniqueKey,
-					selFeature;
-					
+						thisLayerId = this.options.layerId,
+						thisKey = this.options.uniqueKey,
+						selFeature;
+						
 					var theItem = obj[thisLayerId];
 					var valsArr = theItem["vals"],
 						paramVal, i, props, keyArr, val;
+					
+					var selectMany = valsArr.length > 1 ? true : false;
 					
 					// Iterate through the layers features until we find the feature
 					// with the given key and value.
@@ -308,7 +310,7 @@ smap.core.Select = L.Class.extend({
 							selFeature.fire("click", {
 								properties: selFeature.feature.properties,
 								latlng: latLng,
-								originalEvent: {shiftKey: true}
+								originalEvent: {shiftKey: selectMany}
 							});
 						}
 					}

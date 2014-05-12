@@ -17408,7 +17408,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 				// Do same as for above – but assign to WMS property
 				self._selectedFeaturesWms = utils.makeUniqueArr( self._selectedFeaturesWms.concat(selectedFeatures) );
 			}
-			self.map.closePopup();
+//			self.map.closePopup();
 			
 			if (isVector && !shiftKeyWasPressed) {
 				if (self._selectedFeaturesVector.length <= 1) {
@@ -17552,13 +17552,15 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 				 */
 				function onLoadWfs() {
 					var thisLayer = this,
-					thisLayerId = this.options.layerId,
-					thisKey = this.options.uniqueKey,
-					selFeature;
-					
+						thisLayerId = this.options.layerId,
+						thisKey = this.options.uniqueKey,
+						selFeature;
+						
 					var theItem = obj[thisLayerId];
 					var valsArr = theItem["vals"],
 						paramVal, i, props, keyArr, val;
+					
+					var selectMany = valsArr.length > 1 ? true : false;
 					
 					// Iterate through the layers features until we find the feature
 					// with the given key and value.
@@ -17589,7 +17591,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 							selFeature.fire("click", {
 								properties: selFeature.feature.properties,
 								latlng: latLng,
-								originalEvent: {shiftKey: true}
+								originalEvent: {shiftKey: selectMany}
 							});
 						}
 					}
@@ -19414,13 +19416,23 @@ L.control.layerSwitcher = function (options) {
 	
 	_onApplyParams: function(e, p) {
 		if (p.POI) {
-			this._geoLocate(decodeURIComponent( p.POI ));
+			var q = p.POI instanceof Array ? p.POI[0] : p.POI;
+			q = q.replace(/--c--/g, ",");
+			var showPopup = p.POI instanceof Array && p.POI.length > 1 ? p.POI[1] : false;
+			this._geoLocate(decodeURIComponent(q), {
+				setView: false,
+				showPopup: showPopup
+			});
 		}
 	},
 	
 	_onCreateParams: function(e, obj) {
 		if (this.marker && this.marker.options.q) {
-			obj.POI = encodeURIComponent( this.marker.options.q );
+			var showPopup = this.marker.getPopup()._isOpen ? true : false;
+			obj.POI = [encodeURIComponent( this.marker.options.q.replace(/,/g, "--c--") )];
+			if (showPopup) {
+				obj.POI.push(1);
+			}
 		}
 	},
 
@@ -19558,7 +19570,16 @@ L.control.layerSwitcher = function (options) {
 	},
 	
 	
-	_geoLocate: function(q) {
+	_geoLocate: function(q, options) {
+		options = options || {};
+		
+		// Set defaults and override with options
+		var defaults = {
+				setView: true,
+				showPopup: true
+		};
+		options = $.extend({}, defaults, options);
+		
 		var url = encodeURIComponent( this.options.wsLocateUrl + "?q="+q);
 		var whitespace = this.options.whitespace;
 		if (whitespace) {
@@ -19604,8 +19625,12 @@ L.control.layerSwitcher = function (options) {
 				
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 				
-				this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59
-				this.marker.openPopup();
+				if (options.setView) {
+					this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+				}
+				if (options.showPopup) {
+					this.marker.openPopup();
+				}
 				$("#smap-search-div input").val(null);
 				$("#smap-search-div input").blur();
 				setTimeout(function() {

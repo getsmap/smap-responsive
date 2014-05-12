@@ -66,13 +66,23 @@ L.Control.Search = L.Control.extend({
 	
 	_onApplyParams: function(e, p) {
 		if (p.POI) {
-			this._geoLocate(decodeURIComponent( p.POI ));
+			var q = p.POI instanceof Array ? p.POI[0] : p.POI;
+			q = q.replace(/--c--/g, ",");
+			var showPopup = p.POI instanceof Array && p.POI.length > 1 ? p.POI[1] : false;
+			this._geoLocate(decodeURIComponent(q), {
+				setView: false,
+				showPopup: showPopup
+			});
 		}
 	},
 	
 	_onCreateParams: function(e, obj) {
 		if (this.marker && this.marker.options.q) {
-			obj.POI = encodeURIComponent( this.marker.options.q );
+			var showPopup = this.marker.getPopup()._isOpen ? true : false;
+			obj.POI = [encodeURIComponent( this.marker.options.q.replace(/,/g, "--c--") )];
+			if (showPopup) {
+				obj.POI.push(1);
+			}
 		}
 	},
 
@@ -210,7 +220,16 @@ L.Control.Search = L.Control.extend({
 	},
 	
 	
-	_geoLocate: function(q) {
+	_geoLocate: function(q, options) {
+		options = options || {};
+		
+		// Set defaults and override with options
+		var defaults = {
+				setView: true,
+				showPopup: true
+		};
+		options = $.extend({}, defaults, options);
+		
 		var url = encodeURIComponent( this.options.wsLocateUrl + "?q="+q);
 		var whitespace = this.options.whitespace;
 		if (whitespace) {
@@ -256,8 +275,12 @@ L.Control.Search = L.Control.extend({
 				
 				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 				
-				this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59
-				this.marker.openPopup();
+				if (options.setView) {
+					this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+				}
+				if (options.showPopup) {
+					this.marker.openPopup();
+				}
 				$("#smap-search-div input").val(null);
 				$("#smap-search-div input").blur();
 				setTimeout(function() {

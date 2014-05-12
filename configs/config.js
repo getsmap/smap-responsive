@@ -424,13 +424,15 @@ var config = {
                     ,
                     {
                         init: "L.Control.ShareLink",
-                        options: {}
+                        options: {
+                    		addToMenu: false
+                    	}
                     }
-                    ,
-                    {
-                        init: "L.Control.Menu",
-                        options: {}
-                    }
+//                    ,
+//                    {
+//                        init: "L.Control.Menu",
+//                        options: {}
+//                    }
 //		           ,
 //		           {
 //		           	   init: "L.Control.SideBars",
