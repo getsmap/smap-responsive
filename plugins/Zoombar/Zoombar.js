@@ -31,15 +31,32 @@ L.Control.Zoombar = L.Control.extend({
 		L.DomEvent.disableClickPropagation(this._container);
 		
 		this.$container = $(this._container);
-
+		this.$container.addClass("btn-group-vertical");
+		
         this._createButtonZoomIn();
         this._createButtonZoomUt();
+        
+        this.__onZoomEnd = this.__onZoomEnd || $.proxy(this._onZoomEnd, this);
+        this.map.on("zoomend", this.__onZoomEnd);
 
 		return this._container;
 	},
+	
+	_onZoomEnd: function() {
+		if (this.map.getZoom() >= this.map.getMaxZoom()) {
+			this.$container.find("#zoombar-plus").addClass("disabled");
+		}
+		else if (this.map.getZoom() <= this.map.getMinZoom()) {
+			this.$container.find("#zoombar-minus").addClass("disabled");
+		}
+		else {
+			this.$container.find("button").removeClass("disabled");
+		}
+		
+	},
 
     _createButtonZoomIn: function() {
-        var btn = $('<button class="btn btn-default"><span class="fa fa-plus-circle"></span></button>');
+        var btn = $('<button id="zoombar-plus" class="btn btn-default"><span class="fa fa-plus"></span></button>');
         this.$container.append(btn);
         // -- TODO: Do something when clicking the button --
         var self = this;
@@ -49,7 +66,7 @@ L.Control.Zoombar = L.Control.extend({
     },
 
     _createButtonZoomUt: function() {
-        var btn = $('<button class="btn btn-default"><span class="fa fa-minus-circle"></span></button>');
+        var btn = $('<button id="zoombar-minus" class="btn btn-default"><span class="fa fa-minus"></span></button>');
         this.$container.append(btn);
         // -- TODO: Do something when clicking the button --
         var self = this;

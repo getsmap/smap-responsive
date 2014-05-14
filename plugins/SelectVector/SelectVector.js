@@ -49,7 +49,7 @@ L.Control.SelectVector = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'leaflet-control-selectvector'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
-		
+		this.$container.css("display", "none");
 		this._bindEvents();
 
 		return this._container;

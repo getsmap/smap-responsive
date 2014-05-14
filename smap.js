@@ -19395,11 +19395,12 @@ L.control.layerSwitcher = function (options) {
 
 	onAdd: function(map) {
 		var self = this;
-		self.map = map;
-		self._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
+		this.map = map;
+		this._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
-		self.$container = $(self._container);
-		self._makeSearchField();
+		this.$container = $(this._container);
+		this.$container.css("display", "none");
+		this._makeSearchField();
 		
 		// Bind events
 		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
@@ -19409,7 +19410,7 @@ L.control.layerSwitcher = function (options) {
 		smap.event.on("smap.core.createparams", this.__onCreateParams);
 		
 		this.map.on("click", this._blurSearch);
-			
+		
 		return self._container;
 	},
 	
@@ -19710,7 +19711,7 @@ L.control.search = function (options) {
 		this._container = L.DomUtil.create('div', 'leaflet-control-selectvector'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
-		
+		this.$container.css("display", "none");
 		this._bindEvents();
 
 		return this._container;
@@ -19939,6 +19940,8 @@ L.control.selectVector = function (options) {
 		this._bindEvents();
 		
 		this._container = L.DomUtil.create('div', 'leaflet-control-selectwms'); // second parameter is class name
+		$(this._container).css("display", "none");
+		
 		L.DomEvent.disableClickPropagation(this._container);
 		return this._container;
 	},
@@ -20333,14 +20336,14 @@ L.control.selectWMS = function (options) {
 
         var self = this;
         if(this.options.addToMenu) {
-            smap.cmd.addToolButton( "", "fa fa-share-square-o", function () {
+            smap.cmd.addToolButton( "", "fa fa-link", function () {
                 self.activate();
                 return false;
             },null);
         }
 
         else {
-            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-share-square-o"></span></button>');
+            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-link"></span></button>');
             $btn.on("click", function () {
                 self.activate();
                 return false;
@@ -21125,7 +21128,7 @@ L.control.shareTweet = function(options) {
 	return new L.Control.ShareTweet(options);
 };L.Control.Info = L.Control.extend({
 	options: {
-        addToMenu: true,
+        addToMenu: false,
 		autoActivate: false,
 		position: 'bottomright',
 		_lang: {
@@ -21216,14 +21219,14 @@ L.control.shareTweet = function(options) {
 		var self = this;
 
         if(this.options.addToMenu) {
-            smap.cmd.addToolButton( "", "fa fa-info-circle", function () {
+            smap.cmd.addToolButton( "", "fa fa-info", function () {
                 self.activate();
                 return false;
             },null);
         }
 
         else {
-            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info-circle"></span></button>');
+            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info"></span></button>');
 //		$("#mapdiv").append($btn);
             $btn.on("click", function () {
                 self.activate();
@@ -21371,15 +21374,32 @@ L.control.menu = function (options) {
 		L.DomEvent.disableClickPropagation(this._container);
 		
 		this.$container = $(this._container);
-
+		this.$container.addClass("btn-group-vertical");
+		
         this._createButtonZoomIn();
         this._createButtonZoomUt();
+        
+        this.__onZoomEnd = this.__onZoomEnd || $.proxy(this._onZoomEnd, this);
+        this.map.on("zoomend", this.__onZoomEnd);
 
 		return this._container;
 	},
+	
+	_onZoomEnd: function() {
+		if (this.map.getZoom() >= this.map.getMaxZoom()) {
+			this.$container.find("#zoombar-plus").addClass("disabled");
+		}
+		else if (this.map.getZoom() <= this.map.getMinZoom()) {
+			this.$container.find("#zoombar-minus").addClass("disabled");
+		}
+		else {
+			this.$container.find("button").removeClass("disabled");
+		}
+		
+	},
 
     _createButtonZoomIn: function() {
-        var btn = $('<button class="btn btn-default"><span class="fa fa-plus-circle"></span></button>');
+        var btn = $('<button id="zoombar-plus" class="btn btn-default"><span class="fa fa-plus"></span></button>');
         this.$container.append(btn);
         // -- TODO: Do something when clicking the button --
         var self = this;
@@ -21389,7 +21409,7 @@ L.control.menu = function (options) {
     },
 
     _createButtonZoomUt: function() {
-        var btn = $('<button class="btn btn-default"><span class="fa fa-minus-circle"></span></button>');
+        var btn = $('<button id="zoombar-minus" class="btn btn-default"><span class="fa fa-minus"></span></button>');
         this.$container.append(btn);
         // -- TODO: Do something when clicking the button --
         var self = this;

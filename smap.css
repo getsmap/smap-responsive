@@ -1090,6 +1090,14 @@ body {
 
 .modal-dialog {
   font-size: 1.4em; }
+
+.leaflet-control-container .btn {
+  padding: 9px 15px;
+  max-width: 3.1em;
+  min-width: 3.1em; }
+
+.leaflet-bottom .leaflet-control {
+  margin-bottom: 1em; }
 /* 
 Author: L. Voogdt
 License: MIT
@@ -1813,8 +1821,6 @@ Version: 1.0
 	#smap-search-div {
 		left: 310px;
 	}	
-}#smap-info-btn {
-	margin-top: 30px;
 }#smap-menu-div {
 	z-index: 1001;
 	background-color: #58708f;
@@ -1835,11 +1841,5 @@ Version: 1.0
     #smap-menu-div {
 		left: 0px;
 	}
-
-}.leaflet-control-zoombar button {
-
-    display: block;
-    margin: 2px;
-
 
 }

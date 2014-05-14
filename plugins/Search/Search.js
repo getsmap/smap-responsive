@@ -36,11 +36,12 @@ L.Control.Search = L.Control.extend({
 
 	onAdd: function(map) {
 		var self = this;
-		self.map = map;
-		self._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
+		this.map = map;
+		this._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
-		self.$container = $(self._container);
-		self._makeSearchField();
+		this.$container = $(this._container);
+		this.$container.css("display", "none");
+		this._makeSearchField();
 		
 		// Bind events
 		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
@@ -50,7 +51,7 @@ L.Control.Search = L.Control.extend({
 		smap.event.on("smap.core.createparams", this.__onCreateParams);
 		
 		this.map.on("click", this._blurSearch);
-			
+		
 		return self._container;
 	},
 	

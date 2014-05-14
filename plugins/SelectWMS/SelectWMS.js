@@ -58,6 +58,8 @@ L.Control.SelectWMS = L.Control.extend({
 		this._bindEvents();
 		
 		this._container = L.DomUtil.create('div', 'leaflet-control-selectwms'); // second parameter is class name
+		$(this._container).css("display", "none");
+		
 		L.DomEvent.disableClickPropagation(this._container);
 		return this._container;
 	},

@@ -31,3 +31,11 @@ body {
 
 .modal-dialog {
   font-size: 1.4em; }
+
+.leaflet-control-container .btn {
+  padding: 9px 15px;
+  max-width: 3.1em;
+  min-width: 3.1em; }
+
+.leaflet-bottom .leaflet-control {
+  margin-bottom: 1em; }

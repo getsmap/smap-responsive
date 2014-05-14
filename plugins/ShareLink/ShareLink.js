@@ -84,14 +84,14 @@ L.Control.ShareLink = L.Control.extend({
 
         var self = this;
         if(this.options.addToMenu) {
-            smap.cmd.addToolButton( "", "fa fa-share-square-o", function () {
+            smap.cmd.addToolButton( "", "fa fa-link", function () {
                 self.activate();
                 return false;
             },null);
         }
 
         else {
-            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-share-square-o"></span></button>');
+            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-link"></span></button>');
             $btn.on("click", function () {
                 self.activate();
                 return false;
