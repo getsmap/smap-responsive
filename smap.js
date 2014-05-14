@@ -19730,8 +19730,6 @@ L.control.search = function (options) {
 	/*
 	 * --- Event listeners ------------------------------------------------------------
 	 */
-	
-	
 	onMapClick: function() {
 		this._selectedFeatures = [];
 	},
