@@ -61,13 +61,10 @@ L.Control.ShareLink = L.Control.extend({
             
             input.on("tap click", function() {
             	select(this);
-//            	return false;
             });
-//            this._$dialog.on("shown.bs.modal", function() {
-//            	setTimeout(function() {
-//            		select(input[0]);
-//            	}, 100);
-//        	});
+            this._$dialog.on("shown.bs.modal", function() {
+        		select(input[0]);
+        	});
             this._$dialog.on("hide.bs.modal", function() {
             	// Hide keyboard on touch devices
             	$(this).find('input[type=text]').blur();
