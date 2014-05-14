@@ -62,7 +62,7 @@ L.Control.Geolocate = L.Control.extend({
 	},
 	
 	activate: function() {
-		if (this.active) {
+		if (this.active || !navigator.geolocation) {
 			return false;
 		}
 		this.active = true;
