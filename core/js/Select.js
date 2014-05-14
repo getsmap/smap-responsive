@@ -93,6 +93,8 @@ smap.core.Select = L.Class.extend({
 			
 			
 			if (isVector) {
+				self._selectedFeaturesWms = []; // We don't allow mixing vector and raster "features" in current version
+				
 				// Assign layerId to all features to enable fetching a feature during SEL param creation
 //				$.each(selectedFeatures, function(i, f) {
 //					f.layerId = layerId;
@@ -124,6 +126,7 @@ smap.core.Select = L.Class.extend({
 				}
 			}
 			else {
+				self._selectedFeaturesVector = []; // We don't allow mixing vector and raster "features" in current version
 				// Do same as for above – but assign to WMS property
 				self._selectedFeaturesWms = utils.makeUniqueArr( self._selectedFeaturesWms.concat(selectedFeatures) );
 			}
