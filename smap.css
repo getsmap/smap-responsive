@@ -1497,10 +1497,10 @@ Version: 1.0
   background-color: #fff;
   background-color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  border-radius: 0 4px 4px 0;
-  -webkit-border-radius: 0 4px 4px 0;
-  -moz-border-radius: 0 4px 4px 0;
-  -ms-border-radius: 0 4px 4px 0; }
+  border-radius: 0 0 0.4em 0.4em;
+  -webkit-border-radius: 0 0 0.4em 0.4em;
+  -moz-border-radius: 0 0 0.4em 0.4em;
+  -ms-border-radius: 0 0 0.4em 0.4em; }
 
 .lswitch-panel .panel {
   box-shadow: none;
@@ -1536,10 +1536,10 @@ Version: 1.0
   background-color: #38454E;
   color: #eee;
   border: none;
-  border-radius: 0px !important;
-  -webkit-border-radius: 0px !important;
-  -moz-border-radius: 0px !important;
-  -ms-border-radius: 0px !important;
+  border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  -ms-border-radius: 0 !important;
   margin-top: 1px; }
 
 .lswitch-panel a:hover, .lswitch-panel a:active {
@@ -1574,10 +1574,10 @@ Version: 1.0
   background-color: #333;
   background-color: rgba(0, 0, 0, 0.4) !important;
   color: #fff !important;
-  border-radius: 5px 5px 0px 0;
-  -webkit-border-radius: 5px 5px 0px 0;
-  -moz-border-radius: 5px 5px 0px 0;
-  -ms-border-radius: 5px 5px 0px 0;
+  border-radius: 0.5em 0.5em 0 0;
+  -webkit-border-radius: 0.5em 0.5em 0 0;
+  -moz-border-radius: 0.5em 0.5em 0 0;
+  -ms-border-radius: 0.5em 0.5em 0 0;
   font-weight: bold;
   font-size: 110%; }
 
@@ -1674,7 +1674,17 @@ Version: 1.0
     background: none; }
 
   #lswitch-olcont, #lswitch-blcont {
-    background-color: rgba(255, 255, 255, 0.4); }
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 0 0 0.4em 0.4em;
+    -webkit-border-radius: 0 0 0.4em 0.4em;
+    -moz-border-radius: 0 0 0.4em 0.4em;
+    -ms-border-radius: 0 0 0.4em 0.4em; }
+
+  #lswitch-olcont a:last-child, #lswitch-blcont a:last-child {
+    border-radius: 0 0 0.4em 0.4em;
+    -webkit-border-radius: 0 0 0.4em 0.4em;
+    -moz-border-radius: 0 0 0.4em 0.4em;
+    -ms-border-radius: 0 0 0.4em 0.4em; }
 
   .lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont {
     background-color: none; } }

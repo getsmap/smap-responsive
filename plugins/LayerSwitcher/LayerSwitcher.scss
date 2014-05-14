@@ -20,7 +20,7 @@ $hover-color-hex: #eee;
 	background-color: #fff;
 	background-color: rgba(255,255,255,.8);
 	cursor: pointer;
-	@include border-radius(0 4px 4px 0);
+	@include border-radius(0 0 .4em .4em);
 }
 
 .lswitch-panel .panel {
@@ -54,7 +54,7 @@ $hover-color-hex: #eee;
 	background-color: #38454E;
 	color: #eee;
 	border: none;
-	@include border-radius(0px !important);
+	@include border-radius(0 !important);
 	margin-top: 1px;
 }
 
@@ -90,7 +90,7 @@ $hover-color-hex: #eee;
 	background-color: #333;
 	background-color: rgba(0,0,0,.4) !important;
 	color: #fff !important;
-	@include border-radius(5px 5px 0px 0);
+	@include border-radius(.5em .5em 0 0);
 	font-weight: bold;
 	font-size: 110%;
 }
@@ -197,6 +197,10 @@ $hover-color-hex: #eee;
 	
 	#lswitch-olcont, #lswitch-blcont {
 		background-color: rgba(255,255,255,.4);
+		@include border-radius(0 0 .4em .4em);
+	}
+	#lswitch-olcont a:last-child, #lswitch-blcont a:last-child {
+		@include border-radius(0 0 .4em .4em);
 	}
 	.lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont {
 		background-color: none;
