@@ -20,7 +20,7 @@ $hover-color-hex: #eee;
 	background-color: #fff;
 	background-color: rgba(255,255,255,.8);
 	cursor: pointer;
-	@include border-radius(0 0 .4em .4em);
+	@include border-radius(0 .4em .4em 0);
 }
 
 .lswitch-panel .panel {

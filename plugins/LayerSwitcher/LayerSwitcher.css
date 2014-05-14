@@ -12,10 +12,10 @@
   background-color: #fff;
   background-color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  border-radius: 0 0 0.4em 0.4em;
-  -webkit-border-radius: 0 0 0.4em 0.4em;
-  -moz-border-radius: 0 0 0.4em 0.4em;
-  -ms-border-radius: 0 0 0.4em 0.4em; }
+  border-radius: 0 0.4em 0.4em 0;
+  -webkit-border-radius: 0 0.4em 0.4em 0;
+  -moz-border-radius: 0 0.4em 0.4em 0;
+  -ms-border-radius: 0 0.4em 0.4em 0; }
 
 .lswitch-panel .panel {
   box-shadow: none;
