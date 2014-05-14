@@ -18219,10 +18219,12 @@ $(document).ready(function() {
 	
 	_lang: {
 		"sv": {
-			errorGeolocate: "Kunde inte hitta din position"
+			errorGeolocate: "Kunde inte hitta din position",
+			notSupported: "Din webbläsare stödjer inte geolokalisering"
 		},
 		"en": {
-			errorGeolocate: "The browser could not detect your position"
+			errorGeolocate: "The browser could not detect your position",
+			notSupported: "Your browser does not support geolocation"
 		}
 	},
 	
@@ -18271,7 +18273,11 @@ $(document).ready(function() {
 	},
 	
 	activate: function() {
-		if (this.active || !navigator.geolocation) {
+		if (this.active) {
+			return false;
+		}
+		if (!navigator.geolocation) {
+			smap.cmd.notify(this.lang.notSupported);
 			return false;
 		}
 		this.active = true;
