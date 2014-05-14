@@ -78,8 +78,6 @@ L.Control.SelectVector = L.Control.extend({
 	/*
 	 * --- Event listeners ------------------------------------------------------------
 	 */
-	
-	
 	onMapClick: function() {
 		this._selectedFeatures = [];
 	},
