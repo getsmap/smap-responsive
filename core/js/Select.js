@@ -266,7 +266,18 @@ smap.core.Select = L.Class.extend({
 					self = this,
 					isWms = false,
 					latLng, s, layer,
-					theItem, xy, layerId;
+					theItem, xy, layerId,
+					selectMany = false;
+				
+				// Find out if there are more than one feature to select.
+				var i = 0;
+				for (var k in obj) {
+					i += 1;
+					if (i > 1 || (obj[k].vals || obj[k].vals.length > 1)) {
+						selectMany = true;
+						break;
+					}
+				}
 				
 				/**
 				 * Called when the Vector layer is loaded so we can iterate through
@@ -281,8 +292,6 @@ smap.core.Select = L.Class.extend({
 					var theItem = obj[thisLayerId];
 					var valsArr = theItem["vals"],
 						paramVal, i, props, keyArr, val;
-					
-					var selectMany = valsArr.length > 1 ? true : false;
 					
 					// Iterate through the layers features until we find the feature
 					// with the given key and value.

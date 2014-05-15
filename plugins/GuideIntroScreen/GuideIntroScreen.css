@@ -24,6 +24,16 @@
 	margin-top: 40px;	
 }
 
+.gintro-bg {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	max-width: 20em;
+	text-align: center;
+}
+
 /*.gintro-box .lead {
 	text-align: justify;
 }*/

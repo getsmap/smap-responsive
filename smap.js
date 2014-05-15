@@ -17549,7 +17549,18 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 					self = this,
 					isWms = false,
 					latLng, s, layer,
-					theItem, xy, layerId;
+					theItem, xy, layerId,
+					selectMany = false;
+				
+				// Find out if there are more than one feature to select.
+				var i = 0;
+				for (var k in obj) {
+					i += 1;
+					if (i > 1 || (obj[k].vals || obj[k].vals.length > 1)) {
+						selectMany = true;
+						break;
+					}
+				}
 				
 				/**
 				 * Called when the Vector layer is loaded so we can iterate through
@@ -17564,8 +17575,6 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 					var theItem = obj[thisLayerId];
 					var valsArr = theItem["vals"],
 						paramVal, i, props, keyArr, val;
-					
-					var selectMany = valsArr.length > 1 ? true : false;
 					
 					// Iterate through the layers features until we find the feature
 					// with the given key and value.
@@ -18389,6 +18398,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		
 		position: 'bottomright',
 		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>',
+		bgSrc: null,
 		
 		langs: {
 			"sv": "Svenska",
@@ -18569,20 +18579,20 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			b.data("configName", configName);
 			$row.append( $cTag );
 		}
-		
-		
 		$content.find(".guideintro-btn-option").on("click", function() {
 			var _langCode = $(this).data("langCode");
 			if (langCode !== _langCode) {
 				$(this).addClass(classActive).siblings().removeClass(classActive).addClass("btn-default");
 				var $newContent = self._makeContent( _langCode );
-				$(".guide-introscreen").empty().append( $newContent );				
+				$(".guide-introscreen").empty().append( $newContent );
 			}
 			return false;
 			
 		});
+		if (this.options.bgSrc) {
+			$(".guide-introscreen").append('<img src="'+this.options.bgSrc+'" class="gintro-bg"></img>');			
+		}
 		$content.find(".gintro-btn-configoption").on("click", goToConfig);
-		
 		return $content;
 	}
 });

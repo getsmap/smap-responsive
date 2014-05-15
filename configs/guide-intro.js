@@ -43,7 +43,8 @@ var config = {
 		           {
 		        	   init: "L.Control.GuideIntroScreen",
 		        	   options: {
-		        		   autoActivate: true
+		        		   autoActivate: true,
+		        		   bgSrc: "img/GuideIntroScreen/element-alfa-grey.png"
 		        	   }
 		           }
        ]

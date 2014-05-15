@@ -4,6 +4,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		
 		position: 'bottomright',
 		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>',
+		bgSrc: null,
 		
 		langs: {
 			"sv": "Svenska",
@@ -184,20 +185,20 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			b.data("configName", configName);
 			$row.append( $cTag );
 		}
-		
-		
 		$content.find(".guideintro-btn-option").on("click", function() {
 			var _langCode = $(this).data("langCode");
 			if (langCode !== _langCode) {
 				$(this).addClass(classActive).siblings().removeClass(classActive).addClass("btn-default");
 				var $newContent = self._makeContent( _langCode );
-				$(".guide-introscreen").empty().append( $newContent );				
+				$(".guide-introscreen").empty().append( $newContent );
 			}
 			return false;
 			
 		});
+		if (this.options.bgSrc) {
+			$(".guide-introscreen").append('<img src="'+this.options.bgSrc+'" class="gintro-bg"></img>');			
+		}
 		$content.find(".gintro-btn-configoption").on("click", goToConfig);
-		
 		return $content;
 	}
 });
