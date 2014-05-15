@@ -21406,6 +21406,9 @@ L.control.menu = function (options) {
 		
 		this.$container = $(this._container);
 		this.$container.addClass("btn-group-vertical");
+		this.$container.on("mousedown", function() {
+			return false;
+		});
 		
         this._createButtonZoomIn();
         this._createButtonZoomUt();
@@ -21434,8 +21437,9 @@ L.control.menu = function (options) {
         this.$container.append(btn);
         // -- TODO: Do something when clicking the button --
         var self = this;
-        btn.on("click", function() {
-            self.map.zoomIn();
+        btn.on("click touchstart dblclick", function() {
+            smap.map.zoomIn();
+            return false;
         });
     },
 
@@ -21444,8 +21448,9 @@ L.control.menu = function (options) {
         this.$container.append(btn);
         // -- TODO: Do something when clicking the button --
         var self = this;
-        btn.on("click", function() {
-            self.map.zoomOut();
+        btn.on("click touchstart dblclick", function() {
+        	smap.map.zoomOut();
+            return false;
         });
     },
 
