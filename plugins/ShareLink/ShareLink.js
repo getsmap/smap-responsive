@@ -50,8 +50,12 @@ L.Control.ShareLink = L.Control.extend({
         var select = function(tag) {
 //        	tag.selectionStart = 0;
 //        	tag.selectionEnd = 9999;
-        	tag.setSelectionRange(0, 9999);
-//        	$(tag).select();
+        	if (tag.setSelectionRange) {
+        		tag.setSelectionRange(0, 9999);        		
+        	}
+        	else {
+	        	$(tag).select();
+        	}
         };
         
         if (!this._$dialog) {
