@@ -33,16 +33,39 @@ L.Control.Menu = L.Control.extend({
 
         this.$container = $(this._container);
         this._createMenu();
+        
+        // Example of usage
+        this.addButton("My button", "fa fa-link", function() {
+        	alert("Hej");
+        	return false;
+        });
 
         return this._container;
     },
 
-    
+    /**
+     * 
+     * @param label {String}
+     * @param iconClass {String} E.g. "fa fa-link"
+     * @param onClick {Function}
+     * @param options {Options} Optional.
+     * @returns
+     */
+    addButton: function(label, iconClass, onClick, options) {
+    	options = options || {};
 
-    addButton: function(id, iconClass, clickFunc, options){
-        var $btn = $('<li><a href=""><span class="'+iconClass+'"></span> Getting started</a></li>');
-        $btn.on("click", clickFunc);
-        $("#btns").append($btn);
+    	var $btn = $('<li><a href="btn btn-default"><span class="'+iconClass+'"></span> '+label+'</a></li>');
+    	if (options.proxy) {
+    		onClick = $.proxy(onClick, options.proxy);
+    	}
+    	$btn.on("click", onClick);
+    	$("#btns").append($btn);
+    	
+    	if (options.callback) {
+    		// Since this function is sometimes called async (using smap.cmd.addToolButton)
+    		// it needs a callback function to return the button.
+    		options.callback($btn);
+    	}
     },
 
     _createMenu: function() {

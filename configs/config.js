@@ -432,22 +432,23 @@ var config = {
                     {
                         init: "L.Control.Menu",
                         options: {}
-                    },
-                    {
-            			init : "L.Control.RedirectClick,		
-            			config : {
-            				displayName : 'Snedbild',
-            				//addToToolsMenu: "toolsmenu",
-            				toolbarIndex: 4,
-            				url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
-            				overrideName: "snedbild",
-            				btnLabel: "Snedbild",
-//            				btnHover: "Verktyg för att se snedbilder",
-            				buttonId: "redirect-snedbild",
-            				buttonCss: "ui-icon-arrowstop-1-s",
-            				mouseMoveText: "Klicka i kartan för att se snedbild"
-            			}
-            		}
+                    }
+//                    ,
+//                    {
+//            			init : "L.Control.RedirectClick,		
+//            			config : {
+//            				displayName : 'Snedbild',
+//            				//addToToolsMenu: "toolsmenu",
+//            				toolbarIndex: 4,
+//            				url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
+//            				overrideName: "snedbild",
+//            				btnLabel: "Snedbild",
+////            				btnHover: "Verktyg för att se snedbilder",
+//            				buttonId: "redirect-snedbild",
+//            				buttonCss: "ui-icon-arrowstop-1-s",
+//            				mouseMoveText: "Klicka i kartan för att se snedbild"
+//            			}
+//            		}
 //		           ,
 //		           {
 //		           	   init: "L.Control.SideBars",
