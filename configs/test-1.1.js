@@ -410,10 +410,10 @@ var config = {
 		        		   buffer: 5
 		        	   }
 		           },
-		           {
-		        	   init: "L.Control.SharePosition",
-		        	   options: {}
-		           },
+//		           {
+//		        	   init: "L.Control.SharePosition",
+//		        	   options: {}
+//		           },
 		           {
 		        	   init: "L.Control.Search",
 		        	   options: {}
