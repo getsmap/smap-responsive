@@ -9,16 +9,18 @@ smap.cmd = {
 		 * @param iconClass {String}
 		 * @param onClick {Function}
 		 * @param options {Object}
+		 * 		- callback {Function} Called when button has been created. Receives one argument, which is the button. 
+		 * 		- index {Integer} Order from the right in the toolbar.
+		 * 		- toggle {Boolean} If true, renders as active/inactive.
 		 * @returns {void}
 		 */
 		addToolButton: function(label, iconClass, onClick, options) {
-			var pluginToolbar = "Menu";
 			options = options || {
 				index: null,
 				toggle: false,
-				callback: null // function called when the toolbar plugin is done creating the button
+				callback: null  // function called when the toolbar plugin is done creating the button
 			};
-			smap.core.pluginHandlerInst.callPlugin(pluginToolbar, "addButton", [label, iconClass, onClick, options]); 
+			smap.core.pluginHandlerInst.callPlugin(smap.core.mainConfig.toolbarPlugin, "addButton", [label, iconClass, onClick, options]); 
 		},
 
 

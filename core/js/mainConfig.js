@@ -8,5 +8,7 @@ smap.core.mainConfig = {
 		    center: [0, 0],
 		    zoom: 2,
 		    maxZoom: 18
-		}
+		},
+		
+		toolbarPlugin: "Menu"
 };
