@@ -150,10 +150,6 @@ var config = {
 		        		   buffer: 5
 		        	   }
 		           },
-		           {
-		        	   init: "L.Control.Geolocate",
-		        	   options: {}
-		           },
 //		           {
 //		        	   init: "L.Control.SelectWMS",
 //		        	   options: {
@@ -164,6 +160,20 @@ var config = {
 		        	   init: "L.Control.SelectVector",
 		        	   options: {
 		        		   buffer: 5
+		        	   }
+		           },
+		           {
+		        	   init: "L.Control.Zoombar",
+		        	   options: {}
+		           },
+		           {
+		        	   init: "L.Control.Geolocate",
+		        	   options: {}
+		           },
+		           {
+		        	   init: "L.Control.ShareLink",
+		        	   options: {
+		        		   addToMenu: false
 		        	   }
 		           },
 		           {

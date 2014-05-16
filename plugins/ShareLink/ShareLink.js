@@ -1,7 +1,7 @@
 L.Control.ShareLink = L.Control.extend({
     options: {
         position: 'bottomright', // just an example
-        addToMenu: true
+        addToMenu: false
     },
 
     _lang: {
