@@ -150,6 +150,17 @@ smap.core.Layer = L.Class.extend({
 		if (this.map.hasLayer(layer) === false) {
 			this.map.addLayer(layer);			
 		}
+//		For next version, try this.
+//		if (layer.options.zIndex && layer.setZIndex) {
+//			if (layer._layers) {
+//				layer.on("load", function() {
+//					this.setZIndex(this.options.zIndex);
+//				});
+//			}
+//			else {
+//				layer.setZIndex(layer.options.zIndex);				
+//			}
+//		}
 		return layer;
 	},
 	

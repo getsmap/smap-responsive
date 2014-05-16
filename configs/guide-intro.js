@@ -44,7 +44,9 @@ var config = {
 		        	   init: "L.Control.GuideIntroScreen",
 		        	   options: {
 		        		   autoActivate: true,
-		        		   bgSrc: "img/GuideIntroScreen/element-alfa-grey.png"
+		        		   bgSrc: "img/GuideIntroScreen/element-alfa-grey.png",
+		        		   munLogoSrc: "img/GuideIntroScreen/Logotype_stor.jpg",
+		        		   euLogoSrc: "img/GuideIntroScreen/EUlogo_Inv_v_RGB.gif"
 		        	   }
 		           }
        ]

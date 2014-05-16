@@ -29,6 +29,7 @@ var config = {
 	    			 uniqueKey: "objectid",
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 zIndex: 110,
 	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
 	    		 }
 		     },
@@ -43,6 +44,7 @@ var config = {
 	    			 selectable: true,
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 zIndex: 101,
 	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
 	    		 }
 		     },
@@ -57,6 +59,7 @@ var config = {
 	    			 selectable: true,
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 zIndex: 101,
 	    			 popup: "<h3>${_displayName}</h3><p>Typ: ${typ}</p><p>Geom: ${geom}</p>"
 	    		 }
 		     },
@@ -67,6 +70,7 @@ var config = {
 						layerId: "wfstest_qgis_server",
 						displayName: "Elnät Kristianstad",
 						attribution: "Kristianstads WFS",
+						zIndex: 50,
 						inputCrs: "EPSG:3008",
 						reverseAxis: false,
 						reverseAxisBbox: false,
@@ -98,6 +102,7 @@ var config = {
 			    	 	layerId: "busstation",
 			    	 	displayName: "Busstationer",
 			    	 	attribution: "Malmö stads WFS",
+			    	 	zIndex: 302,
 			    	 	inputCrs: "EPSG:3008",
 			    	 	reverseAxis: false,
 			    	 	reverseAxisBbox: true,
@@ -136,6 +141,7 @@ var config = {
 			    	 	layerId: "stadsdel",
 			    	 	displayName: "Stadsdel",
 			    	 	attribution: "Malmö stads WFS",
+			    	 	zIndex: 1,
 			    	 	inputCrs: "EPSG:3008",
 			    	 	reverseAxis: false,
 			    	 	reverseAxisBbox: true,
@@ -162,6 +168,7 @@ var config = {
 		    	 	layerId: "malmows_STADSDEL_L",
 		    	 	displayName: "Stadsdel Linje",
 		    	 	attribution: "Malmö stads WFS",
+		    	 	zIndex: 1,
 		    	 	inputCrs: "EPSG:3008",
 		    	 	reverseAxis: false,
 		    	 	reverseAxisBbox: true,
@@ -198,6 +205,7 @@ var config = {
 				    	 typeName: "malmows:POI_VHAMN_PT"
 		     		  },
 					  attribution: "Malmö stads WFS",
+					  zIndex: 201,
 					  inputCrs: "EPSG:4326",
 					  uniqueKey: "gid",
 					  reverseAxis: false,
@@ -228,6 +236,7 @@ var config = {
 					  layerId: "malmows_kvarter",
 					  displayName: "Kvarter",
 					  attribution: "Malmö stads WFS",
+					  zIndex: 50,
 					  inputCrs: "EPSG:3008",
 					  reverseAxis: false,
 					  reverseAxisBbox: true,

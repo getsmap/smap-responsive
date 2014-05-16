@@ -191,7 +191,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this.$panel.show();
 		setTimeout(function() {
 			$(".lswitch-panel").addClass("panel-visible");
-		}, 10);
+		}, 1);
 		
 		$("#mapdiv").css({
 			"margin-left": this.$panel.outerWidth() + "px"
