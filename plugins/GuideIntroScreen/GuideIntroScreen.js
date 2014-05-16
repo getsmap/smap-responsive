@@ -86,6 +86,11 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		var $content = this._makeContent("sv"),
 			$container = $('<div class="guide-introscreen" />');
 		$container.append( $content );
+		
+		if (this.options.bgSrc) {
+			$container.prepend('<img class="gintro-bg" src="'+this.options.bgSrc+'"></img>');			
+		}
+		
 		this.$container = $container;
 		return this._container;
 	},
@@ -119,6 +124,8 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	
 	_makeContent: function(langCode) {
 		
+		var $content = $('<div class="guide-content container" />');
+		
 		var words = this.options.words[langCode];
 		
 		var self = this;
@@ -143,6 +150,15 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			shs += '<p class="lead">'+h.subHeaders[i]+'</p>';
 		}
 		
+		// Logos (appended at a later stage)
+		var $logoContainer = $('<div class="row text-center col-xs-offset-2 col-md-offset-3"></div>');
+		if (this.options.munLogoSrc) {
+			$logoContainer.append('<img class="gintro-munlogo" src="'+this.options.munLogoSrc+'"></img>');
+		}
+		if (this.options.euLogoSrc) {
+			$logoContainer.append('<img class="gintro-eulogo" src="'+this.options.euLogoSrc+'"></img>');
+		}
+		
 		var headerHtml = '<div class="container"><h1 style="margin-bottom:20px;">'+h.title+'</h1>'+shs+'</div>';
 		var classActive = "btn-danger";
 		
@@ -159,8 +175,11 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			btn.data("langCode", _langCode);
 			langBtns.append(btn);
 		}
-		var $content = $('<div class="guide-content" />');
+		
 		$content.append(headerHtml);
+		if ($logoContainer.children().length) {
+			$content.append($logoContainer);
+		}
 		$content.append(langBtns);
 		
 		var c, $cTag,
@@ -185,19 +204,20 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			b.data("configName", configName);
 			$row.append( $cTag );
 		}
+		
+		
+		
 		$content.find(".guideintro-btn-option").on("click", function() {
 			var _langCode = $(this).data("langCode");
 			if (langCode !== _langCode) {
 				$(this).addClass(classActive).siblings().removeClass(classActive).addClass("btn-default");
-				var $newContent = self._makeContent( _langCode );
-				$(".guide-introscreen").empty().append( $newContent );
+				var $newContent = self._makeContent( _langCode ).children();
+				$(".guide-content").empty().append( $newContent );
 			}
 			return false;
 			
 		});
-		if (this.options.bgSrc) {
-			$(".guide-introscreen").append('<img src="'+this.options.bgSrc+'" class="gintro-bg"></img>');			
-		}
+		
 		$content.find(".gintro-btn-configoption").on("click", goToConfig);
 		return $content;
 	}
