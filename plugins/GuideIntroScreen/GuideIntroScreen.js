@@ -23,11 +23,11 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		header: {
 			"sv": {
 				title: "Promenadstaden",
-				subHeaders: ["Malmö museer", "Science Center"]
+				subHeaders: ["Malmö museer, Science Center"]
 			},
 			"en": {
 				title: "The walking city",
-				subHeaders: ["Malmö museums", "Science Center"]
+				subHeaders: ["Malmö museums, Science Center"]
 			}
 		},
 		
@@ -88,7 +88,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		$container.append( $content );
 		
 		if (this.options.bgSrc) {
-			$container.prepend('<img class="gintro-bg" src="'+this.options.bgSrc+'"></img>');			
+			$container.prepend('<img class="gintro-bg gintro-bg-left" src="'+this.options.bgSrc+'"></img><img class="gintro-bg gintro-bg-right" src="'+this.options.bgSrc+'"></img>');			
 		}
 		
 		this.$container = $container;
@@ -151,12 +151,12 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		}
 		
 		// Logos (appended at a later stage)
-		var $logoContainer = $('<div class="row text-center col-xs-offset-2 col-md-offset-3"></div>');
+		var $logoContainer = $('<div class="container" id="gintro-logo-container"></div>');
 		if (this.options.munLogoSrc) {
-			$logoContainer.append('<img class="gintro-munlogo" src="'+this.options.munLogoSrc+'"></img>');
+			$logoContainer.append('<img class="gintro-munlogo col-xs-offset-3 col-sm-offset-3 col-sm-3 col-md-offset-4 col-md-3 col-lg-offset-4 col-lg-3" src="'+this.options.munLogoSrc+'"></img>');
 		}
 		if (this.options.euLogoSrc) {
-			$logoContainer.append('<img class="gintro-eulogo" src="'+this.options.euLogoSrc+'"></img>');
+			$logoContainer.append('<img class="gintro-eulogo col-xs-offset-1 col-sm-offset-2 col-md-offset-1 col-lg-offset-1" src="'+this.options.euLogoSrc+'"></img>');
 		}
 		
 		var headerHtml = '<div class="container"><h1 style="margin-bottom:20px;">'+h.title+'</h1>'+shs+'</div>';
