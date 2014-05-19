@@ -16806,7 +16806,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 			else {
 				tBL = smap.config.bl[0];
 			}
-			if (tBL.options) {
+			if (tBL && tBL.options) {
 				tBL.options.isBaseLayer = true;
 				map.addLayer(this._createLayer(tBL));
 			}
