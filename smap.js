@@ -16806,9 +16806,10 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 			else {
 				tBL = smap.config.bl[0];
 			}
-			tBL.options.isBaseLayer = true;
-			map.addLayer(this._createLayer(tBL));
-
+			if (tBL.options) {
+				tBL.options.isBaseLayer = true;
+				map.addLayer(this._createLayer(tBL));
+			}
 			if (p.OL) {
 				var t, i;
 				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
