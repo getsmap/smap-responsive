@@ -27,6 +27,14 @@
 	padding-top: 53px;
 }
 
+.gp-fullscreen h1 {
+	color: #fff;	
+}
+.gp-fullscreen .gp-mediapic {
+	display: block;
+	margin: 2em 0;
+}
+
 .gp-fs-visible {
 	opacity: 1;
 	filter: alpha(opacity=1);

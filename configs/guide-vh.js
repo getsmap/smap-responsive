@@ -207,6 +207,9 @@ var config = {
 							'</div>',
 		        		   
 		        		   attrId: "id",
+		        		   
+		        		   fullScreenIntroPic: "http://maja-k.com/promenad/vh/popup/${picture}", // Used only when clicking on a media tag, opening in fullscreen
+		        		   
 		        		   data: {
 		        	   			1: {
 		        	   			// Hållbar utveckling i Malmö och omvärlden
@@ -764,9 +767,3 @@ var config = {
 		
 		
 };
-
-// Set proxy for WFS
-L.GeoJSON.WFS.proxy = config.ws[document.domain].proxy;
-
-// Set proxy for SelectWMS
-L.Control.SelectWMS.proxy = config.ws[document.domain].proxy;

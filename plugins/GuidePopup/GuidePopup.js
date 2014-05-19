@@ -6,8 +6,6 @@ L.Control.GuidePopup = L.Control.extend({
 		this._setLang();
 	},
 	
-	
-	
 	_lang: {
 		"sv": {
 			mediaHeader: "Media",
@@ -68,7 +66,11 @@ L.Control.GuidePopup = L.Control.extend({
 		else if (mediaArr && mediaArr instanceof Object) {
 			// Show media in full-screen at once
 			var content = this._makeMediaContent(mediaArr.mediaType, utils.extractToHtml(mediaArr.sources, props).split(","));
-			this.showFullScreen(content);
+			var mediaPic;
+			if (t.mediaType !== "image") {
+				mediaPic = utils.extractToHtml(this.options.fullScreenIntroPic, props);
+			}
+			this.showFullScreen(content, utils.extractToHtml(mediaArr.label, props), mediaPic);
 		}
 		
 		// On media icons click - open media tab when dialog opens
@@ -298,7 +300,7 @@ L.Control.GuidePopup = L.Control.extend({
 		return list;
 	},
 	
-	showFullScreen: function(content) {
+	showFullScreen: function(content, titleText, picSrc) {
 		var div = $('<div class="gp-fullscreen"></div>');
 		
 		function onKeyDown(e) {
@@ -323,6 +325,12 @@ L.Control.GuidePopup = L.Control.extend({
 			close();
 			return false;
 		});
+		var title = '<h1>'+titleText+'</h1>';
+		div.append(title);
+		if (picSrc) {
+			var pic = $('<img class="gp-mediapic" src="'+picSrc+'" />');
+			div.append(pic);			
+		}
 		div.append(content);
 		div.append(btnClose);
 		btnClose.css("z-index", 3000);
@@ -404,7 +412,11 @@ L.Control.GuidePopup = L.Control.extend({
 			var t = data.tabMedia[index];
 			var sources = utils.extractToHtml(t.sources, props);
 			var content = self._makeMediaContent(t.mediaType, sources.split(","));
-			self.showFullScreen(content);
+			var mediaPic;
+			if (t.mediaType === "audio") {
+				mediaPic = utils.extractToHtml(self.options.fullScreenIntroPic, props);
+			}
+			self.showFullScreen(content, $(this).text(), mediaPic);
 			return false;
 		};
 		this.dialog.find("#gp-listmoreinfo").find(".list-group-item").on("tap click", onLiTap);

@@ -18099,7 +18099,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		configs: [
 		          {
 		        	  configName: "guide-industri.js",
-		        	  
+		        	  disabledText: false,
 	        		  "sv": {
 	        			  title: "Industristaden",
 	        			  description: "Industrispåret guidar dig genom de gamla industrierna i Malmös innerstad."		        			  
@@ -18111,6 +18111,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		          },
 		          {
 		        	  configName: "guide-vh.js",
+		        	  disabledText: false,
 	        		  "sv": {
 	        			  title: "Västra hamnen",
 			        	  description: "Västra hamnen guidar dig genom Malmös modernaste och fräsigaste stadsdel."
@@ -18118,17 +18119,6 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	        		  "en": {
 	        			  title: "Western harbor",
 			        	  description: "This tour guides you through the most modern part of Malmö."
-	        		  }
-		          },
-		          {
-		        	  configName: "guide-rosengard.js",
-	        		  "sv": {
-	        			  title: "Rosengård",
-	        			  description: "Den här turen tar dig genom Sveriges kanske mest omtalade stadsdel."
-	        		  },
-	        		  "en": {
-	        			  title: "Rose garden",
-	        			  description: "This tour will take you through the infamous Rosengård."
 	        		  }
 		          }
           ]
@@ -18247,7 +18237,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		}
 		$content.append(langBtns);
 		
-		var c, $cTag,
+		var c, cc, $cTag,
 			configName,
 			configs = this.options.configs;
 		var $row = $('<div class="row" />');
@@ -18255,14 +18245,20 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		for (var i=0,len=configs.length; i<len; i++) {
 			c = configs[i];
 			configName = c.configName;
-			c = c[langCode];
+			cc = c[langCode];
 			$cTag = $('<div class="gintro-box col-xs-6 col-md-4 col-lg-3 text-left">'+
-			  		'<h3>'+c.title+'</h3>'+
+			  		'<h3>'+cc.title+'</h3>'+
 			  		'<div style="margin-bottom:20px;">'+
-			  			'<p class="lead text-muted">'+c.description+'</p>'+
+			  			'<p class="lead text-muted">'+cc.description+'</p>'+
 			  			'<button class="btn btn-default btn-sm gintro-btn-configoption">'+words.btnStartTour+'</button>'+
 			  		'</div>'+
 		  		'</div>');
+			if (c.disabledText) {
+				var disTag = $('<div class="gintro-disbox"><label>'+c.disabledText+'</label></div>');
+				$cTag.find("div").append(disTag);
+				$cTag.find("button").addClass("disabled");
+				$cTag.addClass("disabled");
+			}
 			
 			$cTag.addClass("col-xs-offset-3 col-md-offset-1 col-lg-offset-1");
 			var b = $cTag.find("button");
@@ -18312,8 +18308,6 @@ L.control.guideIntroScreen = function (options) {
 		L.setOptions(this, options);
 		this._setLang();
 	},
-	
-	
 	
 	_lang: {
 		"sv": {
@@ -18375,7 +18369,11 @@ L.control.guideIntroScreen = function (options) {
 		else if (mediaArr && mediaArr instanceof Object) {
 			// Show media in full-screen at once
 			var content = this._makeMediaContent(mediaArr.mediaType, utils.extractToHtml(mediaArr.sources, props).split(","));
-			this.showFullScreen(content);
+			var mediaPic;
+			if (t.mediaType !== "image") {
+				mediaPic = utils.extractToHtml(this.options.fullScreenIntroPic, props);
+			}
+			this.showFullScreen(content, utils.extractToHtml(mediaArr.label, props), mediaPic);
 		}
 		
 		// On media icons click - open media tab when dialog opens
@@ -18605,7 +18603,7 @@ L.control.guideIntroScreen = function (options) {
 		return list;
 	},
 	
-	showFullScreen: function(content) {
+	showFullScreen: function(content, titleText, picSrc) {
 		var div = $('<div class="gp-fullscreen"></div>');
 		
 		function onKeyDown(e) {
@@ -18630,6 +18628,12 @@ L.control.guideIntroScreen = function (options) {
 			close();
 			return false;
 		});
+		var title = '<h1>'+titleText+'</h1>';
+		div.append(title);
+		if (picSrc) {
+			var pic = $('<img class="gp-mediapic" src="'+picSrc+'" />');
+			div.append(pic);			
+		}
 		div.append(content);
 		div.append(btnClose);
 		btnClose.css("z-index", 3000);
@@ -18711,7 +18715,11 @@ L.control.guideIntroScreen = function (options) {
 			var t = data.tabMedia[index];
 			var sources = utils.extractToHtml(t.sources, props);
 			var content = self._makeMediaContent(t.mediaType, sources.split(","));
-			self.showFullScreen(content);
+			var mediaPic;
+			if (t.mediaType === "audio") {
+				mediaPic = utils.extractToHtml(self.options.fullScreenIntroPic, props);
+			}
+			self.showFullScreen(content, $(this).text(), mediaPic);
 			return false;
 		};
 		this.dialog.find("#gp-listmoreinfo").find(".list-group-item").on("tap click", onLiTap);
