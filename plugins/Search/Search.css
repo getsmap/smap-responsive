@@ -10,6 +10,12 @@
 	transition: max-width .3s;
 	-webkit-transition: max-width .3s;
 }
+
+.smap-search-div-in-toolbar {
+	top: .2em !important;
+	z-index: 1002 !important;
+}
+
 .smap-search-div-focused {
 	max-width: 450px !important;
 }
@@ -72,9 +78,18 @@
 	max-width: 635px;
 }
 
+@media (max-width: 991px) {
+	.smap-search-div-in-toolbar {
+		max-width: 80% !important;
+	}
+	.smap-search-div-focused {
+		max-width: 96% !important;
+		width: auto !important;
+	}
+}
+
 
 @media (min-width: 992px) {
-
 	#smap-search-div {
 		left: 310px;
 	}	

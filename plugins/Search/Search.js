@@ -6,7 +6,8 @@ L.Control.Search = L.Control.extend({
 		wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
 		whitespace: "%2B",
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
-		pxDesktop: 992
+		pxDesktop: 992,
+		addToMenu: false
 	},
 	
 	_lang: {
@@ -159,6 +160,12 @@ L.Control.Search = L.Control.extend({
 		$entry.on("blur", deactivate);
 		
 		$("#mapdiv").append( $searchDiv );
+		smap.event.on("smap.core.pluginsadded", function() {
+			var toolbar = $("#smap-menu-div nav");
+			if (toolbar.length) {
+				$searchDiv.addClass("smap-search-div-in-toolbar");
+			}
+		});
 
 		
 //		var bHound = new Bloodhound({

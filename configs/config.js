@@ -17,6 +17,21 @@ var config = {
 		},
 		
 		ol: [
+		{
+			 init: "L.TileLayer.WMS",
+			 url: "http://geoserver.smap.se/geoserver/wms",
+			 options: {
+				 layerId: "gangstig",
+				 displayName: "Gångstig",
+				 layers: 'sandboxws:regisln',
+				 format: 'image/png',
+				 selectable: true,
+				 uniqueKey: "objectid",
+				 transparent: true,
+				 attribution: "@ Malmö Stadsbyggnadskontor",
+				 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
+			 }
+		},
 	    	 {
 	    		 init: "L.TileLayer.WMS",
 	    		 url: "http://geoserver.smap.se/geoserver/wms",
@@ -128,6 +143,20 @@ var config = {
 			     		    fillOpacity: 0.5
 			    		}
 			     	}
+			     },
+			     {
+		    		 init: "L.TileLayer.WMS",
+		    		 url: "http://xyz.malmo.se:8081/geoserver/wms/gwc",
+		    		 options: {
+		    			 layerId: "Stadsdel",
+		    			 displayName: "Stadsdel",
+		    			 layers: 'malmows:stadsdel',
+		    			 format: 'image/png',
+		    			 selectable: true,
+		    			 transparent: true,
+		    			 attribution: "@ Malmö Stadsbyggnadskontor",
+		    			 popup: '${id}'
+		    		 }
 			     },
 				{
 			    	 init: "L.GeoJSON.WFS",
@@ -411,7 +440,9 @@ var config = {
 //		           },
 		           {
 		        	   init: "L.Control.Search",
-		        	   options: {}
+		        	   options: {
+		        	   		addToMenu: true
+		           		}
 		           },
 //		           {
 //		        	   init: "L.Control.Info",
