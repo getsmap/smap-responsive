@@ -13,25 +13,13 @@ var config = {
             },
 			"91.123.201.52": {
 				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
+			},
+			"kartor.helsingborg.se": {
+				proxy: "http://kartor.helsingborg.se/cgi-bin/proxy.py?url="
 			}
 		},
 		
 		ol: [
-		{
-			 init: "L.TileLayer.WMS",
-			 url: "http://geoserver.smap.se/geoserver/wms",
-			 options: {
-				 layerId: "gangstig",
-				 displayName: "Gångstig",
-				 layers: 'sandboxws:regisln',
-				 format: 'image/png',
-				 selectable: true,
-				 uniqueKey: "objectid",
-				 transparent: true,
-				 attribution: "@ Malmö Stadsbyggnadskontor",
-				 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
-			 }
-		},
 	    	 {
 	    		 init: "L.TileLayer.WMS",
 	    		 url: "http://geoserver.smap.se/geoserver/wms",
@@ -143,20 +131,6 @@ var config = {
 			     		    fillOpacity: 0.5
 			    		}
 			     	}
-			     },
-			     {
-		    		 init: "L.TileLayer.WMS",
-		    		 url: "http://xyz.malmo.se:8081/geoserver/wms/gwc",
-		    		 options: {
-		    			 layerId: "Stadsdel",
-		    			 displayName: "Stadsdel",
-		    			 layers: 'malmows:stadsdel',
-		    			 format: 'image/png',
-		    			 selectable: true,
-		    			 transparent: true,
-		    			 attribution: "@ Malmö Stadsbyggnadskontor",
-		    			 popup: '${id}'
-		    		 }
 			     },
 				{
 			    	 init: "L.GeoJSON.WFS",
@@ -440,9 +414,7 @@ var config = {
 //		           },
 		           {
 		        	   init: "L.Control.Search",
-		        	   options: {
-		        	   		addToMenu: true
-		           		}
+		        	   options: {}
 		           },
 //		           {
 //		        	   init: "L.Control.Info",
@@ -463,27 +435,14 @@ var config = {
                     {
                         init: "L.Control.Menu",
                         options: {}
-                    }
-//                    ,
-//                    {
-//            			init : "L.Control.RedirectClick,		
-//            			config : {
-//            				displayName : 'Snedbild',
-//            				//addToToolsMenu: "toolsmenu",
-//            				toolbarIndex: 4,
-//            				url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
-//            				overrideName: "snedbild",
-//            				btnLabel: "Snedbild",
-////            				btnHover: "Verktyg för att se snedbilder",
-//            				buttonId: "redirect-snedbild",
-//            				buttonCss: "ui-icon-arrowstop-1-s",
-//            				mouseMoveText: "Klicka i kartan för att se snedbild"
-//            			}
-//            		}
-//		           ,
-//		           {
-//		           	   init: "L.Control.SideBars",
-//		           	   options: {}
-//		           }
+                    },
+                    {
+            			init : "L.Control.RedirectClick",		
+            			option: {}
+            		},
+			        {
+			         	init: "L.Control.SideBars",
+			           	   options: {}
+			           }
        ]
 };
