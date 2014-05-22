@@ -120,7 +120,7 @@ L.Control.SharePosition = L.Control.extend({
 			options: {
 				noBindZoom: true,
 				noBindDrag: true,
-				layerId: "shareposition",
+				layerId: "_shareposition",
 				displayName: "Shared locations",
 				featureType: this.options.wfsFeatureType,
 				attribution: "Malmö stads WFS",
@@ -178,6 +178,7 @@ L.Control.SharePosition = L.Control.extend({
 					self._addLayer();
 				}
 				else {
+					self._stopShare(); // Stop sharing your position
 					self.deactivate();
 				}
 				return false;
@@ -189,7 +190,8 @@ L.Control.SharePosition = L.Control.extend({
 				}
 				else {
 					$(this).removeClass("btn-danger");
-					self._stopShare();
+					self._stopShare(); // Stop sharing your position
+					self.deactivate(); // Stop fetching other's position
 //					$(this).text(self.lang.dShare); // Restore label 
 				}
 			});

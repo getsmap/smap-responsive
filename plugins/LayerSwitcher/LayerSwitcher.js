@@ -87,13 +87,19 @@ L.Control.LayerSwitcher = L.Control.extend({
 		else {
 			$(".lswitch-panel-bl").hide();
 		}
-		for (var i=0,len=ols.length; i<len; i++) {
-			t = ols[i];
-			this._addRow({
-				displayName: t.options.displayName,
-				layerId: t.options.layerId,
-				isBaseLayer: false
-			});
+		if (ols.length > 0) {
+			for (var i=0,len=ols.length; i<len; i++) {
+				t = ols[i];
+				this._addRow({
+					displayName: t.options.displayName,
+					layerId: t.options.layerId,
+					isBaseLayer: false
+				});
+			}
+		}
+		else {
+			$(".lswitch-panel-ol").hide();
+			
 		}
 	},
 	
