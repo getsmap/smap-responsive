@@ -1,6 +1,8 @@
 
-#sharepos-gui {
-	position: relative;
+/*#sharepos-gui {
+	position: absolute;
+	right: 5em;
+	bottom: .5em;
 	z-index: 1001;
 	float: left;
 	margin-right: 25px;
@@ -13,4 +15,4 @@
 	-moz-transition: width .2s;
 	-o-transition: width .2s;
 	transition: width .2s;
-}
+}*/

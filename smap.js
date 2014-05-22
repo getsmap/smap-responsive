@@ -19079,7 +19079,8 @@ L.control.layerSwitcher = function (options) {
 		wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
 		whitespace: "%2B",
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
-		pxDesktop: 992
+		pxDesktop: 992,
+		addToMenu: false
 	},
 	
 	_lang: {
@@ -19232,6 +19233,12 @@ L.control.layerSwitcher = function (options) {
 		$entry.on("blur", deactivate);
 		
 		$("#mapdiv").append( $searchDiv );
+		smap.event.on("smap.core.pluginsadded", function() {
+			var toolbar = $("#smap-menu-div nav");
+			if (toolbar.length) {
+				$searchDiv.addClass("smap-search-div-in-toolbar");
+			}
+		});
 
 		
 //		var bHound = new Bloodhound({
@@ -20129,9 +20136,9 @@ L.control.sharePos = function (options) {
 	deactivate: function() {
 		clearInterval( self._refreshInterval );
 		
-		$("#sharepos-gui button").text(this.lang.dShare).removeClass("btn-danger")
+		$("#smap-share-btn").text(this.lang.dShare).removeClass("btn-danger")
 		this.dialog.find("input").val(null);
-		$("#sharepos-gui").hide();
+		$("#smap-share-btn").hide();
 		this.map.removeLayer(this.layer);
 	},
 
@@ -20157,12 +20164,13 @@ L.control.sharePos = function (options) {
 	},
 	
 	_drawGui: function() {
-		var $gui = $('<div id="sharepos-gui" />');
-		var $btnShare =	$('<button class="btn btn-default btn-lg" type="button">'+this.lang.dShare+'</button>');
-		$gui.append($btnShare);
-		$(".leaflet-control-Geolocate").prepend( $gui );
-		$gui.hide();
-		
+		var $btnShare =	$('<button id="smap-share-btn" class="btn btn-default" type="button"><span class="fa fa-user"></span></button>');
+		$btnShare.hide();
+		this.$container.append($btnShare);
+		var self = this;
+		smap.event.on("smap.core.pluginsadded", function() {
+			$(".leaflet-control-Geolocate").before( self.$container );		
+		});
 		var bodyContent =
 				'<div class="form-group">'+
 					'<label>'+this.lang.yourName+'</label>'+
@@ -20258,15 +20266,25 @@ L.control.sharePos = function (options) {
 		smap.event.on("smap.core.pluginsadded", function() {
 			$("#smap-glocate-btn").on("click", function() {
 				if ( $(this).hasClass("btn-primary") ) {
-					// Show the GUI
-					$("#sharepos-gui").show();
+					// Show the locate button
+					$("#smap-share-btn").show();
 					self._addLayer();
-					self._refreshInterval = setInterval($.proxy(self._refresh, self), self._refreshIntervalMs);
 				}
 				else {
 					self.deactivate();
 				}
 				return false;
+			});
+			$("#smap-share-btn").on("click", function() {
+				var isActive = $(this).hasClass("btn-danger");
+				if ( !isActive ) {
+					self.dialog.modal("show");
+				}
+				else {
+					$(this).removeClass("btn-danger");
+					self._stopShare();
+//					$(this).text(self.lang.dShare); // Restore label 
+				}
 			});
 		});
 		
@@ -20275,7 +20293,7 @@ L.control.sharePos = function (options) {
 		});
 		
 		this.dialog.find(".modal-footer .btn-primary").on("click", function() {
-			$("#sharepos-gui button").addClass("btn-danger").text(self.lang.stopSharing);
+			$("#smap-share-btn").addClass("btn-danger"); //.text(self.lang.stopSharing);
 			self.dialog.modal("hide");
 			
 			var uName = $.trim( self.dialog.find("input[type='text']").val() );
@@ -20283,20 +20301,9 @@ L.control.sharePos = function (options) {
 		});
 		
 //		this.dialog.find(".modal-footer .btn-default").on("click", function() {
-//			$("#sharepos-gui button").addClass("btn-danger").text(self.lang.stopSharing);
+//			$("#smap-share-btn").addClass("btn-danger").text(self.lang.stopSharing);
 //		});
 		
-		$("#sharepos-gui button").on("click", function() {
-			var isActive = $(this).hasClass("btn-danger");
-			if ( !isActive ) {
-				self.dialog.modal("show");
-			}
-			else {
-				$(this).removeClass("btn-danger");
-				self._stopShare();
-				$(this).text(self.lang.dShare); // Restore label 
-			}
-		});
 	},
 	
 	_onLocationFound: function(e) {
@@ -20323,26 +20330,40 @@ L.control.sharePos = function (options) {
 	_startShare: function(uName) {
 		this.uName = uName;
 		
+		
+		this.__onLocationFound = this.__onLocationFound || $.proxy(this._onLocationFound, this);
+		this.__onLocationError = this.__onLocationError || $.proxy(this._onLocationError, this);
+		
 //		smap.cmd.loading(true);
-		this.map.on("locationfound", $.proxy(this._onLocationFound, this));
-		this.map.on("locationerror", $.proxy(this._onLocationError, this));
+		this.map.on("locationfound", this.__onLocationFound);
+		this.map.on("locationerror", this.__onLocationFound);
 		
 		this.uid = localStorage.share_uid || null;
 		
-		this._storeInterval = setInterval($.proxy(this._store, this), 5000);
+		this.__store = this.__store || $.proxy(this._store, this);
+		this.__refresh = this.__refresh || $.proxy(this._refresh, this);
+		
+		this._storeInterval = setInterval(this.__store, 5000);
+		this._refreshInterval = setInterval(this.__refresh, this._refreshIntervalMs);
+		
+		
 		this._setLocateSettings();
 		this.map.fire("drag");
+		
+		utils.log("START sharing");
 		
 	},
 	
 	_stopShare: function() {
 		smap.cmd.loading(false);
 		
+		utils.log("stop sharing");
+		
 		clearInterval(this._storeInterval);
 		this._storeInterval = null;
 		
-		this.map.off("locationfound", this._onLocationFound, this);
-		this.map.off("locationerror", this._onLocationError, this);
+		this.map.off("locationfound", this.__onLocationFound, this);
+		this.map.off("locationerror", this.__onLocationError, this);
 		
 		this._location = null;
 		this.uid = null;
