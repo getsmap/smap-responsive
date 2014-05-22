@@ -125,18 +125,20 @@ L.Control.SharePosition = L.Control.extend({
 				featureType: this.options.wfsFeatureType,
 				attribution: "Malmö stads WFS",
 				inputCrs: "EPSG:4326",
-				reverseAxis: true,
 				selectable: true,
 				popup: '<span><strong>${text_username}</strong>&nbsp;&nbsp;(<span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);var dNow = new Date(); var dDiff = new Date( Math.abs(dNow.getTime() - d.getTime()) ); return dDiff.getMinutes(); }}</span> min ago)</span>',
-				uniqueAttr: null, //"id",
-				hoverColor: '#FF0'
-//				style: {
-//					weight: 6,
-//					color: '#F00',
-//					dashArray: '',
-//					fillOpacity: 0.5
-//				},
-				
+				hoverColor: '#FF0',
+				zIndex: 350,
+				reverseAxis: false,
+				reverseAxisBbox: true,
+				uniqueKey: "id",
+				params: {
+					typeName: "sandbox:sharedpositions",
+					version: "1.1.0",
+					maxFeatures: 10000,
+					format: "text/geojson",
+					outputFormat: "json"
+				}
 			}
 		});
 		

@@ -16352,7 +16352,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		}
 
 		var options = this.options;
-		if (options.filter && !options.filter(geojson)) { return; }
+//		if (options.filter && !options.filter(geojson)) { return; }
 		
 		var isPointLayer = !options.pointToLayer && geojson.geometry && (geojson.geometry.type === "MultiPoint" || geojson.geometry.type === "Point");
 		if (isPointLayer && !options.pointToLayer && options.style) {
@@ -18860,13 +18860,19 @@ L.control.guidePopup = function (options) {
 		else {
 			$(".lswitch-panel-bl").hide();
 		}
-		for (var i=0,len=ols.length; i<len; i++) {
-			t = ols[i];
-			this._addRow({
-				displayName: t.options.displayName,
-				layerId: t.options.layerId,
-				isBaseLayer: false
-			});
+		if (ols.length > 0) {
+			for (var i=0,len=ols.length; i<len; i++) {
+				t = ols[i];
+				this._addRow({
+					displayName: t.options.displayName,
+					layerId: t.options.layerId,
+					isBaseLayer: false
+				});
+			}
+		}
+		else {
+			$(".lswitch-panel-ol").hide();
+			
 		}
 	},
 	
@@ -20213,23 +20219,25 @@ L.control.sharePos = function (options) {
 			options: {
 				noBindZoom: true,
 				noBindDrag: true,
-				layerId: "shareposition",
+				layerId: "_shareposition",
 				displayName: "Shared locations",
 				featureType: this.options.wfsFeatureType,
 				attribution: "Malmö stads WFS",
 				inputCrs: "EPSG:4326",
-				reverseAxis: true,
 				selectable: true,
 				popup: '<span><strong>${text_username}</strong>&nbsp;&nbsp;(<span style="white-space:nowrap;">${function(p) {var d = new Date(p.datetime_changed);var dNow = new Date(); var dDiff = new Date( Math.abs(dNow.getTime() - d.getTime()) ); return dDiff.getMinutes(); }}</span> min ago)</span>',
-				uniqueAttr: null, //"id",
-				hoverColor: '#FF0'
-//				style: {
-//					weight: 6,
-//					color: '#F00',
-//					dashArray: '',
-//					fillOpacity: 0.5
-//				},
-				
+				hoverColor: '#FF0',
+				zIndex: 350,
+				reverseAxis: false,
+				reverseAxisBbox: true,
+				uniqueKey: "id",
+				params: {
+					typeName: "sandbox:sharedpositions",
+					version: "1.1.0",
+					maxFeatures: 10000,
+					format: "text/geojson",
+					outputFormat: "json"
+				}
 			}
 		});
 		
@@ -20271,6 +20279,7 @@ L.control.sharePos = function (options) {
 					self._addLayer();
 				}
 				else {
+					self._stopShare(); // Stop sharing your position
 					self.deactivate();
 				}
 				return false;
@@ -20282,7 +20291,8 @@ L.control.sharePos = function (options) {
 				}
 				else {
 					$(this).removeClass("btn-danger");
-					self._stopShare();
+					self._stopShare(); // Stop sharing your position
+					self.deactivate(); // Stop fetching other's position
 //					$(this).text(self.lang.dShare); // Restore label 
 				}
 			});
