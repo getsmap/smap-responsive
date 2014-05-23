@@ -37,7 +37,8 @@ var config = {
 								version: "1.1.0",
 								maxFeatures: 10000,
 								format: "text/geojson",
-								outputFormat: "json"
+								outputFormat: "json",
+								filter: '<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><ogc:PropertyIsBetween><ogc:PropertyName>datetime_changed</ogc:PropertyName><ogc:LowerBoundary><ogc:Literal>2014-05-23T14:28:41.722Z</ogc:Literal></ogc:LowerBoundary><ogc:UpperBoundary><ogc:Literal>2014-05-23T15:05:41.722Z</ogc:Literal></ogc:UpperBoundary></ogc:PropertyIsBetween></ogc:Filter>'
 				     		},
 						  hoverColor: '#FF0',
 						  style: {

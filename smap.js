@@ -20110,10 +20110,11 @@ L.control.sharePos = function (options) {
 		wfsFeatureType: "sandbox:sharedpositions",
 		wfsUri: "http://www.malmo.se/sandbox/",
 		useProxy: true,
-		maxAge: 5
+		maxAge: 15,
+		_refreshIntervalMs: 10000,
+		_storeIntervalMs: 10000,
 	},
 	
-	_refreshIntervalMs: 15000,
 	
 	_lang: {
 		"sv": {
@@ -20145,9 +20146,9 @@ L.control.sharePos = function (options) {
 	},
 	
 	deactivate: function() {
-		clearInterval( self._refreshInterval );
+		this._stopRefresh();
 		
-		$("#smap-share-btn").text(this.lang.dShare).removeClass("btn-danger")
+		$("#smap-share-btn").removeClass("btn-danger"); //text(this.lang.dShare)
 		this.dialog.find("input").val(null);
 		$("#smap-share-btn").hide();
 		this.map.removeLayer(this.layer);
@@ -20200,15 +20201,19 @@ L.control.sharePos = function (options) {
 		var maxAge = this.options.maxAge; // minutes
 		
 		var dNow = new Date();
-		var now = dNow.getTime();
+		var now = dNow.getTime(); // - dNow.getTimezoneOffset() * 1000 * 60; // Corrected for timezone
 		var old = now - maxAge * 60 * 1000; // age in ms
-		var dOld = new Date(old);
+		var dOld = new Date(old); //  - 15 * 60 * 1000
+		
+//		now += 24 * 60 * 60 * 1000; // Add 1 day before sending to DB (which has a different clock) in case the clock is not calibrated.
+//		dNow = new Date(now);
 		
 		var filter = new OpenLayers.Filter.Comparison({
-				type: OpenLayers.Filter.Comparison.BETWEEN,
+				type: OpenLayers.Filter.Comparison.GREATER_THAN, //OpenLayers.Filter.Comparison.BETWEEN,
 				property: "datetime_changed",
-				lowerBoundary: dOld,
-				upperBoundary: dNow
+				value: dOld
+//				lowerBoundary: dOld,
+//				upperBoundary: dNow
 		});
 		var filterFormat = new OpenLayers.Format.Filter({version: "1.1.0"}),
         	xml = new OpenLayers.Format.XML();
@@ -20222,8 +20227,8 @@ L.control.sharePos = function (options) {
 			init: "L.GeoJSON.WFS",
 			url: this.options.wfsSource,
 			options: {
-				noBindZoom: false,
-				noBindDrag: false,
+				noBindZoom: true,
+				noBindDrag: true,
 				layerId: "_shareposition",
 				displayName: "Shared locations",
 				featureType: this.options.wfsFeatureType,
@@ -20256,7 +20261,9 @@ L.control.sharePos = function (options) {
 				self.layer.removeLayer(marker);
 				if (marker.feature) {
 					var uid = parseInt(marker.feature.id.split(".")[1]);
-					if (!self.uid || (self.uid && self.uid !== uid)) {
+					var savedUid = self.uid || localStorage.share_uid || null;
+					savedUid = parseInt(savedUid);
+					if (!savedUid || (savedUid && savedUid !== uid)) {
 						self.layer.addLayer(newMarker);
 					}
 					var html = utils.extractToHtml(self.layer.options.popup, marker.feature.properties);
@@ -20282,9 +20289,10 @@ L.control.sharePos = function (options) {
 					// Show the locate button
 					$("#smap-share-btn").show();
 					self._addLayer();
+					self._startRefresh(); // Start refreshing layer
 				}
 				else {
-					self._stopShare(); // Stop sharing your position
+					self._stopShare(); // Stop sharing your position AND refreshing layer
 					self.deactivate();
 				}
 				return false;
@@ -20297,7 +20305,7 @@ L.control.sharePos = function (options) {
 				else {
 					$(this).removeClass("btn-danger");
 					self._stopShare(); // Stop sharing your position
-					self.deactivate(); // Stop fetching other's position
+//					self.deactivate(); // Stop fetching other's position
 //					$(this).text(self.lang.dShare); // Restore label 
 				}
 			});
@@ -20343,8 +20351,14 @@ L.control.sharePos = function (options) {
 	},
 	
 	_startShare: function(uName) {
+		if (this._storeInterval) {
+			return false; // already sharing
+		}
+		utils.log("START sharing");
+		
 		this.uName = uName;
 		
+//		this._stopShare(); // Just to avoid multiple updates
 		
 		this.__onLocationFound = this.__onLocationFound || $.proxy(this._onLocationFound, this);
 		this.__onLocationError = this.__onLocationError || $.proxy(this._onLocationError, this);
@@ -20356,23 +20370,34 @@ L.control.sharePos = function (options) {
 		this.uid = localStorage.share_uid || null;
 		
 		this.__store = this.__store || $.proxy(this._store, this);
-		this.__refresh = this.__refresh || $.proxy(this._refresh, this);
-		
-		this._storeInterval = setInterval(this.__store, 5000);
-		this._refreshInterval = setInterval(this.__refresh, this._refreshIntervalMs);
-		
+		this._storeInterval = setInterval(this.__store, this.options._storeIntervalMs);
 		
 		this._setLocateSettings();
 		this.map.fire("drag");
 		
-		utils.log("START sharing");
-		
+	},
+	
+	_startRefresh: function() {
+		if (this._refreshInterval) {
+			return false; // already refreshing
+		}
+		utils.log("start refreshing");
+		this.__refresh = this.__refresh || $.proxy(this._refresh, this);
+		this._refreshInterval = setInterval(this.__refresh, this.options._refreshIntervalMs);
+	},
+	
+	_stopRefresh: function() {
+		utils.log("stop refreshing");
+		clearInterval( this._refreshInterval );
+		this._refreshInterval = null;
 	},
 	
 	_stopShare: function() {
 		smap.cmd.loading(false);
 		
 		utils.log("stop sharing");
+		
+		this._stopRefresh();
 		
 		clearInterval(this._storeInterval);
 		this._storeInterval = null;
@@ -20399,11 +20424,25 @@ L.control.sharePos = function (options) {
 			data: this._getXml(this._location.latlng, this._location.accuracy, this.uName, this.uid),
 			contentType: "text/xml",
 			dataType: "text",
+			error: function(a, text, c) {
+				utils.log("SharePosition: Error storing coordinates because of: "+text);
+			},
 			success: function(resp) {
 				var obj = $.xml2json(resp);
-				if (!this.uid && obj && obj.TransactionSummary && parseInt(obj.TransactionSummary.totalInserted) > 0) {
-					this.uid = parseInt(obj.InsertResults.Feature.FeatureId.fid.split(".")[1]);
-					localStorage.share_uid = this.uid;
+				if (obj && obj.TransactionSummary) {
+					var totInserted = parseInt(obj.TransactionSummary.totalInserted),
+						totUpdated = parseInt(obj.TransactionSummary.totalUpdated);
+					
+					if (!this.uid && totInserted > 0) {
+						this.uid = parseInt(obj.InsertResults.Feature.FeatureId.fid.split(".")[1]);
+						localStorage.share_uid = this.uid;
+					}
+					else if (totInserted === 0 && totUpdated === 0) {
+						// We need to reset the uid because it has been removed in the DB but not reset on the client
+						this.uid = null;
+						delete localStorage.share_uid;
+					}
+					
 				}
 			},
 			complete: function() {
@@ -20897,7 +20936,7 @@ L.control.shareTweet = function(options) {
 			  		'<p>Ramverket har hittills utvecklats av Malmö Stadsbyggnadskontor men är tänkt att ingå '+
 					  'i sMap-samarbetet – där även kommunerna Kristianstad, Helsingborg och Lund är delaktiga.'+
 			  		'<h4>Kontakta oss!</h4>'+
-					'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta GIT-utvecklare <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
+					'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta sMaps systemarkitekt och huvudutvecklare <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
 					'<p>Vill du veta mer om sMap-samarbetet eller publicering av geodata? Kontakta projektsamordnade <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
 					'<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
 			},
@@ -20912,7 +20951,7 @@ L.control.shareTweet = function(options) {
 			  		'<p>The framework has so far been developed by Malmö Stadsbyggnadskontor but will be used in '+
 					  'the sMap project – where the municipalities of Kristianstad, Helsingborg and Lund will participate.'+
 			  		'<h4>Feed-back!</h4>'+
-					'<p>Do you have suggestions, or are you interested in contributing with the development of sMap mobile? Please contact GIT-developer <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
+					'<p>Do you have suggestions, or are you interested in contributing with the development of sMap mobile? Please contact sMap\'s System Architect and main developer <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
 					'<p>Do you want more info about the sMap project or publishing geographic data? Then contact the project administrators <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> or '+
 					'<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
 			}

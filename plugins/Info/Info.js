@@ -15,7 +15,7 @@ L.Control.Info = L.Control.extend({
 			  		'<p>Ramverket har hittills utvecklats av Malmö Stadsbyggnadskontor men är tänkt att ingå '+
 					  'i sMap-samarbetet – där även kommunerna Kristianstad, Helsingborg och Lund är delaktiga.'+
 			  		'<h4>Kontakta oss!</h4>'+
-					'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta GIT-utvecklare <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
+					'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta sMaps systemarkitekt och huvudutvecklare <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
 					'<p>Vill du veta mer om sMap-samarbetet eller publicering av geodata? Kontakta projektsamordnade <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
 					'<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
 			},
@@ -30,7 +30,7 @@ L.Control.Info = L.Control.extend({
 			  		'<p>The framework has so far been developed by Malmö Stadsbyggnadskontor but will be used in '+
 					  'the sMap project – where the municipalities of Kristianstad, Helsingborg and Lund will participate.'+
 			  		'<h4>Feed-back!</h4>'+
-					'<p>Do you have suggestions, or are you interested in contributing with the development of sMap mobile? Please contact GIT-developer <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
+					'<p>Do you have suggestions, or are you interested in contributing with the development of sMap mobile? Please contact sMap\'s System Architect and main developer <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
 					'<p>Do you want more info about the sMap project or publishing geographic data? Then contact the project administrators <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> or '+
 					'<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
 			}
