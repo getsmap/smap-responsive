@@ -1,7 +1,8 @@
 L.Control.Menu = L.Control.extend({
 
     options: {
-        position: 'topright' // just an example
+        position: 'topright', // just an example
+        btnID: "my-btn"
     },
 
     _lang: {
@@ -34,12 +35,16 @@ L.Control.Menu = L.Control.extend({
         this.$container = $(this._container);
         this._createMenu();
         
-        // Example of usage
-        this.addButton("My button", "fa fa-link", function() {
+        var id = "";
+        if(this.options.btnID){
+        	id = this.options.btnID; 
+        }
+        // Example of usage -- UNCOMMENT HERE TO ADD EXAMPLE BUTTON
+        this.addButton(id,"My button", "fa fa-link", function() {
         	alert("Hej");
         	return false;
         });
-
+	   
         return this._container;
     },
 
@@ -51,10 +56,12 @@ L.Control.Menu = L.Control.extend({
      * @param options {Options} Optional.
      * @returns
      */
-    addButton: function(label, iconClass, onClick, options) {
+    addButton: function(btnID, label, iconClass, onClick, options) {
     	options = options || {};
-
-    	var $btn = $('<li><a href="btn btn-default"><span class="'+iconClass+'"></span> '+label+'</a></li>');
+		var id = btnID || "";
+		
+    	var $btn = $('<li><a id="'+id+'" href="btn btn-default"><span class="'+iconClass+'"></span> '+label+'</a></li>');
+    	
     	if (options.proxy) {
     		onClick = $.proxy(onClick, options.proxy);
     	}
