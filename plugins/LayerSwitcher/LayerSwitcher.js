@@ -99,8 +99,13 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}
 		else {
 			$(".lswitch-panel-ol").hide();
-			
 		}
+		
+		if (bls.length <= 1 && ols.length === 0) {
+			// Hide all 
+			$(".lswitch-panel").remove();
+		}
+		
 	},
 	
 	_bindEvents: function() {

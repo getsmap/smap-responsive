@@ -18872,8 +18872,13 @@ L.control.guidePopup = function (options) {
 		}
 		else {
 			$(".lswitch-panel-ol").hide();
-			
 		}
+		
+		if (bls.length <= 1 && ols.length === 0) {
+			// Hide all 
+			$(".lswitch-panel").remove();
+		}
+		
 	},
 	
 	_bindEvents: function() {
