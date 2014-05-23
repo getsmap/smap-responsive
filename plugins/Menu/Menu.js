@@ -2,7 +2,7 @@ L.Control.Menu = L.Control.extend({
 
     options: {
         position: 'topright', // just an example
-        btnID: "my-btn"
+        btnID: "my-btn" //plugin ID which can be used with jquery e.g.
     },
 
     _lang: {
@@ -104,10 +104,6 @@ L.Control.Menu = L.Control.extend({
         //this.$container.append($div);
 
     },
-
-
-
-
 
     onRemove: function(map) {
 
