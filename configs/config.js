@@ -22,26 +22,24 @@ var config = {
 		ol: [
 	    	 {
 	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://geoserver.smap.se/geoserver/wms",
+	    		 url: "http://opendata-view.smhi.se/klim-stat_temperatur/wms",
 	    		 options: {
 	    			 layerId: "gangstig",
 	    			 displayName: "Gångstig",
-	    			 layers: 'sandboxws:regisln',
+	    			 layers: 'arsmedeltemperatur',
 	    			 format: 'image/png',
 	    			 selectable: true,
-	    			 uniqueKey: "objectid",
 	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor",
-	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
+	    			 attribution: "@ Malmö Stadsbyggnadskontor"
 	    		 }
 		     },
 		     {
 	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://geoserver.smap.se/geoserver/wms",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/gwc/service/wms",
 	    		 options: {
-	    			 layerId: "gangstig2",
-	    			 displayName: "Gångstig2",
-	    			 layers: 'sandboxws:regisln',
+	    			 layerId: "test",
+	    			 displayName: "Test",
+	    			 layers: 'malmows:smap-mobile-bakgrundskarta',
 	    			 format: 'image/png',
 	    			 selectable: true,
 	    			 transparent: true,
@@ -416,10 +414,6 @@ var config = {
 		        	   init: "L.Control.Search",
 		        	   options: {}
 		           },
-//		           {
-//		        	   init: "L.Control.Info",
-//		        	   options: {}
-//		           },
                     {
                         init: "L.Control.Zoombar",
                         options: {}
@@ -440,9 +434,9 @@ var config = {
             			init : "L.Control.RedirectClick",		
             			option: {}
             		},
-			        {
-			         	init: "L.Control.SideBars",
-			           	   options: {}
-			           }
+            		{
+  		        	   init: "L.Control.Info",
+  		        	   options: {}
+  		           	}
        ]
 };

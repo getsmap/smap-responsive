@@ -1,6 +1,6 @@
 L.Control.Template = L.Control.extend({
 	options: {
-		position: 'bottomright' // just an example
+		position: 'bottomright'
 	},
 	
 	_lang: {
@@ -45,6 +45,6 @@ L.Control.Template = L.Control.extend({
  * This code lets us skip "new" before the
  * Class name when instantiating it.
  */
-L.control.template = function (options) {
-	return new L.Control.Template(options);
-};
+//L.control.template = function (options) {
+//	return new L.Control.Template(options);
+//};
