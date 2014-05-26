@@ -113,7 +113,7 @@ L.Control.RedirectClick = L.Control.extend({
 	_projectEPSG: function (evt) {
 		//creating source and destination Proj4js objects
 		//once initialized, these may be re-used as often as needed
-		var source = new Proj4js.Proj('EPSG:3857');    	//source coordinates will be in Longitude/Latitude
+		var source = new Proj4js.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
 		var dest = new Proj4js.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
 		
 		var lfproj = L.Proj;
@@ -122,8 +122,8 @@ L.Control.RedirectClick = L.Control.extend({
 		var p = new Proj4js.Point(evt.latlng.lng, evt.latlng.lat);   //any object will do as long as it has 'x' and 'y' properties
 		Proj4js.transform(source, dest, p);     		//do the transformation.  x and y are modified in place	
 
-		evt.latlng.lat = p.x; //Must proj x to this (117252);//p.x;
-		evt.latlng.lng = p.y; //Must proj y to this (6165717);//p.y;
+		evt.latlng.lat = p.x; //Must proj x to this (117252 or 13.123);
+		evt.latlng.lng = p.y; //Must proj y to this (6165717 or 55.456);
 		return evt	
 	},
 	
@@ -176,15 +176,15 @@ L.Control.RedirectClick = L.Control.extend({
 	onDone : function(e) {
 		var url = this.options.url;
 		if (url) {
-			var x = e.latlng.lat,
-				y = e.latlng.lng;
+			var x = parseInt(e.latlng.lat),
+				y = parseInt(e.latlng.lng);
 			url = url.replace(/\${x}/g, x).replace(/\${y}/g, y); 
+
 		}
-		//window.open(url, this.options.btnLabel);
-		//this.deactivate();
+		window.open(url, this.options.btnLabel);
+
 	},
 });
-
 
 // Do something when the map initializes
 //L.Map.addInitHook(function () {
