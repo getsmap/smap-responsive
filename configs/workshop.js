@@ -16,25 +16,8 @@ var config = {
 		},
 		
 		ol: [
-				{
-					init: "L.TileLayer.WMS",
-					url: 'http://xyz.malmo.se/geoserver/wms',
-					options: {
-						layerId: "stadsomraden",
-						displayName: "Stadsområden",
-						layers: "malmows:SMA_STADSOMRADEN_P",
-						format: 'image/png',
-						transparent: true,
-						tiled: true,
-						minZoom: 6,
-						maxZoom: 18
-					}
-				},
-				
-		     
-		     
-		     
-		     ],
+
+		],
 		     
 		bl: [
 			{
@@ -50,6 +33,7 @@ var config = {
 		],
 		
 		plugins: [
+
 		]
 		
 
