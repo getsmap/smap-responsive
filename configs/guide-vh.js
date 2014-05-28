@@ -9,6 +9,9 @@ var config = {
 			},
 			"91.123.201.52": {
 				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
+			},
+			"mobile.smap.se": {
+				proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
 			}
 		},
 		
@@ -89,7 +92,7 @@ var config = {
 			    	 	reverseAxisBbox: true,
 			    	 	selectable: true,
 			    	 	popup: '<h3>Busstation: ${caption}</h3>'+
-			    	 		'<div><a type="button" class="btn btn-default" target="_blank" href="http://www.resiskane.se/start?fr_id=${externid}">Res hit</a></div>',
+			    	 		'<div><a type="button" class="btn btn-default" target="_blank" href="http://www.skanetrafiken.se?fr_id=${externid}">Res hit</a></div>',
 			    	 	uniqueKey: "externid",
 			    	 	params: {
 				    	 	typeName: "commonws:skanetrafiken3006"
