@@ -16,7 +16,7 @@ L.Control.RedirectClick = L.Control.extend({
 		btnID: "redirect-click-btn", //plugin ID which can be used with jquery e.g.
 		displayName : 'Snedbild',
 		toolbarIndex: 4,
-		url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
+		url: "http://kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}",
 		overrideName: "snedbild",
 		btnLabel: "Snedbild",
 		btnHover: "Verktyg för att se snedbilder",
@@ -72,13 +72,21 @@ L.Control.RedirectClick = L.Control.extend({
 		snedbildBtn.addButton(this.options.btnID, this.options.btnLabel, this.options.buttonCss, function(){return false;});
 		
 		$("#"+this.options.btnID+"").on('click',function(){
-			self.addHooks();
-			
-			self._map.on("click", function(e){
-				var evt = self._projectEPSG(e);
-				self.onDone(evt);
-				self.removeHooks(e);
-			});
+					
+			if(self._tooltip){
+				self.removeHooks();
+				self.removeBtnClass();
+				
+			}else {
+				self.addHooks();
+				self.addBtnClass();
+				self._map.on("click", function(e){
+					self.removeBtnClass();						
+					var evt = self._projectEPSG(e);
+					self.onDone(evt);
+					self.removeHooks();
+				});
+			}
 		});
 
 		return this._container;
@@ -99,7 +107,8 @@ L.Control.RedirectClick = L.Control.extend({
 		}
 	},
 	
-	removeHooks: function (e) {
+	removeHooks: function () {
+			
 		if (this._map) {
 			if(this._tooltip){					
 				this._tooltip.dispose();
@@ -108,6 +117,14 @@ L.Control.RedirectClick = L.Control.extend({
 				this._map.off( "click" );
 			}
 		}
+	},
+	
+	removeBtnClass: function(){
+		$("#"+this.options.btnID+"").removeClass("redirect-click-btn-on");
+	},
+	
+	addBtnClass: function(){
+		$("#"+this.options.btnID+"").addClass("redirect-click-btn-on");
 	},
 		
 	_projectEPSG: function (evt) {
@@ -167,6 +184,10 @@ L.Control.RedirectClick = L.Control.extend({
 			// Show dialog
 			modal.modal("show");
 		});
+	},
+	
+	_toggleBtn: function(){
+		
 	},
 
 	onRemove: function(map) {
