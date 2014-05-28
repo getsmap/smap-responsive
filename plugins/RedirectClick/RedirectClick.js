@@ -108,7 +108,6 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 	
 	removeHooks: function () {
-			
 		if (this._map) {
 			if(this._tooltip){					
 				this._tooltip.dispose();
@@ -149,9 +148,7 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 	
 	_addEvents: function(){
-		
 		this.addHooks();
-	
 		return false;
 	},
 	
@@ -186,10 +183,6 @@ L.Control.RedirectClick = L.Control.extend({
 		});
 	},
 	
-	_toggleBtn: function(){
-		
-	},
-
 	onRemove: function(map) {
 		this.$container.empty();
 	},
@@ -203,7 +196,6 @@ L.Control.RedirectClick = L.Control.extend({
 
 		}
 		window.open(url, this.options.btnLabel);
-
 	},
 });
 
