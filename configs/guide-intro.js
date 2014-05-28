@@ -60,11 +60,11 @@ var config = {
 		        			        	  configName: "guide-vh.js",
 		        		        		  "sv": {
 		        		        			  title: "Västra hamnen",
-		        				        	  description: "Västra hamnen guidar dig genom Malmös modernaste och fräsigaste stadsdel."
+		        				        	  description: "En guide till olika aspekter av hållbarhet, i en av Malmös mest moderna stadsdelar."
 		        		        		  },
 		        		        		  "en": {
 		        		        			  title: "Western harbor",
-		        				        	  description: "This tour guides you through the most modern part of Malmö."
+		        				        	  description: "A guide to different aspects of sustainability, in one of the most modern city districts in Malmö."
 		        		        		  }
 		        			          },
 		        			          {
@@ -72,11 +72,11 @@ var config = {
 		        			        	  disabledText: "Kommer snart!",
 		        		        		  "sv": {
 		        		        			  title: "Industristaden",
-		        		        			  description: "Industrispåret guidar dig genom de gamla industrierna i Malmös innerstad."		        			  
+		        		        			  description: "En guide till de gamla industrierna i Malmös innerstad."		        			  
 		        		        		  },
 		        		        		  "en": {
 		        		        			  title: "The industrial city",
-		        		        			  description: "This tour guides you to some old industrial buildings of Malmö"
+		        		        			  description: "A guide to some of the old industrial buildings of Malmö"
 		        		        		  }
 		        			          },
 		        			         
