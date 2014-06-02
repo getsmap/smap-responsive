@@ -168,6 +168,7 @@ smap.core.Layer = L.Class.extend({
 	hideLayer: function(layerId) {
 		// Just remove the layer from the map (still keep it in the ass. array).
 		var layer = this._getLayer(layerId);
+		layer.fire("loadcancel", {layer: this});
 		this.map.removeLayer(layer);
 	},
 	
