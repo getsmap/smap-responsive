@@ -16285,31 +16285,39 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 			this.xhr = null;
 			this.fire("loadcancel", {layer: this});
 		}
+		this._unbindEvents(map);
 		L.GeoJSON.prototype.onRemove.call(this, map);
+	},
+	
+	_onZoomEnd: function() {
+		if (this._prevZoom > this.map.getZoom()) {
+			this._refresh();
+		}
+		this._prevZoom = this.map.getZoom();
 	},
 	
 	_bindEvents: function(map) {
 		var self = this;
 		
+		this.__refresh = this.__refresh || $.proxy(this._refresh, this);
+		this.__onZoomEnd = this.__onZoomEnd || $.proxy(this._onZoomEnd, this);
+		
 		if (!this.options.noBindDrag) {
-			map.on("dragend", function() {
-				self._refresh();
-			});
+			map.on("dragend", this.__refresh);
 		}
 
 		// Only refresh is last zoom was higher than current (i.e. map zoomed out)
 		if (!this.options.noBindZoom) {
 			var self = this;
-			var prevZoom = map.getZoom();
-			map.on("zoomend", function() {
-				if (prevZoom > map.getZoom()) {
-					self._refresh();
-				}
-				prevZoom = map.getZoom();
-			});
+			this._prevZoom = map.getZoom();
+			map.on("zoomend", this.__onZoomEnd);
 		}
 	},
 	
+	_unbindEvents: function(map) {
+		map.off("dragend", this.__refresh);
+		map.off("zoomend", this.__onZoomEnd);
+	},
 	
 	
 	/**
@@ -16948,6 +16956,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 	hideLayer: function(layerId) {
 		// Just remove the layer from the map (still keep it in the ass. array).
 		var layer = this._getLayer(layerId);
+		layer.fire("loadcancel", {layer: this});
 		this.map.removeLayer(layer);
 	},
 	
@@ -21043,7 +21052,7 @@ L.control.info = function (options) {
 
     options: {
         position: 'topright', // just an example
-        btnID: "my-btn"
+        btnID: "my-btn" //plugin ID which can be used with jquery e.g.
     },
 
     _lang: {
@@ -21145,10 +21154,6 @@ L.control.info = function (options) {
         //this.$container.append($div);
 
     },
-
-
-
-
 
     onRemove: function(map) {
 
