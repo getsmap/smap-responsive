@@ -9,6 +9,7 @@
 	max-width: 380px;
 	transition: max-width .3s;
 	-webkit-transition: max-width .3s;
+	overflow-y: hidden;
 }
 
 .smap-search-div-in-toolbar {
@@ -78,7 +79,7 @@
 	max-width: 635px;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 767px) {
 	.smap-search-div-in-toolbar {
 		max-width: 80% !important;
 	}
