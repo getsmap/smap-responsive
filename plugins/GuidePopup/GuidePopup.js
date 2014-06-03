@@ -285,16 +285,16 @@ L.Control.GuidePopup = L.Control.extend({
 		arrMedia = arrMedia || [];
 		
 		var glyphs = {
-				image: "picture",
-				audio: "volume-up",
-				video: "facetime-video"
+				image: "fa fa-picture-o fa-lg",
+				audio: "fa fa-volume-up fa-lg",
+				video: "fa fa-film fa-lg"
 				
 		};
 		var t,i,li,
 			list = $('<div id="gp-listmoreinfo" class="list-group" />');
 		for (i=0,len=arrMedia.length; i<len; i++) {
 			t = arrMedia[i];
-			li = $('<a href="#" class="list-group-item"><span class="glyphicon glyphicon-'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
+			li = $('<a href="#" class="list-group-item"><span class="'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
 			list.append(li);
 		}
 		return list;
