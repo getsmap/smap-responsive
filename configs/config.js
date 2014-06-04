@@ -98,7 +98,7 @@ var config = {
 			    	 options: {
 			    	 	layerId: "busstation",
 			    	 	displayName: "Busstationer",
-			    	 	attribution: "Malmö stads WFS",
+			    	 	attribution: "Stadsbyggnadskontoret, Malmö",
 			    	 	inputCrs: "EPSG:3008",
 			    	 	reverseAxis: false,
 			    	 	reverseAxisBbox: true,
@@ -136,7 +136,7 @@ var config = {
 			    	 options: {
 			    	 	layerId: "stadsdel",
 			    	 	displayName: "Stadsdel",
-			    	 	attribution: "Malmö stads WFS",
+			    	 	attribution: "Stadsbyggnadskontoret, Malmö",
 			    	 	inputCrs: "EPSG:3008",
 			    	 	reverseAxis: false,
 			    	 	reverseAxisBbox: true,
@@ -162,7 +162,7 @@ var config = {
 		    	 options: {
 		    	 	layerId: "malmows_STADSDEL_L",
 		    	 	displayName: "Stadsdel Linje",
-		    	 	attribution: "Malmö stads WFS",
+		    	 	attribution: "Stadsbyggnadskontoret, Malmö",
 		    	 	inputCrs: "EPSG:3008",
 		    	 	reverseAxis: false,
 		    	 	reverseAxisBbox: true,
@@ -190,6 +190,40 @@ var config = {
 		     	}
 		     },
 		     {
+		    	 init: "L.GeoJSON.WFS",
+		    	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+		    	 options: {
+		    	 	layerId: "stadsdel3d",
+		    	 	displayName: "Stadsdel 3D",
+		    	 	attribution: "Stadsbyggnadskontoret, Malmö",
+		    	 	inputCrs: "EPSG:4326",
+		    	 	reverseAxis: false,
+		    	 	reverseAxisBbox: true,
+		    	 	selectable: true,
+		    	 	popup: 'The ID: ${id}',
+		    	 	uniqueKey: "id",
+		    	 	params: {
+			    	 	typeName: "malmows:malmo_kvarter_3d",
+						version: "1.1.0",
+						maxFeatures: 10000,
+						format: "text/geojson",
+						outputFormat: "json"
+		     		}
+//		     		,
+//		     		style: {
+//		     			weight: 6,
+//		     			color: '#F00',
+//		     			dashArray: '',
+//		     			opacity: 0.1
+//		     		},
+//		     		selectStyle: {
+//		    			weight: 10,
+//		    	        color: '#00FF00',
+//		    	        opacity: 1
+//		    		}
+		     	}
+		     },
+		     {
 				  init: "L.GeoJSON.WFS",
 				  url: "http://xyz.malmo.se:8081/geoserver/wfs",
 				  options: {
@@ -198,7 +232,7 @@ var config = {
 					  params: {
 				    	 typeName: "malmows:POI_VHAMN_PT"
 		     		  },
-					  attribution: "Malmö stads WFS",
+					  attribution: "Stadsbyggnadskontoret, Malmö",
 					  inputCrs: "EPSG:4326",
 					  uniqueKey: "gid",
 					  reverseAxis: false,
@@ -228,7 +262,7 @@ var config = {
 				  options: {
 					  layerId: "malmows_kvarter",
 					  displayName: "Kvarter",
-					  attribution: "Malmö stads WFS",
+					  attribution: "Stadsbyggnadskontoret, Malmö",
 					  inputCrs: "EPSG:3008",
 					  reverseAxis: false,
 					  reverseAxisBbox: true,
@@ -281,7 +315,7 @@ var config = {
 //					  layerId: "intressepunkter",
 //					  displayName: "Intressepunkter",
 //					  featureType: "sandboxws:regispt",
-//					  attribution: "Malmö stads WFS",
+//					  attribution: "Stadsbyggnadskontoret, Malmö",
 //					  inputCrs: "EPSG:3008",
 //					  reverseAxis: false,
 //					  popup: '<h1>${namn}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="${picture}"></img>',
@@ -418,6 +452,13 @@ var config = {
                         init: "L.Control.Zoombar",
                         options: {}
                     }
+		           ,
+		           {
+                       init: "L.Control.ThreeD",
+                       options: {
+		        	   		
+		           		}
+                   }
                     ,
                     {
                         init: "L.Control.ShareLink",

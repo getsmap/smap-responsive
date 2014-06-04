@@ -16290,10 +16290,10 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 	},
 	
 	_onZoomEnd: function() {
-		if (this._prevZoom > this.map.getZoom()) {
+		if (this._prevZoom > this._map.getZoom()) {
 			this._refresh();
 		}
-		this._prevZoom = this.map.getZoom();
+		this._prevZoom = this._map.getZoom();
 	},
 	
 	_bindEvents: function(map) {
@@ -18598,16 +18598,16 @@ L.control.guideIntroScreen = function (options) {
 		arrMedia = arrMedia || [];
 		
 		var glyphs = {
-				image: "picture",
-				audio: "volume-up",
-				video: "facetime-video"
+				image: "fa fa-picture-o fa-lg",
+				audio: "fa fa-volume-up fa-lg",
+				video: "fa fa-film fa-lg"
 				
 		};
 		var t,i,li,
 			list = $('<div id="gp-listmoreinfo" class="list-group" />');
 		for (i=0,len=arrMedia.length; i<len; i++) {
 			t = arrMedia[i];
-			li = $('<a href="#" class="list-group-item"><span class="glyphicon glyphicon-'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
+			li = $('<a href="#" class="list-group-item"><span class="'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
 			list.append(li);
 		}
 		return list;
@@ -18780,7 +18780,8 @@ L.control.guideIntroScreen = function (options) {
  */
 L.control.guidePopup = function (options) {
 	return new L.Control.GuidePopup(options);
-};L.Control.LayerSwitcher = L.Control.extend({
+};
+L.Control.LayerSwitcher = L.Control.extend({
 	options: {
 		pxDesktop: 992
 	},
