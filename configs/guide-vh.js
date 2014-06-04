@@ -301,7 +301,7 @@ var config = {
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					label: 'En intervju med skejtarna Sonja och Björn.',
 			        	   					mediaType: "video",
 			        	   					sources: "http://www.youtube.com/embed/7Wku164Ywtg"
 			           					},
@@ -343,7 +343,7 @@ var config = {
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					label: 'En liten film om att bo och leva i Västra Hamnen',
 			        	   					mediaType: "video",
 			        	   					sources: "http://www.youtube.com/embed/LxWRgvBgGZY"
 			           					},
@@ -386,7 +386,7 @@ var config = {
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					label: 'Intervju med Michael Palmgren från SEA-U.',
 			        	   					mediaType: "video",
 			        	   					sources: "http://www.youtube.com/embed/8jPGRQnqgTg"
 			           					},
@@ -410,7 +410,7 @@ var config = {
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					label: 'En liten film om cykling.',
 			        	   					mediaType: "video",
 			        	   					sources: "http://www.youtube.com/embed/v6vAXIXSwh4"
 			           					},
@@ -434,7 +434,7 @@ var config = {
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					label: 'Från soluppgång till solnedgång ur Turning Torsos perspektiv.',
 			        	   					mediaType: "video",
 			        	   					sources: "http://www.youtube.com/embed/VTHpQbkRj98"
 			           					},
@@ -496,7 +496,7 @@ var config = {
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					label: 'Intervju med stadsträdgårdsmästare Ola Melin om parker.',
 			        	   					mediaType: "video",
 			        	   					sources: "http://www.youtube.com/embed/C8v33ErJZDE"
 			           					},
@@ -595,7 +595,7 @@ var config = {
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					label: 'Intervju med stadsträdgårdsmästare Ola Melin om offentlig konst.',
 			        	   					mediaType: "video",
 			        	   					sources: "http://www.youtube.com/embed/RfjkTGbovt0"
 			           					},
@@ -619,7 +619,7 @@ var config = {
 			        	   					sources: "http://maja-k.com/promenad/vh/mp3/${urlsound}"
 			           					},
 			           					{
-			        	   					label: 'Se en liten film om "${namn}"',
+			        	   					label: 'Intervju med stadsträdgårdsmästare Ola Melin om gröna tak.',
 			        	   					mediaType: "video",
 			        	   					sources: "http://www.youtube.com/embed/5LYTo-po6_4"
 			           					},
