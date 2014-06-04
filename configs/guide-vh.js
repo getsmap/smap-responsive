@@ -303,7 +303,7 @@ var config = {
 			           					{
 			        	   					label: 'Se en liten film om "${namn}"',
 			        	   					mediaType: "video",
-			        	   					sources: "http://www.youtube.com/embed/f0r_JsnIRJY"
+			        	   					sources: "http://www.youtube.com/embed/7Wku164Ywtg"
 			           					},
 			           					{
 			        	   					label: "Introduktion till Västra Hamnen-spåret",
@@ -345,7 +345,7 @@ var config = {
 			           					{
 			        	   					label: 'Se en liten film om "${namn}"',
 			        	   					mediaType: "video",
-			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			        	   					sources: "http://www.youtube.com/embed/LxWRgvBgGZY"
 			           					},
 			           					{
 			        	   					label: "Introduktion till Västra Hamnen-spåret",
@@ -388,7 +388,7 @@ var config = {
 			           					{
 			        	   					label: 'Se en liten film om "${namn}"',
 			        	   					mediaType: "video",
-			        	   					sources: "http://player.vimeo.com/video/24584160"
+			        	   					sources: "http://www.youtube.com/embed/8jPGRQnqgTg"
 			           					},
 			           					{
 			        	   					label: "Introduktion till Västra Hamnen-spåret",
@@ -412,7 +412,7 @@ var config = {
 			           					{
 			        	   					label: 'Se en liten film om "${namn}"',
 			        	   					mediaType: "video",
-			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			        	   					sources: "http://www.youtube.com/embed/v6vAXIXSwh4"
 			           					},
 			           					{
 			        	   					label: "Introduktion till Västra Hamnen-spåret",
@@ -436,7 +436,7 @@ var config = {
 			           					{
 			        	   					label: 'Se en liten film om "${namn}"',
 			        	   					mediaType: "video",
-			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			        	   					sources: "http://www.youtube.com/embed/VTHpQbkRj98"
 			           					},
 			           					{
 			        	   					label: "Introduktion till Västra Hamnen-spåret",
@@ -498,7 +498,7 @@ var config = {
 			           					{
 			        	   					label: 'Se en liten film om "${namn}"',
 			        	   					mediaType: "video",
-			        	   					sources: "http://www.youtube.com/embed/WnEJ5SmJtm0"
+			        	   					sources: "http://www.youtube.com/embed/C8v33ErJZDE"
 			           					},
 			           					{
 			        	   					label: "Introduktion till Västra Hamnen-spåret",
@@ -597,7 +597,7 @@ var config = {
 			           					{
 			        	   					label: 'Se en liten film om "${namn}"',
 			        	   					mediaType: "video",
-			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			        	   					sources: "http://www.youtube.com/embed/RfjkTGbovt0"
 			           					},
 			           					{
 			        	   					label: "Introduktion till Västra Hamnen-spåret",
@@ -621,7 +621,7 @@ var config = {
 			           					{
 			        	   					label: 'Se en liten film om "${namn}"',
 			        	   					mediaType: "video",
-			        	   					sources: "http://www.youtube.com/embed/wWJHWMpHvoc"
+			        	   					sources: "http://www.youtube.com/embed/5LYTo-po6_4"
 			           					},
 			           					{
 			        	   					label: "Introduktion till Västra Hamnen-spåret",
