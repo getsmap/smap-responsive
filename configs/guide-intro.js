@@ -25,9 +25,8 @@ var config = {
 		        	   options: {
 		        		   autoActivate: true,
 		        		   bgSrc: "img/GuideIntroScreen/element-alfa-grey.png",
-		        		   munLogoSrc: "img/GuideIntroScreen/Logotype_stor.jpg",
+		        		   munLogoSrc: "img/GuideIntroScreen/scm-logg-85px.png", //"img/GuideIntroScreen/Logotype_stor.jpg",
 		        		   euLogoSrc: "img/GuideIntroScreen/EUlogo_Inv_v_RGB.gif",
-		        		   autoActivate: true,
 		        			
 		        			position: 'bottomright',
 		        			prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>',
@@ -50,11 +49,11 @@ var config = {
 		        			header: {
 		        				"sv": {
 		        					title: "Promenadstaden",
-		        					subHeaders: ["Malmö museer, Science Center"]
+		        					subHeaders: [] //["Malmö museer, Science Center"]
 		        				},
 		        				"en": {
 		        					title: "The walking city",
-		        					subHeaders: ["Malmö museums, Science Center"]
+		        					subHeaders: [] //["Malmö museums, Science Center"]
 		        				}
 		        			},
 		        			

@@ -52,14 +52,18 @@
 
 .gintro-munlogo, .gintro-eulogo {
 	position: relative;
-	float: left;
 	bottom: 0px;
 	width: auto;
 	height: auto;
 	max-height: 10em;
 }
 
-.gintro-eulogo {}
+.gintro-eulogo {
+	position: fixed;
+	bottom: 1em;
+	right: 1em;
+	z-index: 5;
+}
 
 .guide-content {
 	z-index: 1;
