@@ -1,11 +1,9 @@
 L.Control.GuideIntroScreen = L.Control.extend({
 	options: {
 		autoActivate: true,
-		
 		position: 'bottomright',
 		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>',
 		bgSrc: null,
-		
 		langs: {
 			"sv": "Svenska",
 			"en": "English"

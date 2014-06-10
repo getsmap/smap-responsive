@@ -451,15 +451,13 @@ var config = {
                     {
                         init: "L.Control.Zoombar",
                         options: {}
-                    }
-		           ,
-		           {
-                       init: "L.Control.ThreeD",
-                       options: {
+                    },
+		           // {
+             //           init: "L.Control.ThreeD",
+             //           options: {
 		        	   		
-		           		}
-                   }
-                    ,
+		           // 		}
+             //       }
                     {
                         init: "L.Control.ShareLink",
                         options: {

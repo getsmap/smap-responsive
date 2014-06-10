@@ -20,6 +20,10 @@ var config = {
 		bl: [],
 		
 		plugins: [
+				// {
+    //                 init: "L.Control.MalmoHeader",
+    //                 options: {}
+    //             },
 		           {
 		        	   init: "L.Control.GuideIntroScreen",
 		        	   options: {
