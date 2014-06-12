@@ -5,7 +5,7 @@ smap.core.Init = L.Class.extend({
 	
 	initialize: function() {
 		this.defineProjs();
-		
+
 		// Instantiate core classes
 		smap.core.divInst = new smap.core.Div();
 		smap.cmd.loading(true); // needs the mapdiv to work :)
@@ -40,6 +40,10 @@ smap.core.Init = L.Class.extend({
 	
 	applyConfig: function(theConfig) {
 		this.preProcessConfig(theConfig);
+
+
+
+		this._loadTheme(theConfig.theme);
 		
 		
 		// Set proxy for layers and controls
@@ -53,10 +57,24 @@ smap.core.Init = L.Class.extend({
 		
 		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
+
+	_loadTheme: function(themeSrc) {
+		
+	},
 	
 	resetMap: function() {
 		// Destroy map
 		smap.map.off();
+
+		var ctrls = smap.core.controls;
+		for (var i=0,len=ctrls.length; i<len; i++) {
+			try {
+				smap.map.removeControl(ctrls[i]);
+			}
+			catch(e) {
+				
+			}
+		}
 		this.map.remove();
 		
 		this.map = null;
@@ -116,6 +134,10 @@ smap.core.Init = L.Class.extend({
 		for (var i=0,len=bls.length; i<len; i++) {
 			bls[i].options.isBaseLayer = true;
 		}
+
+		// Set default theme if not set
+		config.theme = config.theme || smap.core.mainConfig.defaultTheme;
+
 	},
 	
 	defineProjs: function() {

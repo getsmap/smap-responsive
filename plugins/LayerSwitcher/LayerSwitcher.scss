@@ -1,15 +1,15 @@
 @import '../../core/css/css3.scss';
 
 $select-color-hex: #bbb;
-$select-color: rgba(48, 81, 100, 0.56);
+$select-color: #3D80BE; //rgba(48, 81, 100, 0.56);
 
-$header-color-hex: #bbb;	
-$header-color: rgba(88, 112, 143, 1);
+$header-color-hex: #bbb;
+$header-color: rgba(42, 111, 175, 1);
 	
 $hover-color-hex: #eee;
 
 #lswitch-btn {
-	z-index: 999;
+	z-index: 1;
 	position: absolute;
 	left: 0px;
 	bottom: 80px;
@@ -20,11 +20,12 @@ $hover-color-hex: #eee;
 	background-color: #fff;
 	background-color: rgba(255,255,255,.8);
 	cursor: pointer;
-	@include border-radius(0 .4em .4em 0);
+	@include radius(0 .4em .4em 0);
 }
 
 .lswitch-panel .panel {
 	@include box-shadow(none);
+
 }
 
 .lswitch-panelslide {
@@ -48,20 +49,23 @@ $hover-color-hex: #eee;
 	-ms-overflow-style: -ms-autohiding-scrollbar !important; /* Nasty bug fix: Required for WP8 IE10!!! */
 	font-size: 1.4em;
 }
+.map-with-header .lswitch-panel {
+	padding-top: 4em;
+}
 
 .lswitch-panel a {
 	cursor: pointer;
 	background-color: #38454E;
 	color: #eee;
 	border: none;
-	@include border-radius(0 !important);
+	@include radius(0 !important);
 	margin-top: 1px;
 }
 
 .lswitch-panel a:hover, .lswitch-panel a:active {
 	background-color: #38454E; /* For mobile screens - use same background-color during hover as for default */
 	color: #fff;
-	@include border-radius(0);
+	@include radius(0);
 }
 
 .lswitch-panel a.active {
@@ -83,17 +87,6 @@ $hover-color-hex: #eee;
 	background-color: #38454E;
 }
 
-.lswitch-panel .panel-heading {
-	padding: 3px 15px;
-	border: none;
-	font-weight: normal;
-	background-color: #333;
-	background-color: rgba(0,0,0,.4) !important;
-	color: #fff !important;
-	@include border-radius(.5em .5em 0 0);
-	font-weight: bold;
-	font-size: 110%;
-}
 
 /* Added to html and body temporarily to avoid scrollbars during transitions */
 .lswitch-overflow-hidden {
@@ -141,7 +134,7 @@ $hover-color-hex: #eee;
 		display: block !important;
 		background-color: #fff;
 		background-color: rgba(255,255,255, 0);
-		z-index: 1000;
+		z-index: 900;
 		
 		overflow: hidden;
 	}
@@ -155,7 +148,8 @@ $hover-color-hex: #eee;
 	
 	.lswitch-panel .panel-heading {
 		background-color: $header-color-hex;
-		background-color: $header-color !important;
+		background-color: $header-color; // !important;
+		@include linear-gradient(#428bca, #3278b3);
 		color: #000;
 		border: none;
 	}
@@ -197,10 +191,10 @@ $hover-color-hex: #eee;
 	
 	#lswitch-olcont, #lswitch-blcont {
 		background-color: rgba(255,255,255,.4);
-		@include border-radius(0 0 .4em .4em);
+		@include radius(0 0 .4em .4em);
 	}
 	#lswitch-olcont a:last-child, #lswitch-blcont a:last-child {
-		@include border-radius(0 0 .4em .4em);
+		@include radius(0 0 .4em .4em);
 	}
 	.lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont {
 		background-color: none;

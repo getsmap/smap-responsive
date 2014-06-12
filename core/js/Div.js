@@ -6,8 +6,10 @@ smap.core.Div = L.Class.extend({
 	},
 	
 	draw: function() {
-		var div = $('<div id="mapdiv" />');
-		this.parentTag.append(div);
+		var mapDiv = $('<div id="mapdiv" />');
+		var mainDiv = $('<div id="maindiv" />');
+		mainDiv.append(mapDiv);
+		this.parentTag.append(mainDiv);
 		
 		// Fix things after orientation change.
 		if (L.Browser.touch) {
@@ -15,6 +17,14 @@ smap.core.Div = L.Class.extend({
 				window.scrollTo(0,0);
 			});			
 		}
+
+		smap.event.on("smap.core.pluginsadded", function() {
+			if ( $("body > header").length || smap.cmd.getControl("MalmoHeader") ) {
+				// If body has an immediate child that is a <header>-tag then we assume
+				// a toolbar exists and the map should have a chance to adapt.
+				mainDiv.addClass("map-with-header");
+			}
+		});
 	},
 	
 	

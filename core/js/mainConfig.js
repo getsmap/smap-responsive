@@ -10,5 +10,6 @@ smap.core.mainConfig = {
 		    maxZoom: 18
 		},
 		
-		toolbarPlugin: "Menu"
+		toolbarPlugin: "Menu",
+		defaultTheme: "smap"
 };

@@ -34,16 +34,22 @@ smap.cmd = {
 		},
 		
 		getControl: function(controlName) {
+			var ctrls = this.getControls(controlName);
+			return ctrls.length ? ctrls[0] : null;
+		},
+
+		getControls: function(controlName) {
 			// "Attribution" or "Scale"
 			var inst,
-				ctrls = smap.core.controls || [];
+				ctrls = smap.core.controls || [],
+				foundControls = [];
 			for (var i=0,len=ctrls.length; i<len; i++) {
 				inst = ctrls[i];
 				if (inst instanceof L.Control[controlName]) {
-					return inst;
+					foundControls.push(inst);
 				}
 			}
-			return null;
+			return foundControls;
 		},
 		
 		/**

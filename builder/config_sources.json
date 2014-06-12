@@ -40,6 +40,7 @@
 		"plugins/Info/Info.js",
 		"plugins/Menu/Menu.js",
 		"plugins/Zoombar/Zoombar.js",
+		"plugins/MalmoHeader/MalmoHeader.js",
 		"builder/overrides.js"
     ],
     
@@ -66,7 +67,8 @@
 		"plugins/Search/Search.css",
 		"plugins/Info/Info.css",
 		"plugins/Menu/Menu.css",
-		"plugins/Zoombar/Zoombar.css"
+		"plugins/Zoombar/Zoombar.css",
+		"plugins/MalmoHeader/MalmoHeader.css"
     ]
     
     

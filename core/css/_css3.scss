@@ -2,27 +2,62 @@
 
 // To use these methods in your scss-file, type (e.g.): 
 // @include border-radius(2px 3px 0 10px);
-
-@mixin border-radius($radius) {
-          border-radius: $radius;
-  -webkit-border-radius: $radius;
-     -moz-border-radius: $radius;
-      -ms-border-radius: $radius;
-}
-
-@mixin box-shadow($param) {
-	box-shadow: $param;
-	-moz-box-shadow: $param;
-	-webkit-box-shadow: $param;
-}
-@mixin transition($param) {
-	transition: $param;
-	-webkit-transition: $param;
-	-moz-transition: $param;
-}
+// Some of there borrowed from: https://github.com/malmostad/shared_assets/blob/master/stylesheets/shared/mixins.scss
 
 @mixin transform($param) {
 	transform: $param;
 	-webkit-transform: $param;
 	-ms-transform: $param;
+  -o-transform: $param;
+}
+
+@mixin radius($values) {
+  -moz-border-radius: $values;
+  -webkit-border-radius: $values;
+  border-radius: $values;
+}
+
+@mixin linear-gradient($from, $to, $start: 0, $stop: 100%) {
+  filter: none;
+  background: $from;
+  background: -ms-linear-gradient(top, $from $start, $to $stop); /* IE10+ */
+  background: -moz-linear-gradient(top, $from $start, $to $stop);
+  background: -webkit-gradient(linear, 0 0, $start $stop, from($from), to($to));
+  background: -webkit-linear-gradient(top, $from $start, $to $stop);
+  background: -o-linear-gradient(top, $from $start, $to $stop);
+  background: linear-gradient(to bottom, $from $start, $to $stop);
+}
+
+@mixin transition($values) {
+  -webkit-transition: $values;
+  -moz-transition: $values;
+  -o-transition: $values;
+  transition: $values;
+}
+
+@mixin box-shadow($values) {
+  -moz-box-shadow: $values;
+  -webkit-box-shadow: $values;
+  box-shadow: $values;
+}
+
+@mixin opacity($value) {
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(#{$value * 100}));
+  filter: alpha(opacity=($value * 100));
+  opacity: $value;
+}
+
+@mixin box-sizing($boxmodel) {
+  -ms-box-sizing: $boxmodel;
+  -webkit-box-sizing: $boxmodel;
+  -moz-box-sizing: $boxmodel;
+  box-sizing: $boxmodel;
+}
+
+@mixin rotate($deg) {
+  -webkit-transform: rotate($deg);
+  -moz-transform: rotate($deg);
+  -ms-transform: rotate($deg);
+  -o-transform: rotate($deg);
+  transform: rotate($deg);
 }

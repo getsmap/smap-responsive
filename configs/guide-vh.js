@@ -14,6 +14,8 @@ var config = {
 				proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
 			}
 		},
+
+		theme: "malmo",
 		
 		ol: [
 		     {
@@ -137,6 +139,12 @@ var config = {
 		],
 		
 		plugins: [
+					{
+		        	   init: "L.Control.MalmoHeader",
+		        	   options: {
+		        		   imperial: false
+		        	   }
+		           },
 		           {
 		        	   init: "L.Control.Scale",
 		        	   options: {

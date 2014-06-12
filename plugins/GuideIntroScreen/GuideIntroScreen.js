@@ -1,7 +1,7 @@
 L.Control.GuideIntroScreen = L.Control.extend({
 	options: {
 		autoActivate: true,
-		position: 'bottomright',
+		position: "bottomright",
 		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>',
 		bgSrc: null,
 		langs: {
@@ -69,7 +69,6 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		
 		// Use $ prefix for all jQuery objects to make it easier to sort out all
 		// jQuery dependencies when sharing the code in future.
-		this.$container = $(this._container);
 		
 		var $content = this._makeContent("sv"),
 			$container = $('<div class="guide-introscreen" />');
@@ -84,12 +83,11 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	},
 
 	onRemove: function(map) {
-		$(".guide-introscreen").empty().remove();
-		return this;
+		this.$container.remove();
 	},
 	
 	activate: function() {
-		$("body").append( this.$container );
+		$("#maindiv").append( this.$container );
 	},
 	deactivate: function() {
 		this.$container.detach();

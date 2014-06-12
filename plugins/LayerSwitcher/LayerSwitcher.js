@@ -166,13 +166,13 @@ L.Control.LayerSwitcher = L.Control.extend({
 	
 	_addPanel: function() {
 		this.$panel = $('<div class="lswitch-panel unselectable" />');
-		smap.event.on("smap.core.pluginsadded", function() {
-			if ( $("body > header.navbar").length ) {
-				// If body has an immediate child that is a <header>-tag, with class "navbar",
-				// then we assume we need to move the panel content down a little bit.
-				$(".lswitch-panel").addClass("panel-with-toolbar");
-			}
-		});
+		// smap.event.on("smap.core.pluginsadded", function() {
+		// 	if ( $("body > header.navbar").length ) {
+		// 		// If body has an immediate child that is a <header>-tag, with class "navbar",
+		// 		// then we assume we need to move the panel content down a little bit.
+		// 		$(".lswitch-panel").addClass("panel-with-toolbar");
+		// 	}
+		// });
 		
 		
 		this.$panel.swipeleft($.proxy(function() {
@@ -195,7 +195,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 				'<div id="lswitch-olcont" class="list-group"></div>'+
 			'</div>');
 		this.$panel.append(this.$list);
-		$("body").append( this.$panel );
+		$("#maindiv").append( this.$panel );
 	},
 	
 	showPanel: function() {
@@ -217,10 +217,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		$("#lswitch-btn").show();
 		$(".lswitch-panel").removeClass("panel-visible");
 		
-		$("html, body").addClass("lswitch-overflow-hidden");
+		$("#maindiv").addClass("lswitch-overflow-hidden");
 		setTimeout($.proxy(function() {
 			this.$panel.hide();
-			$("html, body").removeClass("lswitch-overflow-hidden");
+			$("#maindiv").removeClass("lswitch-overflow-hidden");
 		}, this), 300);
 	},
 	
