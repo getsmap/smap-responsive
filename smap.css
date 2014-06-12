@@ -908,6 +908,11 @@ body {
   padding: 0;
   font-size: 100% !important; }
 
+#maindiv {
+  margin: 0;
+  padding: 0;
+  font-size: 100%; }
+
 #mapdiv {
   position: absolute;
   left: 0px;
@@ -1249,7 +1254,7 @@ Version: 1.0
 	top: 0px;
 	width: 100%;
 	height: 100%;
-	z-index: 2000;
+	z-index: 1;
 	background-color: #fff;
 	background-color: rgba(255,255,255,1);
 	text-align: center;
@@ -1257,6 +1262,7 @@ Version: 1.0
 	margin: 0;
 	overflow-x: hidden;
 	overflow-y: auto;
+	padding-top: 4em;
 }
 
 .guide-introscreen .container {
@@ -1297,14 +1303,18 @@ Version: 1.0
 
 .gintro-munlogo, .gintro-eulogo {
 	position: relative;
-	float: left;
 	bottom: 0px;
 	width: auto;
 	height: auto;
 	max-height: 10em;
 }
 
-.gintro-eulogo {}
+.gintro-eulogo {
+	position: fixed;
+	bottom: 1em;
+	right: 1em;
+	z-index: 5;
+}
 
 .guide-content {
 	z-index: 1;
@@ -1423,38 +1433,38 @@ Version: 1.0
 	cursor: pointer;
 }
 #lswitch-btn {
-  z-index: 999;
+  z-index: 1;
   position: absolute;
   left: 0px;
   bottom: 80px;
   padding: 8px 3px 5px 0px;
   border: 1px solid #999;
   border-width: 1px 1px 1px 0;
-  box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
   -moz-box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
   -webkit-box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
+  box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
   background-color: #fff;
   background-color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  border-radius: 0 0.4em 0.4em 0;
-  -webkit-border-radius: 0 0.4em 0.4em 0;
   -moz-border-radius: 0 0.4em 0.4em 0;
-  -ms-border-radius: 0 0.4em 0.4em 0; }
+  -webkit-border-radius: 0 0.4em 0.4em 0;
+  border-radius: 0 0.4em 0.4em 0; }
 
 .lswitch-panel .panel {
-  box-shadow: none;
   -moz-box-shadow: none;
-  -webkit-box-shadow: none; }
+  -webkit-box-shadow: none;
+  box-shadow: none; }
 
 .lswitch-panelslide {
-  transition: margin-left 300ms ease;
   -webkit-transition: margin-left 300ms ease;
-  -moz-transition: margin-left 300ms ease; }
+  -moz-transition: margin-left 300ms ease;
+  -o-transition: margin-left 300ms ease;
+  transition: margin-left 300ms ease; }
 
 .lswitch-panel {
-  box-shadow: inset black -3px 0px 17px;
   -moz-box-shadow: inset black -3px 0px 17px;
   -webkit-box-shadow: inset black -3px 0px 17px;
+  box-shadow: inset black -3px 0px 17px;
   z-index: -1;
   position: absolute;
   left: 0px;
@@ -1470,25 +1480,26 @@ Version: 1.0
   /* Nasty bug fix: Required for WP8 IE10!!! */
   font-size: 1.4em; }
 
+.map-with-header .lswitch-panel {
+  padding-top: 4em; }
+
 .lswitch-panel a {
   cursor: pointer;
   background-color: #38454E;
   color: #eee;
   border: none;
-  border-radius: 0 !important;
-  -webkit-border-radius: 0 !important;
   -moz-border-radius: 0 !important;
-  -ms-border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+  border-radius: 0 !important;
   margin-top: 1px; }
 
 .lswitch-panel a:hover, .lswitch-panel a:active {
   background-color: #38454E;
   /* For mobile screens - use same background-color during hover as for default */
   color: #fff;
-  border-radius: 0;
-  -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  -ms-border-radius: 0; }
+  -webkit-border-radius: 0;
+  border-radius: 0; }
 
 .lswitch-panel a.active {
   cursor: pointer;
@@ -1513,10 +1524,9 @@ Version: 1.0
   background-color: #333;
   background-color: rgba(0, 0, 0, 0.4) !important;
   color: #fff !important;
-  border-radius: 0.5em 0.5em 0 0;
-  -webkit-border-radius: 0.5em 0.5em 0 0;
   -moz-border-radius: 0.5em 0.5em 0 0;
-  -ms-border-radius: 0.5em 0.5em 0 0;
+  -webkit-border-radius: 0.5em 0.5em 0 0;
+  border-radius: 0.5em 0.5em 0 0;
   font-weight: bold;
   font-size: 110%; }
 
@@ -1529,17 +1539,20 @@ Version: 1.0
 
 @media (max-width: 991px) {
   .lswitch-panel .panel {
-    transition: all 400ms;
     -webkit-transition: all 400ms;
     -moz-transition: all 400ms;
+    -o-transition: all 400ms;
+    transition: all 400ms;
     transform: translate(-20%, 0) scale(0.95);
     -webkit-transform: translate(-20%, 0) scale(0.95);
-    -ms-transform: translate(-20%, 0) scale(0.95); }
+    -ms-transform: translate(-20%, 0) scale(0.95);
+    -o-transform: translate(-20%, 0) scale(0.95); }
 
   .lswitch-panel.panel-visible .panel {
     transform: translate(0, 0) scale(1) !important;
     -webkit-transform: translate(0, 0) scale(1) !important;
-    -ms-transform: translate(0, 0) scale(1) !important; } }
+    -ms-transform: translate(0, 0) scale(1) !important;
+    -o-transform: translate(0, 0) scale(1) !important; } }
 @media (min-width: 992px) {
   /* For desktop computers */
   /* Avoid things appearing under the switcher */
@@ -1554,43 +1567,54 @@ Version: 1.0
 
   .lswitch-panel {
     /*@include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);*/
-    box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
-    transition: all 300ms;
+    box-shadow: none;
     -webkit-transition: all 300ms;
     -moz-transition: all 300ms;
+    -o-transition: all 300ms;
+    transition: all 300ms;
     display: block !important;
     background-color: #fff;
     background-color: rgba(255, 255, 255, 0);
-    z-index: 1000;
+    z-index: 900;
     overflow: hidden; }
 
   .lswitch-panel:hover {
-    box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
     -moz-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
+    box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
     background-color: rgba(255, 255, 255, 0.9);
     overflow-y: auto; }
 
   .lswitch-panel .panel-heading {
     background-color: #bbbbbb;
-    background-color: #58708f !important;
+    background-color: #2a6faf;
+    filter: none;
+    background: #428bca;
+    background: -ms-linear-gradient(top, #428bca 0, #3278b3 100%);
+    /* IE10+ */
+    background: -moz-linear-gradient(top, #428bca 0, #3278b3 100%);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#428bca), to(#3278b3));
+    background: -webkit-linear-gradient(top, #428bca 0, #3278b3 100%);
+    background: -o-linear-gradient(top, #428bca 0, #3278b3 100%);
+    background: linear-gradient(to bottom, #428bca 0, #3278b3 100%);
     color: #000;
     border: none; }
 
   .lswitch-panel:hover .panel-heading {
     background-color: #bbbbbb;
-    background-color: #58708f !important;
+    background-color: #2a6faf !important;
     color: #000;
     border: none; }
 
   .lswitch-panel a {
     background: none;
     color: #444;
-    transition: all 100ms;
     -webkit-transition: all 100ms;
-    -moz-transition: all 100ms; }
+    -moz-transition: all 100ms;
+    -o-transition: all 100ms;
+    transition: all 100ms; }
 
   .lswitch-panel a:hover, .lswitch-panel a:active {
     background-color: #eeeeee;
@@ -1598,13 +1622,13 @@ Version: 1.0
 
   .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
     background-color: #bbbbbb;
-    background-color: rgba(48, 81, 100, 0.56);
+    background-color: #3d80be;
     color: #fff; }
 
   .lswitch-panel a.active {
     cursor: pointer;
     background-color: #bbbbbb;
-    background-color: rgba(48, 81, 100, 0.56);
+    background-color: #3d80be;
     color: #fff;
     font-weight: normal; }
 
@@ -1614,16 +1638,14 @@ Version: 1.0
 
   #lswitch-olcont, #lswitch-blcont {
     background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 0 0 0.4em 0.4em;
-    -webkit-border-radius: 0 0 0.4em 0.4em;
     -moz-border-radius: 0 0 0.4em 0.4em;
-    -ms-border-radius: 0 0 0.4em 0.4em; }
+    -webkit-border-radius: 0 0 0.4em 0.4em;
+    border-radius: 0 0 0.4em 0.4em; }
 
   #lswitch-olcont a:last-child, #lswitch-blcont a:last-child {
-    border-radius: 0 0 0.4em 0.4em;
-    -webkit-border-radius: 0 0 0.4em 0.4em;
     -moz-border-radius: 0 0 0.4em 0.4em;
-    -ms-border-radius: 0 0 0.4em 0.4em; }
+    -webkit-border-radius: 0 0 0.4em 0.4em;
+    border-radius: 0 0 0.4em 0.4em; }
 
   .lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont {
     background-color: none; } }

@@ -16773,8 +16773,10 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 	},
 	
 	draw: function() {
-		var div = $('<div id="mapdiv" />');
-		this.parentTag.append(div);
+		var mapDiv = $('<div id="mapdiv" />');
+		var mainDiv = $('<div id="maindiv" />');
+		mainDiv.append(mapDiv);
+		this.parentTag.append(mainDiv);
 		
 		// Fix things after orientation change.
 		if (L.Browser.touch) {
@@ -16782,6 +16784,14 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 				window.scrollTo(0,0);
 			});			
 		}
+
+		smap.event.on("smap.core.pluginsadded", function() {
+			if ( $("body > header").length || smap.cmd.getControl("MalmoHeader") ) {
+				// If body has an immediate child that is a <header>-tag then we assume
+				// a toolbar exists and the map should have a chance to adapt.
+				mainDiv.addClass("map-with-header");
+			}
+		});
 	},
 	
 	
@@ -18076,11 +18086,9 @@ L.control.geolocate = function (options) {
 L.Control.GuideIntroScreen = L.Control.extend({
 	options: {
 		autoActivate: true,
-		
 		position: 'bottomright',
 		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>',
 		bgSrc: null,
-		
 		langs: {
 			"sv": "Svenska",
 			"en": "English"
@@ -18166,7 +18174,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	},
 	
 	activate: function() {
-		$("body").append( this.$container );
+		$("#maindiv").append( this.$container );
 	},
 	deactivate: function() {
 		this.$container.detach();
@@ -18218,10 +18226,12 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		// Logos (appended at a later stage)
 		var $logoContainer = $('<div class="container" id="gintro-logo-container"></div>');
 		if (this.options.munLogoSrc) {
-			$logoContainer.append('<img class="gintro-munlogo col-xs-offset-3 col-sm-offset-3 col-sm-3 col-md-offset-4 col-md-3 col-lg-offset-4 col-lg-3" src="'+this.options.munLogoSrc+'"></img>');
+			// $logoContainer.append('<img class="gintro-munlogo col-xs-offset-3 col-sm-offset-3 col-sm-3 col-md-offset-4 col-md-3 col-lg-offset-4 col-lg-3" src="'+this.options.munLogoSrc+'"></img>');
+			$logoContainer.append('<img class="gintro-munlogo" src="'+this.options.munLogoSrc+'"></img>');
 		}
 		if (this.options.euLogoSrc) {
-			$logoContainer.append('<img class="gintro-eulogo col-xs-offset-1 col-sm-offset-2 col-md-offset-1 col-lg-offset-1" src="'+this.options.euLogoSrc+'"></img>');
+			// $logoContainer.append('<img class="gintro-eulogo col-xs-offset-1 col-sm-offset-2 col-md-offset-1 col-lg-offset-1" src="'+this.options.euLogoSrc+'"></img>');
+			$content.append('<img class="gintro-eulogo" src="'+this.options.euLogoSrc+'"></img>');
 		}
 		
 		var headerHtml = '<div class="container"><h1 style="margin-bottom:20px;">'+h.title+'</h1>'+shs+'</div>';
@@ -18949,13 +18959,13 @@ L.Control.LayerSwitcher = L.Control.extend({
 	
 	_addPanel: function() {
 		this.$panel = $('<div class="lswitch-panel unselectable" />');
-		smap.event.on("smap.core.pluginsadded", function() {
-			if ( $("body > header.navbar").length ) {
-				// If body has an immediate child that is a <header>-tag, with class "navbar",
-				// then we assume we need to move the panel content down a little bit.
-				$(".lswitch-panel").addClass("panel-with-toolbar");
-			}
-		});
+		// smap.event.on("smap.core.pluginsadded", function() {
+		// 	if ( $("body > header.navbar").length ) {
+		// 		// If body has an immediate child that is a <header>-tag, with class "navbar",
+		// 		// then we assume we need to move the panel content down a little bit.
+		// 		$(".lswitch-panel").addClass("panel-with-toolbar");
+		// 	}
+		// });
 		
 		
 		this.$panel.swipeleft($.proxy(function() {
@@ -18978,7 +18988,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 				'<div id="lswitch-olcont" class="list-group"></div>'+
 			'</div>');
 		this.$panel.append(this.$list);
-		$("body").append( this.$panel );
+		$("#maindiv").append( this.$panel );
 	},
 	
 	showPanel: function() {
@@ -19000,10 +19010,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		$("#lswitch-btn").show();
 		$(".lswitch-panel").removeClass("panel-visible");
 		
-		$("html, body").addClass("lswitch-overflow-hidden");
+		$("#maindiv").addClass("lswitch-overflow-hidden");
 		setTimeout($.proxy(function() {
 			this.$panel.hide();
-			$("html, body").removeClass("lswitch-overflow-hidden");
+			$("#maindiv").removeClass("lswitch-overflow-hidden");
 		}, this), 300);
 	},
 	
@@ -21264,4 +21274,68 @@ L.control.menu = function (options) {
  */
 L.control.zoombar = function (options) {
 	return new L.Control.Zoombar(options);
-};L.Icon.Default.imagePath = "lib/leaflet-0.7.2/images/";
+};
+L.Control.MalmoHeader = L.Control.extend({
+	options: {
+		position: 'bottomright'
+	},
+	
+	_lang: {
+		"sv": {
+			exampleLabel: "Ett exempel"
+		},
+		"en": {
+			exampleLabel: "An example"
+		}
+	},
+	
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode;
+
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
+	},
+
+	initialize: function(options) {
+		L.setOptions(this, options);
+		this._setLang(options.langCode);
+	},
+
+	onAdd: function(map) {
+		this.map = map;
+		
+		this._container = L.DomUtil.create('div', 'leaflet-control-MalmoHeader'); // second parameter is class name
+		L.DomEvent.disableClickPropagation(this._container);
+		
+		this.$container = $(this._container);
+
+		var headerHtml = 
+			'<!--[if IE]><meta content="IE=edge" http-equiv="X-UA-Compatible"/><![endif]-->'+
+			'    <!--[if lte IE 8]><script src="//assets.malmo.se/external/v4/html5shiv-printshiv.js" type="text/javascript"></script><![endif]-->'+
+			'    <link href="//assets.malmo.se/external/v4/masthead_standalone.css" media="all" rel="stylesheet" type="text/css"/>'+
+			'    <!--[if lte IE 8]><link href="//assets.malmo.se/external/v4/legacy/ie8.css" media="all" rel="stylesheet" type="text/css"/><![endif]-->'+
+			'    <noscript><link href="//assets.malmo.se/external/v4/icons.fallback.css" rel="stylesheet"></noscript>'+
+			'    <link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico"/>'
+		$("head").prepend(headerHtml);
+		$("body").addClass("mf-v4 no-footer");
+		$("body").addClass("test"); // during dev only
+		$("body").prepend('<script src="//assets.malmo.se/external/v4/masthead_standalone_without_jquery.js"></script>');
+		
+		return this._container;
+	},
+
+	onRemove: function(map) {
+		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
+		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+	}
+});
+
+/*
+ * This code lets us skip "new" before the
+ * Class name when instantiating it.
+ */
+// L.control.malmoHeader = function (options) {
+// 	return new L.Control.MalmoHeader(options);
+// };
+L.Icon.Default.imagePath = "lib/leaflet-0.7.2/images/";
