@@ -162,6 +162,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 			this.showPanel();
 			return false;
 		}, this));
+		btn.on("dblclick", function() {
+			return false;
+		});
 	},
 	
 	_addPanel: function() {
@@ -199,10 +202,20 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	showPanel: function() {
+		var self = this;
+
 		this.$panel.show();
+		if (this._panelIsSliding) {
+			utils.log("no slide");
+			return false;
+		}
+		this._panelIsSliding = true;
 		setTimeout(function() {
 			$(".lswitch-panel").addClass("panel-visible");
 		}, 1);
+		setTimeout(function() {
+			self._panelIsSliding = false;
+		}, 300);
 		
 		$("#mapdiv").css({
 			"margin-left": this.$panel.outerWidth() + "px"
@@ -211,6 +224,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	hidePanel: function() {
+		if (this._panelIsSliding) {
+			utils.log("no slide");
+			return false;
+		}
 		$("#mapdiv").css({
 			"margin-left": "0px"
 		});
@@ -219,6 +236,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		
 		$("#maindiv").addClass("lswitch-overflow-hidden");
 		setTimeout($.proxy(function() {
+			this._panelIsSliding = false;
 			this.$panel.hide();
 			$("#maindiv").removeClass("lswitch-overflow-hidden");
 		}, this), 300);

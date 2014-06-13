@@ -1518,7 +1518,19 @@ Version: 1.0
     transform: translate(0, 0) scale(1) !important;
     -webkit-transform: translate(0, 0) scale(1) !important;
     -ms-transform: translate(0, 0) scale(1) !important;
-    -o-transform: translate(0, 0) scale(1) !important; } }
+    -o-transform: translate(0, 0) scale(1) !important; }
+
+  .lswitch-panel a {
+    color: #fff;
+    background: none; }
+
+  .lswitch-panel a.active, .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
+    background: none !important;
+    background: #000 !important;
+    color: #fff; }
+
+  .lswitch-panel a:hover {
+    background: #222 !important; } }
 @media (min-width: 992px) {
   /* For desktop computers */
   /* Avoid things appearing under the switcher */

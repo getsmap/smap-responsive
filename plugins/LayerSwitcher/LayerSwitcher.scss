@@ -107,6 +107,19 @@ $hover-color-hex: #eee;
 	.lswitch-panel.panel-visible .panel {
 		@include transform(translate(0,0) scale(1) !important);
 	}
+	.lswitch-panel a {
+		color: #fff;
+		background: none;
+	}
+	.lswitch-panel a.active, .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
+		background: none !important;
+		background: #000 !important;
+		color: #fff;
+	}
+	.lswitch-panel a:hover {
+		background: #222 !important;
+	}
+
 }
 
 @media (min-width: 992px) {
