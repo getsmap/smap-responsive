@@ -139,12 +139,12 @@ var config = {
 		],
 		
 		plugins: [
-					{
-		        	   init: "L.Control.MalmoHeader",
-		        	   options: {
-		        		   imperial: false
-		        	   }
-		           },
+					// {
+		   //      	   init: "L.Control.MalmoHeader",
+		   //      	   options: {
+		   //      		   imperial: false
+		   //      	   }
+		   //         },
 		           {
 		        	   init: "L.Control.Scale",
 		        	   options: {

@@ -51,7 +51,7 @@ L.Control.ThreeD = L.Control.extend({
 		});
 		layer._map = this.map;
 //		layer._bindEvents(this.map);
-		layer._refresh();
+		// layer._refresh();
 		layer._unbindEvents(this.map);
 		
 //		this.map.on("layeradd", function() {

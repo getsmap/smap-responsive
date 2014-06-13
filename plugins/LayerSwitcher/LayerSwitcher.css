@@ -51,50 +51,16 @@
 
 .lswitch-panel a {
   cursor: pointer;
-  background-color: #38454E;
-  color: #eee;
+  background: none;
   border: none;
-  -moz-border-radius: 0 !important;
-  -webkit-border-radius: 0 !important;
-  border-radius: 0 !important;
   margin-top: 1px; }
 
-.lswitch-panel a:hover, .lswitch-panel a:active {
-  background-color: #38454E;
-  /* For mobile screens - use same background-color during hover as for default */
-  color: #fff;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-  border-radius: 0; }
-
 .lswitch-panel a.active {
-  cursor: pointer;
-  background-color: #333;
-  background-color: rgba(0, 0, 0, 0.4);
-  color: #fff;
-  font-weight: normal; }
-
-.lswitch-panel a.active:hover, .lswitch-panel a.active:active {
-  background-color: #333;
-  background-color: rgba(0, 0, 0, 0.4);
-  color: #fff; }
+  cursor: pointer; }
 
 .lswitch-panel .panel-default {
   border: none;
   background-color: #38454E; }
-
-.lswitch-panel .panel-heading {
-  padding: 3px 15px;
-  border: none;
-  font-weight: normal;
-  background-color: #333;
-  background-color: rgba(0, 0, 0, 0.4) !important;
-  color: #fff !important;
-  -moz-border-radius: 0.5em 0.5em 0 0;
-  -webkit-border-radius: 0.5em 0.5em 0 0;
-  border-radius: 0.5em 0.5em 0 0;
-  font-weight: bold;
-  font-size: 110%; }
 
 /* Added to html and body temporarily to avoid scrollbars during transitions */
 .lswitch-overflow-hidden {
@@ -153,50 +119,11 @@
     background-color: rgba(255, 255, 255, 0.9);
     overflow-y: auto; }
 
-  .lswitch-panel .panel-heading {
-    background-color: #bbbbbb;
-    background-color: #2a6faf;
-    filter: none;
-    background: #428bca;
-    background: -ms-linear-gradient(top, #428bca 0, #3278b3 100%);
-    /* IE10+ */
-    background: -moz-linear-gradient(top, #428bca 0, #3278b3 100%);
-    background: -webkit-gradient(linear, 0 0, 0 100%, from(#428bca), to(#3278b3));
-    background: -webkit-linear-gradient(top, #428bca 0, #3278b3 100%);
-    background: -o-linear-gradient(top, #428bca 0, #3278b3 100%);
-    background: linear-gradient(to bottom, #428bca 0, #3278b3 100%);
-    color: #000;
-    border: none; }
-
-  .lswitch-panel:hover .panel-heading {
-    background-color: #bbbbbb;
-    background-color: #2a6faf !important;
-    color: #000;
-    border: none; }
-
   .lswitch-panel a {
-    background: none;
-    color: #444;
     -webkit-transition: all 100ms;
     -moz-transition: all 100ms;
     -o-transition: all 100ms;
     transition: all 100ms; }
-
-  .lswitch-panel a:hover, .lswitch-panel a:active {
-    background-color: #eeeeee;
-    color: #000; }
-
-  .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
-    background-color: #bbbbbb;
-    background-color: #3d80be;
-    color: #fff; }
-
-  .lswitch-panel a.active {
-    cursor: pointer;
-    background-color: #bbbbbb;
-    background-color: #3d80be;
-    color: #fff;
-    font-weight: normal; }
 
   .lswitch-panel .panel-default {
     border: none;

@@ -67,8 +67,7 @@
 		"plugins/Search/Search.css",
 		"plugins/Info/Info.css",
 		"plugins/Menu/Menu.css",
-		"plugins/Zoombar/Zoombar.css",
-		"plugins/MalmoHeader/MalmoHeader.css"
+		"plugins/Zoombar/Zoombar.css"	
     ]
     
     

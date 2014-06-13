@@ -41,10 +41,7 @@ smap.core.Init = L.Class.extend({
 	applyConfig: function(theConfig) {
 		this.preProcessConfig(theConfig);
 
-
-
-		this._loadTheme(theConfig.theme);
-		
+		// this._loadTheme(theConfig.theme);
 		
 		// Set proxy for layers and controls
 		var proxy = smap.config.ws.proxy;
@@ -58,9 +55,9 @@ smap.core.Init = L.Class.extend({
 		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
 
-	_loadTheme: function(themeSrc) {
-		
-	},
+	// _loadTheme: function(themeSrc) {
+	// 	var themesFolder = 'css/themes/';
+	// },
 	
 	resetMap: function() {
 		// Destroy map
@@ -136,7 +133,7 @@ smap.core.Init = L.Class.extend({
 		}
 
 		// Set default theme if not set
-		config.theme = config.theme || smap.core.mainConfig.defaultTheme;
+		// config.theme = config.theme || smap.core.mainConfig.defaultTheme;
 
 	},
 	

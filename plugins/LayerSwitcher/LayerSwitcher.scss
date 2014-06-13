@@ -1,7 +1,7 @@
 @import '../../core/css/css3.scss';
 
 $select-color-hex: #bbb;
-$select-color: #3D80BE; //rgba(48, 81, 100, 0.56);
+$select-color: #3D80BE;
 
 $header-color-hex: #bbb;
 $header-color: rgba(42, 111, 175, 1);
@@ -55,31 +55,31 @@ $hover-color-hex: #eee;
 
 .lswitch-panel a {
 	cursor: pointer;
-	background-color: #38454E;
-	color: #eee;
+	background: none; //#38454E;
+	// color: #eee;
 	border: none;
-	@include radius(0 !important);
+	// @include radius(0 !important);
 	margin-top: 1px;
 }
 
 .lswitch-panel a:hover, .lswitch-panel a:active {
-	background-color: #38454E; /* For mobile screens - use same background-color during hover as for default */
-	color: #fff;
-	@include radius(0);
+	// background-color: #38454E; /* For mobile screens - use same background-color during hover as for default */
+	// color: #fff;
+	// @include radius(0);
 }
 
 .lswitch-panel a.active {
 	cursor: pointer;
-	background-color: #333;
-	background-color: rgba(0,0,0,.4);
-	color: #fff;
-	font-weight: normal;
+	// background-color: #333;
+	// background-color: rgba(0,0,0,.4);
+	// color: #fff;
+	// font-weight: normal;
 }
 
 .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
-	background-color: #333;
-	background-color: rgba(0,0,0,.4);
-	color: #fff;
+	// background-color: #333;
+	// background-color: rgba(0,0,0,.4);
+	// color: #fff;
 }
 
 .lswitch-panel .panel-default {
@@ -146,41 +146,26 @@ $hover-color-hex: #eee;
 		overflow-y: auto;
 	}
 	
-	.lswitch-panel .panel-heading {
-		background-color: $header-color-hex;
-		background-color: $header-color; // !important;
-		@include linear-gradient(#428bca, #3278b3);
-		color: #000;
-		border: none;
-	}
-	.lswitch-panel:hover .panel-heading {
-		background-color: $header-color-hex;
-		background-color: $header-color !important;
-		color: #000;
-		border: none;
-	}
-	
 	.lswitch-panel a {
-		background: none;
-		color: #444;
+		// background: none;
 		@include transition(all 100ms);
 	}
 	.lswitch-panel a:hover, .lswitch-panel a:active {
-		background-color: $hover-color-hex;
-		color: #000;
+		// background-color: $hover-color-hex;
+		// color: #000;
 	}
 	.lswitch-panel a.active:hover, .lswitch-panel a.active:active {
-		background-color: $select-color-hex;
-		background-color: $select-color;
-		color: #fff;
+		// background-color: $select-color-hex;
+		// background-color: $select-color;
+		// color: #fff;
 	}
 	
 	.lswitch-panel a.active {
-		cursor: pointer;
-		background-color: $select-color-hex;
-		background-color: $select-color;
-		color: #fff;
-		font-weight: normal;
+		// cursor: pointer;
+		// background-color: $select-color-hex;
+		// background-color: $select-color;
+		// color: #fff;
+		// font-weight: normal;
 	}
 	.lswitch-panel .panel-default {
 		border: none;

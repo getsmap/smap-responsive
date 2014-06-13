@@ -16764,7 +16764,8 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		    maxZoom: 18
 		},
 		
-		toolbarPlugin: "Menu"
+		toolbarPlugin: "Menu",
+		defaultTheme: "smap"
 };smap.core.Div = L.Class.extend({
 	
 	initialize: function() {
@@ -17647,16 +17648,22 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		},
 		
 		getControl: function(controlName) {
+			var ctrls = this.getControls(controlName);
+			return ctrls.length ? ctrls[0] : null;
+		},
+
+		getControls: function(controlName) {
 			// "Attribution" or "Scale"
 			var inst,
-				ctrls = smap.core.controls || [];
+				ctrls = smap.core.controls || [],
+				foundControls = [];
 			for (var i=0,len=ctrls.length; i<len; i++) {
 				inst = ctrls[i];
 				if (inst instanceof L.Control[controlName]) {
-					return inst;
+					foundControls.push(inst);
 				}
 			}
-			return null;
+			return foundControls;
 		},
 		
 		/**
@@ -17780,7 +17787,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 	
 	initialize: function() {
 		this.defineProjs();
-		
+
 		// Instantiate core classes
 		smap.core.divInst = new smap.core.Div();
 		smap.cmd.loading(true); // needs the mapdiv to work :)
@@ -17815,7 +17822,8 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 	
 	applyConfig: function(theConfig) {
 		this.preProcessConfig(theConfig);
-		
+
+		// this._loadTheme(theConfig.theme);
 		
 		// Set proxy for layers and controls
 		var proxy = smap.config.ws.proxy;
@@ -17828,10 +17836,24 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		
 		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
+
+	// _loadTheme: function(themeSrc) {
+	// 	var themesFolder = 'css/themes/';
+	// },
 	
 	resetMap: function() {
 		// Destroy map
 		smap.map.off();
+
+		var ctrls = smap.core.controls;
+		for (var i=0,len=ctrls.length; i<len; i++) {
+			try {
+				smap.map.removeControl(ctrls[i]);
+			}
+			catch(e) {
+				
+			}
+		}
 		this.map.remove();
 		
 		this.map = null;
@@ -17891,6 +17913,10 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		for (var i=0,len=bls.length; i<len; i++) {
 			bls[i].options.isBaseLayer = true;
 		}
+
+		// Set default theme if not set
+		// config.theme = config.theme || smap.core.mainConfig.defaultTheme;
+
 	},
 	
 	defineProjs: function() {
@@ -18086,7 +18112,7 @@ L.control.geolocate = function (options) {
 L.Control.GuideIntroScreen = L.Control.extend({
 	options: {
 		autoActivate: true,
-		position: 'bottomright',
+		position: "bottomright",
 		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>',
 		bgSrc: null,
 		langs: {
@@ -18154,7 +18180,6 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		
 		// Use $ prefix for all jQuery objects to make it easier to sort out all
 		// jQuery dependencies when sharing the code in future.
-		this.$container = $(this._container);
 		
 		var $content = this._makeContent("sv"),
 			$container = $('<div class="guide-introscreen" />');
@@ -18169,8 +18194,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	},
 
 	onRemove: function(map) {
-		$(".guide-introscreen").empty().remove();
-		return this;
+		this.$container.remove();
 	},
 	
 	activate: function() {
@@ -21310,17 +21334,21 @@ L.Control.MalmoHeader = L.Control.extend({
 		
 		this.$container = $(this._container);
 
+		// if ( $("#malmo-masthead").length ) {
+		// 	return this._container;
+		// }
+		
 		var headerHtml = 
-			'<!--[if IE]><meta content="IE=edge" http-equiv="X-UA-Compatible"/><![endif]-->'+
+			'<!--[if IE]><meta content="IE=edge" http-equiv="X-UA-Compatible" /><![endif]-->'+
 			'    <!--[if lte IE 8]><script src="//assets.malmo.se/external/v4/html5shiv-printshiv.js" type="text/javascript"></script><![endif]-->'+
 			'    <link href="//assets.malmo.se/external/v4/masthead_standalone.css" media="all" rel="stylesheet" type="text/css"/>'+
 			'    <!--[if lte IE 8]><link href="//assets.malmo.se/external/v4/legacy/ie8.css" media="all" rel="stylesheet" type="text/css"/><![endif]-->'+
 			'    <noscript><link href="//assets.malmo.se/external/v4/icons.fallback.css" rel="stylesheet"></noscript>'+
-			'    <link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico"/>'
+			'    <link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico" />'
 		$("head").prepend(headerHtml);
 		$("body").addClass("mf-v4 no-footer");
 		$("body").addClass("test"); // during dev only
-		$("body").prepend('<script src="//assets.malmo.se/external/v4/masthead_standalone_without_jquery.js"></script>');
+		$("body").append('<script src="//assets.malmo.se/external/v4/masthead_standalone_without_jquery.js"></script>');
 		
 		return this._container;
 	},
@@ -21328,6 +21356,8 @@ L.Control.MalmoHeader = L.Control.extend({
 	onRemove: function(map) {
 		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
 		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+		$("#malmo-masthead").remove();
+
 	}
 });
 
@@ -21335,7 +21365,7 @@ L.Control.MalmoHeader = L.Control.extend({
  * This code lets us skip "new" before the
  * Class name when instantiating it.
  */
-// L.control.malmoHeader = function (options) {
-// 	return new L.Control.MalmoHeader(options);
-// };
+L.control.malmoHeader = function (options) {
+	return new L.Control.MalmoHeader(options);
+};// Keep this commented line (or empty line), otherwise it might appear behind a comment when merged.
 L.Icon.Default.imagePath = "lib/leaflet-0.7.2/images/";
