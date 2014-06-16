@@ -6,7 +6,7 @@ $select-color: #3D80BE;
 $header-color-hex: #bbb;
 $header-color: rgba(42, 111, 175, 1);
 	
-$hover-color-hex: #eee;
+$hover-color-hex: rgba(210,210,210,.5);
 
 #lswitch-btn {
 	z-index: 1;
@@ -148,15 +148,14 @@ $hover-color-hex: #eee;
 		background-color: #fff;
 		background-color: rgba(255,255,255, 0);
 		z-index: 900;
-		
 		overflow: hidden;
+		position: relative;
 	}
 	
 	.lswitch-panel:hover {
-		@include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);
-		background-color: rgba(255,255,255, .9);
-		
-		overflow-y: auto;
+		// @include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);
+		// background-color: rgba(255,255,255, .9);
+		// overflow-y: auto;
 	}
 	
 	.lswitch-panel a {
@@ -164,7 +163,7 @@ $hover-color-hex: #eee;
 		@include transition(all 100ms);
 	}
 	.lswitch-panel a:hover, .lswitch-panel a:active {
-		// background-color: $hover-color-hex;
+		background-color: $hover-color-hex;
 		// color: #000;
 	}
 	.lswitch-panel a.active:hover, .lswitch-panel a.active:active {

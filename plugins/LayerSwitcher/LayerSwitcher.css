@@ -122,20 +122,17 @@
     background-color: #fff;
     background-color: rgba(255, 255, 255, 0);
     z-index: 900;
-    overflow: hidden; }
-
-  .lswitch-panel:hover {
-    -moz-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
-    -webkit-box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
-    box-shadow: rgba(0, 0, 0, 0.3) -1px -1px 4px;
-    background-color: rgba(255, 255, 255, 0.9);
-    overflow-y: auto; }
+    overflow: hidden;
+    position: relative; }
 
   .lswitch-panel a {
     -webkit-transition: all 100ms;
     -moz-transition: all 100ms;
     -o-transition: all 100ms;
     transition: all 100ms; }
+
+  .lswitch-panel a:hover, .lswitch-panel a:active {
+    background-color: rgba(210, 210, 210, 0.5); }
 
   .lswitch-panel .panel-default {
     border: none;
