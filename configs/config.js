@@ -4,9 +4,7 @@ var config = {
 		params:{
 			center: [12.72491455078125,56.01834293384084],
 			zoom: 10
-		
 		},
-				
 
 		ws: {
 			"localhost": {
@@ -341,17 +339,6 @@ var config = {
 		     ],
 		     
 		bl: [
-		
-		{
-			init: "L.TileLayer",
-			url: 'http://tileserver.maptiler.com/grandcanyon/{z}/{x}/{y}.png',
-			options: {
-				layerId: "canyon",
-				displayName: "Canyon",
-				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
-				maxZoom: 18
-			}
-		},
 		{
 			init: "L.TileLayer",
 			url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
