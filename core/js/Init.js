@@ -22,14 +22,17 @@ smap.core.Init = L.Class.extend({
 		smap.core.selectInst = new smap.core.Select(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
 		smap.core.pluginHandlerInst = new smap.core.PluginHandler(this.map);
-		var params = options.params || smap.core.paramInst.getParams();
+		var params = options.params || smap.core.paramInst.getParams(); //Parameters from URL
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				smap.config.configName = params.CONFIG; // Store for creating params
 				
+				
 				var lang = params.LANG || navigator.language;
 				smap.config.langCode = lang ? lang.split("-")[0] : "en";
 				self.applyConfig(smap.config);
+				
+				params = $.extend(smap.config.params || {}, params;
 				smap.core.paramInst.applyParams(params);
 				smap.cmd.loading(false);
 		}).fail(function(a, text, c) {
