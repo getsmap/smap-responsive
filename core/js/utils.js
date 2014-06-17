@@ -23,6 +23,19 @@ var utils = {
 			});
 			return newArr;
 		},
+
+		/**
+		 * Transforms all keys in an object into upper-case.
+		 * @param  {Object} o
+		 * @return {Object} Upper-case object.
+		 */
+		objectToUpperCase: function(o) {
+			var out = {};
+			for (var key in o) {
+				out[key.objectToUpperCase()] = o[key];
+			}
+			return out;
+		},
 		
 		drawDialog: function(title, bodyContent, footerContent, options) {
 			options = options || {};
