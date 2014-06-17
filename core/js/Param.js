@@ -19,8 +19,9 @@ smap.core.Param = L.Class.extend({
 			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
+
 	
-	getParams: function() {
+	getParams: function(param) {
 		var sep = "?";
 		var p = location.href.split(sep);
     	var pString = p.length > 1 ? p[1] : "";
