@@ -911,7 +911,10 @@ body {
 #maindiv {
   margin: 0;
   padding: 0;
-  font-size: 100%; }
+  font-size: 100%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; }
 
 #mapdiv {
   position: absolute;
@@ -1557,7 +1560,7 @@ Version: 1.0
     background-color: rgba(255, 255, 255, 0);
     z-index: 900;
     overflow: hidden;
-    position: relative; }
+    position: absolute; }
 
   .lswitch-panel a {
     -webkit-transition: all 100ms;

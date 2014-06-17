@@ -100,7 +100,7 @@ L.Control.Menu = L.Control.extend({
 	    '</header>'
 	    );
 
-        $("body").append($div);
+        $("#maindiv").prepend($div);
         //this.$container.append($div);
 
     },

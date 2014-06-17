@@ -16617,6 +16617,19 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 			});
 			return newArr;
 		},
+
+		/**
+		 * Transforms all keys in an object into upper-case.
+		 * @param  {Object} o
+		 * @return {Object} Upper-case object.
+		 */
+		objectToUpperCase: function(o) {
+			var out = {};
+			for (var key in o) {
+				out[key.toUpperCase()] = o[key];
+			}
+			return out;
+		},
 		
 		drawDialog: function(title, bodyContent, footerContent, options) {
 			options = options || {};
@@ -17339,8 +17352,9 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
+
 	
-	getParams: function() {
+	getParams: function(param) {
 		var sep = "?";
 		var p = location.href.split(sep);
     	var pString = p.length > 1 ? p[1] : "";
@@ -17804,14 +17818,19 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		smap.core.selectInst = new smap.core.Select(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
 		smap.core.pluginHandlerInst = new smap.core.PluginHandler(this.map);
-		var params = options.params || smap.core.paramInst.getParams();
+		var params = options.params || smap.core.paramInst.getParams(); //Parameters from URL
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				smap.config.configName = params.CONFIG; // Store for creating params
 				
+				
 				var lang = params.LANG || navigator.language;
 				smap.config.langCode = lang ? lang.split("-")[0] : "en";
 				self.applyConfig(smap.config);
+
+				params = utils.objectToUpperCase(smap.config.params);
+
+				params = $.extend(smap.config.params || {}, params);
 				smap.core.paramInst.applyParams(params);
 				smap.cmd.loading(false);
 		}).fail(function(a, text, c) {
@@ -21203,7 +21222,7 @@ L.control.info = function (options) {
 	    '</header>'
 	    );
 
-        $("body").append($div);
+        $("#maindiv").prepend($div);
         //this.$container.append($div);
 
     },

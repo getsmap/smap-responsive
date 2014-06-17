@@ -123,7 +123,7 @@
     background-color: rgba(255, 255, 255, 0);
     z-index: 900;
     overflow: hidden;
-    position: relative; }
+    position: absolute; }
 
   .lswitch-panel a {
     -webkit-transition: all 100ms;
