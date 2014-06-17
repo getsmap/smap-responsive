@@ -1559,8 +1559,8 @@ Version: 1.0
     background-color: #fff;
     background-color: rgba(255, 255, 255, 0);
     z-index: 900;
-    overflow: hidden;
-    position: absolute; }
+    max-height: 100%;
+    position: relative; }
 
   .lswitch-panel a {
     -webkit-transition: all 100ms;
