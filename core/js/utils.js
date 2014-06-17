@@ -32,7 +32,7 @@ var utils = {
 		objectToUpperCase: function(o) {
 			var out = {};
 			for (var key in o) {
-				out[key.objectToUpperCase()] = o[key];
+				out[key.toUpperCase()] = o[key];
 			}
 			return out;
 		},

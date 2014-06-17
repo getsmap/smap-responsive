@@ -1,6 +1,12 @@
 
 var config = {
+
+		params:{
+			center: [12.72491455078125,56.01834293384084],
+			zoom: 10
 		
+		},
+				
 
 		ws: {
 			"localhost": {

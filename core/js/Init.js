@@ -32,7 +32,11 @@ smap.core.Init = L.Class.extend({
 				smap.config.langCode = lang ? lang.split("-")[0] : "en";
 				self.applyConfig(smap.config);
 				
-				params = $.extend(smap.config.params || {}, params;
+				
+				params = utils.objectToUpperCase(smap.config.params);
+				
+				
+				params = $.extend(smap.config.params || {}, params);
 				smap.core.paramInst.applyParams(params);
 				smap.cmd.loading(false);
 		}).fail(function(a, text, c) {
