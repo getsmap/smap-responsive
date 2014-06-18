@@ -73,6 +73,10 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		var $content = this._makeContent("sv"),
 			$container = $('<div class="guide-introscreen" />');
 		$container.append( $content );
+		if (this.options.euLogoSrc) {
+			// $logoContainer.append('<img class="gintro-eulogo col-xs-offset-1 col-sm-offset-2 col-md-offset-1 col-lg-offset-1" src="'+this.options.euLogoSrc+'"></img>');
+			$container.append('<img class="gintro-eulogo" src="'+this.options.euLogoSrc+'"></img>');
+		}
 		
 		if (this.options.bgSrc) {
 			$container.prepend('<img class="gintro-bg gintro-bg-left" src="'+this.options.bgSrc+'"></img><img class="gintro-bg gintro-bg-right" src="'+this.options.bgSrc+'"></img>');			
@@ -142,10 +146,6 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			// $logoContainer.append('<img class="gintro-munlogo col-xs-offset-3 col-sm-offset-3 col-sm-3 col-md-offset-4 col-md-3 col-lg-offset-4 col-lg-3" src="'+this.options.munLogoSrc+'"></img>');
 			$logoContainer.append('<img class="gintro-munlogo" src="'+this.options.munLogoSrc+'"></img>');
 		}
-		if (this.options.euLogoSrc) {
-			// $logoContainer.append('<img class="gintro-eulogo col-xs-offset-1 col-sm-offset-2 col-md-offset-1 col-lg-offset-1" src="'+this.options.euLogoSrc+'"></img>');
-			$content.append('<img class="gintro-eulogo" src="'+this.options.euLogoSrc+'"></img>');
-		}
 		
 		var headerHtml = '<div class="container"><h1 style="margin-bottom:20px;">'+h.title+'</h1>'+shs+'</div>';
 		var classActive = "btn-danger";
@@ -198,8 +198,6 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			b.data("configName", configName);
 			$row.append( $cTag );
 		}
-		
-		
 		
 		$content.find(".guideintro-btn-option").on("click", function() {
 			var _langCode = $(this).data("langCode");

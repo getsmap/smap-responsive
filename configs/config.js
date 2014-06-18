@@ -194,40 +194,28 @@ var config = {
 		    		}
 		     	}
 		     },
-		     {
-		    	 init: "L.GeoJSON.WFS",
-		    	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
-		    	 options: {
-		    	 	layerId: "stadsdel3d",
-		    	 	displayName: "Stadsdel 3D",
-		    	 	attribution: "Stadsbyggnadskontoret, Malmö",
-		    	 	inputCrs: "EPSG:4326",
-		    	 	reverseAxis: false,
-		    	 	reverseAxisBbox: true,
-		    	 	selectable: true,
-		    	 	popup: 'The ID: ${id}',
-		    	 	uniqueKey: "id",
-		    	 	params: {
-			    	 	typeName: "malmows:malmo_kvarter_3d",
-						version: "1.1.0",
-						maxFeatures: 10000,
-						format: "text/geojson",
-						outputFormat: "json"
-		     		}
-//		     		,
-//		     		style: {
-//		     			weight: 6,
-//		     			color: '#F00',
-//		     			dashArray: '',
-//		     			opacity: 0.1
-//		     		},
-//		     		selectStyle: {
-//		    			weight: 10,
-//		    	        color: '#00FF00',
-//		    	        opacity: 1
-//		    		}
-		     	}
-		     },
+		    //  {
+		    // 	 init: "L.GeoJSON.WFS",
+		    // 	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+		    // 	 options: {
+		    // 	 	layerId: "stadsdel3d",
+		    // 	 	displayName: "Stadsdel 3D",
+		    // 	 	attribution: "Stadsbyggnadskontoret, Malmö",
+		    // 	 	inputCrs: "EPSG:4326",
+		    // 	 	reverseAxis: false,
+		    // 	 	reverseAxisBbox: true,
+		    // 	 	selectable: true,
+		    // 	 	popup: 'The ID: ${id}',
+		    // 	 	uniqueKey: "id",
+		    // 	 	params: {
+			   //  	 	typeName: "malmows:malmo_kvarter_3d",
+						// version: "1.1.0",
+						// maxFeatures: 10000,
+						// format: "text/geojson",
+						// outputFormat: "json"
+		    //  		}
+		    //  	}
+		    //  },
 		     {
 				  init: "L.GeoJSON.WFS",
 				  url: "http://xyz.malmo.se:8081/geoserver/wfs",

@@ -60,10 +60,10 @@
 }
 
 .gintro-eulogo {
-	position: fixed;
-	bottom: 1em;
-	right: 1em;
+	position: relative;
+	margin-top: 3em;
 	z-index: 5;
+	margin-bottom: 5em;
 }
 
 .guide-content {
