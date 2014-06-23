@@ -96,7 +96,7 @@
     color: #fff; }
 
   .lswitch-panel a:hover {
-    background: #222 !important; } }
+    background: none !important; } }
 @media (min-width: 992px) {
   /* For desktop computers */
   /* Avoid things appearing under the switcher */

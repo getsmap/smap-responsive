@@ -10,7 +10,7 @@ L.Control.ShareLink = L.Control.extend({
             close: "Stäng"
         },
         "en": {
-            caption: "Link to the map",
+            caption: "Share link",
             close: "Close"
         }
     },

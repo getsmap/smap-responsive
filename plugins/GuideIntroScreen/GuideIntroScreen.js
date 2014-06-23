@@ -128,7 +128,8 @@ L.Control.GuideIntroScreen = L.Control.extend({
 				params: {
 					CONFIG: configName,
 					CENTER: [12.985,55.613],
-					ZOOM: 15					
+					ZOOM: 15,
+					LANG: langCode
 				}
 			});
 			return false;
