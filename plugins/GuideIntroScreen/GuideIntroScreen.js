@@ -92,6 +92,7 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	
 	activate: function() {
 		$("#maindiv").append( this.$container );
+		$("#maindiv").addClass("overflow-y");
 	},
 	deactivate: function() {
 		this.$container.detach();

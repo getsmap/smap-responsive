@@ -125,7 +125,7 @@ smap.core.Init = L.Class.extend({
 	
 	preProcessConfig: function(config) {
 		try {
-			config.ws = config.ws ? config.ws[document.domain] : {};
+			config.ws = config.ws ? config.ws[document.domain] || {} : {};
 		} catch(e) {
 			config.log("smap.core.Init: config file's ws property not specified for domain: "+document.domain);
 		};

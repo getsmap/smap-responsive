@@ -105,9 +105,3 @@ var config = {
 		
 		
 };
-
-// Set proxy for WFS
-L.GeoJSON.WFS.proxy = config.ws[document.domain].proxy;
-
-// Set proxy for SelectWMS
-L.Control.SelectWMS.proxy = config.ws[document.domain].proxy;

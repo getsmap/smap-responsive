@@ -1251,20 +1251,23 @@ Version: 1.0
 .leaflet-control-Geolocate .btn {
 	outline: none;
 }
+.overflow-y {
+	overflow-x: auto !important;
+	-ms-overflow-style: -ms-autohiding-scrollbar !important; /*For WP8 IE*/
+}
+
 .guide-introscreen {
 	position: absolute;
 	left: 0px;
 	top: 0px;
 	width: 100%;
-	height: 100%;
+	height: auto;
 	z-index: 1;
 	background-color: #fff;
 	background-color: rgba(255,255,255,1);
 	text-align: center;
 	padding: 0;
 	margin: 0;
-	overflow-x: hidden;
-	overflow-y: auto;
 	padding-top: 4em;
 }
 
