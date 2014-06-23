@@ -2,15 +2,15 @@
   user-zoom: fixed;
   max-zoom: 1;
   min-zoom: 1; }
+/* Fix for Bootstrap for WP8. Enables scrolling in modals. */
+.modal {
+  -ms-overflow-style: -ms-autohiding-scrollbar; }
+
 body {
   margin: 0;
   padding: 0;
   font-size: 100% !important; }
 
-  .modal {
-	-ms-overflow-style: -ms-autohiding-scrollbar;
-  
-  }
 #maindiv {
   margin: 0;
   padding: 0;

@@ -16332,7 +16332,6 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		var features = L.Util.isArray(geojson) ? geojson : geojson.features,
 		    i, len, feature, fid,
 		    uniqueKey = this.options.uniqueKey;
-		
 		if (features) {
 			var featureIndexes = this._featureIndexes,
 				addData = this.addData;
@@ -16404,7 +16403,6 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 			return false;
 		}
 		var bounds = this._map.getBounds();
-		
 		this.getFeature(bounds, function() {
 			if (self.options.uniqueKey === null) {
 				self.clearLayers();
@@ -16487,6 +16485,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 				if (response.type && response.type == "FeatureCollection") {
 					this.jsonData = response;
 					this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
+					
 					callback();
 					this.fire("load", {layer: this});
 				}
@@ -16599,7 +16598,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		
 		log: function(msg) {
 			if (window.console) {
-				console.log(msg);
+				window.console.log(msg);
 			}
 		},
 		
@@ -17832,7 +17831,7 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 				smap.core.paramInst.applyParams(params);
 				smap.cmd.loading(false);
 		}).fail(function(a, text, c) {
-			console.log("Config not loaded because: "+text);
+			utils.log("Config not loaded because: "+text);
 			smap.cmd.loading(false);
 		});
 	},
@@ -17880,7 +17879,10 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		delete smap.map;
 		
 		window.config = null;
-		delete window.config;
+		try {
+			delete window.config;
+		} catch(e) {}
+		
 		smap.config = null;
 		delete smap.config;
 		
@@ -17921,9 +17923,9 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 	
 	preProcessConfig: function(config) {
 		try {
-			config.ws = config.ws ? config.ws[document.domain] : {};
+			config.ws = config.ws ? config.ws[document.domain] || {} : {};
 		} catch(e) {
-			config.log("smap.core.Init: config file's ws property not specified for domain: "+document.domain);
+			utils.log("smap.core.Init: config file's ws property not specified for domain: "+document.domain);
 		};
 		
 		var bls = config.bl || [];
@@ -18569,7 +18571,7 @@ L.control.guideIntroScreen = function (options) {
 		var src,
 			ext,
 			type,
-			$tagAudio = $('<audio controls />'),
+			$tagAudio = $('<audio controls="controls" />'),
 			tagSrc;
 		for (var i=0,len=arrAudioSources.length; i<len; i++) {
 			src = arrAudioSources[i];
@@ -18676,6 +18678,11 @@ L.control.guideIntroScreen = function (options) {
 		function close() {
 			$("body").off("keydown", onKeyDown);
 			$(".gp-fullscreen").removeClass("gp-fs-visible");
+			$(".gp-fullscreen").find("audio").each(function() {
+				if (this.pause) {
+					this.pause();
+				}
+			});
 			setTimeout(function() {
 				$(".gp-fullscreen").empty().remove();
 			}, 500);

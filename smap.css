@@ -903,6 +903,10 @@ th {
   user-zoom: fixed;
   max-zoom: 1;
   min-zoom: 1; }
+/* Fix for Bootstrap for WP8. Enables scrolling in modals. */
+.modal {
+  -ms-overflow-style: -ms-autohiding-scrollbar; }
+
 body {
   margin: 0;
   padding: 0;
@@ -1276,6 +1280,7 @@ Version: 1.0
 }
 
 .guide-introscreen .jumbotron {
+	background-color: #fff;
 	background-color: rgba(255,255,255,1);
 }
 
@@ -1338,6 +1343,7 @@ Version: 1.0
 	left: 0px;
 	top: 0px;
 	z-index: 2;
+	background-color: #fff;
 	background-color: rgba(255,255,255,.5);
 	text-align: center;
 	border: 1px dashed #bbb;
@@ -1407,7 +1413,7 @@ Version: 1.0
 
 .gp-fs-visible {
 	opacity: 1;
-	filter: alpha(opacity=1);
+	filter: alpha(opacity=100);
 	transition: opacity .5s;
 	-webkit-transition: opacity .5s;	
 }
@@ -1431,6 +1437,7 @@ Version: 1.0
 }
 
 .gp-fullscreen .btn-default:hover {
+	background: #fff;
 	background: rgba(255,255,255,1);
 	color: #000;
 }
