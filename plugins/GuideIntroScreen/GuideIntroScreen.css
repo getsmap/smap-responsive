@@ -11,7 +11,8 @@
 	padding: 0;
 	margin: 0;
 	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-y: auto !important;
+	-ms-overflow-style: -ms-autohiding-scrollbar !important; /* Nasty bug fix: Required for WP8 IE10!!! */
 	padding-top: 4em;
 }
 
