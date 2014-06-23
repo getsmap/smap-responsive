@@ -36,7 +36,7 @@ smap.core.Init = L.Class.extend({
 				smap.core.paramInst.applyParams(params);
 				smap.cmd.loading(false);
 		}).fail(function(a, text, c) {
-			console.log("Config not loaded because: "+text);
+			utils.log("Config not loaded because: "+text);
 			smap.cmd.loading(false);
 		});
 	},
@@ -84,7 +84,10 @@ smap.core.Init = L.Class.extend({
 		delete smap.map;
 		
 		window.config = null;
-		delete window.config;
+		try {
+			delete window.config;
+		} catch(e) {}
+		
 		smap.config = null;
 		delete smap.config;
 		
@@ -127,7 +130,7 @@ smap.core.Init = L.Class.extend({
 		try {
 			config.ws = config.ws ? config.ws[document.domain] || {} : {};
 		} catch(e) {
-			config.log("smap.core.Init: config file's ws property not specified for domain: "+document.domain);
+			utils.log("smap.core.Init: config file's ws property not specified for domain: "+document.domain);
 		};
 		
 		var bls = config.bl || [];

@@ -205,7 +205,7 @@ L.Control.GuidePopup = L.Control.extend({
 		var src,
 			ext,
 			type,
-			$tagAudio = $('<audio controls />'),
+			$tagAudio = $('<audio controls="controls" />'),
 			tagSrc;
 		for (var i=0,len=arrAudioSources.length; i<len; i++) {
 			src = arrAudioSources[i];
@@ -312,6 +312,11 @@ L.Control.GuidePopup = L.Control.extend({
 		function close() {
 			$("body").off("keydown", onKeyDown);
 			$(".gp-fullscreen").removeClass("gp-fs-visible");
+			$(".gp-fullscreen").find("audio").each(function() {
+				if (this.pause) {
+					this.pause();
+				}
+			});
 			setTimeout(function() {
 				$(".gp-fullscreen").empty().remove();
 			}, 500);

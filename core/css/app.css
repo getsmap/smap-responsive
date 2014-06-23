@@ -7,6 +7,10 @@ body {
   padding: 0;
   font-size: 100% !important; }
 
+  .modal {
+	-ms-overflow-style: -ms-autohiding-scrollbar;
+  
+  }
 #maindiv {
   margin: 0;
   padding: 0;
