@@ -1,9 +1,9 @@
-sMap-mobile
+sMap-responsive
 ===========
 
 ###Introduction
 
-sMap-mobile is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which supports a range of different browsers and devices (specified in the wiki). The framework can be extended with Leaflet controls.
+sMap-responsive is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which supports a range of different browsers and devices (specified in the wiki). The framework can be extended with Leaflet controls.
 
 For technical questions, contact Johan Lahti (see below).
 
@@ -30,12 +30,12 @@ To get started, follow these steps:
 
 ###Support
 
-If you are using sMap mobile to make your own map, or if you change it, we would be grateful if you let us know and share your experiences and your code.
+If you are using sMap-responsive to make your own map, or if you change it, we would be grateful if you let us know and share your experiences and your code.
 
 ###Questions or suggestions?
 
 We are happy for any type of feed-back.
 
-If you have technical questions regarding smap-mobile, contact Johan Lahti (System Architect and main developer) (johan.lahti (at) malmo.se).
+If you have technical questions regarding smap-reponsive, contact Johan Lahti (System Architect and main developer) (johan.lahti (at) malmo.se).
 
-For more generic questions about the sMap project – contact Product Owner Ulf Minör (ulf.minor (at) malmo.se) or Karl-Magnus Jönsson (karl-magnus.jonsson (at) kristianstad.se).
+For more generic questions about the sMap cooperation – contact Product Owner Ulf Minör (ulf.minor (at) malmo.se) or Karl-Magnus Jönsson (karl-magnus.jonsson (at) kristianstad.se).
