@@ -18217,15 +18217,21 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	},
 
 	onRemove: function(map) {
+		this.deactivate();
 		this.$container.remove();
 	},
 	
 	activate: function() {
 		$("#maindiv").append( this.$container );
-		$("#maindiv").addClass("overflow-y");
+		// $("#mapdiv").addClass("transparent");
 	},
 	deactivate: function() {
 		this.$container.detach();
+		// $("#mapdiv").removeClass("transparent");
+		// $("#mapdiv").addClass("transition fadein");
+		// setTimeout(function() {
+		// 	$("#mapdiv").removeClass("transition fadein");
+		// }, 500);
 	},
 	
 //	toggle: function() {
@@ -18375,11 +18381,13 @@ L.control.guideIntroScreen = function (options) {
 	_lang: {
 		"sv": {
 			mediaHeader: "Media",
-			accessHeader: "Tillgänglighet"
+			accessHeader: "Tillgänglighet",
+			close: "Stäng"
 		},
 		"en": {
 			mediaHeader: "Media",
-			accessHeader: "Accessibility"
+			accessHeader: "Accessibility",
+			close: "Close"
 		}
 	},
 	
@@ -18498,7 +18506,6 @@ L.control.guideIntroScreen = function (options) {
 					    popupAnchor:  [0, -8]
 					})
 				}
-				
 		};
 	
 		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
@@ -18766,10 +18773,12 @@ L.control.guideIntroScreen = function (options) {
 		
 		
 		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);
-		
+		var btnClose = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+
 		this.dialog = utils.drawDialog(
 				dialogTitle,
-				content
+				content,
+				btnClose
 		);
 		this.dialog.on("hidden.bs.modal", function() {
 			$(this).empty().remove();
