@@ -9,11 +9,13 @@ L.Control.GuidePopup = L.Control.extend({
 	_lang: {
 		"sv": {
 			mediaHeader: "Media",
-			accessHeader: "Tillgänglighet"
+			accessHeader: "Tillgänglighet",
+			close: "Stäng"
 		},
 		"en": {
 			mediaHeader: "Media",
-			accessHeader: "Accessibility"
+			accessHeader: "Accessibility",
+			close: "Close"
 		}
 	},
 	
@@ -400,10 +402,12 @@ L.Control.GuidePopup = L.Control.extend({
 		
 		
 		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);
-		
+		var btnClose = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+
 		this.dialog = utils.drawDialog(
 				dialogTitle,
-				content
+				content,
+				btnClose
 		);
 		this.dialog.on("hidden.bs.modal", function() {
 			$(this).empty().remove();
