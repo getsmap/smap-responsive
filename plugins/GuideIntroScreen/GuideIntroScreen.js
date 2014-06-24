@@ -102,10 +102,6 @@ L.Control.GuideIntroScreen = L.Control.extend({
 		// setTimeout(function() {
 		// 	$("#mapdiv").removeClass("transition fadein");
 		// }, 500);
-
-		// setTimeout(function() {
-		// 	$("#mapdiv").removeClass("fadein");
-		// }, 2000);
 	},
 	
 //	toggle: function() {
