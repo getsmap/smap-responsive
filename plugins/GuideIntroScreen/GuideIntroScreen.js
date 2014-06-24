@@ -93,10 +93,12 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	
 	activate: function() {
 		$("#maindiv").append( this.$container );
+		$("#mapdiv").hide();
 		// $("#mapdiv").addClass("transparent");
 	},
 	deactivate: function() {
 		this.$container.detach();
+		$("#mapdiv").show();
 		// $("#mapdiv").removeClass("transparent");
 		// $("#mapdiv").addClass("transition fadein");
 		// setTimeout(function() {
