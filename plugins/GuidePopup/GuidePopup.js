@@ -134,7 +134,6 @@ L.Control.GuidePopup = L.Control.extend({
 					    popupAnchor:  [0, -8]
 					})
 				}
-				
 		};
 	
 		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
