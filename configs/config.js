@@ -473,6 +473,12 @@ var config = {
             		{
   		        	   init: "L.Control.Print",
   		        	   options: {}
-  		           	}
+  		           	},
+  		           	{
+		        	   init: "L.Control.Opacity",
+		        	   options: {
+		        	   		addToMenu: false
+		        	   }
+		           }
        ]
 };
