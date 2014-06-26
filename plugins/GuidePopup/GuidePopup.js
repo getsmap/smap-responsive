@@ -79,7 +79,6 @@ L.Control.GuidePopup = L.Control.extend({
 		if ($(e.target).hasClass("gp-mediaicons") || $(e.target).parent().hasClass("gp-mediaicons")) {
 			$('[href="#gp-moreinfo"]').click();
 		}
-		
 		return false;
 	},
 	

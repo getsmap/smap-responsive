@@ -100,13 +100,13 @@ $hover-color-hex: rgba(210,210,210,.5);
 
 @media (max-width: 991px) {
 	// Zoom-in-effect when showing and hiding the panel
-	.lswitch-panel .panel {
-		@include transition(all 400ms);
-		@include transform(translate(-20%,0) scale(0.95));
-	}
-	.lswitch-panel.panel-visible .panel {
-		@include transform(translate(0,0) scale(1) !important);
-	}
+	// .lswitch-panel .panel {
+	// 	@include transition(all 400ms);
+	// 	@include transform(translate(-20%,0) scale(0.95));
+	// }
+	// .lswitch-panel.panel-visible .panel {
+	// 	@include transform(translate(0,0) scale(1) !important);
+	// }
 	.lswitch-panel a {
 		color: #fff;
 		background: none;

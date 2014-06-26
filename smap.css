@@ -1535,22 +1535,6 @@ Version: 1.0
   padding-top: 5em; }
 
 @media (max-width: 991px) {
-  .lswitch-panel .panel {
-    -webkit-transition: all 400ms;
-    -moz-transition: all 400ms;
-    -o-transition: all 400ms;
-    transition: all 400ms;
-    transform: translate(-20%, 0) scale(0.95);
-    -webkit-transform: translate(-20%, 0) scale(0.95);
-    -ms-transform: translate(-20%, 0) scale(0.95);
-    -o-transform: translate(-20%, 0) scale(0.95); }
-
-  .lswitch-panel.panel-visible .panel {
-    transform: translate(0, 0) scale(1) !important;
-    -webkit-transform: translate(0, 0) scale(1) !important;
-    -ms-transform: translate(0, 0) scale(1) !important;
-    -o-transform: translate(0, 0) scale(1) !important; }
-
   .lswitch-panel a {
     color: #fff;
     background: none; }
