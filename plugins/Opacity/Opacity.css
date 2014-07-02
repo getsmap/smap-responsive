@@ -1,9 +1,47 @@
+.op-modal-slideeffect{
+	opacity: 0.5 !important;
+}
 #op-rowsdiv {
-margin-top: 1em;
+	margin-top: 1em;
 }
 .op-rows {
 	margin-top: 0.5em;
+	position: relative;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	outline: 0;
+	clear: both;
+	padding: 20px 10px 20px 0px;
 }
 #op-collapsebtn {
 	width: 100%;
+}
+.op-mapname{
+	float: left;
+	margin-right: 5px;
+}
+.op-values{
+	float: right;
+	margin-right: 10px;
+	margin-left: 15px;
+}
+.slider{
+	float: right;
+}
+#op-prefdiv{
+	float:left;
+}
+#op-prefs{
+	margin-left: 5px;
+	margin-right: 10px;	
+}
+#op-rowsdiv > div.op-rows:nth-child(odd) {
+	background-color: none;
+}
+#op-rowsdiv > div.op-rows:nth-child(even) {
+	color: gray;
 }

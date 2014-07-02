@@ -1,19 +1,23 @@
 L.Control.Opacity = L.Control.extend({
     options: {
         position: 'bottomright',
-        addToMenu: true
+        addToMenu: false
     },
 
     _lang: {
         "sv": {
-            caption: "Opacitetsverktyg",
+            caption: "Ändra genomskinlighet på lager",
             close: "Stäng",
-            collapsebtn: "visa/dölj lager"
+            collapsebtn: "visa/dölj lagerlista",
+            btntitle: "Justera transparens",
+            prefTxt: "Spara inställningar"
         },
         "en": {
-            caption: "Opacity tool",
+            caption: "Transparency tool",
             close: "Close",
-            collapsebtn: "show/hide layers"
+            collapsebtn: "show/hide layers",
+            btntitle: "Adjust transparency",
+            prefTxt: "Save settings"
         }
     },
 
@@ -31,11 +35,11 @@ L.Control.Opacity = L.Control.extend({
 
     onAdd: function(map) {
         var self = this;
+        //Variable allNamesInGui keeps track of all the layers
         self.allNamesInGui = [];
 
         map.on("layeradd layerremove", function(e) {
-            
-            if (!e.layer.options || !e.layer.options.layerId || e.layer.feature) {
+            if( !e.layer.options || !e.layer.options.layerId || e.layer.feature ){
                 return;
             }
             
@@ -66,23 +70,37 @@ L.Control.Opacity = L.Control.extend({
             "data-target='#op-rowsdiv'>" + this.lang.collapsebtn + "</button><div id='op-rowsdiv' class='collapse in'></div></div>");
         
         var inputDiv = opDiv.children("#op-rowsdiv");
-        var a = 0;
+        a = 0;
        
         $.each(layers,function(){
             var t = smap.core.layerInst._getLayer(this);
             if( t == null ){
                 return;
-            }
+            }            
+            
+            var decVal = t.options.opacity != null ? t.options.opacity : 1;
+            var guiVal = Math.round(decVal * 100);
 
             var opRow = $("<div class='op-rows' id='" + t.options.layerId + "' ><span class='op-mapname'>" + t.options.displayName + "</span>" + 
-                "<input class='op-sliderdiv' data-slider-id='slider" + a + "' type='text' data-slider-min='0'" +
-                "data-slider-max='100' data-slider-value='100' data-slider-step='1'/>" );         
-
+                "<span class='op-values'>" + guiVal + "</span><input class='op-sliderdiv' data-slider-tooltip='hide'"+ 
+                "data-slider-id='slider" + a + "' type='text' data-slider-min='0' data-slider-max='100' data-slider-value='" + guiVal + "' data-slider-step='1'/>" );         
 
             opRow.children("input").slider().on('slide', function(ev){
-                var lyrId = $(this).closest("div.op-rows").get(0).id;
+                var theDiv = $(this).closest("div.op-rows");
+                var lyrId = theDiv.get(0).id;
                 var theLyr = smap.core.layerInst._getLayer(lyrId);
-                theLyr.setOpacity(ev.value/100);
+                
+                if( theLyr.setOpacity ){
+                    theLyr.setOpacity(ev.value/100);
+                }
+                else if ( theLyr.options.style ){
+                    theLyr.setStyle({"opacity" : ev.value/100,"fillOpacity" : ev.value/100});
+                }
+                theDiv.children("span.op-values").text(ev.value);
+            }).on('slideStart', function(ev){
+                $('#op-modal').addClass('op-modal-slideeffect');               
+            }).on('slideStop', function(ev){
+                $('#op-modal').removeClass('op-modal-slideeffect');
             });
      
             a+=1;
@@ -94,21 +112,37 @@ L.Control.Opacity = L.Control.extend({
            return opDiv;
     },
 
+    _onClose: function(){
+        if( this.options.savePrefBox && $("#op-prefs").is(":checked") == false){
+            $.each($("div.op-rows"),function(){
+                if( smap.core.layerInst._getLayer(this.id).setOpacity ){
+                    smap.core.layerInst._getLayer(this.id).setOpacity(1);
+                }
+                else if( theLyr.options.style ){
+                    theLyr.setStyle({"opacity" : 1,"fillOpacity" : 1});
+                }
+                $(this).children("span.op-values").text(100);  
+            });
+        }
+    },
+
     activate: function() {
         var self = this;
         var inputDiv = self._addLayers(self.allNamesInGui);
         
         if (!self._$dialog) {
-            var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+            if (self.options.savePrefBox && self.options.savePrefBox == true){
+                var footerContent = "<div id='op-prefdiv'><label for='op-prefs'>" + self.lang.prefTxt + "</label><input id='op-prefs' type='checkbox' " + 
+                    " name='saveprefs' checked /></div><button type='button' class='btn btn-default' data-dismiss='modal'>"+this.lang.close+"</button>";
+            }
+            else{
+                var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+            }
             self._$dialog = utils.drawDialog(self.lang.caption, inputDiv, footerContent);
             self._$dialog.attr("id", "op-modal");
                       
-            /*this._$dialog.on("hide.bs.modal", function() {
-            	// Hide keyboard on touch devices
-            	$(this).find('input[type=text]').blur();
-            });*/
-
             self._$dialog.on("hidden.bs.modal", function() {
+                self._onClose();
             	self._$dialog.empty().remove();
             	self._$dialog = null;
             });
@@ -122,14 +156,16 @@ L.Control.Opacity = L.Control.extend({
         var self = this;
 
         if(self.options.addToMenu) {
-            smap.cmd.addToolButton( "", "fa fa-share-square-o", function () {
+            
+            smap.cmd.addToolButton( "", "fa fa-adjust", function () {
                 self.activate();
                 return false;
             },null);
         }
 
         else {
-            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-share-square-o"></span></button>');
+            
+            var $btn = $('<button id="smap-opacity-btn" title="' + self.lang.btntitle + '" class="btn btn-default"><span class="fa fa-adjust"></span></button>');
             $btn.on("click", function () {
                 self.activate();
                 return false;
@@ -143,6 +179,7 @@ L.Control.Opacity = L.Control.extend({
     onRemove: function(map) {
         // Do everything "opposite" of onAdd – e.g. unbind events and destroy things
         // map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+
     }
 });
 

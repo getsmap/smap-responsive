@@ -477,7 +477,8 @@ var config = {
   		           	{
 		        	   init: "L.Control.Opacity",
 		        	   options: {
-		        	   		addToMenu: false
+		        	   		addToMenu: false,
+		        	   		savePrefBox: true
 		        	   }
 		           }
        ]
