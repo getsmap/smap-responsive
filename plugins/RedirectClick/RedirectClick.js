@@ -1,14 +1,3 @@
-L.clickLocal = {
-	click:{
-		handler:{
-			tooltip:{ 
-				text: "Click on the map to redirect",
-				subtext: ""
-			}
-		}
-	}
-};
-
 L.Control.RedirectClick = L.Control.extend({
 	
 	options: {
@@ -22,7 +11,8 @@ L.Control.RedirectClick = L.Control.extend({
 		btnHover: "Verktyg för att se snedbilder",
 		buttonId: "redirect-snedbild",
 		buttonCss: "ui-icon-arrowstop-1-s",
-		mouseMoveText: "Klicka i kartan för att se snedbild"
+		mouseMoveText: "Klicka i kartan för att redirect till snedbild",
+		mouseMoveSubtext: ""
 		
 	},
 	
@@ -99,8 +89,8 @@ L.Control.RedirectClick = L.Control.extend({
 			map.getContainer().focus();
 			this._tooltip = new L.Tooltip(this._map);
 			this._tooltip.updateContent({
-				text: L.clickLocal.click.handler.tooltip.text,
-				subtext: L.clickLocal.click.handler.tooltip.subtext
+				text: this.options.mouseMoveText,
+				//subtext: this.options.mouseMoveSubtext
 			});
 
 			this._map.on('mousemove', this._onMouseMove, this);
