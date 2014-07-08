@@ -63,6 +63,18 @@
               "MarkerCluster.Default.css",
               "MarkerCluster.css"
           ]
+      },
+      "leaflet-usermarker": {
+          "main": [
+              "src/leaflet.usermarker.js",
+              "src/leaflet.usermarker.css"
+          ]
+      },
+      "Leaflet.label": {
+          "main": [
+              "dist/leaflet.label.js",
+              "dist/leaflet.label.css"
+          ]
       }
   }
 }

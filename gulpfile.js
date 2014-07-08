@@ -108,12 +108,61 @@ gulp.task('cleanlib', function() {
 gulp.task('cleanimg', function() {
 	return gulp.src("dist/img").pipe(rimraf());
 });
-gulp.task('clean', function() {
+gulp.task('clean', ['cleanlib', 'cleancode']); // Clean all but img folder
+gulp.task('cleantotal', function() {
 	return gulp.src("dist").pipe(rimraf());
 });
 
 
-gulp.task('images', function () {   // ['cleanimg']
+
+
+
+// ---- Our code -----
+
+gulp.task('ourcsscompile', function() {
+	var streamStylus = gulp.src(p.ourStylus, {base: "./"})
+			.pipe(stylus());
+	var streamSass = gulp.src(p.ourSass, {base: "./"})
+			.pipe(sass());
+
+	return es.merge(streamStylus, streamSass)
+		.pipe(minhtml())
+		.pipe(gulp.dest("."));
+});
+
+
+gulp.task('ourcss', ['ourcsscompile'], function() {
+	return gulp
+		.src(p.ourCss)
+		.pipe(autoprefixer())
+		// .pipe(csslint())
+		// .pipe(csslint.reporter())
+		// .pipe(order(p.ourCss.concat("*")))
+		.pipe(concat('smap.css'))
+		.pipe(mincss())
+		// .pipe(rename("smap.css"))
+		.pipe(gulp.dest("dist/css"));
+});
+
+
+
+gulp.task('ourjs', function() {
+	return gulp
+		.src(p.ourJs)
+		// .pipe(order(p.ourJs.concat("*")))
+		// .pipe(jshint())
+  // 		.pipe(jshint.reporter('default'))
+  		.pipe(concat("smap.js"))
+  		// .pipe(ngmin())
+		.pipe(uglify())  // {mangle: false}
+		.pipe(gulp.dest("dist/js"));
+});
+
+
+
+
+
+gulp.task('images', function () {
 	var imgDest = 'dist/img';
     return gulp
     	.src(['img/**/*.png', 'img/**/*.jpg', 'img/**/*.jpeg', 'img/**/*.gif'])
@@ -158,59 +207,31 @@ gulp.task('htmlcompress', ['htmlinject'], function() {
 gulp.task('html', ["htmlcompress"]);
 
 
-gulp.task('ourcsscompile', function() {
-	var streamStylus = gulp.src(p.ourStylus, {base: "./"})
-			.pipe(stylus());
-	var streamSass = gulp.src(p.ourSass, {base: "./"})
-			.pipe(sass());
-
-	return es.merge(streamStylus, streamSass)
-		.pipe(minhtml())
-		.pipe(gulp.dest("."));
-});
 
 
-gulp.task('ourcss', ['ourcsscompile'], function() {
-	return gulp
-		.src(p.ourCss)
-		.pipe(autoprefixer())
-		// .pipe(csslint())
-		// .pipe(csslint.reporter())
-		// .pipe(order(p.ourCss.concat("*")))
-		.pipe(concat('smap.css'))
-		.pipe(mincss())
-		// .pipe(rename("smap.css"))
-		.pipe(gulp.dest("dist/css"));
-});
-
-
-
-gulp.task('ourjs', function() {
-	return gulp
-		.src(p.ourJs)
-		// .pipe(order(p.ourJs.concat("*")))
-		// .pipe(jshint())
-  // 		.pipe(jshint.reporter('default'))
-  		.pipe(concat("smap.js"))
-  		// .pipe(ngmin())
-		.pipe(uglify())  // {mangle: false}
-		.pipe(gulp.dest("dist/js"));
-});
-
-
-
-
+// Build our code (during dev)
 gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
-gulp.task('full', ["images", "html"]);
-gulp.task('reset', ["clean", "full"]);
-// gulp.task('default', ["full"]);
+
+gulp.task('_full', ["images", "html"]);
+
+// Clean the code and libs and then make a full build (i.e. fetch libs to dist,
+// compile js/css/sass/styl and insert into HTML).
+gulp.task('full', ["cleancode"], function() {
+	return gulp.start("_full");
+});
+
+// Note! It's wise to run <bower update> before resetting. Thereby, packages will be
+// up to date and any missing files (however that might happen...) will be filled-in.
+gulp.task('reset', ["cleantotal", "full"]);
 
 
 gulp.task('watch', function() {
 	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
-	return gulp.watch(p.ourJs.concat(css), ["ourcode"]);
+	var js = p.ourJs;
+	return gulp.watch(js.concat(css), ["ourcode"]);
 });
 
+gulp.task('default', ["watch"]); // Note! <gulp> is same as <gulp default>
 
 
 
