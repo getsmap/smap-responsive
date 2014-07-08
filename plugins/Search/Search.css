@@ -3,12 +3,10 @@
 	left: 2%;
 	top: 8px;
 	z-index: 1001;
-	transition: left .3s, max-width .3s;
-	-webkit-transition: left .3s, max-width .3s;
 	width: 96%;
 	max-width: 380px;
-	transition: max-width .3s;
-	-webkit-transition: max-width .3s;
+	-webkit-transition: left .3s, max-width .3s;
+	transition: left .3s, max-width .3s;
 	overflow-y: hidden;
 }
 
@@ -34,9 +32,9 @@
 	/*border: none;
 	border: 1px solid #ccc;
 	border-width: 1px 1px 1px 0;*/
-	box-shadow: none;
 	-webkit-box-shadow: none;
-	-webkit-appearance: none;
+	box-shadow: none;
+	appearance: none;
 	border-radius: 0 !important;
 }
 
@@ -63,10 +61,11 @@
 	left: 0px;
 	top: 0px;
 	position: absolute;
-	transition: background-color .3s;
 	-webkit-transition: background-color .3s;
+	transition: background-color .3s;
 }
 .search-bg-visible {
+	background-color: #fff !important;
 	background-color: rgba(255,255,255,1) !important;
 }
 

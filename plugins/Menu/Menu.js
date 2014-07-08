@@ -7,7 +7,7 @@ L.Control.Menu = L.Control.extend({
 
     _lang: {
         "sv": {
-            caption: "Dela länk till positionen"
+            caption: "Exempeltext som jag ändrar"
         },
         "en": {
             caption: "Share position link"

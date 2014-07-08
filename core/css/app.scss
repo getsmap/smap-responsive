@@ -1,8 +1,8 @@
-@-ms-viewport {
-    user-zoom: fixed;
-    max-zoom: 1;
-    min-zoom: 1;
-}
+// @-ms-viewport {
+//     user-zoom: fixed;
+//     max-zoom: 1;
+//     min-zoom: 1;
+// }
 
 /* Fix for Bootstrap for WP8. Enables scrolling in modals. */
 .modal {
@@ -26,18 +26,13 @@ body {
 
 #mapdiv {
 	position: absolute;
-	left: 0px;
-	top: 0px;
+	left: 0;
+	top: 0;
 	width: 100%;	
 	height: 100%;
 }
 
-
 .unselectable {
-	-webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: -moz-none;
-    -o-user-select: none;
     user-select: none;
 }
 
@@ -46,7 +41,7 @@ body {
 	z-index: 1001;
 	max-width: 80%;
 	display: block;
-	bottom: 0px;
+	bottom: 0;
 	right: 100px;
 }
 

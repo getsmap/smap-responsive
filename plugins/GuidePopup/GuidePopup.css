@@ -13,17 +13,16 @@
 
 .gp-fullscreen {
 	position: absolute;
-	left: 0px;
-	top: 0px;
+	left: 0;
+	top: 0;
 	width: 100%;
 	height: 100%;
 	z-index: 2000;
 	background-color: #000;
 	text-align: center;
 	opacity: 0;
-	filter: alpha(opacity=0);
-	transition: opacity .5s;
 	-webkit-transition: opacity .5s;
+	transition: opacity .5s;
 	padding-top: 53px;
 }
 
@@ -37,9 +36,8 @@
 
 .gp-fs-visible {
 	opacity: 1;
-	filter: alpha(opacity=100);
+	-webkit-transition: opacity .5s;
 	transition: opacity .5s;
-	-webkit-transition: opacity .5s;	
 }
 
 .gp-fullscreen img {
@@ -57,7 +55,6 @@
 	border: 1px solid #fff;
 	background: none;
 	border-radius: 0;
-	-webkit-border-radius: 0;
 }
 
 .gp-fullscreen .btn-default:hover {

@@ -22,8 +22,8 @@
 
 .guide-introscreen {
 	position: absolute;
-	left: 0px;
-	top: 0px;
+	left: 0;
+	top: 0;
 	width: 100%;
 	height: auto;
 	min-height: 100%;
@@ -51,20 +51,19 @@
 
 .gintro-bg {
 	position: absolute;
-	top: 0px;
+	top: 0;
 	width: 100%;
 	height: 100%;
 	max-width: 80em;
 	margin: 0 auto;
 	z-index: 0;
 	opacity: .5;
-	filter: alpha(opacity=50);
 }
 .gintro-bg-left {
-	left: 0px;	
+	left: 0;	
 }
 .gintro-bg-right {
-	right: 0px;
+	right: 0;
 }
 
 
@@ -75,7 +74,7 @@
 
 .gintro-munlogo, .gintro-eulogo {
 	position: relative;
-	bottom: 0px;
+	bottom: 0;
 	width: auto;
 	height: auto;
 	max-height: 10em;
@@ -101,8 +100,8 @@
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	left: 0px;
-	top: 0px;
+	left: 0;
+	top: 0;
 	z-index: 2;
 	background-color: #fff;
 	background-color: rgba(255,255,255,.5);
@@ -113,8 +112,8 @@
 	top: 2.5em;
 	position: relative;
 	font-size: 2.5em;
-	-ms-transform: rotate(315deg);
 	-webkit-transform: rotate(315deg);
+	-ms-transform: rotate(315deg);
 	transform: rotate(315deg);
 	font-weight: normal;
 	color: #692F09;
