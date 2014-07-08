@@ -95,7 +95,7 @@ L.Control.ShareLink = L.Control.extend({
         }
 
         else {
-            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-link"></span></button>');
+            var $btn = $('<button id="smap-sharelink-btn" class="btn btn-default"><span class="fa fa-link"></span></button>');
             $btn.on("click", function () {
                 self.activate();
                 return false;

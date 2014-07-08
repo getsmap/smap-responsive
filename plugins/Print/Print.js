@@ -75,7 +75,7 @@
             }
 
             else {
-                var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-print"></span></button>');
+                var $btn = $('<button id="smap-print-btn" class="btn btn-default"><span class="fa fa-print"></span></button>');
                 $btn.on("click", function () {
                     self.activate();
                     return false;
