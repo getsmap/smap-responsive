@@ -163,7 +163,11 @@ gulp.task('ourjs', ['cleanjs'], function() {
 	return gulp
 		.src(ourJs)
 		.pipe(order(ourJs.concat("*")))
-		.pipe(uglify())
+		.pipe(jshint())
+  		.pipe(jshint.reporter('default'))
+  		.pipe(concat("smap.js"))
+  		.pipe(ngmin())
+		.pipe(uglify())  // {mangle: false}
 		.pipe(gulp.dest("dist/js"));
 });
 

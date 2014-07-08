@@ -33,6 +33,10 @@ smap.cmd = {
 			return smap.core.paramInst.createParams(addRoot);
 		},
 		
+		createParamsAsObject: function() {
+			return smap.core.paramInst.createParamsAsObject();
+		},
+		
 		getControl: function(controlName) {
 			var ctrls = this.getControls(controlName);
 			return ctrls.length ? ctrls[0] : null;

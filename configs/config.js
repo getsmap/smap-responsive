@@ -469,6 +469,17 @@ var config = {
             		{
   		        	   init: "L.Control.Info",
   		        	   options: {}
-  		           	}
+  		           	},
+            		{
+  		        	   init: "L.Control.Print",
+  		        	   options: {}
+  		           	},
+  		           	{
+		        	   init: "L.Control.Opacity",
+		        	   options: {
+		        	   		addToMenu: false,
+		        	   		savePrefBox: true
+		        	   }
+		           }
        ]
 };
