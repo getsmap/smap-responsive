@@ -51,7 +51,7 @@ L.Control.RedirectClick = L.Control.extend({
 		var self = this;
 		this.map = map;
 		
-		this.loadProj4();
+		// this.loadProj4();
 		
 		this._container = L.DomUtil.create('div', 'leaflet-control-myplugin');
 		L.DomEvent.disableClickPropagation(this._container);

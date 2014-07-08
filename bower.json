@@ -1,0 +1,68 @@
+{
+  "name": "smap-responsive",
+  "version": "1.1.0",
+  "homepage": "https://github.com/getsmap/smap-responsive",
+  "authors": [
+    "Johan Lahti <johanlahti@gmail.com>"
+  ],
+  "description": "A web mapping framework",
+  "main": "index.html",
+  "keywords": [
+    "map"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "GeoJSON.WFS": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.WFS.js",
+    "Leaflet.label": "~0.2.1",
+    "GeoJSON.Custom": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js",
+    "Leaflet.awesome-markers": "~2.0.2",
+    "bootstrap3-typeahead": "~3.0.3",
+    "es5-shim": "~3.4.0",
+    "font-awesome": "~4.1.0",
+    "jquery-xml2json": "~0.0.6",
+    "leaflet-usermarker": "https://github.com/heyman/leaflet-usermarker.git",
+    "leaflet.markercluster": "~0.4.0",
+    "leaflet": "*",
+    "modernizr": "~2.6.2",
+    "openlayers": "~2.13.1",
+    "proj4": "~2.1.4",
+    "spinjs": "~2.0.1",
+    "sass-bootstrap": "~3.0.0"
+  },
+  "overrides": {
+      "bootstrap3-typeahead": {
+          "main": [
+              "bootstrap3-typeahead.min.js"
+          ]
+      },
+      "es5-shim": {
+          "main": ["es5-shim.js", "es5-sham.js"]
+      },
+      "leaflet": {
+          "main": [
+              "dist/leaflet.js",
+              "dist/leaflet.css",
+              "dist/images/layers-2x.png",
+              "dist/images/layers.png",
+              "dist/images/marker-icon-2x.png",
+              "dist/images/marker-icon.png",
+              "dist/images/marker-shadow.png"
+          ]
+      },
+      "leaflet.markercluster": {
+          "main": [
+              "leaflet.markercluster.js",
+              "MarkerCluster.Default.css",
+              "MarkerCluster.css"
+          ]
+      }
+  }
+}

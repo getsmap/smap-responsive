@@ -34,15 +34,19 @@ var p = {
 
 	// ----- Our libs ------
 	libsCss: [
-		'build/lib/sass-bootstrap/**/*.css'
-
+		'dist/lib/font-awesome/**/*.css',
+		'dist/lib/sass-bootstrap/**/*.css',
+		'dist/lib/es5-shim/**/*.css',
+		'dist/lib/leaflet/**/*.css',
+		'dist/lib/**/*.css'
 	],
 	libsJs: [
-		'build/lib/proj4/**/*.js',
-		'build/lib/jquery/**/*.js',
-		'build/lib/sass-bootstrap/**/*.js',
-		'build/lib/leaflet/**/*.js',
-		'build/lib/**/*.js'
+		'dist/lib/proj4/**/*.js',
+		'dist/lib/jquery/**/*.js',
+		'dist/lib/sass-bootstrap/**/*.js',
+		'dist/lib/leaflet/**/*.js',
+		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
+		'dist/lib/**/*.js'
 	],
 
 	// ----- Our code ------
@@ -64,13 +68,14 @@ var p = {
 	ourCss: [
 		// first
 		"core/css/app.css",
+		"core/css/lib-overrides.css",
 
 		// last
 		"plugins/**/*.css",
 		"!plugins/MyPlugin/**/*.css",
 		"!plugins/SideBars/**/*.css",
 		"!plugins/ThreeD/**/*.css",
-		"!plugins/WorkshopPlugin/**/*.css",
+		"!plugins/WorkshopPlugin/**/*.css"
 
 		
 	],
@@ -94,44 +99,64 @@ var p = {
 // ----- Tasks ------
 
 gulp.task('cleancss', function() {
-	return gulp.src("dist/css").pipe(clean());
+	return gulp.src("dist/css").pipe(rimraf());
 });
 gulp.task('cleanjs', function() {
-	return gulp.src("dist/js").pipe(clean());
+	return gulp.src("dist/js").pipe(rimraf());
 });
 gulp.task('cleanlib', function() {
-	return gulp.src("dist/lib").pipe(clean());
+	return gulp.src("dist/lib").pipe(rimraf());
 });
 gulp.task('cleanimg', function() {
-	return gulp.src("dist/img").pipe(clean());
+	return gulp.src("dist/img").pipe(rimraf());
 });
 gulp.task('clean', function() {
-	return gulp.src("dist").pipe(clean());
+	return gulp.src("dist").pipe(rimraf());
 });
 
 
-gulp.task('images', ['cleanimg'], function () {
+gulp.task('images', function () {   // ['cleanimg']
+	var imgDest = 'dist/img';
     return gulp
-    	.src(['img/**/*.png'])
+    	.src(['img/**/*.png', 'img/**/*.jpg', 'img/**/*.jpeg', 'img/**/*.gif'])
+    	.pipe(changed(imgDest))
         .pipe(imagemin({
         	progressive: true,
             svgoPlugins: [{removeViewBox: false}],
             use: [pngcrush()]
         }))
-        .pipe(gulp.dest('dist/img'));
+        .pipe(gulp.dest(imgDest));
 });
 
 gulp.task('libs', ['cleanlib'], function() {
-	return gulpBowerFiles().pipe(gulp.dest("dist/lib"));
+	return bowerfiles().pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
 });
 
-gulp.task('htmlinject', ['libs'], function() {
+gulp.task('htmlinjectdev', function() {
 	return gulp
 		.src('index_template.html')
-		.pipe(inject(libsJs.concat("dist/js/*.js"), {read: false}))
+		.pipe(inject(gulp.src(p.libsJs.concat(p.libsCss).concat(p.ourJs).concat(p.ourCss), {read: false}).pipe(using()), {addRootSlash: false}))
+		.pipe(rename("dev.html"))
+		.pipe(gulp.dest("."));
+});
+
+gulp.task('htmlinjectprod', function() {
+	var srcs = p.libsJs.concat(p.libsCss).concat("dist/js/*.js").concat("dist/css/*.css");
+	return gulp
+		.src('index_template.html')
+		.pipe(inject(gulp.src(srcs, {read: false}).pipe(using()), {addRootSlash: false}))
 		.pipe(rename("index.html"))
 		.pipe(gulp.dest("."));
 });
+gulp.task('htmlinject', ["htmlinjectdev", "htmlinjectprod"]);
+
+gulp.task('htmlcompress', ['htmlinject'], function() {
+	return gulp
+		.src('index.html')
+		.pipe(gulp.dest("."));
+});
+gulp.task('html', ["htmlcompress"]);
+
 
 gulp.task('ourcsscompile', function() {
 	var streamStylus = gulp.src(p.ourStylus, {base: "./"})
@@ -140,17 +165,18 @@ gulp.task('ourcsscompile', function() {
 			.pipe(sass());
 
 	return es.merge(streamStylus, streamSass)
+		.pipe(minhtml())
 		.pipe(gulp.dest("."));
 });
 
 
-gulp.task('ourcss', ['cleancss', 'ourcsscompile'], function() {
+gulp.task('ourcss', ['ourcsscompile'], function() {
 	return gulp
 		.src(p.ourCss)
-		.pipe(order(p.ourCss).concat("*"))
 		.pipe(autoprefixer())
-		.pipe(csslint())
-		.pipe(csslint.reporter())
+		// .pipe(csslint())
+		// .pipe(csslint.reporter())
+		// .pipe(order(p.ourCss.concat("*")))
 		.pipe(concat('smap.css'))
 		.pipe(mincss())
 		// .pipe(rename("smap.css"))
@@ -159,12 +185,12 @@ gulp.task('ourcss', ['cleancss', 'ourcsscompile'], function() {
 
 
 
-gulp.task('ourjs', ['cleanjs'], function() {
+gulp.task('ourjs', function() {
 	return gulp
-		.src(ourJs)
-		.pipe(order(ourJs.concat("*")))
-		.pipe(jshint())
-  		.pipe(jshint.reporter('default'))
+		.src(p.ourJs)
+		// .pipe(order(p.ourJs.concat("*")))
+		// .pipe(jshint())
+  // 		.pipe(jshint.reporter('default'))
   		.pipe(concat("smap.js"))
   		.pipe(ngmin())
 		.pipe(uglify())  // {mangle: false}
@@ -174,14 +200,15 @@ gulp.task('ourjs', ['cleanjs'], function() {
 
 
 
-gulp.task('dev', ["clean", "ourcss"]);
+gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
+gulp.task('full', ["cleancss", "cleanjs", "cleanlib", "ourcss", "ourjs", "libs", "images", "html"]);
+gulp.task('reset', ["clean", "full"]);
+// gulp.task('default', ["full"]);
 
 
 gulp.task('watch', function() {
-
-	gulp.pipe(gulp.watch( ourJs ), ["ourjs"] ))
-	return gulp
-		.pipe(gulp.watch( ourCss.concat(ourStylus).concat(ourSass), ["ourcss"] ));
+	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
+	return gulp.watch(p.ourJs.concat(css), ["ourcode"]);
 });
 
 
