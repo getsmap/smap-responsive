@@ -1,0 +1,17 @@
+{
+  "name": "jquery-xml2json",
+  "version": "0.0.6",
+  "main": "src/xml2json.js",
+  "maintainers": [{
+    "name": "Sergey Todyshev",
+    "email": "stodyshev@gmail.com"
+  }],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
