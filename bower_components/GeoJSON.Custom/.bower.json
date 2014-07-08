@@ -1,0 +1,14 @@
+{
+  "name": "GeoJSON.Custom",
+  "_cacheHeaders": {
+    "ETag": "\"99b7b58a234b6751542269b213263d9c3bd1852c\"",
+    "Content-Length": "4701",
+    "Content-Type": "text/plain; charset=utf-8"
+  },
+  "_release": "e-tag:99b7b58a2",
+  "main": "index.js",
+  "_source": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js",
+  "_target": "*",
+  "_originalSource": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js",
+  "_direct": true
+}

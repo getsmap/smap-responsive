@@ -1,0 +1,19 @@
+{
+  "name": "leaflet-usermarker",
+  "homepage": "https://github.com/heyman/leaflet-usermarker",
+  "main": [
+    "src/leaflet.usermarker.js",
+    "src/leaflet.usermarker.css",
+    "src/img/bluedot.png"
+  ],
+  "_release": "74c362fc3f",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "74c362fc3f73ba79a377c6726f61a46781554614"
+  },
+  "_source": "https://github.com/heyman/leaflet-usermarker.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/heyman/leaflet-usermarker.git",
+  "_direct": true
+}

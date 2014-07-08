@@ -1,0 +1,13 @@
+{
+  "name": "GeoJSON.WFS",
+  "_cacheHeaders": {
+    "ETag": "\"dcdde7e9f11507c1309ec090172fa21ebb04ce2e\"",
+    "Content-Length": "10181",
+    "Content-Type": "text/plain; charset=utf-8"
+  },
+  "_release": "e-tag:dcdde7e9f",
+  "main": "index.js",
+  "_source": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.WFS.js",
+  "_target": "*",
+  "_originalSource": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.WFS.js"
+}

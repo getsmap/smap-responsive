@@ -1,7 +1,5 @@
 #sharetweet-btn {
 	-webkit-transition: width .2s ease-in-out;
-	-moz-transition: width .2s ease-in-out;
-	-o-transition: width .2s ease-in-out;
 	transition: width .2s ease-in-out;
 	width: 180px;
 }

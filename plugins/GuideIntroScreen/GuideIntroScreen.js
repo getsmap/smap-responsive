@@ -87,15 +87,23 @@ L.Control.GuideIntroScreen = L.Control.extend({
 	},
 
 	onRemove: function(map) {
+		this.deactivate();
 		this.$container.remove();
 	},
 	
 	activate: function() {
 		$("#maindiv").append( this.$container );
-		$("#maindiv").addClass("overflow-y");
+		$("#mapdiv").hide();
+		// $("#mapdiv").addClass("transparent");
 	},
 	deactivate: function() {
 		this.$container.detach();
+		$("#mapdiv").show();
+		// $("#mapdiv").removeClass("transparent");
+		// $("#mapdiv").addClass("transition fadein");
+		// setTimeout(function() {
+		// 	$("#mapdiv").removeClass("transition fadein");
+		// }, 500);
 	},
 	
 //	toggle: function() {

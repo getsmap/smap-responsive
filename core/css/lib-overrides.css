@@ -1,0 +1,6 @@
+
+
+/* ------- Leaflet overrides ------- */
+.leaflet-top, .leaflet-bottom {
+	z-index: 900; /*Appear behind Malmo header for instance*/
+}

@@ -52,6 +52,7 @@
     "css": [
     	"lib/normalize.css",
 		"lib/leaflet-0.7.2/leaflet.css",
+		"core/css/lib-overrides.css",
 		"core/css/app.css",
 		"core/css/theme.css",
 		"lib/leaflet-plugins/Leaflet.awesome-markers-2.0/dist/leaflet.awesome-markers.css",

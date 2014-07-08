@@ -1,4 +1,4 @@
-var config = {
+	var config = {
 		
 		ws: {
 			"localhost": {
@@ -32,7 +32,7 @@ var config = {
 					  uniqueKey: "gid",
 					  selectable: true,
 					  reverseAxis: false,
-					  reverseAxisBbox: false,
+					  reverseAxisBbox: true,
 					  popup:
 						  '<h4>${id}: ${namn} </h4>'+
   						'<div class="gp-mediaicons">${function(p) {'+

@@ -1,153 +1,130 @@
 #lswitch-btn {
   z-index: 1;
   position: absolute;
-  left: 0px;
+  left: 0;
   bottom: 80px;
-  padding: 8px 3px 5px 0px;
+  padding: 8px 3px 5px 0;
   border: 1px solid #999;
   border-width: 1px 1px 1px 0;
-  -moz-box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
-  -webkit-box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
-  box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
+  -webkit-box-shadow: 1px 1px 4px 0 rgba(100,100,100,0.5);
+  box-shadow: 1px 1px 4px 0 rgba(100,100,100,0.5);
   background-color: #fff;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255,255,255,0.8);
   cursor: pointer;
-  -moz-border-radius: 0 0.4em 0.4em 0;
-  -webkit-border-radius: 0 0.4em 0.4em 0;
-  border-radius: 0 0.4em 0.4em 0; }
-
+  border-radius: 0 0.4em 0.4em 0;
+}
 .lswitch-panel .panel {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  box-shadow: none; }
-
+  box-shadow: none;
+}
 .lswitch-panelslide {
   -webkit-transition: margin-left 300ms ease;
-  -moz-transition: margin-left 300ms ease;
-  -o-transition: margin-left 300ms ease;
-  transition: margin-left 300ms ease; }
-
+  transition: margin-left 300ms ease;
+}
 .lswitch-panel {
-  -moz-box-shadow: inset black -3px 0px 17px;
-  -webkit-box-shadow: inset black -3px 0px 17px;
-  box-shadow: inset black -3px 0px 17px;
+  -webkit-box-shadow: inset #000 -3px 0 17px;
+  box-shadow: inset #000 -3px 0 17px;
   z-index: -1;
   position: absolute;
-  left: 0px;
-  top: 0px;
+  left: 0;
+  top: 0;
   width: 70%;
   height: 100%;
   max-width: 300px;
-  background-color: #38454E;
+  background-color: #38454e;
   padding: 0 20px;
   padding-top: 1em;
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar !important;
-  /* Nasty bug fix: Required for WP8 IE10!!! */
-  font-size: 1.4em; }
-
+  font-size: 1.4em;
+}
 .map-with-header .lswitch-panel {
-  padding-top: 4em; }
-
+  padding-top: 4em;
+}
 .lswitch-panel a {
   cursor: pointer;
   background: none;
   border: none;
-  margin-top: 1px; }
-
+  margin-top: 1px;
+}
 .lswitch-panel a.active {
-  cursor: pointer; }
-
+  cursor: pointer;
+}
 .lswitch-panel .panel-default {
   border: none;
-  background-color: #38454E; }
-
+  background-color: #38454e;
+}
 /* Added to html and body temporarily to avoid scrollbars during transitions */
 .lswitch-overflow-hidden {
-  overflow: hidden !important; }
-
+  overflow: hidden !important;
+}
 .panel-with-toolbar {
-  padding-top: 5em; }
-
+  padding-top: 5em;
+}
 @media (max-width: 991px) {
-  .lswitch-panel .panel {
-    -webkit-transition: all 400ms;
-    -moz-transition: all 400ms;
-    -o-transition: all 400ms;
-    transition: all 400ms;
-    transform: translate(-20%, 0) scale(0.95);
-    -webkit-transform: translate(-20%, 0) scale(0.95);
-    -ms-transform: translate(-20%, 0) scale(0.95);
-    -o-transform: translate(-20%, 0) scale(0.95); }
-
-  .lswitch-panel.panel-visible .panel {
-    transform: translate(0, 0) scale(1) !important;
-    -webkit-transform: translate(0, 0) scale(1) !important;
-    -ms-transform: translate(0, 0) scale(1) !important;
-    -o-transform: translate(0, 0) scale(1) !important; }
-
+  .lswitch-panel-ol .list-group {
+    background-color: #000 !important;
+    background-color: rgba(0,0,0,0) !important;
+  }
   .lswitch-panel a {
     color: #fff;
-    background: none; }
-
-  .lswitch-panel a.active, .lswitch-panel a.active:hover, .lswitch-panel a.active:active {
+  }
+  .lswitch-panel a.active,
+  .lswitch-panel a.active:hover,
+  .lswitch-panel a.active:active {
     background: none !important;
     background: #000 !important;
-    color: #fff; }
-
+    color: #fff;
+  }
   .lswitch-panel a:hover {
-    background: none !important; } }
+    background: none !important;
+  }
+}
 @media (min-width: 992px) {
-  /* For desktop computers */
-  /* Avoid things appearing under the switcher */
   .leaflet-left {
-    left: 310px; }
-
+    left: 310px;
+  }
   #mapdiv {
-    margin-left: 0px !important; }
-
+    margin-left: 0 !important;
+  }
   #lswitch-btn {
-    display: none !important; }
-
+    display: none !important;
+  }
   .lswitch-panel {
-    /*@include box-shadow(rgba(0,0,0,0.3) -1px -1px 4px);*/
-    -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
     -webkit-transition: all 300ms;
-    -moz-transition: all 300ms;
-    -o-transition: all 300ms;
     transition: all 300ms;
     display: block !important;
     background-color: #fff;
-    background-color: rgba(255, 255, 255, 0);
+    background-color: rgba(255,255,255,0);
     z-index: 900;
     max-height: 100%;
-    position: relative; }
-
-  .lswitch-panel a {
-    -webkit-transition: all 100ms;
-    -moz-transition: all 100ms;
-    -o-transition: all 100ms;
-    transition: all 100ms; }
-
-  .lswitch-panel a:hover, .lswitch-panel a:active {
-    background-color: rgba(210, 210, 210, 0.5); }
-
-  .lswitch-panel .panel-default {
-    border: none;
-    background: none; }
-
-  #lswitch-olcont, #lswitch-blcont {
-    background-color: rgba(255, 255, 255, 0.4);
-    -moz-border-radius: 0 0 0.4em 0.4em;
-    -webkit-border-radius: 0 0 0.4em 0.4em;
-    border-radius: 0 0 0.4em 0.4em; }
-
-  #lswitch-olcont a:last-child, #lswitch-blcont a:last-child {
-    -moz-border-radius: 0 0 0.4em 0.4em;
-    -webkit-border-radius: 0 0 0.4em 0.4em;
-    border-radius: 0 0 0.4em 0.4em; }
-
-  .lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont {
-    background-color: none; } }
+    position: relative;
+  }
+}
+.lswitch-panel a {
+  -webkit-transition: all 100ms;
+  transition: all 100ms;
+}
+.lswitch-panel a:hover,
+.lswitch-panel a:active {
+  background-color: rgba(210,210,210,0.5);
+}
+.lswitch-panel .panel-default {
+  border: none;
+  background: none;
+}
+#lswitch-olcont,
+#lswitch-blcont {
+  background-color: rgba(255,255,255,0.4);
+  border-radius: 0 0 0.4em 0.4em;
+}
+#lswitch-olcont a:last-child,
+#lswitch-blcont a:last-child {
+  border-radius: 0 0 0.4em 0.4em;
+}
+.lswitch-panel:hover #lswitch-olcont,
+.lswitch-panel:hover #lswitch-blcont {
+  background-color: none;
+}

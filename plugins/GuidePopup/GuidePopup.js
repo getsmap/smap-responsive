@@ -9,11 +9,13 @@ L.Control.GuidePopup = L.Control.extend({
 	_lang: {
 		"sv": {
 			mediaHeader: "Media",
-			accessHeader: "Tillgänglighet"
+			accessHeader: "Tillgänglighet",
+			close: "Stäng"
 		},
 		"en": {
 			mediaHeader: "Media",
-			accessHeader: "Accessibility"
+			accessHeader: "Accessibility",
+			close: "Close"
 		}
 	},
 	
@@ -77,7 +79,6 @@ L.Control.GuidePopup = L.Control.extend({
 		if ($(e.target).hasClass("gp-mediaicons") || $(e.target).parent().hasClass("gp-mediaicons")) {
 			$('[href="#gp-moreinfo"]').click();
 		}
-		
 		return false;
 	},
 	
@@ -132,7 +133,6 @@ L.Control.GuidePopup = L.Control.extend({
 					    popupAnchor:  [0, -8]
 					})
 				}
-				
 		};
 	
 		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
@@ -205,7 +205,7 @@ L.Control.GuidePopup = L.Control.extend({
 		var src,
 			ext,
 			type,
-			$tagAudio = $('<audio controls />'),
+			$tagAudio = $('<audio controls="controls" />'),
 			tagSrc;
 		for (var i=0,len=arrAudioSources.length; i<len; i++) {
 			src = arrAudioSources[i];
@@ -312,6 +312,11 @@ L.Control.GuidePopup = L.Control.extend({
 		function close() {
 			$("body").off("keydown", onKeyDown);
 			$(".gp-fullscreen").removeClass("gp-fs-visible");
+			$(".gp-fullscreen").find("audio").each(function() {
+				if (this.pause) {
+					this.pause();
+				}
+			});
 			setTimeout(function() {
 				$(".gp-fullscreen").empty().remove();
 			}, 500);
@@ -395,10 +400,12 @@ L.Control.GuidePopup = L.Control.extend({
 		
 		
 		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);
-		
+		var btnClose = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+
 		this.dialog = utils.drawDialog(
 				dialogTitle,
-				content
+				content,
+				btnClose
 		);
 		this.dialog.on("hidden.bs.modal", function() {
 			$(this).empty().remove();

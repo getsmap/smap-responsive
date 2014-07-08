@@ -41,11 +41,12 @@
   box-shadow: $values;
 }
 
-@mixin opacity($value) {
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=(#{$value * 100}));
-  filter: alpha(opacity=($value * 100));
-  opacity: $value;
-}
+// @mixin opacity($value) {
+// Does not compile with gulp-sass
+//   -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=({$value * 100}));
+//   filter: alpha(opacity=($value * 100));
+//   opacity: $value;
+// }
 
 @mixin box-sizing($boxmodel) {
   -ms-box-sizing: $boxmodel;

@@ -17,7 +17,7 @@ L.Control.Info = L.Control.extend({
 			  		'<h4>Kontakta oss!</h4>'+
 					'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta sMaps systemarkitekt och huvudutvecklare <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
 					'<p>Vill du veta mer om sMap-samarbetet eller publicering av geodata? Kontakta projektsamordnade <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
-					'<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
+					'<a href="mailto :Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
 			},
 			"en": {
 				titleInfo: "<h4>Welcome to smap-mobile!</h4>",
