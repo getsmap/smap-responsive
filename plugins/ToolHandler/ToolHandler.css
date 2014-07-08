@@ -1,0 +1,57 @@
+.toolhandler-div{
+	position: relative;
+	float: right;
+	margin-right: 5px;
+	top: -36px;
+}
+.toolhandler-div-small{
+	position: absolute;
+	float: right;
+	margin-right: 2px;
+	right: 0;
+	margin-top: 40px;
+}
+#toolhandler-btn{
+	position: relative;
+	float: right;
+	margin-right: 2px;
+	top: -36px;
+}
+.btn-group-vertical > .th-btn{
+	margin: 0px 0px 5px 0px !important;
+}
+.th-btn{
+	margin-left: 10px;
+}
+@media (max-width: 991px){
+	.toolhandler-div{
+		display: none;
+	}
+}
+@media (min-width: 992px){
+	#toolhandler-btn{
+		display: none;
+	}
+	#toolhandler-container{
+		display: inline-block;
+		min-width: 200px;
+		height: auto;
+		max-width: 30%;
+	}
+	.toolhandler-div-small{
+		display: none;
+	}
+	.btn-group-vertical{
+		display: none;
+	}
+}
+@media (max-width: 480px){
+	#toolhandler-btn{
+		top: 15%;
+	}
+	.btn-group-vertical{
+		margin-right: 15%;
+	}
+}
+
+

@@ -480,6 +480,12 @@ var config = {
 		        	   		addToMenu: false,
 		        	   		savePrefBox: true
 		        	   }
+		           },
+		           {
+		        	   init: "L.Control.ToolHandler",
+		        	   options: {
+		        	   		addToMenu: false
+		        	   }
 		           }
        ]
 };
