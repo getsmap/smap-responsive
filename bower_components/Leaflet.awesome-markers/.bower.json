@@ -26,6 +26,5 @@
   },
   "_source": "git://github.com/lvoogdt/Leaflet.awesome-markers.git",
   "_target": "~2.0.2",
-  "_originalSource": "Leaflet.awesome-markers",
-  "_direct": true
+  "_originalSource": "Leaflet.awesome-markers"
 }

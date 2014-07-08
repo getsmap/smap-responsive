@@ -29,6 +29,5 @@
   },
   "_source": "git://github.com/proj4js/proj4js.git",
   "_target": "~2.1.4",
-  "_originalSource": "proj4",
-  "_direct": true
+  "_originalSource": "proj4"
 }

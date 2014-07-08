@@ -25,6 +25,5 @@
   },
   "_source": "git://github.com/sergeyt/jQuery-xml2json.git",
   "_target": "~0.0.6",
-  "_originalSource": "jquery-xml2json",
-  "_direct": true
+  "_originalSource": "jquery-xml2json"
 }

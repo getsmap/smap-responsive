@@ -2,9 +2,6 @@
   "name": "modernizr",
   "homepage": "https://github.com/Modernizr/Modernizr",
   "version": "2.6.3",
-  "main": [
-    "modernizr.js"
-  ],
   "_release": "2.6.3",
   "_resolution": {
     "type": "version",

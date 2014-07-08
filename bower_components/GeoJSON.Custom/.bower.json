@@ -9,6 +9,5 @@
   "main": "index.js",
   "_source": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js",
   "_target": "*",
-  "_originalSource": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js",
-  "_direct": true
+  "_originalSource": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js"
 }

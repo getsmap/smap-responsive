@@ -98,11 +98,9 @@ var p = {
 
 // ----- Tasks ------
 
-gulp.task('cleancss', function() {
-	return gulp.src("dist/css").pipe(rimraf());
-});
-gulp.task('cleanjs', function() {
-	return gulp.src("dist/js").pipe(rimraf());
+gulp.task('cleanourcode', function() {
+	gulp.src("dist/css").pipe(rimraf());
+	gulp.src("dist/js").pipe(rimraf());
 });
 gulp.task('cleanlib', function() {
 	return gulp.src("dist/lib").pipe(rimraf());
@@ -128,23 +126,24 @@ gulp.task('images', function () {   // ['cleanimg']
         .pipe(gulp.dest(imgDest));
 });
 
-gulp.task('libs', ['cleanlib'], function() {
+gulp.task('libs', ["cleanlib"], function() {
 	return bowerfiles().pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
 });
 
 gulp.task('htmlinjectdev', function() {
+	var devSrcs = p.libsJs.concat(p.libsCss).concat(p.ourJs).concat(p.ourCss);
 	return gulp
 		.src('index_template.html')
-		.pipe(inject(gulp.src(p.libsJs.concat(p.libsCss).concat(p.ourJs).concat(p.ourCss), {read: false}).pipe(using()), {addRootSlash: false}))
+		.pipe(inject(gulp.src(devSrcs, {read: false}).pipe(using()), {addRootSlash: false}))
 		.pipe(rename("dev.html"))
 		.pipe(gulp.dest("."));
 });
 
 gulp.task('htmlinjectprod', function() {
-	var srcs = p.libsJs.concat(p.libsCss).concat("dist/js/*.js").concat("dist/css/*.css");
+	var prodSrcs = p.libsJs.concat(p.libsCss).concat("dist/js/*.js").concat("dist/css/*.css");
 	return gulp
 		.src('index_template.html')
-		.pipe(inject(gulp.src(srcs, {read: false}).pipe(using()), {addRootSlash: false}))
+		.pipe(inject(gulp.src(prodSrcs, {read: false}), {addRootSlash: false}))
 		.pipe(rename("index.html"))
 		.pipe(gulp.dest("."));
 });
@@ -201,7 +200,7 @@ gulp.task('ourjs', function() {
 
 
 gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
-gulp.task('full', ["cleancss", "cleanjs", "cleanlib", "ourcss", "ourjs", "libs", "images", "html"]);
+gulp.task('full', ["ourcss", "ourjs", "libs", "images", "html"]);
 gulp.task('reset', ["clean", "full"]);
 // gulp.task('default', ["full"]);
 

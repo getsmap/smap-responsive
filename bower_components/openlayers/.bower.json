@@ -1,9 +1,6 @@
 {
   "name": "openlayers",
   "homepage": "https://github.com/openlayers/openlayers",
-  "main": [
-      "build/OpenLayers.js"
-  ],
   "version": "2.13.1",
   "_release": "2.13.1",
   "_resolution": {
@@ -13,6 +10,5 @@
   },
   "_source": "git://github.com/openlayers/openlayers.git",
   "_target": "~2.13.1",
-  "_originalSource": "openlayers",
-  "_direct": true
+  "_originalSource": "openlayers"
 }
