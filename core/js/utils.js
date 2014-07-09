@@ -152,6 +152,12 @@ var utils = {
 				return txt;
 			}
 			
+			//If a selectable layer misses a popup parameter in config.
+			if( typeof html === 'undefined' ){
+				html = "( No information provided. )";
+				return html;
+			}
+
 			// Extract props until there are no left to extract.
 			var index = html.search(/\${/g);
 			while (index !== -1) {
