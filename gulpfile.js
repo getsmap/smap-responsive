@@ -126,7 +126,7 @@ gulp.task('ourcsscompile', function() {
 			.pipe(sass());
 
 	return es.merge(streamStylus, streamSass)
-		.pipe(minhtml())
+		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8"))
 		.pipe(gulp.dest("."));
 });
 
@@ -134,7 +134,7 @@ gulp.task('ourcsscompile', function() {
 gulp.task('ourcss', ['ourcsscompile'], function() {
 	return gulp
 		.src(p.ourCss)
-		.pipe(autoprefixer())
+		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8"))
 		// .pipe(csslint())
 		// .pipe(csslint.reporter())
 		// .pipe(order(p.ourCss.concat("*")))
