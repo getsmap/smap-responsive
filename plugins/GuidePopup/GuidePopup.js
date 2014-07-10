@@ -148,14 +148,18 @@ L.Control.GuidePopup = L.Control.extend({
 			}
 		};
 		var layer = smap.cmd.addLayerWithConfig(layerConfig);
+
+
+		this.__onPopupOpen = this.__onPopupOpen || $.proxy(this._onPopupOpen, this);
+		this.__onPopupClose = this.__onPopupClose || $.proxy(this._onPopupClose, this);
 		
-		this.map.on("popupopen", $.proxy(this._onPopupOpen, this));
-		this.map.on("popupclose", $.proxy(this._onPopupClose, this));
+		this.map.on("popupopen", this.__onPopupOpen);
+		this.map.on("popupclose", this.__onPopupClose);
 	},
 	
 	_deactivate: function() {
-		this.map.off("popupopen", $.proxy(this._onPopupOpen, this));
-		this.map.off("popupclose", $.proxy(this._onPopupClose, this));
+		this.map.off("popupopen", this.__onPopupOpen);
+		this.map.off("popupclose", this.__onPopupClose);
 	},
 	
 	_makeCarousel: function(arrImageSources) {

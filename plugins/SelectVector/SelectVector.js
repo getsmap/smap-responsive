@@ -140,7 +140,7 @@ L.Control.SelectVector = L.Control.extend({
 		// Remove the feature from selected arr and reset style
 		this._selectedFeatures.splice(indexOfFeature, 1);
 		
-		var lay = this._layerFromFeature(f, parentLayer) || parentLayer;
+		var lay = utils.getLayerFromFeature(f, parentLayer) || parentLayer;
 //		if (!lay.resetStyle) {
 //			lay = parentLayer;
 //		}
