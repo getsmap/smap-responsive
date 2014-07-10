@@ -147,6 +147,9 @@ smap.core.Select = L.Class.extend({
 					
 					var html = utils.extractToHtml(layer.options.popup, props);
 					var lay = utils.getLayerFromFeature(selectedFeature, layer);
+					// if (!lay) {
+					// 	lay = layer;
+					// }
 					if (lay._popup) {
 						lay.unbindPopup();
 					}

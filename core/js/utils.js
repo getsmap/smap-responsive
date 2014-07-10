@@ -78,7 +78,7 @@ var utils = {
 			var layersObj = parentLayer._layers;
 			for (var nbr in layersObj) {
 				var _lay = layersObj[nbr];
-				if (_lay.feature === feature) {
+				if (_lay.feature.id === feature.id) {
 					return _lay;
 				}
 			}

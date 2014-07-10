@@ -159,7 +159,7 @@ gulp.task('ourjs', function() {
 		// .pipe(jshint())
   // 		.pipe(jshint.reporter('default'))
   		.pipe(concat("smap.js"))
-  		.pipe(ngmin())
+  		// .pipe(ngmin())
 		.pipe(uglify())  // {mangle: false}
 		.pipe(gulp.dest("dist"));
 });
