@@ -1,0 +1,1 @@
+L.Icon.Default.imagePath = "lib/leaflet/dist/images";

@@ -1,11 +1,6 @@
 
 var config = {
-
-		params:{
-			center: [12.72491455078125,56.01834293384084],
-			zoom: 10
-		},
-
+		 
 		ws: {
 			"localhost": {
 				proxy: "http://localhost/cgi-bin/proxy.py?url="
@@ -18,37 +13,38 @@ var config = {
             },
 			"91.123.201.52": {
 				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
-			},
-			"kartor.helsingborg.se": {
-				proxy: "http://kartor.helsingborg.se/cgi-bin/proxy.py?url="
 			}
 		},
 		
 		ol: [
 	    	 {
 	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://opendata-view.smhi.se/klim-stat_temperatur/wms",
+	    		 url: "http://geoserver.smap.se/geoserver/wms",
 	    		 options: {
 	    			 layerId: "gangstig",
 	    			 displayName: "Gångstig",
-	    			 layers: 'arsmedeltemperatur',
+	    			 layers: 'sandboxws:regisln',
 	    			 format: 'image/png',
 	    			 selectable: true,
+	    			 uniqueKey: "objectid",
 	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor"
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 zIndex: 110,
+	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
 	    		 }
 		     },
 		     {
 	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://xyz.malmo.se:8081/geoserver/gwc/service/wms",
+	    		 url: "http://geoserver.smap.se/geoserver/wms",
 	    		 options: {
-	    			 layerId: "test",
-	    			 displayName: "Test",
-	    			 layers: 'malmows:smap-mobile-bakgrundskarta',
+	    			 layerId: "gangstig2",
+	    			 displayName: "Gångstig2",
+	    			 layers: 'sandboxws:regisln',
 	    			 format: 'image/png',
 	    			 selectable: true,
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 zIndex: 101,
 	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
 	    		 }
 		     },
@@ -63,6 +59,7 @@ var config = {
 	    			 selectable: true,
 	    			 transparent: true,
 	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 zIndex: 101,
 	    			 popup: "<h3>${_displayName}</h3><p>Typ: ${typ}</p><p>Geom: ${geom}</p>"
 	    		 }
 		     },
@@ -73,6 +70,7 @@ var config = {
 						layerId: "wfstest_qgis_server",
 						displayName: "Elnät Kristianstad",
 						attribution: "Kristianstads WFS",
+						zIndex: 50,
 						inputCrs: "EPSG:3008",
 						reverseAxis: false,
 						reverseAxisBbox: false,
@@ -103,7 +101,8 @@ var config = {
 			    	 options: {
 			    	 	layerId: "busstation",
 			    	 	displayName: "Busstationer",
-			    	 	attribution: "Stadsbyggnadskontoret, Malmö",
+			    	 	attribution: "Malmö stads WFS",
+			    	 	zIndex: 302,
 			    	 	inputCrs: "EPSG:3008",
 			    	 	reverseAxis: false,
 			    	 	reverseAxisBbox: true,
@@ -141,7 +140,8 @@ var config = {
 			    	 options: {
 			    	 	layerId: "stadsdel",
 			    	 	displayName: "Stadsdel",
-			    	 	attribution: "Stadsbyggnadskontoret, Malmö",
+			    	 	attribution: "Malmö stads WFS",
+			    	 	zIndex: 1,
 			    	 	inputCrs: "EPSG:3008",
 			    	 	reverseAxis: false,
 			    	 	reverseAxisBbox: true,
@@ -155,10 +155,10 @@ var config = {
 							format: "text/geojson",
 							outputFormat: "json"
 			     		},
-			     		// style: {
-			     		// 	color: '#00F',
-			     		// 	fillOpacity: 0.3
-			     		// }
+			     		style: {
+			     			color: '#00F',
+			     			fillOpacity: 0.3
+			     		}
 			     	},
 			     },
 		     {
@@ -167,7 +167,8 @@ var config = {
 		    	 options: {
 		    	 	layerId: "malmows_STADSDEL_L",
 		    	 	displayName: "Stadsdel Linje",
-		    	 	attribution: "Stadsbyggnadskontoret, Malmö",
+		    	 	attribution: "Malmö stads WFS",
+		    	 	zIndex: 1,
 		    	 	inputCrs: "EPSG:3008",
 		    	 	reverseAxis: false,
 		    	 	reverseAxisBbox: true,
@@ -194,28 +195,6 @@ var config = {
 		    		}
 		     	}
 		     },
-		    //  {
-		    // 	 init: "L.GeoJSON.WFS",
-		    // 	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
-		    // 	 options: {
-		    // 	 	layerId: "stadsdel3d",
-		    // 	 	displayName: "Stadsdel 3D",
-		    // 	 	attribution: "Stadsbyggnadskontoret, Malmö",
-		    // 	 	inputCrs: "EPSG:4326",
-		    // 	 	reverseAxis: false,
-		    // 	 	reverseAxisBbox: true,
-		    // 	 	selectable: true,
-		    // 	 	popup: 'The ID: ${id}',
-		    // 	 	uniqueKey: "id",
-		    // 	 	params: {
-			   //  	 	typeName: "malmows:malmo_kvarter_3d",
-						// version: "1.1.0",
-						// maxFeatures: 10000,
-						// format: "text/geojson",
-						// outputFormat: "json"
-		    //  		}
-		    //  	}
-		    //  },
 		     {
 				  init: "L.GeoJSON.WFS",
 				  url: "http://xyz.malmo.se:8081/geoserver/wfs",
@@ -225,7 +204,8 @@ var config = {
 					  params: {
 				    	 typeName: "malmows:POI_VHAMN_PT"
 		     		  },
-					  attribution: "Stadsbyggnadskontoret, Malmö",
+					  attribution: "Malmö stads WFS",
+					  zIndex: 201,
 					  inputCrs: "EPSG:4326",
 					  uniqueKey: "gid",
 					  reverseAxis: false,
@@ -255,7 +235,8 @@ var config = {
 				  options: {
 					  layerId: "malmows_kvarter",
 					  displayName: "Kvarter",
-					  attribution: "Stadsbyggnadskontoret, Malmö",
+					  attribution: "Malmö stads WFS",
+					  zIndex: 50,
 					  inputCrs: "EPSG:3008",
 					  reverseAxis: false,
 					  reverseAxisBbox: true,
@@ -284,6 +265,7 @@ var config = {
 				options: {
 					layerId: "vakant_mark",
 					displayName: "Vakant Mark",
+					uniqueKey: "id",
 					params: {
 						mId : "1290",
 						type : "Mark"
@@ -299,7 +281,21 @@ var config = {
 						fillOpacity: 0.8
 					}
 				}
-			}
+			},
+			{
+	    		 init: "L.TileLayer.WMS",
+	    		 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    		 options: {
+	    			 layerId: "malmo_dp",
+	    			 displayName: "WMS (Detaljplan)",
+	    			 layers: 'malmows:SMA_DP_ADP_YTOR_P',
+	    			 format: 'image/png',
+	    			 selectable: true,
+	    			 transparent: true,
+	    			 attribution: "@ Malmö Stadsbyggnadskontor",
+	    			 popup: '<h3>${plan}</h3><a href="${url}">Länk</a>'   //<p onclick="window.open(\'http://www.malmo.se\')">Länk till plan</p>'
+	    		 }
+		     }
 //		     ,
 //		     {
 //				  init: "L.GeoJSON.WFS",
@@ -308,7 +304,7 @@ var config = {
 //					  layerId: "intressepunkter",
 //					  displayName: "Intressepunkter",
 //					  featureType: "sandboxws:regispt",
-//					  attribution: "Stadsbyggnadskontoret, Malmö",
+//					  attribution: "Malmö stads WFS",
 //					  inputCrs: "EPSG:3008",
 //					  reverseAxis: false,
 //					  popup: '<h1>${namn}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="${picture}"></img>',
@@ -337,7 +333,7 @@ var config = {
 				maxZoom: 18
 			}
 		},
-	 	{
+		{
 			init: "L.TileLayer",
 			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
 			options: {
@@ -363,7 +359,7 @@ var config = {
 				maxZoom: 18,
 				tiled: true
 			}
-		},		
+		},
 //		{
 //			init: "L.TileLayer.WMS",
 //			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
@@ -424,16 +420,6 @@ var config = {
 		        	   }
 		           },
 //		           {
-//		        	   init: "L.Control.MyPlugin",
-//		        	   options: {
-//		        	   		position: "bottomright"
-//		        	   }
-//		           },
-//		           {
-//		        	   init: "L.Control.ShareTweet",
-//		        	   options: {}
-//		           },
-//		           {
 //		        	   init: "L.Control.SharePosition",
 //		        	   options: {}
 //		           },
@@ -441,51 +427,25 @@ var config = {
 		        	   init: "L.Control.Search",
 		        	   options: {}
 		           },
+//		           {
+//		        	   init: "L.Control.Info",
+//		        	   options: {}
+//		           },
                     {
                         init: "L.Control.Zoombar",
                         options: {}
-                    },
-		           // {
-             //           init: "L.Control.ThreeD",
-             //           options: {
-		        	   		
-		           // 		}
-             //       }
+                    }
+                    ,
                     {
                         init: "L.Control.ShareLink",
                         options: {
                     		addToMenu: false
                     	}
                     }
-                    ,
-                    // {
-                    //     init: "L.Control.Menu",
-                    //     options: {}
-                    // },
-                    {
-            			init : "L.Control.RedirectClick",		
-            			option: {}
-            		},
-            		{
-  		        	   init: "L.Control.Info",
-  		        	   options: {}
-  		           	},
-            		{
-  		        	   init: "L.Control.Print",
-  		        	   options: {}
-  		           	},
-  		           	{
-		        	   init: "L.Control.Opacity",
-		        	   options: {
-		        	   		addToMenu: false,
-		        	   		savePrefBox: true
-		        	   }
-		           },
-		           {
-		        	   init: "L.Control.ToolHandler",
-		        	   options: {
-		        	   		addToMenu: false
-		        	   }
-		           }
+//                    ,
+//                    {
+//                        init: "L.Control.Menu",
+//                        options: {}
+//                    }
        ]
 };

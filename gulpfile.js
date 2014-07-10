@@ -46,7 +46,9 @@ var p = {
 		'dist/lib/sass-bootstrap/**/*.js',
 		'dist/lib/leaflet/**/*.js',
 		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
-		'dist/lib/**/*.js'
+		'dist/lib/**/*.js',
+		'!dist/lib/libs.js', // Don't use previously compressed lib file
+		'core/js/buildLibOverrides.js'  // Override libs js
 	],
 
 	// ----- Our code ------
@@ -87,7 +89,8 @@ var p = {
 		"!plugins/SideBars/**/*.js",
 		"!plugins/ThreeD/**/*.js",
 		"!plugins/WorkshopPlugin/**/*.js",
-		"!plugins/PluginTemplate.js"
+		"!plugins/PluginTemplate.js",
+		'!core/js/buildLibOverrides.js'
 	]
 
 };
@@ -105,10 +108,13 @@ gulp.task('cleancode', function() {
 gulp.task('cleanlib', function() {
 	return gulp.src("dist/lib").pipe(rimraf());
 });
+gulp.task('cleanconfigs', function() {
+	return gulp.src("dist/configs").pipe(rimraf());
+});
 gulp.task('cleanimg', function() {
 	return gulp.src("dist/img").pipe(rimraf());
 });
-gulp.task('clean', ['cleanlib', 'cleancode']); // Clean all but img folder
+gulp.task('clean', ['cleanlib', 'cleancode', 'cleanconfigs']); // Clean all but img folder
 gulp.task('cleantotal', function() {
 	return gulp.src("dist").pipe(rimraf());
 });
@@ -141,7 +147,7 @@ gulp.task('ourcss', ['ourcsscompile'], function() {
 		.pipe(concat('smap.css'))
 		.pipe(mincss())
 		// .pipe(rename("smap.css"))
-		.pipe(gulp.dest("dist/css"));
+		.pipe(gulp.dest("dist"));
 });
 
 
@@ -153,11 +159,10 @@ gulp.task('ourjs', function() {
 		// .pipe(jshint())
   // 		.pipe(jshint.reporter('default'))
   		.pipe(concat("smap.js"))
-  		// .pipe(ngmin())
+  		.pipe(ngmin())
 		.pipe(uglify())  // {mangle: false}
-		.pipe(gulp.dest("dist/js"));
+		.pipe(gulp.dest("dist"));
 });
-
 
 
 
@@ -165,7 +170,7 @@ gulp.task('ourjs', function() {
 gulp.task('images', function () {
 	var imgDest = 'dist/img';
     return gulp
-    	.src(['img/**/*.png', 'img/**/*.jpg', 'img/**/*.jpeg', 'img/**/*.gif'])
+    	.src(['img/**/*.{png,jpg,jpeg,gif}'])
     	.pipe(changed(imgDest))
         .pipe(imagemin({
         	progressive: true,
@@ -175,12 +180,48 @@ gulp.task('images', function () {
         .pipe(gulp.dest(imgDest));
 });
 
+gulp.task('moveconfigs', function() {
+	return gulp
+		.src(['configs/*.js'])
+		.pipe(gulp.dest("dist/configs"));
+});
+
+// gulp.task('movecssresources', function() {
+// 	return gulp
+// 		.src(['dist/lib/**/*.{eot,svg,ttf,woff,png,jpg,jpeg,gif}'], {base: "dist/lib/", ignorePath: "dist/lib/"})
+// 		.pipe(gulp.dest("dist/css"));
+// });
+
 gulp.task('libs', function() {
 	return bowerfiles().pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
 });
 
+gulp.task('libsjs', ["libs"], function() {
+	return gulp
+		.src(p.libsJs)
+		// .pipe(order(p.libsJs.concat("*")))
+		// .pipe(using())
+  		.pipe(concat("libs.js"))
+		.pipe(uglify())  // {mangle: false}
+		.pipe(gulp.dest("dist"));
+});
+
+// gulp.task('libscss', function() {
+// 	return gulp
+// 		.src(p.libsCss)
+// 		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8"))
+// 		// .pipe(csslint())
+// 		// .pipe(csslint.reporter())
+// 		// .pipe(order(p.ourCss.concat("*")))
+// 		.pipe(concat('libs.css'))
+// 		.pipe(mincss())
+// 		// .pipe(rename("smap.css"))
+// 		.pipe(gulp.dest("dist"));
+// });
+
 gulp.task('htmlinjectdev', ["libs", "ourcss", "ourjs"], function() {
-	var devSrcs = p.libsJs.concat(p.libsCss).concat(p.ourJs).concat(p.ourCss);
+	var libsJs = p.libsJs.slice(0, p.libsJs.length-1); // we don't want buildLibOverrides.js because we don't compress libs
+	var devSrcs = libsJs.concat(p.libsCss).concat(p.ourJs).concat(p.ourCss);
 	return gulp
 		.src('index_template.html')
 		.pipe(inject(gulp.src(devSrcs, {read: false}), {addRootSlash: false}))
@@ -188,13 +229,15 @@ gulp.task('htmlinjectdev', ["libs", "ourcss", "ourjs"], function() {
 		.pipe(gulp.dest("."));
 });
 
-gulp.task('htmlinjectprod', ["libs", "ourcss", "ourjs"], function() {
-	var prodSrcs = p.libsJs.concat(p.libsCss).concat("dist/js/*.js").concat("dist/css/*.css");
+gulp.task('htmlinjectprod', ["libsjs", "ourcss", "ourjs"], function() {
+	var libsJs = ["dist/libs.js"]; //p.libsJs
+	var libsCss = p.libsCss; //["dist/libs.css"];
+	var prodSrcs = libsJs.concat(libsCss).concat("dist/smap.js").concat("dist/smap.css");
 	return gulp
 		.src('index_template.html')
-		.pipe(inject(gulp.src(prodSrcs, {read: false}), {addRootSlash: false}))
+		.pipe(inject(gulp.src(prodSrcs, {read: false}), {addRootSlash: false, ignorePath: 'dist/'}))
 		.pipe(rename("index.html"))
-		.pipe(gulp.dest("."));
+		.pipe(gulp.dest("dist"));
 });
 gulp.task('htmlinject', ["htmlinjectdev", "htmlinjectprod"]);
 
@@ -212,7 +255,7 @@ gulp.task('html', ["htmlcompress"]);
 // Build our code (during dev)
 gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
 
-gulp.task('_full', ["images", "html"]);
+gulp.task('_full', ["images", "html", "moveconfigs"]);
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).

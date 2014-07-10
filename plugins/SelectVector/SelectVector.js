@@ -126,7 +126,7 @@ L.Control.SelectVector = L.Control.extend({
 		var layersObj = theLay._layers;
 		for (var nbr in layersObj) {
 			var _lay = layersObj[nbr];
-			if (_lay.feature === _f) {
+			if (_lay.feature.id === _f.id) {
 				return _lay;					
 			}
 		}
@@ -193,7 +193,7 @@ L.Control.SelectVector = L.Control.extend({
 			f.uniqueKey = parentLayer.options.uniqueKey;
 			this._selectedFeatures.push(f);
 			var _lay = this._layerFromFeature(f, parentLayer);
-			if (_lay.setStyle) {
+			if (_lay && _lay.setStyle) {
 				_lay.setStyle(parentLayer.options.selectStyle || this.options.selectStyle);
 			}
 			this._map.fire("selected", {

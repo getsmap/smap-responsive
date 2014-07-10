@@ -35,46 +35,50 @@
     "openlayers": "~2.13.1",
     "proj4": "~2.1.4",
     "spinjs": "~2.0.1",
-    "sass-bootstrap": "~3.0.0"
+    "sass-bootstrap": "~3.0.0",
+    "add-to-homescreen": "~3.0.7"
   },
   "overrides": {
-      "bootstrap3-typeahead": {
-          "main": [
-              "bootstrap3-typeahead.min.js"
-          ]
-      },
-      "es5-shim": {
-          "main": ["es5-shim.js", "es5-sham.js"]
-      },
-      "leaflet": {
-          "main": [
-              "dist/leaflet.js",
-              "dist/leaflet.css",
-              "dist/images/layers-2x.png",
-              "dist/images/layers.png",
-              "dist/images/marker-icon-2x.png",
-              "dist/images/marker-icon.png",
-              "dist/images/marker-shadow.png"
-          ]
-      },
-      "leaflet.markercluster": {
-          "main": [
-              "leaflet.markercluster.js",
-              "MarkerCluster.Default.css",
-              "MarkerCluster.css"
-          ]
-      },
-      "leaflet-usermarker": {
-          "main": [
-              "src/leaflet.usermarker.js",
-              "src/leaflet.usermarker.css"
-          ]
-      },
-      "Leaflet.label": {
-          "main": [
-              "dist/leaflet.label.js",
-              "dist/leaflet.label.css"
-          ]
-      }
+    "bootstrap3-typeahead": {
+      "main": [
+        "bootstrap3-typeahead.min.js"
+      ]
+    },
+    "es5-shim": {
+      "main": [
+        "es5-shim.js",
+        "es5-sham.js"
+      ]
+    },
+    "leaflet": {
+      "main": [
+        "dist/leaflet.js",
+        "dist/leaflet.css",
+        "dist/images/layers-2x.png",
+        "dist/images/layers.png",
+        "dist/images/marker-icon-2x.png",
+        "dist/images/marker-icon.png",
+        "dist/images/marker-shadow.png"
+      ]
+    },
+    "leaflet.markercluster": {
+      "main": [
+        "leaflet.markercluster.js",
+        "MarkerCluster.Default.css",
+        "MarkerCluster.css"
+      ]
+    },
+    "leaflet-usermarker": {
+      "main": [
+        "src/leaflet.usermarker.js",
+        "src/leaflet.usermarker.css"
+      ]
+    },
+    "Leaflet.label": {
+      "main": [
+        "dist/leaflet.label.js",
+        "dist/leaflet.label.css"
+      ]
+    }
   }
 }
