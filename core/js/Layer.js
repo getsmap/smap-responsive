@@ -35,11 +35,6 @@ smap.core.Layer = L.Class.extend({
 				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
 				for (i=0,len=ol.length; i<len; i++) {
 					this._addLayerWithConfig(t);
-					// t = smap.cmd.getLayerConfig( ol[i] );
-					// if (!t || !t.init) {
-					// 	continue;
-					// }
-					// map.addLayer(this._createLayer(t));
 				}
 			}
 			
@@ -67,6 +62,9 @@ smap.core.Layer = L.Class.extend({
 	},
 	
 	_addLayerWithConfig: function(t) {
+		if (!t || !t.options) {
+			return false;
+		}
 		var layerAlreadyAdded = this._getLayer(t.options.layerId);
 		if (layerAlreadyAdded) {
 			return false;
