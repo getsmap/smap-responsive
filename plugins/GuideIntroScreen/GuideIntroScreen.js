@@ -135,10 +135,10 @@ L.Control.GuideIntroScreen = L.Control.extend({
 			// TODO: Apply config to map
 			smap.cmd.reloadCore({
 				params: {
-					CONFIG: configName,
-					CENTER: [12.985,55.613],
-					ZOOM: 15,
-					LANG: langCode
+					CONFIG: configName
+					// CENTER: [12.985,55.613],
+					// ZOOM: 15,
+					// LANG: langCode
 				}
 			});
 			return false;

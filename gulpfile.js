@@ -18,7 +18,7 @@ var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var rimraf = require('gulp-rimraf');
 var sass = require('gulp-sass');
-var stripdebug = require('gulp-strip-debug');
+var stripDebug = require('gulp-strip-debug');
 var stylus = require('gulp-stylus');
 var todo = require('gulp-todo');
 var uglify = require('gulp-uglify');
@@ -159,6 +159,7 @@ gulp.task('ourjs', function() {
 		// .pipe(jshint())
   // 		.pipe(jshint.reporter('default'))
   		.pipe(concat("smap.js"))
+  		.pipe(stripDebug())
   		// .pipe(ngmin())
 		.pipe(uglify())  // {mangle: false}
 		.pipe(gulp.dest("dist"));
@@ -180,7 +181,7 @@ gulp.task('images', function () {
         .pipe(gulp.dest(imgDest));
 });
 
-gulp.task('moveconfigs', function() {
+gulp.task('configs', function() {
 	return gulp
 		.src(['configs/*.js'])
 		.pipe(gulp.dest("dist/configs"));
@@ -255,7 +256,7 @@ gulp.task('html', ["htmlcompress"]);
 // Build our code (during dev)
 gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
 
-gulp.task('_full', ["images", "html", "moveconfigs"]);
+gulp.task('_full', ["images", "html", "configs"]);
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).
@@ -271,7 +272,7 @@ gulp.task('reset', ["cleantotal", "full"]);
 gulp.task('watch', function() {
 	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
 	var js = p.ourJs;
-	return gulp.watch(js.concat(css), ["ourcode"]);
+	return gulp.watch(js.concat(css).concat("configs/*.js"), ["ourcode", "configs"]);
 });
 
 gulp.task('default', ["watch"]); // Note! <gulp> is same as <gulp default>

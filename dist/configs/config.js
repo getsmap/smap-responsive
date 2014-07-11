@@ -96,6 +96,46 @@ var config = {
 						}
 					}
 				},
+
+				{
+			    	 init: "L.GeoJSON.WFS",
+			    	 url: "http://localhost/cgi-bin/cultMap/getGeoData.py",
+			    	 options: {
+			    	 	layerId: "Kulturlagret",
+			    	 	displayName: "Kulturlagret",
+			    	 	attribution: "Stadsbyggnadskontoret, Malmö",
+			    	 	inputCrs: "EPSG:4326",
+			    	 	reverseAxis: false,
+			    	 	reverseAxisBbox: false,
+			    	 	selectable: true,
+			    	 	popup: '<h4>${txt_name}</h4>',
+			    	 	uniqueKey: "id",
+			    	 	params: {
+			    	 		q: "hembygdsgard"
+				   //  	 	typeName: null,
+							// version: null,
+							// maxFeatures: 10000,
+							// format: "text/geojson",
+							// outputFormat: "json"
+			     		},
+			     		style: {
+			     			radius: 8,
+			     		    fillColor: "#ff7800",
+			     		    color: "#000",
+			     		    weight: 1,
+			     		    opacity: 1,
+			     		    fillOpacity: 0.8
+			     		},
+			     		selectStyle: {
+			     			radius: 8,
+			     		    fillColor: "#0FF",
+			     		    color: "#0FF",
+			     		    weight: 1,
+			     		    opacity: 1,
+			     		    fillOpacity: 0.5
+			    		}
+			     	}
+			     },
 				
 				{
 			    	 init: "L.GeoJSON.WFS",

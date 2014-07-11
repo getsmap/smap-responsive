@@ -226,7 +226,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			// Don't use bbox if filter is specified (wfs does not support a combination)
 			var reverseBbox = this.options.hasOwnProperty("reverseAxisBbox") ? this.options.reverseAxisBbox : this.options.reverseAxis;
 			if (this.options.inputCrs) {
-				bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
+				if (this.options.inputCrs.toUpperCase() !== "EPSG:4326") {
+					bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
+				}
 				this.options.params.srsName = this.options.inputCrs;
 			}
 			this.options.params.bbox = this._boundsToBbox(bounds, reverseBbox);
@@ -254,19 +256,29 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			data: params,
 			context: this,
 			success: function(response) {
-				if (response.type && response.type == "FeatureCollection") {
-					this.jsonData = response;
-					this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
-					
-					callback();
-					this.fire("load", {layer: this});
-				}
+				this.onGetFeatureSuccess(response, callback);
 			},
-			error: function() {
-				this.fire("loaderror", {layer: this});
-			},
+			error: this.onGetFeatureError,
 			dataType: "json"
 		});
+	},
+
+	/**
+	 * The function must be called with context <this> (this class instance).
+	 * @param  {[type]} response [description]
+	 * @return {[type]}          [description]
+	 */
+	onGetFeatureSuccess: function(response, callback) {
+		if (response.type && response.type == "FeatureCollection") {
+			this.jsonData = response;
+			this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
+			callback();
+			this.fire("load", {layer: this});
+		}
+	},
+
+	onGetFeatureError: function(e) {
+		this.fire("loaderror", {layer: this});
 	},
 	
 	swapCoords: function(coords) {

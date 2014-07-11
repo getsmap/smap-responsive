@@ -1,5 +1,10 @@
 	var config = {
 		
+		params: {
+			center: [12.985,55.613],
+			zoom: 15
+		},
+
 		ws: {
 			"localhost": {
 				proxy: "http://localhost/cgi-bin/proxy.py?url="
