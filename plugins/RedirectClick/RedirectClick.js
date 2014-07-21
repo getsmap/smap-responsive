@@ -12,7 +12,8 @@ L.Control.RedirectClick = L.Control.extend({
 		buttonId: "redirect-snedbild",
 		buttonCss: "ui-icon-arrowstop-1-s",
 		mouseMoveText: "Klicka i kartan för att redirect till snedbild",
-		mouseMoveSubtext: ""
+		mouseMoveSubtext: "",
+		addToMenu: false
 		
 	},
 	
@@ -53,32 +54,13 @@ L.Control.RedirectClick = L.Control.extend({
 		
 		// this.loadProj4();
 		
-		this._container = L.DomUtil.create('div', 'leaflet-control-myplugin');
+		this._container = L.DomUtil.create('div', 'leaflet-control-RedirectClick');
 		L.DomEvent.disableClickPropagation(this._container);
+		
 		this.$container = $(this._container);
 		
-		var snedbildBtn = L.control.menu({});
-				
-		snedbildBtn.addButton(this.options.btnID, this.options.btnLabel, this.options.buttonCss, function(){return false;});
+		self._createButton();
 		
-		$("#"+this.options.btnID+"").on('click',function(){
-					
-			if(self._tooltip){
-				self.removeHooks();
-				self.removeBtnClass();
-				
-			}else {
-				self.addHooks();
-				self.addBtnClass();
-				self._map.on("click", function(e){
-					self.removeBtnClass();						
-					var evt = self._projectEPSG(e);
-					self.onDone(evt);
-					self.removeHooks();
-				});
-			}
-		});
-
 		return this._container;
 	},
 
@@ -143,34 +125,60 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 	
 	_createButton: function() {
-		// Create a button and add to the container of this plugin
-		var btn = $('<button class="btn btn-default"><span class="fa fa-bars fa-2x"></span></button>');
-		this.$container.append(btn);
-		
-		// Bind click function
 		var self = this;
-		btn.on("click", function() {
-			
-			// Create HTML from the layers to display inside the "modal window"
-			var htmlLayers = "",
-				layer;
-			for (var key in self.map._layers) {
-				layer = self.map._layers[key];
-				var t = smap.cmd.getLayerConfig(layer.options.layerId);
-				htmlLayers += '<p>'+t.options.displayName+'</p>';
-			}
-			
-			// Open content in a "modal window"
-			var modal = utils.drawDialog("Some layers", self.lang.modalTitle);
-			
-			// Destroy on close
-			modal.on("hidden.bs.modal", function() {
-				$(this).remove();
-			});
-			
-			// Show dialog
-			modal.modal("show");
-		});
+		if(self.options.addToMenu) {
+		            
+            smap.cmd.addToolButton( "", "fa fa-external-link", function () {
+	            var snedbildBtn = L.control.menu({});
+	            				
+	    		snedbildBtn.addButton(this.options.btnID, this.options.btnLabel, this.options.buttonCss, function(){return false;});
+	    		
+	    		$("#"+this.options.btnID+"").on('click',function(){
+	    					
+	    			if(self._tooltip){
+	    				self.removeHooks();
+	    				self.removeBtnClass();
+	    				
+	    			}else {
+	    				self.addHooks();
+	    				self.addBtnClass();
+	    				self._map.on("click", function(e){
+	    					self.removeBtnClass();						
+	    					var evt = self._projectEPSG(e);
+	    					self.onDone(evt);
+	    					self.removeHooks();
+	    				});
+	    			}
+    		});
+    		
+    		self.$container = $(this._container);
+            return false;
+            },null);
+        }
+
+        else {
+            
+            var $btn = $('<button id="'+ self.options.btnID +'" title="' + self.options.btnLabel + '" class="btn btn-default"><span class="fa fa-external-link"></span></button>');
+            $btn.on("click", function () {
+				if(self._tooltip){
+					self.removeHooks();
+					self.removeBtnClass();
+					
+				}else {
+					self.addHooks();
+					self.addBtnClass();
+					self._map.on("click", function(e){
+						self.removeBtnClass();						
+						var evt = self._projectEPSG(e);
+						self.onDone(evt);
+						self.removeHooks();
+					});
+				}
+
+                return false;
+            });
+            self.$container.append($btn);
+        }
 	},
 	
 	onRemove: function(map) {
