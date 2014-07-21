@@ -44,6 +44,22 @@ L.Control.LayerSwitcher = L.Control.extend({
 		
 		this._addPanel();
 		this._addLayers(smap.config.bl, smap.config.ol);
+
+		this.options.startOpened = false;
+		if (this.options.startOpened) {
+			var baseParents = $("#lswitch-olcont, #lswitch-blcont");
+			if (this.options.startOpened === 1) {
+				baseParents.children(".lswitch-cat").click();
+			}
+			else if (this.options.startOpened === 2) {
+				baseParents.children(".lswitch-cat").next().find(".lswitch-cat").click();
+			}
+			else if (this.options.startOpened === true) {
+				// Open all levels and sublevels
+				baseParents.find(".lswitch-cat").click();
+			}
+		}
+
 		this._addBtn();
 		this._bindEvents();
 		$("#mapdiv").addClass("lswitch-panelslide");
@@ -77,11 +93,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 		if (bls.length > 1) {
 			for (var i=0,len=bls.length; i<len; i++) {
 				t = bls[i];
-				this._addRow({
-					displayName: t.options.displayName,
-					layerId: t.options.layerId,
-					isBaseLayer: true
-				});
+				t.options.isBaseLayer = true;
+				this._addRow(t);
 			}
 		}
 		else {
@@ -90,11 +103,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 		if (ols.length > 0) {
 			for (var i=0,len=ols.length; i<len; i++) {
 				t = ols[i];
-				this._addRow({
-					displayName: t.options.displayName,
-					layerId: t.options.layerId,
-					isBaseLayer: false
-				});
+				t.options.isBaseLayer = false;
+				this._addRow(t);
 			}
 		}
 		else {
@@ -264,10 +274,11 @@ L.Control.LayerSwitcher = L.Control.extend({
 		
 		var theId = tag.attr("id");
 		var layerId = this._unMakeId(theId),
-			isBaseLayer = $("#"+theId).parent().attr("id") === "lswitch-blcont";
+			isBaseLayer = $("#"+theId).parents("#lswitch-blcont").length > 0;
 		
 		if (isBaseLayer) {
-			tag.siblings().removeClass("active");
+			// tag.siblings().removeClass("active");
+			$("#lswitch-blcont").find("a.active").removeClass("active");
 			tag.addClass("active");
 			this._setBaseLayer(layerId);
 			return false;
@@ -293,20 +304,68 @@ L.Control.LayerSwitcher = L.Control.extend({
 	_unMakeId: function(theId) {
 		return decodeURIComponent( theId.replace("lswitchrow-", "").replace(/--pr--/g, "%") );
 	},
+
+	_onHeaderClick: function(e) {
+		var tag = $(this);
+		tag.next().toggleClass('lswitch-catcont-visible');
+		tag.toggleClass('open')
+		// setTimeout(function() {
+		// }, 1);
+		return false;
+	},
 	
 	_addRow: function(t) {
-		var row = $('<a class="list-group-item">'+t.displayName+'</a>');
-		row.attr("id", this._makeId(t.layerId));
+		var self = this;
+		var o = t.options;
+		var row = $('<a class="list-group-item">'+o.displayName+'</a>');
+		row.attr("id", this._makeId(o.layerId));
 		row.on("tap", $.proxy(this._onRowTap, this));
 		
 		var parentTag;
-		if (t.isBaseLayer) {
+		if (o.isBaseLayer) {
 			parentTag = $("#lswitch-blcont");
 		}
 		else {
 			parentTag = $("#lswitch-olcont");
 		}
-		parentTag.append(row);
+
+		if (o.category) {
+			var cats = o.category,
+				catHeader, catContainer, catName;
+
+			// Recursively add a category container inside another category container
+			// and at the end - add the row to the category container.
+			function addToCat(_cats, index, _parentTag) {
+				catName = _cats[index];
+				catHeader = _parentTag.find('.lswitch-cat:has(span:contains("'+catName+'"))');
+				if (!catHeader.length) {
+					catHeader = $('<div class="list-group-item lswitch-cat"><i class="fa fa-caret-right"></i><span>'+catName+'</span></div>')
+						.appendTo(_parentTag);
+					catContainer = $('<div class="lswitch-catcont"></div>');
+					catHeader.after(catContainer);
+					catHeader.on("click", self._onHeaderClick);
+				}
+				else {
+					catContainer = catHeader.next();
+				}
+				if (_cats.length > index + 1) {
+					// Add another sub-catheader
+					return addToCat(_cats, index+1, catContainer);
+				}
+				else {
+					// We're done – finally add the row to the container
+					catContainer.append(row);
+					return true;
+				}
+
+			}
+			addToCat(cats, 0, parentTag); // Start digging down the hierarchies
+
+		}
+		else {
+			parentTag.append(row);
+		}
+
 	}
 });
 

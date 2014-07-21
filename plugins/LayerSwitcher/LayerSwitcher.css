@@ -41,11 +41,55 @@
 .map-with-header .lswitch-panel {
   padding-top: 4em;
 }
+.lswitch-cat span {
+  margin-left: 0.7em;
+}
+.lswitch-cat i {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+.lswitch-cat.open {
+  background-color: rgba(0,0,0,0.5);
+  color: #fff;
+}
+.lswitch-cat.open i {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.lswitch-catcont {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border: none;
+  opacity: 0;
+  border-left: 4px solid rgba(0,0,0,0.5);
+  padding-left: 0.1em;
+}
+.lswitch-catcont.lswitch-catcont-visible {
+  height: auto;
+  opacity: 1;
+  background-color: rgba(255,255,255,0.3);
+}
+.lswitch-catcont a {
+  border-radius: 0 !important;
+  padding-left: 1.8em;
+}
+.lswitch-catcont a:first-child {
+  margin: 0;
+}
+.lswitch-cat,
 .lswitch-panel a {
   cursor: pointer;
   background: none;
   border: none;
   margin-top: 1px;
+}
+.lswitch-cat {
+  color: #fff;
+  background-color: rgba(0,0,0,0.5);
+  margin-top: 2px;
 }
 .lswitch-panel a.active {
   cursor: pointer;
@@ -131,9 +175,5 @@
   #lswitch-olcont a:last-child,
   #lswitch-blcont a:last-child {
     border-radius: 0 0 0.4em 0.4em;
-  }
-  .lswitch-panel:hover #lswitch-olcont,
-  .lswitch-panel:hover #lswitch-blcont {
-    background-color: none;
   }
 }

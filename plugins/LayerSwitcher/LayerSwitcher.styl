@@ -7,6 +7,8 @@ header-color = rgba(42, 111, 175, 1)
 	
 hover-color-hex = rgba(210,210,210,.5)
 
+colorHeaderOpen = rgba(0, 0, 0, 0.5)
+
 #lswitch-btn
 	z-index 1
 	position absolute
@@ -51,8 +53,45 @@ hover-color-hex = rgba(210,210,210,.5)
 .map-with-header .lswitch-panel
 	padding-top 4em
 
+.lswitch-cat span
+	margin-left .7em
 
-.lswitch-panel a
+.lswitch-cat i
+	transition all .2s
+
+
+.lswitch-cat.open
+	background-color colorHeaderOpen
+	color #fff
+
+.lswitch-cat.open i
+	transform rotate(90deg)
+
+.lswitch-catcont
+	height 0
+	overflow hidden
+	transition all .5s
+	
+	border none
+	opacity 0
+	// box-shadow rgba(0, 0, 0, 0.29) 1px 1px 2px inset
+	border-left 4px solid colorHeaderOpen
+
+	padding-left .1em
+
+.lswitch-catcont.lswitch-catcont-visible
+	height auto
+	opacity 1
+	background-color rgba(255,255,255,.3)
+
+.lswitch-catcont a
+	border-radius 0 !important
+	padding-left 1.8em
+
+.lswitch-catcont a:first-child
+	margin 0
+
+.lswitch-cat, .lswitch-panel a
 	cursor pointer
 	background none //#38454E
 	// color #eee
@@ -60,6 +99,10 @@ hover-color-hex = rgba(210,210,210,.5)
 	// border-radius: 0 !important
 	margin-top 1px
 
+.lswitch-cat
+	color #fff
+	background-color colorHeaderOpen
+	margin-top 2px
 
 .lswitch-panel a:hover, .lswitch-panel a:active
 	// background-color #38454E /* For mobile screens - use same background-color during hover as for default */
@@ -155,6 +198,7 @@ hover-color-hex = rgba(210,210,210,.5)
 		// is also not hiding the div.
 		position relative
 	
+
 	.lswitch-panel a
 		// background none
 		transition all 100ms
@@ -191,6 +235,4 @@ hover-color-hex = rgba(210,210,210,.5)
 		border-radius: 0 0 .4em .4em
 	
 	.lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont
-		background-color none
-	 
-	
+		none
