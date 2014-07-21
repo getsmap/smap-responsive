@@ -48,9 +48,10 @@
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
-.lswitch-cat.open {
-  background-color: rgba(0,0,0,0.5);
-  color: #fff;
+.lswitch-cat.open,
+.lswitch-cat.open:hover {
+  background-color: rgba(255,255,255,0.8);
+  color: #000;
 }
 .lswitch-cat.open i {
   -webkit-transform: rotate(90deg);
@@ -64,7 +65,7 @@
   transition: all 0.5s;
   border: none;
   opacity: 0;
-  border-left: 4px solid rgba(0,0,0,0.5);
+  border-left: 4px solid rgba(255,255,255,0.8);
   padding-left: 0.1em;
 }
 .lswitch-catcont.lswitch-catcont-visible {
@@ -87,9 +88,10 @@
   margin-top: 1px;
 }
 .lswitch-cat {
-  color: #fff;
-  background-color: rgba(0,0,0,0.5);
   margin-top: 2px;
+}
+.lswitch-cat:hover {
+  background-color: rgba(210,210,210,0.5);
 }
 .lswitch-panel a.active {
   cursor: pointer;

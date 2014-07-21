@@ -7,7 +7,9 @@ header-color = rgba(42, 111, 175, 1)
 	
 hover-color-hex = rgba(210,210,210,.5)
 
-colorHeaderOpen = rgba(0, 0, 0, 0.5)
+bgColorHeaderOpen = rgba(255,255,255, .8)
+colorHeaderOpen = #000
+
 
 #lswitch-btn
 	z-index 1
@@ -60,9 +62,9 @@ colorHeaderOpen = rgba(0, 0, 0, 0.5)
 	transition all .2s
 
 
-.lswitch-cat.open
-	background-color colorHeaderOpen
-	color #fff
+.lswitch-cat.open, .lswitch-cat.open:hover
+	background-color bgColorHeaderOpen
+	color colorHeaderOpen
 
 .lswitch-cat.open i
 	transform rotate(90deg)
@@ -75,7 +77,7 @@ colorHeaderOpen = rgba(0, 0, 0, 0.5)
 	border none
 	opacity 0
 	// box-shadow rgba(0, 0, 0, 0.29) 1px 1px 2px inset
-	border-left 4px solid colorHeaderOpen
+	border-left 4px solid bgColorHeaderOpen
 
 	padding-left .1em
 
@@ -100,9 +102,12 @@ colorHeaderOpen = rgba(0, 0, 0, 0.5)
 	margin-top 1px
 
 .lswitch-cat
-	color #fff
-	background-color colorHeaderOpen
+	// color colorHeaderOpen
+	// background-color bgColorHeaderOpen
 	margin-top 2px
+
+.lswitch-cat:hover
+	background-color hover-color-hex
 
 .lswitch-panel a:hover, .lswitch-panel a:active
 	// background-color #38454E /* For mobile screens - use same background-color during hover as for default */

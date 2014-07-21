@@ -34,7 +34,7 @@ smap.core.Layer = L.Class.extend({
 				var t, i;
 				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
 				for (i=0,len=ol.length; i<len; i++) {
-					this._addLayerWithConfig(t);
+					this._addLayerWithConfig( smap.cmd.getLayerConfig(ol[i]) );
 				}
 			}
 			
