@@ -1,19 +1,15 @@
 #lswitchresponsive-btn {
   z-index: 1;
-  position: fixed; //absolute;
+  position: fixed; /*absolute*/
   left: 0px;
   bottom: 80px;
   padding: 8px 3px 5px 0px;
   border: 1px solid #999;
   border-width: 1px 1px 1px 0;
-  -moz-box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
-  -webkit-box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
   box-shadow: 1px 1px 4px 0 rgba(100, 100, 100, 0.5);
   background-color: #fff;
   background-color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  -moz-border-radius: 0 0.4em 0.4em 0;
-  -webkit-border-radius: 0 0.4em 0.4em 0;
   border-radius: 0 0.4em 0.4em 0;
   margin: 0px;
   width: 28px; }
@@ -25,7 +21,7 @@
   
   #lswitchresponsive-menu{
   	max-width: 300px;
-  	//top: 2%;
+  	/*top: 2%;*/
   	right: 0;
   	outline: none;
   	position: absolute;

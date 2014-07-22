@@ -120,7 +120,10 @@ gulp.task('cleantotal', function() {
 });
 
 
-
+var onError = function(err) {
+	console.log(err.toString());
+  	this.emit('end');
+};
 
 
 // ---- Our code -----
@@ -132,7 +135,7 @@ gulp.task('ourcsscompile', function() {
 			.pipe(sass());
 
 	return es.merge(streamStylus, streamSass)
-		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8"))
+		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9")) //.on('error', onError)
 		.pipe(gulp.dest("."));
 });
 
@@ -140,7 +143,7 @@ gulp.task('ourcsscompile', function() {
 gulp.task('ourcss', ['ourcsscompile'], function() {
 	return gulp
 		.src(p.ourCss)
-		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8"))
+		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9"))
 		// .pipe(csslint())
 		// .pipe(csslint.reporter())
 		// .pipe(order(p.ourCss.concat("*")))

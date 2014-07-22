@@ -31,7 +31,7 @@ var config = {
 		    	 options: {
 		    	 	layerId: "hembygdsgard",
 		    	 	displayName: "Hembygdsgårdar",
-		    	 	category: ["Gårdar", "Ställen"],
+		    	 	category: ["Gårdar", "Ställen", "AnotherCat", "Test"],
 		    	 	attribution: "Stadsbyggnadskontoret, Malmö",
 		    	 	inputCrs: "EPSG:4326",
 		    	 	reverseAxis: false,

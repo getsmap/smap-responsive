@@ -1,14 +1,8 @@
 
-select-color-hex = #bbb
-select-color = #3D80BE
 
-header-color-hex = #bbb
-header-color = rgba(42, 111, 175, 1)
-	
-hover-color-hex = rgba(210,210,210,.5)
-
-bgColorHeaderOpen = rgba(255,255,255, .8)
-colorHeaderOpen = #000
+hoverColor = rgba(210,210,210,.5)
+bgColorHeaderOpen = rgba(100,100,100,.8)
+colorHeaderOpen = #fff
 
 
 #lswitch-btn
@@ -23,21 +17,17 @@ colorHeaderOpen = #000
 	background-color #fff
 	background-color rgba(255,255,255,.8)
 	cursor pointer
-	border-radius: 0 .4em .4em 0
+	border-radius 0 0.4em 0.4em 0
 
 
 .lswitch-panel .panel
 	box-shadow none
 
-
-
 .lswitch-panelslide
 	transition margin-left 300ms ease
 
-
 .lswitch-panel
 	box-shadow inset #000 -3px 0px 17px
-	
 	z-index -1
 	position absolute
 	left 0px
@@ -107,9 +97,9 @@ colorHeaderOpen = #000
 	margin-top 2px
 
 .lswitch-cat:hover
-	background-color hover-color-hex
+	background-color hoverColor
 
-.lswitch-panel a:hover, .lswitch-panel a:active
+// .lswitch-panel a:hover, .lswitch-panel a:active
 	// background-color #38454E /* For mobile screens - use same background-color during hover as for default */
 	// color #fff
 	// border-radius: 0
@@ -209,35 +199,19 @@ colorHeaderOpen = #000
 		transition all 100ms
 	
 	.lswitch-panel a:hover, .lswitch-panel a:active
-		background-color hover-color-hex
+		background-color hoverColor
 		// color #000
-	
-	.lswitch-panel a.active:hover, .lswitch-panel a.active:active
-		// background-color select-color-hex
-		// background-color select-color
-		// color #fff
-	
-	
-	.lswitch-panel a.active
-		// cursor pointer
-		// background-color select-color-hex
-		// background-color select-color
-		// color #fff
-		// font-weight normal
 	
 	.lswitch-panel .panel-default
 		border none
 		background none
 	
-	
-	
-	
 	#lswitch-olcont, #lswitch-blcont
 		background-color rgba(255,255,255,.4)
-		border-radius: 0 0 .4em .4em
+		border-radius 0 0 .4em .4em
 	
 	#lswitch-olcont a:last-child, #lswitch-blcont a:last-child
-		border-radius: 0 0 .4em .4em
+		border-radius 0 0 .4em .4em
 	
 	.lswitch-panel:hover #lswitch-olcont, .lswitch-panel:hover #lswitch-blcont
 		none
