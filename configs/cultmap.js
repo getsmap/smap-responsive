@@ -31,7 +31,7 @@ var config = {
 		    	 options: {
 		    	 	layerId: "hembygdsgard",
 		    	 	displayName: "Hembygdsgårdar",
-		    	 	category: ["Gårdar", "Ställen", "AnotherCat", "Test"],
+		    	 	category: ["Gårdar"],
 		    	 	attribution: "Stadsbyggnadskontoret, Malmö",
 		    	 	inputCrs: "EPSG:4326",
 		    	 	reverseAxis: false,
@@ -153,7 +153,6 @@ var config = {
 			options: {
 				layerId: "osm",
 				displayName: "OSM",
-				category: ["Malmö maps"],
 				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
 				maxZoom: 18
 			}

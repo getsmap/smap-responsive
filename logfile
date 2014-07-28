@@ -62,3 +62,6 @@ LOG:  automatic vacuum of table "kulturkartan.public.cultplaces": index scans: 1
 	avg read rate: 4.368 MB/s, avg write rate: 8.736 MB/s
 	system usage: CPU 0.00s/0.00u sec elapsed 0.00 sec
 LOG:  automatic analyze of table "kulturkartan.public.cultplaces" system usage: CPU 0.00s/0.02u sec elapsed 0.07 sec
+LOG:  database system was shut down at 2014-07-21 17:01:01 CEST
+LOG:  autovacuum launcher started
+LOG:  database system is ready to accept connections
