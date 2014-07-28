@@ -2,12 +2,31 @@ L.Control.Search = L.Control.extend({
 	options: {
 		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
 		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
-		wsAcUrl: "http://xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
-		wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
+		// wsAcUrl: "http://xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
+		// wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
+		
 		whitespace: "%2B",
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
-		addToMenu: false
+		addToMenu: false,
+		onLocateSuccess: function(json) {
+   			if (!json.features.length) {
+				// This means the searched place does not exist – inform user
+				smap.cmd.notify("Inga sökträffar", "error");
+				return;
+			}
+			var geoJson = L.geoJson(json);
+			if (this.markerLayer) {
+				this.map.removeLayer(this.markerLayer);
+				this.markerLayer = null;
+			}
+			this.markerLayer = L.geoJson(null, {layerId: "searchlayer", selectable: true, popup: '${txt_cat}'}).addTo(this.map);
+			this.map.addLayer(this.markerLayer);
+			this.markerLayer.addData(json);
+			this.markerLayer.fire("load"); // Make it selectable
+			this.map.fitBounds(this.markerLayer.getBounds());
+   		}
+		// qPattern: '{"txt_cat": ${q}}'
 	},
 	
 	_lang: {
@@ -166,45 +185,27 @@ L.Control.Search = L.Control.extend({
 				$searchDiv.addClass("smap-search-div-in-toolbar");
 			}
 		});
-
-		
-//		var bHound = new Bloodhound({
-//			datumTokenizer: Bloodhound.tokenizers.whitespace,
-//			queryTokenizer: Bloodhound.tokenizers.whitespace,
-////			local:  ["Alabama","Alaska","Arizona","Arkansas","Arkansas2","Barkansas"]
-//	    	remote: {
-//	      		url: smap.config.ws.proxy + encodeURIComponent( this.options.wsAcUrl ),
-//	        	filter: function(text) {
-//					text = text.split("\n");
-//					var vals = [];
-//	            	for (var i=0; i<text.length; i++) {
-//	            		vals.push({
-//		                    value: text[i]
-//		                });
-//	            	}
-//	            	return vals;
-//				}
-//	    	}
-//		});
-//		bHound.initialize();
 		
 		var whitespace = this.options.whitespace;
 
 		var geoLocate = this._geoLocate;
-		$entry.typeahead({
-			items: 5,
-			minLength: 2,
-			highlight: true,
-			hint: true,
-			updater: function(val) {
-				smap.cmd.loading(true);
-				geoLocate.call(self, val);
-				deactivate();
-				return val;
-			},
-//		    displayKey: 'value',
-//		    source: bHound.ttAdapter(),
-			source: function(q, process) {
+		var typeheadOptions = {
+				items: 5,
+				minLength: 2,
+				highlight: true,
+				hint: true,
+				updater: function(val) {
+					smap.cmd.loading(true);
+					geoLocate.call(self, val);
+					deactivate();
+					return val;
+				}
+	//		    displayKey: 'value',
+	//		    source: bHound.ttAdapter(),
+		};
+
+		if (this.options.wsAcUrl) {
+			typeheadOptions.source = function(q, process) {
 				var url = encodeURIComponent( self.options.wsAcUrl + "?q="+q);
 				if (whitespace) {
 					url = url.replace(/%20/g, whitespace);					
@@ -223,8 +224,14 @@ L.Control.Search = L.Control.extend({
 					error: function() {}
 				});
 			}
-//		    template: '<p>{{value}} ({{country_code}})</p>',
-		});
+		}
+		else if (this.options.wsAcLocal && this.options.wsAcLocal instanceof Array) {
+			// Use local autocomplete words
+			typeheadOptions.source = this.options.wsAcLocal;
+		}
+
+		
+		$entry.typeahead(typeheadOptions);
 	},
 	
 	
@@ -238,66 +245,79 @@ L.Control.Search = L.Control.extend({
 		};
 		options = $.extend({}, defaults, options);
 		
+		if (this.options.qPattern) {
+			// Modify the question value according to the pattern, e.g. 'qPattern: {"txt_cat": ${q}}'
+			q = utils.extractToHtml(this.options.qPattern, {q: q});
+		}
+
 		var url = encodeURIComponent( this.options.wsLocateUrl + "?q="+q);
 		var whitespace = this.options.whitespace;
 		if (whitespace) {
 			url = url.replace(/%20/g, whitespace);					
 		}
+
+
+		var callbacks = {
+				success: function(json) {
+					var self = this;
+					if (this.marker) {
+						this.map.removeLayer(this.marker);
+						this.marker = null;
+					}
+					if (!json.features.length) {
+						// This means the searched place does not exist – inform user
+						smap.cmd.notify(this.lang.addressNotFound, "error");
+						return;
+					}
+					var coords = json.features[0].geometry.coordinates;
+					var latLng = L.latLng( coords[1], coords[0] );
+					
+					var wgs84 = "EPSG:4326";
+					if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
+						// project the response
+						var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
+						latLng = L.latLng(arr[1], arr[0]);
+					}
+					function onPopupOpen(e) {
+						$("#smap-search-popupbtn").off("click").on("click", function() {
+							self.map.removeLayer(self.marker);
+							self.marker = null;
+							return false;
+						});
+					};
+					this.map.off("popupopen", onPopupOpen);
+					this.map.on("popupopen", onPopupOpen);
+					
+					this.marker = L.marker(latLng).addTo(this.map);
+					this.marker.options.q = q; // Store for creating link to map
+					
+					this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
+					
+					if (options.setView) {
+						this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+					}
+					if (options.showPopup) {
+						this.marker.openPopup();
+					}
+					$("#smap-search-div input").val(null);
+					$("#smap-search-div input").blur();
+					setTimeout(function() {
+						$("#smap-search-div input").blur();
+					}, 100);
+				},
+				complete: function() {
+					smap.cmd.loading(false);
+				}
+		};
+
+
 		$.ajax({
 			url: smap.config.ws.proxy + url,
 			type: "GET",
 			dataType: "json",
 			context: this,
-			success: function(json) {
-				var self = this;
-				if (this.marker) {
-					this.map.removeLayer(this.marker);
-					this.marker = null;
-				}
-				if (!json.features.length) {
-					// This means the searched place does not exist – inform user
-					smap.cmd.notify(this.lang.addressNotFound, "error");
-					return;
-				}
-				var coords = json.features[0].geometry.coordinates;
-				var latLng = L.latLng( coords[1], coords[0] );
-				
-				var wgs84 = "EPSG:4326";
-				if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
-					// project the response
-					var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
-					latLng = L.latLng(arr[1], arr[0]);
-				}
-				function onPopupOpen(e) {
-					$("#smap-search-popupbtn").off("click").on("click", function() {
-						self.map.removeLayer(self.marker);
-						self.marker = null;
-						return false;
-					});
-				};
-				this.map.off("popupopen", onPopupOpen);
-				this.map.on("popupopen", onPopupOpen);
-				
-				this.marker = L.marker(latLng).addTo(this.map);
-				this.marker.options.q = q; // Store for creating link to map
-				
-				this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
-				
-				if (options.setView) {
-					this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
-				}
-				if (options.showPopup) {
-					this.marker.openPopup();
-				}
-				$("#smap-search-div input").val(null);
-				$("#smap-search-div input").blur();
-				setTimeout(function() {
-					$("#smap-search-div input").blur();
-				}, 100);
-			},
-			complete: function() {
-				smap.cmd.loading(false);
-			}
+			success: this.options.onLocateSuccess || callbacks.success,
+			complete: callbacks.complete
 		});
 		
 				

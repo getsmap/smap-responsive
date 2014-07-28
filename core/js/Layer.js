@@ -16,7 +16,8 @@ smap.core.Layer = L.Class.extend({
 		var self = this;
 		var map = this.map;
 		
-		map.on("layeradd", $.proxy(this.onLayerAdd, this));
+		this._onLayerAdd = this._onLayerAdd || $.proxy(this.onLayerAdd, this);
+		map.on("layeradd", this._onLayerAdd);
 		
 		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
 			var tBL;

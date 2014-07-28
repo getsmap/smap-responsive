@@ -102,6 +102,9 @@ L.Control.SelectVector = L.Control.extend({
 	},
 	
 	onLayerRemoved: function(e) {
+		if (!e.layer.options || !e.layer.options.layerId) {
+			return;
+		}
 		var layerId = e.layer.options.layerId;
 		if (layerId && e.layer._layers) {
 			var index = $.inArray(e.layer, this._vectorLayers);

@@ -188,7 +188,12 @@ var config = {
 		           },
 		           {
 		        	   init: "L.Control.Search",
-		        	   options: {}
+		        	   options: {
+		        	   		wsAcLocal: ["hembygdsgard", "kulturen", "museum"],
+		        	   		wsLocateUrl: "http://localhost/cgi-bin/cultMap/getGeoData.py",
+		        	   		wsOrgProj: "EPSG:4326"
+		        	   		// qPattern: '{"txt_cat": ${q}}'
+		        	   }
 		           },
                     {
                         init: "L.Control.Zoombar",
