@@ -37,9 +37,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		
 		L.GeoJSON.prototype.initialize.call(this, null, options);
 		
-		if (options.proxy || L.GeoJSON.WFS.proxy) {
-			this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
-		}
+		// if (options.proxy || L.GeoJSON.WFS.proxy) {
+		// 	this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
+		// }
 		this._featureIndexes = [];
 		this.getFeatureUrl = serviceUrl;
 	},
@@ -221,6 +221,7 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
     },
 	
 	getFeature: function(bounds, callback) {
+		var proxy = this.options.proxy || null;
 		if (bounds && !this.options.params.filter) {
 			// Make a filter so that we only fetch features within current viewport.
 			// Don't use bbox if filter is specified (wfs does not support a combination)
@@ -236,12 +237,12 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		var url,
 			params = null;
 		if (this.options.xhrType === "GET") {
-			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
+			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
 			params = null;
 		}
 		else {
 			// POST
-			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
+			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
 			params = this.options.params;
 		}
 		

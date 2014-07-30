@@ -65,3 +65,7 @@ LOG:  automatic analyze of table "kulturkartan.public.cultplaces" system usage: 
 LOG:  database system was shut down at 2014-07-21 17:01:01 CEST
 LOG:  autovacuum launcher started
 LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher shutting down
+LOG:  received smart shutdown request
+LOG:  shutting down
+LOG:  database system is shut down

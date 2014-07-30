@@ -27,11 +27,13 @@ var config = {
 		ol: [
 			{
 		    	 init: "L.GeoJSON.WFS",
-		    	 url: "http://localhost/cgi-bin/cultMap/getGeoData.py",
+		    	 url: "http://localhost/cherrypy/cultmap/getdata", //"http://localhost/cgi-bin/cultMap/getGeoData.py",
 		    	 options: {
+		    	 	proxy: null,
+		    	 	// xhrType: "GET",
 		    	 	layerId: "hembygdsgard",
 		    	 	displayName: "Hembygdsgårdar",
-		    	 	category: ["Gårdar"],
+		    	 	category: null,
 		    	 	attribution: "Stadsbyggnadskontoret, Malmö",
 		    	 	inputCrs: "EPSG:4326",
 		    	 	reverseAxis: false,
