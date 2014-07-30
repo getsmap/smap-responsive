@@ -80,7 +80,8 @@ smap.core.Select = L.Class.extend({
 //			for (var i=0,len=arr.length; i<len; i++) {
 //				arr[i].resetStyle(arr[i]);
 //			}
-			
+
+//			var isGeoJsonLayer = !layer.addData ? false : true;			
 			var layer = e.layer;
 			var isVector = layer.hasOwnProperty("_layers"),
 				layerId = layer.options.layerId,
@@ -144,7 +145,6 @@ smap.core.Select = L.Class.extend({
 						}
 					}
 					
-					
 					var html = utils.extractToHtml(layer.options.popup, props);
 					var lay = utils.getLayerFromFeature(selectedFeature, layer);
 					// if (!lay) {
@@ -156,7 +156,7 @@ smap.core.Select = L.Class.extend({
 					lay.bindPopup(html, {autoPan: true, keepInView: false, autoPanPadding: L.point(0, 50)});
 //					lay.off("click", lay.togglePopup); // Unbind the default listener that comes with bindPopup
 //					lay._popup.options.autoPanPaddingTopLeft = [0, 50];
-					lay.openPopup(latLng);
+					lay.openPopup(latLng);					
 				}
 			}
 			

@@ -17,7 +17,9 @@ smap.core.Layer = L.Class.extend({
 		var map = this.map;
 		
 		this._onLayerAdd = this._onLayerAdd || $.proxy(this.onLayerAdd, this);
+		this._onLayerRemove = this._onLayerRemove || $.proxy(this.onLayerRemove, this);
 		map.on("layeradd", this._onLayerAdd);
+		map.on("layerremove", this._onLayerRemove);
 		
 		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
 			var tBL;
@@ -83,6 +85,16 @@ smap.core.Layer = L.Class.extend({
 		}
 		var layerId = layer.options.layerId;
 		this._layers[layerId] = layer; // Store in object so we can fetch it when needed.
+		if (layer._layers) {
+			this._wfsLayers.push(layer);
+		}
+	},
+
+	onLayerRemove: function(e) {
+		var layer = e.layer;
+		if (layer._layers) {
+			this._wfsLayers.splice(layer, 1);
+		}	
 	},
 	
 	_getLayer: function(layerId) {
@@ -131,7 +143,6 @@ smap.core.Layer = L.Class.extend({
 			layer.on("loadcancel loaderror", function(e) {
 				smap.cmd.loading(false);
 			});
-			this._wfsLayers.push(layer);
 		}
 		else {
 			layer.on("load", function(e) {

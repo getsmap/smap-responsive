@@ -8,24 +8,7 @@ L.Control.Search = L.Control.extend({
 		whitespace: "%2B",
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
-		addToMenu: false,
-		onLocateSuccess: function(json) {
-   			if (!json.features.length) {
-				// This means the searched place does not exist – inform user
-				smap.cmd.notify("Inga sökträffar", "error");
-				return;
-			}
-			var geoJson = L.geoJson(json);
-			if (this.markerLayer) {
-				this.map.removeLayer(this.markerLayer);
-				this.markerLayer = null;
-			}
-			this.markerLayer = L.geoJson(null, {layerId: "searchlayer", selectable: true, popup: '${txt_cat}'}).addTo(this.map);
-			this.map.addLayer(this.markerLayer);
-			this.markerLayer.addData(json);
-			this.markerLayer.fire("load"); // Make it selectable
-			this.map.fitBounds(this.markerLayer.getBounds());
-   		}
+		addToMenu: false
 		// qPattern: '{"txt_cat": ${q}}'
 	},
 	
