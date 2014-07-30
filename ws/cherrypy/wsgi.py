@@ -2,7 +2,7 @@
 
 import cherrypy
 import sys
-sys.path.extend(["libs", "ws"])
+sys.path.extend(["libs", "cultmap"])
 
 import proxy
 import getGeoData
@@ -32,7 +32,7 @@ class CultMap(object):
 	@cherrypy.expose
 	def getdata(self, q, bbox=None, **params):
 		cherrypy.response.headers['Content-Type']= 'application/json'
-		return getGeoData.getCultureFeatures(q, bbox)
+		return getGeoData.getCultureFeatures(q, bbox.split(","))
 		
 
 	

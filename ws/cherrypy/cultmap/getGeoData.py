@@ -33,7 +33,7 @@ class GeoDataFetcher(object):
 		# bbox
 		if bbox != None:
 			# w,s,e,n
-			whereString += " AND %s.%s && ST_MakeEnvelope(%s, %s, %s, %s, 4326);" %(tableName, geomColName, "%s", "%s", "%s", "%s")
+			whereString += " AND %s.%s && ST_MakeEnvelope(%s, %s, %s, %s, 4326)" %(tableName, geomColName, "%s", "%s", "%s", "%s")
 			vals.extend(bbox)
 
 		sql = """
@@ -46,7 +46,6 @@ class GeoDataFetcher(object):
 			"type": "FeatureCollection",
 			"features": []
 		}
-		
 		cur.execute(sql, vals)
 
 		features = []
