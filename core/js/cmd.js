@@ -43,7 +43,11 @@ smap.cmd = {
 		},
 
 		getControls: function(controlName) {
-			// "Attribution" or "Scale"
+			// "Attribution" or "Scale" or "L.Control.Scale"
+			if (controlName.search(/\./) > -1) {
+				// Convert "L.Control.Scale" -> "Scale"
+				controlName = controlName.split(".").slice(2).join(".");
+			}
 			var inst,
 				ctrls = smap.core.controls || [],
 				foundControls = [];

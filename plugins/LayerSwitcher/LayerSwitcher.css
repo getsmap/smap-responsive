@@ -29,9 +29,9 @@
   left: 0px;
   top: 0px;
   width: 70%;
+  background-color: #38454e;
   height: 100%;
   max-width: 300px;
-  background-color: #38454e;
   padding: 0 20px;
   padding-top: 1em;
   overflow-y: auto;
@@ -108,17 +108,11 @@
   padding-top: 5em;
 }
 @media (max-width: 991px) {
-  .lswitch-panel .panel {
-    -webkit-transition: all 400ms;
-    transition: all 400ms;
-    -webkit-transform: translate(-20%, 0) scale(0.95);
-    -ms-transform: translate(-20%, 0) scale(0.95);
-    transform: translate(-20%, 0) scale(0.95);
+  .lswitch-cat {
+    color: #fff;
   }
-  .lswitch-panel.panel-visible .panel {
-    -webkit-transform: translate(0, 0) scale(1);
-    -ms-transform: translate(0, 0) scale(1);
-    transform: translate(0, 0) scale(1);
+  .lswitch-panel {
+    background-color: #38454e;
   }
   .lswitch-panel a {
     color: #fff;
@@ -136,6 +130,9 @@
   }
 }
 @media (min-width: 992px) {
+  .lswitch-cat {
+    color: #000;
+  }
   .leaflet-left {
     left: 310px;
   }
@@ -151,7 +148,7 @@
     -webkit-transition: all 300ms;
     transition: all 300ms;
     display: block !important;
-    background-color: #fff;
+    background-color: none;
     background-color: rgba(255,255,255,0);
     z-index: 900;
     max-height: 100%;

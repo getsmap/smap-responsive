@@ -15,7 +15,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	showLayer: function(layerId) {
-		smap.core.layerInst.showLayer(layerId);
+		return smap.core.layerInst.showLayer(layerId);
 	},
 	
 	hideLayer: function(layerId) {
@@ -288,7 +288,14 @@ L.Control.LayerSwitcher = L.Control.extend({
 		
 		if ( isActive ) {
 			// Show layer
-			this.showLayer(layerId);
+			var t = tag.data("t") || null; // Allow to store layer config in a custom way (not requiring to be present in config file)
+			var layer = this.showLayer(t || layerId);
+			// if (t.options.zoomToExtent) {
+			// 	layer.on("load", function() {
+			// 		this._map.fitBounds(this.getBounds());
+			// 	});
+			// }
+
 		}
 		else {
 			// Hide layer
@@ -315,11 +322,15 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	_addRow: function(t) {
+
+		this.__onRowTap = this.__onRowTap || $.proxy(this._onRowTap, this);
+
 		var self = this;
 		var o = t.options;
 		var row = $('<a class="list-group-item">'+o.displayName+'</a>');
 		row.attr("id", this._makeId(o.layerId));
-		row.on("tap", $.proxy(this._onRowTap, this));
+		row.on("tap", this.__onRowTap);
+		row.data("t", t); // Faster to fetch than fetching from config on click
 		
 		var parentTag;
 		if (o.isBaseLayer) {
@@ -328,7 +339,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 		else {
 			parentTag = $("#lswitch-olcont");
 		}
-
 		if (o.category) {
 			var cats = o.category,
 				catHeader, catContainer, catName;
@@ -343,7 +353,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 						.appendTo(_parentTag);
 					catContainer = $('<div class="lswitch-catcont"></div>');
 					catHeader.after(catContainer);
-					catHeader.on("click", self._onHeaderClick);
+					catHeader.on("tap", self._onHeaderClick);
 				}
 				else {
 					catContainer = catHeader.next();
@@ -365,6 +375,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		else {
 			parentTag.append(row);
 		}
+		return row;
 
 	}
 });

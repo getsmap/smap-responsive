@@ -193,46 +193,7 @@ var config = {
 						options: {
 							wsAcLocal: ["Hembygdsgard", "Kulturen", "Museum"],
 							wsLocateUrl: "http://localhost/cgi-bin/cultMap/getGeoData.py",
-							wsOrgProj: "EPSG:4326",
-							onLocateSuccess: function(json) {
-								// Simply add all the features to a new layer we call "searchlayer"
-								// TODO: This layer should have the same popup interaction as all other layers.
-								// TODO: Probably the layer should be cleared when an overlay is turned on.
-								if (!json.features.length) {
-									smap.cmd.notify("Inga sökträffar", "error");
-									return;
-								}
-								var geoJson = L.geoJson(json);
-								if (this.markerLayer) {
-									this.map.removeLayer(this.markerLayer);
-									this.markerLayer = null;
-								}
-								this.markerLayer = L.geoJson(null, {
-									layerId: "searchlayer",
-									selectable: true,
-									popup: '${txt_cat}',
-									uniqueKey: "id",
-									style: {
-										radius: 8,
-										fillColor: "#00F",
-										color: "#00F",
-										weight: 2,
-										opacity: 1,
-										fillOpacity: 0.2
-									},
-									selectStyle: {
-										weight: 5,
-										fillColor: "#0FF",
-								        color: "#0FF",
-								        opacity: 1,
-								        fillOpacity: 1
-									}
-								}).addTo(this.map);
-								this.map.addLayer(this.markerLayer);
-								this.markerLayer.addData(json);
-								this.markerLayer.fire("load"); // Make all features selectable
-								this.map.fitBounds(this.markerLayer.getBounds());
-							}
+							wsOrgProj: "EPSG:4326"
 						}
 					},
 					{

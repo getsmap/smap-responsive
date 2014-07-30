@@ -4,6 +4,9 @@ hoverColor = rgba(210,210,210,.5)
 bgColorHeaderOpen = rgba(0,0,0, .7)
 colorHeaderOpen = #fff
 
+cpPanelBg = none
+mobPanelBg = #38454e
+
 
 #lswitch-btn
 	z-index 1
@@ -33,9 +36,9 @@ colorHeaderOpen = #fff
 	left 0px
 	top 0px
 	width 70%
+	background-color mobPanelBg
 	height 100%
 	max-width 300px
-	background-color #38454E
 	padding 0 20px
 	padding-top 1em
 	overflow-y auto
@@ -136,13 +139,20 @@ colorHeaderOpen = #fff
 
 
 @media (max-width: 991px)
+	.lswitch-cat
+		color #fff
+
+
+	.lswitch-panel
+		background-color mobPanelBg
+
 	// Zoom-in-effect when showing and hiding the panel
-	.lswitch-panel .panel
-		transition all 400ms
-		transform translate(-20%,0) scale(0.95)
+	// .lswitch-panel .panel
+	// 	transition all 400ms
+	// 	transform translate(-20%,0) scale(0.95)
 	
-	.lswitch-panel.panel-visible .panel
-		transform translate(0,0) scale(1)
+	// .lswitch-panel.panel-visible .panel
+	// 	transform translate(0,0) scale(1)
 	
 	.lswitch-panel a
 		color #fff
@@ -162,6 +172,8 @@ colorHeaderOpen = #fff
 @media (min-width: 992px)
 	/* For desktop computers */
 	
+	.lswitch-cat
+		color #000
 	
 	/* Avoid things appearing under the switcher */
 	.leaflet-left
@@ -181,7 +193,7 @@ colorHeaderOpen = #fff
 		transition all 300ms
 		
 		display block !important
-		background-color #fff
+		background-color none
 		background-color rgba(255,255,255, 0)
 		z-index 900
 
