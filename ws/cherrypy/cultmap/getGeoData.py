@@ -3,23 +3,36 @@
 import sys, os, json, psycopg2, psycopg2.extras
 import cherrypy
 
+from dbConnector import opendbconnection, closedbconnection
+
+
+# Tell CherryPy to call "connect" for each thread, when it starts up 
+# cherrypy.engine.subscribe('start_thread', connect)
+
 class GeoDataFetcher(object):
 	"""docstring for GeoDataFetcher"""
 	def __init__(self):
 		super(GeoDataFetcher, self).__init__()
 
-	def _dbconnect(self, host="localhost", database="kulturkartan", user="johanlahti", password=""):
-		conn = psycopg2.connect(host=host, database=database, user=user, password=password)
-		cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+
+	def _getCursor(self, cursor_factory=psycopg2.extras.DictCursor):
+		conn = opendbconnection()
+		#cur = cherrypy.thread_data.conn.cursor(cursor_factory=cursor_factory)
+		cur = conn.cursor(cursor_factory=cursor_factory)
 		return cur
+
+	# def _dbconnect(self, host="localhost", database="kulturkartan", user="johanlahti", password=""):
+	# 	conn = psycopg2.connect(host=host, database=database, user=user, password=password)
+	# 	cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+	# 	return cur
 
 	def getData(self, tableName, q, bbox=None):
 		geomColName = "the_geom"
 
-
-		p = cherrypy.request.app.config['postgresql']
-		cur = self._dbconnect() #p["host"], p["database"], p["user"], p["password"])
-
+		#p = cherrypy.request.app.config['postgresql']
+		cur = self._getCursor()
+	
 
 		whereString = ""
 		vals = []
@@ -63,8 +76,9 @@ class GeoDataFetcher(object):
 		out["features"] = features
 
 		# Close
-		cur.connection.close()
-		cur.close()
+		closedbconnection(cur.connection)
+		# cur.connection.close()
+		# cur.close()
 		return out
 
 
@@ -88,6 +102,7 @@ def getCultureFeatures(q, bbox=None):
 		"txt_cat": "%%;%s;%%" %(q)
 	}
 	geodata = g.getData("cultplaces", q, bbox)
+
 	return json.dumps(geodata)
 
 
