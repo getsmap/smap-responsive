@@ -44,10 +44,6 @@
 .lswitch-cat span {
   margin-left: 0.7em;
 }
-.lswitch-cat i {
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-}
 .lswitch-cat.open,
 .lswitch-cat.open:hover {
   background-color: rgba(0,0,0,0.7);
@@ -61,8 +57,6 @@
 .lswitch-catcont {
   height: 0;
   overflow: hidden;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
   border: none;
   opacity: 0;
   border-left: 4px solid rgba(0,0,0,0.7);
@@ -131,10 +125,18 @@
 }
 @media (min-width: 992px) {
   .lswitch-cat {
-    color: #000;
+    color: #555;
   }
   .leaflet-left {
     left: 310px;
+  }
+  .lswitch-catcont {
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+  }
+  .lswitch-cat i {
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
   }
   #mapdiv {
     margin-left: 0px !important;

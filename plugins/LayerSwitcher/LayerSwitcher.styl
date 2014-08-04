@@ -51,8 +51,8 @@ mobPanelBg = #38454e
 .lswitch-cat span
 	margin-left .7em
 
-.lswitch-cat i
-	transition all .2s
+// .lswitch-cat i
+// 	transition all .2s // only use transition effect for desktop due to rendering problem in Chrome e.g.
 
 
 .lswitch-cat.open, .lswitch-cat.open:hover
@@ -65,7 +65,7 @@ mobPanelBg = #38454e
 .lswitch-catcont
 	height 0
 	overflow hidden
-	transition all .5s
+	// transition all .5s  // only use transition effect for desktop due to rendering problem in Chrome e.g.
 	
 	border none
 	opacity 0
@@ -173,12 +173,17 @@ mobPanelBg = #38454e
 	/* For desktop computers */
 	
 	.lswitch-cat
-		color #000
+		color #555
 	
 	/* Avoid things appearing under the switcher */
 	.leaflet-left
 		left 310px
 	
+	.lswitch-catcont
+		transition all .5s
+
+	.lswitch-cat i
+		transition all .2s
 	
 	#mapdiv
 		margin-left 0px !important
