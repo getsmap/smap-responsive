@@ -203,24 +203,26 @@ var config = {
 					{
 						init: "L.Control.ShareLink",
 						options: {
-							addToMenu: false
+							position: 'topright'
 						}
 					},
 					{
  						init: "L.Control.Print",
- 						options: {}
+ 						options: {
+ 							position: 'topright'
+ 						}
  					},
  					{
 						init: "L.Control.Opacity",
 						options: {
-							addToMenu: false,
+							position: 'topright',
 							savePrefBox: true
 						}
 					},
 					{
 						init: "L.Control.ToolHandler",
 						options: {
-							addToMenu: false
+							
 						}
 					}
 		]

@@ -79,6 +79,11 @@
         "dist/leaflet.label.js",
         "dist/leaflet.label.css"
       ]
+    },
+    "openlayers": {
+      "main": [
+        "build/openlayers.js"
+      ]
     }
   }
 }

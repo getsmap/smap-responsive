@@ -554,13 +554,9 @@ var config = {
 		        		   imperial: false
 		        	   }
 		           },
-//		           {
-//		        	   init: "L.Control.LayerSwitcher",
-//		        	   options: {}
-//		           },
 		           {
-		           	   init: "L.Control.LayerSwitcherResponsive",
-		           	   options: {}
+		        	   init: "L.Control.LayerSwitcher",
+		        	   options: {}
 		           },
 		           {
 		        	   init: "L.Control.Geolocate",
