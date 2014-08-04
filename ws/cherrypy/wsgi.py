@@ -32,7 +32,7 @@ class CultMap(object):
 	@cherrypy.expose
 	def getdata(self, q, bbox=None, **params):
 		cherrypy.response.headers['Content-Type']= 'application/json'
-		return getGeoData.getCultureFeatures(q, bbox.split(","))
+		return getGeoData.getCultureFeatures(q, bbox.split(",") if bbox is not None else None)
 		
 
 	
