@@ -1,0 +1,54 @@
+
+
+.thandler-btn
+	position relative
+	float right
+	margin-right 2px
+	top -36px
+
+// .btn-group-vertical > .th-btn
+// 	margin 0px 0px 5px 0px !important
+
+.th-btn
+	margin-left 10px
+
+
+.thandler-container.thandler-visible
+	display block
+
+@media (max-width: 991px)
+	
+	.thandler-container
+		display none
+
+	.thandler-popover
+		left auto !important
+		right .2em
+
+	.thandler-popover .popover-content .leaflet-control
+		clear none
+		margin .2em
+
+	.thandler-popover .popover-content
+		padding .5em
+		padding-bottom 3.7em
+
+	.thandler-popover .arrow
+		left auto !important
+		right .7em
+
+@media (min-width: 992px)
+	.thandler-btn
+		display none
+
+	// .thandler-popover
+	// 	display none !important
+	
+
+@media (max-width: 480px)
+	.thandler-btn
+		top 15%
+	
+
+
+

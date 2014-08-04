@@ -1,57 +1,43 @@
-.toolhandler-div{
-	position: relative;
-	float: right;
-	margin-right: 5px;
-	top: -36px;
+.thandler-btn {
+  position: relative;
+  float: right;
+  margin-right: 2px;
+  top: -36px;
 }
-.toolhandler-div-small{
-	position: absolute;
-	float: right;
-	margin-right: 2px;
-	right: 0;
-	margin-top: 40px;
+.th-btn {
+  margin-left: 10px;
 }
-#toolhandler-btn{
-	position: relative;
-	float: right;
-	margin-right: 2px;
-	top: -36px;
+.thandler-container.thandler-visible {
+  display: block;
 }
-.btn-group-vertical > .th-btn{
-	margin: 0px 0px 5px 0px !important;
+@media (max-width: 991px) {
+  .thandler-container {
+    display: none;
+  }
+  .thandler-popover {
+    left: auto !important;
+    right: 0.2em;
+  }
+  .thandler-popover .popover-content .leaflet-control {
+    clear: none;
+    margin: 0.2em;
+  }
+  .thandler-popover .popover-content {
+    padding: 0.5em;
+    padding-bottom: 3.7em;
+  }
+  .thandler-popover .arrow {
+    left: auto !important;
+    right: 0.7em;
+  }
 }
-.th-btn{
-	margin-left: 10px;
+@media (min-width: 992px) {
+  .thandler-btn {
+    display: none;
+  }
 }
-@media (max-width: 991px){
-	.toolhandler-div{
-		display: none;
-	}
+@media (max-width: 480px) {
+  .thandler-btn {
+    top: 15%;
+  }
 }
-@media (min-width: 992px){
-	#toolhandler-btn{
-		display: none;
-	}
-	#toolhandler-container{
-		display: inline-block;
-		min-width: 200px;
-		height: auto;
-		max-width: 30%;
-	}
-	.toolhandler-div-small{
-		display: none;
-	}
-	.btn-group-vertical{
-		display: none;
-	}
-}
-@media (max-width: 480px){
-	#toolhandler-btn{
-		top: 15%;
-	}
-	.btn-group-vertical{
-		margin-right: 15%;
-	}
-}
-
-
