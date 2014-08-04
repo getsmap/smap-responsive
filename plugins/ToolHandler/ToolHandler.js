@@ -1,11 +1,16 @@
 L.Control.ToolHandler = L.Control.extend({
     options: {
-        position: 'bottomright'
+        position: 'bottomright',
+        showPopoverTitle: true
     },
 
     _lang: {
-        "sv": {},
-        "en": {}
+        "sv": {
+            popoverTitle: "Verktyg"
+        },
+        "en": {
+            popoverTitle: "Tools"
+        }
     },
 
     _setLang: function(langCode) {
@@ -90,7 +95,7 @@ L.Control.ToolHandler = L.Control.extend({
                     // container: 'body',
                     content: null,
                     placement: "bottom"
-                    , title: "Tools"
+                    , title: self.lang.popoverTitle
                     , trigger: "manual"
                 });
 
@@ -98,7 +103,9 @@ L.Control.ToolHandler = L.Control.extend({
                 $this.on("shown.bs.popover", function() {
                     var $popover = $(".popover"),
                         $popCont = $(".popover-content");
-                    // $popover.find("h3").remove();
+                    if (!self.options.showPopoverTitle) {
+                        $popover.find("h3").remove();
+                    }
                     $popover.addClass("thandler-popover");
 
                     // Move control divs into the popover - but only those which contains a button tag
