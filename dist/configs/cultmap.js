@@ -213,6 +213,18 @@ var config = {
  						}
  					},
  					{
+ 						init: "L.Control.Info",
+ 						options: {
+ 							position: 'topright'
+ 						}
+ 					},
+ 					{
+ 						init: "L.Control.SharePosition",
+ 						options: {
+ 							position: 'topright'
+ 						}
+ 					},
+ 					{
 						init: "L.Control.Opacity",
 						options: {
 							position: 'topright',

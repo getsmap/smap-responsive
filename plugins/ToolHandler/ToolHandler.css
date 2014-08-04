@@ -1,8 +1,8 @@
 .thandler-btn {
-  position: relative;
-  float: right;
-  margin-right: 2px;
-  top: -36px;
+  position: absolute;
+  left: auto;
+  right: 10px;
+  top: 0.5em;
 }
 .th-btn {
   margin-left: 10px;
@@ -22,13 +22,16 @@
     clear: none;
     margin: 0.2em;
   }
+  .thandler-popover .popover-content .leaflet-control button {
+    width: 2.75em;
+  }
   .thandler-popover .popover-content {
     padding: 0.5em;
     padding-bottom: 3.7em;
   }
   .thandler-popover .arrow {
     left: auto !important;
-    right: 0.7em;
+    right: 1.3em;
   }
 }
 @media (min-width: 992px) {
