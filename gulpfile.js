@@ -54,7 +54,7 @@ var p = {
 	// ----- Our code ------
 	ourSass: [
 		// first
-		"core/css/**/*.scss",
+		// "core/css/**/*.scss",
 
 		// last
 		"plugins/**/*.scss"
@@ -275,7 +275,9 @@ gulp.task('reset', ["cleantotal", "full"]);
 gulp.task('watch', function() {
 	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
 	var js = p.ourJs;
-	return gulp.watch(js.concat(css).concat("configs/*.js"), ["ourcode", "configs"]);
+	var tasks = ["ourcode", "configs"];
+	gulp.start(tasks); // Start by running once
+	return gulp.watch(js.concat(css).concat("configs/*.js"), tasks);
 });
 
 gulp.task('default', ["watch"]); // Note! <gulp> is same as <gulp default>

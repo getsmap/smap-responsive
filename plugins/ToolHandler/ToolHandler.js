@@ -61,27 +61,29 @@ L.Control.ToolHandler = L.Control.extend({
 
         $("#mapdiv").append($thBtn);
         
-        function onFocusOut() {
-            if (!self._popoverWorking) {
-                self._popoverWorking = true;
+        function hidePopover() {
+            var isVisible = $(".thandler-popover").length && parseInt($(".thandler-popover").css("opacity") || 0) > 0;
+            var $popCont = $(".popover-content");
+            if ( $thBtn.data('bs.popover') && isVisible && $popCont.children().length) {
                 $thBtn.popover("hide");
             }
         }
-        
-        this._map.on("click dragstart", function() {
-            $thBtn.popover("hide");
-        });
 
-        $(window).on("orientationchange", function() {
-            $thBtn.popover("hide");
-        });
+        function togglePopover() {
+            var $btns = $(".thandler-container").children(":has('button')");
+            if ($btns.length) {
+                $thBtn.popover("show");
+            }
+        }
+
+        function onFocusOut() {
+            hidePopover();
+        }
+        
+        this._map.on("click dragstart", hidePopover);
+        $(window).on("orientationchange", hidePopover);
 
         $thBtn.on("click", function() {
-            if ( self._popoverWorking ) {
-                return false;
-            }
-            self._popoverWorking = true;
-
             var $this = $(this);
             if ( $this.data('bs.popover') ) {
                 var isVisible = $(".thandler-popover").length && parseInt($(".thandler-popover").css("opacity") || 0) > 0;
@@ -112,10 +114,6 @@ L.Control.ToolHandler = L.Control.extend({
                     $popCont.append( $(".thandler-container").children(":has('button')") );
                     
                     $this.on("focusout", onFocusOut);
-
-                    setTimeout(function() {
-                        self._popoverWorking = false;
-                    }, 150);
                 });
                 $this.on("hidden.bs.popover", function() {
                     $this.off("focusout", onFocusOut);
@@ -125,12 +123,11 @@ L.Control.ToolHandler = L.Control.extend({
                     // is completed - so we need to add a timeout, to avoid ugly animation.
                     setTimeout(function() {
                         $(".thandler-container").append( $popCont.children() );
-                        self._popoverWorking = false;
                     }, 150);
                 });
                 // $(".thandler-container").toggleClass("thandler-visible");
             }
-            $this.popover("show");
+            togglePopover();
             return false;
         });
 

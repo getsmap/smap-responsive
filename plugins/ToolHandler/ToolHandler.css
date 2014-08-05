@@ -2,7 +2,11 @@
   position: absolute;
   left: auto;
   right: 10px;
-  top: 10px;
+  top: 8px;
+}
+.thandler-btn button {
+  width: 45px;
+  height: 45px;
 }
 .th-btn {
   margin-left: 10px;
@@ -37,10 +41,5 @@
 @media (min-width: 992px) {
   .thandler-btn {
     display: none;
-  }
-}
-@media (max-width: 480px) {
-  .thandler-btn {
-    top: 6em;
   }
 }
