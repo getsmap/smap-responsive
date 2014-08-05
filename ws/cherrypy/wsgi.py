@@ -1,11 +1,33 @@
-
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
 
 import cherrypy
 import sys
-sys.path.extend(["libs", "cultmap"])
+sys.path.extend(["libs", "cultmap", "search"])
 
 import proxy
 import getGeoData
+import sok
+
+
+
+class Search(object):
+	
+	@cherrypy.expose
+	def index(self):
+		return "Welcome to the Map REST API of Malmö Stad"
+
+	@cherrypy.expose
+	# @cherrypy.tools.json_out()
+	def match(self, q):
+		return sok.match(q)
+	
+	@cherrypy.expose
+	@cherrypy.tools.json_out()
+	def locate(self, address):
+		return sok.locate(address)
+
+
 
 
 class CultMap(object):
@@ -13,20 +35,11 @@ class CultMap(object):
     
 	@cherrypy.expose
 	def index(self):
-		return "Hello world!"
-
-	@cherrypy.expose
-	def sayhi(self, uname=""):
-		return "Hello %s" %(uname)
-
-	@cherrypy.expose
-	def respond(self, p=""):
-		return cherrypy.request.method
+		return "Welcome to Cult map's REST API"
 
 	@cherrypy.expose
 	def proxy(self, url):
 		# cherrypy.response.headers['Content-Type']= 'text/html'
-		
 		return proxy.request(url)
 
 	@cherrypy.expose

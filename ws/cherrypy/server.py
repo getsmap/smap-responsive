@@ -3,6 +3,7 @@
 # Example:
 
 from wsgi import CultMap
+from wsgi import Search
 from cherrypy.process import plugins
 from cherrypy import tools
 
@@ -15,7 +16,8 @@ if __name__ == '__main__':
     cherrypy.config.update('server.conf')
 
     # Mount the application
-    cherrypy.tree.mount(CultMap(), "/cultmap", "app_cultmap.conf") # 'app_cultmap.conf') # What's the difference between graft and mount?
+    cherrypy.tree.mount(CultMap(), "/cultmap", "cultmap/app_cultmap.conf") # 'app_cultmap.conf') # What's the difference between graft and mount?
+    cherrypy.tree.mount(Search(), "/search", "search/app_search.conf")
     #cherrypy.tree.graft(CultMap(), "/cultmap")
 
     #cherrypy.tree.graft(cultMap, '/cultmap', 'cultmap.conf')
