@@ -23,23 +23,21 @@ def request(url):
                     'xyz.malmo.se', 'xyz.malmo.se:8081',
                     "webapps05.malmo.se", "sbkspace.malmo.se", "141.255.184.63", "141.255.184.63:8080",
                     "161.52.9.230", "161.52.9.230:8080", "sbkvmgeoserver.sbkmalmo.local:8080", "sbkvmgeoserver.sbkmalmo.local",
-                    "www.vakant.nu", "193.17.67.229", "opendata-view.smhi.se", "maja-k.com", "localhost:5432"]
+                    "www.vakant.nu", "193.17.67.229", "opendata-view.smhi.se", "maja-k.com", "localhost:5432", "maja-k.com"]
 
     method = cherrypy.request.method #os.environ["REQUEST_METHOD"]
 
+    outMimeType = "text/html"
     out = ""
     try:
         host = url.split("/")[2]
         if allowedHosts and not host in allowedHosts:
             out += "Status: 502 Bad Gateway"
-            out += "Content-Type: text/plain"
             out += ""
             out += "This proxy does not allow you to access that location (%s)." % (host,)
             out += ""
             out += os.environ
-      
         elif url.startswith("http://") or url.startswith("https://"):
-        
             if method == "POST":
                 length = int(os.environ["CONTENT_LENGTH"])
                 headers = {"Content-Type": os.environ["CONTENT_TYPE"]}
@@ -52,26 +50,19 @@ def request(url):
             # out += content type header
             i = y.info()
             if i.has_key("Content-Type"):
-                out += "Content-Type: %s" % (i["Content-Type"])
-            else:
-                out += "Content-Type: text/plain"
-            out += ""
-            
+                outMimeType = "%s" % (i["Content-Type"])
             out += y.read()
-            
             y.close()
         else:
-            out += "Content-Type: text/plain"
             out += ""
             out += "Illegal request."
 
     except Exception, E:
         out += "Status: 500 Unexpected Error"
-        out += "Content-Type: text/plain"
         out += ""
         out += "Some unexpected error occurred. Error text was: "  # E
 
-    return out
+    return out, outMimeType
 
 if __name__ == "__main__":
     request()

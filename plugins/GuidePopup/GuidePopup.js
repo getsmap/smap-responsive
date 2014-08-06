@@ -10,12 +10,14 @@ L.Control.GuidePopup = L.Control.extend({
 		"sv": {
 			mediaHeader: "Media",
 			accessHeader: "Tillgänglighet",
-			close: "Stäng"
+			close: "Stäng",
+			showMore: "Visa mer"
 		},
 		"en": {
 			mediaHeader: "Media",
 			accessHeader: "Accessibility",
-			close: "Close"
+			close: "Close",
+			showMore: "Read more"
 		}
 	},
 	
@@ -59,20 +61,20 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_onPopupClick: function(e) {
 		var props = $("#gp-btn-show").data("props");
-		var t = this.options.data[ props[this.options.attrId] ] || {};
-		var mediaArr = t.tabMedia,
+		var t = this._getFeatureData(props[this.options.attrId]);
+		var tabMedia = t.tabMedia,
 			tabIntro = t.tabIntro;
-		if (tabIntro) {   //mediaArr && mediaArr instanceof Array) {
+		if (tabIntro) {   //tabMedia && tabMedia instanceof Array) {
 			this.createPopup(props);
 		}
-		else if (mediaArr && mediaArr instanceof Object) {
+		else if (tabMedia && tabMedia instanceof Object) {
 			// Show media in full-screen at once
-			var content = this._makeMediaContent(mediaArr.mediaType, utils.extractToHtml(mediaArr.sources, props).split(","));
+			var content = this._makeMediaContent(tabMedia.mediaType, utils.extractToHtml(tabMedia.sources, props).split(","));
 			var mediaPic;
 			if (t.mediaType !== "image") {
-				mediaPic = utils.extractToHtml(this.options.fullScreenIntroPic, props);
+				mediaPic = utils.extractToHtml(t.fullScreenIntroPic, props);
 			}
-			this.showFullScreen(content, utils.extractToHtml(mediaArr.label, props), mediaPic);
+			this.showFullScreen(content, utils.extractToHtml(tabMedia.label, props), mediaPic);
 		}
 		
 		// On media icons click - open media tab when dialog opens
@@ -90,9 +92,9 @@ L.Control.GuidePopup = L.Control.extend({
 //			this.properties = props; // properties for filling the dialog
 			
 			$(".leaflet-popup-content").find(".gp-mediaicons").on("touchstart click", this.__onPopupClick);
-			var t = this.options.data[ props[this.options.attrId] ];
+			var t = this._getFeatureData(props[this.options.attrId]);
 			if (t && t instanceof Object) {
-				var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-default">Visa mer</button>');
+				var btn = $('<button style="margin-top:10px;" id="gp-btn-show" class="btn btn-default">'+this.lang.showMore+'</button>');
 				$(".leaflet-popup-content").append(btn);
 				btn.data("props", props);
 				btn.on("touchstart click", this.__onPopupClick);
@@ -138,7 +140,7 @@ L.Control.GuidePopup = L.Control.extend({
 		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
 		layerConfig.options.pointToLayer = function(f, latLng) {
 			var props = f.properties || {};
-			var t = self.options.data[ props[self.options.attrId] ] || {};
+			var t = self.options.modalContentOverrides[ props[self.options.attrId] ] || {};
 			var m = t.tabMedia;
 			if (t.iconType && icons[t.iconType]) {
 				return L.marker(latLng, icons[t.iconType]);
@@ -279,10 +281,8 @@ L.Control.GuidePopup = L.Control.extend({
 	},
 	
 	_makeAccessContent: function(props) {
-		
-		var content = this.options.tabAccess;
-		content = utils.extractToHtml(content, props);
-		return content;
+		var d = this._getFeatureData(props[this.options.attrId])
+		return utils.extractToHtml(d.tabAccess, props);
 	},
 	
 	_makeMediaList: function(arrMedia, props) {
@@ -367,6 +367,12 @@ L.Control.GuidePopup = L.Control.extend({
 		}
 		return content;
 	},
+
+	_getFeatureData: function(featureId) {
+		// featureId is optional
+		var fData = this.options.modalContentOverrides[featureId] || {};
+		return $.extend(true, {}, this.options.modalContent || {}, fData);
+	},
 	
 	createPopup: function(props) {
 		props = props || {};
@@ -390,9 +396,8 @@ L.Control.GuidePopup = L.Control.extend({
 //		content = utils.extractToHtml(content, props);
 		content = $(content);
 		
-		var featureId = props[this.options.attrId];
 		// Fetch bigpopup config for this feature
-		var data = self.options.data[featureId];
+		var data = this._getFeatureData(props[this.options.attrId]);
 		
 		// Fill media-tab content
 		var list = this._makeMediaList(data.tabMedia, props);
@@ -425,7 +430,7 @@ L.Control.GuidePopup = L.Control.extend({
 			var content = self._makeMediaContent(t.mediaType, sources.split(","));
 			var mediaPic;
 			if (t.mediaType === "audio") {
-				mediaPic = utils.extractToHtml(self.options.fullScreenIntroPic, props);
+				mediaPic = utils.extractToHtml(data.fullScreenIntroPic, props);
 			}
 			self.showFullScreen(content, $(this).text(), mediaPic);
 			return false;
@@ -435,28 +440,29 @@ L.Control.GuidePopup = L.Control.extend({
 		this.dialog.modal();
 		
 		// Fill intro-tab content after modal dialog has already opened
-		var url;
 		if (data.tabIntro) {
-			// If a path is specified explicitly for this feature
-			url = utils.extractToHtml( data.tabIntro, props);			
+			var tabIntro = utils.extractToHtml(data.tabIntro, props);
+			if (tabIntro.substring(0, 4).toUpperCase() === "HTTP") {
+				// We are dealing with a URL
+				this._getData(tabIntro, function() {
+					$("#gp-intro").append(utils.extractToHtml($(this).html(), props));
+					smap.cmd.loading(false);
+				});
+			}
+			else {
+				// We are dealing with HTML
+				$("#gp-intro").append(tabIntro);
+			}
 		}
-		else {
-			// Use the general path for intro text
-			url = utils.extractToHtml(this.options.tabIntroFolderUrl, props);
-		}
-		this._getIntroContent(url);
 	},
 	
-	_getIntroContent: function(url, props) {
+	_getData: function(url, callback) {
 		var div = $('<div />');
 		
 		smap.cmd.loading(true);
 //		utils.extractToHtml(html, props)
 		url = this.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url) : url;
-		div.load(url, function() {
-			$("#gp-intro").append( utils.extractToHtml($(this).html(), props) );
-			smap.cmd.loading(false);
-		});
+		div.load(url, callback);
 	},
 	
 });

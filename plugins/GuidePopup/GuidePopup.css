@@ -2,6 +2,9 @@
 	max-width: 100%;
 	margin: 10px 0;
 }
+.gp-popup .tab-pane {
+	padding-top: .5em;
+}
 
 #gp-btn-show {
 	display: block;	

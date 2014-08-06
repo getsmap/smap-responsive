@@ -9,6 +9,8 @@ import proxy
 import getGeoData
 import sok
 
+from cherrypy import log
+
 
 
 class Search(object):
@@ -38,9 +40,11 @@ class CultMap(object):
 		return "Welcome to Cult map's REST API"
 
 	@cherrypy.expose
-	def proxy(self, url):
-		# cherrypy.response.headers['Content-Type']= 'text/html'
-		return proxy.request(url)
+	def proxy(self, url, **params):
+		out, mimetype = proxy.request(url)
+		log( '\n\n-------- %s\n\n' %mimetype )
+		cherrypy.response.headers['Content-Type'] = mimetype
+		return out
 
 	@cherrypy.expose
 	def getdata(self, q, bbox=None, **params):
