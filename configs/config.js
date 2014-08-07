@@ -78,7 +78,7 @@ var config = {
 	    			 selectable: true,
 	    			 transparent: true,
 	    			 attribution: "@ Helsingborg stad",
-	    			 zIndex: 9
+	    			 zIndex: 5
 	    		 }
 		     }
 		
