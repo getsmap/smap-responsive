@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import cgi, sys, os, json, psycopg2, psycopg2.extras
+import cgi, sys, os, json
 import pgConnector
 
 # Tell CherryPy to call "connect" for each thread, when it starts up 
@@ -77,12 +77,15 @@ def getParamsAsObject():
 		out[i] = params[i].value
 	return out
 
-def getCultureFeatures(q, bbox=None):
+def getCultureFeatures():
 	''' Function for fetching objects from the Kulturkarta database '''
 	
 	print "Content-Type: application/json\n\n"  #text/html\n\n
 
 	p = getParamsAsObject()
+	q = p["q"] if p.has_key("q") else "museum"
+	bbox = p["bbox"].split(",") if p.has_key("bbox") else None
+
 	g = GeoDataFetcher()
 	q = {
 		"txt_cat": "%%;%s;%%" %(q)
@@ -93,4 +96,5 @@ def getCultureFeatures(q, bbox=None):
 
 if __name__ == "__main__":
 	getCultureFeatures()
+	print "hej"
 
