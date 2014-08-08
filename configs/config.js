@@ -6,67 +6,7 @@ var config = {
 			zoom: 10
 		},
 		
-		categories: {
-			headers: {
-				"Bo bygga & miljö": {
-					parentTag: "bobyggmiljo",
-					href: "bobyggmiljo",
-					startVisible : true,
-					subheaders: {
-						"Översiktsplan 2010": {
-							startVisible : true
-						}
-					},
-					tooltip: " <i> Översiktsplan 2010</i> <br> &nbsp; > Förvaltningar & myndigheter <br> &nbsp; > Medborgarkontor  "
-				},
-				"Översiktsplan 2010": {
-					parentTag: "oversiktsplan",
-					href: "oversiktsplan",
-					startVisible : true,
-					subheaders: {
-						"Tryheader 2010": {
-							startVisible : true
-						}
-					},
-					tooltip: " <i> Översiktsplan 2010</i> <br> &nbsp; > Förvaltningar & myndigheter <br> &nbsp; > Medborgarkontor  "
-				},
-				"Förskola & utbildning": {
-					parentTag: "forskolanutbildning",
-					href: "forskolanutbildning",
-					startVisible : true,
-					subheaders: {
-						"Helsingborg  2010": {
-							startVisible : true
-						}
-					},
-					tooltip: " <i> Översiktsplan 2010</i> <br> &nbsp; > Förvaltningar & myndigheter <br> &nbsp; > Medborgarkontor  "
-				},
-				"Miljö & hållbarhet": {
-					parentTag: "miljohallbarhet",
-					href: "miljohallbarhet",
-					startVisible : true,
-					subheaders: {
-						"Helsingborg  2010": {
-							startVisible : true
-						}
-					},
-					tooltip: " <i> Översiktsplan 2010</i> <br> &nbsp; > Förvaltningar & myndigheter <br> &nbsp; > Medborgarkontor  "
-				},
-				"Uppleva & göra": {
-					parentTag: "upplevagora",
-					href: "upplevagora",
-					startVisible : true,
-					subheaders: {
-						"Helsingborg  2010 B": {
-							startVisible : true
-						}
-					},
-					tooltip: " <i> Översiktsplan 2010</i> <br> &nbsp; > Förvaltningar & myndigheter <br> &nbsp; > Medborgarkontor  "
-				}
-				
-			}
-		},
-
+		
 		ws: {
 			"localhost": {
 				proxy: "http://localhost/cgi-bin/proxy.py?url="
@@ -91,15 +31,17 @@ var config = {
 	    		 init: "L.TileLayer.WMS",
 	    		 url: "http://193.17.67.229/geos/wms",
 				 parentTag: "bobyggmiljo",
-	    		 category: "Bo bygga & miljö",
 	    		 options: {
+		    		 category: ["Bo bygga & miljö"],
 	    			 layerId: "dp_pagaende",
 	    			 displayName: "Pågående detaljplaner",
 	    			 layers: 'dp_pagaende_poly',
 	    			 format: 'image/png',
+	    			 featureType: "polygon",
 	    			 selectable: true,
 	    			 transparent: true,
-	    			 attribution: "@ Helsingborg stad"
+	    			 attribution: "@ Helsingborg stad",
+	    			 zIndex: 9
 	    		 }
 		     },
 
@@ -107,15 +49,18 @@ var config = {
 	    		 init: "L.TileLayer.WMS",
 	    		 url: "http://193.17.67.229/geos/wms",
 	    		 parentTag: "bobyggmiljo",
-	    		 category: "Bo bygga & miljö",
 	    		 options: {
+		    		 category: ["Bo bygga & miljö"],
 	    			 layerId: "dp_gallande",
 	    			 displayName: "Gällande detaljplaner",
 	    			 layers: 'dp_gallande_poly',
 	    			 format: 'image/png',
+	    			 featureType: "polygon",
 	    			 selectable: true,
 	    			 transparent: true,
-	    			 attribution: "@ Helsingborg stad"
+	    			 attribution: "@ Helsingborg stad",
+	    			 zIndex: 9
+	    			
 	    		 }
 		     },
 
@@ -123,15 +68,17 @@ var config = {
 	    		 init: "L.TileLayer.WMS",
 	    		 url: "http://193.17.67.229/geos/wms",
 	    		 parentTag: "oversiktsplan",
-	    		 category: "Översiktsplan 2010",
 	    		 options: {
+		    		 category: ["Översiktsplan 2010"],
 	    			 layerId: "fastighet",
 	    			 displayName: "Fastighet",
 	    			 layers: 'fastighet_polygon',
 	    			 format: 'image/png',
+	    			 featureType: "polygon",
 	    			 selectable: true,
 	    			 transparent: true,
-	    			 attribution: "@ Helsingborg stad"
+	    			 attribution: "@ Helsingborg stad",
+	    			 zIndex: 5
 	    		 }
 		     }
 		
@@ -558,6 +505,10 @@ var config = {
 		        	   init: "L.Control.LayerSwitcher",
 		        	   options: {}
 		           },
+//		           {
+//		           	   init: "L.Control.LayerSwitcherResponsive",
+//		           	   options: {}
+//		           },
 		           {
 		        	   init: "L.Control.Geolocate",
 		        	   options: {}
