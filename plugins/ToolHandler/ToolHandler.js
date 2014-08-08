@@ -83,6 +83,7 @@ L.Control.ToolHandler = L.Control.extend({
         this._map.on("click dragstart", hidePopover);
         $(window).on("orientationchange", hidePopover);
 
+
         $thBtn.on("click", function() {
             var $this = $(this);
             if ( $this.data('bs.popover') ) {
@@ -101,7 +102,6 @@ L.Control.ToolHandler = L.Control.extend({
                     , trigger: "manual"
                 });
 
-
                 $this.on("shown.bs.popover", function() {
                     var $popover = $(".popover"),
                         $popCont = $(".popover-content");
@@ -113,10 +113,11 @@ L.Control.ToolHandler = L.Control.extend({
                     // Move control divs into the popover - but only those which contains a button tag
                     $popCont.append( $(".thandler-container").children(":has('button')") );
                     
-                    $this.on("focusout", onFocusOut);
+                    $(window).on("resize", hidePopover);
+                    
                 });
                 $this.on("hidden.bs.popover", function() {
-                    $this.off("focusout", onFocusOut);
+                    $(window).off("resize", hidePopover);
                     var $popCont = $(".popover-content");
 
                     // It seems as though the hidden.bs.popover-event is triggered before animation 
@@ -130,6 +131,7 @@ L.Control.ToolHandler = L.Control.extend({
             togglePopover();
             return false;
         });
+
 
         // $(window).on("resize", function() {
         //     $(".thandler-btn").popover("hide");
