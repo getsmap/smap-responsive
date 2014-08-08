@@ -27,7 +27,7 @@ var config = {
 		ol: [
 			{
 				 init: "L.GeoJSON.WFS",
-				 url: "http://localhost/cherrypy/cultmap/getdata", //"http://localhost/cgi-bin/cultMap/getGeoData.py",
+				 url: "http://localhost/cgi-bin/cultMap/getGeoData.py",  //"http://localhost/cherrypy/cultmap/getdata",
 				 options: {
 					proxy: null,
 					// xhrType: "GET",
