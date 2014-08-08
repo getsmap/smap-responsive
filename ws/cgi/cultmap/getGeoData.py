@@ -96,5 +96,4 @@ def getCultureFeatures():
 
 if __name__ == "__main__":
 	getCultureFeatures()
-	print "hej"
 
