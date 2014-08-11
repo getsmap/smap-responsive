@@ -8,8 +8,19 @@
   width: 45px;
   height: 45px;
 }
-.th-btn {
-  margin-left: 10px;
+.thandler-container {
+  margin-right: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+}
+.leaflet-top.leaflet-right .leaflet-control,
+.thandler-container .leaflet-control {
+  margin: 0;
+}
+.leaflet-top.leaflet-right .leaflet-control button,
+.thandler-container .leaflet-control button {
+  border: none;
+  border-radius: 0;
 }
 .thandler-container.thandler-visible {
   display: block;

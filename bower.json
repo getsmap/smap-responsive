@@ -71,7 +71,8 @@
     "leaflet-usermarker": {
       "main": [
         "src/leaflet.usermarker.js",
-        "src/leaflet.usermarker.css"
+        "src/leaflet.usermarker.css",
+        "src/img/bluedot.png"
       ]
     },
     "Leaflet.label": {

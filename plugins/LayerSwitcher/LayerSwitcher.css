@@ -33,7 +33,7 @@
   height: 100%;
   max-width: 300px;
   padding: 0 20px;
-  padding-top: 1em;
+  padding-top: 8px;
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar !important;
   font-size: 1.4em;
