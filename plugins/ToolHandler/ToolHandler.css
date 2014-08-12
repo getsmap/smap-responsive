@@ -7,6 +7,7 @@
 .thandler-btn button {
   width: 52px;
   height: 45px;
+  border-radius: 0;
 }
 .thandler-container {
   margin-right: 10px;
@@ -37,7 +38,7 @@
   }
   .thandler-popover .arrow {
     left: auto !important;
-    right: 1.3em;
+    right: 1.7em;
   }
 }
 @media (min-width: 992px) {

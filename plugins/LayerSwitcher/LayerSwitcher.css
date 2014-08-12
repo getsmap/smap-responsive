@@ -47,7 +47,7 @@
 .lswitch-cat.open,
 .lswitch-cat.open:hover {
   background-color: #fff;
-  color: #000;
+  color: #555;
 }
 .lswitch-cat.open i {
   -webkit-transform: rotate(90deg);
@@ -59,12 +59,12 @@
   overflow: hidden;
   border: none;
   opacity: 0;
-  padding-left: 0.1em;
 }
 .lswitch-catcont.lswitch-catcont-visible {
   height: auto;
   opacity: 1;
   background-color: rgba(255,255,255,0.3);
+  overflow: visible;
 }
 .lswitch-catcont a {
   border-radius: 0 !important;
