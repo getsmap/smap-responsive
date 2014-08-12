@@ -39,12 +39,14 @@ body {
 }
 .leaflet-top.leaflet-right .leaflet-control {
   clear: none !important;
-  margin: 8px 0 0 0.5em;
+  margin: 0;
 }
 .leaflet-top.leaflet-right .leaflet-control button {
+  border: none;
+  border-radius: 0;
   max-width: none;
   max-height: none;
-  width: 48px;
+  width: 54px;
   height: 45px;
 }
 .leaflet-bottom .leaflet-control {
@@ -55,4 +57,14 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+a.list-group-item.active,
+a.list-group-item.active:hover,
+a.list-group-item.active:focus {
+  background-color: rgba(66,139,202,0.7);
+}
+.panel-default > .panel-heading {
+  background-color: #fff;
+  outline: 1px solid #ccc;
+  border: none;
 }

@@ -33,7 +33,7 @@ var config = {
 					// xhrType: "GET",
 					layerId: "hembygdsgard",
 					displayName: "Hembygdsgårdar",
-					category: null,
+					category: ["Historiska platser"],
 					attribution: "Stadsbyggnadskontoret, Malmö",
 					inputCrs: "EPSG:4326",
 					reverseAxis: false,
@@ -68,7 +68,7 @@ var config = {
 				 options: {
 					layerId: "Kulturen",
 					displayName: "Kulturen",
-					category: ["Gårdar"],
+					category: ["Historiska platser"],
 					attribution: "Stadsbyggnadskontoret, Malmö",
 					inputCrs: "EPSG:4326",
 					reverseAxis: false,
@@ -104,6 +104,7 @@ var config = {
 					layerId: "Museum",
 					displayName: "Museum",
 					attribution: "Stadsbyggnadskontoret, Malmö",
+					category: ["Museer", "Kulturen"],
 					inputCrs: "EPSG:4326",
 					reverseAxis: false,
 					reverseAxisBbox: false,
@@ -142,7 +143,6 @@ var config = {
 			options: {
 				layerId: "malmotile",
 				displayName: "Malmö karta",
-				category: ["Malmö maps"],
 				attribution: "© Malmö Stadsbyggnadskontor",
 				minZoom: 6,
 				maxZoom: 18,

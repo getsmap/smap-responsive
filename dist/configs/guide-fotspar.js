@@ -1,7 +1,7 @@
 
 var ws = {
 		"localhost": {
-			proxy: "http://localhost/cherrypy/cultmap/proxy?url="
+			proxy: "//localhost/cgi-bin/proxy.py?url="
 		},
 		"xyz.malmo.se": {
 			proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
@@ -69,13 +69,13 @@ var config = {
 								'if (p.audio) {'+
 								'	out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-lg"></span>\';'+
 								'}'+
-							'if (p.picture && p.picture.split(",").length > 1) {'+
+							'if (p.bilder && p.bilder.split(",").length > 1) {'+
 							'	out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-lg"></span>\';'+
 							'}'+
 						'return out;'+
 						'}'+
 						'}</div>'+
-						'<img style="width:200px;max-height:200px;margin-top: 1em;" src="${picture}"></img>'
+						'<img style="width:200px;max-height:200px;margin-top: 1em;" src="${bilder}"></img>'
 				}
 			},
 			{
@@ -227,22 +227,26 @@ var config = {
 						layerId: "guidelayer",
 						dialogTitle: "${titel}",
 						useProxy: true,
-						attrId: "id",
+						attrId: "gid",
 						
 						// This object specifies how to fill the big popup (the modal window).
 						// The modalContent parameters can be overridden by individual parameters for each feature.
 						modalContent: {
 							iconType: null,
 							dialogTitle: "${titel}",
-							fullScreenIntroPic: "${picture}", // Used only when clicking on a media tag, opening in fullscreen
-							tabIntro: "${description}",
-							tabMedia: null,
+							fullScreenIntroPic: "${bilder}", // Used only when clicking on a media tag, opening in fullscreen
+							tabIntro: "${beskrivning}",
+							tabMedia: [{
+								label: 'Om "${namn}"',
+								mediaType: "picture",
+								sources: "${urlsound}"
+							}],
 							tabAccess: '<div>'+
-								'<p><img class="img-thumbnail" src="${picture}"></img></p>'+
-								'<p><b>Parkering:</b> ${till_park}</p>'+
-								'<p><b>Handikapparkering:</b> ${till_hcp}</p>'+
-								'<p><b>Busshållplats:</b> ${till_buss}</p>'+
-								'<p><b>Övrigt:</b> ${till_misc}</p>'+
+								'<p><img class="img-thumbnail" src="${bilder}"></img></p>'+
+								// '<p><b>Parkering:</b> ${till_park}</p>'+
+								// '<p><b>Handikapparkering:</b> ${till_hcp}</p>'+
+								// '<p><b>Busshållplats:</b> ${till_buss}</p>'+
+								// '<p><b>Övrigt:</b> ${till_misc}</p>'+
 							'</div>'
 						},
 
