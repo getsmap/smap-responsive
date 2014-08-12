@@ -75,7 +75,22 @@ var config = {
 						'return out;'+
 						'}'+
 						'}</div>'+
-						'<img style="width:200px;max-height:200px;margin-top: 1em;" src="${bilder}"></img>'
+						'${function(p) {'+
+								'var out = "";'+
+								'var pics = p.bilder || "",'+
+									'pic;'+
+								'pics = pics ? pics.split(",") : [];'+
+								'if (pics.length > 1 && pics[0].length) {'+
+									'pic = pics[0];'+
+								'}'+
+								'else if (pics.length === 1) {'+
+									'pic = pics;'+
+								'}'+
+								'else {return "";}'+
+								'pic = $.trim(pic);'+
+								'return "<img style=\'width:200px;max-height:200px;margin-top: 1em;\' src=\'http://xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
+							'}}'
+						//xyz.malmo.se/rest/resources/vara_fotspar/${bilder}"></img>'
 				}
 			},
 			{
