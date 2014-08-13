@@ -57,7 +57,7 @@ var config = {
 					uniqueKey: "gid",
 					selectable: true,
 					reverseAxis: false,
-					reverseAxisBbox: false,
+					reverseAxisBbox: true,
 					popup:
 						'<h4>${gid}: ${titel} </h4>'+
 						'<div class="gp-mediaicons">${function(p) {'+
@@ -88,7 +88,7 @@ var config = {
 								'}'+
 								'else {return "";}'+
 								'pic = $.trim(pic);'+
-								'return "<img style=\'width:200px;max-height:200px;margin-top: 1em;\' src=\'http://xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
+								'return "<img style=\'width:200px;max-height:200px;margin-top: 1em;\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
 							'}}'
 						//xyz.malmo.se/rest/resources/vara_fotspar/${bilder}"></img>'
 				}
@@ -130,6 +130,7 @@ var config = {
 					displayName: "Busshållplatser",
 					attribution: "@ Skånetrafiken",
 					inputCrs: "EPSG:3006",
+					proxy: proxy,
 					reverseAxis: false,
 					reverseAxisBbox: true,
 					selectable: true,
@@ -252,17 +253,41 @@ var config = {
 							fullScreenIntroPic: "${bilder}", // Used only when clicking on a media tag, opening in fullscreen
 							tabIntro: "${beskrivning}",
 							tabMedia: [{
-								label: 'Om "${namn}"',
-								mediaType: "picture",
-								sources: "${urlsound}"
-							}],
-							tabAccess: '<div>'+
-								'<p><img class="img-thumbnail" src="${bilder}"></img></p>'+
-								// '<p><b>Parkering:</b> ${till_park}</p>'+
-								// '<p><b>Handikapparkering:</b> ${till_hcp}</p>'+
-								// '<p><b>Busshållplats:</b> ${till_buss}</p>'+
-								// '<p><b>Övrigt:</b> ${till_misc}</p>'+
-							'</div>'
+								condition: function(p) {
+									return p.bilder && p.bilder.split(",").length > 1;
+								},
+								label: 'Om "${titel}"',
+								mediaType: "image",
+								sources: '${function(p){var pics = p.bilder.split(","); '+
+										'var baseUrl = "//xyz.malmo.se/rest/resources/vara_fotspar/";'+
+										'var out = [];'+
+										'for (var i=0,len=pics.length; i<len; i++) {'+
+											'out.push(baseUrl + $.trim(pics[i]));'+
+										'}'+
+										'return out.join(",");'+
+									'}}'
+							},
+							{
+								condition: function(p) {
+									return p.video && p.video.length > 0;
+								},
+								label: 'Kort video om "${titel}"',
+								mediaType: "video",
+								sources: '${video}'
+							}
+
+							]
+							// ,
+							// tabAccess: '<div>'+
+
+							// 	'<p>'+
+							// 		'${function(p){var pics = p.bilder && p.bilder.length ? p.bilder.split(",") : []; '+
+							// 			'if (pics.length) {'+
+							// 				'return "<img height=\'25%\' width=\'25%\' class=\'img-thumbnail\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+$.trim(pics[0])+"\'></img>";'+
+							// 			'} else {return "";}'+
+							// 		'}}'+
+							// 	'"</p>'+
+							// '</div>'
 						},
 
 						modalContentOverrides: {
