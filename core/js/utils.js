@@ -154,7 +154,7 @@ var utils = {
 			
 			//If a selectable layer misses a popup parameter in config.
 			if( typeof html === 'undefined' ){
-				html = "( No information provided. )";
+				html = null;
 				return html;
 			}
 

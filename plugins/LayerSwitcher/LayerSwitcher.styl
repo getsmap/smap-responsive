@@ -45,7 +45,7 @@ mobPanelBg = #38454e
 	height 100%
 	max-width 300px
 	padding 0 20px
-	padding-top 8px
+	padding-top 10px
 	overflow-y auto
 	-ms-overflow-style -ms-autohiding-scrollbar !important /* Nasty bug fix Required for WP8 IE10!!! */
 	font-size 1.4em
@@ -78,10 +78,12 @@ mobPanelBg = #38454e
 	
 	border none
 	opacity 0
+	border-color rgba(255,255,255, 0)
 	// box-shadow rgba(0, 0, 0, 0.29) 1px 1px 2px inset
-	// border-left 4px solid rgba(66,139,202,0.7)
+
 
 .lswitch-catcont.lswitch-catcont-visible
+	margin-left 10px
 	height auto
 	opacity 1
 	background-color rgba(255,255,255,.3)
@@ -173,6 +175,13 @@ mobPanelBg = #38454e
 	
 	.lswitch-panel a:hover
 		background none !important
+
+	.lswitch-panel .panel-default > .panel-heading
+		background none
+		color #fff
+		outline none
+		font-weight bold
+		font-size 1.2em
 	
 
 
@@ -236,7 +245,7 @@ mobPanelBg = #38454e
 	#lswitch-olcont, #lswitch-blcont
 		background-color rgba(255,255,255,.4)
 		border-radius 0 0 .4em .4em
-		margin-top .3em
+		margin-top -1px
 	
 	#lswitch-olcont a:last-child, #lswitch-blcont a:last-child
 		border-radius 0 0 .4em .4em

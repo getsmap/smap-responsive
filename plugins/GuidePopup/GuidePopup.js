@@ -8,12 +8,14 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_lang: {
 		"sv": {
+			introHeader: "Info",
 			mediaHeader: "Media",
 			accessHeader: "Tillgänglighet",
 			close: "Stäng",
 			showMore: "Visa mer"
 		},
 		"en": {
+			introHeader: "About",
 			mediaHeader: "Media",
 			accessHeader: "Accessibility",
 			close: "Close",
@@ -69,6 +71,7 @@ L.Control.GuidePopup = L.Control.extend({
 		}
 		else if (tabMedia && tabMedia instanceof Object) {
 			// Show media in full-screen at once
+			
 			var content = this._makeMediaContent(tabMedia.mediaType, utils.extractToHtml(tabMedia.sources, props).split(","));
 			var mediaPic;
 			if (t.mediaType !== "image") {
@@ -87,6 +90,10 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_onPopupOpen: function(e) {
 		if (e.popup._source.feature) {
+			var layerId = e.popup._source.feature.layerId;
+			if (layerId !== this.options.layerId) {
+				return;
+			}
 			var props = e.popup._source.feature.properties;
 //			this.layerId = e.popup.layerId;
 //			this.properties = props; // properties for filling the dialog
@@ -287,6 +294,10 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	_makeMediaList: function(arrMedia, props) {
 		arrMedia = arrMedia || [];
+
+		if (!arrMedia.length) {
+			return null;
+		}
 		
 		var glyphs = {
 				image: "fa fa-picture-o fa-lg",
@@ -298,10 +309,12 @@ L.Control.GuidePopup = L.Control.extend({
 			list = $('<div id="gp-listmoreinfo" class="list-group" />');
 		for (i=0,len=arrMedia.length; i<len; i++) {
 			t = arrMedia[i];
-			li = $('<a href="#" class="list-group-item"><span class="'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
-			list.append(li);
+			if (t.condition && t.condition(props) === true) {
+				li = $('<a href="#" class="list-group-item"><span class="'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
+				list.append(li);
+			}
 		}
-		return list;
+		return list.children().length ? list : null;
 	},
 	
 	showFullScreen: function(content, titleText, picSrc) {
@@ -381,7 +394,7 @@ L.Control.GuidePopup = L.Control.extend({
 		
 		var content = 
 		'<ul class="nav nav-tabs">' +
-			'<li class="active"><a href="#gp-intro" data-toggle="tab">Intro</a></li>'+
+			'<li class="active"><a href="#gp-intro" data-toggle="tab">'+this.lang.introHeader+'</a></li>'+
 			'<li><a href="#gp-moreinfo" data-toggle="tab">'+this.lang.mediaHeader+'</a></li>'+
 			'<li><a href="#gp-access" data-toggle="tab">'+this.lang.accessHeader+'</a></li>'+
 		'</ul>'+
@@ -401,11 +414,21 @@ L.Control.GuidePopup = L.Control.extend({
 		
 		// Fill media-tab content
 		var list = this._makeMediaList(data.tabMedia, props);
-		content.find("#gp-moreinfo").append(list);
+		if (list) {
+			content.find("#gp-moreinfo").append(list);
+		}
+		else {
+			content.find('[href="#gp-moreinfo"], #gp-moreinfo').remove();
+		}
 		
 		// Fill access-tag content
 		var accessContent = this._makeAccessContent(props);
-		content.find("#gp-access").append(accessContent);
+		if (accessContent) {
+			content.find("#gp-access").append(accessContent);
+		}
+		else {
+			content.find('[href="#gp-access"], #gp-access').remove();
+		}
 		
 		
 		var dialogTitle = utils.extractToHtml(data.dialogTitle || props[this.options.dialogTitle], props);

@@ -58,13 +58,8 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
-a.list-group-item.active,
-a.list-group-item.active:hover,
-a.list-group-item.active:focus {
-  background-color: rgba(66,139,202,0.7);
-}
 .panel-default > .panel-heading {
-  background-color: #fff;
   outline: 1px solid #ccc;
   border: none;
+  background-color: #fff;
 }

@@ -1,6 +1,6 @@
 var ws = {
 		"localhost": {
-			proxy: "http://localhost/cherrypy/cultmap/proxy?url="
+			proxy: "//localhost/cgi-bin/proxy.py?url="
 		},
 		"xyz.malmo.se": {
 			proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="

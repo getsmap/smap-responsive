@@ -33,7 +33,7 @@
   height: 100%;
   max-width: 300px;
   padding: 0 20px;
-  padding-top: 8px;
+  padding-top: 10px;
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar !important;
   font-size: 1.4em;
@@ -59,8 +59,10 @@
   overflow: hidden;
   border: none;
   opacity: 0;
+  border-color: rgba(255,255,255,0);
 }
 .lswitch-catcont.lswitch-catcont-visible {
+  margin-left: 10px;
   height: auto;
   opacity: 1;
   background-color: rgba(255,255,255,0.3);
@@ -118,6 +120,13 @@
   .lswitch-panel a:hover {
     background: none !important;
   }
+  .lswitch-panel .panel-default > .panel-heading {
+    background: none;
+    color: #fff;
+    outline: none;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
 }
 @media (min-width: 992px) {
   .lswitch-cat {
@@ -170,7 +179,7 @@
   #lswitch-blcont {
     background-color: rgba(255,255,255,0.4);
     border-radius: 0 0 0.4em 0.4em;
-    margin-top: 0.3em;
+    margin-top: -1px;
   }
   #lswitch-olcont a:last-child,
   #lswitch-blcont a:last-child {
