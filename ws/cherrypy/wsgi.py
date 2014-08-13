@@ -60,6 +60,13 @@ class CultMap(object):
 # print myConfig['someparams']['somekey']
 
 
-# def application(env, start_response):
-#     start_response('200 OK', [('Content-Type', 'text/html')])
-#     return ["Hello!"]
+def application(env, start_response):
+	start_response('200 OK', [('Content-Type', 'text/html')])
+	cherrypy.tree.mount(CultMap(), "/cultmap", "cultmap/app_cultmap.conf") # 'app_cultmap.conf') # What's the difference between graft and mount?
+	cherrypy.tree.mount(Search(), "/search", "search/app_search.conf")
+	return cherrypy.tree(env, start_response)
+
+
+# > uwsgi --socket 127.0.0.1:9090 --wsgi-file wsgi.py   # --protocol=http
+# > # change config for nginx: https://www.digitalocean.com/community/tutorials/how-to-deploy-python-wsgi-applications-using-uwsgi-web-server-with-nginx
+
