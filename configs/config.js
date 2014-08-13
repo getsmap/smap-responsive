@@ -590,6 +590,10 @@ var config = {
 		        	   options: {
 		        	   		addToMenu: false
 		        	   }
+		           },
+		           {
+		        	   init: "L.Control.Add2HomeScreen",
+		        	   options: {}
 		           }
        ]
 };
