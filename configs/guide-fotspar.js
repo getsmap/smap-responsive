@@ -190,10 +190,10 @@ var config = {
 						imperial: false
 					}
 				},
-				{
-					init: "L.Control.LayerSwitcher",
-					options: {}
-				},
+				// {
+				// 	init: "L.Control.LayerSwitcher",
+				// 	options: {}
+				// },
 				{
 					init: "L.Control.SelectWMS",
 					options: {
