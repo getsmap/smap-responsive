@@ -20,7 +20,7 @@ var config = {
 	
 	params: {
 		center: [13.0212, 55.59387],
-		zoom: 13
+		zoom: 12
 	},
 
 	ws: {
