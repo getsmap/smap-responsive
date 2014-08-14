@@ -85,5 +85,8 @@
         "build/openlayers.js"
       ]
     }
+  },
+  "devDependencies": {
+    "jquery-mobile": "~1.4.3"
   }
 }

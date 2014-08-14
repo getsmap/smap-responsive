@@ -104,6 +104,7 @@ var p = {
 gulp.task('cleancode', function() {
 	gulp.src("dist/css").pipe(rimraf());
 	gulp.src("dist/js").pipe(rimraf());
+	gulp.src("dist/*.*").pipe(rimraf());
 });
 gulp.task('cleanlib', function() {
 	return gulp.src("dist/lib").pipe(rimraf());
@@ -197,7 +198,7 @@ gulp.task('configs', function() {
 // });
 
 gulp.task('libs', function() {
-	return gulp.src(bowerfiles()).pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
+	return gulp.src(bowerfiles(), {base: "./bower_components/"}).pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
 });
 
 gulp.task('libsjs', ["libs"], function() {

@@ -188,7 +188,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		// });
 		
 		
-		this.$panel.swipeleft($.proxy(function() {
+		this.$panel.on("swipeleft", $.proxy(function() {
 			this.hidePanel();
 		}, this));
 		
