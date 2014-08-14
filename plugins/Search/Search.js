@@ -8,80 +8,80 @@ L.Control.Search = L.Control.extend({
 		whitespace: "%2B",
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
-		addToMenu: false,
-		_geoLocate: function(q) {
-			// TODO: When this function is completed, move to config file cultmap.js
-			function cleanUp() {
-				// Hide layer if added and
-				$(".lswitch-temprow.active").tap();
-				$(".lswitch-temprow").remove(); // Remove old searches
-				// $(".lswitch-temprow.active").each(function() {
-				// 	var t = $(this).data("t");
-				// 	var layer = smap.cmd.getLayer( t.options.layerId );
-				// 	if (layer) {
-				// 		layer.destroy();
-				// 	}
-				// });
-			}
+		addToMenu: false
+		// _geoLocate: function(q) {
+			// // TODO: When this function is completed, move to config file cultmap.js
+			// function cleanUp() {
+				// // Hide layer if added and
+				// $(".lswitch-temprow.active").tap();
+				// $(".lswitch-temprow").remove(); // Remove old searches
+				// // $(".lswitch-temprow.active").each(function() {
+				// // 	var t = $(this).data("t");
+				// // 	var layer = smap.cmd.getLayer( t.options.layerId );
+				// // 	if (layer) {
+				// // 		layer.destroy();
+				// // 	}
+				// // });
+			// }
 
-			function onKeyUp(e) {
-				if (e.keyCode === 8 && $(this).val() == "") {
-					cleanUp();
-				}
-			}
-			// This code should not be here, but it's ok because it doesn't harm anyone
-			this._onKeyUp = this._onKeyUp || onKeyUp;
-			$("#smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
+			// function onKeyUp(e) {
+				// if (e.keyCode === 8 && $(this).val() == "") {
+					// cleanUp();
+				// }
+			// }
+			// // This code should not be here, but it's ok because it doesn't harm anyone
+			// this._onKeyUp = this._onKeyUp || onKeyUp;
+			// $("#smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
 
-			cleanUp(); // clean up old searches
+			// cleanUp(); // clean up old searches
 
-			var lswitchInst = smap.cmd.getControl("L.Control.LayerSwitcher");
-			if (lswitchInst) {
-				var t = {
-						init: "L.GeoJSON.WFS",
-						url: "http://localhost/cherrypy/cultmap/getdata", //"http://localhost/cgi-bin/cultMap/getGeoData.py",
-						options: {
-							proxy: null,
-							// zoomToExtent: true,
-							// xhrType: "GET",
-							layerId: "searchresults",
-							displayName: "Sökresultat: "+'"'+q+'"',
-							category: null,
-							attribution: "Stadsbyggnadskontoret, Malmö",
-							inputCrs: "EPSG:4326",
-							reverseAxis: false,
-							reverseAxisBbox: false,
-							selectable: true,
-							popup: '<h4>${txt_name}</h4>',
-							uniqueKey: "id",
-							params: {
-								q: encodeURIComponent(q)
-							},
-							style: {
-								radius: 8,
-								fillColor: "#ff7800",
-								color: "#000",
-								weight: 1,
-								opacity: 1,
-								fillOpacity: 0.8
-							},
-							selectStyle: {
-								radius: 8,
-								fillColor: "#0FF",
-								color: "#0FF",
-								weight: 1,
-								opacity: 1,
-								fillOpacity: 0.5
-							}
-						}
-				};
-				var row = lswitchInst._addRow(t);
-				row.data("t", t);
-				row.addClass("lswitch-temprow");
-				row.tap();
+			// var lswitchInst = smap.cmd.getControl("L.Control.LayerSwitcher");
+			// if (lswitchInst) {
+				// var t = {
+						// init: "L.GeoJSON.WFS",
+						// url: "http://localhost/cherrypy/cultmap/getdata", //"http://localhost/cgi-bin/cultMap/getGeoData.py",
+						// options: {
+							// proxy: null,
+							// // zoomToExtent: true,
+							// // xhrType: "GET",
+							// layerId: "searchresults",
+							// displayName: "Sökresultat: "+'"'+q+'"',
+							// category: null,
+							// attribution: "Stadsbyggnadskontoret, Malmö",
+							// inputCrs: "EPSG:4326",
+							// reverseAxis: false,
+							// reverseAxisBbox: false,
+							// selectable: true,
+							// popup: '<h4>${txt_name}</h4>',
+							// uniqueKey: "id",
+							// params: {
+								// q: encodeURIComponent(q)
+							// },
+							// style: {
+								// radius: 8,
+								// fillColor: "#ff7800",
+								// color: "#000",
+								// weight: 1,
+								// opacity: 1,
+								// fillOpacity: 0.8
+							// },
+							// selectStyle: {
+								// radius: 8,
+								// fillColor: "#0FF",
+								// color: "#0FF",
+								// weight: 1,
+								// opacity: 1,
+								// fillOpacity: 0.5
+							// }
+						// }
+				// };
+				// var row = lswitchInst._addRow(t);
+				// row.data("t", t);
+				// row.addClass("lswitch-temprow");
+				// row.tap();
 
-			}
-		}
+			// }
+		// }
 
 							// onLocateSuccess: function(json) {
 							// 	// Simply add all the features to a new layer we call "searchlayer"
