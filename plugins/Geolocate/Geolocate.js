@@ -2,7 +2,7 @@ L.Control.Geolocate = L.Control.extend({
 	options: {
 		position: 'bottomright',
 		locateOptions: {
-			maxZoom: 12,
+			maxZoom: 17,
 			enableHighAccuracy: true
 		}
 		
