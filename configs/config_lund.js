@@ -9,8 +9,8 @@ var config = {
 		
 		ws: {
 			"localhost": {
-				//proxy: "http://localhost:8080/proxy.py?url="
-				proxy: "http://localhost/cgi-bin/proxy.py?url="
+				proxy: "http://localhost:8080/proxy.py?url="
+				//proxy: "http://localhost/cgi-bin/proxy.py?url="
 			},
 			"kartor.lund.se": {
 				proxy: "http://kartor.lund.se/proxy.py?url="
