@@ -256,7 +256,7 @@ var config = {
 								condition: function(p) {
 									return p.bilder && p.bilder.split(",").length > 1;
 								},
-								label: 'Om "${titel}"',
+								label: 'Bilder av "${titel}"',
 								mediaType: "image",
 								sources: '${function(p){var pics = p.bilder.split(","); '+
 										'var baseUrl = "//xyz.malmo.se/rest/resources/vara_fotspar/";'+

@@ -30,11 +30,16 @@
 }
 
 .gp-fullscreen h1 {
-	color: #fff;	
+	color: #fff;
+	margin-top: -20px;
 }
 .gp-fullscreen .gp-mediapic {
 	display: block;
 	margin: 2em 0;
+}
+
+.gp-fullscreen .carousel {
+	max-height: calc(100% - 50px);
 }
 
 .gp-fs-visible {
