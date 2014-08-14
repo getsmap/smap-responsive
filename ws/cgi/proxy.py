@@ -21,7 +21,7 @@ allowedHosts = ['localhost', 'localhost:8080', 'localhost:80',
                 'xyz.malmo.se', 'xyz.malmo.se:8081',
                 "webapps05.malmo.se", "sbkspace.malmo.se", "141.255.184.63", "141.255.184.63:8080",
                 "161.52.9.230", "161.52.9.230:8080", "sbkvmgeoserver.sbkmalmo.local:8080", "sbkvmgeoserver.sbkmalmo.local",
-                "www.vakant.nu", "193.17.67.229", "opendata-view.smhi.se", "maja-k.com"]
+                "www.vakant.nu", "193.17.67.229", "opendata-view.smhi.se", "maja-k.com", "kartor.lund.se"]
 
 method = os.environ["REQUEST_METHOD"]
 
