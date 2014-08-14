@@ -47,7 +47,8 @@ var config = {
 	    			 layers: 'fastgrans',
 	    			 format: 'image/png',
 	    			 featureType: "polygon",
-	    			 selectable: false,
+	    			 selectable: true,
+					 queryLayer: "polka_fastigheter",
 	    			 transparent: true,
 	    			 attribution: "@ Lunds kommun"
 					// popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
