@@ -1,7 +1,7 @@
 
 var gulp = require('gulp');
 var autoprefixer = require('gulp-autoprefixer');
-var bowerfiles = require('gulp-bower-files');
+var bowerfiles = require('main-bower-files');
 var cache = require('gulp-cache');
 var changed = require('gulp-changed');
 var concat = require('gulp-concat');
@@ -197,7 +197,7 @@ gulp.task('configs', function() {
 // });
 
 gulp.task('libs', function() {
-	return bowerfiles().pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
+	return gulp.src(bowerfiles()).pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
 });
 
 gulp.task('libsjs', ["libs"], function() {

@@ -12,7 +12,6 @@
     "event-stream": "^3.1.5",
     "gulp": "^3.8.5",
     "gulp-autoprefixer": "^0.0.7",
-    "gulp-bower-files": "^0.2.5",
     "gulp-cache": "^0.2.0",
     "gulp-changed": "^0.4.0",
     "gulp-concat": "^2.2.0",
@@ -36,6 +35,7 @@
     "gulp-using": "^0.0.1",
     "gulp-util": "^2.2.19",
     "imagemin-pngcrush": "^0.1.0",
+    "main-bower-files": "^1.0.2",
     "matchdep": "^0.3.0"
   },
   "scripts": {
