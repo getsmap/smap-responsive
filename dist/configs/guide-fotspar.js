@@ -1,8 +1,8 @@
 
 var ws = {
-		// "localhost": {
-		// 	proxy: "//localhost/cgi-bin/proxy.py?url="
-		// },
+		"localhost": {
+			proxy: "//localhost/cgi-bin/proxy.py?url="
+		},
 		"xyz.malmo.se": {
 			proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
 		},
