@@ -12,7 +12,7 @@ var ws = {
 			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
 		}
 };
-var proxy = ws[document.domain].proxy;
+var proxy = ws.hasOwnProperty(document.domain) ? ws[document.domain].proxy : null;
 
 
 

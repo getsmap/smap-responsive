@@ -1,8 +1,8 @@
 
 var ws = {
-		"localhost": {
-			proxy: "//localhost/cgi-bin/proxy.py?url="
-		},
+		// "localhost": {
+		// 	proxy: "//localhost/cgi-bin/proxy.py?url="
+		// },
 		"xyz.malmo.se": {
 			proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
 		},
@@ -13,7 +13,7 @@ var ws = {
 			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
 		}
 };
-var proxy = ws[document.domain].proxy;
+var proxy = ws.hasOwnProperty(document.domain) ? ws[document.domain].proxy : null;
 
 
 var config = {
@@ -24,9 +24,9 @@ var config = {
 	},
 
 	ws: {
-		"localhost": {
-			proxy: proxy
-		},
+		// "localhost": {
+		// 	proxy: proxy
+		// },
 		"xyz.malmo.se": {
 			proxy: proxy
 		},

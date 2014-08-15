@@ -462,7 +462,7 @@ var config = {
 				attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">',
 				maxZoom: 18
 			}
-		}
+		},
 //		,
 //	 	{
 //			init: "L.TileLayer",
@@ -476,21 +476,21 @@ var config = {
 //				tms: true
 //			}
 //		},
-//		{
-//			init: "L.TileLayer.WMS",
-//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
-//			options: {
-//				layerId: "wms-op",
-//				displayName: "WMS-op",
-//				layers: "malmows:smap-mobile-bakgrundskarta",
-//				format: 'image/jpeg',
-//				subdomains: ["xyz"],
-//				transparent: true,
-//				minZoom: 6,
-//				maxZoom: 18,
-//				tiled: true
-//			}
-//		},		
+		{
+			init: "L.TileLayer.WMS",
+			url: 'http://lund0001:FDA019ucyhoO@maps.lantmateriet.se/topowebb/wms/v1?request=GetCapabilities&version=1.1.1',  // gwc/service/
+			options: {
+				layerId: "topowebbkartan_nedtonad",
+				displayName: "lantmäteriet",
+				layers: "topowebbkartan_nedtonad",
+				format: 'image/jpeg',
+				//subdomains: ["xyz"],
+				transparent: true,
+				minZoom: 6,
+				maxZoom: 18//,
+				//tiled: true
+			}
+		}//,		
 //		{
 //			init: "L.TileLayer.WMS",
 //			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
@@ -573,6 +573,8 @@ var config = {
 		        	   options: {
 						wsAcUrl : "http://kartor.lund.se/lkarta_sokproxy/auto_lund.ashx",
 						wsLocateUrl: "http://kartor.lund.se/lkarta_sokproxy/sokexakt_lund.ashx",
+						//wsAcUrl : "http://nominatim.openstreetmap.org/search",
+						//wsLocateUrl : "http://nominatim.openstreetmap.org/search",
 						wsOrgProj: "EPSG:3008"
 					   }
 		           },
