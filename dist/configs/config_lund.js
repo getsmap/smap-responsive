@@ -10,6 +10,7 @@ var config = {
 		ws: {
 			"localhost": {
 				proxy: "http://localhost:8080/proxy.py?url="
+				//proxy: "http://localhost/cgi-bin/proxy.py?url="
 			},
 			"kartor.lund.se": {
 				proxy: "http://kartor.lund.se/proxy.py?url="
@@ -47,7 +48,8 @@ var config = {
 	    			 layers: 'fastgrans',
 	    			 format: 'image/png',
 	    			 featureType: "polygon",
-	    			 selectable: false,
+	    			 selectable: true,
+					 queryLayer: "polka_fastigheter",
 	    			 transparent: true,
 	    			 attribution: "@ Lunds kommun"
 					// popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"

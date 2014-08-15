@@ -71,7 +71,6 @@ L.Control.GuidePopup = L.Control.extend({
 		}
 		else if (tabMedia && tabMedia instanceof Object) {
 			// Show media in full-screen at once
-			
 			var content = this._makeMediaContent(tabMedia.mediaType, utils.extractToHtml(tabMedia.sources, props).split(","));
 			var mediaPic;
 			if (t.mediaType !== "image") {
@@ -309,7 +308,7 @@ L.Control.GuidePopup = L.Control.extend({
 			list = $('<div id="gp-listmoreinfo" class="list-group" />');
 		for (i=0,len=arrMedia.length; i<len; i++) {
 			t = arrMedia[i];
-			if (t.condition && t.condition(props) === true) {
+			if (!t.condition || (t.condition && t.condition(props) === true)) {
 				li = $('<a href="#" class="list-group-item"><span class="'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
 				list.append(li);
 			}
