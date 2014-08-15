@@ -62,11 +62,17 @@
   border-color: rgba(255,255,255,0);
 }
 .lswitch-catcont.lswitch-catcont-visible {
-  margin-left: 10px;
   height: auto;
   opacity: 1;
   background-color: rgba(255,255,255,0.3);
-  overflow: visible;
+  overflow: hidden;
+}
+.lswitch-catcont.lswitch-catcont-visible .lswitch-cat,
+.lswitch-catcont .lswitch-catcont.lswitch-catcont-visible a {
+  margin-left: 10px;
+}
+.lswitch-catcont.lswitch-catcont-visible {
+  width: calc(100% + 10px);
 }
 .lswitch-catcont a {
   border-radius: 0 !important;

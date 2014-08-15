@@ -83,11 +83,17 @@ mobPanelBg = #38454e
 
 
 .lswitch-catcont.lswitch-catcont-visible
-	margin-left 10px
+	// margin-left 10px
 	height auto
 	opacity 1
 	background-color rgba(255,255,255,.3)
-	overflow visible
+	overflow hidden
+
+.lswitch-catcont.lswitch-catcont-visible .lswitch-cat, .lswitch-catcont .lswitch-catcont.lswitch-catcont-visible a
+	margin-left 10px
+
+.lswitch-catcont.lswitch-catcont-visible
+	width calc(100% + 10px)
 
 .lswitch-catcont a
 	border-radius 0 !important
