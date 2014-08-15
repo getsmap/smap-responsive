@@ -88,7 +88,7 @@ var config = {
 								'}'+
 								'else {return "";}'+
 								'pic = $.trim(pic);'+
-								'return "<img style=\'max-width:200px;max-height:200px;margin-top: 1em;\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
+								'return "<img style=\'width:100%;max-height:200px;margin-top: 1em;\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
 							'}}'
 						//xyz.malmo.se/rest/resources/vara_fotspar/${bilder}"></img>'
 				}
