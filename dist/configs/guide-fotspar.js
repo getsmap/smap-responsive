@@ -88,7 +88,7 @@ var config = {
 								'}'+
 								'else {return "";}'+
 								'pic = $.trim(pic);'+
-								'return "<img style=\'width:200px;max-height:200px;margin-top: 1em;\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
+								'return "<img style=\'max-width:200px;max-height:200px;margin-top: 1em;\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
 							'}}'
 						//xyz.malmo.se/rest/resources/vara_fotspar/${bilder}"></img>'
 				}
@@ -251,12 +251,27 @@ var config = {
 							iconType: null,
 							dialogTitle: "${titel}",
 							fullScreenIntroPic: "${bilder}", // Used only when clicking on a media tag, opening in fullscreen
-							tabIntro: "${beskrivning}",
+							tabIntro: '${function(p) {'+
+								'var out = "";'+
+								'var pics = p.bilder || "",'+
+									'pic;'+
+								'pics = pics ? pics.split(",") : [];'+
+								'if (pics.length > 1 && pics[0].length) {'+
+									'pic = pics[0];'+
+								'}'+
+								'else if (pics.length === 1) {'+
+									'pic = pics;'+
+								'}'+
+								'else {return "";}'+
+								'pic = $.trim(pic);'+
+								'return "<img style=\'max-width:70%;max-height:300px;margin-bottom: 1em;\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
+							'}}'+
+							"<div>${beskrivning}</div>",
 							tabMedia: [{
 								condition: function(p) {
 									return p.bilder && p.bilder.split(",").length > 1;
 								},
-								label: 'Bilder av "${titel}"',
+								label: 'Fler bilder av "${titel}"',
 								mediaType: "image",
 								sources: '${function(p){var pics = p.bilder.split(","); '+
 										'var baseUrl = "//xyz.malmo.se/rest/resources/vara_fotspar/";'+
