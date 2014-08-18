@@ -465,7 +465,7 @@ var config = {
 		// },
 	 	{
 			init: "L.TileLayer",
-			url: 'http://api.tiles.mapbox.com/v4/lundskommun.j909n073/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVuZHNrb21tdW4iLCJhIjoiOF9aRFdOcyJ9.Sgz7y47TZQ01Cxfy-zVLRg#12/55.6922/13.2732',
+			url: 'http://api.tiles.mapbox.com/v4/lundskommun.j909n073/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVuZHNrb21tdW4iLCJhIjoicDJISExiMCJ9.TO5qHjZRKpsuQLL08w362w#12/55.6922/13.2732',
 			options: {
 				layerId: "mapboxlund",
 				displayName: "Lunds kommun",
