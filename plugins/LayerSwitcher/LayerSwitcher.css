@@ -44,11 +44,6 @@
 .lswitch-cat span {
   margin-left: 0.7em;
 }
-.lswitch-cat.open,
-.lswitch-cat.open:hover {
-  background-color: #fff;
-  color: #555;
-}
 .lswitch-cat.open i {
   -webkit-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
@@ -85,8 +80,8 @@
 }
 .lswitch-catcont.lswitch-catcont-visible a {
   padding-left: 2em;
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
 }
 .lswitch-cat,
 .lswitch-panel a {
@@ -97,9 +92,6 @@
 }
 .lswitch-cat {
   margin-top: 2px;
-}
-.lswitch-cat:hover {
-  background-color: #fafafa;
 }
 .lswitch-panel a.active {
   cursor: pointer;
@@ -145,6 +137,14 @@
   }
 }
 @media (min-width: 992px) {
+  .lswitch-cat:hover {
+    background-color: #fafafa;
+  }
+  .lswitch-cat.open,
+  .lswitch-cat.open:hover {
+    background-color: #fff;
+    color: #555;
+  }
   .lswitch-cat {
     color: #555;
     background-color: #fff;

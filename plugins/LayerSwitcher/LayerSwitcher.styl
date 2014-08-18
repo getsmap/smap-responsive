@@ -66,9 +66,7 @@ indentDist = 1em
 // 	transition all .2s // only use transition effect for desktop due to rendering problem in Chrome e.g.
 
 
-.lswitch-cat.open, .lswitch-cat.open:hover
-	background-color bgColorHeaderOpen
-	color colorHeaderOpen
+
 
 .lswitch-cat.open i
 	transform rotate(90deg)
@@ -113,7 +111,7 @@ indentDist = 1em
 
 .lswitch-catcont.lswitch-catcont-visible a
 	padding-left 2em
-	transition all 0.5s
+	transition all 0.2s
 
 // .lswitch-catcont.lswitch-catcont-visible .lswitch-cat
 // 	border-right 1px solid #ccc
@@ -133,9 +131,6 @@ indentDist = 1em
 	// color colorHeaderOpen
 	// background-color bgColorHeaderOpen
 	margin-top 2px
-
-.lswitch-cat:hover
-	background-color catHoverColor
 
 // .lswitch-panel a:hover, .lswitch-panel a:active
 	// background-color #38454E /* For mobile screens - use same background-color during hover as for default */
@@ -213,7 +208,13 @@ indentDist = 1em
 
 @media (min-width: 992px)
 	/* For desktop computers */
-	
+	.lswitch-cat:hover
+		background-color catHoverColor
+		
+	.lswitch-cat.open, .lswitch-cat.open:hover
+		background-color bgColorHeaderOpen
+		color colorHeaderOpen
+
 	.lswitch-cat
 		color #555
 		background-color #fff
