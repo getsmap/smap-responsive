@@ -463,49 +463,48 @@ var config = {
 				maxZoom: 18
 			}
 		},
-//		,
-//	 	{
-//			init: "L.TileLayer",
-//			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
-//			options: {
-//				layerId: "malmotile",
-//				displayName: "Malmö karta",
-//				attribution: "© Malmö Stadsbyggnadskontor",
-//				minZoom: 6,
-//				maxZoom: 18,
-//				tms: true
-//			}
-//		},
+	 	// {
+			// init: "L.TileLayer",
+			// url: 'http://api.tiles.mapbox.com/v4/lundskommun.j909n073/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVuZHNrb21tdW4iLCJhIjoicDJISExiMCJ9.TO5qHjZRKpsuQLL08w362w#12/55.6922/13.2732',
+			// options: {
+				// layerId: "mapboxlund",
+				// displayName: "Lunds kommun",
+				// attribution: "© Mapbox",
+				// maxZoom: 18
+			// }
+		// },
 		{
 			init: "L.TileLayer.WMS",
-			url: 'http://lund0001:FDA019ucyhoO@maps.lantmateriet.se/topowebb/wms/v1?request=GetCapabilities&version=1.1.1',  // gwc/service/
+			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
+			options: {
+				layerId: "wms-op",
+				displayName: "WMS-op",
+				layers: "malmows:smap-mobile-bakgrundskarta",
+				format: 'image/jpeg',
+				subdomains: ["xyz"],
+				transparent: true,
+				minZoom: 6,
+				maxZoom: 18,
+				tiled: true
+			}
+		},
+		{
+			init: "L.TileLayer.WMS",
+			url: 'http://lund0001:FDA019ucyhoO@maps.lantmateriet.se/topowebb/wms/v1',  // gwc/service/
 			options: {
 				layerId: "topowebbkartan_nedtonad",
 				displayName: "lantmäteriet",
 				layers: "topowebbkartan_nedtonad",
 				format: 'image/jpeg',
+				CRS: 'epsg:3006',
 				//subdomains: ["xyz"],
 				transparent: true,
 				minZoom: 6,
 				maxZoom: 18//,
 				//tiled: true
 			}
-		}//,		
-//		{
-//			init: "L.TileLayer.WMS",
-//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
-//			options: {
-//				layerId: "wms-topo",
-//				displayName: "WMS-Topo (OBS! endast för test)",
-//				layers: "malmows:smap-mobile-bakgrundskarta-topo",
-//				format: 'image/jpeg',
-//				subdomains: ["xyz"],
-//				transparent: true,
-//				minZoom: 6,
-//				maxZoom: 18,
-//				tiled: true
-//			}
-//		},
+		}
+		//,
 //		{
 //			init: "L.TileLayer.WMS",
 //			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/
