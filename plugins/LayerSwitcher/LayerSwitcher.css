@@ -57,6 +57,7 @@
 .lswitch-catcont {
   height: 0;
   overflow: hidden;
+  overflow-x: visible;
   border: none;
   opacity: 0;
   border-color: rgba(255,255,255,0);
@@ -64,19 +65,28 @@
 .lswitch-catcont.lswitch-catcont-visible {
   height: auto;
   opacity: 1;
-  background-color: rgba(255,255,255,0.3);
-  overflow: hidden;
+  background-color: none;
+  overflow: visible;
 }
-.lswitch-catcont.lswitch-catcont-visible .lswitch-cat,
-.lswitch-catcont .lswitch-catcont.lswitch-catcont-visible a {
-  margin-left: 10px;
+.lswitch-catcont.lswitch-catcont-visible .lswitch-cat {
+  margin-left: 1em;
 }
-.lswitch-catcont.lswitch-catcont-visible {
-  width: calc(100% + 10px);
+.lswitch-catcont.lswitch-catcont-visible .lswitch-catcont .lswitch-cat {
+  margin-left: 2em;
+}
+.lswitch-catcont.lswitch-catcont-visible .lswitch-catcont .lswitch-catcont.lswitch-catcont-visible a {
+  margin-left: 2em;
+}
+.lswitch-catcont.lswitch-catcont-visible .lswitch-catcont a {
+  margin-left: 1em;
 }
 .lswitch-catcont a {
   border-radius: 0 !important;
-  padding-left: 1.8em;
+}
+.lswitch-catcont.lswitch-catcont-visible a {
+  padding-left: 2em;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
 }
 .lswitch-cat,
 .lswitch-panel a {
@@ -172,6 +182,7 @@
   .lswitch-panel a {
     -webkit-transition: all 100ms;
     transition: all 100ms;
+    background-color: rgba(255,255,255,0.5);
   }
   .lswitch-panel a:hover,
   .lswitch-panel a:active {
@@ -183,7 +194,7 @@
   }
   #lswitch-olcont,
   #lswitch-blcont {
-    background-color: rgba(255,255,255,0.4);
+    background-color: none;
     border-radius: 0 0 0.4em 0.4em;
     margin-top: -1px;
   }

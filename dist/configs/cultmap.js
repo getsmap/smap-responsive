@@ -104,7 +104,7 @@ var config = {
 					layerId: "Museum",
 					displayName: "Museum",
 					attribution: "Stadsbyggnadskontoret, Malmö",
-					category: ["Museer", "Kulturen"],
+					category: ["Museer", "Kulturen", "Okulten"],
 					inputCrs: "EPSG:4326",
 					reverseAxis: false,
 					reverseAxisBbox: false,

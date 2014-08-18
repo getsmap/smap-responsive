@@ -12,6 +12,8 @@ colorHeaderOpen = #555
 cpPanelBg = none
 mobPanelBg = #38454e
 
+indentDist = 1em
+
 
 #lswitch-btn
 	z-index 1
@@ -74,11 +76,13 @@ mobPanelBg = #38454e
 .lswitch-catcont
 	height 0
 	overflow hidden
+	overflow-x visible
 	// transition all .5s  // only use transition effect for desktop due to rendering problem in Chrome e.g.
 	
 	border none
 	opacity 0
 	border-color rgba(255,255,255, 0)
+
 	// box-shadow rgba(0, 0, 0, 0.29) 1px 1px 2px inset
 
 
@@ -86,18 +90,33 @@ mobPanelBg = #38454e
 	// margin-left 10px
 	height auto
 	opacity 1
-	background-color rgba(255,255,255,.3)
-	overflow hidden
+	background-color none //rgba(255,255,255,.3)
+	overflow visible
 
-.lswitch-catcont.lswitch-catcont-visible .lswitch-cat, .lswitch-catcont .lswitch-catcont.lswitch-catcont-visible a
-	margin-left 10px
+	.lswitch-cat
+		margin-left indentDist
 
-.lswitch-catcont.lswitch-catcont-visible
-	width calc(100% + 10px)
+	.lswitch-catcont
+		.lswitch-cat
+			margin-left indentDist*2
+		.lswitch-catcont.lswitch-catcont-visible a
+			margin-left indentDist*2
+	.lswitch-catcont a
+		margin-left indentDist
+
+
+// .lswitch-catcont.lswitch-catcont-visible
+// 	width calc(100% + 1px)
 
 .lswitch-catcont a
 	border-radius 0 !important
-	padding-left 1.8em
+
+.lswitch-catcont.lswitch-catcont-visible a
+	padding-left 2em
+	transition all 0.5s
+
+// .lswitch-catcont.lswitch-catcont-visible .lswitch-cat
+// 	border-right 1px solid #ccc
 
 // .lswitch-catcont a:first-child
 // 	margin 0
@@ -239,6 +258,7 @@ mobPanelBg = #38454e
 	.lswitch-panel a
 		// background none
 		transition all 100ms
+		background-color rgba(255,255,255, 0.5)
 	
 	.lswitch-panel a:hover, .lswitch-panel a:active
 		background-color hoverColor
@@ -249,7 +269,7 @@ mobPanelBg = #38454e
 		background none
 	
 	#lswitch-olcont, #lswitch-blcont
-		background-color rgba(255,255,255,.4)
+		background-color none
 		border-radius 0 0 .4em .4em
 		margin-top -1px
 	
