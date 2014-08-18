@@ -35,7 +35,9 @@
     "openlayers": "~2.13.1",
     "proj4": "~2.1.4",
     "spinjs": "~2.0.1",
-    "sass-bootstrap": "~3.0.0"
+    "sass-bootstrap": "~3.0.0",
+    "add-to-homescreen": "~3.0.7",
+    "screenfull": "~1.2.1"
   },
   "overrides": {
     "bootstrap3-typeahead": {
@@ -85,8 +87,5 @@
         "build/openlayers.js"
       ]
     }
-  },
-  "devDependencies": {
-    "jquery-mobile": "~1.4.3"
   }
 }
