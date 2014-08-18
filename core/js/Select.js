@@ -1,6 +1,5 @@
 smap.core.Select = L.Class.extend({
-	
-	
+
 	/**
 	 * Containers for selected features (Vector and WMS).
 	 */
@@ -80,7 +79,6 @@ smap.core.Select = L.Class.extend({
 //			for (var i=0,len=arr.length; i<len; i++) {
 //				arr[i].resetStyle(arr[i]);
 //			}
-
 //			var isGeoJsonLayer = !layer.addData ? false : true;			
 			var layer = e.layer;
 			var isVector = layer.hasOwnProperty("_layers"),

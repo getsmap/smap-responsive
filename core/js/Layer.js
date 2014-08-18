@@ -1,6 +1,10 @@
 smap.core.Layer = L.Class.extend({
 	
 	options: {
+		defaultStyle: {
+			color: '#00F',
+			fillOpacity: 0.3
+		},
 		selectStyle: {
 			weight: 5,
 	        color: '#00DDFF',
@@ -125,6 +129,8 @@ smap.core.Layer = L.Class.extend({
 		
 		var self = this;
 		if (layer._layers) {
+			layer.options.style = layer.options.style || $.extend({}, self.options.defaultStyle);
+
 //			if (!t.options.style) {
 //				var style = {
 //						weight: 2,
