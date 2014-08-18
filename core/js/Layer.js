@@ -3,7 +3,11 @@ smap.core.Layer = L.Class.extend({
 	options: {
 		defaultStyle: {
 			color: '#00F',
-			fillOpacity: 0.3
+			fillColor: "#00F",
+			opacity: 1,
+			fillOpacity: 0.3,
+			radius: 8,
+			weight: 1
 		},
 		selectStyle: {
 			weight: 5,
