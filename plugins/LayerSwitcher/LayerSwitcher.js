@@ -161,10 +161,12 @@ L.Control.LayerSwitcher = L.Control.extend({
 			var isActive = row.hasClass("active");
 			if (row.length) {
 				if (e.type === "layeradd" && isActive === false) {
-					row.addClass("active");						
+					self._onRowTap({target: row});
+					// row.addClass("active");						
 				}
 				else if (e.type === "layerremove" && isActive === true) {
-					row.removeClass("active");
+					self._onRowTap({target: row});
+					// row.removeClass("active");
 				}
 			}
 		});
