@@ -2,7 +2,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	options: {
 		pxDesktop: 992,
 		toggleSubLayersOnClick: true,
-		unfoldOnClick: false,
+		unfoldOnClick: true,
 		unfoldAll: false,
 		catIconClass: "fa fa-chevron-circle-right"  //fa-chevron-circle-right"
 

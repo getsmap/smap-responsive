@@ -121,7 +121,12 @@
   .lswitch-panel a.active,
   .lswitch-panel a.active:hover,
   .lswitch-panel a.active:active {
-    background: none !important;
+    background: #000 !important;
+    color: #fff;
+  }
+  div.list-group-item.active,
+  div.list-group-item.active:hover,
+  div.list-group-item.active:focus {
     background: #000 !important;
     color: #fff;
   }
@@ -141,9 +146,9 @@
   div.list-group-item.active:hover,
   div.list-group-item.active:focus {
     z-index: 2;
-    color: #fff;
-    background-color: #428bca;
-    border-color: #428bca;
+    background-color: #fff;
+    color: #555;
+    font-weight: bold;
   }
   .lswitch-panel a.active,
   .lswitch-panel a.active:hover,

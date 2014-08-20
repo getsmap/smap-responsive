@@ -621,6 +621,10 @@ var config = {
 				  {
 					  init: "L.Control.Add2HomeScreen",
 					  options: {}
-				  }
+				  },
+				    {
+				  	  init: "L.Control.FullScreen",
+				  	  options: {position: 'topright'}
+				    }
 	  ]
 };

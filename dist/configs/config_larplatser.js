@@ -25,9 +25,7 @@ var config = {
 		},
 		
 		ol: [
-	    	 
-	    	 	    	 
-	    	 
+
 	    	 {
 	    	 	 init: "L.GeoJSON.WFS",
 	    	 	 url: "http://193.17.67.229/geos/hborg/wfs",
@@ -40,8 +38,7 @@ var config = {
 	    	 	 	reverseAxis: false,
 	    	 	 	reverseAxisBbox: true,
 	    	 	 	selectable: true,
-	    	 	 	//popup: '${fid}',
-	    	 	 	// uniqueKey: "id",
+	    	 	 	popup: "<h3>Lärplatser</h3><p><b>Plats namn:</b> ${plats}</p>",
 	    	 	 	params: {
 	    	 	 		typeName: "hborg:larplatser_mv", // required
 	    	 	 		version: "1.1.0",
@@ -49,408 +46,48 @@ var config = {
 	    	 	 		format: "text/geojson",
 	    	 	 		outputFormat: "json",
 	    	 	 		service: "WFS",
-	    	 	 		request: "GetFeature"
+	    	 	 		request: "GetFeature",
+	    	 	 		pointToLayer: "type"
 	    	 	 	},
 					style: {
-					
-					    fillColor: "#ff7800",
-					    color: "#000",
-					    weight: 1,
-					    opacity: 1,
-					    fillOpacity: 0.8
-					},
-					selectStyle: {
-					
-					    fillColor: "#0FF",
-					    color: "#0FF",
-					    weight: 1,
-					    opacity: 1,
-					    fillOpacity: 0.5
+						icon:{
+							iconUrl: 'lib/leaflet-0.7.2/images/marker-icon.png',
+						    shadowUrl: 'lib/leaflet-0.7.2/images/marker-shadow.png',
+						}
 					}
 	    	 	 }
-	    	 	 
 	    	 },
 	    	 {
 	    	 	 init: "L.GeoJSON.WFS",
-	    	 	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
+	    	 	 url: "http://193.17.67.229/geos/hborg/wfs",
 	    	 	 options: {
-	    	 	 	layerId: "busstation",
-	    	 	 	displayName: "Busstationer",
-	    	 	 	attribution: "Stadsbyggnadskontoret, Malmö",
+	    	 	 	xhrType: "GET",
+	    	 	 	layerId: "naturpunkter_hbg",
+	    	 	 	displayName: "Naturpunkter",
+	    	 	 	attribution: "IT/GIS Helsingborg stad",
 	    	 	 	inputCrs: "EPSG:3008",
 	    	 	 	reverseAxis: false,
 	    	 	 	reverseAxisBbox: true,
 	    	 	 	selectable: true,
-	    	 	 	popup: '${id}',
-	    	 	 	uniqueKey: "id",
+	    	 	 	popup: "<h3>Naturpunkter</h3><p><b>Plats namn:</b> ${namn}</p><p><b>Beskrivning:</b> ${beskrivning}</p>",
 	    	 	 	params: {
-	    	     	 	typeName: "malmows:busstation",
-	    	 			version: "1.1.0",
-	    	 			maxFeatures: 10000,
-	    	 			format: "text/geojson",
-	    	 			outputFormat: "json"
-	    	  		},
-	    	  		style: {
-	    	  			radius: 8,
-	    	  		    fillColor: "#ff7800",
-	    	  		    color: "#000",
-	    	  		    weight: 1,
-	    	  		    opacity: 1,
-	    	  		    fillOpacity: 0.8
-	    	  		},
-	    	  		selectStyle: {
-	    	  			radius: 8,
-	    	  		    fillColor: "#0FF",
-	    	  		    color: "#0FF",
-	    	  		    weight: 1,
-	    	  		    opacity: 1,
-	    	  		    fillOpacity: 0.5
+	    	 	 		typeName: "hborg:naturpunkter_hbg", // required
+	    	 	 		version: "1.1.0",
+	    	 	 		maxFeatures: 10000,
+	    	 	 		format: "text/geojson",
+	    	 	 		outputFormat: "json",
+	    	 	 		service: "WFS",
+	    	 	 		request: "GetFeature",
+	    	 	 		pointToLayer: "type"
+	    	 	 	},
+	    	 		style: {
+	    	 			icon:{
+	    	 				iconUrl: 'img/naturpunkt_30x38_sbf.png',
+	    	 			    shadowUrl: 'lib/leaflet-0.7.2/images/marker-shadow.png',
+	    	 			}
 	    	 		}
-	    	  	}
-	    	 },
-	    	 {
-	    	 	 init: "L.TileLayer.WMS",
-	    	 	 url: "http://geoserver.smap.se/geoserver/wms",
-	    	 	 options: {
-	    	 		 layerId: "cykelvag",
-	    	 		 displayName: "Cykelväg",
-	    	 		 layers: 'malmows:GK_CYKELVAG_L',
-	    	 		 format: 'image/png',
-	    	 		 selectable: true,
-	    	 		 transparent: true,
-	    	 		 attribution: "@ Malmö Stadsbyggnadskontor",
-	    	 		 popup: "<h3>${_displayName}</h3><p>Typ: ${typ}</p><p>Geom: ${geom}</p>"
 	    	 	 }
-	    	 	 
-	    	 },
-	    	 
-	    	 /*
-	    	 {
-	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://opendata-view.smhi.se/klim-stat_temperatur/wms",
-	    		 options: {
-	    			 layerId: "gangstig",
-	    			 displayName: "Gångstig",
-	    			 layers: 'arsmedeltemperatur',
-	    			 format: 'image/png',
-	    			 selectable: true,
-	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor"
-	    		 }
-		     },
-		     {
-	    		 init: "L.TileLayer.WMS",
-	    		 url: "http://xyz.malmo.se:8081/geoserver/gwc/service/wms",
-	    		 options: {
-	    			 layerId: "test",
-	    			 displayName: "Test",
-	    			 layers: 'malmows:smap-mobile-bakgrundskarta',
-	    			 format: 'image/png',
-	    			 selectable: true,
-	    			 transparent: true,
-	    			 attribution: "@ Malmö Stadsbyggnadskontor",
-	    			 popup: "<h3>${_displayName}</h3><p>Beläggning: ${belaggning}</p><p>${shape_leng}</p>"
-	    		 }
-		     },
-		     
-		     {
-					init: "L.GeoJSON.WFS",
-					url: "http://193.17.67.229/cgi-bin/externt/kkarta/qgis_mapserv.fcgi",
-					options: {
-						layerId: "wfstest_qgis_server",
-						displayName: "Elnät Kristianstad",
-						attribution: "Kristianstads WFS",
-						inputCrs: "EPSG:3008",
-						reverseAxis: false,
-						reverseAxisBbox: false,
-						xhrType: "GET",
-						selectable: true,
-						popup: 'agare: ${agare}',
-						uniqueKey: "id",
-						params: {
-//		    	 			version: "1.0.0"
-							typeName: "c4elnat",
-							format: "text/xml",
-//							srs: "EPSG:3008",
-							maxFeatures: 10000,
-							outputFormat: "GeoJSON"
-						},
-						style: {
-							weight: 2,
-							color: '#F00',
-							dashArray: '',
-							opacity: .5
-						}
-					}
-				},
-
-				{
-			    	 init: "L.GeoJSON.WFS",
-			    	 url: "http://localhost/cgi-bin/cultMap/getGeoData.py",
-			    	 options: {
-			    	 	layerId: "Kulturlagret",
-			    	 	displayName: "Kulturlagret",
-			    	 	attribution: "Stadsbyggnadskontoret, Malmö",
-			    	 	inputCrs: "EPSG:4326",
-			    	 	reverseAxis: false,
-			    	 	reverseAxisBbox: false,
-			    	 	selectable: true,
-			    	 	popup: '<h4>${txt_name}</h4>',
-			    	 	uniqueKey: "id",
-			    	 	params: {
-			    	 		q: "hembygdsgard"
-				   //  	 	typeName: null,
-							// version: null,
-							// maxFeatures: 10000,
-							// format: "text/geojson",
-							// outputFormat: "json"
-			     		},
-			     		style: {
-			     			radius: 8,
-			     		    fillColor: "#ff7800",
-			     		    color: "#000",
-			     		    weight: 1,
-			     		    opacity: 1,
-			     		    fillOpacity: 0.8
-			     		},
-			     		selectStyle: {
-			     			radius: 8,
-			     		    fillColor: "#0FF",
-			     		    color: "#0FF",
-			     		    weight: 1,
-			     		    opacity: 1,
-			     		    fillOpacity: 0.5
-			    		}
-			     	}
-			     },
-				
-				{
-			    	 init: "L.GeoJSON.WFS",
-			    	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
-			    	 options: {
-			    	 	layerId: "busstation",
-			    	 	displayName: "Busstationer",
-			    	 	attribution: "Stadsbyggnadskontoret, Malmö",
-			    	 	inputCrs: "EPSG:3008",
-			    	 	reverseAxis: false,
-			    	 	reverseAxisBbox: true,
-			    	 	selectable: true,
-			    	 	popup: '${id}',
-			    	 	uniqueKey: "id",
-			    	 	params: {
-				    	 	typeName: "malmows:busstation",
-							version: "1.1.0",
-							maxFeatures: 10000,
-							format: "text/geojson",
-							outputFormat: "json"
-			     		},
-			     		style: {
-			     			radius: 8,
-			     		    fillColor: "#ff7800",
-			     		    color: "#000",
-			     		    weight: 1,
-			     		    opacity: 1,
-			     		    fillOpacity: 0.8
-			     		},
-			     		selectStyle: {
-			     			radius: 8,
-			     		    fillColor: "#0FF",
-			     		    color: "#0FF",
-			     		    weight: 1,
-			     		    opacity: 1,
-			     		    fillOpacity: 0.5
-			    		}
-			     	}
-			     },
-				{
-			    	 init: "L.GeoJSON.WFS",
-			    	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
-			    	 options: {
-			    	 	layerId: "stadsdel",
-			    	 	displayName: "Stadsdel",
-			    	 	attribution: "Stadsbyggnadskontoret, Malmö",
-			    	 	inputCrs: "EPSG:3008",
-			    	 	reverseAxis: false,
-			    	 	reverseAxisBbox: true,
-			    	 	selectable: true,
-			    	 	popup: '${id}',
-			    	 	uniqueKey: "gid",
-			    	 	params: {
-				    	 	typeName: "malmows:stadsdel",
-							version: "1.1.0",
-							maxFeatures: 10000,
-							format: "text/geojson",
-							outputFormat: "json"
-			     		},
-			     		// style: {
-			     		// 	color: '#00F',
-			     		// 	fillOpacity: 0.3
-			     		// }
-			     	},
-			     },
-		     {
-		    	 init: "L.GeoJSON.WFS",
-		    	 url: "http://geoserver.smap.se/geoserver/wfs",
-		    	 options: {
-		    	 	layerId: "malmows_STADSDEL_L",
-		    	 	displayName: "Stadsdel Linje",
-		    	 	attribution: "Stadsbyggnadskontoret, Malmö",
-		    	 	inputCrs: "EPSG:3008",
-		    	 	reverseAxis: false,
-		    	 	reverseAxisBbox: true,
-		    	 	selectable: true,
-		    	 	popup: 'The FID: ${fid}',
-		    	 	uniqueKey: null,
-		    	 	params: {
-			    	 	typeName: "malmows:STADSDEL_L",
-						version: "1.1.0",
-						maxFeatures: 10000,
-						format: "text/geojson",
-						outputFormat: "json"
-		     		},
-		     		style: {
-		     			weight: 6,
-		     			color: '#F00',
-		     			dashArray: '',
-		     			opacity: 0.1
-		     		},
-		     		selectStyle: {
-		    			weight: 5,
-		    	        color: '#00FF00',
-		    	        opacity: 1
-		    		}
-		     	}
-		     },
-		    //  {
-		    // 	 init: "L.GeoJSON.WFS",
-		    // 	 url: "http://xyz.malmo.se:8081/geoserver/wfs",
-		    // 	 options: {
-		    // 	 	layerId: "stadsdel3d",
-		    // 	 	displayName: "Stadsdel 3D",
-		    // 	 	attribution: "Stadsbyggnadskontoret, Malmö",
-		    // 	 	inputCrs: "EPSG:4326",
-		    // 	 	reverseAxis: false,
-		    // 	 	reverseAxisBbox: true,
-		    // 	 	selectable: true,
-		    // 	 	popup: 'The ID: ${id}',
-		    // 	 	uniqueKey: "id",
-		    // 	 	params: {
-			   //  	 	typeName: "malmows:malmo_kvarter_3d",
-						// version: "1.1.0",
-						// maxFeatures: 10000,
-						// format: "text/geojson",
-						// outputFormat: "json"
-		    //  		}
-		    //  	}
-		    //  },
-		     {
-				  init: "L.GeoJSON.WFS",
-				  url: "http://xyz.malmo.se:8081/geoserver/wfs",
-				  options: {
-					  layerId: "vhamnen_pt",
-					  displayName: "Punkter av intresse",
-					  params: {
-				    	 typeName: "malmows:POI_VHAMN_PT"
-		     		  },
-					  attribution: "Stadsbyggnadskontoret, Malmö",
-					  inputCrs: "EPSG:4326",
-					  uniqueKey: "gid",
-					  reverseAxis: false,
-					  reverseAxisBbox: true,
-					  popup: 
- 						'<div>${function(p) {'+
-   							'var out = "";'+
-   							'var style="margin-right:.3em;";'+
-   							'if (p.urlvideo) {'+
-   								'    out += \'<span style="\'+style+\'" class="fa fa-film fa-2x"></span>\';'+
-   								'}'+
-   							'if (p.urlsound) {'+
-   							'    out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-2x"></span>\';'+
-   							'}'+
-   						'if (p.picture && p.picture.split(",").length > 1) {'+
-   						'    out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-2x"></span>\';'+
-   						'}'+
-   					'return out;'+
-						'}'+
- 					'}</div>'+
-	  				'<h4>${id}: ${namn} </h4><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
-			        }
-		  		},
-		     {
-				  init: "L.GeoJSON.WFS",
-				  url: "http://geoserver.smap.se/geoserver/wfs",
-				  options: {
-					  layerId: "malmows_kvarter",
-					  displayName: "Kvarter",
-					  attribution: "Stadsbyggnadskontoret, Malmö",
-					  inputCrs: "EPSG:3008",
-					  reverseAxis: false,
-					  reverseAxisBbox: true,
-					  selectable: true,
-					  popup: 'The FID: ${fid}',
-					  uniqueKey: "easting;northing",
-					  params: {
-				    	 	typeName: "malmows:SUM_KVARTER_P",
-							version: "1.1.0",
-							maxFeatures: 10000,
-							format: "text/geojson",
-							outputFormat: "json"
-			     		},
-					  hoverColor: '#FF0',
-					  style: {
-						  weight: 2,
-						  color: '#F00',
-						  dashArray: '',
-						  fillOpacity: 0.5
-					  }
-				  }
-		     },
-			 {
-				init: "L.GeoJSON.Custom",
-				url: 'http://www.vakant.nu/gis_json.aspx?',
-				options: {
-					layerId: "vakant_mark",
-					displayName: "Vakant Mark",
-					params: {
-						mId : "1290",
-						type : "Mark"
-					},
-					selectable: true,
-					popup: 'Owner: ${owner_name}',
-					style: {
-						radius: 8,
-						fillColor: "#ff7800",
-						color: "#f00",
-						weight: 1,
-						opacity: 1,
-						fillOpacity: 0.8
-					}
-				}
-			}
-//		     ,
-//		     {
-//				  init: "L.GeoJSON.WFS",
-//				  url: "http://geoserver.smap.se/geoserver/wfs",
-//				  options: {
-//					  layerId: "intressepunkter",
-//					  displayName: "Intressepunkter",
-//					  featureType: "sandboxws:regispt",
-//					  attribution: "Stadsbyggnadskontoret, Malmö",
-//					  inputCrs: "EPSG:3008",
-//					  reverseAxis: false,
-//					  popup: '<h1>${namn}</h1><p>En popup med en bild</p><img style="width:200px;max-height:200px;" src="${picture}"></img>',
-//					  bigPopup: {
-//						  headerHtml: "${namn}",
-//						  srcVideo: '<video controls="controls" autoplay width="240" height="135">' +
-//				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.m4v" type="video/mp4" />' +
-//				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.webm" type="video/webm" />' +
-//				        	   			'<source src="http://geoserver.smap.se/~cleber/regis1330/video/video_061.ogg" type="video/ogg" />' +
-//			        	   			'</video>',
-//			        	   	srcImage: '${pictures}',
-//			        	   	srcAudio: '${video}'
-//			        }
-//		  		}
-//		     }*/
+	    	 }		     
 		     ],
 		     
 		bl: [
