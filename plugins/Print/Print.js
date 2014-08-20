@@ -62,18 +62,13 @@
         },
 
         _createBtn: function() {
-
-
             var self = this;
-
-
             if(this.options.addToMenu) {
                 smap.cmd.addToolButton( "", "fa fa-print", function () {
                     self.activate();
                     return false;
                 },null);
             }
-
             else {
                 var $btn = $('<button id="smap-print-btn" class="btn btn-default"><span class="fa fa-print"></span></button>');
                 $btn.on("click", function () {
