@@ -25,50 +25,13 @@ var config = {
 		},
 		
 		ol: [
-			{
-				 init: "L.GeoJSON.WFS",
-				 url: "http://localhost/cgi-bin/ws-smapresp/cultmap/getGeoData.py",  //"http://localhost/cherrypy/cultmap/getdata",
-				 options: {
-					proxy: null,
-					// xhrType: "GET",
-					layerId: "hembygdsgard",
-					displayName: "Hembygdsgårdar",
-					category: ["Historiska platser"],
-					attribution: "Stadsbyggnadskontoret, Malmö",
-					inputCrs: "EPSG:4326",
-					reverseAxis: false,
-					reverseAxisBbox: false,
-					selectable: true,
-					popup: '<h4>${txt_name}</h4>',
-					uniqueKey: "id",
-					params: {
-						q: "hembygdsgard"
-					},
-					style: {
-						radius: 8,
-						fillColor: "#ff7800",
-						color: "#000",
-						weight: 1,
-						opacity: 1,
-						fillOpacity: 0.8
-					},
-					selectStyle: {
-						radius: 8,
-						fillColor: "#0FF",
-						color: "#0FF",
-						weight: 1,
-						opacity: 1,
-						fillOpacity: 0.5
-					}
-				}
-			 },
 			 {
 				 init: "L.GeoJSON.WFS",
 				 url: "http://localhost/cgi-bin/cultMap/getGeoData.py",
 				 options: {
 					layerId: "Kulturen",
 					displayName: "Kulturen",
-					category: ["Historiska platser"],
+					category: ["Museer", "Kulturen"],
 					attribution: "Stadsbyggnadskontoret, Malmö",
 					inputCrs: "EPSG:4326",
 					reverseAxis: false,
@@ -104,7 +67,7 @@ var config = {
 					layerId: "Museum",
 					displayName: "Museum",
 					attribution: "Stadsbyggnadskontoret, Malmö",
-					category: ["Museer", "Kulturen", "Okulten"],
+					category: ["Museer", "Kulturen"],
 					inputCrs: "EPSG:4326",
 					reverseAxis: false,
 					reverseAxisBbox: false,
@@ -131,7 +94,44 @@ var config = {
 						fillOpacity: 0.5
 					}
 				}
-			 }
+			 },
+			 {
+				 init: "L.GeoJSON.WFS",
+				 url: "http://localhost/cgi-bin/ws-smapresp/cultmap/getGeoData.py",  //"http://localhost/cherrypy/cultmap/getdata",
+				 options: {
+					proxy: null,
+					// xhrType: "GET",
+					layerId: "hembygdsgard",
+					displayName: "Hembygdsgårdar",
+					category: ["Platser i världen"],
+					attribution: "Stadsbyggnadskontoret, Malmö",
+					inputCrs: "EPSG:4326",
+					reverseAxis: false,
+					reverseAxisBbox: false,
+					selectable: true,
+					popup: '<h4>${txt_name}</h4>',
+					uniqueKey: "id",
+					params: {
+						q: "hembygdsgard"
+					},
+					style: {
+						radius: 8,
+						fillColor: "#ff7800",
+						color: "#000",
+						weight: 1,
+						opacity: 1,
+						fillOpacity: 0.8
+					},
+					selectStyle: {
+						radius: 8,
+						fillColor: "#0FF",
+						color: "#0FF",
+						weight: 1,
+						opacity: 1,
+						fillOpacity: 0.5
+					}
+				}
+			 },
 
 
 		 ],

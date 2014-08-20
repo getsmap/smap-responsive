@@ -1,6 +1,11 @@
 L.Control.LayerSwitcher = L.Control.extend({
 	options: {
-		pxDesktop: 992
+		pxDesktop: 992,
+		toggleSubLayersOnClick: true,
+		unfoldOnClick: false,
+		unfoldAll: false,
+		catIconClass: "fa fa-chevron-circle-right"  //fa-chevron-circle-right"
+
 	},
 	
 	_lang: {
@@ -284,6 +289,22 @@ L.Control.LayerSwitcher = L.Control.extend({
 			return false;
 		}
 		tag.toggleClass("active");
+		if (this.options.toggleSubLayersOnClick) {
+			var isActive = tag.hasClass("active");
+			var parentConts = tag.parents(".lswitch-catcont");
+			parentConts.each(function() {
+				if (isActive) {
+					$(this).prev().addClass("active");
+				}
+				else {
+					if ( $(this).find("a.list-group-item.active").length > 0 ) {
+						// Don't deactivate if there are other active layers
+						return false;
+					}
+					$(this).prev().removeClass("active");
+				}
+			});
+		}
 		var isActive = tag.hasClass("active");
 		
 		if ( isActive ) {
@@ -312,18 +333,80 @@ L.Control.LayerSwitcher = L.Control.extend({
 		return decodeURIComponent( theId.replace("lswitchrow-", "").replace(/--pr--/g, "%") );
 	},
 
-	_onHeaderClick: function(e) {
-		var tag = $(this);
-		tag.next().toggleClass('lswitch-catcont-visible');
-		tag.toggleClass('open')
-		// setTimeout(function() {
-		// }, 1);
+	_toggleHeader: function(header) {
+		header.next().toggleClass('lswitch-catcont-visible');
+		header.toggleClass('open');
+	},
+
+	_onHeaderClick: function(e, options) {
+		options = options || {};
+
+		var self = this;
+		var tag = e.target;
+		if (tag.tagName === "A" || tag.tagName === "SPAN") {
+			tag = $(tag).parent();
+		}
+		else {
+			tag = $(tag);
+		}
+		var cont = tag.next();
+		if (this.options.unfoldOnClick && (this.options.unfoldAll || !options.isSubHeader)) {
+			this._toggleHeader(tag);
+		}
+
+		if (!this.options.toggleSubLayersOnClick && this.options.unfoldOnClick && this.options.unfoldAll) {
+			cont.find("div.list-group-item").each(function() {
+				h = $(this);
+				var thisIsOpen = tag.hasClass("open"),
+					thatIsOpen = h.hasClass("open");
+				if (thisIsOpen !== thatIsOpen) {
+					self._toggleHeader(h);
+				}
+			});
+		}
+
+		if (this.options.toggleSubLayersOnClick) {
+			// Render cat header as active or inactive (toggle)
+
+			var headerIsActive = tag.hasClass("active"),
+				headerIsOpen = tag.hasClass("open"),
+				rowIsActive,
+				row;
+
+			if (this.options.unfoldOnClick && headerIsOpen === headerIsActive && !options.isSubHeader) {
+				headerIsActive = !headerIsActive;
+			}
+			else {
+				tag.toggleClass("active");
+			}
+
+			cont.children(".list-group-item").each(function() {
+				row = $(this);
+				rowIsActive = row.hasClass("active");
+				if (row[0].tagName === "A" && headerIsActive === rowIsActive) {
+					self._onRowTap({target: row});
+				}
+				else if (row[0].tagName === "DIV" && headerIsActive === rowIsActive) {
+					self._onHeaderClick({target: row}, {isSubHeader: true});
+				}
+			});
+		}
+		return false;
+	},
+
+	_onHeaderIconClick: function(e) {
+		var icon = $(e.target);
+		this._toggleHeader(icon.parent());
 		return false;
 	},
 	
 	_addRow: function(t) {
 
 		this.__onRowTap = this.__onRowTap || $.proxy(this._onRowTap, this);
+		this.__onHeaderClick = this.__onHeaderClick || $.proxy(this._onHeaderClick, this);
+		this.__onHeaderIconClick = this.__onHeaderIconClick || $.proxy(this._onHeaderIconClick, this);
+
+		var catIconClass = this.options.catIconClass;
 
 		var self = this;
 		var o = t.options;
@@ -349,11 +432,12 @@ L.Control.LayerSwitcher = L.Control.extend({
 				catName = _cats[index];
 				catHeader = _parentTag.find('.lswitch-cat:has(span:contains("'+catName+'"))');
 				if (!catHeader.length) {
-					catHeader = $('<div class="list-group-item lswitch-cat"><i class="fa fa-caret-right"></i><span>'+catName+'</span></div>')
+					catHeader = $('<div class="list-group-item lswitch-cat"><i class="'+catIconClass+'"></i><span>'+catName+'</span></div>')
 						.appendTo(_parentTag);
 					catContainer = $('<div class="lswitch-catcont"></div>');
 					catHeader.after(catContainer);
-					catHeader.on("tap", self._onHeaderClick);
+					catHeader.on("tap", self.__onHeaderClick);
+					catHeader.find("i").on("tap", self.__onHeaderIconClick);
 				}
 				else {
 					catContainer = catHeader.next();

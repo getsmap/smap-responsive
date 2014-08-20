@@ -137,6 +137,21 @@
   }
 }
 @media (min-width: 992px) {
+  div.list-group-item.active,
+  div.list-group-item.active:hover,
+  div.list-group-item.active:focus {
+    z-index: 2;
+    color: #fff;
+    background-color: #428bca;
+    border-color: #428bca;
+  }
+  .lswitch-panel a.active,
+  .lswitch-panel a.active:hover,
+  .lswitch-panel a.active:active {
+    background-color: rgba(255,255,255,0.5);
+    color: #000;
+    font-weight: bold;
+  }
   .lswitch-cat:hover {
     background-color: #fafafa;
   }
@@ -158,8 +173,12 @@
     transition: all 0.5s;
   }
   .lswitch-cat i {
-    -webkit-transition: all 0.2s;
-    transition: all 0.2s;
+    -webkit-transition: -webkit-transform 0.2s, color 0.1s;
+    transition: transform 0.2s, color 0.1s;
+    font-size: 1.2em;
+  }
+  .lswitch-cat i:hover {
+    color: #00eded;
   }
   #mapdiv {
     margin-left: 0px !important;
@@ -180,8 +199,6 @@
     position: relative;
   }
   .lswitch-panel a {
-    -webkit-transition: all 100ms;
-    transition: all 100ms;
     background-color: rgba(255,255,255,0.5);
   }
   .lswitch-panel a:hover,

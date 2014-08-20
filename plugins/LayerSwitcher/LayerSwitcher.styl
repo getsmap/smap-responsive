@@ -146,7 +146,7 @@ indentDist = 1em
 	// font-weight normal
 
 
-.lswitch-panel a.active:hover, .lswitch-panel a.active:active
+// .lswitch-panel a.active:hover, .lswitch-panel a.active:active
 	// background-color #333
 	// background-color rgba(0,0,0,.4)
 	// color #fff
@@ -208,9 +208,25 @@ indentDist = 1em
 
 @media (min-width: 992px)
 	/* For desktop computers */
+
+
+
+	div.list-group-item.active, div.list-group-item.active:hover, div.list-group-item.active:focus
+		z-index 2
+		color white
+		background-color #428bca
+		border-color #428bca
+
+
+
+	.lswitch-panel a.active, .lswitch-panel a.active:hover, .lswitch-panel a.active:active
+		background-color rgba(255,255,255,0.5)
+		color rgba(0,0,0,1)
+		font-weight bold
+
 	.lswitch-cat:hover
 		background-color catHoverColor
-		
+
 	.lswitch-cat.open, .lswitch-cat.open:hover
 		background-color bgColorHeaderOpen
 		color colorHeaderOpen
@@ -228,7 +244,10 @@ indentDist = 1em
 		transition all .5s
 
 	.lswitch-cat i
-		transition all .2s
+		transition transform .2s, color .1s
+		font-size 1.2em
+	.lswitch-cat i:hover
+		color #00EDED
 	
 	#mapdiv
 		margin-left 0px !important
@@ -258,11 +277,12 @@ indentDist = 1em
 
 	.lswitch-panel a
 		// background none
-		transition all 100ms
+		// transition all 100ms
 		background-color rgba(255,255,255, 0.5)
 	
 	.lswitch-panel a:hover, .lswitch-panel a:active
 		background-color hoverColor
+
 		// color #000
 	
 	.lswitch-panel .panel-default
