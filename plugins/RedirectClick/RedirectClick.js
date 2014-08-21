@@ -19,10 +19,12 @@ L.Control.RedirectClick = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			modalTitle: "Lager i kartan"
+			modalTitle: "Lager i kartan",
+			btntitle: "Klicka i kartan för att redirect till snedbild"
 		},
 		"en": {
-			modalTitle: "Layers in the map"
+			modalTitle: "Layers in the map",
+			btntitle: "Click on the map to redirect to snedbild"
 		}
 	},
 	
@@ -69,20 +71,23 @@ L.Control.RedirectClick = L.Control.extend({
 
 		if (map) {
 			map.getContainer().focus();
-			this._tooltip = new L.Tooltip(this._map);
-			this._tooltip.updateContent({
-				text: this.options.mouseMoveText,
-				//subtext: this.options.mouseMoveSubtext
+			this._tooltip = new L.Tooltip({
+				map: this._map,
+				trackMouse: true,
+				target: $("body"),
+				showDelay: 1,
+				hideDelay: 1,
+				fadeAnimation: false,
+				mouseOffset: L.point(0, 10)
 			});
-
-			this._map.on('mousemove', this._onMouseMove, this);
+			this._tooltip.setHtml(""+this.options.mouseMoveText+"");
+			this._map.on('mousemove mouseup', this._onMouseMove, this);
 		}
 	},
 	
 	removeHooks: function () {
 		if (this._map) {
 			if(this._tooltip){					
-				this._tooltip.dispose();
 				this._tooltip = null;
 				this._map.off('mousemove', this._onMouseMove, this);
 				this._map.off( "click" );
@@ -116,8 +121,20 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 	
 	_onMouseMove: function (e) {
-		this._tooltip.updatePosition(e.latlng);
+
+		if(e.layerPoint){
+			e.layerPoint.x = e.originalEvent.clientX;
+			e.layerPoint.y = e.originalEvent.clientY;
+			this._tooltip.setPosition(e.layerPoint);
+			this._tooltip.show(e.layerPoint,""+this.options.mouseMoveText+"");
+		}else {
+			var xypos = {x:e.originalEvent.clientX, y:e.originalEvent.clientY}
+			this._tooltip.setPosition(xypos);
+			this._tooltip.show(xypos,""+this.options.mouseMoveText+"");
+		}
+		
 	},
+	
 	
 	_addEvents: function(){
 		this.addHooks();
@@ -127,8 +144,7 @@ L.Control.RedirectClick = L.Control.extend({
 	_createButton: function() {
 		var self = this;
 		if(self.options.addToMenu) {
-		            
-            smap.cmd.addToolButton( "", "fa fa-external-link", function () {
+	        smap.cmd.addToolButton( "", "fa fa-external-link", function () {
 	            var snedbildBtn = L.control.menu({});
 	            				
 	    		snedbildBtn.addButton(this.options.btnID, this.options.btnLabel, this.options.buttonCss, function(){return false;});
@@ -149,21 +165,19 @@ L.Control.RedirectClick = L.Control.extend({
 	    					self.removeHooks();
 	    				});
 	    			}
-    		});
-    		
-    		self.$container = $(this._container);
-            return false;
-            },null);
+				});
+			
+				self.$container = $(this._container);
+	        	return false;
+	        },null);
         }
 
         else {
-            
             var $btn = $('<button id="'+ self.options.btnID +'" title="' + self.options.btnLabel + '" class="btn btn-default"><span class="fa fa-external-link"></span></button>');
             $btn.on("click", function () {
 				if(self._tooltip){
 					self.removeHooks();
 					self.removeBtnClass();
-					
 				}else {
 					self.addHooks();
 					self.addBtnClass();
@@ -174,7 +188,6 @@ L.Control.RedirectClick = L.Control.extend({
 						self.removeHooks();
 					});
 				}
-
                 return false;
             });
             self.$container.append($btn);
