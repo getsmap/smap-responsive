@@ -5,6 +5,7 @@ L.Control.RedirectClick = L.Control.extend({
 		btnID: "redirect-click-btn", //plugin ID which can be used with jquery e.g.
 		displayName : 'Snedbild',
 		toolbarIndex: 4,
+		//url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
 		url: "http://kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}",
 		overrideName: "snedbild",
 		btnLabel: "Snedbild",
@@ -28,16 +29,6 @@ L.Control.RedirectClick = L.Control.extend({
 		}
 	},
 	
-	loadProj4: function(){
-		Proj4js.defs["EPSG:4326"] = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
-		Proj4js.defs["EPSG:3857"] = "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs";
-		Proj4js.defs["GOOGLE"] = Proj4js.defs["EPSG:3857"];
-		Proj4js.defs["EPSG:900913"] = Proj4js.defs["EPSG:3857"];
-		Proj4js.defs["EPSG:3008"] = "+proj=tmerc +lat_0=0 +lon_0=13.5 +k=1 +x_0=150000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs";
-		Proj4js.defs["EPSG:3006"] = "+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs";
-		Proj4js.defs["EPSG:3021"] = "+proj=tmerc +lat_0=0 +lon_0=15.8062845294444 +k=1.00000561024+x_0=1500064.274 +y_0=-667.711 +ellps=GRS80 +units=m";
-	},
-	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
@@ -48,13 +39,17 @@ L.Control.RedirectClick = L.Control.extend({
 	initialize: function(options) {
 		L.setOptions(this, options);
 		this._setLang(options.langCode);
+		this._setURL(this.options.url);
 	},
-
+	
+	_setURL: function(url){
+		var self = this;
+		self.options.url = url ? url || self.options.url : null;
+	},
+	
 	onAdd: function(map) {
 		var self = this;
 		this.map = map;
-		
-		// this.loadProj4();
 		
 		this._container = L.DomUtil.create('div', 'leaflet-control-RedirectClick');
 		L.DomEvent.disableClickPropagation(this._container);
@@ -91,6 +86,7 @@ L.Control.RedirectClick = L.Control.extend({
 				this._tooltip = null;
 				this._map.off('mousemove', this._onMouseMove, this);
 				this._map.off( "click" );
+				$("#mapdiv").find(".leaflet-tooltip-container").children().remove();
 			}
 		}
 	},
@@ -134,8 +130,7 @@ L.Control.RedirectClick = L.Control.extend({
 		}
 		
 	},
-	
-	
+		
 	_addEvents: function(){
 		this.addHooks();
 		return false;
@@ -160,7 +155,6 @@ L.Control.RedirectClick = L.Control.extend({
 	    				self.addBtnClass();
 	    				self._map.on("click", function(e){
 	    					self.removeBtnClass();						
-	    					var evt = self._projectEPSG(e);
 	    					self.onDone(evt);
 	    					self.removeHooks();
 	    				});
@@ -183,8 +177,7 @@ L.Control.RedirectClick = L.Control.extend({
 					self.addBtnClass();
 					self._map.on("click", function(e){
 						self.removeBtnClass();						
-						var evt = self._projectEPSG(e);
-						self.onDone(evt);
+						self.onDone(e);
 						self.removeHooks();
 					});
 				}
@@ -201,9 +194,17 @@ L.Control.RedirectClick = L.Control.extend({
 	onDone : function(e) {
 		var url = this.options.url;
 		if (url) {
-			var x = parseInt(e.latlng.lat),
-				y = parseInt(e.latlng.lng);
-			url = url.replace(/\${x}/g, x).replace(/\${y}/g, y); 
+			
+			var source = new proj4.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
+			var dest = new proj4.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
+			
+			var point = {
+				x:e.latlng.lng,
+				y:e.latlng.lat
+			};
+
+			proj4.transform(source, dest,point);
+			url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y); 
 
 		}
 		window.open(url, this.options.btnLabel);

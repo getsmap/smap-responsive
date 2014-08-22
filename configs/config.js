@@ -594,7 +594,8 @@ var config = {
 					{
 						init : "L.Control.RedirectClick",		
 						option: {
-							addToMenu: false
+							addToMenu: false,
+							url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}"
 						}
 					},
 					{
