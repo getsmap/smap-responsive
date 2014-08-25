@@ -3,7 +3,8 @@ var config = {
 
 		params:{
 			center: [13.0, 55.6],
-			zoom: 10
+			zoom: 10,
+			hash: false
 		},
 		
 		
@@ -623,9 +624,13 @@ var config = {
 					  init: "L.Control.Add2HomeScreen",
 					  options: {}
 				  },
-				    {
-				  	  init: "L.Control.FullScreen",
+				  {
+				      init: "L.Control.FullScreen",
 				  	  options: {position: 'topright'}
-				    }
+				  },
+				  {
+				      init: "L.Control.Edit",
+				  	  options: {}
+				  }
 	  ]
 };
