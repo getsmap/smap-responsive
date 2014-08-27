@@ -40,7 +40,7 @@ class GeoDataFetcher(object):
 
 		sql = """
 		select *, ST_AsGeoJSON(%s) as the_geom
-		from cultplaces
+		from features
 		where %s;
 		""" %(geomColName, whereString)
 

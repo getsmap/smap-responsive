@@ -201,7 +201,7 @@
     background-color: rgba(255,255,255,0);
     z-index: 900;
     max-height: 100%;
-    position: relative;
+    position: absolute;
   }
   .lswitch-panel a {
     background-color: rgba(255,255,255,0.5);
