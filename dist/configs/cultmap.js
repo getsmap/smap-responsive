@@ -31,7 +31,7 @@ var config = {
 				url: "http://91.123.201.52/cgi-bin/cultmap/getGeoData.py",
 				options: {
 					layerId: "Kulturen",
-					proxy: ws[document.domain].proxy,
+					proxy: null,
 					displayName: "Kulturen",
 					category: ["Museum"],
 					attribution: "© Regis",
@@ -67,7 +67,7 @@ var config = {
 				url: "http://91.123.201.52/cgi-bin/cultmap/getGeoData.py",
 				options: {
 					layerId: "Fornminne",
-					proxy: ws[document.domain].proxy,
+					proxy: null,
 					displayName: "Fornminne",
 					category: ["Uråldriga ting"],
 					attribution: "© Regis",
@@ -104,7 +104,7 @@ var config = {
 					options: {
 						layerId: "Konst",
 						displayName: "Konst",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						attribution: "© Regis",
 						category: ["Konst"],
 						inputCrs: "EPSG:4326",
@@ -140,7 +140,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Mölla",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Mölla",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -177,7 +177,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Sjöfartsmuseum",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Sjöfartsmuseum",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -214,7 +214,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Malmö museer",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Malmö museer",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -251,7 +251,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Friluftsmuseum",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Friluftsmuseum",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -288,7 +288,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Regionmuseet",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Regionmuseet",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -325,7 +325,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Järnvägsmuseum",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Järnvägsmuseum",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -362,7 +362,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Lantbruksmuseum",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Lantbruksmuseum",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -399,7 +399,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Slott",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Slott",
 						category: ["Sevärda platser"],
 						attribution: "© Regis",
@@ -436,7 +436,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Trädgård",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Trädgård",
 						category: ["Sevärda platser"],
 						attribution: "© Regis",
@@ -473,7 +473,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Staty",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Staty",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -510,7 +510,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Brons",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Brons",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -547,7 +547,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Skulptur",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Skulptur",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -584,7 +584,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Fasadkonst",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Fasadkonst",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -621,7 +621,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Porträtt",
-						proxy: ws[document.domain].proxy,
+						proxy: null,
 						displayName: "Porträtt (testar utan kategori)",
 						category: null,
 						attribution: "© Regis",
