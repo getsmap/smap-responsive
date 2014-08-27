@@ -2,3 +2,4 @@ node_modules/
 bower_components/
 *.scssc
 configs/config_lund.js
+dist/configs/config_lund.js

@@ -9,7 +9,7 @@ var config = {
 		
 		ws: {
 			"localhost": {
-				proxy: "http://localhost/cgi-bin/proxy.py?url="
+				proxy: "http://localhost:8080/proxy.py?url="
 				//proxy: "http://localhost/cgi-bin/proxy.py?url="
 			},
 			"kartor.lund.se": {
@@ -98,7 +98,7 @@ var config = {
 	    		 // url: "http://193.17.67.229/geos/wms",
 	    		 // parentTag: "oversiktsplan",
 	    		 // options: {
-		    		 // category: ["Ã–versiktsplan 2010"],
+		    		 // category: ["Översiktsplan 2010"],
 	    			 // layerId: "fastighet",
 	    			 // displayName: "Fastighet",
 	    			 // layers: 'fastighet_polygon',
@@ -116,7 +116,7 @@ var config = {
 //	    		 url: "http://opendata-view.smhi.se/klim-stat_temperatur/wms",
 //	    		 options: {
 //	    			 layerId: "gangstig",
-//	    			 displayName: "GÃ¥ngstig",
+//	    			 displayName: "Gångstig",
 //	    			 layers: 'arsmedeltemperatur',
 //	    			 format: 'image/png',
 //	    			 selectable: true,
@@ -463,49 +463,45 @@ var config = {
 				maxZoom: 18
 			}
 		},
-//		,
-//	 	{
-//			init: "L.TileLayer",
-//			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
-//			options: {
-//				layerId: "malmotile",
-//				displayName: "Malmö karta",
-//				attribution: "Â© Malmö Stadsbyggnadskontor",
-//				minZoom: 6,
-//				maxZoom: 18,
-//				tms: true
-//			}
-//		},
-		{
-			init: "L.TileLayer.WMS",
-			url: 'http://lund0001:FDA019ucyhoO@maps.lantmateriet.se/topowebb/wms/v1?request=GetCapabilities&version=1.1.1',  // gwc/service/
+	 	{
+			init: "L.TileLayer",
+			url: 'http://api.tiles.mapbox.com/v4/lundskommun.j909n073/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVuZHNrb21tdW4iLCJhIjoiTGRtQW51WSJ9.f-bABPBDFFzgUc3UkBsAGA#12/55.6922/13.2732',
 			options: {
-				layerId: "topowebbkartan_nedtonad",
-				displayName: "lantmäteriet",
-				layers: "topowebbkartan_nedtonad",
-				format: 'image/jpeg',
-				//subdomains: ["xyz"],
-				transparent: true,
-				minZoom: 6,
-				maxZoom: 18//,
-				//tiled: true
+				layerId: "mapboxlund",
+				displayName: "Lunds kommun",
+				attribution: "© Mapbox",
+				maxZoom: 18
 			}
-		}//,		
-//		{
-//			init: "L.TileLayer.WMS",
-//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
-//			options: {
-//				layerId: "wms-topo",
-//				displayName: "WMS-Topo (OBS! endast för test)",
-//				layers: "malmows:smap-mobile-bakgrundskarta-topo",
-//				format: 'image/jpeg',
-//				subdomains: ["xyz"],
-//				transparent: true,
-//				minZoom: 6,
-//				maxZoom: 18,
-//				tiled: true
-//			}
-//		},
+		}//,
+		// {
+			// init: "L.BingLayer",
+			// url: 'http://api.tiles.mapbox.com/v4/lundskommun.j909n073/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHVuZHNrb21tdW4iLCJhIjoicDJISExiMCJ9.TO5qHjZRKpsuQLL08w362w#12/55.6922/13.2732',
+			// options: {
+				// layerId: "mapboxlund",
+				// displayName: "Bing",
+				// attribution: "© Mapbox",
+				// maxZoom: 18
+			// }
+		// }
+		// ,
+		
+		// {
+			// init: "L.TileLayer.WMS",
+			// url: 'http://lund0001:FDA019ucyhoO@maps.lantmateriet.se/topowebb/wms/v1',  // gwc/service/
+			// options: {
+				// layerId: "topowebbkartan_nedtonad",
+				// displayName: "lantmäteriet",
+				// layers: "topowebbkartan_nedtonad",
+				// format: 'image/jpeg',
+				// CRS: L.CRS.EPSG4326 ,
+				// //subdomains: ["xyz"],
+				// transparent: true,
+				// minZoom: 6,
+				// maxZoom: 18//,
+				// //tiled: true
+			// }
+		// }
+		//,
 //		{
 //			init: "L.TileLayer.WMS",
 //			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/
@@ -571,10 +567,10 @@ var config = {
 		           {
 		        	   init: "L.Control.Search",
 		        	   options: {
-						wsAcUrl : "http://kartor.lund.se/lkarta_sokproxy/auto_lund.ashx",
-						wsLocateUrl: "http://kartor.lund.se/lkarta_sokproxy/sokexakt_lund.ashx",
-						//wsAcUrl : "http://nominatim.openstreetmap.org/search",
-						//wsLocateUrl : "http://nominatim.openstreetmap.org/search",
+						//wsAcUrl : "http://kartor.lund.se/lkarta_sokproxy/auto_lund.ashx",
+						//wsLocateUrl: "http://kartor.lund.se/lkarta_sokproxy/sokexakt_lund.ashx",
+						wsAcUrl : "http://nominatim.openstreetmap.org/search",
+						wsLocateUrl : "http://nominatim.openstreetmap.org/search",
 						wsOrgProj: "EPSG:3008"
 					   }
 		           },
