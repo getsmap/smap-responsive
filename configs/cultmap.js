@@ -9,7 +9,7 @@ var ws = {
 			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
 		},
 		"91.123.201.52": {
-			proxy: "http://localhost/cgi-bin/proxy.py?url="
+			proxy: "" //http://localhost/cgi-bin/proxy.py?url="
 		},
 		"kartor.helsingborg.se": {
 			proxy: "http://kartor.helsingborg.se/cgi-bin/proxy.py?url="
