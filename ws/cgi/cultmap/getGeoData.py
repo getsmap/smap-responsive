@@ -79,8 +79,6 @@ def getParamsAsObject():
 
 def getCultureFeatures():
 	''' Function for fetching objects from the Kulturkarta database '''
-	
-	print "Content-Type: application/json\n\n"  #text/html\n\n
 
 	p = getParamsAsObject()
 	q = p["q"] if p.has_key("q") else "museum"
@@ -91,9 +89,20 @@ def getCultureFeatures():
 		"txt_cat": "%%;%s;%%" %(q)
 	}
 	geodata = g.getData("cultplaces", q, bbox)
-	print json.dumps(geodata)
+	return geodata
 
 
 if __name__ == "__main__":
-	getCultureFeatures()
+	print "Content-Type: application/json\n\n"  #text/html\n\n
+	print json.dumps(getCultureFeatures())
+
+
+
+
+
+
+
+
+
+
 
