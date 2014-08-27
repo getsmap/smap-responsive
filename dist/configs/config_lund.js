@@ -564,16 +564,24 @@ var config = {
 //		        	   init: "L.Control.SharePosition",
 //		        	   options: {}
 //		           },
-		           {
-		        	   init: "L.Control.Search",
+					{
+		        	   init: "L.Control.OpenSearch",
 		        	   options: {
-						//wsAcUrl : "http://kartor.lund.se/lkarta_sokproxy/auto_lund.ashx",
-						//wsLocateUrl: "http://kartor.lund.se/lkarta_sokproxy/sokexakt_lund.ashx",
 						wsAcUrl : "http://nominatim.openstreetmap.org/search",
 						wsLocateUrl : "http://nominatim.openstreetmap.org/search",
 						wsOrgProj: "EPSG:3008"
 					   }
 		           },
+		           // {
+		        	   // init: "L.Control.Search",
+		        	   // options: {
+						// //wsAcUrl : "http://kartor.lund.se/lkarta_sokproxy/auto_lund.ashx",
+						// //wsLocateUrl: "http://kartor.lund.se/lkarta_sokproxy/sokexakt_lund.ashx",
+						// wsAcUrl : "http://nominatim.openstreetmap.org/search",
+						// wsLocateUrl : "http://nominatim.openstreetmap.org/search",
+						// wsOrgProj: "EPSG:3008"
+					   // }
+		           // },
                     {
                         init: "L.Control.Zoombar",
                         options: {}
