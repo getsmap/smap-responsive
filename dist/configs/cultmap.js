@@ -31,7 +31,7 @@ var config = {
 				url: "http://91.123.201.52/cgi-bin/cultmap/getGeoData.py",
 				options: {
 					layerId: "Kulturen",
-					proxy: null,
+					proxy: ws[document.domain].proxy,
 					displayName: "Kulturen",
 					category: ["Museum"],
 					attribution: "© Regis",
@@ -39,7 +39,8 @@ var config = {
 					reverseAxis: false,
 					reverseAxisBbox: false,
 					selectable: true,
-					popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+					popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+							'<a href="${txt_link}" target="_blank">Länk</a>',
 					uniqueKey: "id",
 					params: {
 						q: "Kulturen"
@@ -67,7 +68,7 @@ var config = {
 				url: "http://91.123.201.52/cgi-bin/cultmap/getGeoData.py",
 				options: {
 					layerId: "Fornminne",
-					proxy: null,
+					proxy: ws[document.domain].proxy,
 					displayName: "Fornminne",
 					category: ["Uråldriga ting"],
 					attribution: "© Regis",
@@ -75,7 +76,8 @@ var config = {
 					reverseAxis: false,
 					reverseAxisBbox: false,
 					selectable: true,
-					popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+					popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+							'<a href="${txt_link}" target="_blank">Länk</a>',
 					uniqueKey: "id",
 					params: {
 						q: "Fornminne"
@@ -104,14 +106,15 @@ var config = {
 					options: {
 						layerId: "Konst",
 						displayName: "Konst",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						attribution: "© Regis",
 						category: ["Konst"],
 						inputCrs: "EPSG:4326",
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Konst"
@@ -140,7 +143,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Mölla",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Mölla",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -148,7 +151,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Mölla"
@@ -177,7 +181,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Sjöfartsmuseum",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Sjöfartsmuseum",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -185,7 +189,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Sjöfartsmuseum"
@@ -214,7 +219,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Malmö museer",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Malmö museer",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -222,7 +227,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Malmö museer"
@@ -251,7 +257,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Friluftsmuseum",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Friluftsmuseum",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -259,7 +265,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Friluftsmuseum"
@@ -288,7 +295,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Regionmuseet",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Regionmuseet",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -296,7 +303,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Regionmuseet"
@@ -325,7 +333,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Järnvägsmuseum",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Järnvägsmuseum",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -333,7 +341,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Järnvägsmuseum"
@@ -362,7 +371,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Lantbruksmuseum",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Lantbruksmuseum",
 						category: ["Museum"],
 						attribution: "© Regis",
@@ -370,7 +379,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Lantbruksmuseum"
@@ -399,7 +409,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Slott",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Slott",
 						category: ["Sevärda platser"],
 						attribution: "© Regis",
@@ -407,7 +417,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Slott"
@@ -436,7 +447,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Trädgård",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Trädgård",
 						category: ["Sevärda platser"],
 						attribution: "© Regis",
@@ -444,7 +455,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Trädgård"
@@ -473,7 +485,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Staty",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Staty",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -481,7 +493,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Staty"
@@ -510,7 +523,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Brons",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Brons",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -518,7 +531,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Brons"
@@ -547,7 +561,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Skulptur",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Skulptur",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -555,7 +569,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Skulptur"
@@ -584,7 +599,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Fasadkonst",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Fasadkonst",
 						category: ["Uråldriga ting"],
 						attribution: "© Regis",
@@ -592,7 +607,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Fasadkonst"
@@ -621,7 +637,7 @@ var config = {
 					options: {
 						// xhrType: "GET",
 						layerId: "Porträtt",
-						proxy: null,
+						proxy: ws[document.domain].proxy,
 						displayName: "Porträtt (testar utan kategori)",
 						category: null,
 						attribution: "© Regis",
@@ -629,7 +645,8 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						selectable: true,
-						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><a href="${txt_link}" target="_blank">Länk</a>',
+						popup: '<h4>${txt_name}</h4><p>${}txt_access</p><img src="http://xyz.malmo.se/rest/resources/cultmap/${txt_pic}" style="width:200px;max-height:300px;"></img><br/>' +
+								'<a href="${txt_link}" target="_blank">Länk</a>',
 						uniqueKey: "id",
 						params: {
 							q: "Porträtt"
