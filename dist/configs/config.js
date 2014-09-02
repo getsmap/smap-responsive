@@ -629,7 +629,7 @@ var config = {
 				  	  options: {position: 'topright'}
 				  },
 				  {
-				      init: "L.Control.Edit",
+				      init: "L.Control.DrawSmap",
 				  	  options: {}
 				  }
 	  ]
