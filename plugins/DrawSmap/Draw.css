@@ -10,7 +10,7 @@
   right: 0.2em;
   margin-right: 140px;
   min-width: 100px;
-  max-width: 320px;
+  max-width: 272px;
 }
 .drawsmap-popover .popover-content .leaflet-control {
     clear: none;
@@ -29,4 +29,8 @@
 }
 .drawsmap-container {
   display: block;
+}
+
+.btn-popover{
+	margin: 5px;
 }

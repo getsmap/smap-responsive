@@ -1,13 +1,41 @@
 L.Control.DrawSmap = L.Control.extend({
     options: {
         buttons: {
-            polyline: true,
-            polygon: true,
-            rectangle: true,
-            circle: true,
-            marker: true,
-            edit: true,
-            remove: true
+            polyline: {
+            	addToPopover: true,
+            	iconCss: "icon-large icon-vector-path-line",
+            	displayName: "Polyline"
+            },
+            polygon: {
+            	addToPopover: true,
+            	iconCss: "icon-large icon-vector-path-polygon",
+            	displayName: "Polygon"
+            },
+            rectangle: {
+            	addToPopover: true,
+            	iconCss: "icon-large icon-vector-path-square",
+            	displayName: "Rectangle"
+            },
+            circle: {
+            	addToPopover: true,
+            	iconCss: "icon-large icon-vector-path-circle",
+            	displayName: "Circle"
+            },
+            marker: {
+            	addToPopover: true,
+            	iconCss: "icon-large icon-map-marker",
+            	displayName: "Marker"
+            },
+            edit: {
+            	addToPopover: true,
+            	iconCss: "icon-large icon-edit",
+            	displayName: "Edit"
+            },
+            remove: {
+            	addToPopover: true,
+            	iconCss: "icon-large icon-remove",
+            	displayName: "Remove"
+            }
         }
     },
 
@@ -198,8 +226,8 @@ L.Control.DrawSmap = L.Control.extend({
         //popoverdiv.append($(rt));
         
         $.each(self.options.buttons,function(k,v){
-            if (v === true){
-                var tool = self._createToolBtn(k);
+            if (v.addToPopover === true){
+                var tool = self._createToolBtn(k,v);
                 popoverdiv.append(tool);
             }
         });
@@ -207,10 +235,10 @@ L.Control.DrawSmap = L.Control.extend({
         return popoverdiv;
     },
 
-    _createToolBtn : function(tooltype){
+    _createToolBtn : function(tooltype,obj){
         var self = this;
         tooltype.toLowerCase();
-        var $toolbtn = $("<button id='drawsmap" + tooltype + "' class='drawsmapbtn btn btn-default' title='"+tooltype+"'>" + tooltype + "</button>");
+        var $toolbtn = $('<button id="drawsmap'+tooltype+'" class="btn btn-default btn-popover" title="'+obj.displayName+'"><span></span></button>');
        
         tooltype = tooltype.charAt(0).toUpperCase() + tooltype.slice(1);
        
@@ -267,12 +295,13 @@ L.Control.DrawSmap = L.Control.extend({
             }
             
         });
+        $toolbtn.find("span").addClass(obj.iconCss);
         return $toolbtn;
     },
 
     _createDrawTool: function() {
         var self = this;
-        var $btn = $('<button id="smap-drawsmap-btn" title="' + self.lang.btntitle + '" class="btn btn-default"><span class="fa fa-pencil"></span></button>');
+        var $btn = $('<button id="smap-drawsmap-btn" title="' + self.lang.btntitle + '" class="btn btn-default"><span class="icon-large  icon-th"></span></button>');
         
         self.$container.append($btn);
 
