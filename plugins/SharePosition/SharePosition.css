@@ -1,4 +1,11 @@
 
+.leaflet-label {
+	background: #000;
+	background: rgba(0,0,0,0.5) !important;
+	color: #fff !important;
+}
+
+
 /*#sharepos-gui {
 	position: absolute;
 	right: 5em;

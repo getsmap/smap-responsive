@@ -1,20 +1,22 @@
+var ws = {
+		"localhost": {
+			proxy: "http://localhost/cgi-bin/proxy.py?url="
+		},
+		"xyz.malmo.se": {
+			proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
+		},
+	    "mobile.smap.se": {
+	        proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
+	    },
+		"91.123.201.52": {
+			proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
+		}
+};
+
 
 var config = {
 		 
-		ws: {
-			"localhost": {
-				proxy: "http://localhost/cgi-bin/proxy.py?url="
-			},
-			"xyz.malmo.se": {
-				proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
-			},
-            "mobile.smap.se": {
-                proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
-            },
-			"91.123.201.52": {
-				proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
-			}
-		},
+		ws: ws,
 		
 		ol: [
 		  		{
@@ -23,6 +25,7 @@ var config = {
 					  options: {
 						  layerId: "shareposition",
 						  displayName: "Delade positioner",
+						  proxy: ws[document.domain].proxy,
 						  attribution: "Malmö stads WFS",
 						  zIndex: 50,
 						  reverseAxis: false,
@@ -59,63 +62,6 @@ var config = {
 				displayName: "OSM",
 				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
 				maxZoom: 18
-			}
-		},
-		{
-			init: "L.TileLayer",
-			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
-			options: {
-				layerId: "malmotile",
-				displayName: "Malmö karta",
-				attribution: "© Malmö Stadsbyggnadskontor",
-				minZoom: 6,
-				maxZoom: 18,
-				tms: true
-			}
-		},
-		{
-			init: "L.TileLayer.WMS",
-			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
-			options: {
-				layerId: "wms-op",
-				displayName: "WMS-op",
-				layers: "malmows:smap-mobile-bakgrundskarta",
-				format: 'image/jpeg',
-				subdomains: ["xyz"],
-				transparent: true,
-				minZoom: 6,
-				maxZoom: 18,
-				tiled: true
-			}
-		},
-//		{
-//			init: "L.TileLayer.WMS",
-//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
-//			options: {
-//				layerId: "wms-topo",
-//				displayName: "WMS-Topo (OBS! endast för test)",
-//				layers: "malmows:smap-mobile-bakgrundskarta-topo",
-//				format: 'image/jpeg',
-//				subdomains: ["xyz"],
-//				transparent: true,
-//				minZoom: 6,
-//				maxZoom: 18,
-//				tiled: true
-//			}
-//		},
-		{
-			init: "L.TileLayer.WMS",
-			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/
-			options: {
-				layerId: "wms",
-				displayName: "WMS",
-				layers: "malmows:MALMO_SMA_DELOMR_P_3857_TEST2",
-				format: 'image/png',
-				subdomains: ["xyz"],
-				transparent: true,
-				minZoom: 1,
-				maxZoom: 18,
-				tiled: true
 			}
 		}
 		],
@@ -161,17 +107,18 @@ var config = {
                     {
  		        	   init: "L.Control.Geolocate",
  		        	   options: {}
- 		           	},
-                    {
-                        init: "L.Control.ShareLink",
-                        options: {
-                    		addToMenu: false
-                    	}
-                    },
-                    {
- 		        	   init: "L.Control.Info",
- 		        	   options: {}
  		           	}
+ 		           	// ,
+               //      {
+               //          init: "L.Control.ShareLink",
+               //          options: {
+               //      		addToMenu: false
+               //      	}
+               //      },
+               //      {
+ 		        	   // init: "L.Control.Info",
+ 		        	   // options: {}
+ 		           	// }
 //                    ,
 //                    {
 //                        init: "L.Control.Menu",

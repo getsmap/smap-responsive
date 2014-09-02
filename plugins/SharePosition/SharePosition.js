@@ -325,18 +325,27 @@ L.Control.SharePosition = L.Control.extend({
 			},
 			success: function(resp) {
 				var obj = $.xml2json(resp);
-				if (obj && obj.TransactionSummary) {
-					var totInserted = parseInt(obj.TransactionSummary.totalInserted),
-						totUpdated = parseInt(obj.TransactionSummary.totalUpdated);
-					
-					if (!this.uid && totInserted > 0) {
-						this.uid = parseInt(obj.InsertResults.Feature.FeatureId.fid.split(".")[1]);
-						localStorage.share_uid = this.uid;
-					}
-					else if (totInserted === 0 && totUpdated === 0) {
-						// We need to reset the uid because it has been removed in the DB but not reset on the client
-						this.uid = null;
-						delete localStorage.share_uid;
+				var tResp = obj ? obj.TransactionResponse || obj["wfs:TransactionResponse"] : null;
+				if (tResp) {
+					var tSummary = tResp ? tResp.TransactionSummary || tResp["wfs:TransactionSummary"] : null;
+					if (tSummary) {
+						var totInserted = parseInt(tSummary.totalInserted || tSummary["wfs:totalInserted"]),
+							totUpdated = parseInt(tSummary.totalUpdated || tSummary["wfs:totalUpdated"]);
+						
+						if (!this.uid && totInserted > 0) {
+							var insertResults = tResp.InsertResults || tResp["wfs:InsertResults"];
+							var feature = insertResults.Feature || insertResults["wfs:Feature"];
+							var FeatureId = feature.FeatureId || feature["ogc:FeatureId"];
+							var fid = FeatureId.fid || FeatureId.$.fid;
+							this.uid = parseInt(fid.split(".")[1]);
+							localStorage.share_uid = this.uid;
+						}
+						else if (totInserted === 0 && totUpdated === 0) {
+							// We need to reset the uid because it has been removed in the DB but not reset on the client
+							this.uid = null;
+							delete localStorage.share_uid;
+						}
+						
 					}
 					
 				}
