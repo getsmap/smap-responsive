@@ -153,7 +153,12 @@
   .lswitch-panel a.active,
   .lswitch-panel a.active:hover,
   .lswitch-panel a.active:active {
+    background: none;
+    background-image: none !important;
+    text-shadow: none !important;
+    background-color: #fff;
     background-color: rgba(255,255,255,0.5);
+    color: #000;
     color: #000;
     font-weight: bold;
   }

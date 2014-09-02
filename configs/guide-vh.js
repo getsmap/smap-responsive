@@ -79,9 +79,9 @@ var config = {
 					'}'+
 					'}</div>'+
 					'<img style="width:200px;max-height:200px;margin-top: 1em;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
-					}
-				},
-				{
+				}
+		},
+		{
 	 		 init: "L.TileLayer.WMS",
 	 		 url: "http://geoserver.smap.se/geoserver/wms",
 	 		 options: {
@@ -93,9 +93,9 @@ var config = {
 	 			 transparent: true,
 	 			 attribution: "@ Malmö Stadsbyggnadskontor",
 	 			 popup: "<h3>${_displayName}</h3><p>Typ: ${typ}</p><p>Geom: ${geom}</p>"
-	 		 }
-			},
-			{
+	 		}
+		},
+		{
 	 		 init: "L.TileLayer.WMS",
 	 		 url: "http://xyz.malmo.se:8081/geoserver/wms",
 	 		 options: {
@@ -229,18 +229,12 @@ var config = {
 				init: "L.Control.GuidePopup",
 				options: {
 					autoActivate: false,
-					layerId: "vhamnen_pt",
-					
+					layerId: "vhamnen_pt",					
 					dialogTitle: "${namn}",
 					
 					// The folder and the attribute key for fetching the filename
-					
 					useProxy: true,
-					
 					attrId: "id",
-					
-					
-
 					modalContent: {
 						tabIntro: "http://maja-k.com/promenad/vh/text/${urltext}",
 						iconType: null,

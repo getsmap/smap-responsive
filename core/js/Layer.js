@@ -76,11 +76,10 @@ smap.core.Layer = L.Class.extend({
 		if (!t || !t.options) {
 			return false;
 		}
-		var layerAlreadyAdded = this._getLayer(t.options.layerId);
-		if (layerAlreadyAdded) {
+		var layer = this._createLayer(t);
+		if (!layer) {
 			return false;
 		}
-		var layer = this._createLayer(t);
 //		return this._addLayer(layer);
 		this.map.addLayer(layer);
 		return layer;
@@ -117,6 +116,11 @@ smap.core.Layer = L.Class.extend({
 	_wfsLayers: [],
 	
 	_createLayer: function(t) {
+		var layerAlreadyAdded = this._getLayer(t.options.layerId);
+		if (layerAlreadyAdded) {
+			return layerAlreadyAdded; // Return the already created layer
+		}
+
 		var init = eval(t.init);
 		
 		/**
