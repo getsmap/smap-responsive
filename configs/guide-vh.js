@@ -46,7 +46,7 @@ var config = {
 	ol: [
 		{
 				init: "L.GeoJSON.WFS",
-				url: "http://xyz.malmo.se:8081/geoserver/wfs",
+				url: "http://kartor.malmo.se/geoserver/wfs",
 				options: {
 					params: {
 			 	 		typeName: "malmows:POI_VHAMN_PT"
@@ -54,7 +54,7 @@ var config = {
 					xhrType: "GET",
 					layerId: "vhamnen_pt",
 					displayName: "Punkter av intresse",
-					proxy: proxy,
+					// proxy: proxy,
 					attribution: "Malmö stads WFS",
 					inputCrs: "EPSG:4326",
 					uniqueKey: "gid",
