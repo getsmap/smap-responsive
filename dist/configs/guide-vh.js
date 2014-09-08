@@ -6,7 +6,7 @@ var ws = {
 			proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
 		},
 		"kartor.malmo.se": {
-			proxy: "http://localhost/cgi-bin/proxy.py?url="
+			proxy: "http://kartor.malmo.se/cgi-bin/proxy.py?url="
 		},
 		"mobile.smap.se": {
 			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
@@ -114,7 +114,7 @@ var config = {
 		 	 	layerId: "busshallplatser",
 		 	 	displayName: "Busshållplatser",
 		 	 	proxy: proxy,
-		 	 	xhrType: "GET",
+		 	 	xhrType: "POST",
 		 	 	attribution: "@ Skånetrafiken",
 		 	 	inputCrs: "EPSG:3006",
 		 	 	reverseAxis: false,
