@@ -153,21 +153,39 @@ smap.cmd = {
 		
 		
 		loading: function(show) {
+			var _lang = {
+				"sv": {
+						loading: 'laddar'
+				},
+				"en": {
+						loading: 'loading'
+				}
+			}
+
+			var navLang = navigator.language; //get language from system because smap.config.langCode is not yet defined(?)
+			var langCode = navLang ? navLang.split("-")[0] : "en";
+			this.lang = _lang ? _lang[langCode] : null;			
+
 			if (show && show === true) {
 				if (!this.spinner) {
 					var opts = {
-							length: 10,
-							width: 8,
-							radius: 15
+							lines: 12,
+							length: 4,
+							width: 6,
+							radius: 25
 					};
 					this.spinner = new Spinner(opts).spin();
 				}
 				this.spinner.spin();
 				$("#mapdiv").append(this.spinner.el);
-				$(this.spinner.el).css({
-					"left": "50%",
-					"top": "50%"
+				$('div .spinner').css({
+					"top" : "auto", //to nullify default value given from spin.js
+					"left": "3.5em",
+					"bottom": "3.5em"
 				});
+				$(this.spinner.el).append('<div id="loadingText">'+this.lang.loading+'</div>');
+				
+
 			}
 			else {
 				this.spinner.stop();
