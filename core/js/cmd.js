@@ -184,8 +184,6 @@ smap.cmd = {
 					"bottom": "3.5em"
 				});
 				$(this.spinner.el).append('<div id="loadingText">'+this.lang.loading+'</div>');
-				
-
 			}
 			else {
 				this.spinner.stop();
