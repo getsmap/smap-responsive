@@ -97,7 +97,7 @@ var config = {
 		},
 		{
 	 		 init: "L.TileLayer.WMS",
-	 		 url: "http://xyz.malmo.se:8081/geoserver/wms",
+	 		 url: "http://kartor.malmo.se/geoserver/wms",
 	 		 options: {
 	 			 layerId: "cykelpump",
 	 			 displayName: "Cykelpumpar",
