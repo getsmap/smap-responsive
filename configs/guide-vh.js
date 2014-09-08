@@ -6,10 +6,7 @@ var ws = {
 			proxy: "http://xyz.malmo.se/myproxy/proxy.py?url="
 		},
 		"kartor.malmo.se": {
-			proxy: "http://kartor.malmo.se/cgi-bin/py/proxy.py?url="
-		},
-		"91.123.201.52": {
-			proxy: "http://91.123.201.52/cgi-bin/proxy.py?url="
+			proxy: "http://localhost/cgi-bin/proxy.py?url="
 		},
 		"mobile.smap.se": {
 			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
@@ -31,9 +28,6 @@ var config = {
 			proxy: proxy
 		},
 		"xyz.malmo.se": {
-			proxy: proxy
-		},
-		"91.123.201.52": {
 			proxy: proxy
 		},
 		"mobile.smap.se": {
