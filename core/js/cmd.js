@@ -162,7 +162,7 @@ smap.cmd = {
 				}
 			}
 
-			var navLang = navigator.language; //get language from system because smap.config.langCode is not yet defined(?)
+			var navLang = smap.config ? smap.config.langCode : navigator.language; //get language from system if smap.config.langCode is not yet defined
 			var langCode = navLang ? navLang.split("-")[0] : "en";
 			this.lang = _lang ? _lang[langCode] : null;			
 
