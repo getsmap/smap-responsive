@@ -112,13 +112,13 @@ gulp.task('cleancode', function() {
 gulp.task('cleanlib', function() {
 	return gulp.src("dist/lib").pipe(rimraf());
 });
-gulp.task('cleanconfigs', function() {
-	return gulp.src("dist/configs").pipe(rimraf());
-});
+// gulp.task('cleanconfigs', function() {
+// 	return gulp.src("dist/configs").pipe(rimraf());
+// });
 gulp.task('cleanimg', function() {
 	return gulp.src("dist/img").pipe(rimraf());
 });
-gulp.task('clean', ['cleanlib', 'cleancode', 'cleanconfigs']); // Clean all but img folder
+gulp.task('clean', ['cleanlib', 'cleancode']); // Clean all but img folder
 gulp.task('cleantotal', function() {
 	return gulp.src("dist").pipe(rimraf());
 });
@@ -188,11 +188,11 @@ gulp.task('images', function () {
         .pipe(gulp.dest(imgDest));
 });
 
-gulp.task('configs', function() {
-	return gulp
-		.src(['configs/*.js'])
-		.pipe(gulp.dest("dist/configs"));
-});
+// gulp.task('configs', function() {
+// 	return gulp
+// 		.src(['configs/*.js'])
+// 		.pipe(gulp.dest("dist/configs"));
+// });
 
 // gulp.task('movecssresources', function() {
 // 	return gulp
@@ -263,7 +263,7 @@ gulp.task('html', ["htmlcompress"]);
 // Build our code (during dev)
 gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
 
-gulp.task('_full', ["images", "html", "configs"]);
+gulp.task('_full', ["images", "html"]);
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).
@@ -279,9 +279,9 @@ gulp.task('reset', ["cleantotal", "full"]);
 gulp.task('watch', function() {
 	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
 	var js = p.ourJs;
-	var tasks = ["ourcode", "configs"];
+	var tasks = ["ourcode"];
 	gulp.start(tasks); // Start by running once
-	return gulp.watch(js.concat(css).concat("configs/*.js"), tasks);
+	return gulp.watch(js.concat(css), tasks);
 });
 
 gulp.task('default', ["watch"]); // Note! <gulp> is same as <gulp default>

@@ -30,6 +30,9 @@ var config = {
 		"xyz.malmo.se": {
 			proxy: proxy
 		},
+		"kartor.malmo.se": {
+			proxy: proxy
+		},
 		"mobile.smap.se": {
 			proxy: proxy
 		}
@@ -45,7 +48,7 @@ var config = {
 					params: {
 			 	 		typeName: "malmows:POI_VHAMN_PT"
 					},
-					xhrType: "GET",
+					xhrType: "POST",
 					layerId: "vhamnen_pt",
 					displayName: "Punkter av intresse",
 					// proxy: proxy,
