@@ -94,6 +94,8 @@ L.Control.GuidePopup = L.Control.extend({
 				return;
 			}
 			var props = e.popup._source.feature.properties;
+			e.popup.options.autoPanPaddingTopLeft = [0, 60]; // Does this work?
+
 //			this.layerId = e.popup.layerId;
 //			this.properties = props; // properties for filling the dialog
 			
