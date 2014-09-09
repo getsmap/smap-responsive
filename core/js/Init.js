@@ -138,6 +138,7 @@ smap.core.Init = L.Class.extend({
 		
 		var bls = config.bl || [];
 		for (var i=0,len=bls.length; i<len; i++) {
+			bls[i].options = bls[i].options || {};
 			bls[i].options.isBaseLayer = true;
 		}
 

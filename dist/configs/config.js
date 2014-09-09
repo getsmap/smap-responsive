@@ -525,7 +525,7 @@ var config = {
 		},
 		{
 			init: "L.esri.BasemapLayer",
-			params: ["Gray"],
+			url: "Gray",
 			options: {
 				layerId: "esri",
 				displayName: "ESRI",
@@ -535,7 +535,7 @@ var config = {
 		{
 			init: "L.esri.BasemapLayer",
 			// 'Streets', 'Topographic', 'Oceans', 'NationalGeographic', 'Gray', 'GrayLabels', 'DarkGray', 'DarkGrayLabels', 'Imagery', 'ImageryLabels', 'ImageryTransportation', 'ShadedRelief' or 'ShadedReliefLabels' 
-			params: ["Topographic"],
+			url: "Topographic",
 			options: {
 				layerId: "esri2",
 				displayName: "ESRI2",

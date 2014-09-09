@@ -123,6 +123,8 @@ smap.core.Layer = L.Class.extend({
 
 		var init = eval(t.init);
 		
+		init.options = init.options || {};
+
 		/**
 		 * Avoid baselayers appearing on top of overlays.
 		 */
@@ -139,6 +141,9 @@ smap.core.Layer = L.Class.extend({
 			// layer = new init(t.param1);
 			layer = Object.create(init.prototype);
 			init.apply(layer, t.params);
+			if (t.options && t.options instanceof Object) {
+				$.extend(layer.options, t.options);
+			}
 		}
 		else {
 			if (!t.url) {
