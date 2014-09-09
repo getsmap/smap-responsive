@@ -37,7 +37,11 @@
     "spinjs": "~2.0.1",
     "sass-bootstrap": "~3.0.0",
     "add-to-homescreen": "~3.0.7",
-    "screenfull": "~1.2.1"
+    "screenfull": "~1.2.1",
+    "leaflet-vector-layers": "https://github.com/JasonSanford/leaflet-vector-layers",
+    "esri-leaflet": "~0.0.1-beta.4-patch-1",
+    "lvector": "https://raw.githubusercontent.com/JasonSanford/leaflet-vector-layers/master/dist/lvector.js",
+    "leaflet.draw": "~0.2.3"
   },
   "overrides": {
     "bootstrap3-typeahead": {
@@ -62,6 +66,13 @@
         "dist/images/marker-shadow.png"
       ]
     },
+    "leaflet.draw": {
+      "main": [
+          "dist/leaflet.draw.css",
+          "dist/leaflet.draw.js",
+          "dist/images/*.png"
+      ]
+    },
     "leaflet.markercluster": {
       "main": [
         "leaflet.markercluster.js",
@@ -69,6 +80,7 @@
         "MarkerCluster.css"
       ]
     },
+
     "leaflet-usermarker": {
       "main": [
         "src/leaflet.usermarker.js",
