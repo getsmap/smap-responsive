@@ -75,6 +75,7 @@ var p = {
 
 		// last
 		"plugins/**/*.css",
+		"!plugins/**/_*.css",
 		"!plugins/Edit/**/*.css",
 		"!plugins/MyPlugin/**/*.css",
 		"!plugins/SideBars/**/*.css",
@@ -87,6 +88,7 @@ var p = {
 		"core/js/smap.js",
 		"core/js/*.js",
 		"plugins/**/*.js",
+		"!plugins/**/_*.js",
 		"!plugins/Edit/**/*.js",
 		"!plugins/MyPlugin/**/*.js",
 		"!plugins/SideBars/**/*.js",

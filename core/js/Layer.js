@@ -132,24 +132,27 @@ smap.core.Layer = L.Class.extend({
 		else {
 			t.options.zIndex = t.options.zIndex || 10;
 		}
-		
-		var layer = new init(t.url, t.options);
+		var layer;
+		if (t.params) {
+			// Apply any number of params to the class.
+			// layer = new (init.prototype.bind.apply(this, t.params));
+			// layer = new init(t.param1);
+			layer = Object.create(init.prototype);
+			init.apply(layer, t.params);
+		}
+		else {
+			if (!t.url) {
+				// Some layers only use options.
+				layer = new init(t.options);	
+			}
+			else {
+				layer = new init(t.url, t.options);
+			}
+		}
 		
 		var self = this;
 		if (layer._layers) {
 			layer.options.style = layer.options.style || $.extend({}, self.options.defaultStyle);
-
-//			if (!t.options.style) {
-//				var style = {
-//						weight: 2,
-//				        opacity: 1,
-//				        color: '#fff',
-//				        dashArray: '3',
-//				        fillOpacity: 0.7
-//					};
-//				layer.setStyle(style);
-//				layer.options.style = style;
-//			}
 			layer.on("load", function(e) {
 				smap.cmd.loading(false);
 			});
@@ -182,26 +185,17 @@ smap.core.Layer = L.Class.extend({
 			layer = this._createLayer(t);
 		}
 		if (this.map.hasLayer(layer) === false) {
-			this.map.addLayer(layer);			
+			this.map.addLayer(layer);
 		}
-//		For next version, try this.
-//		if (layer.options.zIndex && layer.setZIndex) {
-//			if (layer._layers) {
-//				layer.on("load", function() {
-//					this.setZIndex(this.options.zIndex);
-//				});
-//			}
-//			else {
-//				layer.setZIndex(layer.options.zIndex);				
-//			}
-//		}
 		return layer;
 	},
 	
 	hideLayer: function(layerId) {
 		// Just remove the layer from the map (still keep it in the ass. array).
 		var layer = this._getLayer(layerId);
-		layer.fire("loadcancel", {layer: this});
+		if (layer.fire) {
+			layer.fire("loadcancel", {layer: this});
+		}
 		this.map.removeLayer(layer);
 	},
 	

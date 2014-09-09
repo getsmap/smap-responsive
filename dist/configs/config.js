@@ -27,6 +27,50 @@ var config = {
 		},
 		
 		ol: [
+		
+			// {
+			// 		init: "lvector.AGS",
+			// 		options: {
+			// 			// setMap: true,
+			// 			displayName: "ArcGIS Jönköping",
+			// 			url: "http://ext-geoservices.lansstyrelsen.se/ArcGIS/rest/services/Vektor/Lst_Miljodata/MapServer/2",
+			// 			fields: "*",
+			// 			uniqueField: "OBJECTID",
+			// 			scaleRange: [9, 20],
+			// 			layerId: "ArcGIS_Jonkoping",
+			// 			attribution: "Stadsbyggnadskontoret, Malmö",
+			// 			singlePopup: true,
+   //  					showAll: false,
+			// 			popupTemplate: '<h2>Fiskväg - {FiskvTyper}</h2><table><small><tr><td valign="top"><b>Namn:</b></td>\
+			// 				<td>{FiskvNamn}</td></tr>\
+			// 				<tr><td valign="top"><b>Hindertyp:</b></td><td>{HinderTyp}</td></tr>\
+			// 				<tr><td valign="top"><b>Kategori:</b></td><td>{Kategori}</td><tr>\
+			// 				<tr><td valign="top"><b>Fallhöjd:</b></td><td>{Fallh_m} m</td><tr>\
+			// 				<tr><td valign="top"><b>Längd:</b></td><td>{Langd_m} m</td></tr>\
+			// 				<tr><td valign="top"><b>Mer info:</b></td><td><a href="{URL}" target="_blank">L&auml;nk</a></tr>\
+			// 				<tr><td><b>Felrapportering: </b></td><td><a href="mailto:atgarderivatten@lansstyrelsen.se?subject=Felrapportering/Komplettering%20fiskv&auml;g:%20{FiskvagID}&body=Beskriv fel eller kompletteringen och bifoga g&auml;rna bilder! %0A%0ATack f%C3%B6r hj&auml;lpen">Fiskv&auml;g: {FiskvagID}</a></tr></small></table>',
+			// 			selectable: true
+			// 		}
+			// },
+			{
+					init: "L.esri.FeatureLayer",
+					url: "http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Portland_Parks/FeatureServer/0",
+					// url: "http://localhost/cgi-bin/proxy.py?url="+encodeURIComponent("http://ext-geoservices.lansstyrelsen.se/ArcGIS/rest/services/Vektor/Lst_Miljodata/MapServer/2"),
+					options: {
+						layerId: "ArcGIS Portland",
+						// http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Portland_Parks/FeatureServer/0
+						displayName: "ArcGIS Portland",
+						attribution: "Stadsbyggnadskontoret, Malmö",
+						popup: '${OBJECTID}',
+						uniqueKey: "OBJECTID",
+						selectable: true
+						// ,
+						// style: {
+						// 	color: '#00F',
+						// 	fillOpacity: 0.3
+						// }
+					}
+			},
 			{
 					init: "L.GeoJSON.WFS",
 					url: "http://xyz.malmo.se:8081/geoserver/wfs",
@@ -461,6 +505,25 @@ var config = {
 				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
 				maxZoom: 18
 			}
+		},
+		{
+			init: "L.esri.BasemapLayer",
+			params: ["Gray"],
+			options: {
+				layerId: "esri",
+				displayName: "ESRI",
+				maxZoom: 18
+			}
+		},
+		{
+			init: "L.esri.BasemapLayer",
+			// 'Streets', 'Topographic', 'Oceans', 'NationalGeographic', 'Gray', 'GrayLabels', 'DarkGray', 'DarkGrayLabels', 'Imagery', 'ImageryLabels', 'ImageryTransportation', 'ShadedRelief' or 'ShadedReliefLabels' 
+			params: ["Topographic"],
+			options: {
+				layerId: "esri2",
+				displayName: "ESRI2",
+				maxZoom: 18
+			}
 		}
 //		,
 //		{
@@ -619,19 +682,21 @@ var config = {
 					  options: {
 					 		addToMenu: false
 					  }
-				  },
-				  {
-					  init: "L.Control.Add2HomeScreen",
-					  options: {}
-				  },
-				  {
-				      init: "L.Control.FullScreen",
-				  	  options: {position: 'topright'}
 				  }
 				  // ,
 				  // {
-				  //     init: "L.Control.DrawSmap",
-				  // 	  options: {}
+					 //  init: "L.Control.Add2HomeScreen",
+					 //  options: {}
 				  // }
+				  // ,
+				  // {
+				  //	 init: "L.Control.FullScreen",
+				  // 	  options: {position: 'topright'}
+				  // }
+				  ,
+				  {
+					  init: "L.Control.DrawSmap",
+				  	  options: {}
+				  }
 	  ]
 };
