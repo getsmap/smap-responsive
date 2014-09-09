@@ -333,7 +333,7 @@ L.Control.DrawSmap = L.Control.extend({
                         //$popover.attr('id', 'drawsmap-popover');
                         self.initDraw($popCont);
                         self.initDone = true;
-                        
+
                     }
                 });
                 
