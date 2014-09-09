@@ -3,7 +3,7 @@ L.Control.Add2HomeScreen = L.Control.extend({
 
 	initialize: function(options) {
 		L.setOptions(this, options);
-		$('body').append('<script src="dist/lib/add-to-homescreen/src/addtohomescreen.js"></script>');
+		$('body').append('<script src="lib/add-to-homescreen/src/addtohomescreen.js"></script>');
 	},
 
 	onAdd: function(map) {
