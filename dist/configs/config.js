@@ -72,6 +72,23 @@ var config = {
 					}
 			},
 			{
+					init: "L.esri.FeatureLayer",
+					url: "http://localhost/cgi-bin/proxy.py?url="+encodeURIComponent("http://ext-geoservices.lansstyrelsen.se/ArcGIS/rest/services/Vektor/Lst_Miljodata/MapServer/2"),
+					options: {
+						layerId: "Lansstyrelsen",
+						displayName: "Länsstyrelsen",
+						attribution: "© Länsstyrelsen",
+						popup: '${OBJECTID}',
+						uniqueKey: "OBJECTID",
+						selectable: true
+						// ,
+						// style: {
+						// 	color: '#00F',
+						// 	fillOpacity: 0.3
+						// }
+					}
+			},
+			{
 					init: "L.GeoJSON.WFS",
 					url: "http://xyz.malmo.se:8081/geoserver/wfs",
 					options: {
