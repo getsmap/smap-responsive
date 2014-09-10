@@ -133,6 +133,12 @@ smap.cmd = {
 			}
 			return null;
 		},
+
+		getLang: function() {
+			var lang = smap.core.paramInst ? smap.core.paramInst.getParams().LANG || navigator.language : navigator.language; //Parameters from URL
+			var langCode = lang ? lang.split("-")[0] : "en";
+			return langCode;
+		},
 		
 		/**
 		 * Load a config file and apply it to the map.
@@ -162,9 +168,8 @@ smap.cmd = {
 				}
 			}
 
-			var navLang = smap.config ? smap.config.langCode : navigator.language; //get language from system if smap.config.langCode is not yet defined
-			var langCode = navLang ? navLang.split("-")[0] : "en";
-			this.lang = _lang ? _lang[langCode] : null;			
+			var langCode = this.getLang();
+			var lang = _lang.hasOwnProperty(langCode) ? _lang[langCode] : _lang["en"];
 
 			if (show && show === true) {
 				if (!this.spinner) {
@@ -183,7 +188,7 @@ smap.cmd = {
 					"left": "3.5em",
 					"bottom": "3.5em"
 				});
-				$(this.spinner.el).append('<div id="loadingText">'+this.lang.loading+'</div>');
+				$(this.spinner.el).append('<div id="loadingText">'+lang.loading+'</div>');
 			}
 			else {
 				this.spinner.stop();
