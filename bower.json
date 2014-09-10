@@ -41,7 +41,9 @@
     "leaflet-vector-layers": "https://github.com/JasonSanford/leaflet-vector-layers",
     "esri-leaflet": "~0.0.1-beta.4-patch-1",
     "lvector": "https://raw.githubusercontent.com/JasonSanford/leaflet-vector-layers/master/dist/lvector.js",
-    "leaflet.draw": "~0.2.3"
+    "leaflet.draw": "~0.2.3",
+    "leaflet-plugins": "~1.2.0",
+    "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js"
   },
   "overrides": {
     "bootstrap3-typeahead": {
@@ -68,9 +70,9 @@
     },
     "leaflet.draw": {
       "main": [
-          "dist/leaflet.draw.css",
-          "dist/leaflet.draw.js",
-          "dist/images/*.png"
+        "dist/leaflet.draw.css",
+        "dist/leaflet.draw.js",
+        "dist/images/*.png"
       ]
     },
     "leaflet.markercluster": {
@@ -80,7 +82,6 @@
         "MarkerCluster.css"
       ]
     },
-
     "leaflet-usermarker": {
       "main": [
         "src/leaflet.usermarker.js",

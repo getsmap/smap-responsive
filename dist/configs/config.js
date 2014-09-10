@@ -52,15 +52,18 @@ var config = {
 			// 			selectable: true
 			// 		}
 			// },
+			
+			// ESRI REST RASTER layer
 			{
-					init: "L.esri.FeatureLayer",
-					url: "http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Portland_Parks/FeatureServer/0",
-					// url: "http://localhost/cgi-bin/proxy.py?url="+encodeURIComponent("http://ext-geoservices.lansstyrelsen.se/ArcGIS/rest/services/Vektor/Lst_Miljodata/MapServer/2"),
+					init: "L.TileLayer.EsriRest",
+					url: "http://gis-services.metria.se/arcgis/rest/services/nv/InspireNV_NVR/MapServer",
 					options: {
-						layerId: "ArcGIS Portland",
+						layers: "0,1,2,3,4,5",
+						transparent: true,
+						layerId: "lansstyrelsen",
 						// http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Portland_Parks/FeatureServer/0
-						displayName: "ArcGIS Portland",
-						attribution: "Stadsbyggnadskontoret, Malmö",
+						displayName: "Länsstyrelsen",
+						attribution: "Länsstyrelsen",
 						popup: '${OBJECTID}',
 						uniqueKey: "OBJECTID",
 						selectable: true
@@ -71,8 +74,10 @@ var config = {
 						// }
 					}
 			},
+			// ESRI REST VECTOR layer
 			{
 					init: "L.esri.FeatureLayer",
+					// url: "http://ext-geoservices.lansstyrelsen.se/ArcGIS/rest/services/Vektor/Lst_Miljodata/MapServer/2",
 					url: "http://localhost/cgi-bin/proxy.py?url="+encodeURIComponent("http://ext-geoservices.lansstyrelsen.se/ArcGIS/rest/services/Vektor/Lst_Miljodata/MapServer/2"),
 					options: {
 						layerId: "Lansstyrelsen",
@@ -88,6 +93,25 @@ var config = {
 						// }
 					}
 			},
+			// {
+			// 		init: "L.esri.FeatureLayer",
+			// 		url: "http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Portland_Parks/FeatureServer/0",
+			// 		// url: "http://localhost/cgi-bin/proxy.py?url="+encodeURIComponent("http://ext-geoservices.lansstyrelsen.se/ArcGIS/rest/services/Vektor/Lst_Miljodata/MapServer/2"),
+			// 		options: {
+			// 			layerId: "ArcGIS Portland",
+			// 			// http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Portland_Parks/FeatureServer/0
+			// 			displayName: "ArcGIS Portland",
+			// 			attribution: "Stadsbyggnadskontoret, Malmö",
+			// 			popup: '${OBJECTID}',
+			// 			uniqueKey: "OBJECTID",
+			// 			selectable: true
+			// 			// ,
+			// 			// style: {
+			// 			// 	color: '#00F',
+			// 			// 	fillOpacity: 0.3
+			// 			// }
+			// 		}
+			// },
 			{
 					init: "L.GeoJSON.WFS",
 					url: "http://xyz.malmo.se:8081/geoserver/wfs",
