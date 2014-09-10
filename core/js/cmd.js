@@ -184,9 +184,8 @@ smap.cmd = {
 				this.spinner.spin();
 				$("#mapdiv").append(this.spinner.el);
 				$('div .spinner').css({
-					"top" : "auto", //to nullify default value given from spin.js
-					"left": "3.5em",
-					"bottom": "3.5em"
+					"top": "50%",
+					"left": "50%"
 				});
 				$(this.spinner.el).append('<div id="loadingText">'+lang.loading+'</div>');
 			}
