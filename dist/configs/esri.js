@@ -2,7 +2,7 @@
 var config = {
 
 		params:{
-			center: [0, 0],
+			center: [-50, 40],
 			zoom: 3,
 			hash: false
 		},
@@ -53,22 +53,6 @@ var config = {
 			// 		}
 			// },
 			
-			// ESRI REST Raster layer
-			{
-					init: "L.TileLayer.EsriRest",
-					url: "http://gis-services.metria.se/arcgis/rest/services/nv/InspireNV_NVR/MapServer",
-					options: {
-						displayName: "L.TileLayer.EsriRest (Sweden)",
-						layers: "0,1,2,3,4,5",
-						transparent: true,
-						layerId: "lansstyrelsen",
-						// http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Portland_Parks/FeatureServer/0
-						attribution: "Länsstyrelsen",
-						popup: '${OBJECTID}',
-						uniqueKey: "OBJECTID",
-						selectable: true // select doesn't work with this ESRI layer
-					}
-			},
 			// ESRI REST Vector layer
 			{
 					init: "L.esri.FeatureLayer",
@@ -90,6 +74,38 @@ var config = {
 							color: '#00F',
 							fillOpacity: 1
 						}
+					}
+			},
+
+			// ESRI REST "WMS"-kind of layer
+			{
+					init: "L.TileLayer.EsriRest",
+					url: "http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer",
+					options: {
+						displayName: "L.TileLayer.EsriRest (World)",
+						transparent: true,
+						layerId: "EsriRest_world",
+						attribution: "Länsstyrelsen",
+						popup: '${OBJECTID}',
+						uniqueKey: "OBJECTID",
+						selectable: true // select doesn't work with this ESRI layer
+					}
+			},
+
+			// ESRI REST "Tile"-kind of layer
+			{
+					init: "L.esri.TiledMapLayer",
+					url: "http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer",
+					options: {
+						displayName: "L.esri.TiledMapLayer (World)",
+						// layers: "0,1,2,3,4,5",
+						transparent: true,
+						layerId: "TiledMap_world",
+						// http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/Portland_Parks/FeatureServer/0
+						attribution: "Länsstyrelsen",
+						popup: '${OBJECTID}',
+						uniqueKey: "OBJECTID",
+						selectable: true // select doesn't work with this ESRI layer
 					}
 			}
 
@@ -262,13 +278,13 @@ var config = {
  					  init: "L.Control.Print",
  					  options: {}
  				 	},
- 				 	{
-					  init: "L.Control.Opacity",
-					  options: {
-					 		addToMenu: false,
-					 		savePrefBox: true
-					  }
-				  },
+ 				 // 	{
+					 //  init: "L.Control.Opacity",
+					 //  options: {
+					 // 		addToMenu: false,
+					 // 		savePrefBox: true
+					 //  }
+				  // },
 				  {
 					  init: "L.Control.ToolHandler",
 					  options: {
@@ -285,10 +301,10 @@ var config = {
 				  //	 init: "L.Control.FullScreen",
 				  // 	  options: {position: 'topright'}
 				  // }
-				  ,
-				  {
-					  init: "L.Control.DrawSmap",
-				  	  options: {}
-				  }
+				  // ,
+				  // {
+					 //  init: "L.Control.DrawSmap",
+				  // 	  options: {}
+				  // }
 	  ]
 };
