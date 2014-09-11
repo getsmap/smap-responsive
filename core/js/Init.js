@@ -26,7 +26,7 @@ smap.core.Init = L.Class.extend({
 		this.loadConfig(params.CONFIG).done(function() {
 				smap.config = config || window.config;
 				smap.config.configName = params.CONFIG; // Store for creating params
-				smap.cmd.getLang();
+				smap.config.langCode = smap.cmd.getLang();
 				params = $.extend( utils.objectToUpperCase(smap.config.params || {}), params);
 				self.applyConfig(smap.config);
 				smap.core.paramInst.applyParams(params);
