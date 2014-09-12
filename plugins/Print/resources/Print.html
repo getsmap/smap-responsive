@@ -1,0 +1,78 @@
+<div id="sprint-tabs-1">
+	<form>
+		<table>
+			<tr>
+				<td colspan="2">Rubrik:</td>
+			</tr>
+			<tr>
+				<td colspan="2"><input id="sprint_txtHeader"
+					style="width: 300px; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;"></td>
+			</tr>
+			<tr>
+				<!--  This determines the size of the columns  -->
+				<td colspan="1" width="162px">&nbsp;</td>
+				<td colspan="1">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="2">Beskrivning:</td>
+			</tr>
+			<tr>
+				<td colspan="2"><textarea id="sprint_txtAreaDescription"
+						rows="3" style="width: 300px; overflow-Y: scroll;" cols=""
+						rows=""></textarea></td>
+			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Utskriftsformat:</td>
+				<td>Upplösning:</td>
+			</tr>
+			<tr>
+				<td><select id="sprint_Print_slctPrintFormat"
+					class="sprint-paperformat" style="width: 140px; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;">
+						<!--option value="A0">A0</option-->
+						<!--option value="A1">A1</option-->
+						<!--option value="A2">A2</option-->
+						<option value="A3">A3</option>
+						<option value="A4" selected="selected">A4</option>
+						<option value="A5">A5</option>
+				</select></td>
+				<td><select id="sprint_Print_slctResolution"
+					style="width: 140px; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;">
+						<option value="96" selected="selected">96</option>
+						<option value="300">300</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td><input id="sprint_Print_chkNorthArrow" type="checkbox"></input><label
+					style="margin-top: 7px">Norrpil</label><br>
+					<input id="sprint_Print_chkScaleBar" type="checkbox"></input><label
+					style="margin-top: 7px">Skalstock</label></td>
+				<td><input class="sprint-orientation" type="radio" name="sprint_Print_radLandscape" value="Landscape"></input><label>Liggande</label><br />
+					<input class="sprint-orientation" type="radio" name="sprint_Print_radLandscape" value="Portrait" checked="checked"></input><label>Stående</label></td>
+			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td>
+					<label>Välj skala:</label>
+				</td>
+				<td><input id="sprint_Print_chkPdfUrl" type="checkbox"></input><label
+					style="margin-top: 7px">Länk till pdf</label></td>
+			</tr>
+			<tr>
+				<td>
+					<select class="sprint-selectscale"></select>
+				</td>
+				<td><input type="button" id="sprint_Print_btnPrint"
+					style="margin-top: 7px; width: 140px; height: 25px;"
+					value="Skriv ut"></input></td>
+			</tr>
+		</table>
+	</form>
+</div>
