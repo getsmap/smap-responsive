@@ -197,7 +197,7 @@ var config = {
 //						uniqueKey: "id",
 //						params: {
 //							q: "hembygdsgard"
-				  // 		typeName: null,
+					// 		typeName: null,
 							// version: null,
 							// maxFeatures: 10000,
 							// format: "text/geojson",
@@ -320,7 +320,7 @@ var config = {
 //					}
 //				}
 //			},
-			//  {
+			//	{
 			//	init: "L.GeoJSON.WFS",
 			//	url: "http://xyz.malmo.se:8081/geoserver/wfs",
 			//	options: {
@@ -334,14 +334,14 @@ var config = {
 			//		popup: 'The ID: ${id}',
 			//		uniqueKey: "id",
 			//		params: {
-			  // 		typeName: "malmows:malmo_kvarter_3d",
+				// 		typeName: "malmows:malmo_kvarter_3d",
 						// version: "1.1.0",
 						// maxFeatures: 10000,
 						// format: "text/geojson",
 						// outputFormat: "json"
 			// 		}
 			// 	}
-			//  },
+			//	},
 //			{
 //				 init: "L.GeoJSON.WFS",
 //				 url: "http://xyz.malmo.se:8081/geoserver/wfs",
@@ -358,18 +358,18 @@ var config = {
 //					 reverseAxisBbox: true,
 //					 popup: 
 //						'<div>${function(p) {'+
-//  							'var out = "";'+
-//  							'var style="margin-right:.3em;";'+
-//  							'if (p.urlvideo) {'+
-//  								'	out += \'<span style="\'+style+\'" class="fa fa-film fa-2x"></span>\';'+
-//  								'}'+
-//  							'if (p.urlsound) {'+
-//  							'	out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-2x"></span>\';'+
-//  							'}'+
-//  						'if (p.picture && p.picture.split(",").length > 1) {'+
-//  						'	out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-2x"></span>\';'+
-//  						'}'+
-//  					'return out;'+
+//								'var out = "";'+
+//								'var style="margin-right:.3em;";'+
+//								'if (p.urlvideo) {'+
+//									'	out += \'<span style="\'+style+\'" class="fa fa-film fa-2x"></span>\';'+
+//									'}'+
+//								'if (p.urlsound) {'+
+//								'	out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-2x"></span>\';'+
+//								'}'+
+//							'if (p.picture && p.picture.split(",").length > 1) {'+
+//							'	out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-2x"></span>\';'+
+//							'}'+
+//						'return out;'+
 //						'}'+
 //					'}</div>'+
 //					'<h4>${id}: ${namn} </h4><img style="width:200px;max-height:200px;" src="http://maja-k.com/promenad/vh/popup/${picture}"></img>'
@@ -497,7 +497,7 @@ var config = {
 //		},
 //		{
 //			init: "L.TileLayer.WMS",
-//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
+//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',	// gwc/service/
 //			options: {
 //				layerId: "wms-op",
 //				displayName: "WMS-op",
@@ -512,7 +512,7 @@ var config = {
 //		},		
 //		{
 //			init: "L.TileLayer.WMS",
-//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',  // gwc/service/
+//			url: 'http://xyz.malmo.se/geoserver/gwc/service/wms',	// gwc/service/
 //			options: {
 //				layerId: "wms-topo",
 //				displayName: "WMS-Topo (OBS! endast för test)",
@@ -527,7 +527,7 @@ var config = {
 //		},
 //		{
 //			init: "L.TileLayer.WMS",
-//			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',  // gwc/service/
+//			url: 'http://geoserver.smap.se/geoserver/gwc/service/wms',	// gwc/service/
 //			options: {
 //				layerId: "wms",
 //				displayName: "WMS",
@@ -543,68 +543,69 @@ var config = {
 		],
 		
 		plugins: [
-				  {
-					  init: "L.Control.Scale",
-					  options: {
-						  imperial: false
-					  }
-				  },
-				  {
-					  init: "L.Control.LayerSwitcher",
-					  options: {}
-				  },
-//				  {
-//				 	  init: "L.Control.LayerSwitcherResponsive",
-//				 	  options: {}
-//				  },
-				  {
-					  init: "L.Control.Geolocate",
-					  options: {}
-				  },
-				  {
-					  init: "L.Control.SelectWMS",
-					  options: {
-						  buffer: 5
-					  }
-				  },
-				  {
-					  init: "L.Control.SelectVector",
-					  options: {
-						  buffer: 5
-					  }
-				  },
-//				  {
-//					  init: "L.Control.MyPlugin",
-//					  options: {
+					{
+						init: "L.Control.Scale",
+						options: {
+							imperial: false
+						}
+					},
+					{
+						init: "L.Control.LayerSwitcher",
+						options: {}
+					},
+//					{
+//				 		init: "L.Control.LayerSwitcherResponsive",
+//				 		options: {}
+//					},
+					{
+						init: "L.Control.Geolocate",
+						options: {}
+					},
+					{
+						init: "L.Control.SelectWMS",
+						options: {
+							buffer: 5
+						}
+					},
+					{
+						init: "L.Control.SelectVector",
+						options: {
+							buffer: 5
+						}
+					},
+//					{
+//						init: "L.Control.MyPlugin",
+//						options: {
 //					 		position: "bottomright"
-//					  }
-//				  },
-//				  {
-//					  init: "L.Control.ShareTweet",
-//					  options: {}
-//				  },
-//				  {
-//					  init: "L.Control.SharePosition",
-//					  options: {}
-//				  },
-				  {
-					  init: "L.Control.Search",
-					  options: {}
-				  },
+//						}
+//					},
+//					{
+//						init: "L.Control.ShareTweet",
+//						options: {}
+//					},
+//					{
+//						init: "L.Control.SharePosition",
+//						options: {}
+//					},
+					{
+						init: "L.Control.Search",
+						options: {}
+					},
 					{
 						init: "L.Control.Zoombar",
 						options: {}
 					},
-				  // {
-			//		  init: "L.Control.ThreeD",
-			//		  options: {
+					// {
+			//			init: "L.Control.ThreeD",
+			//			options: {
 					 		
-				  //		}
-			//	  }
+					//		}
+			//		}
 					{
 						init: "L.Control.ShareLink",
 						options: {
-							addToMenu: false
+							addToMenu: false,
+							position: "topright"
 						}
 					}
 					,
@@ -616,44 +617,52 @@ var config = {
 						init : "L.Control.RedirectClick",		
 						option: {
 							addToMenu: false,
-							url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}"
+							url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
+							position: "topright"
 						}
 					},
 					{
- 					  init: "L.Control.Info",
- 					  options: {}
+ 						init: "L.Control.Info",
+ 						options: {
+ 							position: "topright"
+ 						}
  				 	},
 					{
- 					  init: "L.Control.Print",
- 					  options: {}
+ 						init: "L.Control.Print",
+ 						options: {
+ 							position: "topright"
+ 						}
  				 	},
  				 	{
-					  init: "L.Control.Opacity",
-					  options: {
+						init: "L.Control.Opacity",
+						options: {
 					 		addToMenu: false,
-					 		savePrefBox: true
-					  }
-				  },
-				  {
-					  init: "L.Control.ToolHandler",
-					  options: {
+					 		savePrefBox: true,
+					 		position: "topright"
+						}
+					},
+					{
+						init: "L.Control.ToolHandler",
+						options: {
 					 		addToMenu: false
-					  }
-				  }
-				  // ,
-				  // {
-					 //  init: "L.Control.Add2HomeScreen",
-					 //  options: {}
-				  // }
-				  // ,
-				  // {
-				  //	 init: "L.Control.FullScreen",
-				  // 	  options: {position: 'topright'}
-				  // }
-				  ,
-				  {
-					  init: "L.Control.DrawSmap",
-				  	  options: {}
-				  }
-	  ]
+						}
+					}
+					// ,
+					// {
+					 //	init: "L.Control.Add2HomeScreen",
+					 //	options: {}
+					// }
+					// ,
+					// {
+					//	 init: "L.Control.FullScreen",
+					// 		options: {position: 'topright'}
+					// }
+					,
+					{
+						init: "L.Control.DrawSmap",
+						options: {
+							position: "topright"
+						}
+					}
+		]
 };

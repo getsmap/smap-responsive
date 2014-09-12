@@ -1,7 +1,7 @@
 L.Control.RedirectClick = L.Control.extend({
 	
 	options: {
-		position: 'bottomright', // just an example
+		position: 'topright', // just an example
 		btnID: "redirect-click-btn", //plugin ID which can be used with jquery e.g.
 		displayName : 'Snedbild',
 		toolbarIndex: 4,
