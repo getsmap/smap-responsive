@@ -17,6 +17,16 @@ smap.core.Init = L.Class.extend({
 		
 		var self = this;
 		this.drawMap();
+
+		// if (utils.isInIframe()) {
+		// 	var w = window.frameElement.offsetWidth;
+		// 	alert(w);
+		// 	$("html, body").css({
+		// 		"width": w+"px",
+		// 		"max-width": w+"px"
+		// 	});
+		// }
+
 		this.bindEvents(this.map);
 		smap.core.layerInst = new smap.core.Layer(this.map);
 		smap.core.selectInst = new smap.core.Select(this.map);

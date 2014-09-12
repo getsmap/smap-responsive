@@ -8,6 +8,10 @@ var utils = {
 				window.console.log(msg);
 			}
 		},
+
+		isInIframe: function() {
+			return top.location != self.location;
+		},
 		
 		/**
 		 * Remove all duplicates in the array.

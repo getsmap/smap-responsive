@@ -234,8 +234,11 @@ L.Control.LayerSwitcher = L.Control.extend({
 			self._panelIsSliding = false;
 		}, 300);
 		
+		$("#mapdiv").addClass("mapdiv-slidetransition");
+		var panelWidth = this.$panel.outerWidth();
 		$("#mapdiv").css({
-			"margin-left": this.$panel.outerWidth() + "px"
+			"margin-left": panelWidth + "px",
+			"width": $("#mapdiv").outerWidth() - panelWidth + "px"
 		});
 		// $("#lswitch-btn").hide();
 	},
@@ -246,13 +249,15 @@ L.Control.LayerSwitcher = L.Control.extend({
 			return false;
 		}
 		$("#mapdiv").css({
-			"margin-left": "0px"
+			"margin-left": "0",
+			"width": "100%"
 		});
 		// $("#lswitch-btn").show();
 		$(".lswitch-panel").removeClass("panel-visible");
 		
 		$("#maindiv").addClass("lswitch-overflow-hidden");
 		setTimeout($.proxy(function() {
+			$("#mapdiv").removeClass("mapdiv-slidetransition");
 			this._panelIsSliding = false;
 			this.$panel.hide();
 			$("#maindiv").removeClass("lswitch-overflow-hidden");

@@ -13,6 +13,10 @@
   cursor: pointer;
   border-radius: 0 0.4em 0.4em 0;
 }
+.mapdiv-slidetransition {
+  -webkit-transition: all 0.3s ease !important;
+  transition: all 0.3s ease !important;
+}
 .lswitch-panel .panel {
   -webkit-box-shadow: none;
   box-shadow: none;
