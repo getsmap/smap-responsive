@@ -558,6 +558,10 @@ var config = {
 //				 		options: {}
 //					},
 					{
+						init: "L.Control.Zoombar",
+						options: {}
+					},
+					{
 						init: "L.Control.Geolocate",
 						options: {}
 					},
@@ -589,10 +593,6 @@ var config = {
 //					},
 					{
 						init: "L.Control.Search",
-						options: {}
-					},
-					{
-						init: "L.Control.Zoombar",
 						options: {}
 					},
 					// {
@@ -640,7 +640,8 @@ var config = {
 					 		savePrefBox: true,
 					 		position: "topright"
 						}
-					},
+					}
+					,
 					{
 						init: "L.Control.ToolHandler",
 						options: {
