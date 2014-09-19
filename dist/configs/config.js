@@ -455,6 +455,32 @@ var config = {
 		bl: [
 		{
 			init: "L.TileLayer",
+			url: 'http://xyz.malmo.se/data_e/tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
+			options: {
+				layerId: "malmotileXYZ",
+				displayName: "Malmö karta",
+				attribution: "© Malmö Stadsbyggnadskontor",
+				minZoom: 6,
+				extension: "jpeg",
+				maxZoom: 18,
+				tms: true
+			}
+		},
+		{
+			init: "L.TileLayer",
+			url: 'http://kartor.malmo.se/wwwroot_data/tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
+			options: {
+				layerId: "malmotileKartor",
+				displayName: "Malmö karta",
+				attribution: "© Malmö Stadsbyggnadskontor",
+				minZoom: 6,
+				extension: "jpeg",
+				maxZoom: 18,
+				tms: true
+			}
+		},
+		{
+			init: "L.TileLayer",
 			url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 			options: {
 				layerId: "osm",

@@ -20,7 +20,9 @@ smap.cmd = {
 				toggle: false,
 				callback: null  // function called when the toolbar plugin is done creating the button
 			};
-			smap.core.pluginHandlerInst.callPlugin(smap.core.mainConfig.toolbarPlugin, "addButton", [label, iconClass, onClick, options]); 
+			if (smap.core.mainConfig.toolbarPlugin) {
+				smap.core.pluginHandlerInst.callPlugin(smap.core.mainConfig.toolbarPlugin, "addButton", [label, iconClass, onClick, options]); 
+			}
 		},
 
 

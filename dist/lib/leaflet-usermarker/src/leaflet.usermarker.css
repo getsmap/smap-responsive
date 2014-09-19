@@ -43,10 +43,12 @@
 
 .leaflet-usermarker,
 .leaflet-usermarker-small {
-    width: 34px;
-    height: 34px;
-    background: url(img/bluedot.png);
-    background-size: 100%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00f;
+    /*background: url(img/bluedot.png);
+    background-size: 100%;*/
 }
 .leaflet-usermarker-small {
     width: 17px;

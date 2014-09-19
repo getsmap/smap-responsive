@@ -272,7 +272,7 @@ gulp.task('html', ["htmlcompress"]);
 
 
 // Build our code (during dev)
-gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
+gulp.task('ourcode', ["ourcss", "ourjs", "copypluginresources"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
 
 gulp.task('_full', ["images", "html", "copypluginresources"]);
 

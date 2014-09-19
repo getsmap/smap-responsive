@@ -43,7 +43,8 @@
     "lvector": "https://raw.githubusercontent.com/JasonSanford/leaflet-vector-layers/master/dist/lvector.js",
     "leaflet.draw": "~0.2.3",
     "leaflet-plugins": "~1.2.0",
-    "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js"
+    "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
+    "Leaflet.print-smap": "./lib/Leaflet.print-smap"
   },
   "overrides": {
     "bootstrap3-typeahead": {
@@ -80,6 +81,13 @@
         "leaflet.markercluster.js",
         "MarkerCluster.Default.css",
         "MarkerCluster.css"
+      ]
+    },
+    "Leaflet.print": {
+      "main": [
+        "dist/leaflet.print-src.js",
+        "dist/leaflet.print.css",
+        "dist/images/printer.png"
       ]
     },
     "leaflet-usermarker": {
