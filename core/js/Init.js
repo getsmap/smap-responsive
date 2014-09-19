@@ -52,15 +52,16 @@ smap.core.Init = L.Class.extend({
 
 		// this._loadTheme(theConfig.theme);
 		
-		// Set proxy for layers and controls
-		var proxy = smap.config.ws.proxy;
-		L.GeoJSON.WFS.prototype.proxy = proxy;
-		L.GeoJSON.Custom.prototype.proxy = proxy;
-		L.Control.SelectWMS.prototype.proxy = proxy;
+		if (theConfig.ws) {
+			// Set proxy for layers and controls
+			var proxy = smap.config.ws.proxy;
+			L.GeoJSON.WFS.prototype.proxy = proxy;
+			L.GeoJSON.Custom.prototype.proxy = proxy;
+			L.Control.SelectWMS.prototype.proxy = proxy;
+		}
 		
 		// Extend map options
 		$.extend(this.map.options, theConfig.mapOptions || {});
-		
 		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
 

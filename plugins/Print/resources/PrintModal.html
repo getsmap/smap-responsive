@@ -1,9 +1,27 @@
 <div id="sprint-tabs-1">
-	<form>
-		<table>
-			<tr>
-				<td colspan="2">Rubrik:</td>
-			</tr>
+	<form role="form">
+		<div class="form-group">
+			<label for="sprint_header">${header}</label>
+			<input type="text" class="form-control" id="sprint_header" name="header" placeholder="${tip_header}">
+		</div>
+		<div class="form-group">
+			<label for="sprint_descript">${descript}</label>
+			<textarea class="form-control" id="sprint_descript" name="descript" placeholder="${tip_descript}" rows="3" />
+		</div>
+		<div>
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-primary active">
+					<input type="radio" name="a3" id="sprint_a3" checked>A3
+				</label>
+				<label class="btn btn-primary">
+					<input type="radio" name="a4" id="sprint_a4">A4
+				</label>
+				<label class="btn btn-primary">
+					<input type="radio" name="a5" id="sprint_a5">A5
+				</label>
+			</div>
+		</div>
+
 			<tr>
 				<td colspan="2"><input id="sprint_txtHeader"
 					style="width: 300px; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;"></td>
