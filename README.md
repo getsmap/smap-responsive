@@ -35,9 +35,9 @@ There are two ways to get ready, depending on if your goal is to:
 ###b) Get started deploying the code
 
 1. Clone or download the source code of this repository (note that Git doesn't allow downloading a subfolder)
-```svn checkout https://github.com/getsmap/smap-responsive/trunk/dist myDeployeddMap```
-2. Adapt the file dist/configs/config.js (or any other config-file you want to use) so that it refers to already published data (e.g. WMS or WFS)
-3. Point the browser to dev.html and point out the config-file by adding the parameter e.g. like this: ?config=dist/configs/config.js
+```svn checkout https://github.com/getsmap/smap-responsive/trunk/dist myDeployedMap```
+2. Adapt the file configs/config.js (or any other config-file you want to use) so that it refers to already published data (e.g. WMS or WFS)
+3. Point the browser to dev.html and point out the config-file by adding the parameter e.g. like this: ?config=configs/config.js or ?config=config.js  ("configs/" is added as default)
 
 
 ###Support
