@@ -3,7 +3,9 @@ sMap-responsive
 
 ###Introduction
 
-sMap-responsive is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which supports a range of different browsers and devices (specified in the wiki). The framework can be extended with Leaflet controls. Leaflet controls are great for extending the functionality, because you can easily pick the goodies from here to any other Leaflet project – in case you want to use your own framework.
+sMap-responsive is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which supports a range of different browsers and devices (specified in the wiki).
+
+The framework can be extended with Leaflet controls. Leaflet controls are great, because you can easily pick the goodies from here and use in any other Leaflet-based framework.
 
 ###Scope
 
