@@ -20,8 +20,8 @@ Data sources – whether belonging to the contributors' organisation, or to anyo
 ###Get started
 
 There are two ways to get ready, depending on if your goal is to:
-a) **Develop** the source code
-b) **Deploy** the application only (only adapting the configuration file)
+- a) **Develop** the source code
+- b) **Deploy** the application only (only adapting the configuration file)
 
 ###a) Get started developing the source code
 
