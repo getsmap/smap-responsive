@@ -32,7 +32,7 @@
     "leaflet.markercluster": "~0.4.0",
     "leaflet": "*",
     "modernizr": "~2.6.2",
-    "openlayers": "latest",
+    "openlayers": "~2.13.1",
     "proj4": "~2.1.4",
     "spinjs": "~2.0.1",
     "sass-bootstrap": "~3.0.0",
@@ -44,8 +44,7 @@
     "leaflet.draw": "~0.2.3",
     "leaflet-plugins": "~1.2.0",
     "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
-    "bootstrap-3": "./lib/bootstrap-3",
-    "Leaflet.print-smap": "./lib/Leaflet.print-smap"
+    "bootstrap-3": "./lib/bootstrap-3"
   },
   "overrides": {
     "bootstrap-3": {
@@ -88,13 +87,6 @@
         "leaflet.markercluster.js",
         "MarkerCluster.Default.css",
         "MarkerCluster.css"
-      ]
-    },
-    "Leaflet.print": {
-      "main": [
-        "dist/leaflet.print-src.js",
-        "dist/leaflet.print.css",
-        "dist/images/printer.png"
       ]
     },
     "leaflet-usermarker": {

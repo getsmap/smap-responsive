@@ -2,8 +2,8 @@ smap.core.Layer = L.Class.extend({
 	
 	options: {
 		defaultStyle: {
-			color: '#0000FF',
-			fillColor: "#0000FF",
+			color: '#00F',
+			fillColor: "#00F",
 			opacity: 1,
 			fillOpacity: 0.3,
 			radius: 8,

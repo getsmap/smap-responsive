@@ -185,13 +185,8 @@
   }
   .lswitch-cat i {
     -webkit-transition: -webkit-transform 0.2s, color 0.1s;
-<<<<<<< HEAD
             transition: transform 0.2s, color 0.1s;
     font-size: 1.2em;
-=======
-    transition: transform 0.2s, color 0.1s;
-    font-size: 0.9em;
->>>>>>> FETCH_HEAD
   }
   .lswitch-cat i:hover {
     color: #00eded;
@@ -215,9 +210,6 @@
   }
   .lswitch-panel a {
     background-color: rgba(255,255,255,0.5);
-  }
-  .lswitch-panel a:first-child {
-    margin-top: 2px;
   }
   .lswitch-panel a:hover,
   .lswitch-panel a:active {
