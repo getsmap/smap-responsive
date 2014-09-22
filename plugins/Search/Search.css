@@ -27,7 +27,6 @@
 /*border none
 	border 1px solid #ccc
 	border-width 1px 1px 1px 0*/
-  -webkit-box-shadow: none;
   box-shadow: none;
   -webkit-appearance: none;
   border-radius: 0 !important;

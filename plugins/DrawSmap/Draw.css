@@ -1,5 +1,5 @@
 #smap-drawsmap-btn{
-  margin-right: 140px;
+  
 }
 .drawsmapbtn{
   width: auto !important;
@@ -33,4 +33,12 @@
 
 .btn-popover{
 	margin: 5px;
+}
+
+.drawBtns{
+	padding: 0;
+}
+.drawBtnsTight{
+	margin-right: 5px;
+	margin-bottom: 4px;
 }

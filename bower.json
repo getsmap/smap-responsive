@@ -43,9 +43,16 @@
     "lvector": "https://raw.githubusercontent.com/JasonSanford/leaflet-vector-layers/master/dist/lvector.js",
     "leaflet.draw": "~0.2.3",
     "leaflet-plugins": "~1.2.0",
-    "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js"
+    "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
+    "bootstrap-3": "./lib/bootstrap-3"
   },
   "overrides": {
+    "bootstrap-3": {
+      "main": [
+        "css/bootstrap.icon-large.css",
+        "fonts/glyphicons-draw.png"
+      ]
+    },
     "bootstrap3-typeahead": {
       "main": [
         "bootstrap3-typeahead.min.js"

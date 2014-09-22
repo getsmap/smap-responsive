@@ -3,38 +3,45 @@ L.Control.DrawSmap = L.Control.extend({
         buttons: {
             polyline: {
             	addToPopover: true,
-            	iconCss: "icon-large icon-vector-path-line",
-            	displayName: "Polyline"
+            	iconCss: "fa icon-large icon-vector-path-line",
+            	displayName: "Polyline",
+            	iconClass: "drawBtns"
             },
             polygon: {
             	addToPopover: true,
-            	iconCss: "icon-large icon-vector-path-polygon",
-            	displayName: "Polygon"
+            	iconCss: "fa icon-large icon-vector-path-polygon",
+            	displayName: "Polygon",
+            	iconClass: "drawBtns"
             },
             rectangle: {
             	addToPopover: true,
-            	iconCss: "icon-large icon-vector-path-square",
-            	displayName: "Rectangle"
+            	iconCss: "fa icon-large icon-vector-path-square",
+            	displayName: "Rectangle",
+            	iconClass: "drawBtns"
             },
             circle: {
             	addToPopover: true,
-            	iconCss: "icon-large icon-vector-path-circle",
-            	displayName: "Circle"
+            	iconCss: "fa icon-large icon-vector-path-circle",
+            	displayName: "Circle",
+            	iconClass: "drawBtns"
             },
             marker: {
             	addToPopover: true,
-            	iconCss: "icon-large icon-map-marker",
-            	displayName: "Marker"
+            	iconCss: " fa icon-large icon-map-marker",
+            	displayName: "Marker",
+            	iconClass: "drawBtns"
             },
             edit: {
             	addToPopover: true,
-            	iconCss: "icon-large icon-edit",
-            	displayName: "Edit"
+            	iconCss: "fa fa-edit",
+            	displayName: "Edit",
+            	iconClass: ""
             },
             remove: {
             	addToPopover: true,
-            	iconCss: "icon-large icon-remove",
-            	displayName: "Remove"
+            	iconCss: "fa fa-times",
+            	displayName: "Remove",
+            	iconClass: ""
             }
         }
     },
@@ -152,14 +159,15 @@ L.Control.DrawSmap = L.Control.extend({
 
     onAdd: function(map) {
         var self = this;
-        self._container = L.DomUtil.create('div', 'leaflet-control-drawsmap'); // second parameter is class name
-        L.DomEvent.disableClickPropagation(self._container);
+        self._drawcontainer = L.DomUtil.create('div', 'leaflet-control-drawsmap'); // second parameter is class name
+        L.DomEvent.disableClickPropagation(self._drawcontainer);
 
-        self.$container = $(self._container);
+        self.$drawcontainer = $(self._drawcontainer);
         self.initDone = false;
         self.currentTool = {};
-        self._createDrawTool();
-        return self._container;
+        //self._createDrawTool();
+        self.initDraw(self.$drawcontainer);
+        return self._drawcontainer;
     },
 
     activate: function() {},
@@ -232,13 +240,30 @@ L.Control.DrawSmap = L.Control.extend({
             }
         });
         
+        
+//        $('.thandler-btn').on('click',function(e){
+//        	alert("hil");
+//        	
+//        	if ( $(".thandler-popover").data('bs.popover') ) {
+//	            if ($(".thandler-popover").is(":visible")) {
+//	                            $(".drawsmap-popover").hide();
+//					alert("POP");
+//	            }
+//	            else{
+//	                $(".drawsmap-popover").show();
+//	                alert("NO");
+//	            }
+//	        }
+//        				
+//        
+//        });
         return popoverdiv;
     },
 
     _createToolBtn : function(tooltype,obj){
         var self = this;
         tooltype.toLowerCase();
-        var $toolbtn = $('<button id="drawsmap'+tooltype+'" class="btn btn-default btn-popover" title="'+obj.displayName+'"><span></span></button>');
+        var $toolbtn = $('<button id="drawsmap'+tooltype+'" class="btn btn-default '+obj.iconClass+' " title="'+obj.displayName+'"><span></span></button>');
        
         tooltype = tooltype.charAt(0).toUpperCase() + tooltype.slice(1);
        
@@ -295,15 +320,34 @@ L.Control.DrawSmap = L.Control.extend({
             }
             
         });
+        
+//        if ( $(".thandler-popover").data('bs.popover') ) {
+//            if ($(".thandler-popover").is(":visible")) {
+//                            $(".drawsmap-popover").hide();
+//				alert("hi");
+//            }
+//            else{
+                //$(".drawsmap-popover").show();
+//                alert("NO");
+//            }
+//        }
+                
+//        popover thandler-popover fade bottom in
+        
+//        height: 2.55em;
+//        padding: 4px;
+//        border-right-width: 1px;
+//        margin-right: 5px;
+        
         $toolbtn.find("span").addClass(obj.iconCss);
-        return $toolbtn;
+		return $toolbtn;
     },
 
     _createDrawTool: function() {
         var self = this;
-        var $btn = $('<button id="smap-drawsmap-btn" title="' + self.lang.btntitle + '" class="btn btn-default"><span class="icon-large  icon-th"></span></button>');
+        var $btn = $('<button id="smap-drawsmap-btn" title="' + self.lang.btntitle + '" class="btn btn-default"><span ></span><i class="fa fa-th"></i></button>');
         
-        self.$container.append($btn);
+        self.$drawcontainer.append($btn);
 
         $btn.on("click", function () {
             var $this = $(this);
@@ -330,7 +374,7 @@ L.Control.DrawSmap = L.Control.extend({
                         var $popover = $(".popover"),
                         $popCont = $(".popover-content");
                         $popover.addClass("drawsmap-popover");
-                        //$popover.attr('id', 'drawsmap-popover');
+                        $popCont.attr('id', 'drawsmap-popover');
                         self.initDraw($popCont);
                         self.initDone = true;
 
