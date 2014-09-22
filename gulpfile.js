@@ -24,6 +24,7 @@ var todo = require('gulp-todo');
 var uglify = require('gulp-uglify');
 var using = require('gulp-using');
 var gutil = require('gulp-util');
+var gulpflatten = require('gulp-flatten')
 
 var es = require('event-stream');
 var pngcrush = require('imagemin-pngcrush');
@@ -96,6 +97,10 @@ var p = {
 		"!plugins/WorkshopPlugin/**/*.js",
 		"!plugins/PluginTemplate.js",
 		'!core/js/buildLibOverrides.js'
+	],
+
+	ourPluginResources: [
+		"plugins/**/resources/*" // => anything that exists in a folder named "resources"
 	]
 
 };
@@ -109,6 +114,7 @@ var p = {
 gulp.task('cleancode', function() {
 	gulp.src("dist/css").pipe(rimraf());
 	gulp.src("dist/js").pipe(rimraf());
+	gulp.src("dist/resources").pipe(rimraf());
 	gulp.src("dist/*.*").pipe(rimraf());
 });
 gulp.task('cleanlib', function() {
@@ -173,9 +179,12 @@ gulp.task('ourjs', function() {
 		.pipe(uglify())  // {mangle: false}
 		.pipe(gulp.dest("dist"));
 });
-
-
-
+gulp.task('copypluginresources', function() {
+	return gulp
+		.src(p.ourPluginResources)
+		.pipe(gulpflatten())
+		.pipe(gulp.dest("dist/resources"));
+});
 
 gulp.task('images', function () {
 	var imgDest = 'dist/img';
@@ -263,9 +272,9 @@ gulp.task('html', ["htmlcompress"]);
 
 
 // Build our code (during dev)
-gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
+gulp.task('ourcode', ["ourcss", "ourjs", "copypluginresources"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
 
-gulp.task('_full', ["images", "html"]);
+gulp.task('_full', ["images", "html", "copypluginresources"]);
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).
