@@ -224,14 +224,8 @@ L.Control.DrawSmap = L.Control.extend({
         });
 
         smap.map.on('draw:edited', function (e) {
-            //var layers = e.layers;
-            //layers.eachLayer(function (layer) {});
-        });
-        
 
-        //this.drawControl.addTo(smap.map);
-       // var rt = this.drawControl.getContainer();
-        //popoverdiv.append($(rt));
+        });
         
         $.each(self.options.buttons,function(k,v){
             if (v.addToPopover === true){
@@ -239,24 +233,7 @@ L.Control.DrawSmap = L.Control.extend({
                 popoverdiv.append(tool);
             }
         });
-        
-        
-//        $('.thandler-btn').on('click',function(e){
-//        	alert("hil");
-//        	
-//        	if ( $(".thandler-popover").data('bs.popover') ) {
-//	            if ($(".thandler-popover").is(":visible")) {
-//	                            $(".drawsmap-popover").hide();
-//					alert("POP");
-//	            }
-//	            else{
-//	                $(".drawsmap-popover").show();
-//	                alert("NO");
-//	            }
-//	        }
-//        				
-//        
-//        });
+
         return popoverdiv;
     },
 
@@ -320,24 +297,7 @@ L.Control.DrawSmap = L.Control.extend({
             }
             
         });
-        
-//        if ( $(".thandler-popover").data('bs.popover') ) {
-//            if ($(".thandler-popover").is(":visible")) {
-//                            $(".drawsmap-popover").hide();
-//				alert("hi");
-//            }
-//            else{
-                //$(".drawsmap-popover").show();
-//                alert("NO");
-//            }
-//        }
-                
-//        popover thandler-popover fade bottom in
-        
-//        height: 2.55em;
-//        padding: 4px;
-//        border-right-width: 1px;
-//        margin-right: 5px;
+       
         
         $toolbtn.find("span").addClass(obj.iconCss);
 		return $toolbtn;
