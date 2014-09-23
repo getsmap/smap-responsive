@@ -139,9 +139,6 @@ smap.core.Init = L.Class.extend({
 		if (config.ws && config.ws.hasOwnProperty(document.domain)) {
 			config.ws = config.ws[document.domain];
 		}
-		else {
-			utils.log("config.ws does not support this domain: "+document.domain);
-		}
 		
 		var bls = config.bl || [];
 		for (var i=0,len=bls.length; i<len; i++) {
