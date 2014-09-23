@@ -2,11 +2,6 @@ configs/*.js
 node_modules/
 bower_components/
 *.scssc
-*.pyc
 configs/config_lund.js
 dist/configs/config_lund.js
 plugins/GuidePopup/qgis_calc_cat.txt
-
-dist/lib/leaflet/dist/leaflet-src.js
-
-dist/lib/leaflet/dist/leaflet-src.js

@@ -1,5 +1,5 @@
 #smap-drawsmap-btn{
-  margin-right: 140px;
+  
 }
 .drawsmapbtn{
   width: auto !important;
@@ -33,4 +33,18 @@
 
 .btn-popover{
 	margin: 5px;
+}
+
+.drawBtns{
+	padding: 0;
+}
+.drawBtnsTight{
+	margin-right: 5px;
+	margin-bottom: 4px;
+}
+
+@media (max-width: 1470px){
+	.leaflet-top.leaflet-right .leaflet-control-drawsmap {
+	  margin: 45px -270px 0px 0px;
+	}
 }

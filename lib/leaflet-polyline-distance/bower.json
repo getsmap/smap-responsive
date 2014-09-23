@@ -1,0 +1,20 @@
+{
+  "name": "leaflet-polyline-distance",
+  "version": "3.0.0",
+  "authors": [
+    "danimt"
+  ],
+  "main": [
+    "L.Polyline.measuredDistance.js"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">=1.7.0"
+  }
+}

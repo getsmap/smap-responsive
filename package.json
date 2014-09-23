@@ -17,7 +17,6 @@
     "gulp-concat": "^2.2.0",
     "gulp-css-validator": "^0.0.4",
     "gulp-csslint": "^0.1.4",
-    "gulp-flatten": "0.0.3",
     "gulp-imagemin": "^0.6.1",
     "gulp-inject": "^0.4.1",
     "gulp-jshint": "^1.6.4",

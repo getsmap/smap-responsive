@@ -6,7 +6,6 @@
   padding: 8px 3px 5px 0px;
   border: 1px solid #999;
   border-width: 1px 1px 1px 0;
-  -webkit-box-shadow: 1px 1px 4px 0 rgba(100,100,100,0.5);
   box-shadow: 1px 1px 4px 0 rgba(100,100,100,0.5);
   background-color: #fff;
   background-color: rgba(255,255,255,0.8);
@@ -15,18 +14,16 @@
 }
 .mapdiv-slidetransition {
   -webkit-transition: all 0.3s ease !important;
-  transition: all 0.3s ease !important;
+          transition: all 0.3s ease !important;
 }
 .lswitch-panel .panel {
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 .lswitch-panelslide {
   -webkit-transition: margin-left 300ms ease;
-  transition: margin-left 300ms ease;
+          transition: margin-left 300ms ease;
 }
 .lswitch-panel {
-  -webkit-box-shadow: inset #000 -3px 0px 17px;
   box-shadow: inset #000 -3px 0px 17px;
   z-index: -1;
   position: absolute;
@@ -50,8 +47,8 @@
 }
 .lswitch-cat.open i {
   -webkit-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+          transform: rotate(90deg);
 }
 .lswitch-catcont {
   height: 0;
@@ -85,7 +82,7 @@
 .lswitch-catcont.lswitch-catcont-visible a {
   padding-left: 2em;
   -webkit-transition: all 0.2s;
-  transition: all 0.2s;
+          transition: all 0.2s;
 }
 .lswitch-cat,
 .lswitch-panel a {
@@ -184,12 +181,12 @@
   }
   .lswitch-catcont {
     -webkit-transition: all 0.5s;
-    transition: all 0.5s;
+            transition: all 0.5s;
   }
   .lswitch-cat i {
     -webkit-transition: -webkit-transform 0.2s, color 0.1s;
-    transition: transform 0.2s, color 0.1s;
-    font-size: 0.9em;
+            transition: transform 0.2s, color 0.1s;
+    font-size: 1.2em;
   }
   .lswitch-cat i:hover {
     color: #00eded;
@@ -201,10 +198,9 @@
     display: none !important;
   }
   .lswitch-panel {
-    -webkit-box-shadow: none;
     box-shadow: none;
     -webkit-transition: all 300ms;
-    transition: all 300ms;
+            transition: all 300ms;
     display: block !important;
     background-color: none;
     background-color: rgba(255,255,255,0);
@@ -214,9 +210,6 @@
   }
   .lswitch-panel a {
     background-color: rgba(255,255,255,0.5);
-  }
-  .lswitch-panel a:first-child {
-    margin-top: 2px;
   }
   .lswitch-panel a:hover,
   .lswitch-panel a:active {

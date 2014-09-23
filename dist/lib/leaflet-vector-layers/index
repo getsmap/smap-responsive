@@ -32,8 +32,8 @@
     <meta name="selected-link" value="repo_source" data-pjax-transient>
       <meta name="google-analytics" content="UA-3769691-2">
 
-    <meta content="collector.githubapp.com" name="octolytics-host" /><meta content="collector-cdn.github.com" name="octolytics-script-host" /><meta content="github" name="octolytics-app-id" /><meta content="A1344028:6A43:4A738E90:540DC8C3" name="octolytics-dimension-request_id" />
-    
+    <meta content="collector.githubapp.com" name="octolytics-host" /><meta content="collector-cdn.github.com" name="octolytics-script-host" /><meta content="github" name="octolytics-app-id" /><meta content="C1B46866:76FA:7EE1DEE:5417F8D5" name="octolytics-dimension-request_id" />
+    <meta content="Rails, view, files#disambiguate" name="analytics-event" />
 
     
     
@@ -41,14 +41,14 @@
 
 
     <meta content="authenticity_token" name="csrf-param" />
-<meta content="KH/JKl5g+s8e03g5zVbqU69auGRqKnaVETGTrcDU1P3KeL1KTGOBefRaK1id6atfP5PLiPhqccQqnBx8Ec1xRg==" name="csrf-token" />
+<meta content="q/c0eDrx3Sp6Q83qCLAIAsGuBnMmJOIqR6dTt7IN4D5IHc8qvJFDh/cNkBoAof9oftf3JOEwXOKZbf5+B855xg==" name="csrf-token" />
 
-    <link href="https://assets-cdn.github.com/assets/github-15dc68509b37dbe3792de390aae9bc716c03c421.css" media="all" rel="stylesheet" type="text/css" />
-    <link href="https://assets-cdn.github.com/assets/github2-93f8f619dc51fc5d484d938d7ce6ba262a4d736c.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://assets-cdn.github.com/assets/github-dffb79fb82f52982b30244965c2578205ec70b2f.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://assets-cdn.github.com/assets/github2-a2cc0de113caf4b0ae498b06378dc6e817147d77.css" media="all" rel="stylesheet" type="text/css" />
     
 
 
-    <meta http-equiv="x-pjax-version" content="50ae6c4a51f959c93b6729956824965b">
+    <meta http-equiv="x-pjax-version" content="53cbbcddc26423ce802605f0d031c02e">
 
       
   <meta name="description" content="leaflet-vector-layers - A little help to viewing ArcGIS Server, Geocommons, Arc2Earth, CartoDB, GIS Cloud, etc. vector data in a Leaflet map">
@@ -137,7 +137,7 @@
   </a>
 
     <a class="social-count js-social-count" href="/JasonSanford/leaflet-vector-layers/stargazers">
-      168
+      169
     </a>
 
   </li>
@@ -322,13 +322,11 @@
 
       <li>
         
-  <a href="/JasonSanford/leaflet-vector-layers/graphs/contributors">
-    <span class="octicon octicon-organization"></span>
-    <span class="num text-emphasized">
-      4
-    </span>
-    contributors
-  </a>
+          <a href="/JasonSanford/leaflet-vector-layers/graphs/contributors" class="js-deferred-content" data-url="/JasonSanford/leaflet-vector-layers/contributors_size">
+            <span class="octicon octicon-organization"></span>
+            <span class="num text-emphasized"></span>
+            Fetching contributors
+          </a>
       </li>
     </ul>
 
@@ -613,33 +611,20 @@
 
 
   
-  <div class="commit commit-tease js-details-container" >
-    <p class="commit-title ">
-        <a href="/JasonSanford/leaflet-vector-layers/commit/de68e3b514508481bece4ab7f44e2375ae46d57d" class="message" data-pjax="true" title="Merge pull request #57 from snkashis/patch-1
-
-Fixing Layer off button for GitSpatial Utility poles Demo">Merge pull request</a> <a href="https://github.com/JasonSanford/leaflet-vector-layers/pull/57" class="issue-link" title="Fixing Layer off button for GitSpatial Utility poles Demo">#57</a> <a href="/JasonSanford/leaflet-vector-layers/commit/de68e3b514508481bece4ab7f44e2375ae46d57d" class="message" data-pjax="true" title="Merge pull request #57 from snkashis/patch-1
-
-Fixing Layer off button for GitSpatial Utility poles Demo">from snkashis/patch-1</a>
-        <span class="hidden-text-expander inline"><a href="#" class="js-details-target">…</a></span>
-    </p>
-      <div class="commit-desc"><pre>Fixing Layer off button for GitSpatial Utility poles Demo</pre></div>
-    <div class="commit-meta">
-      <button aria-label="Copy SHA" class="js-zeroclipboard zeroclipboard-link" data-clipboard-text="de68e3b514508481bece4ab7f44e2375ae46d57d" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
-      <a href="/JasonSanford/leaflet-vector-layers/commit/de68e3b514508481bece4ab7f44e2375ae46d57d" class="sha-block" data-pjax>latest commit <span class="sha">de68e3b514</span></a>
-
-      <div class="authorship">
-        <img alt="Jason Sanford" class="avatar" data-user="220341" height="20" src="https://avatars1.githubusercontent.com/u/220341?v=2&amp;s=40" width="20" />
-        <span class="author-name"><a href="/JasonSanford" rel="author">JasonSanford</a></span>
-        authored <time class="updated" datetime="2013-10-28T09:27:04-07:00" is="relative-time">October 28, 2013</time>
-
+    <div class="commit commit-loader commit-tease js-details-container js-deferred-content" data-url="/JasonSanford/leaflet-vector-layers/tree-commit/de68e3b514508481bece4ab7f44e2375ae46d57d">
+      <p class="commit-title blank">
+        Fetching latest commit…
+      </p>
+      <div class="commit-meta">
+        <p class="loader-loading"><img alt="" height="16" src="https://assets-cdn.github.com/images/spinners/octocat-spinner-32-EAF2F5.gif" width="16" /></p>
+        <p class="loader-error">Cannot retrieve the latest commit at this time</p>
       </div>
     </div>
-  </div>
 
   <div class="file-wrap">
     <table class="files" data-pjax>
 
-      <tbody class=""
+      <tbody class="js-deferred-content"
   data-url="/JasonSanford/leaflet-vector-layers/file-list/master"
   data-deferred-content-error="Failed to load latest commit information.">
 
@@ -652,12 +637,12 @@ Fixing Layer off button for GitSpatial Utility poles Demo">from snkashis/patch-1
         <span class="css-truncate css-truncate-target"><a href="/JasonSanford/leaflet-vector-layers/tree/master/build" class="js-directory-link" id="b0da275520918e23dd615e2a747528f1-9cc76500503b6cb95fb940f4d4563f9cd043ab5b" title="build">build</a></span>
       </td>
       <td class="message">
-        <span class="css-truncate css-truncate-target ">
-          <a href="/JasonSanford/leaflet-vector-layers/commit/debd89995bf979df765b795fe98aa6ef08a737c5" class="message" data-pjax="true" title="Getting started with GitSpatial">Getting started with GitSpatial</a>
+        <span class="css-truncate css-truncate-target js-deferred-content-error">
+          
         </span>
       </td>
       <td class="age">
-        <span class="css-truncate css-truncate-target"><time datetime="2013-08-27T13:39:26Z" is="time-ago">August 27, 2013</time></span>
+        <span class="css-truncate css-truncate-target"></span>
       </td>
     </tr>
     <tr>
@@ -739,12 +724,12 @@ It was set to affect the neighborhoods example instead.">Fixing Layer off button
         <span class="css-truncate css-truncate-target"><a href="/JasonSanford/leaflet-vector-layers/tree/master/documentation" class="js-directory-link" id="55876228853abf632dec9346a4f372ec-11a7e90a9163cb37533712e05e5d6a661b78bb6c" title="documentation">documentation</a></span>
       </td>
       <td class="message">
-        <span class="css-truncate css-truncate-target ">
-          <a href="/JasonSanford/leaflet-vector-layers/commit/daaf31d360aef49e29127b53c48fdccf265d642b" class="message" data-pjax="true" title="Version 1.5.1. gitspatial.com, not gitspatial.herokuapp.com">Version 1.5.1. gitspatial.com, not gitspatial.herokuapp.com</a>
+        <span class="css-truncate css-truncate-target js-deferred-content-error">
+          
         </span>
       </td>
       <td class="age">
-        <span class="css-truncate css-truncate-target"><time datetime="2013-09-04T05:00:30Z" is="time-ago">September 04, 2013</time></span>
+        <span class="css-truncate css-truncate-target"></span>
       </td>
     </tr>
     <tr>
@@ -790,12 +775,12 @@ It was set to affect the neighborhoods example instead.">Fixing Layer off button
         <span class="css-truncate css-truncate-target"><a href="/JasonSanford/leaflet-vector-layers/tree/master/src" class="js-directory-link" id="25d902c24283ab8cfbac54dfa101ad31-b33039f03d3e46fcd9429db9c44d532f7e1f434f" title="src">src</a></span>
       </td>
       <td class="message">
-        <span class="css-truncate css-truncate-target ">
-          <a href="/JasonSanford/leaflet-vector-layers/commit/daaf31d360aef49e29127b53c48fdccf265d642b" class="message" data-pjax="true" title="Version 1.5.1. gitspatial.com, not gitspatial.herokuapp.com">Version 1.5.1. gitspatial.com, not gitspatial.herokuapp.com</a>
+        <span class="css-truncate css-truncate-target js-deferred-content-error">
+          
         </span>
       </td>
       <td class="age">
-        <span class="css-truncate css-truncate-target"><time datetime="2013-09-04T05:00:30Z" is="time-ago">September 04, 2013</time></span>
+        <span class="css-truncate css-truncate-target"></span>
       </td>
     </tr>
     <tr>
@@ -841,12 +826,12 @@ It was set to affect the neighborhoods example instead.">Fixing Layer off button
         <span class="css-truncate css-truncate-target"><a href="/JasonSanford/leaflet-vector-layers/blob/master/CHANGELOG" class="js-directory-link" id="d3bb3391c79904494c60ee2ac2f33070-995ae27d8af999ac9df46bbdfce6733caccd74fa" title="CHANGELOG">CHANGELOG</a></span>
       </td>
       <td class="message">
-        <span class="css-truncate css-truncate-target ">
-          <a href="/JasonSanford/leaflet-vector-layers/commit/692e51cd629c4f20dbc926a8766d3dc2e3357809" class="message" data-pjax="true" title="Updating docs">Updating docs</a>
+        <span class="css-truncate css-truncate-target js-deferred-content-error">
+          
         </span>
       </td>
       <td class="age">
-        <span class="css-truncate css-truncate-target"><time datetime="2012-10-23T16:48:57Z" is="time-ago">October 23, 2012</time></span>
+        <span class="css-truncate css-truncate-target"></span>
       </td>
     </tr>
     <tr>
@@ -858,12 +843,12 @@ It was set to affect the neighborhoods example instead.">Fixing Layer off button
         <span class="css-truncate css-truncate-target"><a href="/JasonSanford/leaflet-vector-layers/blob/master/LICENSE" class="js-directory-link" id="9879d6db96fd29134fc802214163b95a-de3b07e1d67aeeae980565bd662036fe630f2fe3" title="LICENSE">LICENSE</a></span>
       </td>
       <td class="message">
-        <span class="css-truncate css-truncate-target ">
-          <a href="/JasonSanford/leaflet-vector-layers/commit/7df76fdce952fbb3313464f537cf90ba9b457a3c" class="message" data-pjax="true" title="Happy New Year.">Happy New Year.</a>
+        <span class="css-truncate css-truncate-target js-deferred-content-error">
+          
         </span>
       </td>
       <td class="age">
-        <span class="css-truncate css-truncate-target"><time datetime="2013-04-22T22:56:02Z" is="time-ago">April 22, 2013</time></span>
+        <span class="css-truncate css-truncate-target"></span>
       </td>
     </tr>
     <tr>
@@ -955,7 +940,7 @@ Don&#39;t recommend filing issues at Google Vector Layers.">Update README.md</a>
     </a>
 
     <ul class="site-footer-links">
-      <li>&copy; 2014 <span title="0.03331s from github-fe117-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+      <li>&copy; 2014 <span title="0.03711s from github-fe125-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
         <li><a href="/site/terms">Terms</a></li>
         <li><a href="/site/privacy">Privacy</a></li>
         <li><a href="/security">Security</a></li>
@@ -986,13 +971,13 @@ Don&#39;t recommend filing issues at Google Vector Layers.">Update README.md</a>
 
     <div id="ajax-error-message" class="flash flash-error">
       <span class="octicon octicon-alert"></span>
-      <a href="#" class="octicon octicon-x close js-ajax-error-dismiss" aria-label="Dismiss error"></a>
+      <a href="#" class="octicon octicon-x flash-close js-ajax-error-dismiss" aria-label="Dismiss error"></a>
       Something went wrong with that request. Please try again.
     </div>
 
 
       <script crossorigin="anonymous" src="https://assets-cdn.github.com/assets/frameworks-0c1b00f7935ae85624f5fc5d40d52d60febf92b4.js" type="text/javascript"></script>
-      <script async="async" crossorigin="anonymous" src="https://assets-cdn.github.com/assets/github-fbf037c05b1b216496f330cff338007e2f09a2a1.js" type="text/javascript"></script>
+      <script async="async" crossorigin="anonymous" src="https://assets-cdn.github.com/assets/github-0245b231edeefe0fb2ff1f901fe7b131b9a7aa19.js" type="text/javascript"></script>
       
       
         <script async src="https://www.google-analytics.com/analytics.js"></script>
