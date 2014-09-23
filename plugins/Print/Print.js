@@ -2,7 +2,7 @@
 		options: {
 			position: 'topleft',
 			addToMenu: false,
-			printUrl: "http://localhost/geoserver/pdf" //"http://localhost/print-servlet/export"
+			printUrl: "http://localhost/print-servlet/print" //http://localhost/geoserver/pdf"
 		},
 
 		_lang: {
@@ -13,13 +13,28 @@
 				tip_header: "Rubrik (valfritt)",
 				descript: "Beskrivning",
 				tip_descript: "Beskrivning (valfritt)",
-				layout: "Layout",
+				layout: "Pappersformat",
+				resolution: "Upplösning",
+				orientation: "Orientering",
+				portrait: "Stående",
+				landscape: "Liggande",
+				create: "Skapa bild",
 				close: "Stäng"
 			},
 			"en": {
-				caption: "Print",
-				mTitle: "Print/Export",
-				close: "Close"
+				caption: "Skriv ut",
+				mTitle: "Skriv ut/Exportera",
+				header: "Rubrik",
+				tip_header: "Rubrik (valfritt)",
+				descript: "Beskrivning",
+				tip_descript: "Beskrivning (valfritt)",
+				layout: "Layout",
+				resolution: "Resolution",
+				orientation: "Orientation",
+				portrait: "Portrait",
+				landscape: "landscape",
+				create: "Create image",
+				close: "Stäng"
 			}
 		},
 
@@ -81,10 +96,19 @@
 				copy: "© Stadsbyggnadskontoret, Malmö stad",
 				dpi: 96,
 				layout: "A4_Portrait_NoArrow_NoBar", // A4 portrait
-				outputFormat: "png",
+				outputFormat: "pdf",
 				map: this.map
 			});
+			// Print options picked from the GUI. Will be sent into print func when printing.
+			this.printOptions = {
+				paperFormat: "A4",
+				orientation: "Portrait",
+				arrow: false,
+				scalebar: false,
+				dpi: "96"
+			}
 			this.printProvider.on('capabilitiesload', function(e) {
+				// Go through proxy to avoid cross-domain.
 				e.capabilities.printURL = e.capabilities.printURL.replace(/localhost:8080/, "localhost");
 				e.capabilities.createURL = e.capabilities.createURL.replace(/localhost:8080/, "localhost");
 			});
@@ -97,6 +121,26 @@
 
 		},
 
+		/**
+		 * Adapt params from form to fit the server-side print service.
+		 * @param  {Object} o Params from form submit (as Object).
+		 * @return {Object}   Params ready to send server-side.
+		 */
+		_preprocessPrintOptions: function(o) {
+			var out = {
+					mapTitle: o.mapTitle,
+					comment: o.comment,
+					dpi: parseInt(o.dpi),
+					layout: [
+						o.paperFormat,
+						o.orientation,
+						o.arrow ? "Arrow" : "NoArrow",
+						o.scalebar ? "Bar" : "NoBar"
+					].join("_")
+			};
+			return out;
+		},
+
 		print: function(options) {
 			this.printProvider.print(options);
 		},
@@ -104,9 +148,14 @@
 		_drawModal: function() {
 			var self = this;
 			$.get("plugins/Print/resources/PrintModal.html", function(html) {
-				html = utils.extractToHtml(html, this.lang);
-				self._modal = utils.drawDialog(self.lang.mTitle, html,
-						'<button data-dismiss="modal" class="btn btn-default">'+self.lang.close+'</button>');
+				html = utils.extractToHtml(html, self.lang);
+				self._modal = utils.drawDialog(self.lang.mTitle, html);
+				self._modal.find("form").submit(function() {
+					var p = utils.paramsStringToObject( $(this).serialize(), false );
+					p = self._preprocessPrintOptions(p);
+					self.print(p);
+					return false;
+				});
 				smap.event.trigger("smap:print:modaldrawn");
 			});
 		},
@@ -118,7 +167,7 @@
 			}
 			else {
 				// Wait till the modal HTML has been fetched and drawn
-				smap.event.off("smap:print:modaldrawn").on("map:print:modaldrawn", function() {
+				smap.event.off("smap:print:modaldrawn").on("smap:print:modaldrawn", function() {
 					self._modal.modal("show");
 				});
 			}

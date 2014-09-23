@@ -97,15 +97,15 @@ L.print.Provider = L.Class.extend({
 			layout: options.layout,
 			dpi: options.dpi,
 			outputFormat: options.outputFormat,
+			comment: options.comment,
+			mapTitle: options.mapTitle,
 			outputFilename: options.outputFilename,
 			layers: this._encodeLayers(this._map),
 			pages: [{
 				center: this._projectCoords(L.print.Provider.SRS, this._map.getCenter()),
 				scale: this._getScale(),
 				rotation: options.rotation,
-				copy: options.copy,
-				comment: options.comment,
-				mapTitle: options.mapTitle
+				copy: options.copy
 			}]
 		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
 		    url;
@@ -133,7 +133,10 @@ L.print.Provider = L.Class.extend({
 			if (this._xhr) {
 				this._xhr.abort();
 			}
-
+			this.fire('print', {
+				provider: this,
+				map: this._map
+			});
 			this._xhr = $.ajax({
 				type: 'POST',
 				contentType: 'application/json; charset=UTF-8',
@@ -408,15 +411,15 @@ L.print.Provider = L.Class.extend({
 					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
 				}
 
-				var ext = layer._url.split(".");
-				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
+				// var ext = layer._url.split(".");
+				// ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
 
 				return L.extend(enc, {
 					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
 					// See https://github.com/mapfish/mapfish-print/pull/38
 					type: 'OSM',
 					baseURL: baseUrl,
-					extension: ext || 'png',
+					extension: 'png',
 					tileSize: [layer.options.tileSize, layer.options.tileSize],
 					maxExtent: L.print.Provider.MAX_EXTENT,
 					resolutions: resolutions,

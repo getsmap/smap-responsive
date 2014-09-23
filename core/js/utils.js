@@ -47,13 +47,13 @@ var utils = {
 			options.size = options.size || "";
 			
 			var d = $('<div class="modal fade"><div class="modal-dialog">'+
-			    '<div class="modal-content">'+
-		      '<div class="modal-header">'+
-		        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
-		        (title.search(/</g) === -1 ? '<h4 class="modal-title">'+title+'</h4>' : title) + 
-		      '</div>'+
-		      '<div class="modal-body"></div>'+
-		    '</div>');
+				'<div class="modal-content">'+
+			  '<div class="modal-header">'+
+				'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
+				(title.search(/</g) === -1 ? '<h4 class="modal-title">'+title+'</h4>' : title) + 
+			  '</div>'+
+			  '<div class="modal-body"></div>'+
+			'</div>');
 			d.find(".modal-body").append(bodyContent);
 			if (footerContent) {
 				var footer = $('<div class="modal-footer"></div>');
@@ -101,27 +101,27 @@ var utils = {
 		extractToHtml: function(html, props) {
 			function getFunctionEnd(text) {
 				var p = 1,
-		            found = false,
-		            startIndex = text.search(/\{/g); // get starting "{"
-		        text = text.substring(startIndex+1);
-		        var i=0;            
-		        for (i=0,len=text.length; i<len; i++) {
-		        	if (text.charAt(i) === "{") {
-		        		p += 1;
-		        	}
-		        	else if (text.charAt(i) === "}") {
-		        		p -= 1;
-		        	}
-		        	if (p === 0) {
-		        		found = true;
-		        		i = i + startIndex + 2;
-		        		break;
-		        	}
-		        }
-		        if (!found) {
-		        	i = -1;
-		        }
-		        return i;
+					found = false,
+					startIndex = text.search(/\{/g); // get starting "{"
+				text = text.substring(startIndex+1);
+				var i=0;			
+				for (i=0,len=text.length; i<len; i++) {
+					if (text.charAt(i) === "{") {
+						p += 1;
+					}
+					else if (text.charAt(i) === "}") {
+						p -= 1;
+					}
+					if (p === 0) {
+						found = true;
+						i = i + startIndex + 2;
+						break;
+					}
+				}
+				if (!found) {
+					i = -1;
+				}
+				return i;
 			};
 			
 			
@@ -169,6 +169,45 @@ var utils = {
 				index = html.search(/\${/g);
 			}
 			return html;
+		},
+
+		paramsStringToObject: function(pString, keysToUpperCase) {
+			keysToUpperCase = keysToUpperCase || false;
+
+			// The following code taken and modified from OpenLayers 2.13.1.
+			var out = {},
+				key, value, keyValue,
+				pairs = pString.split(/[&;]/);
+			for (var i=0,len=pairs.length; i<len; i++) {
+				keyValue = pairs[i].split('=');
+				if (keyValue[0]) {
+					key = keyValue[0];
+					try {
+						key = decodeURIComponent(key);
+					} catch (err) {
+						key = unescape(key);
+					}
+					// being liberal by replacing "+" with " "
+					value = (keyValue[1] || '').replace(/\+/g, " ");
+					try {
+						value = decodeURIComponent(value);
+					} catch (err) {
+						value = unescape(value);
+					}
+					// follow OGC convention of comma delimited values
+					value = value.split(",");
+
+					//if there's only one value, do not return as array					
+					if (value.length == 1) {
+						value = value[0];
+					}
+					if (keysToUpperCase) {
+						key = key.toUpperCase();
+					}
+					out[key] = value;
+				 }
+			}
+			return out;
 		}
 		
 		
