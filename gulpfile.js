@@ -2,6 +2,7 @@
 var gulp = require('gulp');
 var autoprefixer = require('gulp-autoprefixer');
 var bowerfiles = require('main-bower-files');
+var flatten = require('gulp-flatten');
 var cache = require('gulp-cache');
 var changed = require('gulp-changed');
 var concat = require('gulp-concat');
@@ -12,7 +13,7 @@ var inject = require('gulp-inject');
 var jshint = require('gulp-jshint');
 var mincss = require('gulp-minify-css');
 var minhtml = require('gulp-minify-html');
-var ngmin = require('gulp-ngmin');
+var ngAnnotate = require('gulp-ng-annotate');
 var order = require('gulp-order');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
@@ -43,6 +44,7 @@ var p = {
 	libsJs: [
 		'dist/lib/proj4/**/*.js',
 		'dist/lib/jquery/**/*.js',
+		'dist/lib/Leaflet.print-smap/**/*.js',
 		'dist/lib/sass-bootstrap/**/*.js',
 		'dist/lib/leaflet/**/*.js',
 		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
@@ -132,6 +134,13 @@ var onError = function(err) {
 };
 
 
+gulp.task('moveresources', function() {
+	gulp.src("plugins/**/resources/**/*") //, {base: "./"})
+		.pipe(flatten())
+		// .pipe(using())
+		.pipe(gulp.dest("dist/resources/"));
+});
+
 // ---- Our code -----
 
 gulp.task('ourcsscompile', function() {
@@ -169,7 +178,7 @@ gulp.task('ourjs', function() {
   // 		.pipe(jshint.reporter('default'))
   		.pipe(concat("smap.js"))
   		.pipe(stripDebug())
-  		// .pipe(ngmin())
+  		.pipe(ngAnnotate())
 		.pipe(uglify())  // {mangle: false}
 		.pipe(gulp.dest("dist"));
 });
@@ -212,7 +221,8 @@ gulp.task('libsjs', ["libs"], function() {
 		// .pipe(order(p.libsJs.concat("*")))
 		// .pipe(using())
   		.pipe(concat("libs.js"))
-		.pipe(uglify())  // {mangle: false}
+		// .pipe(uglify())  // {mangle: false}
+		.on('error', onError)
 		.pipe(gulp.dest("dist"));
 });
 
@@ -263,9 +273,9 @@ gulp.task('html', ["htmlcompress"]);
 
 
 // Build our code (during dev)
-gulp.task('ourcode', ["ourcss", "ourjs"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
+gulp.task('ourcode', ["ourcss", "ourjs", "moveresources"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
 
-gulp.task('_full', ["images", "html"]);
+gulp.task('_full', ["images", "html", "moveresources"]);
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).

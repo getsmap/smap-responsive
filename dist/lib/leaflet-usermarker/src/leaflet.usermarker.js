@@ -7,8 +7,8 @@
 (function(window) {
     var icon = L.divIcon({
         className: "leaflet-usermarker",
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
+        iconSize: [34, 34],
+        iconAnchor: [17, 17],
         popupAnchor: [0, -20],
         labelAnchor: [11, -3],
         html: ''
