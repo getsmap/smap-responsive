@@ -203,6 +203,24 @@ L.Control.DrawSmap = L.Control.extend({
             var type = e.layerType,
             layer = e.layer;
             
+            if(type === "polyline"){
+            
+			var polyline = L.polyline(e.layer._latlngs).addTo(this);
+			
+			var result = polyline.measuredDistance();
+       
+       		var testinglabel = e.layer.bindLabel(''+result+'',{ noHide: true });
+       		
+            // Returns the distance in imperial units
+            var result_imp =  polyline.measuredDistance({
+              metric: false
+            });
+            }
+            
+
+       		
+            
+            
             layer.on("click", function(e){
                 if(self.delModeOn == true){
                     self.featureGroup.removeLayer(layer);
@@ -235,6 +253,10 @@ L.Control.DrawSmap = L.Control.extend({
         });
 
         return popoverdiv;
+    },
+    
+    bindLabeltoFeature: function(f){
+		    
     },
 
     _createToolBtn : function(tooltype,obj){
@@ -348,6 +370,7 @@ L.Control.DrawSmap = L.Control.extend({
          });
         
     },
+    
 
     onRemove: function(map) {
         // Do everything "opposite" of onAdd – e.g. unbind events and destroy things

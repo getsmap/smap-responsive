@@ -44,9 +44,15 @@
     "leaflet.draw": "~0.2.3",
     "leaflet-plugins": "~1.2.0",
     "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
-    "bootstrap-3": "./lib/bootstrap-3"
+    "bootstrap-3": "./lib/bootstrap-3",
+    "leaflet-polyline-distance": "./lib/leaflet-polyline-distance/"
   },
   "overrides": {
+    "leaflet-polyline-distance": {
+      "main": [
+        "dist/L.Polyline.measuredDistance.js"
+      ]
+    },
     "bootstrap-3": {
       "main": [
         "css/bootstrap.icon-large.css",
