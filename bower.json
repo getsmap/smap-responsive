@@ -30,7 +30,7 @@
     "jquery-xml2json": "~0.0.6",
     "leaflet-usermarker": "https://github.com/heyman/leaflet-usermarker.git",
     "leaflet.markercluster": "~0.4.0",
-    "leaflet": "*",
+    "leaflet": "latest",
     "modernizr": "~2.6.2",
     "openlayers": "latest",
     "spinjs": "~2.0.1",

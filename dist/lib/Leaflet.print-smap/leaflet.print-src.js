@@ -2,8 +2,6 @@
 	Leaflet.print, implements the Mapfish print protocol allowing a Leaflet map to be printed using either the Mapfish or GeoServer print module.
 	(c) 2013, Adam Ratcliffe, GeoSmart Maps Limited
 */
-(function (window, document, undefined) {
-/* global L:false, $:false */
 
 L.print = L.print || {};
 
@@ -691,6 +689,8 @@ L.print.Provider = L.Class.extend({
 
 	onPrintSuccess: function (response) {
 		var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
+
+		url = url.replaceAll("localhost:8080", "kartor.malmo.se");
 
 		if (this.options.autoOpen) {
 			if (L.Browser.ie) {

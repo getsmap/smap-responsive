@@ -105,7 +105,7 @@ var config = {
 					{
  						init: "L.Control.Print",
  						options: {
- 							printUrl: "http://localhost/print-servlet/print", // http://localhost/geoserver/pdf
+ 							printUrl: "http://localhost/geoserver/pdf", // http://localhost/geoserver/pdf
  							position: "topright"
  						}
  				 	},
