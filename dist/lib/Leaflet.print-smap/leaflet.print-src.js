@@ -690,8 +690,6 @@ L.print.Provider = L.Class.extend({
 	onPrintSuccess: function (response) {
 		var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
 
-		url = url.replaceAll("localhost:8080", "kartor.malmo.se");
-
 		if (this.options.autoOpen) {
 			if (L.Browser.ie) {
 				window.open(url);
