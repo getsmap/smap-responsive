@@ -417,7 +417,7 @@ L.print.Provider = L.Class.extend({
 					// See https://github.com/mapfish/mapfish-print/pull/38
 					type: 'OSM',
 					baseURL: baseUrl,
-					extension: 'png',
+					extension: ext || 'png',
 					tileSize: [layer.options.tileSize, layer.options.tileSize],
 					maxExtent: L.print.Provider.MAX_EXTENT,
 					resolutions: resolutions,
