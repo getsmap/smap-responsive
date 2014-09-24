@@ -152,7 +152,7 @@
 
 		_drawModal: function() {
 			var self = this;
-			$.get("plugins/Print/resources/PrintModal.html", function(html) {
+			$.get("resources/PrintModal.html", function(html) {
 				html = utils.extractToHtml(html, self.lang);
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
 				self._modal.find("form").submit(function() {
