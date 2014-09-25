@@ -152,7 +152,11 @@
 
 		_drawModal: function() {
 			var self = this;
-			$.get("resources/PrintModal.html", function(html) {
+			var src = "resources/PrintModal.html";
+			if (document.domain === "localhost") {
+				src = "plugins/Print/"+src;
+			}
+			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
 				self._modal.find("form").submit(function() {
