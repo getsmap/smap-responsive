@@ -26,7 +26,7 @@ L.print.Provider = L.Class.extend({
 		method: 'POST',
 		rotation: 0,
 		customParams: {},
-        legends: false
+		legends: false
 	},
 
 	initialize: function (options) {
@@ -106,7 +106,7 @@ L.print.Provider = L.Class.extend({
 				copy: options.copy
 			}]
 		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
-		    url;
+			url;
 
 		if (options.method === 'GET') {
 			url = this._capabilities.printURL + '?spec=' + encodeURIComponent(jsonData);
@@ -195,12 +195,12 @@ L.print.Provider = L.Class.extend({
 
 	_getLayers: function (map) {
 		var markers = [],
-		    vectors = [],
-		    tiles = [],
-		    imageOverlays = [],
-		    imageNodes,
-		    pathNodes,
-		    id;
+			vectors = [],
+			tiles = [],
+			imageOverlays = [],
+			imageNodes,
+			pathNodes,
+			id;
 
 		for (id in map._layers) {
 			if (map._layers.hasOwnProperty(id)) {
@@ -222,24 +222,24 @@ L.print.Provider = L.Class.extend({
 			return a._icon.style.zIndex - b._icon.style.zIndex;
 		});
 
-        var i;
-        // Layers with equal zIndexes can cause problems with mapfish print
-        for(i = 1;i<markers.length;i++){
-            if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
-                markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
-            }
-        }
+		var i;
+		// Layers with equal zIndexes can cause problems with mapfish print
+		for(i = 1;i<markers.length;i++){
+			if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
+				markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
+			}
+		}
 
 		tiles.sort(function (a, b) {
 			return a._container.style.zIndex - b._container.style.zIndex;
 		});
 
-        // Layers with equal zIndexes can cause problems with mapfish print
-        for(i = 1;i<tiles.length;i++){
-            if(tiles[i]._container.style.zIndex <= tiles[i - 1]._container.style.zIndex){
-                tiles[i]._container.style.zIndex = tiles[i - 1]._container.style.zIndex + 1;
-            }
-        }
+		// Layers with equal zIndexes can cause problems with mapfish print
+		for(i = 1;i<tiles.length;i++){
+			if(tiles[i]._container.style.zIndex <= tiles[i - 1]._container.style.zIndex){
+				tiles[i]._container.style.zIndex = tiles[i - 1]._container.style.zIndex + 1;
+			}
+		}
 
 		imageNodes = [].slice.call(this, map._panes.overlayPane.childNodes);
 		imageOverlays.sort(function (a, b) {
@@ -258,22 +258,22 @@ L.print.Provider = L.Class.extend({
 
 	_getScale: function () {
 		var map = this._map,
-		bounds = map.getBounds(),
-		inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
-		scales = this._capabilities.scales,
-		sw = bounds.getSouthWest(),
-		ne = bounds.getNorthEast(),
-		halfLat = (sw.lat + ne.lat) / 2,
-		midLeft = L.latLng(halfLat, sw.lng),
-		midRight = L.latLng(halfLat, ne.lng),
-		mwidth = midLeft.distanceTo(midRight),
-		pxwidth = map.getSize().x,
-		kmPx = mwidth / pxwidth / 1000,
-		mscale = (kmPx || 0.000001) * inchesKm * L.print.Provider.DPI,
-		closest = Number.POSITIVE_INFINITY,
-		i = scales.length,
-		diff,
-		scale;
+			bounds = map.getBounds(),
+			inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
+			scales = this._capabilities.scales,
+			sw = bounds.getSouthWest(),
+			ne = bounds.getNorthEast(),
+			halfLat = (sw.lat + ne.lat) / 2,
+			midLeft = L.latLng(halfLat, sw.lng),
+			midRight = L.latLng(halfLat, ne.lng),
+			mwidth = midLeft.distanceTo(midRight),
+			pxwidth = map.getSize().x,
+			kmPx = mwidth / pxwidth / 1000,
+			mscale = (kmPx || 0.000001) * inchesKm * L.print.Provider.DPI,
+			closest = Number.POSITIVE_INFINITY,
+			i = scales.length,
+			diff,
+			scale;
 
 		while (i--) {
 			diff = Math.abs(mscale - scales[i].value);
@@ -299,19 +299,29 @@ L.print.Provider = L.Class.extend({
 
 	_encodeLayers: function (map) {
 		var enc = [],
-		    vectors = [],
-		    layer,
-		    i;
+			vectors = [],
+			layer,
+			i;
 
 		var layers = this._getLayers(map);
 		for (i = 0; i < layers.length; i++) {
 			layer = layers[i];
+			if (layer.options.printLayer) {
+				var t = layer.options.printLayer;
+				var layerClass = eval(t.init);
+				layer = new layerClass(t.url, t.options);
+			}
 			if (layer instanceof L.TileLayer.WMS) {
 				enc.push(this._encoders.layers.tilelayerwms.call(this, layer));
 			} else if (layer instanceof L.mapbox.TileLayer){
-                enc.push(this._encoders.layers.tilelayermapbox.call(this,layer));
+				enc.push(this._encoders.layers.tilelayermapbox.call(this,layer));
 			} else if (layer instanceof L.TileLayer) {
-				enc.push(this._encoders.layers.tilelayer.call(this, layer));
+				if (layer.options.tms) {
+					enc.push(this._encoders.layers.TMS.call(this, layer));
+				}
+				else {
+					enc.push(this._encoders.layers.tilelayer.call(this, layer));
+				}
 			} else if (layer instanceof L.ImageOverlay) {
 				enc.push(this._encoders.layers.image.call(this, layer));
 			} else if (layer instanceof L.Marker || (layer instanceof L.Path && layer.toGeoJSON)) {
@@ -324,60 +334,60 @@ L.print.Provider = L.Class.extend({
 		return enc;
 	},
 
-    _makeLegends: function(map,options){
-        if(!this.options.legends){
-            return [];
-        }
+	_makeLegends: function(map,options){
+		if(!this.options.legends){
+			return [];
+		}
 
-        var legends = [],legendReq,singlelayers,url,i;
+		var legends = [],legendReq,singlelayers,url,i;
 
-        var layers = this._getLayers(map);
-        var layer,oneLegend;
+		var layers = this._getLayers(map);
+		var layer,oneLegend;
 		for (i = 0; i < layers.length; i++) {
 			layer = layers[i];
 			if (layer instanceof L.TileLayer.WMS) {
 
-                oneLegend = {
-                    name: layer.options.title || layer.wmsParams.layers,
-                    classes: []
-                };
+				oneLegend = {
+					name: layer.options.title || layer.wmsParams.layers,
+					classes: []
+				};
 
-                // defaults
-                legendReq = {
-                    'SERVICE'     : 'WMS',
-                    'LAYER'       : layer.wmsParams.layers,
-                    'REQUEST'     : 'GetLegendGraphic',
-                    'VERSION'     : layer.wmsParams.version,
-                    'FORMAT'      : layer.wmsParams.format,
-                    'STYLE'       : layer.wmsParams.styles,
-                    'WIDTH'       : 15,
-                    'HEIGHT'      : 15
-                };
+				// defaults
+				legendReq = {
+					'SERVICE'	 : 'WMS',
+					'LAYER'	   : layer.wmsParams.layers,
+					'REQUEST'	 : 'GetLegendGraphic',
+					'VERSION'	 : layer.wmsParams.version,
+					'FORMAT'	  : layer.wmsParams.format,
+					'STYLE'	   : layer.wmsParams.styles,
+					'WIDTH'	   : 15,
+					'HEIGHT'	  : 15
+				};
 
-                legendReq = L.extend(legendReq,options);
-                url = L.Util.template(layer._url);
+				legendReq = L.extend(legendReq,options);
+				url = L.Util.template(layer._url);
 
-                singlelayers = layer.wmsParams.layers.split(',');
+				singlelayers = layer.wmsParams.layers.split(',');
 
-                // If a WMS layer doesn't have multiple server layers, only show one graphic
-                if(singlelayers.length === 1){
-                    oneLegend.icons = [this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))];
-                }else{
-                    for(i = 0;i<singlelayers.length;i++){
-                        legendReq.LAYER = singlelayers[i];
-                        oneLegend.classes.push({
-                            name:singlelayers[i],
-                            icons:[this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))]
-                        });
-                    }
-                }
+				// If a WMS layer doesn't have multiple server layers, only show one graphic
+				if(singlelayers.length === 1){
+					oneLegend.icons = [this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))];
+				}else{
+					for(i = 0;i<singlelayers.length;i++){
+						legendReq.LAYER = singlelayers[i];
+						oneLegend.classes.push({
+							name:singlelayers[i],
+							icons:[this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))]
+						});
+					}
+				}
 
-                legends.push(oneLegend);
-            }
-        }
+				legends.push(oneLegend);
+			}
+		}
 
-        return {legends:legends};
-    },
+		return {legends:legends};
+	},
 
 	_encoders: {
 		layers: {
@@ -394,11 +404,19 @@ L.print.Provider = L.Class.extend({
 					opacity: layer.options.opacity
 				};
 			},
+			TMS: function(layer) {
+				var enc = this._encoders.layers.tilelayer.call(this, layer);
+				return $.extend(enc, {
+					type : 'TMS',
+					format : enc.extension,
+					layer: layer.options.layer
+				});
+			},
 			tilelayer: function (layer) {
 				var enc = this._encoders.layers.httprequest.call(this, layer),
-				    baseUrl = layer._url.substring(0, layer._url.indexOf('{z}')),
-				    resolutions = [],
-				    zoom;
+					baseUrl = layer.options.baseUrl || layer._url.substring(0, layer._url.indexOf('{z}') > 0 ? layer._url.indexOf('{z}') : layer._url.length),
+					resolutions = [],
+					zoom;
 
 				// If using multiple subdomains, replace the subdomain placeholder
 				if (baseUrl.indexOf('{s}') !== -1) {
@@ -411,6 +429,10 @@ L.print.Provider = L.Class.extend({
 
 				var ext = layer._url.split(".");
 				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
+				if (ext.search(/[^a-zA-Z0-9]/) > -1) {
+					// No extension provided
+					ext = "";
+				}
 
 				return L.extend(enc, {
 					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
@@ -426,8 +448,8 @@ L.print.Provider = L.Class.extend({
 			},
 			tilelayerwms: function (layer) {
 				var enc = this._encoders.layers.httprequest.call(this, layer),
-				    layerOpts = layer.options,
-				    p;
+					layerOpts = layer.options,
+					p;
 
 				L.extend(enc, {
 					type: 'WMS',
@@ -449,26 +471,26 @@ L.print.Provider = L.Class.extend({
 				}
 				return enc;
 			},
-            tilelayermapbox: function(layer) {
-                var resolutions = [], zoom;
+			tilelayermapbox: function(layer) {
+				var resolutions = [], zoom;
 
-                for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
-                    resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
-                }
+				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
+					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
+				}
 
-                return {
-                    // XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
-                    // See https://github.com/mapfish/mapfish-print/pull/38
-                    type: 'OSM',
-                    baseURL: layer.options.tiles[0].substring(0,layer.options.tiles[0].indexOf('{z}')),
-                    opacity:layer.options.opacity,
-                    extension: 'png',
-                    tileSize: [layer.options.tileSize, layer.options.tileSize],
-                    maxExtent: L.print.Provider.MAX_EXTENT,
-                    resolutions: resolutions,
-                    singleTile: false
-                };
-            },
+				return {
+					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
+					// See https://github.com/mapfish/mapfish-print/pull/38
+					type: 'OSM',
+					baseURL: layer.options.tiles[0].substring(0,layer.options.tiles[0].indexOf('{z}')),
+					opacity:layer.options.opacity,
+					extension: 'png',
+					tileSize: [layer.options.tileSize, layer.options.tileSize],
+					maxExtent: L.print.Provider.MAX_EXTENT,
+					resolutions: resolutions,
+					singleTile: false
+				};
+			},
 			image: function (layer) {
 				return {
 					type: 'Image',
@@ -480,27 +502,27 @@ L.print.Provider = L.Class.extend({
 			},
 			vector: function (features) {
 				var encFeatures = [],
-				    encStyles = {},
-				    opacity,
-				    feature,
-				    style,
-				    dictKey,
-				    dictItem = {},
-				    styleDict = {},
-				    styleName,
-				    nextId = 1,
-				    featureGeoJson,
-				    i, l;
+					encStyles = {},
+					opacity,
+					feature,
+					style,
+					dictKey,
+					dictItem = {},
+					styleDict = {},
+					styleName,
+					nextId = 1,
+					featureGeoJson,
+					i, l;
 
 				for (i = 0, l = features.length; i < l; i++) {
 					feature = features[i];
 
 					if (feature instanceof L.Marker) {
 						var icon = feature.options.icon,
-						    iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
-						    iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
-						    iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
-						    scaleFactor = (this.options.dpi / L.print.Provider.DPI);
+							iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
+							iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
+							iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
+							scaleFactor = (this.options.dpi / L.print.Provider.DPI);
 
 						style = {
 							externalGraphic: this._getAbsoluteUrl(iconUrl),
@@ -612,31 +634,31 @@ L.print.Provider = L.Class.extend({
 	},
 
 	_getAbsoluteUrl: function (url) {
-        var a;
+		var a;
 
-        if (L.Browser.ie) {
-            a = document.createElement('a');
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.href = url;
-            document.body.removeChild(a);
-        } else {
-            a = document.createElement('a');
-            a.href = url;
-        }
-        return a.href;
+		if (L.Browser.ie) {
+			a = document.createElement('a');
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.href = url;
+			document.body.removeChild(a);
+		} else {
+			a = document.createElement('a');
+			a.href = url;
+		}
+		return a.href;
 	},
 
 	_projectBounds: function (crs, bounds) {
 		var sw = bounds.getSouthWest(),
-		    ne = bounds.getNorthEast();
+			ne = bounds.getNorthEast();
 
 		return this._projectCoords(crs, sw).concat(this._projectCoords(crs, ne));
 	},
 
 	_projectCoords: function (crs, coords) {
 		var crsKey = crs.toUpperCase().replace(':', ''),
-		    crsClass = L.CRS[crsKey];
+			crsClass = L.CRS[crsKey];
 
 		if (!crsClass) {
 			throw 'Unsupported coordinate reference system: ' + crs;
@@ -647,8 +669,8 @@ L.print.Provider = L.Class.extend({
 
 	_project: function (crsClass, coords) {
 		var projected,
-		    pt,
-		    i, l;
+			pt,
+			i, l;
 
 		if (typeof coords[0] === 'number') {
 			coords = new L.LatLng(coords[1], coords[0]);

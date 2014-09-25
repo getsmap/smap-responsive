@@ -51,7 +51,7 @@ indentDist = 1em
 	background-color mobPanelBg
 	height 100%
 	max-width 300px
-	padding 0 20px
+	padding 0 0.6em
 	padding-top 10px
 	overflow-y auto
 	-ms-overflow-style -ms-autohiding-scrollbar !important /* Nasty bug fix Required for WP8 IE10!!! */
@@ -179,6 +179,7 @@ indentDist = 1em
 
 
 	.lswitch-panel
+		position absolute !important
 		background-color mobPanelBg
 
 	// Zoom-in-effect when showing and hiding the panel
@@ -287,7 +288,7 @@ indentDist = 1em
 		// if the layer panel is higher than the win height, scrollbars
 		// won't appear, and the overflow:hidden of the parent container
 		// is also not hiding the div.
-		position absolute
+		position relative
 	
 
 	.lswitch-panel a

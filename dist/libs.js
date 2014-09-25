@@ -11615,15 +11615,15 @@ L.print.Provider = L.Class.extend({
 					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
 				}
 
-				// var ext = layer._url.split(".");
-				// ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
+				var ext = layer._url.split(".");
+				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
 
 				return L.extend(enc, {
 					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
 					// See https://github.com/mapfish/mapfish-print/pull/38
 					type: 'OSM',
 					baseURL: baseUrl,
-					extension: 'png',
+					extension: ext || 'png',
 					tileSize: [layer.options.tileSize, layer.options.tileSize],
 					maxExtent: L.print.Provider.MAX_EXTENT,
 					resolutions: resolutions,

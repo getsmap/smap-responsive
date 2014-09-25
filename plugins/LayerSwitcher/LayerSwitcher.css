@@ -36,7 +36,7 @@
   background-color: #38454e;
   height: 100%;
   max-width: 300px;
-  padding: 0 20px;
+  padding: 0 0.6em;
   padding-top: 10px;
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar !important;
@@ -116,6 +116,7 @@
     color: #fff;
   }
   .lswitch-panel {
+    position: absolute !important;
     background-color: #38454e;
   }
   .lswitch-panel a {
@@ -210,7 +211,7 @@
     background-color: rgba(255,255,255,0);
     z-index: 900;
     max-height: 100%;
-    position: absolute;
+    position: relative;
   }
   .lswitch-panel a {
     background-color: rgba(255,255,255,0.5);

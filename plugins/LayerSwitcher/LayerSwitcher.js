@@ -120,7 +120,25 @@ L.Control.LayerSwitcher = L.Control.extend({
 			// Hide all 
 			$(".lswitch-panel").remove();
 		}
-		
+
+		this._setSwitcherPosition();
+		$(window).on("resize", this._setSwitcherPosition);
+	},
+
+	_setSwitcherPosition: function() {
+		var panelsHeight = 0;
+		$(".lswitch-panel").children().each(function() {
+			panelsHeight += $(this).outerHeight();
+		});
+
+		if (panelsHeight > ( $("#mapdiv").innerHeight() - 35) ) {
+			console.log("absolute");
+			$(".lswitch-panel").css("position", "absolute");
+		}
+		else {
+			console.log("relative");
+			$(".lswitch-panel").css("position", "relative");
+		}
 	},
 	
 	_bindEvents: function() {
