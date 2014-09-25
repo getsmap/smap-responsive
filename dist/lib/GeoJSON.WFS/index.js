@@ -257,7 +257,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 				if (response.type && response.type == "FeatureCollection") {
 					this.jsonData = response;
 					this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
-					
 					callback();
 					this.fire("load", {layer: this});
 				}

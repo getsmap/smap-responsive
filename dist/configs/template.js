@@ -12,23 +12,19 @@ var config = {
 					init: "L.GeoJSON.WFS",
 					url: "http://localhost/geoserver/wfs",
 					options: {
-						layerId: "stadsdel",
+						params: {
+							typeName: "malmows:HL_FORSK_BUSS_PT_3006"
+						},
 						displayName: "Stadsdel",
+						layerId: "stadsdel",
 						xhrType: "POST",
 						attribution: "Stadsbyggnadskontoret, Malmö",
-						inputCrs: "EPSG:4326",
-						reverseAxis: true,
+						inputCrs: "EPSG:3006",
+						reverseAxis: false,
 						reverseAxisBbox: true,
 						selectable: true,
 						popup: '${id}',
-						uniqueKey: "gid",
-						params: {
-							typeName: "malmows:stadsdel",
-							version: "1.1.0",
-							maxFeatures: 10000,
-							format: "text/geojson",
-							outputFormat: "json"
-						}
+						uniqueKey: "id"
 						// ,
 						// style: {
 						// 	color: '#00F',
@@ -171,6 +167,10 @@ var config = {
 						options: {
 							imperial: false
 						}
+					},
+					{
+						init: "L.Control.MalmoHeader",
+						options: {}
 					},
 					{
 						init: "L.Control.LayerSwitcher",

@@ -610,7 +610,7 @@ L.print.Provider = L.Class.extend({
 			strokeWidth: options.weight,
 			strokeOpacity: options.opacity,
 			strokeLinecap: 'round',
-			pointRadius: options.radius,
+			pointRadius: 200, //options.radius,
 			fill: options.fill,
 			fillColor: options.fillColor,
 			fillOpacity: options.fillOpacity,
