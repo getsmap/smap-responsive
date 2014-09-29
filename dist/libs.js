@@ -11204,729 +11204,6 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
 return new o.LatLng(u*i,a)}},o.CRS.EPSG3395=o.extend({},o.CRS,{code:"EPSG:3395",projection:o.Projection.Mercator,transformation:function(){var t=o.Projection.Mercator,e=t.R_MAJOR,i=.5/(Math.PI*e);return new o.Transformation(i,.5,-i,.5)}()}),o.TileLayer=o.Class.extend({includes:o.Mixin.Events,options:{minZoom:0,maxZoom:18,tileSize:256,subdomains:"abc",errorTileUrl:"",attribution:"",zoomOffset:0,opacity:1,unloadInvisibleTiles:o.Browser.mobile,updateWhenIdle:o.Browser.mobile},initialize:function(t,e){e=o.setOptions(this,e),e.detectRetina&&o.Browser.retina&&e.maxZoom>0&&(e.tileSize=Math.floor(e.tileSize/2),e.zoomOffset++,e.minZoom>0&&e.minZoom--,this.options.maxZoom--),e.bounds&&(e.bounds=o.latLngBounds(e.bounds)),this._url=t;var i=this.options.subdomains;"string"==typeof i&&(this.options.subdomains=i.split(""))},onAdd:function(t){this._map=t,this._animated=t._zoomAnimated,this._initContainer(),t.on({viewreset:this._reset,moveend:this._update},this),this._animated&&t.on({zoomanim:this._animateZoom,zoomend:this._endZoomAnim},this),this.options.updateWhenIdle||(this._limitedUpdate=o.Util.limitExecByInterval(this._update,150,this),t.on("move",this._limitedUpdate,this)),this._reset(),this._update()},addTo:function(t){return t.addLayer(this),this},onRemove:function(t){this._container.parentNode.removeChild(this._container),t.off({viewreset:this._reset,moveend:this._update},this),this._animated&&t.off({zoomanim:this._animateZoom,zoomend:this._endZoomAnim},this),this.options.updateWhenIdle||t.off("move",this._limitedUpdate,this),this._container=null,this._map=null},bringToFront:function(){var t=this._map._panes.tilePane;return this._container&&(t.appendChild(this._container),this._setAutoZIndex(t,Math.max)),this},bringToBack:function(){var t=this._map._panes.tilePane;return this._container&&(t.insertBefore(this._container,t.firstChild),this._setAutoZIndex(t,Math.min)),this},getAttribution:function(){return this.options.attribution},getContainer:function(){return this._container},setOpacity:function(t){return this.options.opacity=t,this._map&&this._updateOpacity(),this},setZIndex:function(t){return this.options.zIndex=t,this._updateZIndex(),this},setUrl:function(t,e){return this._url=t,e||this.redraw(),this},redraw:function(){return this._map&&(this._reset({hard:!0}),this._update()),this},_updateZIndex:function(){this._container&&this.options.zIndex!==i&&(this._container.style.zIndex=this.options.zIndex)},_setAutoZIndex:function(t,e){var i,n,o,s=t.children,a=-e(1/0,-1/0);for(n=0,o=s.length;o>n;n++)s[n]!==this._container&&(i=parseInt(s[n].style.zIndex,10),isNaN(i)||(a=e(a,i)));this.options.zIndex=this._container.style.zIndex=(isFinite(a)?a:0)+e(1,-1)},_updateOpacity:function(){var t,e=this._tiles;if(o.Browser.ielt9)for(t in e)o.DomUtil.setOpacity(e[t],this.options.opacity);else o.DomUtil.setOpacity(this._container,this.options.opacity)},_initContainer:function(){var t=this._map._panes.tilePane;if(!this._container){if(this._container=o.DomUtil.create("div","leaflet-layer"),this._updateZIndex(),this._animated){var e="leaflet-tile-container";this._bgBuffer=o.DomUtil.create("div",e,this._container),this._tileContainer=o.DomUtil.create("div",e,this._container)}else this._tileContainer=this._container;t.appendChild(this._container),this.options.opacity<1&&this._updateOpacity()}},_reset:function(t){for(var e in this._tiles)this.fire("tileunload",{tile:this._tiles[e]});this._tiles={},this._tilesToLoad=0,this.options.reuseTiles&&(this._unusedTiles=[]),this._tileContainer.innerHTML="",this._animated&&t&&t.hard&&this._clearBgBuffer(),this._initContainer()},_getTileSize:function(){var t=this._map,e=t.getZoom()+this.options.zoomOffset,i=this.options.maxNativeZoom,n=this.options.tileSize;return i&&e>i&&(n=Math.round(t.getZoomScale(e)/t.getZoomScale(i)*n)),n},_update:function(){if(this._map){var t=this._map,e=t.getPixelBounds(),i=t.getZoom(),n=this._getTileSize();if(!(i>this.options.maxZoom||i<this.options.minZoom)){var s=o.bounds(e.min.divideBy(n)._floor(),e.max.divideBy(n)._floor());this._addTilesFromCenterOut(s),(this.options.unloadInvisibleTiles||this.options.reuseTiles)&&this._removeOtherTiles(s)}}},_addTilesFromCenterOut:function(t){var i,n,s,a=[],r=t.getCenter();for(i=t.min.y;i<=t.max.y;i++)for(n=t.min.x;n<=t.max.x;n++)s=new o.Point(n,i),this._tileShouldBeLoaded(s)&&a.push(s);var h=a.length;if(0!==h){a.sort(function(t,e){return t.distanceTo(r)-e.distanceTo(r)});var l=e.createDocumentFragment();for(this._tilesToLoad||this.fire("loading"),this._tilesToLoad+=h,n=0;h>n;n++)this._addTile(a[n],l);this._tileContainer.appendChild(l)}},_tileShouldBeLoaded:function(t){if(t.x+":"+t.y in this._tiles)return!1;var e=this.options;if(!e.continuousWorld){var i=this._getWrapTileNum();if(e.noWrap&&(t.x<0||t.x>=i.x)||t.y<0||t.y>=i.y)return!1}if(e.bounds){var n=e.tileSize,o=t.multiplyBy(n),s=o.add([n,n]),a=this._map.unproject(o),r=this._map.unproject(s);if(e.continuousWorld||e.noWrap||(a=a.wrap(),r=r.wrap()),!e.bounds.intersects([a,r]))return!1}return!0},_removeOtherTiles:function(t){var e,i,n,o;for(o in this._tiles)e=o.split(":"),i=parseInt(e[0],10),n=parseInt(e[1],10),(i<t.min.x||i>t.max.x||n<t.min.y||n>t.max.y)&&this._removeTile(o)},_removeTile:function(t){var e=this._tiles[t];this.fire("tileunload",{tile:e,url:e.src}),this.options.reuseTiles?(o.DomUtil.removeClass(e,"leaflet-tile-loaded"),this._unusedTiles.push(e)):e.parentNode===this._tileContainer&&this._tileContainer.removeChild(e),o.Browser.android||(e.onload=null,e.src=o.Util.emptyImageUrl),delete this._tiles[t]},_addTile:function(t,e){var i=this._getTilePos(t),n=this._getTile();o.DomUtil.setPosition(n,i,o.Browser.chrome),this._tiles[t.x+":"+t.y]=n,this._loadTile(n,t),n.parentNode!==this._tileContainer&&e.appendChild(n)},_getZoomForUrl:function(){var t=this.options,e=this._map.getZoom();return t.zoomReverse&&(e=t.maxZoom-e),e+=t.zoomOffset,t.maxNativeZoom?Math.min(e,t.maxNativeZoom):e},_getTilePos:function(t){var e=this._map.getPixelOrigin(),i=this._getTileSize();return t.multiplyBy(i).subtract(e)},getTileUrl:function(t){return o.Util.template(this._url,o.extend({s:this._getSubdomain(t),z:t.z,x:t.x,y:t.y},this.options))},_getWrapTileNum:function(){var t=this._map.options.crs,e=t.getSize(this._map.getZoom());return e.divideBy(this._getTileSize())._floor()},_adjustTilePoint:function(t){var e=this._getWrapTileNum();this.options.continuousWorld||this.options.noWrap||(t.x=(t.x%e.x+e.x)%e.x),this.options.tms&&(t.y=e.y-t.y-1),t.z=this._getZoomForUrl()},_getSubdomain:function(t){var e=Math.abs(t.x+t.y)%this.options.subdomains.length;return this.options.subdomains[e]},_getTile:function(){if(this.options.reuseTiles&&this._unusedTiles.length>0){var t=this._unusedTiles.pop();return this._resetTile(t),t}return this._createTile()},_resetTile:function(){},_createTile:function(){var t=o.DomUtil.create("img","leaflet-tile");return t.style.width=t.style.height=this._getTileSize()+"px",t.galleryimg="no",t.onselectstart=t.onmousemove=o.Util.falseFn,o.Browser.ielt9&&this.options.opacity!==i&&o.DomUtil.setOpacity(t,this.options.opacity),o.Browser.mobileWebkit3d&&(t.style.WebkitBackfaceVisibility="hidden"),t},_loadTile:function(t,e){t._layer=this,t.onload=this._tileOnLoad,t.onerror=this._tileOnError,this._adjustTilePoint(e),t.src=this.getTileUrl(e),this.fire("tileloadstart",{tile:t,url:t.src})},_tileLoaded:function(){this._tilesToLoad--,this._animated&&o.DomUtil.addClass(this._tileContainer,"leaflet-zoom-animated"),this._tilesToLoad||(this.fire("load"),this._animated&&(clearTimeout(this._clearBgBufferTimer),this._clearBgBufferTimer=setTimeout(o.bind(this._clearBgBuffer,this),500)))},_tileOnLoad:function(){var t=this._layer;this.src!==o.Util.emptyImageUrl&&(o.DomUtil.addClass(this,"leaflet-tile-loaded"),t.fire("tileload",{tile:this,url:this.src})),t._tileLoaded()},_tileOnError:function(){var t=this._layer;t.fire("tileerror",{tile:this,url:this.src});var e=t.options.errorTileUrl;e&&(this.src=e),t._tileLoaded()}}),o.tileLayer=function(t,e){return new o.TileLayer(t,e)},o.TileLayer.WMS=o.TileLayer.extend({defaultWmsParams:{service:"WMS",request:"GetMap",version:"1.1.1",layers:"",styles:"",format:"image/jpeg",transparent:!1},initialize:function(t,e){this._url=t;var i=o.extend({},this.defaultWmsParams),n=e.tileSize||this.options.tileSize;i.width=i.height=e.detectRetina&&o.Browser.retina?2*n:n;for(var s in e)this.options.hasOwnProperty(s)||"crs"===s||(i[s]=e[s]);this.wmsParams=i,o.setOptions(this,e)},onAdd:function(t){this._crs=this.options.crs||t.options.crs,this._wmsVersion=parseFloat(this.wmsParams.version);var e=this._wmsVersion>=1.3?"crs":"srs";this.wmsParams[e]=this._crs.code,o.TileLayer.prototype.onAdd.call(this,t)},getTileUrl:function(t){var e=this._map,i=this.options.tileSize,n=t.multiplyBy(i),s=n.add([i,i]),a=this._crs.project(e.unproject(n,t.z)),r=this._crs.project(e.unproject(s,t.z)),h=this._wmsVersion>=1.3&&this._crs===o.CRS.EPSG4326?[r.y,a.x,a.y,r.x].join(","):[a.x,r.y,r.x,a.y].join(","),l=o.Util.template(this._url,{s:this._getSubdomain(t)});return l+o.Util.getParamString(this.wmsParams,l,!0)+"&BBOX="+h},setParams:function(t,e){return o.extend(this.wmsParams,t),e||this.redraw(),this}}),o.tileLayer.wms=function(t,e){return new o.TileLayer.WMS(t,e)},o.TileLayer.Canvas=o.TileLayer.extend({options:{async:!1},initialize:function(t){o.setOptions(this,t)},redraw:function(){this._map&&(this._reset({hard:!0}),this._update());for(var t in this._tiles)this._redrawTile(this._tiles[t]);return this},_redrawTile:function(t){this.drawTile(t,t._tilePoint,this._map._zoom)},_createTile:function(){var t=o.DomUtil.create("canvas","leaflet-tile");return t.width=t.height=this.options.tileSize,t.onselectstart=t.onmousemove=o.Util.falseFn,t},_loadTile:function(t,e){t._layer=this,t._tilePoint=e,this._redrawTile(t),this.options.async||this.tileDrawn(t)},drawTile:function(){},tileDrawn:function(t){this._tileOnLoad.call(t)}}),o.tileLayer.canvas=function(t){return new o.TileLayer.Canvas(t)},o.ImageOverlay=o.Class.extend({includes:o.Mixin.Events,options:{opacity:1},initialize:function(t,e,i){this._url=t,this._bounds=o.latLngBounds(e),o.setOptions(this,i)},onAdd:function(t){this._map=t,this._image||this._initImage(),t._panes.overlayPane.appendChild(this._image),t.on("viewreset",this._reset,this),t.options.zoomAnimation&&o.Browser.any3d&&t.on("zoomanim",this._animateZoom,this),this._reset()},onRemove:function(t){t.getPanes().overlayPane.removeChild(this._image),t.off("viewreset",this._reset,this),t.options.zoomAnimation&&t.off("zoomanim",this._animateZoom,this)},addTo:function(t){return t.addLayer(this),this},setOpacity:function(t){return this.options.opacity=t,this._updateOpacity(),this},bringToFront:function(){return this._image&&this._map._panes.overlayPane.appendChild(this._image),this},bringToBack:function(){var t=this._map._panes.overlayPane;return this._image&&t.insertBefore(this._image,t.firstChild),this},setUrl:function(t){this._url=t,this._image.src=this._url},getAttribution:function(){return this.options.attribution},_initImage:function(){this._image=o.DomUtil.create("img","leaflet-image-layer"),this._map.options.zoomAnimation&&o.Browser.any3d?o.DomUtil.addClass(this._image,"leaflet-zoom-animated"):o.DomUtil.addClass(this._image,"leaflet-zoom-hide"),this._updateOpacity(),o.extend(this._image,{galleryimg:"no",onselectstart:o.Util.falseFn,onmousemove:o.Util.falseFn,onload:o.bind(this._onImageLoad,this),src:this._url})},_animateZoom:function(t){var e=this._map,i=this._image,n=e.getZoomScale(t.zoom),s=this._bounds.getNorthWest(),a=this._bounds.getSouthEast(),r=e._latLngToNewLayerPoint(s,t.zoom,t.center),h=e._latLngToNewLayerPoint(a,t.zoom,t.center)._subtract(r),l=r._add(h._multiplyBy(.5*(1-1/n)));i.style[o.DomUtil.TRANSFORM]=o.DomUtil.getTranslateString(l)+" scale("+n+") "},_reset:function(){var t=this._image,e=this._map.latLngToLayerPoint(this._bounds.getNorthWest()),i=this._map.latLngToLayerPoint(this._bounds.getSouthEast())._subtract(e);o.DomUtil.setPosition(t,e),t.style.width=i.x+"px",t.style.height=i.y+"px"},_onImageLoad:function(){this.fire("load")},_updateOpacity:function(){o.DomUtil.setOpacity(this._image,this.options.opacity)}}),o.imageOverlay=function(t,e,i){return new o.ImageOverlay(t,e,i)},o.Icon=o.Class.extend({options:{className:""},initialize:function(t){o.setOptions(this,t)},createIcon:function(t){return this._createIcon("icon",t)},createShadow:function(t){return this._createIcon("shadow",t)},_createIcon:function(t,e){var i=this._getIconUrl(t);if(!i){if("icon"===t)throw new Error("iconUrl not set in Icon options (see the docs).");return null}var n;return n=e&&"IMG"===e.tagName?this._createImg(i,e):this._createImg(i),this._setIconStyles(n,t),n},_setIconStyles:function(t,e){var i,n=this.options,s=o.point(n[e+"Size"]);i=o.point("shadow"===e?n.shadowAnchor||n.iconAnchor:n.iconAnchor),!i&&s&&(i=s.divideBy(2,!0)),t.className="leaflet-marker-"+e+" "+n.className,i&&(t.style.marginLeft=-i.x+"px",t.style.marginTop=-i.y+"px"),s&&(t.style.width=s.x+"px",t.style.height=s.y+"px")},_createImg:function(t,i){return i=i||e.createElement("img"),i.src=t,i},_getIconUrl:function(t){return o.Browser.retina&&this.options[t+"RetinaUrl"]?this.options[t+"RetinaUrl"]:this.options[t+"Url"]}}),o.icon=function(t){return new o.Icon(t)},o.Icon.Default=o.Icon.extend({options:{iconSize:[25,41],iconAnchor:[12,41],popupAnchor:[1,-34],shadowSize:[41,41]},_getIconUrl:function(t){var e=t+"Url";if(this.options[e])return this.options[e];o.Browser.retina&&"icon"===t&&(t+="-2x");var i=o.Icon.Default.imagePath;if(!i)throw new Error("Couldn't autodetect L.Icon.Default.imagePath, set it manually.");return i+"/marker-"+t+".png"}}),o.Icon.Default.imagePath=function(){var t,i,n,o,s,a=e.getElementsByTagName("script"),r=/[\/^]leaflet[\-\._]?([\w\-\._]*)\.js\??/;for(t=0,i=a.length;i>t;t++)if(n=a[t].src,o=n.match(r))return s=n.split(r)[0],(s?s+"/":"")+"images"}(),o.Marker=o.Class.extend({includes:o.Mixin.Events,options:{icon:new o.Icon.Default,title:"",alt:"",clickable:!0,draggable:!1,keyboard:!0,zIndexOffset:0,opacity:1,riseOnHover:!1,riseOffset:250},initialize:function(t,e){o.setOptions(this,e),this._latlng=o.latLng(t)},onAdd:function(t){this._map=t,t.on("viewreset",this.update,this),this._initIcon(),this.update(),this.fire("add"),t.options.zoomAnimation&&t.options.markerZoomAnimation&&t.on("zoomanim",this._animateZoom,this)},addTo:function(t){return t.addLayer(this),this},onRemove:function(t){this.dragging&&this.dragging.disable(),this._removeIcon(),this._removeShadow(),this.fire("remove"),t.off({viewreset:this.update,zoomanim:this._animateZoom},this),this._map=null},getLatLng:function(){return this._latlng},setLatLng:function(t){return this._latlng=o.latLng(t),this.update(),this.fire("move",{latlng:this._latlng})},setZIndexOffset:function(t){return this.options.zIndexOffset=t,this.update(),this},setIcon:function(t){return this.options.icon=t,this._map&&(this._initIcon(),this.update()),this._popup&&this.bindPopup(this._popup),this},update:function(){if(this._icon){var t=this._map.latLngToLayerPoint(this._latlng).round();this._setPos(t)}return this},_initIcon:function(){var t=this.options,e=this._map,i=e.options.zoomAnimation&&e.options.markerZoomAnimation,n=i?"leaflet-zoom-animated":"leaflet-zoom-hide",s=t.icon.createIcon(this._icon),a=!1;s!==this._icon&&(this._icon&&this._removeIcon(),a=!0,t.title&&(s.title=t.title),t.alt&&(s.alt=t.alt)),o.DomUtil.addClass(s,n),t.keyboard&&(s.tabIndex="0"),this._icon=s,this._initInteraction(),t.riseOnHover&&o.DomEvent.on(s,"mouseover",this._bringToFront,this).on(s,"mouseout",this._resetZIndex,this);var r=t.icon.createShadow(this._shadow),h=!1;r!==this._shadow&&(this._removeShadow(),h=!0),r&&o.DomUtil.addClass(r,n),this._shadow=r,t.opacity<1&&this._updateOpacity();var l=this._map._panes;a&&l.markerPane.appendChild(this._icon),r&&h&&l.shadowPane.appendChild(this._shadow)},_removeIcon:function(){this.options.riseOnHover&&o.DomEvent.off(this._icon,"mouseover",this._bringToFront).off(this._icon,"mouseout",this._resetZIndex),this._map._panes.markerPane.removeChild(this._icon),this._icon=null},_removeShadow:function(){this._shadow&&this._map._panes.shadowPane.removeChild(this._shadow),this._shadow=null},_setPos:function(t){o.DomUtil.setPosition(this._icon,t),this._shadow&&o.DomUtil.setPosition(this._shadow,t),this._zIndex=t.y+this.options.zIndexOffset,this._resetZIndex()},_updateZIndex:function(t){this._icon.style.zIndex=this._zIndex+t},_animateZoom:function(t){var e=this._map._latLngToNewLayerPoint(this._latlng,t.zoom,t.center).round();this._setPos(e)},_initInteraction:function(){if(this.options.clickable){var t=this._icon,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];o.DomUtil.addClass(t,"leaflet-clickable"),o.DomEvent.on(t,"click",this._onMouseClick,this),o.DomEvent.on(t,"keypress",this._onKeyPress,this);for(var i=0;i<e.length;i++)o.DomEvent.on(t,e[i],this._fireMouseEvent,this);o.Handler.MarkerDrag&&(this.dragging=new o.Handler.MarkerDrag(this),this.options.draggable&&this.dragging.enable())}},_onMouseClick:function(t){var e=this.dragging&&this.dragging.moved();(this.hasEventListeners(t.type)||e)&&o.DomEvent.stopPropagation(t),e||(this.dragging&&this.dragging._enabled||!this._map.dragging||!this._map.dragging.moved())&&this.fire(t.type,{originalEvent:t,latlng:this._latlng})},_onKeyPress:function(t){13===t.keyCode&&this.fire("click",{originalEvent:t,latlng:this._latlng})},_fireMouseEvent:function(t){this.fire(t.type,{originalEvent:t,latlng:this._latlng}),"contextmenu"===t.type&&this.hasEventListeners(t.type)&&o.DomEvent.preventDefault(t),"mousedown"!==t.type?o.DomEvent.stopPropagation(t):o.DomEvent.preventDefault(t)},setOpacity:function(t){return this.options.opacity=t,this._map&&this._updateOpacity(),this},_updateOpacity:function(){o.DomUtil.setOpacity(this._icon,this.options.opacity),this._shadow&&o.DomUtil.setOpacity(this._shadow,this.options.opacity)},_bringToFront:function(){this._updateZIndex(this.options.riseOffset)},_resetZIndex:function(){this._updateZIndex(0)}}),o.marker=function(t,e){return new o.Marker(t,e)},o.DivIcon=o.Icon.extend({options:{iconSize:[12,12],className:"leaflet-div-icon",html:!1},createIcon:function(t){var i=t&&"DIV"===t.tagName?t:e.createElement("div"),n=this.options;return i.innerHTML=n.html!==!1?n.html:"",n.bgPos&&(i.style.backgroundPosition=-n.bgPos.x+"px "+-n.bgPos.y+"px"),this._setIconStyles(i,"icon"),i},createShadow:function(){return null}}),o.divIcon=function(t){return new o.DivIcon(t)},o.Map.mergeOptions({closePopupOnClick:!0}),o.Popup=o.Class.extend({includes:o.Mixin.Events,options:{minWidth:50,maxWidth:300,autoPan:!0,closeButton:!0,offset:[0,7],autoPanPadding:[5,5],keepInView:!1,className:"",zoomAnimation:!0},initialize:function(t,e){o.setOptions(this,t),this._source=e,this._animated=o.Browser.any3d&&this.options.zoomAnimation,this._isOpen=!1},onAdd:function(t){this._map=t,this._container||this._initLayout();var e=t.options.fadeAnimation;e&&o.DomUtil.setOpacity(this._container,0),t._panes.popupPane.appendChild(this._container),t.on(this._getEvents(),this),this.update(),e&&o.DomUtil.setOpacity(this._container,1),this.fire("open"),t.fire("popupopen",{popup:this}),this._source&&this._source.fire("popupopen",{popup:this})},addTo:function(t){return t.addLayer(this),this},openOn:function(t){return t.openPopup(this),this},onRemove:function(t){t._panes.popupPane.removeChild(this._container),o.Util.falseFn(this._container.offsetWidth),t.off(this._getEvents(),this),t.options.fadeAnimation&&o.DomUtil.setOpacity(this._container,0),this._map=null,this.fire("close"),t.fire("popupclose",{popup:this}),this._source&&this._source.fire("popupclose",{popup:this})},getLatLng:function(){return this._latlng},setLatLng:function(t){return this._latlng=o.latLng(t),this._map&&(this._updatePosition(),this._adjustPan()),this},getContent:function(){return this._content},setContent:function(t){return this._content=t,this.update(),this},update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updateLayout(),this._updatePosition(),this._container.style.visibility="",this._adjustPan())},_getEvents:function(){var t={viewreset:this._updatePosition};return this._animated&&(t.zoomanim=this._zoomAnimation),("closeOnClick"in this.options?this.options.closeOnClick:this._map.options.closePopupOnClick)&&(t.preclick=this._close),this.options.keepInView&&(t.moveend=this._adjustPan),t},_close:function(){this._map&&this._map.closePopup(this)},_initLayout:function(){var t,e="leaflet-popup",i=e+" "+this.options.className+" leaflet-zoom-"+(this._animated?"animated":"hide"),n=this._container=o.DomUtil.create("div",i);this.options.closeButton&&(t=this._closeButton=o.DomUtil.create("a",e+"-close-button",n),t.href="#close",t.innerHTML="&#215;",o.DomEvent.disableClickPropagation(t),o.DomEvent.on(t,"click",this._onCloseButtonClick,this));var s=this._wrapper=o.DomUtil.create("div",e+"-content-wrapper",n);o.DomEvent.disableClickPropagation(s),this._contentNode=o.DomUtil.create("div",e+"-content",s),o.DomEvent.disableScrollPropagation(this._contentNode),o.DomEvent.on(s,"contextmenu",o.DomEvent.stopPropagation),this._tipContainer=o.DomUtil.create("div",e+"-tip-container",n),this._tip=o.DomUtil.create("div",e+"-tip",this._tipContainer)},_updateContent:function(){if(this._content){if("string"==typeof this._content)this._contentNode.innerHTML=this._content;else{for(;this._contentNode.hasChildNodes();)this._contentNode.removeChild(this._contentNode.firstChild);this._contentNode.appendChild(this._content)}this.fire("contentupdate")}},_updateLayout:function(){var t=this._contentNode,e=t.style;e.width="",e.whiteSpace="nowrap";var i=t.offsetWidth;i=Math.min(i,this.options.maxWidth),i=Math.max(i,this.options.minWidth),e.width=i+1+"px",e.whiteSpace="",e.height="";var n=t.offsetHeight,s=this.options.maxHeight,a="leaflet-popup-scrolled";s&&n>s?(e.height=s+"px",o.DomUtil.addClass(t,a)):o.DomUtil.removeClass(t,a),this._containerWidth=this._container.offsetWidth},_updatePosition:function(){if(this._map){var t=this._map.latLngToLayerPoint(this._latlng),e=this._animated,i=o.point(this.options.offset);e&&o.DomUtil.setPosition(this._container,t),this._containerBottom=-i.y-(e?0:t.y),this._containerLeft=-Math.round(this._containerWidth/2)+i.x+(e?0:t.x),this._container.style.bottom=this._containerBottom+"px",this._container.style.left=this._containerLeft+"px"}},_zoomAnimation:function(t){var e=this._map._latLngToNewLayerPoint(this._latlng,t.zoom,t.center);o.DomUtil.setPosition(this._container,e)},_adjustPan:function(){if(this.options.autoPan){var t=this._map,e=this._container.offsetHeight,i=this._containerWidth,n=new o.Point(this._containerLeft,-e-this._containerBottom);this._animated&&n._add(o.DomUtil.getPosition(this._container));var s=t.layerPointToContainerPoint(n),a=o.point(this.options.autoPanPadding),r=o.point(this.options.autoPanPaddingTopLeft||a),h=o.point(this.options.autoPanPaddingBottomRight||a),l=t.getSize(),u=0,c=0;s.x+i+h.x>l.x&&(u=s.x+i-l.x+h.x),s.x-u-r.x<0&&(u=s.x-r.x),s.y+e+h.y>l.y&&(c=s.y+e-l.y+h.y),s.y-c-r.y<0&&(c=s.y-r.y),(u||c)&&t.fire("autopanstart").panBy([u,c])}},_onCloseButtonClick:function(t){this._close(),o.DomEvent.stop(t)}}),o.popup=function(t,e){return new o.Popup(t,e)},o.Map.include({openPopup:function(t,e,i){if(this.closePopup(),!(t instanceof o.Popup)){var n=t;t=new o.Popup(i).setLatLng(e).setContent(n)}return t._isOpen=!0,this._popup=t,this.addLayer(t)},closePopup:function(t){return t&&t!==this._popup||(t=this._popup,this._popup=null),t&&(this.removeLayer(t),t._isOpen=!1),this}}),o.Marker.include({openPopup:function(){return this._popup&&this._map&&!this._map.hasLayer(this._popup)&&(this._popup.setLatLng(this._latlng),this._map.openPopup(this._popup)),this},closePopup:function(){return this._popup&&this._popup._close(),this},togglePopup:function(){return this._popup&&(this._popup._isOpen?this.closePopup():this.openPopup()),this},bindPopup:function(t,e){var i=o.point(this.options.icon.options.popupAnchor||[0,0]);return i=i.add(o.Popup.prototype.options.offset),e&&e.offset&&(i=i.add(e.offset)),e=o.extend({offset:i},e),this._popupHandlersAdded||(this.on("click",this.togglePopup,this).on("remove",this.closePopup,this).on("move",this._movePopup,this),this._popupHandlersAdded=!0),t instanceof o.Popup?(o.setOptions(t,e),this._popup=t):this._popup=new o.Popup(e,this).setContent(t),this},setPopupContent:function(t){return this._popup&&this._popup.setContent(t),this},unbindPopup:function(){return this._popup&&(this._popup=null,this.off("click",this.togglePopup,this).off("remove",this.closePopup,this).off("move",this._movePopup,this),this._popupHandlersAdded=!1),this},getPopup:function(){return this._popup},_movePopup:function(t){this._popup.setLatLng(t.latlng)}}),o.LayerGroup=o.Class.extend({initialize:function(t){this._layers={};var e,i;if(t)for(e=0,i=t.length;i>e;e++)this.addLayer(t[e])},addLayer:function(t){var e=this.getLayerId(t);return this._layers[e]=t,this._map&&this._map.addLayer(t),this},removeLayer:function(t){var e=t in this._layers?t:this.getLayerId(t);return this._map&&this._layers[e]&&this._map.removeLayer(this._layers[e]),delete this._layers[e],this},hasLayer:function(t){return t?t in this._layers||this.getLayerId(t)in this._layers:!1},clearLayers:function(){return this.eachLayer(this.removeLayer,this),this},invoke:function(t){var e,i,n=Array.prototype.slice.call(arguments,1);for(e in this._layers)i=this._layers[e],i[t]&&i[t].apply(i,n);return this},onAdd:function(t){this._map=t,this.eachLayer(t.addLayer,t)},onRemove:function(t){this.eachLayer(t.removeLayer,t),this._map=null},addTo:function(t){return t.addLayer(this),this},eachLayer:function(t,e){for(var i in this._layers)t.call(e,this._layers[i]);return this},getLayer:function(t){return this._layers[t]},getLayers:function(){var t=[];for(var e in this._layers)t.push(this._layers[e]);return t},setZIndex:function(t){return this.invoke("setZIndex",t)},getLayerId:function(t){return o.stamp(t)}}),o.layerGroup=function(t){return new o.LayerGroup(t)},o.FeatureGroup=o.LayerGroup.extend({includes:o.Mixin.Events,statics:{EVENTS:"click dblclick mouseover mouseout mousemove contextmenu popupopen popupclose"},addLayer:function(t){return this.hasLayer(t)?this:("on"in t&&t.on(o.FeatureGroup.EVENTS,this._propagateEvent,this),o.LayerGroup.prototype.addLayer.call(this,t),this._popupContent&&t.bindPopup&&t.bindPopup(this._popupContent,this._popupOptions),this.fire("layeradd",{layer:t}))},removeLayer:function(t){return this.hasLayer(t)?(t in this._layers&&(t=this._layers[t]),t.off(o.FeatureGroup.EVENTS,this._propagateEvent,this),o.LayerGroup.prototype.removeLayer.call(this,t),this._popupContent&&this.invoke("unbindPopup"),this.fire("layerremove",{layer:t})):this},bindPopup:function(t,e){return this._popupContent=t,this._popupOptions=e,this.invoke("bindPopup",t,e)},openPopup:function(t){for(var e in this._layers){this._layers[e].openPopup(t);break}return this},setStyle:function(t){return this.invoke("setStyle",t)},bringToFront:function(){return this.invoke("bringToFront")},bringToBack:function(){return this.invoke("bringToBack")},getBounds:function(){var t=new o.LatLngBounds;return this.eachLayer(function(e){t.extend(e instanceof o.Marker?e.getLatLng():e.getBounds())}),t},_propagateEvent:function(t){t=o.extend({layer:t.target,target:this},t),this.fire(t.type,t)}}),o.featureGroup=function(t){return new o.FeatureGroup(t)},o.Path=o.Class.extend({includes:[o.Mixin.Events],statics:{CLIP_PADDING:function(){var e=o.Browser.mobile?1280:2e3,i=(e/Math.max(t.outerWidth,t.outerHeight)-1)/2;return Math.max(0,Math.min(.5,i))}()},options:{stroke:!0,color:"#0033ff",dashArray:null,lineCap:null,lineJoin:null,weight:5,opacity:.5,fill:!1,fillColor:null,fillOpacity:.2,clickable:!0},initialize:function(t){o.setOptions(this,t)},onAdd:function(t){this._map=t,this._container||(this._initElements(),this._initEvents()),this.projectLatlngs(),this._updatePath(),this._container&&this._map._pathRoot.appendChild(this._container),this.fire("add"),t.on({viewreset:this.projectLatlngs,moveend:this._updatePath},this)},addTo:function(t){return t.addLayer(this),this},onRemove:function(t){t._pathRoot.removeChild(this._container),this.fire("remove"),this._map=null,o.Browser.vml&&(this._container=null,this._stroke=null,this._fill=null),t.off({viewreset:this.projectLatlngs,moveend:this._updatePath},this)},projectLatlngs:function(){},setStyle:function(t){return o.setOptions(this,t),this._container&&this._updateStyle(),this},redraw:function(){return this._map&&(this.projectLatlngs(),this._updatePath()),this}}),o.Map.include({_updatePathViewport:function(){var t=o.Path.CLIP_PADDING,e=this.getSize(),i=o.DomUtil.getPosition(this._mapPane),n=i.multiplyBy(-1)._subtract(e.multiplyBy(t)._round()),s=n.add(e.multiplyBy(1+2*t)._round());this._pathViewport=new o.Bounds(n,s)}}),o.Path.SVG_NS="http://www.w3.org/2000/svg",o.Browser.svg=!(!e.createElementNS||!e.createElementNS(o.Path.SVG_NS,"svg").createSVGRect),o.Path=o.Path.extend({statics:{SVG:o.Browser.svg},bringToFront:function(){var t=this._map._pathRoot,e=this._container;return e&&t.lastChild!==e&&t.appendChild(e),this},bringToBack:function(){var t=this._map._pathRoot,e=this._container,i=t.firstChild;return e&&i!==e&&t.insertBefore(e,i),this},getPathString:function(){},_createElement:function(t){return e.createElementNS(o.Path.SVG_NS,t)},_initElements:function(){this._map._initPathRoot(),this._initPath(),this._initStyle()},_initPath:function(){this._container=this._createElement("g"),this._path=this._createElement("path"),this.options.className&&o.DomUtil.addClass(this._path,this.options.className),this._container.appendChild(this._path)},_initStyle:function(){this.options.stroke&&(this._path.setAttribute("stroke-linejoin","round"),this._path.setAttribute("stroke-linecap","round")),this.options.fill&&this._path.setAttribute("fill-rule","evenodd"),this.options.pointerEvents&&this._path.setAttribute("pointer-events",this.options.pointerEvents),this.options.clickable||this.options.pointerEvents||this._path.setAttribute("pointer-events","none"),this._updateStyle()},_updateStyle:function(){this.options.stroke?(this._path.setAttribute("stroke",this.options.color),this._path.setAttribute("stroke-opacity",this.options.opacity),this._path.setAttribute("stroke-width",this.options.weight),this.options.dashArray?this._path.setAttribute("stroke-dasharray",this.options.dashArray):this._path.removeAttribute("stroke-dasharray"),this.options.lineCap&&this._path.setAttribute("stroke-linecap",this.options.lineCap),this.options.lineJoin&&this._path.setAttribute("stroke-linejoin",this.options.lineJoin)):this._path.setAttribute("stroke","none"),this.options.fill?(this._path.setAttribute("fill",this.options.fillColor||this.options.color),this._path.setAttribute("fill-opacity",this.options.fillOpacity)):this._path.setAttribute("fill","none")},_updatePath:function(){var t=this.getPathString();t||(t="M0 0"),this._path.setAttribute("d",t)},_initEvents:function(){if(this.options.clickable){(o.Browser.svg||!o.Browser.vml)&&o.DomUtil.addClass(this._path,"leaflet-clickable"),o.DomEvent.on(this._container,"click",this._onMouseClick,this);for(var t=["dblclick","mousedown","mouseover","mouseout","mousemove","contextmenu"],e=0;e<t.length;e++)o.DomEvent.on(this._container,t[e],this._fireMouseEvent,this)}},_onMouseClick:function(t){this._map.dragging&&this._map.dragging.moved()||this._fireMouseEvent(t)},_fireMouseEvent:function(t){if(this.hasEventListeners(t.type)){var e=this._map,i=e.mouseEventToContainerPoint(t),n=e.containerPointToLayerPoint(i),s=e.layerPointToLatLng(n);this.fire(t.type,{latlng:s,layerPoint:n,containerPoint:i,originalEvent:t}),"contextmenu"===t.type&&o.DomEvent.preventDefault(t),"mousemove"!==t.type&&o.DomEvent.stopPropagation(t)}}}),o.Map.include({_initPathRoot:function(){this._pathRoot||(this._pathRoot=o.Path.prototype._createElement("svg"),this._panes.overlayPane.appendChild(this._pathRoot),this.options.zoomAnimation&&o.Browser.any3d?(o.DomUtil.addClass(this._pathRoot,"leaflet-zoom-animated"),this.on({zoomanim:this._animatePathZoom,zoomend:this._endPathZoom})):o.DomUtil.addClass(this._pathRoot,"leaflet-zoom-hide"),this.on("moveend",this._updateSvgViewport),this._updateSvgViewport())
 },_animatePathZoom:function(t){var e=this.getZoomScale(t.zoom),i=this._getCenterOffset(t.center)._multiplyBy(-e)._add(this._pathViewport.min);this._pathRoot.style[o.DomUtil.TRANSFORM]=o.DomUtil.getTranslateString(i)+" scale("+e+") ",this._pathZooming=!0},_endPathZoom:function(){this._pathZooming=!1},_updateSvgViewport:function(){if(!this._pathZooming){this._updatePathViewport();var t=this._pathViewport,e=t.min,i=t.max,n=i.x-e.x,s=i.y-e.y,a=this._pathRoot,r=this._panes.overlayPane;o.Browser.mobileWebkit&&r.removeChild(a),o.DomUtil.setPosition(a,e),a.setAttribute("width",n),a.setAttribute("height",s),a.setAttribute("viewBox",[e.x,e.y,n,s].join(" ")),o.Browser.mobileWebkit&&r.appendChild(a)}}}),o.Path.include({bindPopup:function(t,e){return t instanceof o.Popup?this._popup=t:((!this._popup||e)&&(this._popup=new o.Popup(e,this)),this._popup.setContent(t)),this._popupHandlersAdded||(this.on("click",this._openPopup,this).on("remove",this.closePopup,this),this._popupHandlersAdded=!0),this},unbindPopup:function(){return this._popup&&(this._popup=null,this.off("click",this._openPopup).off("remove",this.closePopup),this._popupHandlersAdded=!1),this},openPopup:function(t){return this._popup&&(t=t||this._latlng||this._latlngs[Math.floor(this._latlngs.length/2)],this._openPopup({latlng:t})),this},closePopup:function(){return this._popup&&this._popup._close(),this},_openPopup:function(t){this._popup.setLatLng(t.latlng),this._map.openPopup(this._popup)}}),o.Browser.vml=!o.Browser.svg&&function(){try{var t=e.createElement("div");t.innerHTML='<v:shape adj="1"/>';var i=t.firstChild;return i.style.behavior="url(#default#VML)",i&&"object"==typeof i.adj}catch(n){return!1}}(),o.Path=o.Browser.svg||!o.Browser.vml?o.Path:o.Path.extend({statics:{VML:!0,CLIP_PADDING:.02},_createElement:function(){try{return e.namespaces.add("lvml","urn:schemas-microsoft-com:vml"),function(t){return e.createElement("<lvml:"+t+' class="lvml">')}}catch(t){return function(t){return e.createElement("<"+t+' xmlns="urn:schemas-microsoft.com:vml" class="lvml">')}}}(),_initPath:function(){var t=this._container=this._createElement("shape");o.DomUtil.addClass(t,"leaflet-vml-shape"+(this.options.className?" "+this.options.className:"")),this.options.clickable&&o.DomUtil.addClass(t,"leaflet-clickable"),t.coordsize="1 1",this._path=this._createElement("path"),t.appendChild(this._path),this._map._pathRoot.appendChild(t)},_initStyle:function(){this._updateStyle()},_updateStyle:function(){var t=this._stroke,e=this._fill,i=this.options,n=this._container;n.stroked=i.stroke,n.filled=i.fill,i.stroke?(t||(t=this._stroke=this._createElement("stroke"),t.endcap="round",n.appendChild(t)),t.weight=i.weight+"px",t.color=i.color,t.opacity=i.opacity,t.dashStyle=i.dashArray?o.Util.isArray(i.dashArray)?i.dashArray.join(" "):i.dashArray.replace(/( *, *)/g," "):"",i.lineCap&&(t.endcap=i.lineCap.replace("butt","flat")),i.lineJoin&&(t.joinstyle=i.lineJoin)):t&&(n.removeChild(t),this._stroke=null),i.fill?(e||(e=this._fill=this._createElement("fill"),n.appendChild(e)),e.color=i.fillColor||i.color,e.opacity=i.fillOpacity):e&&(n.removeChild(e),this._fill=null)},_updatePath:function(){var t=this._container.style;t.display="none",this._path.v=this.getPathString()+" ",t.display=""}}),o.Map.include(o.Browser.svg||!o.Browser.vml?{}:{_initPathRoot:function(){if(!this._pathRoot){var t=this._pathRoot=e.createElement("div");t.className="leaflet-vml-container",this._panes.overlayPane.appendChild(t),this.on("moveend",this._updatePathViewport),this._updatePathViewport()}}}),o.Browser.canvas=function(){return!!e.createElement("canvas").getContext}(),o.Path=o.Path.SVG&&!t.L_PREFER_CANVAS||!o.Browser.canvas?o.Path:o.Path.extend({statics:{CANVAS:!0,SVG:!1},redraw:function(){return this._map&&(this.projectLatlngs(),this._requestUpdate()),this},setStyle:function(t){return o.setOptions(this,t),this._map&&(this._updateStyle(),this._requestUpdate()),this},onRemove:function(t){t.off("viewreset",this.projectLatlngs,this).off("moveend",this._updatePath,this),this.options.clickable&&(this._map.off("click",this._onClick,this),this._map.off("mousemove",this._onMouseMove,this)),this._requestUpdate(),this.fire("remove"),this._map=null},_requestUpdate:function(){this._map&&!o.Path._updateRequest&&(o.Path._updateRequest=o.Util.requestAnimFrame(this._fireMapMoveEnd,this._map))},_fireMapMoveEnd:function(){o.Path._updateRequest=null,this.fire("moveend")},_initElements:function(){this._map._initPathRoot(),this._ctx=this._map._canvasCtx},_updateStyle:function(){var t=this.options;t.stroke&&(this._ctx.lineWidth=t.weight,this._ctx.strokeStyle=t.color),t.fill&&(this._ctx.fillStyle=t.fillColor||t.color)},_drawPath:function(){var t,e,i,n,s,a;for(this._ctx.beginPath(),t=0,i=this._parts.length;i>t;t++){for(e=0,n=this._parts[t].length;n>e;e++)s=this._parts[t][e],a=(0===e?"move":"line")+"To",this._ctx[a](s.x,s.y);this instanceof o.Polygon&&this._ctx.closePath()}},_checkIfEmpty:function(){return!this._parts.length},_updatePath:function(){if(!this._checkIfEmpty()){var t=this._ctx,e=this.options;this._drawPath(),t.save(),this._updateStyle(),e.fill&&(t.globalAlpha=e.fillOpacity,t.fill()),e.stroke&&(t.globalAlpha=e.opacity,t.stroke()),t.restore()}},_initEvents:function(){this.options.clickable&&(this._map.on("mousemove",this._onMouseMove,this),this._map.on("click",this._onClick,this))},_onClick:function(t){this._containsPoint(t.layerPoint)&&this.fire("click",t)},_onMouseMove:function(t){this._map&&!this._map._animatingZoom&&(this._containsPoint(t.layerPoint)?(this._ctx.canvas.style.cursor="pointer",this._mouseInside=!0,this.fire("mouseover",t)):this._mouseInside&&(this._ctx.canvas.style.cursor="",this._mouseInside=!1,this.fire("mouseout",t)))}}),o.Map.include(o.Path.SVG&&!t.L_PREFER_CANVAS||!o.Browser.canvas?{}:{_initPathRoot:function(){var t,i=this._pathRoot;i||(i=this._pathRoot=e.createElement("canvas"),i.style.position="absolute",t=this._canvasCtx=i.getContext("2d"),t.lineCap="round",t.lineJoin="round",this._panes.overlayPane.appendChild(i),this.options.zoomAnimation&&(this._pathRoot.className="leaflet-zoom-animated",this.on("zoomanim",this._animatePathZoom),this.on("zoomend",this._endPathZoom)),this.on("moveend",this._updateCanvasViewport),this._updateCanvasViewport())},_updateCanvasViewport:function(){if(!this._pathZooming){this._updatePathViewport();var t=this._pathViewport,e=t.min,i=t.max.subtract(e),n=this._pathRoot;o.DomUtil.setPosition(n,e),n.width=i.x,n.height=i.y,n.getContext("2d").translate(-e.x,-e.y)}}}),o.LineUtil={simplify:function(t,e){if(!e||!t.length)return t.slice();var i=e*e;return t=this._reducePoints(t,i),t=this._simplifyDP(t,i)},pointToSegmentDistance:function(t,e,i){return Math.sqrt(this._sqClosestPointOnSegment(t,e,i,!0))},closestPointOnSegment:function(t,e,i){return this._sqClosestPointOnSegment(t,e,i)},_simplifyDP:function(t,e){var n=t.length,o=typeof Uint8Array!=i+""?Uint8Array:Array,s=new o(n);s[0]=s[n-1]=1,this._simplifyDPStep(t,s,e,0,n-1);var a,r=[];for(a=0;n>a;a++)s[a]&&r.push(t[a]);return r},_simplifyDPStep:function(t,e,i,n,o){var s,a,r,h=0;for(a=n+1;o-1>=a;a++)r=this._sqClosestPointOnSegment(t[a],t[n],t[o],!0),r>h&&(s=a,h=r);h>i&&(e[s]=1,this._simplifyDPStep(t,e,i,n,s),this._simplifyDPStep(t,e,i,s,o))},_reducePoints:function(t,e){for(var i=[t[0]],n=1,o=0,s=t.length;s>n;n++)this._sqDist(t[n],t[o])>e&&(i.push(t[n]),o=n);return s-1>o&&i.push(t[s-1]),i},clipSegment:function(t,e,i,n){var o,s,a,r=n?this._lastCode:this._getBitCode(t,i),h=this._getBitCode(e,i);for(this._lastCode=h;;){if(!(r|h))return[t,e];if(r&h)return!1;o=r||h,s=this._getEdgeIntersection(t,e,o,i),a=this._getBitCode(s,i),o===r?(t=s,r=a):(e=s,h=a)}},_getEdgeIntersection:function(t,e,i,n){var s=e.x-t.x,a=e.y-t.y,r=n.min,h=n.max;return 8&i?new o.Point(t.x+s*(h.y-t.y)/a,h.y):4&i?new o.Point(t.x+s*(r.y-t.y)/a,r.y):2&i?new o.Point(h.x,t.y+a*(h.x-t.x)/s):1&i?new o.Point(r.x,t.y+a*(r.x-t.x)/s):void 0},_getBitCode:function(t,e){var i=0;return t.x<e.min.x?i|=1:t.x>e.max.x&&(i|=2),t.y<e.min.y?i|=4:t.y>e.max.y&&(i|=8),i},_sqDist:function(t,e){var i=e.x-t.x,n=e.y-t.y;return i*i+n*n},_sqClosestPointOnSegment:function(t,e,i,n){var s,a=e.x,r=e.y,h=i.x-a,l=i.y-r,u=h*h+l*l;return u>0&&(s=((t.x-a)*h+(t.y-r)*l)/u,s>1?(a=i.x,r=i.y):s>0&&(a+=h*s,r+=l*s)),h=t.x-a,l=t.y-r,n?h*h+l*l:new o.Point(a,r)}},o.Polyline=o.Path.extend({initialize:function(t,e){o.Path.prototype.initialize.call(this,e),this._latlngs=this._convertLatLngs(t)},options:{smoothFactor:1,noClip:!1},projectLatlngs:function(){this._originalPoints=[];for(var t=0,e=this._latlngs.length;e>t;t++)this._originalPoints[t]=this._map.latLngToLayerPoint(this._latlngs[t])},getPathString:function(){for(var t=0,e=this._parts.length,i="";e>t;t++)i+=this._getPathPartStr(this._parts[t]);return i},getLatLngs:function(){return this._latlngs},setLatLngs:function(t){return this._latlngs=this._convertLatLngs(t),this.redraw()},addLatLng:function(t){return this._latlngs.push(o.latLng(t)),this.redraw()},spliceLatLngs:function(){var t=[].splice.apply(this._latlngs,arguments);return this._convertLatLngs(this._latlngs,!0),this.redraw(),t},closestLayerPoint:function(t){for(var e,i,n=1/0,s=this._parts,a=null,r=0,h=s.length;h>r;r++)for(var l=s[r],u=1,c=l.length;c>u;u++){e=l[u-1],i=l[u];var d=o.LineUtil._sqClosestPointOnSegment(t,e,i,!0);n>d&&(n=d,a=o.LineUtil._sqClosestPointOnSegment(t,e,i))}return a&&(a.distance=Math.sqrt(n)),a},getBounds:function(){return new o.LatLngBounds(this.getLatLngs())},_convertLatLngs:function(t,e){var i,n,s=e?t:[];for(i=0,n=t.length;n>i;i++){if(o.Util.isArray(t[i])&&"number"!=typeof t[i][0])return;s[i]=o.latLng(t[i])}return s},_initEvents:function(){o.Path.prototype._initEvents.call(this)},_getPathPartStr:function(t){for(var e,i=o.Path.VML,n=0,s=t.length,a="";s>n;n++)e=t[n],i&&e._round(),a+=(n?"L":"M")+e.x+" "+e.y;return a},_clipPoints:function(){var t,e,i,n=this._originalPoints,s=n.length;if(this.options.noClip)return void(this._parts=[n]);this._parts=[];var a=this._parts,r=this._map._pathViewport,h=o.LineUtil;for(t=0,e=0;s-1>t;t++)i=h.clipSegment(n[t],n[t+1],r,t),i&&(a[e]=a[e]||[],a[e].push(i[0]),(i[1]!==n[t+1]||t===s-2)&&(a[e].push(i[1]),e++))},_simplifyPoints:function(){for(var t=this._parts,e=o.LineUtil,i=0,n=t.length;n>i;i++)t[i]=e.simplify(t[i],this.options.smoothFactor)},_updatePath:function(){this._map&&(this._clipPoints(),this._simplifyPoints(),o.Path.prototype._updatePath.call(this))}}),o.polyline=function(t,e){return new o.Polyline(t,e)},o.PolyUtil={},o.PolyUtil.clipPolygon=function(t,e){var i,n,s,a,r,h,l,u,c,d=[1,4,2,8],p=o.LineUtil;for(n=0,l=t.length;l>n;n++)t[n]._code=p._getBitCode(t[n],e);for(a=0;4>a;a++){for(u=d[a],i=[],n=0,l=t.length,s=l-1;l>n;s=n++)r=t[n],h=t[s],r._code&u?h._code&u||(c=p._getEdgeIntersection(h,r,u,e),c._code=p._getBitCode(c,e),i.push(c)):(h._code&u&&(c=p._getEdgeIntersection(h,r,u,e),c._code=p._getBitCode(c,e),i.push(c)),i.push(r));t=i}return t},o.Polygon=o.Polyline.extend({options:{fill:!0},initialize:function(t,e){o.Polyline.prototype.initialize.call(this,t,e),this._initWithHoles(t)},_initWithHoles:function(t){var e,i,n;if(t&&o.Util.isArray(t[0])&&"number"!=typeof t[0][0])for(this._latlngs=this._convertLatLngs(t[0]),this._holes=t.slice(1),e=0,i=this._holes.length;i>e;e++)n=this._holes[e]=this._convertLatLngs(this._holes[e]),n[0].equals(n[n.length-1])&&n.pop();t=this._latlngs,t.length>=2&&t[0].equals(t[t.length-1])&&t.pop()},projectLatlngs:function(){if(o.Polyline.prototype.projectLatlngs.call(this),this._holePoints=[],this._holes){var t,e,i,n;for(t=0,i=this._holes.length;i>t;t++)for(this._holePoints[t]=[],e=0,n=this._holes[t].length;n>e;e++)this._holePoints[t][e]=this._map.latLngToLayerPoint(this._holes[t][e])}},setLatLngs:function(t){return t&&o.Util.isArray(t[0])&&"number"!=typeof t[0][0]?(this._initWithHoles(t),this.redraw()):o.Polyline.prototype.setLatLngs.call(this,t)},_clipPoints:function(){var t=this._originalPoints,e=[];if(this._parts=[t].concat(this._holePoints),!this.options.noClip){for(var i=0,n=this._parts.length;n>i;i++){var s=o.PolyUtil.clipPolygon(this._parts[i],this._map._pathViewport);s.length&&e.push(s)}this._parts=e}},_getPathPartStr:function(t){var e=o.Polyline.prototype._getPathPartStr.call(this,t);return e+(o.Browser.svg?"z":"x")}}),o.polygon=function(t,e){return new o.Polygon(t,e)},function(){function t(t){return o.FeatureGroup.extend({initialize:function(t,e){this._layers={},this._options=e,this.setLatLngs(t)},setLatLngs:function(e){var i=0,n=e.length;for(this.eachLayer(function(t){n>i?t.setLatLngs(e[i++]):this.removeLayer(t)},this);n>i;)this.addLayer(new t(e[i++],this._options));return this},getLatLngs:function(){var t=[];return this.eachLayer(function(e){t.push(e.getLatLngs())}),t}})}o.MultiPolyline=t(o.Polyline),o.MultiPolygon=t(o.Polygon),o.multiPolyline=function(t,e){return new o.MultiPolyline(t,e)},o.multiPolygon=function(t,e){return new o.MultiPolygon(t,e)}}(),o.Rectangle=o.Polygon.extend({initialize:function(t,e){o.Polygon.prototype.initialize.call(this,this._boundsToLatLngs(t),e)},setBounds:function(t){this.setLatLngs(this._boundsToLatLngs(t))},_boundsToLatLngs:function(t){return t=o.latLngBounds(t),[t.getSouthWest(),t.getNorthWest(),t.getNorthEast(),t.getSouthEast()]}}),o.rectangle=function(t,e){return new o.Rectangle(t,e)},o.Circle=o.Path.extend({initialize:function(t,e,i){o.Path.prototype.initialize.call(this,i),this._latlng=o.latLng(t),this._mRadius=e},options:{fill:!0},setLatLng:function(t){return this._latlng=o.latLng(t),this.redraw()},setRadius:function(t){return this._mRadius=t,this.redraw()},projectLatlngs:function(){var t=this._getLngRadius(),e=this._latlng,i=this._map.latLngToLayerPoint([e.lat,e.lng-t]);this._point=this._map.latLngToLayerPoint(e),this._radius=Math.max(this._point.x-i.x,1)},getBounds:function(){var t=this._getLngRadius(),e=this._mRadius/40075017*360,i=this._latlng;return new o.LatLngBounds([i.lat-e,i.lng-t],[i.lat+e,i.lng+t])},getLatLng:function(){return this._latlng},getPathString:function(){var t=this._point,e=this._radius;return this._checkIfEmpty()?"":o.Browser.svg?"M"+t.x+","+(t.y-e)+"A"+e+","+e+",0,1,1,"+(t.x-.1)+","+(t.y-e)+" z":(t._round(),e=Math.round(e),"AL "+t.x+","+t.y+" "+e+","+e+" 0,23592600")},getRadius:function(){return this._mRadius},_getLatRadius:function(){return this._mRadius/40075017*360},_getLngRadius:function(){return this._getLatRadius()/Math.cos(o.LatLng.DEG_TO_RAD*this._latlng.lat)},_checkIfEmpty:function(){if(!this._map)return!1;var t=this._map._pathViewport,e=this._radius,i=this._point;return i.x-e>t.max.x||i.y-e>t.max.y||i.x+e<t.min.x||i.y+e<t.min.y}}),o.circle=function(t,e,i){return new o.Circle(t,e,i)},o.CircleMarker=o.Circle.extend({options:{radius:10,weight:2},initialize:function(t,e){o.Circle.prototype.initialize.call(this,t,null,e),this._radius=this.options.radius},projectLatlngs:function(){this._point=this._map.latLngToLayerPoint(this._latlng)},_updateStyle:function(){o.Circle.prototype._updateStyle.call(this),this.setRadius(this.options.radius)},setLatLng:function(t){return o.Circle.prototype.setLatLng.call(this,t),this._popup&&this._popup._isOpen&&this._popup.setLatLng(t),this},setRadius:function(t){return this.options.radius=this._radius=t,this.redraw()},getRadius:function(){return this._radius}}),o.circleMarker=function(t,e){return new o.CircleMarker(t,e)},o.Polyline.include(o.Path.CANVAS?{_containsPoint:function(t,e){var i,n,s,a,r,h,l,u=this.options.weight/2;for(o.Browser.touch&&(u+=10),i=0,a=this._parts.length;a>i;i++)for(l=this._parts[i],n=0,r=l.length,s=r-1;r>n;s=n++)if((e||0!==n)&&(h=o.LineUtil.pointToSegmentDistance(t,l[s],l[n]),u>=h))return!0;return!1}}:{}),o.Polygon.include(o.Path.CANVAS?{_containsPoint:function(t){var e,i,n,s,a,r,h,l,u=!1;if(o.Polyline.prototype._containsPoint.call(this,t,!0))return!0;for(s=0,h=this._parts.length;h>s;s++)for(e=this._parts[s],a=0,l=e.length,r=l-1;l>a;r=a++)i=e[a],n=e[r],i.y>t.y!=n.y>t.y&&t.x<(n.x-i.x)*(t.y-i.y)/(n.y-i.y)+i.x&&(u=!u);return u}}:{}),o.Circle.include(o.Path.CANVAS?{_drawPath:function(){var t=this._point;this._ctx.beginPath(),this._ctx.arc(t.x,t.y,this._radius,0,2*Math.PI,!1)},_containsPoint:function(t){var e=this._point,i=this.options.stroke?this.options.weight/2:0;return t.distanceTo(e)<=this._radius+i}}:{}),o.CircleMarker.include(o.Path.CANVAS?{_updateStyle:function(){o.Path.prototype._updateStyle.call(this)}}:{}),o.GeoJSON=o.FeatureGroup.extend({initialize:function(t,e){o.setOptions(this,e),this._layers={},t&&this.addData(t)},addData:function(t){var e,i,n,s=o.Util.isArray(t)?t:t.features;if(s){for(e=0,i=s.length;i>e;e++)n=s[e],(n.geometries||n.geometry||n.features||n.coordinates)&&this.addData(s[e]);return this}var a=this.options;if(!a.filter||a.filter(t)){var r=o.GeoJSON.geometryToLayer(t,a.pointToLayer,a.coordsToLatLng,a);return r.feature=o.GeoJSON.asFeature(t),r.defaultOptions=r.options,this.resetStyle(r),a.onEachFeature&&a.onEachFeature(t,r),this.addLayer(r)}},resetStyle:function(t){var e=this.options.style;e&&(o.Util.extend(t.options,t.defaultOptions),this._setLayerStyle(t,e))},setStyle:function(t){this.eachLayer(function(e){this._setLayerStyle(e,t)},this)},_setLayerStyle:function(t,e){"function"==typeof e&&(e=e(t.feature)),t.setStyle&&t.setStyle(e)}}),o.extend(o.GeoJSON,{geometryToLayer:function(t,e,i,n){var s,a,r,h,l="Feature"===t.type?t.geometry:t,u=l.coordinates,c=[];switch(i=i||this.coordsToLatLng,l.type){case"Point":return s=i(u),e?e(t,s):new o.Marker(s);case"MultiPoint":for(r=0,h=u.length;h>r;r++)s=i(u[r]),c.push(e?e(t,s):new o.Marker(s));return new o.FeatureGroup(c);case"LineString":return a=this.coordsToLatLngs(u,0,i),new o.Polyline(a,n);case"Polygon":if(2===u.length&&!u[1].length)throw new Error("Invalid GeoJSON object.");return a=this.coordsToLatLngs(u,1,i),new o.Polygon(a,n);case"MultiLineString":return a=this.coordsToLatLngs(u,1,i),new o.MultiPolyline(a,n);case"MultiPolygon":return a=this.coordsToLatLngs(u,2,i),new o.MultiPolygon(a,n);case"GeometryCollection":for(r=0,h=l.geometries.length;h>r;r++)c.push(this.geometryToLayer({geometry:l.geometries[r],type:"Feature",properties:t.properties},e,i,n));return new o.FeatureGroup(c);default:throw new Error("Invalid GeoJSON object.")}},coordsToLatLng:function(t){return new o.LatLng(t[1],t[0],t[2])},coordsToLatLngs:function(t,e,i){var n,o,s,a=[];for(o=0,s=t.length;s>o;o++)n=e?this.coordsToLatLngs(t[o],e-1,i):(i||this.coordsToLatLng)(t[o]),a.push(n);return a},latLngToCoords:function(t){var e=[t.lng,t.lat];return t.alt!==i&&e.push(t.alt),e},latLngsToCoords:function(t){for(var e=[],i=0,n=t.length;n>i;i++)e.push(o.GeoJSON.latLngToCoords(t[i]));return e},getFeature:function(t,e){return t.feature?o.extend({},t.feature,{geometry:e}):o.GeoJSON.asFeature(e)},asFeature:function(t){return"Feature"===t.type?t:{type:"Feature",properties:{},geometry:t}}});var a={toGeoJSON:function(){return o.GeoJSON.getFeature(this,{type:"Point",coordinates:o.GeoJSON.latLngToCoords(this.getLatLng())})}};o.Marker.include(a),o.Circle.include(a),o.CircleMarker.include(a),o.Polyline.include({toGeoJSON:function(){return o.GeoJSON.getFeature(this,{type:"LineString",coordinates:o.GeoJSON.latLngsToCoords(this.getLatLngs())})}}),o.Polygon.include({toGeoJSON:function(){var t,e,i,n=[o.GeoJSON.latLngsToCoords(this.getLatLngs())];if(n[0].push(n[0][0]),this._holes)for(t=0,e=this._holes.length;e>t;t++)i=o.GeoJSON.latLngsToCoords(this._holes[t]),i.push(i[0]),n.push(i);return o.GeoJSON.getFeature(this,{type:"Polygon",coordinates:n})}}),function(){function t(t){return function(){var e=[];return this.eachLayer(function(t){e.push(t.toGeoJSON().geometry.coordinates)}),o.GeoJSON.getFeature(this,{type:t,coordinates:e})}}o.MultiPolyline.include({toGeoJSON:t("MultiLineString")}),o.MultiPolygon.include({toGeoJSON:t("MultiPolygon")}),o.LayerGroup.include({toGeoJSON:function(){var e,i=this.feature&&this.feature.geometry,n=[];if(i&&"MultiPoint"===i.type)return t("MultiPoint").call(this);var s=i&&"GeometryCollection"===i.type;return this.eachLayer(function(t){t.toGeoJSON&&(e=t.toGeoJSON(),n.push(s?e.geometry:o.GeoJSON.asFeature(e)))}),s?o.GeoJSON.getFeature(this,{geometries:n,type:"GeometryCollection"}):{type:"FeatureCollection",features:n}}})}(),o.geoJson=function(t,e){return new o.GeoJSON(t,e)},o.DomEvent={addListener:function(t,e,i,n){var s,a,r,h=o.stamp(i),l="_leaflet_"+e+h;return t[l]?this:(s=function(e){return i.call(n||t,e||o.DomEvent._getEvent())},o.Browser.pointer&&0===e.indexOf("touch")?this.addPointerListener(t,e,s,h):(o.Browser.touch&&"dblclick"===e&&this.addDoubleTapListener&&this.addDoubleTapListener(t,s,h),"addEventListener"in t?"mousewheel"===e?(t.addEventListener("DOMMouseScroll",s,!1),t.addEventListener(e,s,!1)):"mouseenter"===e||"mouseleave"===e?(a=s,r="mouseenter"===e?"mouseover":"mouseout",s=function(e){return o.DomEvent._checkMouse(t,e)?a(e):void 0},t.addEventListener(r,s,!1)):"click"===e&&o.Browser.android?(a=s,s=function(t){return o.DomEvent._filterClick(t,a)},t.addEventListener(e,s,!1)):t.addEventListener(e,s,!1):"attachEvent"in t&&t.attachEvent("on"+e,s),t[l]=s,this))},removeListener:function(t,e,i){var n=o.stamp(i),s="_leaflet_"+e+n,a=t[s];return a?(o.Browser.pointer&&0===e.indexOf("touch")?this.removePointerListener(t,e,n):o.Browser.touch&&"dblclick"===e&&this.removeDoubleTapListener?this.removeDoubleTapListener(t,n):"removeEventListener"in t?"mousewheel"===e?(t.removeEventListener("DOMMouseScroll",a,!1),t.removeEventListener(e,a,!1)):"mouseenter"===e||"mouseleave"===e?t.removeEventListener("mouseenter"===e?"mouseover":"mouseout",a,!1):t.removeEventListener(e,a,!1):"detachEvent"in t&&t.detachEvent("on"+e,a),t[s]=null,this):this},stopPropagation:function(t){return t.stopPropagation?t.stopPropagation():t.cancelBubble=!0,o.DomEvent._skipped(t),this},disableScrollPropagation:function(t){var e=o.DomEvent.stopPropagation;return o.DomEvent.on(t,"mousewheel",e).on(t,"MozMousePixelScroll",e)},disableClickPropagation:function(t){for(var e=o.DomEvent.stopPropagation,i=o.Draggable.START.length-1;i>=0;i--)o.DomEvent.on(t,o.Draggable.START[i],e);return o.DomEvent.on(t,"click",o.DomEvent._fakeStop).on(t,"dblclick",e)},preventDefault:function(t){return t.preventDefault?t.preventDefault():t.returnValue=!1,this},stop:function(t){return o.DomEvent.preventDefault(t).stopPropagation(t)},getMousePosition:function(t,e){if(!e)return new o.Point(t.clientX,t.clientY);var i=e.getBoundingClientRect();return new o.Point(t.clientX-i.left-e.clientLeft,t.clientY-i.top-e.clientTop)},getWheelDelta:function(t){var e=0;return t.wheelDelta&&(e=t.wheelDelta/120),t.detail&&(e=-t.detail/3),e},_skipEvents:{},_fakeStop:function(t){o.DomEvent._skipEvents[t.type]=!0},_skipped:function(t){var e=this._skipEvents[t.type];return this._skipEvents[t.type]=!1,e},_checkMouse:function(t,e){var i=e.relatedTarget;if(!i)return!0;try{for(;i&&i!==t;)i=i.parentNode}catch(n){return!1}return i!==t},_getEvent:function(){var e=t.event;if(!e)for(var i=arguments.callee.caller;i&&(e=i.arguments[0],!e||t.Event!==e.constructor);)i=i.caller;return e},_filterClick:function(t,e){var i=t.timeStamp||t.originalEvent.timeStamp,n=o.DomEvent._lastClick&&i-o.DomEvent._lastClick;return n&&n>100&&500>n||t.target._simulatedClick&&!t._simulated?void o.DomEvent.stop(t):(o.DomEvent._lastClick=i,e(t))}},o.DomEvent.on=o.DomEvent.addListener,o.DomEvent.off=o.DomEvent.removeListener,o.Draggable=o.Class.extend({includes:o.Mixin.Events,statics:{START:o.Browser.touch?["touchstart","mousedown"]:["mousedown"],END:{mousedown:"mouseup",touchstart:"touchend",pointerdown:"touchend",MSPointerDown:"touchend"},MOVE:{mousedown:"mousemove",touchstart:"touchmove",pointerdown:"touchmove",MSPointerDown:"touchmove"}},initialize:function(t,e){this._element=t,this._dragStartTarget=e||t},enable:function(){if(!this._enabled){for(var t=o.Draggable.START.length-1;t>=0;t--)o.DomEvent.on(this._dragStartTarget,o.Draggable.START[t],this._onDown,this);this._enabled=!0}},disable:function(){if(this._enabled){for(var t=o.Draggable.START.length-1;t>=0;t--)o.DomEvent.off(this._dragStartTarget,o.Draggable.START[t],this._onDown,this);this._enabled=!1,this._moved=!1}},_onDown:function(t){if(this._moved=!1,!(t.shiftKey||1!==t.which&&1!==t.button&&!t.touches||(o.DomEvent.stopPropagation(t),o.Draggable._disabled||(o.DomUtil.disableImageDrag(),o.DomUtil.disableTextSelection(),this._moving)))){var i=t.touches?t.touches[0]:t;this._startPoint=new o.Point(i.clientX,i.clientY),this._startPos=this._newPos=o.DomUtil.getPosition(this._element),o.DomEvent.on(e,o.Draggable.MOVE[t.type],this._onMove,this).on(e,o.Draggable.END[t.type],this._onUp,this)}},_onMove:function(t){if(t.touches&&t.touches.length>1)return void(this._moved=!0);var i=t.touches&&1===t.touches.length?t.touches[0]:t,n=new o.Point(i.clientX,i.clientY),s=n.subtract(this._startPoint);(s.x||s.y)&&(o.Browser.touch&&Math.abs(s.x)+Math.abs(s.y)<3||(o.DomEvent.preventDefault(t),this._moved||(this.fire("dragstart"),this._moved=!0,this._startPos=o.DomUtil.getPosition(this._element).subtract(s),o.DomUtil.addClass(e.body,"leaflet-dragging"),this._lastTarget=t.target||t.srcElement,o.DomUtil.addClass(this._lastTarget,"leaflet-drag-target")),this._newPos=this._startPos.add(s),this._moving=!0,o.Util.cancelAnimFrame(this._animRequest),this._animRequest=o.Util.requestAnimFrame(this._updatePosition,this,!0,this._dragStartTarget)))},_updatePosition:function(){this.fire("predrag"),o.DomUtil.setPosition(this._element,this._newPos),this.fire("drag")},_onUp:function(){o.DomUtil.removeClass(e.body,"leaflet-dragging"),this._lastTarget&&(o.DomUtil.removeClass(this._lastTarget,"leaflet-drag-target"),this._lastTarget=null);for(var t in o.Draggable.MOVE)o.DomEvent.off(e,o.Draggable.MOVE[t],this._onMove).off(e,o.Draggable.END[t],this._onUp);o.DomUtil.enableImageDrag(),o.DomUtil.enableTextSelection(),this._moved&&this._moving&&(o.Util.cancelAnimFrame(this._animRequest),this.fire("dragend",{distance:this._newPos.distanceTo(this._startPos)})),this._moving=!1}}),o.Handler=o.Class.extend({initialize:function(t){this._map=t},enable:function(){this._enabled||(this._enabled=!0,this.addHooks())},disable:function(){this._enabled&&(this._enabled=!1,this.removeHooks())},enabled:function(){return!!this._enabled}}),o.Map.mergeOptions({dragging:!0,inertia:!o.Browser.android23,inertiaDeceleration:3400,inertiaMaxSpeed:1/0,inertiaThreshold:o.Browser.touch?32:18,easeLinearity:.25,worldCopyJump:!1}),o.Map.Drag=o.Handler.extend({addHooks:function(){if(!this._draggable){var t=this._map;this._draggable=new o.Draggable(t._mapPane,t._container),this._draggable.on({dragstart:this._onDragStart,drag:this._onDrag,dragend:this._onDragEnd},this),t.options.worldCopyJump&&(this._draggable.on("predrag",this._onPreDrag,this),t.on("viewreset",this._onViewReset,this),t.whenReady(this._onViewReset,this))}this._draggable.enable()},removeHooks:function(){this._draggable.disable()},moved:function(){return this._draggable&&this._draggable._moved},_onDragStart:function(){var t=this._map;t._panAnim&&t._panAnim.stop(),t.fire("movestart").fire("dragstart"),t.options.inertia&&(this._positions=[],this._times=[])},_onDrag:function(){if(this._map.options.inertia){var t=this._lastTime=+new Date,e=this._lastPos=this._draggable._newPos;this._positions.push(e),this._times.push(t),t-this._times[0]>200&&(this._positions.shift(),this._times.shift())}this._map.fire("move").fire("drag")},_onViewReset:function(){var t=this._map.getSize()._divideBy(2),e=this._map.latLngToLayerPoint([0,0]);this._initialWorldOffset=e.subtract(t).x,this._worldWidth=this._map.project([0,180]).x},_onPreDrag:function(){var t=this._worldWidth,e=Math.round(t/2),i=this._initialWorldOffset,n=this._draggable._newPos.x,o=(n-e+i)%t+e-i,s=(n+e+i)%t-e-i,a=Math.abs(o+i)<Math.abs(s+i)?o:s;this._draggable._newPos.x=a},_onDragEnd:function(t){var e=this._map,i=e.options,n=+new Date-this._lastTime,s=!i.inertia||n>i.inertiaThreshold||!this._positions[0];if(e.fire("dragend",t),s)e.fire("moveend");else{var a=this._lastPos.subtract(this._positions[0]),r=(this._lastTime+n-this._times[0])/1e3,h=i.easeLinearity,l=a.multiplyBy(h/r),u=l.distanceTo([0,0]),c=Math.min(i.inertiaMaxSpeed,u),d=l.multiplyBy(c/u),p=c/(i.inertiaDeceleration*h),_=d.multiplyBy(-p/2).round();_.x&&_.y?(_=e._limitOffset(_,e.options.maxBounds),o.Util.requestAnimFrame(function(){e.panBy(_,{duration:p,easeLinearity:h,noMoveStart:!0})})):e.fire("moveend")}}}),o.Map.addInitHook("addHandler","dragging",o.Map.Drag),o.Map.mergeOptions({doubleClickZoom:!0}),o.Map.DoubleClickZoom=o.Handler.extend({addHooks:function(){this._map.on("dblclick",this._onDoubleClick,this)},removeHooks:function(){this._map.off("dblclick",this._onDoubleClick,this)},_onDoubleClick:function(t){var e=this._map,i=e.getZoom()+(t.originalEvent.shiftKey?-1:1);"center"===e.options.doubleClickZoom?e.setZoom(i):e.setZoomAround(t.containerPoint,i)}}),o.Map.addInitHook("addHandler","doubleClickZoom",o.Map.DoubleClickZoom),o.Map.mergeOptions({scrollWheelZoom:!0}),o.Map.ScrollWheelZoom=o.Handler.extend({addHooks:function(){o.DomEvent.on(this._map._container,"mousewheel",this._onWheelScroll,this),o.DomEvent.on(this._map._container,"MozMousePixelScroll",o.DomEvent.preventDefault),this._delta=0},removeHooks:function(){o.DomEvent.off(this._map._container,"mousewheel",this._onWheelScroll),o.DomEvent.off(this._map._container,"MozMousePixelScroll",o.DomEvent.preventDefault)},_onWheelScroll:function(t){var e=o.DomEvent.getWheelDelta(t);this._delta+=e,this._lastMousePos=this._map.mouseEventToContainerPoint(t),this._startTime||(this._startTime=+new Date);var i=Math.max(40-(+new Date-this._startTime),0);clearTimeout(this._timer),this._timer=setTimeout(o.bind(this._performZoom,this),i),o.DomEvent.preventDefault(t),o.DomEvent.stopPropagation(t)},_performZoom:function(){var t=this._map,e=this._delta,i=t.getZoom();e=e>0?Math.ceil(e):Math.floor(e),e=Math.max(Math.min(e,4),-4),e=t._limitZoom(i+e)-i,this._delta=0,this._startTime=null,e&&("center"===t.options.scrollWheelZoom?t.setZoom(i+e):t.setZoomAround(this._lastMousePos,i+e))}}),o.Map.addInitHook("addHandler","scrollWheelZoom",o.Map.ScrollWheelZoom),o.extend(o.DomEvent,{_touchstart:o.Browser.msPointer?"MSPointerDown":o.Browser.pointer?"pointerdown":"touchstart",_touchend:o.Browser.msPointer?"MSPointerUp":o.Browser.pointer?"pointerup":"touchend",addDoubleTapListener:function(t,i,n){function s(t){var e;if(o.Browser.pointer?(_.push(t.pointerId),e=_.length):e=t.touches.length,!(e>1)){var i=Date.now(),n=i-(r||i);h=t.touches?t.touches[0]:t,l=n>0&&u>=n,r=i}}function a(t){if(o.Browser.pointer){var e=_.indexOf(t.pointerId);if(-1===e)return;_.splice(e,1)}if(l){if(o.Browser.pointer){var n,s={};for(var a in h)n=h[a],s[a]="function"==typeof n?n.bind(h):n;h=s}h.type="dblclick",i(h),r=null}}var r,h,l=!1,u=250,c="_leaflet_",d=this._touchstart,p=this._touchend,_=[];t[c+d+n]=s,t[c+p+n]=a;var m=o.Browser.pointer?e.documentElement:t;return t.addEventListener(d,s,!1),m.addEventListener(p,a,!1),o.Browser.pointer&&m.addEventListener(o.DomEvent.POINTER_CANCEL,a,!1),this},removeDoubleTapListener:function(t,i){var n="_leaflet_";return t.removeEventListener(this._touchstart,t[n+this._touchstart+i],!1),(o.Browser.pointer?e.documentElement:t).removeEventListener(this._touchend,t[n+this._touchend+i],!1),o.Browser.pointer&&e.documentElement.removeEventListener(o.DomEvent.POINTER_CANCEL,t[n+this._touchend+i],!1),this}}),o.extend(o.DomEvent,{POINTER_DOWN:o.Browser.msPointer?"MSPointerDown":"pointerdown",POINTER_MOVE:o.Browser.msPointer?"MSPointerMove":"pointermove",POINTER_UP:o.Browser.msPointer?"MSPointerUp":"pointerup",POINTER_CANCEL:o.Browser.msPointer?"MSPointerCancel":"pointercancel",_pointers:[],_pointerDocumentListener:!1,addPointerListener:function(t,e,i,n){switch(e){case"touchstart":return this.addPointerListenerStart(t,e,i,n);case"touchend":return this.addPointerListenerEnd(t,e,i,n);case"touchmove":return this.addPointerListenerMove(t,e,i,n);default:throw"Unknown touch event type"}},addPointerListenerStart:function(t,i,n,s){var a="_leaflet_",r=this._pointers,h=function(t){o.DomEvent.preventDefault(t);for(var e=!1,i=0;i<r.length;i++)if(r[i].pointerId===t.pointerId){e=!0;
 break}e||r.push(t),t.touches=r.slice(),t.changedTouches=[t],n(t)};if(t[a+"touchstart"+s]=h,t.addEventListener(this.POINTER_DOWN,h,!1),!this._pointerDocumentListener){var l=function(t){for(var e=0;e<r.length;e++)if(r[e].pointerId===t.pointerId){r.splice(e,1);break}};e.documentElement.addEventListener(this.POINTER_UP,l,!1),e.documentElement.addEventListener(this.POINTER_CANCEL,l,!1),this._pointerDocumentListener=!0}return this},addPointerListenerMove:function(t,e,i,n){function o(t){if(t.pointerType!==t.MSPOINTER_TYPE_MOUSE&&"mouse"!==t.pointerType||0!==t.buttons){for(var e=0;e<a.length;e++)if(a[e].pointerId===t.pointerId){a[e]=t;break}t.touches=a.slice(),t.changedTouches=[t],i(t)}}var s="_leaflet_",a=this._pointers;return t[s+"touchmove"+n]=o,t.addEventListener(this.POINTER_MOVE,o,!1),this},addPointerListenerEnd:function(t,e,i,n){var o="_leaflet_",s=this._pointers,a=function(t){for(var e=0;e<s.length;e++)if(s[e].pointerId===t.pointerId){s.splice(e,1);break}t.touches=s.slice(),t.changedTouches=[t],i(t)};return t[o+"touchend"+n]=a,t.addEventListener(this.POINTER_UP,a,!1),t.addEventListener(this.POINTER_CANCEL,a,!1),this},removePointerListener:function(t,e,i){var n="_leaflet_",o=t[n+e+i];switch(e){case"touchstart":t.removeEventListener(this.POINTER_DOWN,o,!1);break;case"touchmove":t.removeEventListener(this.POINTER_MOVE,o,!1);break;case"touchend":t.removeEventListener(this.POINTER_UP,o,!1),t.removeEventListener(this.POINTER_CANCEL,o,!1)}return this}}),o.Map.mergeOptions({touchZoom:o.Browser.touch&&!o.Browser.android23,bounceAtZoomLimits:!0}),o.Map.TouchZoom=o.Handler.extend({addHooks:function(){o.DomEvent.on(this._map._container,"touchstart",this._onTouchStart,this)},removeHooks:function(){o.DomEvent.off(this._map._container,"touchstart",this._onTouchStart,this)},_onTouchStart:function(t){var i=this._map;if(t.touches&&2===t.touches.length&&!i._animatingZoom&&!this._zooming){var n=i.mouseEventToLayerPoint(t.touches[0]),s=i.mouseEventToLayerPoint(t.touches[1]),a=i._getCenterLayerPoint();this._startCenter=n.add(s)._divideBy(2),this._startDist=n.distanceTo(s),this._moved=!1,this._zooming=!0,this._centerOffset=a.subtract(this._startCenter),i._panAnim&&i._panAnim.stop(),o.DomEvent.on(e,"touchmove",this._onTouchMove,this).on(e,"touchend",this._onTouchEnd,this),o.DomEvent.preventDefault(t)}},_onTouchMove:function(t){var e=this._map;if(t.touches&&2===t.touches.length&&this._zooming){var i=e.mouseEventToLayerPoint(t.touches[0]),n=e.mouseEventToLayerPoint(t.touches[1]);this._scale=i.distanceTo(n)/this._startDist,this._delta=i._add(n)._divideBy(2)._subtract(this._startCenter),1!==this._scale&&(e.options.bounceAtZoomLimits||!(e.getZoom()===e.getMinZoom()&&this._scale<1||e.getZoom()===e.getMaxZoom()&&this._scale>1))&&(this._moved||(o.DomUtil.addClass(e._mapPane,"leaflet-touching"),e.fire("movestart").fire("zoomstart"),this._moved=!0),o.Util.cancelAnimFrame(this._animRequest),this._animRequest=o.Util.requestAnimFrame(this._updateOnMove,this,!0,this._map._container),o.DomEvent.preventDefault(t))}},_updateOnMove:function(){var t=this._map,e=this._getScaleOrigin(),i=t.layerPointToLatLng(e),n=t.getScaleZoom(this._scale);t._animateZoom(i,n,this._startCenter,this._scale,this._delta,!1,!0)},_onTouchEnd:function(){if(!this._moved||!this._zooming)return void(this._zooming=!1);var t=this._map;this._zooming=!1,o.DomUtil.removeClass(t._mapPane,"leaflet-touching"),o.Util.cancelAnimFrame(this._animRequest),o.DomEvent.off(e,"touchmove",this._onTouchMove).off(e,"touchend",this._onTouchEnd);var i=this._getScaleOrigin(),n=t.layerPointToLatLng(i),s=t.getZoom(),a=t.getScaleZoom(this._scale)-s,r=a>0?Math.ceil(a):Math.floor(a),h=t._limitZoom(s+r),l=t.getZoomScale(h)/this._scale;t._animateZoom(n,h,i,l)},_getScaleOrigin:function(){var t=this._centerOffset.subtract(this._delta).divideBy(this._scale);return this._startCenter.add(t)}}),o.Map.addInitHook("addHandler","touchZoom",o.Map.TouchZoom),o.Map.mergeOptions({tap:!0,tapTolerance:15}),o.Map.Tap=o.Handler.extend({addHooks:function(){o.DomEvent.on(this._map._container,"touchstart",this._onDown,this)},removeHooks:function(){o.DomEvent.off(this._map._container,"touchstart",this._onDown,this)},_onDown:function(t){if(t.touches){if(o.DomEvent.preventDefault(t),this._fireClick=!0,t.touches.length>1)return this._fireClick=!1,void clearTimeout(this._holdTimeout);var i=t.touches[0],n=i.target;this._startPos=this._newPos=new o.Point(i.clientX,i.clientY),n.tagName&&"a"===n.tagName.toLowerCase()&&o.DomUtil.addClass(n,"leaflet-active"),this._holdTimeout=setTimeout(o.bind(function(){this._isTapValid()&&(this._fireClick=!1,this._onUp(),this._simulateEvent("contextmenu",i))},this),1e3),o.DomEvent.on(e,"touchmove",this._onMove,this).on(e,"touchend",this._onUp,this)}},_onUp:function(t){if(clearTimeout(this._holdTimeout),o.DomEvent.off(e,"touchmove",this._onMove,this).off(e,"touchend",this._onUp,this),this._fireClick&&t&&t.changedTouches){var i=t.changedTouches[0],n=i.target;n&&n.tagName&&"a"===n.tagName.toLowerCase()&&o.DomUtil.removeClass(n,"leaflet-active"),this._isTapValid()&&this._simulateEvent("click",i)}},_isTapValid:function(){return this._newPos.distanceTo(this._startPos)<=this._map.options.tapTolerance},_onMove:function(t){var e=t.touches[0];this._newPos=new o.Point(e.clientX,e.clientY)},_simulateEvent:function(i,n){var o=e.createEvent("MouseEvents");o._simulated=!0,n.target._simulatedClick=!0,o.initMouseEvent(i,!0,!0,t,1,n.screenX,n.screenY,n.clientX,n.clientY,!1,!1,!1,!1,0,null),n.target.dispatchEvent(o)}}),o.Browser.touch&&!o.Browser.pointer&&o.Map.addInitHook("addHandler","tap",o.Map.Tap),o.Map.mergeOptions({boxZoom:!0}),o.Map.BoxZoom=o.Handler.extend({initialize:function(t){this._map=t,this._container=t._container,this._pane=t._panes.overlayPane,this._moved=!1},addHooks:function(){o.DomEvent.on(this._container,"mousedown",this._onMouseDown,this)},removeHooks:function(){o.DomEvent.off(this._container,"mousedown",this._onMouseDown),this._moved=!1},moved:function(){return this._moved},_onMouseDown:function(t){return this._moved=!1,!t.shiftKey||1!==t.which&&1!==t.button?!1:(o.DomUtil.disableTextSelection(),o.DomUtil.disableImageDrag(),this._startLayerPoint=this._map.mouseEventToLayerPoint(t),void o.DomEvent.on(e,"mousemove",this._onMouseMove,this).on(e,"mouseup",this._onMouseUp,this).on(e,"keydown",this._onKeyDown,this))},_onMouseMove:function(t){this._moved||(this._box=o.DomUtil.create("div","leaflet-zoom-box",this._pane),o.DomUtil.setPosition(this._box,this._startLayerPoint),this._container.style.cursor="crosshair",this._map.fire("boxzoomstart"));var e=this._startLayerPoint,i=this._box,n=this._map.mouseEventToLayerPoint(t),s=n.subtract(e),a=new o.Point(Math.min(n.x,e.x),Math.min(n.y,e.y));o.DomUtil.setPosition(i,a),this._moved=!0,i.style.width=Math.max(0,Math.abs(s.x)-4)+"px",i.style.height=Math.max(0,Math.abs(s.y)-4)+"px"},_finish:function(){this._moved&&(this._pane.removeChild(this._box),this._container.style.cursor=""),o.DomUtil.enableTextSelection(),o.DomUtil.enableImageDrag(),o.DomEvent.off(e,"mousemove",this._onMouseMove).off(e,"mouseup",this._onMouseUp).off(e,"keydown",this._onKeyDown)},_onMouseUp:function(t){this._finish();var e=this._map,i=e.mouseEventToLayerPoint(t);if(!this._startLayerPoint.equals(i)){var n=new o.LatLngBounds(e.layerPointToLatLng(this._startLayerPoint),e.layerPointToLatLng(i));e.fitBounds(n),e.fire("boxzoomend",{boxZoomBounds:n})}},_onKeyDown:function(t){27===t.keyCode&&this._finish()}}),o.Map.addInitHook("addHandler","boxZoom",o.Map.BoxZoom),o.Map.mergeOptions({keyboard:!0,keyboardPanOffset:80,keyboardZoomOffset:1}),o.Map.Keyboard=o.Handler.extend({keyCodes:{left:[37],right:[39],down:[40],up:[38],zoomIn:[187,107,61,171],zoomOut:[189,109,173]},initialize:function(t){this._map=t,this._setPanOffset(t.options.keyboardPanOffset),this._setZoomOffset(t.options.keyboardZoomOffset)},addHooks:function(){var t=this._map._container;-1===t.tabIndex&&(t.tabIndex="0"),o.DomEvent.on(t,"focus",this._onFocus,this).on(t,"blur",this._onBlur,this).on(t,"mousedown",this._onMouseDown,this),this._map.on("focus",this._addHooks,this).on("blur",this._removeHooks,this)},removeHooks:function(){this._removeHooks();var t=this._map._container;o.DomEvent.off(t,"focus",this._onFocus,this).off(t,"blur",this._onBlur,this).off(t,"mousedown",this._onMouseDown,this),this._map.off("focus",this._addHooks,this).off("blur",this._removeHooks,this)},_onMouseDown:function(){if(!this._focused){var i=e.body,n=e.documentElement,o=i.scrollTop||n.scrollTop,s=i.scrollLeft||n.scrollLeft;this._map._container.focus(),t.scrollTo(s,o)}},_onFocus:function(){this._focused=!0,this._map.fire("focus")},_onBlur:function(){this._focused=!1,this._map.fire("blur")},_setPanOffset:function(t){var e,i,n=this._panKeys={},o=this.keyCodes;for(e=0,i=o.left.length;i>e;e++)n[o.left[e]]=[-1*t,0];for(e=0,i=o.right.length;i>e;e++)n[o.right[e]]=[t,0];for(e=0,i=o.down.length;i>e;e++)n[o.down[e]]=[0,t];for(e=0,i=o.up.length;i>e;e++)n[o.up[e]]=[0,-1*t]},_setZoomOffset:function(t){var e,i,n=this._zoomKeys={},o=this.keyCodes;for(e=0,i=o.zoomIn.length;i>e;e++)n[o.zoomIn[e]]=t;for(e=0,i=o.zoomOut.length;i>e;e++)n[o.zoomOut[e]]=-t},_addHooks:function(){o.DomEvent.on(e,"keydown",this._onKeyDown,this)},_removeHooks:function(){o.DomEvent.off(e,"keydown",this._onKeyDown,this)},_onKeyDown:function(t){var e=t.keyCode,i=this._map;if(e in this._panKeys){if(i._panAnim&&i._panAnim._inProgress)return;i.panBy(this._panKeys[e]),i.options.maxBounds&&i.panInsideBounds(i.options.maxBounds)}else{if(!(e in this._zoomKeys))return;i.setZoom(i.getZoom()+this._zoomKeys[e])}o.DomEvent.stop(t)}}),o.Map.addInitHook("addHandler","keyboard",o.Map.Keyboard),o.Handler.MarkerDrag=o.Handler.extend({initialize:function(t){this._marker=t},addHooks:function(){var t=this._marker._icon;this._draggable||(this._draggable=new o.Draggable(t,t)),this._draggable.on("dragstart",this._onDragStart,this).on("drag",this._onDrag,this).on("dragend",this._onDragEnd,this),this._draggable.enable(),o.DomUtil.addClass(this._marker._icon,"leaflet-marker-draggable")},removeHooks:function(){this._draggable.off("dragstart",this._onDragStart,this).off("drag",this._onDrag,this).off("dragend",this._onDragEnd,this),this._draggable.disable(),o.DomUtil.removeClass(this._marker._icon,"leaflet-marker-draggable")},moved:function(){return this._draggable&&this._draggable._moved},_onDragStart:function(){this._marker.closePopup().fire("movestart").fire("dragstart")},_onDrag:function(){var t=this._marker,e=t._shadow,i=o.DomUtil.getPosition(t._icon),n=t._map.layerPointToLatLng(i);e&&o.DomUtil.setPosition(e,i),t._latlng=n,t.fire("move",{latlng:n}).fire("drag")},_onDragEnd:function(t){this._marker.fire("moveend").fire("dragend",t)}}),o.Control=o.Class.extend({options:{position:"topright"},initialize:function(t){o.setOptions(this,t)},getPosition:function(){return this.options.position},setPosition:function(t){var e=this._map;return e&&e.removeControl(this),this.options.position=t,e&&e.addControl(this),this},getContainer:function(){return this._container},addTo:function(t){this._map=t;var e=this._container=this.onAdd(t),i=this.getPosition(),n=t._controlCorners[i];return o.DomUtil.addClass(e,"leaflet-control"),-1!==i.indexOf("bottom")?n.insertBefore(e,n.firstChild):n.appendChild(e),this},removeFrom:function(t){var e=this.getPosition(),i=t._controlCorners[e];return i.removeChild(this._container),this._map=null,this.onRemove&&this.onRemove(t),this},_refocusOnMap:function(){this._map&&this._map.getContainer().focus()}}),o.control=function(t){return new o.Control(t)},o.Map.include({addControl:function(t){return t.addTo(this),this},removeControl:function(t){return t.removeFrom(this),this},_initControlPos:function(){function t(t,s){var a=i+t+" "+i+s;e[t+s]=o.DomUtil.create("div",a,n)}var e=this._controlCorners={},i="leaflet-",n=this._controlContainer=o.DomUtil.create("div",i+"control-container",this._container);t("top","left"),t("top","right"),t("bottom","left"),t("bottom","right")},_clearControlPos:function(){this._container.removeChild(this._controlContainer)}}),o.Control.Zoom=o.Control.extend({options:{position:"topleft",zoomInText:"+",zoomInTitle:"Zoom in",zoomOutText:"-",zoomOutTitle:"Zoom out"},onAdd:function(t){var e="leaflet-control-zoom",i=o.DomUtil.create("div",e+" leaflet-bar");return this._map=t,this._zoomInButton=this._createButton(this.options.zoomInText,this.options.zoomInTitle,e+"-in",i,this._zoomIn,this),this._zoomOutButton=this._createButton(this.options.zoomOutText,this.options.zoomOutTitle,e+"-out",i,this._zoomOut,this),this._updateDisabled(),t.on("zoomend zoomlevelschange",this._updateDisabled,this),i},onRemove:function(t){t.off("zoomend zoomlevelschange",this._updateDisabled,this)},_zoomIn:function(t){this._map.zoomIn(t.shiftKey?3:1)},_zoomOut:function(t){this._map.zoomOut(t.shiftKey?3:1)},_createButton:function(t,e,i,n,s,a){var r=o.DomUtil.create("a",i,n);r.innerHTML=t,r.href="#",r.title=e;var h=o.DomEvent.stopPropagation;return o.DomEvent.on(r,"click",h).on(r,"mousedown",h).on(r,"dblclick",h).on(r,"click",o.DomEvent.preventDefault).on(r,"click",s,a).on(r,"click",this._refocusOnMap,a),r},_updateDisabled:function(){var t=this._map,e="leaflet-disabled";o.DomUtil.removeClass(this._zoomInButton,e),o.DomUtil.removeClass(this._zoomOutButton,e),t._zoom===t.getMinZoom()&&o.DomUtil.addClass(this._zoomOutButton,e),t._zoom===t.getMaxZoom()&&o.DomUtil.addClass(this._zoomInButton,e)}}),o.Map.mergeOptions({zoomControl:!0}),o.Map.addInitHook(function(){this.options.zoomControl&&(this.zoomControl=new o.Control.Zoom,this.addControl(this.zoomControl))}),o.control.zoom=function(t){return new o.Control.Zoom(t)},o.Control.Attribution=o.Control.extend({options:{position:"bottomright",prefix:'<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'},initialize:function(t){o.setOptions(this,t),this._attributions={}},onAdd:function(t){this._container=o.DomUtil.create("div","leaflet-control-attribution"),o.DomEvent.disableClickPropagation(this._container);for(var e in t._layers)t._layers[e].getAttribution&&this.addAttribution(t._layers[e].getAttribution());return t.on("layeradd",this._onLayerAdd,this).on("layerremove",this._onLayerRemove,this),this._update(),this._container},onRemove:function(t){t.off("layeradd",this._onLayerAdd).off("layerremove",this._onLayerRemove)},setPrefix:function(t){return this.options.prefix=t,this._update(),this},addAttribution:function(t){return t?(this._attributions[t]||(this._attributions[t]=0),this._attributions[t]++,this._update(),this):void 0},removeAttribution:function(t){return t?(this._attributions[t]&&(this._attributions[t]--,this._update()),this):void 0},_update:function(){if(this._map){var t=[];for(var e in this._attributions)this._attributions[e]&&t.push(e);var i=[];this.options.prefix&&i.push(this.options.prefix),t.length&&i.push(t.join(", ")),this._container.innerHTML=i.join(" | ")}},_onLayerAdd:function(t){t.layer.getAttribution&&this.addAttribution(t.layer.getAttribution())},_onLayerRemove:function(t){t.layer.getAttribution&&this.removeAttribution(t.layer.getAttribution())}}),o.Map.mergeOptions({attributionControl:!0}),o.Map.addInitHook(function(){this.options.attributionControl&&(this.attributionControl=(new o.Control.Attribution).addTo(this))}),o.control.attribution=function(t){return new o.Control.Attribution(t)},o.Control.Scale=o.Control.extend({options:{position:"bottomleft",maxWidth:100,metric:!0,imperial:!0,updateWhenIdle:!1},onAdd:function(t){this._map=t;var e="leaflet-control-scale",i=o.DomUtil.create("div",e),n=this.options;return this._addScales(n,e,i),t.on(n.updateWhenIdle?"moveend":"move",this._update,this),t.whenReady(this._update,this),i},onRemove:function(t){t.off(this.options.updateWhenIdle?"moveend":"move",this._update,this)},_addScales:function(t,e,i){t.metric&&(this._mScale=o.DomUtil.create("div",e+"-line",i)),t.imperial&&(this._iScale=o.DomUtil.create("div",e+"-line",i))},_update:function(){var t=this._map.getBounds(),e=t.getCenter().lat,i=6378137*Math.PI*Math.cos(e*Math.PI/180),n=i*(t.getNorthEast().lng-t.getSouthWest().lng)/180,o=this._map.getSize(),s=this.options,a=0;o.x>0&&(a=n*(s.maxWidth/o.x)),this._updateScales(s,a)},_updateScales:function(t,e){t.metric&&e&&this._updateMetric(e),t.imperial&&e&&this._updateImperial(e)},_updateMetric:function(t){var e=this._getRoundNum(t);this._mScale.style.width=this._getScaleWidth(e/t)+"px",this._mScale.innerHTML=1e3>e?e+" m":e/1e3+" km"},_updateImperial:function(t){var e,i,n,o=3.2808399*t,s=this._iScale;o>5280?(e=o/5280,i=this._getRoundNum(e),s.style.width=this._getScaleWidth(i/e)+"px",s.innerHTML=i+" mi"):(n=this._getRoundNum(o),s.style.width=this._getScaleWidth(n/o)+"px",s.innerHTML=n+" ft")},_getScaleWidth:function(t){return Math.round(this.options.maxWidth*t)-10},_getRoundNum:function(t){var e=Math.pow(10,(Math.floor(t)+"").length-1),i=t/e;return i=i>=10?10:i>=5?5:i>=3?3:i>=2?2:1,e*i}}),o.control.scale=function(t){return new o.Control.Scale(t)},o.Control.Layers=o.Control.extend({options:{collapsed:!0,position:"topright",autoZIndex:!0},initialize:function(t,e,i){o.setOptions(this,i),this._layers={},this._lastZIndex=0,this._handlingClick=!1;for(var n in t)this._addLayer(t[n],n);for(n in e)this._addLayer(e[n],n,!0)},onAdd:function(t){return this._initLayout(),this._update(),t.on("layeradd",this._onLayerChange,this).on("layerremove",this._onLayerChange,this),this._container},onRemove:function(t){t.off("layeradd",this._onLayerChange,this).off("layerremove",this._onLayerChange,this)},addBaseLayer:function(t,e){return this._addLayer(t,e),this._update(),this},addOverlay:function(t,e){return this._addLayer(t,e,!0),this._update(),this},removeLayer:function(t){var e=o.stamp(t);return delete this._layers[e],this._update(),this},_initLayout:function(){var t="leaflet-control-layers",e=this._container=o.DomUtil.create("div",t);e.setAttribute("aria-haspopup",!0),o.Browser.touch?o.DomEvent.on(e,"click",o.DomEvent.stopPropagation):o.DomEvent.disableClickPropagation(e).disableScrollPropagation(e);var i=this._form=o.DomUtil.create("form",t+"-list");if(this.options.collapsed){o.Browser.android||o.DomEvent.on(e,"mouseover",this._expand,this).on(e,"mouseout",this._collapse,this);var n=this._layersLink=o.DomUtil.create("a",t+"-toggle",e);n.href="#",n.title="Layers",o.Browser.touch?o.DomEvent.on(n,"click",o.DomEvent.stop).on(n,"click",this._expand,this):o.DomEvent.on(n,"focus",this._expand,this),o.DomEvent.on(i,"click",function(){setTimeout(o.bind(this._onInputClick,this),0)},this),this._map.on("click",this._collapse,this)}else this._expand();this._baseLayersList=o.DomUtil.create("div",t+"-base",i),this._separator=o.DomUtil.create("div",t+"-separator",i),this._overlaysList=o.DomUtil.create("div",t+"-overlays",i),e.appendChild(i)},_addLayer:function(t,e,i){var n=o.stamp(t);this._layers[n]={layer:t,name:e,overlay:i},this.options.autoZIndex&&t.setZIndex&&(this._lastZIndex++,t.setZIndex(this._lastZIndex))},_update:function(){if(this._container){this._baseLayersList.innerHTML="",this._overlaysList.innerHTML="";var t,e,i=!1,n=!1;for(t in this._layers)e=this._layers[t],this._addItem(e),n=n||e.overlay,i=i||!e.overlay;this._separator.style.display=n&&i?"":"none"}},_onLayerChange:function(t){var e=this._layers[o.stamp(t.layer)];if(e){this._handlingClick||this._update();var i=e.overlay?"layeradd"===t.type?"overlayadd":"overlayremove":"layeradd"===t.type?"baselayerchange":null;i&&this._map.fire(i,e)}},_createRadioElement:function(t,i){var n='<input type="radio" class="leaflet-control-layers-selector" name="'+t+'"';i&&(n+=' checked="checked"'),n+="/>";var o=e.createElement("div");return o.innerHTML=n,o.firstChild},_addItem:function(t){var i,n=e.createElement("label"),s=this._map.hasLayer(t.layer);t.overlay?(i=e.createElement("input"),i.type="checkbox",i.className="leaflet-control-layers-selector",i.defaultChecked=s):i=this._createRadioElement("leaflet-base-layers",s),i.layerId=o.stamp(t.layer),o.DomEvent.on(i,"click",this._onInputClick,this);var a=e.createElement("span");a.innerHTML=" "+t.name,n.appendChild(i),n.appendChild(a);var r=t.overlay?this._overlaysList:this._baseLayersList;return r.appendChild(n),n},_onInputClick:function(){var t,e,i,n=this._form.getElementsByTagName("input"),o=n.length;for(this._handlingClick=!0,t=0;o>t;t++)e=n[t],i=this._layers[e.layerId],e.checked&&!this._map.hasLayer(i.layer)?this._map.addLayer(i.layer):!e.checked&&this._map.hasLayer(i.layer)&&this._map.removeLayer(i.layer);this._handlingClick=!1,this._refocusOnMap()},_expand:function(){o.DomUtil.addClass(this._container,"leaflet-control-layers-expanded")},_collapse:function(){this._container.className=this._container.className.replace(" leaflet-control-layers-expanded","")}}),o.control.layers=function(t,e,i){return new o.Control.Layers(t,e,i)},o.PosAnimation=o.Class.extend({includes:o.Mixin.Events,run:function(t,e,i,n){this.stop(),this._el=t,this._inProgress=!0,this._newPos=e,this.fire("start"),t.style[o.DomUtil.TRANSITION]="all "+(i||.25)+"s cubic-bezier(0,0,"+(n||.5)+",1)",o.DomEvent.on(t,o.DomUtil.TRANSITION_END,this._onTransitionEnd,this),o.DomUtil.setPosition(t,e),o.Util.falseFn(t.offsetWidth),this._stepTimer=setInterval(o.bind(this._onStep,this),50)},stop:function(){this._inProgress&&(o.DomUtil.setPosition(this._el,this._getPos()),this._onTransitionEnd(),o.Util.falseFn(this._el.offsetWidth))},_onStep:function(){var t=this._getPos();return t?(this._el._leaflet_pos=t,void this.fire("step")):void this._onTransitionEnd()},_transformRe:/([-+]?(?:\d*\.)?\d+)\D*, ([-+]?(?:\d*\.)?\d+)\D*\)/,_getPos:function(){var e,i,n,s=this._el,a=t.getComputedStyle(s);if(o.Browser.any3d){if(n=a[o.DomUtil.TRANSFORM].match(this._transformRe),!n)return;e=parseFloat(n[1]),i=parseFloat(n[2])}else e=parseFloat(a.left),i=parseFloat(a.top);return new o.Point(e,i,!0)},_onTransitionEnd:function(){o.DomEvent.off(this._el,o.DomUtil.TRANSITION_END,this._onTransitionEnd,this),this._inProgress&&(this._inProgress=!1,this._el.style[o.DomUtil.TRANSITION]="",this._el._leaflet_pos=this._newPos,clearInterval(this._stepTimer),this.fire("step").fire("end"))}}),o.Map.include({setView:function(t,e,n){if(e=e===i?this._zoom:this._limitZoom(e),t=this._limitCenter(o.latLng(t),e,this.options.maxBounds),n=n||{},this._panAnim&&this._panAnim.stop(),this._loaded&&!n.reset&&n!==!0){n.animate!==i&&(n.zoom=o.extend({animate:n.animate},n.zoom),n.pan=o.extend({animate:n.animate},n.pan));var s=this._zoom!==e?this._tryAnimatedZoom&&this._tryAnimatedZoom(t,e,n.zoom):this._tryAnimatedPan(t,n.pan);if(s)return clearTimeout(this._sizeTimer),this}return this._resetView(t,e),this},panBy:function(t,e){if(t=o.point(t).round(),e=e||{},!t.x&&!t.y)return this;if(this._panAnim||(this._panAnim=new o.PosAnimation,this._panAnim.on({step:this._onPanTransitionStep,end:this._onPanTransitionEnd},this)),e.noMoveStart||this.fire("movestart"),e.animate!==!1){o.DomUtil.addClass(this._mapPane,"leaflet-pan-anim");var i=this._getMapPanePos().subtract(t);this._panAnim.run(this._mapPane,i,e.duration||.25,e.easeLinearity)}else this._rawPanBy(t),this.fire("move").fire("moveend");return this},_onPanTransitionStep:function(){this.fire("move")},_onPanTransitionEnd:function(){o.DomUtil.removeClass(this._mapPane,"leaflet-pan-anim"),this.fire("moveend")},_tryAnimatedPan:function(t,e){var i=this._getCenterOffset(t)._floor();return(e&&e.animate)===!0||this.getSize().contains(i)?(this.panBy(i,e),!0):!1}}),o.PosAnimation=o.DomUtil.TRANSITION?o.PosAnimation:o.PosAnimation.extend({run:function(t,e,i,n){this.stop(),this._el=t,this._inProgress=!0,this._duration=i||.25,this._easeOutPower=1/Math.max(n||.5,.2),this._startPos=o.DomUtil.getPosition(t),this._offset=e.subtract(this._startPos),this._startTime=+new Date,this.fire("start"),this._animate()},stop:function(){this._inProgress&&(this._step(),this._complete())},_animate:function(){this._animId=o.Util.requestAnimFrame(this._animate,this),this._step()},_step:function(){var t=+new Date-this._startTime,e=1e3*this._duration;e>t?this._runFrame(this._easeOut(t/e)):(this._runFrame(1),this._complete())},_runFrame:function(t){var e=this._startPos.add(this._offset.multiplyBy(t));o.DomUtil.setPosition(this._el,e),this.fire("step")},_complete:function(){o.Util.cancelAnimFrame(this._animId),this._inProgress=!1,this.fire("end")},_easeOut:function(t){return 1-Math.pow(1-t,this._easeOutPower)}}),o.Map.mergeOptions({zoomAnimation:!0,zoomAnimationThreshold:4}),o.DomUtil.TRANSITION&&o.Map.addInitHook(function(){this._zoomAnimated=this.options.zoomAnimation&&o.DomUtil.TRANSITION&&o.Browser.any3d&&!o.Browser.android23&&!o.Browser.mobileOpera,this._zoomAnimated&&o.DomEvent.on(this._mapPane,o.DomUtil.TRANSITION_END,this._catchTransitionEnd,this)}),o.Map.include(o.DomUtil.TRANSITION?{_catchTransitionEnd:function(t){this._animatingZoom&&t.propertyName.indexOf("transform")>=0&&this._onZoomTransitionEnd()},_nothingToAnimate:function(){return!this._container.getElementsByClassName("leaflet-zoom-animated").length},_tryAnimatedZoom:function(t,e,i){if(this._animatingZoom)return!0;if(i=i||{},!this._zoomAnimated||i.animate===!1||this._nothingToAnimate()||Math.abs(e-this._zoom)>this.options.zoomAnimationThreshold)return!1;var n=this.getZoomScale(e),o=this._getCenterOffset(t)._divideBy(1-1/n),s=this._getCenterLayerPoint()._add(o);return i.animate===!0||this.getSize().contains(o)?(this.fire("movestart").fire("zoomstart"),this._animateZoom(t,e,s,n,null,!0),!0):!1},_animateZoom:function(t,e,i,n,s,a,r){r||(this._animatingZoom=!0),o.DomUtil.addClass(this._mapPane,"leaflet-zoom-anim"),this._animateToCenter=t,this._animateToZoom=e,o.Draggable&&(o.Draggable._disabled=!0),o.Util.requestAnimFrame(function(){this.fire("zoomanim",{center:t,zoom:e,origin:i,scale:n,delta:s,backwards:a})},this)},_onZoomTransitionEnd:function(){this._animatingZoom=!1,o.DomUtil.removeClass(this._mapPane,"leaflet-zoom-anim"),this._resetView(this._animateToCenter,this._animateToZoom,!0,!0),o.Draggable&&(o.Draggable._disabled=!1)}}:{}),o.TileLayer.include({_animateZoom:function(t){this._animating||(this._animating=!0,this._prepareBgBuffer());var e=this._bgBuffer,i=o.DomUtil.TRANSFORM,n=t.delta?o.DomUtil.getTranslateString(t.delta):e.style[i],s=o.DomUtil.getScaleString(t.scale,t.origin);e.style[i]=t.backwards?s+" "+n:n+" "+s},_endZoomAnim:function(){var t=this._tileContainer,e=this._bgBuffer;t.style.visibility="",t.parentNode.appendChild(t),o.Util.falseFn(e.offsetWidth),this._animating=!1},_clearBgBuffer:function(){var t=this._map;!t||t._animatingZoom||t.touchZoom._zooming||(this._bgBuffer.innerHTML="",this._bgBuffer.style[o.DomUtil.TRANSFORM]="")},_prepareBgBuffer:function(){var t=this._tileContainer,e=this._bgBuffer,i=this._getLoadedTilesPercentage(e),n=this._getLoadedTilesPercentage(t);return e&&i>.5&&.5>n?(t.style.visibility="hidden",void this._stopLoadingImages(t)):(e.style.visibility="hidden",e.style[o.DomUtil.TRANSFORM]="",this._tileContainer=e,e=this._bgBuffer=t,this._stopLoadingImages(e),void clearTimeout(this._clearBgBufferTimer))},_getLoadedTilesPercentage:function(t){var e,i,n=t.getElementsByTagName("img"),o=0;for(e=0,i=n.length;i>e;e++)n[e].complete&&o++;return o/i},_stopLoadingImages:function(t){var e,i,n,s=Array.prototype.slice.call(t.getElementsByTagName("img"));for(e=0,i=s.length;i>e;e++)n=s[e],n.complete||(n.onload=o.Util.falseFn,n.onerror=o.Util.falseFn,n.src=o.Util.emptyImageUrl,n.parentNode.removeChild(n))}}),o.Map.include({_defaultLocateOptions:{watch:!1,setView:!1,maxZoom:1/0,timeout:1e4,maximumAge:0,enableHighAccuracy:!1},locate:function(t){if(t=this._locateOptions=o.extend(this._defaultLocateOptions,t),!navigator.geolocation)return this._handleGeolocationError({code:0,message:"Geolocation not supported."}),this;var e=o.bind(this._handleGeolocationResponse,this),i=o.bind(this._handleGeolocationError,this);return t.watch?this._locationWatchId=navigator.geolocation.watchPosition(e,i,t):navigator.geolocation.getCurrentPosition(e,i,t),this},stopLocate:function(){return navigator.geolocation&&navigator.geolocation.clearWatch(this._locationWatchId),this._locateOptions&&(this._locateOptions.setView=!1),this},_handleGeolocationError:function(t){var e=t.code,i=t.message||(1===e?"permission denied":2===e?"position unavailable":"timeout");this._locateOptions.setView&&!this._loaded&&this.fitWorld(),this.fire("locationerror",{code:e,message:"Geolocation error: "+i+"."})},_handleGeolocationResponse:function(t){var e=t.coords.latitude,i=t.coords.longitude,n=new o.LatLng(e,i),s=180*t.coords.accuracy/40075017,a=s/Math.cos(o.LatLng.DEG_TO_RAD*e),r=o.latLngBounds([e-s,i-a],[e+s,i+a]),h=this._locateOptions;if(h.setView){var l=Math.min(this.getBoundsZoom(r),h.maxZoom);this.setView(n,l)}var u={latlng:n,bounds:r,timestamp:t.timestamp};for(var c in t.coords)"number"==typeof t.coords[c]&&(u[c]=t.coords[c]);this.fire("locationfound",u)}})}(window,document);
-/*
-	Leaflet.print, implements the Mapfish print protocol allowing a Leaflet map to be printed using either the Mapfish or GeoServer print module.
-	(c) 2013, Adam Ratcliffe, GeoSmart Maps Limited
-*/
-
-L.print = L.print || {};
-
-L.print.Provider = L.Class.extend({
-
-	includes: L.Mixin.Events,
-
-	statics: {
-		MAX_RESOLUTION: 156543.03390625,
-		MAX_EXTENT: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-		SRS: 'EPSG:3857',
-		INCHES_PER_METER: 39.3701,
-		DPI: 72,
-		UNITS: 'm'
-	},
-
-	options: {
-		autoLoad: false,
-		autoOpen: true,
-		outputFormat: 'pdf',
-		outputFilename: 'leaflet-map',
-		method: 'POST',
-		rotation: 0,
-		customParams: {},
-        legends: false
-	},
-
-	initialize: function (options) {
-		if (L.version <= '0.5.1') {
-			throw 'Leaflet.print requires Leaflet 0.6.0+. Download latest from https://github.com/Leaflet/Leaflet/';
-		}
-
-		var context;
-
-		options = L.setOptions(this, options);
-
-		if (options.map) {
-			this.setMap(options.map);
-		}
-
-		if (options.capabilities) {
-			this._capabilities = options.capabilities;
-		} else if (this.options.autoLoad) {
-			this.loadCapabilities();
-		}
-
-		if (options.listeners) {
-			if (options.listeners.context) {
-				context = options.listeners.context;
-				delete options.listeners.context;
-			}
-			this.addEventListener(options.listeners, context);
-		}
-	},
-
-	loadCapabilities: function () {
-		if (!this.options.url) {
-			return;
-		}
-
-		var url;
-
-		url = this.options.url + '/info.json';
-		if (this.options.proxy) {
-			url = this.options.proxy + url;
-		}
-
-		$.ajax({
-			type: 'GET',
-			dataType: 'json',
-			url: url,
-			success: L.Util.bind(this.onCapabilitiesLoad, this)
-		});
-	},
-
-	print: function (options) {
-		options = L.extend(L.extend({}, this.options), options);
-
-		if (!options.layout || !options.dpi) {
-			throw 'Must provide a layout name and dpi value to print';
-		}
-
-		this.fire('beforeprint', {
-			provider: this,
-			map: this._map
-		});
-
-		var jsonData = JSON.stringify(L.extend({
-			units: L.print.Provider.UNITS,
-			srs: L.print.Provider.SRS,
-			layout: options.layout,
-			dpi: options.dpi,
-			outputFormat: options.outputFormat,
-			comment: options.comment,
-			mapTitle: options.mapTitle,
-			outputFilename: options.outputFilename,
-			layers: this._encodeLayers(this._map),
-			pages: [{
-				center: this._projectCoords(L.print.Provider.SRS, this._map.getCenter()),
-				scale: this._getScale(),
-				rotation: options.rotation,
-				copy: options.copy
-			}]
-		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
-		    url;
-
-		if (options.method === 'GET') {
-			url = this._capabilities.printURL + '?spec=' + encodeURIComponent(jsonData);
-
-			if (options.proxy) {
-				url = options.proxy + encodeURIComponent(url);
-			}
-
-			window.open(url);
-
-			this.fire('print', {
-				provider: this,
-				map: this._map
-			});
-		} else {
-			url = this._capabilities.createURL;
-
-			if (options.proxy) {
-				url = options.proxy + url;
-			}
-
-			if (this._xhr) {
-				this._xhr.abort();
-			}
-			this.fire('print', {
-				provider: this,
-				map: this._map
-			});
-			this._xhr = $.ajax({
-				type: 'POST',
-				contentType: 'application/json; charset=UTF-8',
-				processData: false,
-				dataType: 'json',
-				url: url,
-				data: jsonData,
-				success: L.Util.bind(this.onPrintSuccess, this),
-				error: L.Util.bind(this.onPrintError, this)
-			});
-		}
-
-	},
-
-	getCapabilities: function () {
-		return this._capabilities;
-	},
-
-	setMap: function (map) {
-		this._map = map;
-	},
-
-	setDpi: function (dpi) {
-		var oldDpi = this.options.dpi;
-
-		if (oldDpi !== dpi) {
-			this.options.dpi = dpi;
-			this.fire('dpichange', {
-				provider: this,
-				dpi: dpi
-			});
-		}
-	},
-
-	setLayout: function (name) {
-		var oldName = this.options.layout;
-
-		if (oldName !== name) {
-			this.options.layout = name;
-			this.fire('layoutchange', {
-				provider: this,
-				layout: name
-			});
-		}
-	},
-
-	setRotation: function (rotation) {
-		var oldRotation = this.options.rotation;
-
-		if (oldRotation !== this.options.rotation) {
-			this.options.rotation = rotation;
-			this.fire('rotationchange', {
-				provider: this,
-				rotation: rotation
-			});
-		}
-	},
-
-	_getLayers: function (map) {
-		var markers = [],
-		    vectors = [],
-		    tiles = [],
-		    imageOverlays = [],
-		    imageNodes,
-		    pathNodes,
-		    id;
-
-		for (id in map._layers) {
-			if (map._layers.hasOwnProperty(id)) {
-				if (!map._layers.hasOwnProperty(id)) { continue; }
-				var lyr = map._layers[id];
-
-				if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
-					tiles.push(lyr);
-				} else if (lyr instanceof L.ImageOverlay) {
-					imageOverlays.push(lyr);
-				} else if (lyr instanceof L.Marker) {
-					markers.push(lyr);
-				} else if (lyr instanceof L.Path && lyr.toGeoJSON) {
-					vectors.push(lyr);
-				}
-			}
-		}
-		markers.sort(function (a, b) {
-			return a._icon.style.zIndex - b._icon.style.zIndex;
-		});
-
-        var i;
-        // Layers with equal zIndexes can cause problems with mapfish print
-        for(i = 1;i<markers.length;i++){
-            if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
-                markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
-            }
-        }
-
-		tiles.sort(function (a, b) {
-			return a._container.style.zIndex - b._container.style.zIndex;
-		});
-
-        // Layers with equal zIndexes can cause problems with mapfish print
-        for(i = 1;i<tiles.length;i++){
-            if(tiles[i]._container.style.zIndex <= tiles[i - 1]._container.style.zIndex){
-                tiles[i]._container.style.zIndex = tiles[i - 1]._container.style.zIndex + 1;
-            }
-        }
-
-		imageNodes = [].slice.call(this, map._panes.overlayPane.childNodes);
-		imageOverlays.sort(function (a, b) {
-			return $.inArray(a._image, imageNodes) - $.inArray(b._image, imageNodes);
-		});
-
-		if (map._pathRoot) {
-			pathNodes = [].slice.call(this, map._pathRoot.childNodes);
-			vectors.sort(function (a, b) {
-				return $.inArray(a._container, pathNodes) - $.inArray(b._container, pathNodes);
-			});
-		}
-
-		return tiles.concat(vectors).concat(imageOverlays).concat(markers);
-	},
-
-	_getScale: function () {
-		var map = this._map,
-		bounds = map.getBounds(),
-		inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
-		scales = this._capabilities.scales,
-		sw = bounds.getSouthWest(),
-		ne = bounds.getNorthEast(),
-		halfLat = (sw.lat + ne.lat) / 2,
-		midLeft = L.latLng(halfLat, sw.lng),
-		midRight = L.latLng(halfLat, ne.lng),
-		mwidth = midLeft.distanceTo(midRight),
-		pxwidth = map.getSize().x,
-		kmPx = mwidth / pxwidth / 1000,
-		mscale = (kmPx || 0.000001) * inchesKm * L.print.Provider.DPI,
-		closest = Number.POSITIVE_INFINITY,
-		i = scales.length,
-		diff,
-		scale;
-
-		while (i--) {
-			diff = Math.abs(mscale - scales[i].value);
-			if (diff < closest) {
-				closest = diff;
-				scale = parseInt(scales[i].value, 10);
-			}
-		}
-		return scale;
-	},
-
-	_getLayoutByName: function (name) {
-		var layout, i, l;
-
-		for (i = 0, l = this._capabilities.layouts.length; i < l; i++) {
-			if (this._capabilities.layouts[i].name === name) {
-				layout = this._capabilities.layouts[i];
-				break;
-			}
-		}
-		return layout;
-	},
-
-	_encodeLayers: function (map) {
-		var enc = [],
-		    vectors = [],
-		    layer,
-		    i;
-
-		var layers = this._getLayers(map);
-		for (i = 0; i < layers.length; i++) {
-			layer = layers[i];
-			if (layer instanceof L.TileLayer.WMS) {
-				enc.push(this._encoders.layers.tilelayerwms.call(this, layer));
-			} else if (layer instanceof L.mapbox.TileLayer){
-                enc.push(this._encoders.layers.tilelayermapbox.call(this,layer));
-			} else if (layer instanceof L.TileLayer) {
-				enc.push(this._encoders.layers.tilelayer.call(this, layer));
-			} else if (layer instanceof L.ImageOverlay) {
-				enc.push(this._encoders.layers.image.call(this, layer));
-			} else if (layer instanceof L.Marker || (layer instanceof L.Path && layer.toGeoJSON)) {
-				vectors.push(layer);
-			}
-		}
-		if (vectors.length) {
-			enc.push(this._encoders.layers.vector.call(this, vectors));
-		}
-		return enc;
-	},
-
-    _makeLegends: function(map,options){
-        if(!this.options.legends){
-            return [];
-        }
-
-        var legends = [],legendReq,singlelayers,url,i;
-
-        var layers = this._getLayers(map);
-        var layer,oneLegend;
-		for (i = 0; i < layers.length; i++) {
-			layer = layers[i];
-			if (layer instanceof L.TileLayer.WMS) {
-
-                oneLegend = {
-                    name: layer.options.title || layer.wmsParams.layers,
-                    classes: []
-                };
-
-                // defaults
-                legendReq = {
-                    'SERVICE'     : 'WMS',
-                    'LAYER'       : layer.wmsParams.layers,
-                    'REQUEST'     : 'GetLegendGraphic',
-                    'VERSION'     : layer.wmsParams.version,
-                    'FORMAT'      : layer.wmsParams.format,
-                    'STYLE'       : layer.wmsParams.styles,
-                    'WIDTH'       : 15,
-                    'HEIGHT'      : 15
-                };
-
-                legendReq = L.extend(legendReq,options);
-                url = L.Util.template(layer._url);
-
-                singlelayers = layer.wmsParams.layers.split(',');
-
-                // If a WMS layer doesn't have multiple server layers, only show one graphic
-                if(singlelayers.length === 1){
-                    oneLegend.icons = [this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))];
-                }else{
-                    for(i = 0;i<singlelayers.length;i++){
-                        legendReq.LAYER = singlelayers[i];
-                        oneLegend.classes.push({
-                            name:singlelayers[i],
-                            icons:[this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))]
-                        });
-                    }
-                }
-
-                legends.push(oneLegend);
-            }
-        }
-
-        return {legends:legends};
-    },
-
-	_encoders: {
-		layers: {
-			httprequest: function (layer) {
-				var baseUrl = layer._url;
-
-				if (baseUrl.indexOf('{s}') !== -1) {
-					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
-				}
-				baseUrl = this._getAbsoluteUrl(baseUrl);
-
-				return {
-					baseURL: baseUrl,
-					opacity: layer.options.opacity
-				};
-			},
-			tilelayer: function (layer) {
-				var enc = this._encoders.layers.httprequest.call(this, layer),
-				    baseUrl = layer._url.substring(0, layer._url.indexOf('{z}')),
-				    resolutions = [],
-				    zoom;
-
-				// If using multiple subdomains, replace the subdomain placeholder
-				if (baseUrl.indexOf('{s}') !== -1) {
-					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
-				}
-
-				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
-					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
-				}
-
-				var ext = layer._url.split(".");
-				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
-
-				return L.extend(enc, {
-					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
-					// See https://github.com/mapfish/mapfish-print/pull/38
-					type: 'OSM',
-					baseURL: baseUrl,
-					extension: ext || 'png',
-					tileSize: [layer.options.tileSize, layer.options.tileSize],
-					maxExtent: L.print.Provider.MAX_EXTENT,
-					resolutions: resolutions,
-					singleTile: false
-				});
-			},
-			tilelayerwms: function (layer) {
-				var enc = this._encoders.layers.httprequest.call(this, layer),
-				    layerOpts = layer.options,
-				    p;
-
-				L.extend(enc, {
-					type: 'WMS',
-					layers: [layerOpts.layers].join(',').split(',').filter(function(x){return x !== "";}), //filter out empty strings from the array
-					format: layerOpts.format,
-					styles: [layerOpts.styles].join(',').split(',').filter(function(x){return x !== "";}),
-					singleTile: true
-				});
-
-				for (p in layer.wmsParams) {
-					if (layer.wmsParams.hasOwnProperty(p)) {
-						if ('detectretina,format,height,layers,request,service,srs,styles,version,width'.indexOf(p.toLowerCase()) === -1) {
-							if (!enc.customParams) {
-								enc.customParams = {};
-							}
-							enc.customParams[p] = layer.wmsParams[p];
-						}
-					}
-				}
-				return enc;
-			},
-            tilelayermapbox: function(layer) {
-                var resolutions = [], zoom;
-
-                for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
-                    resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
-                }
-
-                return {
-                    // XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
-                    // See https://github.com/mapfish/mapfish-print/pull/38
-                    type: 'OSM',
-                    baseURL: layer.options.tiles[0].substring(0,layer.options.tiles[0].indexOf('{z}')),
-                    opacity:layer.options.opacity,
-                    extension: 'png',
-                    tileSize: [layer.options.tileSize, layer.options.tileSize],
-                    maxExtent: L.print.Provider.MAX_EXTENT,
-                    resolutions: resolutions,
-                    singleTile: false
-                };
-            },
-			image: function (layer) {
-				return {
-					type: 'Image',
-					opacity: layer.options.opacity,
-					name: 'image',
-					baseURL: this._getAbsoluteUrl(layer._url),
-					extent: this._projectBounds(L.print.Provider.SRS, layer._bounds)
-				};
-			},
-			vector: function (features) {
-				var encFeatures = [],
-				    encStyles = {},
-				    opacity,
-				    feature,
-				    style,
-				    dictKey,
-				    dictItem = {},
-				    styleDict = {},
-				    styleName,
-				    nextId = 1,
-				    featureGeoJson,
-				    i, l;
-
-				for (i = 0, l = features.length; i < l; i++) {
-					feature = features[i];
-
-					if (feature instanceof L.Marker) {
-						var icon = feature.options.icon,
-						    iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
-						    iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
-						    iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
-						    scaleFactor = (this.options.dpi / L.print.Provider.DPI);
-
-						style = {
-							externalGraphic: this._getAbsoluteUrl(iconUrl),
-							graphicWidth: (iconSize.x / scaleFactor),
-							graphicHeight: (iconSize.y / scaleFactor),
-							graphicXOffset: (-iconAnchor.x / scaleFactor),
-							graphicYOffset: (-iconAnchor.y / scaleFactor)
-						};
-					} else {
-						style = this._extractFeatureStyle(feature);
-					}
-
-					dictKey = JSON.stringify(style);
-					dictItem = styleDict[dictKey];
-					if (dictItem) {
-						styleName = dictItem;
-					} else {
-						styleDict[dictKey] = styleName = nextId++;
-						encStyles[styleName] = style;
-					}
-
-					featureGeoJson = (feature instanceof L.Circle) ? this._circleGeoJSON(feature) : feature.toGeoJSON();
-					featureGeoJson.geometry.coordinates = this._projectCoords(L.print.Provider.SRS, featureGeoJson.geometry.coordinates);
-					featureGeoJson.properties._leaflet_style = styleName;
-
-					// All markers will use the same opacity as the first marker found
-					if (opacity === null) {
-						opacity = feature.options.opacity || 1.0;
-					}
-
-					encFeatures.push(featureGeoJson);
-				}
-
-				return {
-					type: 'Vector',
-					styles: encStyles,
-					opacity: opacity,
-					styleProperty: '_leaflet_style',
-					geoJson: {
-						type: 'FeatureCollection',
-						features: encFeatures
-					}
-				};
-			}
-		}
-	},
-
-	_circleGeoJSON: function (circle) {
-		var projection = circle._map.options.crs.projection;
-		var earthRadius = 1, i;
-
-		if (projection === L.Projection.SphericalMercator) {
-			earthRadius = 6378137;
-		} else if (projection === L.Projection.Mercator) {
-			earthRadius = projection.R_MAJOR;
-		}
-		var cnt = projection.project(circle.getLatLng());
-		var scale = 1.0 / Math.cos(circle.getLatLng().lat * Math.PI / 180.0);
-		var points = [];
-		for (i = 0; i < 64; i++) {
-			var radian = i * 2.0 * Math.PI / 64.0;
-			var shift = L.point(Math.cos(radian), Math.sin(radian));
-			points.push(projection.unproject(cnt.add(shift.multiplyBy(circle.getRadius() * scale / earthRadius))));
-		}
-		return L.polygon(points).toGeoJSON();
-	},
-
-	_extractFeatureStyle: function (feature) {
-		var options = feature.options;
-
-		// From smap4 (working)
-		// cursor: "pointer"
-		// fillColor: "#ff5b00"
-		// fillOpacity: 0.3
-		// graphicName: "square"
-		// pointRadius: 6
-		// strokeColor: "#ff5b00"
-		// strokeOpacity: 1
-		// strokeWidth: 4
-
-
-		return {
-			stroke: options.stroke,
-			strokeColor: options.color,
-			strokeWidth: options.weight,
-			strokeOpacity: options.opacity,
-			strokeLinecap: 'round',
-			pointRadius: options.radius,
-			fill: options.fill,
-			fillColor: options.fillColor,
-			fillOpacity: options.fillOpacity,
-			graphicZIndex: options.zIndex,
-			graphicWidth: options.graphicWidth,
-			graphicHeight: options.graphicHeight,
-			label: options.label,
-			name: "The layer name"
-		};
-
-
-		// cursor: "pointer"
-		// fillColor: "#00FFFF"
-		// fillOpacity: 0.3
-		// graphicName: "circle"
-		// graphicZIndex: 499
-		// pointRadius: 6
-		// strokeColor: "#00FFFF"
-		// strokeOpacity: 1
-		// strokeWidth: 4
-	},
-
-	_getAbsoluteUrl: function (url) {
-        var a;
-
-        if (L.Browser.ie) {
-            a = document.createElement('a');
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.href = url;
-            document.body.removeChild(a);
-        } else {
-            a = document.createElement('a');
-            a.href = url;
-        }
-        return a.href;
-	},
-
-	_projectBounds: function (crs, bounds) {
-		var sw = bounds.getSouthWest(),
-		    ne = bounds.getNorthEast();
-
-		return this._projectCoords(crs, sw).concat(this._projectCoords(crs, ne));
-	},
-
-	_projectCoords: function (crs, coords) {
-		var crsKey = crs.toUpperCase().replace(':', ''),
-		    crsClass = L.CRS[crsKey];
-
-		if (!crsClass) {
-			throw 'Unsupported coordinate reference system: ' + crs;
-		}
-
-		return this._project(crsClass, coords);
-	},
-
-	_project: function (crsClass, coords) {
-		var projected,
-		    pt,
-		    i, l;
-
-		if (typeof coords[0] === 'number') {
-			coords = new L.LatLng(coords[1], coords[0]);
-		}
-
-		if (coords instanceof L.LatLng) {
-			pt = crsClass.project(coords);
-			return [pt.x, pt.y];
-		} else {
-			projected = [];
-			for (i = 0, l = coords.length; i < l; i++) {
-				projected.push(this._project(crsClass, coords[i]));
-			}
-			return projected;
-		}
-	},
-
-	// --------------------------------------------------
-	// Event handlers
-	// --------------------------------------------------
-
-	onCapabilitiesLoad: function (response) {
-		this._capabilities = response;
-
-		if (!this.options.layout) {
-			this.options.layout = this._capabilities.layouts[0].name;
-		}
-
-		if (!this.options.dpi) {
-			this.options.dpi = this._capabilities.dpis[0].value;
-		}
-
-		this.fire('capabilitiesload', {
-			provider: this,
-			capabilities: this._capabilities
-		});
-	},
-
-	onPrintSuccess: function (response) {
-		var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
-
-		if (this.options.autoOpen) {
-			if (L.Browser.ie) {
-				window.open(url);
-			} else {
-				window.location.href = url;
-			}
-		}
-
-		this._xhr = null;
-
-		this.fire('print', {
-			provider: this,
-			response: response
-		});
-	},
-
-	onPrintError: function (jqXHR) {
-		this._xhr = null;
-
-		this.fire('printexception', {
-			provider: this,
-			response: jqXHR
-		});
-	}
-});
-
-L.print.provider = function (options) {
-	return new L.print.Provider(options);
-};
-
-
 /*! jQuery Mobile v1.4.0 | Copyright 2010, 2013 jQuery Foundation, Inc. | jquery.org/license */
 
 (function(e,t,n){typeof define=="function"&&define.amd?define(["jquery"],function(r){return n(r,e,t),r.mobile}):n(e.jQuery,e,t)})(this,document,function(e,t,n,r){(function(e,n){e.extend(e.support,{orientation:"orientation"in t&&"onorientationchange"in t})})(e),function(e){e.event.special.throttledresize={setup:function(){e(this).bind("resize",n)},teardown:function(){e(this).unbind("resize",n)}};var t=250,n=function(){s=(new Date).getTime(),o=s-r,o>=t?(r=s,e(this).trigger("throttledresize")):(i&&clearTimeout(i),i=setTimeout(n,t-o))},r=0,i,s,o}(e),function(e,t){function p(){var e=s();e!==o&&(o=e,r.trigger(i))}var r=e(t),i="orientationchange",s,o,u,a,f={0:!0,180:!0},l,c,h;if(e.support.orientation){l=t.innerWidth||r.width(),c=t.innerHeight||r.height(),h=50,u=l>c&&l-c>h,a=f[t.orientation];if(u&&a||!u&&!a)f={"-90":!0,90:!0}}e.event.special.orientationchange=e.extend({},e.event.special.orientationchange,{setup:function(){if(e.support.orientation&&!e.event.special.orientationchange.disabled)return!1;o=s(),r.bind("throttledresize",p)},teardown:function(){if(e.support.orientation&&!e.event.special.orientationchange.disabled)return!1;r.unbind("throttledresize",p)},add:function(e){var t=e.handler;e.handler=function(e){return e.orientation=s(),t.apply(this,arguments)}}}),e.event.special.orientationchange.orientation=s=function(){var r=!0,i=n.documentElement;return e.support.orientation?r=f[t.orientation]:r=i&&i.clientWidth/i.clientHeight<1.1,r?"portrait":"landscape"},e.fn[i]=function(e){return e?this.bind(i,e):this.trigger(i)},e.attrFn&&(e.attrFn[i]=!0)}(e,this),function(e,t,n,r){function T(e){while(e&&typeof e.originalEvent!="undefined")e=e.originalEvent;return e}function N(t,n){var i=t.type,s,o,a,l,c,h,p,d,v;t=e.Event(t),t.type=n,s=t.originalEvent,o=e.event.props,i.search(/^(mouse|click)/)>-1&&(o=f);if(s)for(p=o.length,l;p;)l=o[--p],t[l]=s[l];i.search(/mouse(down|up)|click/)>-1&&!t.which&&(t.which=1);if(i.search(/^touch/)!==-1){a=T(s),i=a.touches,c=a.changedTouches,h=i&&i.length?i[0]:c&&c.length?c[0]:r;if(h)for(d=0,v=u.length;d<v;d++)l=u[d],t[l]=h[l]}return t}function C(t){var n={},r,s;while(t){r=e.data(t,i);for(s in r)r[s]&&(n[s]=n.hasVirtualBinding=!0);t=t.parentNode}return n}function k(t,n){var r;while(t){r=e.data(t,i);if(r&&(!n||r[n]))return t;t=t.parentNode}return null}function L(){g=!1}function A(){g=!0}function O(){E=0,v.length=0,m=!1,A()}function M(){L()}function _(){D(),c=setTimeout(function(){c=0,O()},e.vmouse.resetTimerDuration)}function D(){c&&(clearTimeout(c),c=0)}function P(t,n,r){var i;if(r&&r[t]||!r&&k(n.target,t))i=N(n,t),e(n.target).trigger(i);return i}function H(t){var n=e.data(t.target,s),r;!m&&(!E||E!==n)&&(r=P("v"+t.type,t),r&&(r.isDefaultPrevented()&&t.preventDefault(),r.isPropagationStopped()&&t.stopPropagation(),r.isImmediatePropagationStopped()&&t.stopImmediatePropagation()))}function B(t){var n=T(t).touches,r,i,o;n&&n.length===1&&(r=t.target,i=C(r),i.hasVirtualBinding&&(E=w++,e.data(r,s,E),D(),M(),d=!1,o=T(t).touches[0],h=o.pageX,p=o.pageY,P("vmouseover",t,i),P("vmousedown",t,i)))}function j(e){if(g)return;d||P("vmousecancel",e,C(e.target)),d=!0,_()}function F(t){if(g)return;var n=T(t).touches[0],r=d,i=e.vmouse.moveDistanceThreshold,s=C(t.target);d=d||Math.abs(n.pageX-h)>i||Math.abs(n.pageY-p)>i,d&&!r&&P("vmousecancel",t,s),P("vmousemove",t,s),_()}function I(e){if(g)return;A();var t=C(e.target),n,r;P("vmouseup",e,t),d||(n=P("vclick",e,t),n&&n.isDefaultPrevented()&&(r=T(e).changedTouches[0],v.push({touchID:E,x:r.clientX,y:r.clientY}),m=!0)),P("vmouseout",e,t),d=!1,_()}function q(t){var n=e.data(t,i),r;if(n)for(r in n)if(n[r])return!0;return!1}function R(){}function U(t){var n=t.substr(1);return{setup:function(){q(this)||e.data(this,i,{});var r=e.data(this,i);r[t]=!0,l[t]=(l[t]||0)+1,l[t]===1&&b.bind(n,H),e(this).bind(n,R),y&&(l.touchstart=(l.touchstart||0)+1,l.touchstart===1&&b.bind("touchstart",B).bind("touchend",I).bind("touchmove",F).bind("scroll",j))},teardown:function(){--l[t],l[t]||b.unbind(n,H),y&&(--l.touchstart,l.touchstart||b.unbind("touchstart",B).unbind("touchmove",F).unbind("touchend",I).unbind("scroll",j));var r=e(this),s=e.data(this,i);s&&(s[t]=!1),r.unbind(n,R),q(this)||r.removeData(i)}}}var i="virtualMouseBindings",s="virtualTouchID",o="vmouseover vmousedown vmousemove vmouseup vclick vmouseout vmousecancel".split(" "),u="clientX clientY pageX pageY screenX screenY".split(" "),a=e.event.mouseHooks?e.event.mouseHooks.props:[],f=e.event.props.concat(a),l={},c=0,h=0,p=0,d=!1,v=[],m=!1,g=!1,y="addEventListener"in n,b=e(n),w=1,E=0,S,x;e.vmouse={moveDistanceThreshold:10,clickDistanceThreshold:10,resetTimerDuration:1500};for(x=0;x<o.length;x++)e.event.special[o[x]]=U(o[x]);y&&n.addEventListener("click",function(t){var n=v.length,r=t.target,i,o,u,a,f,l;if(n){i=t.clientX,o=t.clientY,S=e.vmouse.clickDistanceThreshold,u=r;while(u){for(a=0;a<n;a++){f=v[a],l=0;if(u===r&&Math.abs(f.x-i)<S&&Math.abs(f.y-o)<S||e.data(u,s)===f.touchID){t.preventDefault(),t.stopPropagation();return}}u=u.parentNode}}},!0)}(e,t,n),function(e){e.mobile={}}(e),function(e,t){var r={touch:"ontouchend"in n};e.mobile.support=e.mobile.support||{},e.extend(e.support,r),e.extend(e.mobile.support,r)}(e),function(e,t,r){function l(t,n,r){var i=r.type;r.type=n,e.event.dispatch.call(t,r),r.type=i}var i=e(n),s=e.mobile.support.touch,o="touchmove scroll",u=s?"touchstart":"mousedown",a=s?"touchend":"mouseup",f=s?"touchmove":"mousemove";e.each("touchstart touchmove touchend tap taphold swipe swipeleft swiperight scrollstart scrollstop".split(" "),function(t,n){e.fn[n]=function(e){return e?this.bind(n,e):this.trigger(n)},e.attrFn&&(e.attrFn[n]=!0)}),e.event.special.scrollstart={enabled:!0,setup:function(){function s(e,n){r=n,l(t,r?"scrollstart":"scrollstop",e)}var t=this,n=e(t),r,i;n.bind(o,function(t){if(!e.event.special.scrollstart.enabled)return;r||s(t,!0),clearTimeout(i),i=setTimeout(function(){s(t,!1)},50)})},teardown:function(){e(this).unbind(o)}},e.event.special.tap={tapholdThreshold:750,emitTapOnTaphold:!0,setup:function(){var t=this,n=e(t),r=!1;n.bind("vmousedown",function(s){function a(){clearTimeout(u)}function f(){a(),n.unbind("vclick",c).unbind("vmouseup",a),i.unbind("vmousecancel",f)}function c(e){f(),!r&&o===e.target?l(t,"tap",e):r&&e.stopPropagation()}r=!1;if(s.which&&s.which!==1)return!1;var o=s.target,u;n.bind("vmouseup",a).bind("vclick",c),i.bind("vmousecancel",f),u=setTimeout(function(){e.event.special.tap.emitTapOnTaphold||(r=!0),l(t,"taphold",e.Event("taphold",{target:o}))},e.event.special.tap.tapholdThreshold)})},teardown:function(){e(this).unbind("vmousedown").unbind("vclick").unbind("vmouseup"),i.unbind("vmousecancel")}},e.event.special.swipe={scrollSupressionThreshold:30,durationThreshold:1e3,horizontalDistanceThreshold:30,verticalDistanceThreshold:75,start:function(t){var n=t.originalEvent.touches?t.originalEvent.touches[0]:t;return{time:(new Date).getTime(),coords:[n.pageX,n.pageY],origin:e(t.target)}},stop:function(e){var t=e.originalEvent.touches?e.originalEvent.touches[0]:e;return{time:(new Date).getTime(),coords:[t.pageX,t.pageY]}},handleSwipe:function(t,n,r,i){if(n.time-t.time<e.event.special.swipe.durationThreshold&&Math.abs(t.coords[0]-n.coords[0])>e.event.special.swipe.horizontalDistanceThreshold&&Math.abs(t.coords[1]-n.coords[1])<e.event.special.swipe.verticalDistanceThreshold){var s=t.coords[0]>n.coords[0]?"swipeleft":"swiperight";return l(r,"swipe",e.Event("swipe",{target:i,swipestart:t,swipestop:n})),l(r,s,e.Event(s,{target:i,swipestart:t,swipestop:n})),!0}return!1},setup:function(){var t=this,n=e(t);n.bind(u,function(r){function l(n){if(!s)return;i=e.event.special.swipe.stop(n),u||(u=e.event.special.swipe.handleSwipe(s,i,t,o)),Math.abs(s.coords[0]-i.coords[0])>e.event.special.swipe.scrollSupressionThreshold&&n.preventDefault()}var i,s=e.event.special.swipe.start(r),o=r.target,u=!1;n.bind(f,l).one(a,function(){u=!0,n.unbind(f,l)})})},teardown:function(){e(this).unbind(u).unbind(f).unbind(a)}},e.each({scrollstop:"scrollstart",taphold:"tap",swipeleft:"swipe",swiperight:"swipe"},function(t,n){e.event.special[t]={setup:function(){e(this).bind(n,e.noop)},teardown:function(){e(this).unbind(n)}}})}(e,this),function(e,t,n){e.extend(e.mobile,{version:"1.4.0",subPageUrlKey:"ui-page",hideUrlBar:!0,keepNative:":jqmData(role='none'), :jqmData(role='nojs')",activePageClass:"ui-page-active",activeBtnClass:"ui-btn-active",focusClass:"ui-focus",ajaxEnabled:!0,hashListeningEnabled:!0,linkBindingEnabled:!0,defaultPageTransition:"fade",maxTransitionWidth:!1,minScrollBack:0,defaultDialogTransition:"pop",pageLoadErrorMessage:"Error Loading Page",pageLoadErrorMessageTheme:"a",phonegapNavigationEnabled:!1,autoInitializePage:!0,pushStateEnabled:!0,ignoreContentEnabled:!1,buttonMarkup:{hoverDelay:200},dynamicBaseEnabled:!0,pageContainer:e(),allowCrossDomainPages:!1,dialogHashKey:"&ui-state=dialog"})}(e,this),function(e,t,n){var r={},i=e.find,s=/(?:\{[\s\S]*\}|\[[\s\S]*\])$/,o=/:jqmData\(([^)]*)\)/g;e.extend(e.mobile,{ns:"",getAttribute:function(t,n){var r;t=t.jquery?t[0]:t,t&&t.getAttribute&&(r=t.getAttribute("data-"+e.mobile.ns+n));try{r=r==="true"?!0:r==="false"?!1:r==="null"?null:+r+""===r?+r:s.test(r)?JSON.parse(r):r}catch(i){}return r},nsNormalizeDict:r,nsNormalize:function(t){return r[t]||(r[t]=e.camelCase(e.mobile.ns+t))},closestPageData:function(e){return e.closest(":jqmData(role='page'), :jqmData(role='dialog')").data("mobile-page")}}),e.fn.jqmData=function(t,r){var i;return typeof t!="undefined"&&(t&&(t=e.mobile.nsNormalize(t)),arguments.length<2||r===n?i=this.data(t):i=this.data(t,r)),i},e.jqmData=function(t,n,r){var i;return typeof n!="undefined"&&(i=e.data(t,n?e.mobile.nsNormalize(n):n,r)),i},e.fn.jqmRemoveData=function(t){return this.removeData(e.mobile.nsNormalize(t))},e.jqmRemoveData=function(t,n){return e.removeData(t,e.mobile.nsNormalize(n))},e.find=function(t,n,r,s){return t.indexOf(":jqmData")>-1&&(t=t.replace(o,"[data-"+(e.mobile.ns||"")+"$1]")),i.call(this,t,n,r,s)},e.extend(e.find,i)}(e,this),function(e,t){function s(t,n){var r,i,s,u=t.nodeName.toLowerCase();return"area"===u?(r=t.parentNode,i=r.name,!t.href||!i||r.nodeName.toLowerCase()!=="map"?!1:(s=e("img[usemap=#"+i+"]")[0],!!s&&o(s))):(/input|select|textarea|button|object/.test(u)?!t.disabled:"a"===u?t.href||n:n)&&o(t)}function o(t){return e.expr.filters.visible(t)&&!e(t).parents().addBack().filter(function(){return e.css(this,"visibility")==="hidden"}).length}var r=0,i=/^ui-id-\d+$/;e.ui=e.ui||{},e.extend(e.ui,{version:"c0ab71056b936627e8a7821f03c044aec6280a40",keyCode:{BACKSPACE:8,COMMA:188,DELETE:46,DOWN:40,END:35,ENTER:13,ESCAPE:27,HOME:36,LEFT:37,PAGE_DOWN:34,PAGE_UP:33,PERIOD:190,RIGHT:39,SPACE:32,TAB:9,UP:38}}),e.fn.extend({focus:function(t){return function(n,r){return typeof n=="number"?this.each(function(){var t=this;setTimeout(function(){e(t).focus(),r&&r.call(t)},n)}):t.apply(this,arguments)}}(e.fn.focus),scrollParent:function(){var t;return e.ui.ie&&/(static|relative)/.test(this.css("position"))||/absolute/.test(this.css("position"))?t=this.parents().filter(function(){return/(relative|absolute|fixed)/.test(e.css(this,"position"))&&/(auto|scroll)/.test(e.css(this,"overflow")+e.css(this,"overflow-y")+e.css(this,"overflow-x"))}).eq(0):t=this.parents().filter(function(){return/(auto|scroll)/.test(e.css(this,"overflow")+e.css(this,"overflow-y")+e.css(this,"overflow-x"))}).eq(0),/fixed/.test(this.css("position"))||!t.length?e(this[0].ownerDocument||n):t},uniqueId:function(){return this.each(function(){this.id||(this.id="ui-id-"+ ++r)})},removeUniqueId:function(){return this.each(function(){i.test(this.id)&&e(this).removeAttr("id")})}}),e.extend(e.expr[":"],{data:e.expr.createPseudo?e.expr.createPseudo(function(t){return function(n){return!!e.data(n,t)}}):function(t,n,r){return!!e.data(t,r[3])},focusable:function(t){return s(t,!isNaN(e.attr(t,"tabindex")))},tabbable:function(t){var n=e.attr(t,"tabindex"),r=isNaN(n);return(r||n>=0)&&s(t,!r)}}),e("<a>").outerWidth(1).jquery||e.each(["Width","Height"],function(n,r){function u(t,n,r,s){return e.each(i,function(){n-=parseFloat(e.css(t,"padding"+this))||0,r&&(n-=parseFloat(e.css(t,"border"+this+"Width"))||0),s&&(n-=parseFloat(e.css(t,"margin"+this))||0)}),n}var i=r==="Width"?["Left","Right"]:["Top","Bottom"],s=r.toLowerCase(),o={innerWidth:e.fn.innerWidth,innerHeight:e.fn.innerHeight,outerWidth:e.fn.outerWidth,outerHeight:e.fn.outerHeight};e.fn["inner"+r]=function(n){return n===t?o["inner"+r].call(this):this.each(function(){e(this).css(s,u(this,n)+"px")})},e.fn["outer"+r]=function(t,n){return typeof t!="number"?o["outer"+r].call(this,t):this.each(function(){e(this).css(s,u(this,t,!0,n)+"px")})}}),e.fn.addBack||(e.fn.addBack=function(e){return this.add(e==null?this.prevObject:this.prevObject.filter(e))}),e("<a>").data("a-b","a").removeData("a-b").data("a-b")&&(e.fn.removeData=function(t){return function(n){return arguments.length?t.call(this,e.camelCase(n)):t.call(this)}}(e.fn.removeData)),e.ui.ie=!!/msie [\w.]+/.exec(navigator.userAgent.toLowerCase()),e.support.selectstart="onselectstart"in n.createElement("div"),e.fn.extend({disableSelection:function(){return this.bind((e.support.selectstart?"selectstart":"mousedown")+".ui-disableSelection",function(e){e.preventDefault()})},enableSelection:function(){return this.unbind(".ui-disableSelection")},zIndex:function(r){if(r!==t)return this.css("zIndex",r);if(this.length){var i=e(this[0]),s,o;while(i.length&&i[0]!==n){s=i.css("position");if(s==="absolute"||s==="relative"||s==="fixed"){o=parseInt(i.css("zIndex"),10);if(!isNaN(o)&&o!==0)return o}i=i.parent()}}return 0}}),e.ui.plugin={add:function(t,n,r){var i,s=e.ui[t].prototype;for(i in r)s.plugins[i]=s.plugins[i]||[],s.plugins[i].push([n,r[i]])},call:function(e,t,n,r){var i,s=e.plugins[t];if(!s)return;if(!r&&(!e.element[0].parentNode||e.element[0].parentNode.nodeType===11))return;for(i=0;i<s.length;i++)e.options[s[i][0]]&&s[i][1].apply(e.element,n)}}}(e),function(e,t,r){e.extend(e.mobile,{window:e(t),document:e(n),keyCode:e.ui.keyCode,behaviors:{},silentScroll:function(n){e.type(n)!=="number"&&(n=e.mobile.defaultHomeScroll),e.event.special.scrollstart.enabled=!1,setTimeout(function(){t.scrollTo(0,n),e.mobile.document.trigger("silentscroll",{x:0,y:n})},20),setTimeout(function(){e.event.special.scrollstart.enabled=!0},150)},getClosestBaseUrl:function(t){var n=e(t).closest(".ui-page").jqmData("url"),r=e.mobile.path.documentBase.hrefNoHash;if(!e.mobile.dynamicBaseEnabled||!n||!e.mobile.path.isPath(n))n=r;return e.mobile.path.makeUrlAbsolute(n,r)},removeActiveLinkClass:function(t){!!e.mobile.activeClickedLink&&(!e.mobile.activeClickedLink.closest("."+e.mobile.activePageClass).length||t)&&e.mobile.activeClickedLink.removeClass(e.mobile.activeBtnClass),e.mobile.activeClickedLink=null},getInheritedTheme:function(e,t){var n=e[0],r="",i=/ui-(bar|body|overlay)-([a-z])\b/,s,o;while(n){s=n.className||"";if(s&&(o=i.exec(s))&&(r=o[2]))break;n=n.parentNode}return r||t||"a"},enhanceable:function(e){return this.haveParents(e,"enhance")},hijackable:function(e){return this.haveParents(e,"ajax")},haveParents:function(t,n){if(!e.mobile.ignoreContentEnabled)return t;var r=t.length,i=e(),s,o,u,a,f;for(a=0;a<r;a++){o=t.eq(a),u=!1,s=t[a];while(s){f=s.getAttribute?s.getAttribute("data-"+e.mobile.ns+n):"";if(f==="false"){u=!0;break}s=s.parentNode}u||(i=i.add(o))}return i},getScreenHeight:function(){return t.innerHeight||e.mobile.window.height()},resetActivePageHeight:function(t){var n=e("."+e.mobile.activePageClass),r=n.height(),i=n.outerHeight(!0);t=typeof t=="number"?t:e.mobile.getScreenHeight(),n.css("min-height",t-(i-r))},loading:function(){var t=this.loading._widget||e(e.mobile.loader.prototype.defaultHtml).loader(),n=t.loader.apply(t,arguments);return this.loading._widget=t,n}}),e.addDependents=function(t,n){var r=e(t),i=r.jqmData("dependents")||e();r.jqmData("dependents",e(i).add(n))},e.fn.extend({removeWithDependents:function(){e.removeWithDependents(this)},enhanceWithin:function(){var t,n={},r=e.mobile.page.prototype.keepNativeSelector(),i=this;e.mobile.nojs&&e.mobile.nojs(this),e.mobile.links&&e.mobile.links(this),e.mobile.degradeInputsWithin&&e.mobile.degradeInputsWithin(this),e.fn.buttonMarkup&&this.find(e.fn.buttonMarkup.initSelector).not(r).jqmEnhanceable().buttonMarkup(),e.fn.fieldcontain&&this.find(":jqmData(role='fieldcontain')").not(r).jqmEnhanceable().fieldcontain(),e.each(e.mobile.widgets,function(t,s){if(s.initSelector){var o=e.mobile.enhanceable(i.find(s.initSelector));o.length>0&&(o=o.not(r)),o.length>0&&(n[s.prototype.widgetName]=o)}});for(t in n)n[t][t]();return this},addDependents:function(t){e.addDependents(this,t)},getEncodedText:function(){return e("<a>").text(this.text()).html()},jqmEnhanceable:function(){return e.mobile.enhanceable(this)},jqmHijackable:function(){return e.mobile.hijackable(this)}}),e.removeWithDependents=function(t){var n=e(t);(n.jqmData("dependents")||e()).remove(),n.remove()},e.addDependents=function(t,n){var r=e(t),i=r.jqmData("dependents")||e();r.jqmData("dependents",e(i).add(n))},e.find.matches=function(t,n){return e.find(t,null,null,n)},e.find.matchesSelector=function(t,n){return e.find(n,null,null,[t]).length>0}}(e,this),function(e,r){t.matchMedia=t.matchMedia||function(e,t){var n,r=e.documentElement,i=r.firstElementChild||r.firstChild,s=e.createElement("body"),o=e.createElement("div");return o.id="mq-test-1",o.style.cssText="position:absolute;top:-100em",s.style.background="none",s.appendChild(o),function(e){return o.innerHTML='&shy;<style media="'+e+'"> #mq-test-1 { width: 42px; }</style>',r.insertBefore(s,i),n=o.offsetWidth===42,r.removeChild(s),{matches:n,media:e}}}(n),e.mobile.media=function(e){return t.matchMedia(e).matches}}(e)});
@@ -12129,9 +11406,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		
 		L.GeoJSON.prototype.initialize.call(this, null, options);
 		
-		if (options.proxy || L.GeoJSON.WFS.proxy) {
-			this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
-		}
+		// if (options.proxy || L.GeoJSON.WFS.proxy) {
+		// 	this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
+		// }
 		this._featureIndexes = [];
 		this.getFeatureUrl = serviceUrl;
 	},
@@ -12313,12 +11590,15 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
     },
 	
 	getFeature: function(bounds, callback) {
+		var proxy = this.options.proxy || null;
 		if (bounds && !this.options.params.filter) {
 			// Make a filter so that we only fetch features within current viewport.
 			// Don't use bbox if filter is specified (wfs does not support a combination)
 			var reverseBbox = this.options.hasOwnProperty("reverseAxisBbox") ? this.options.reverseAxisBbox : this.options.reverseAxis;
 			if (this.options.inputCrs) {
-				bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
+				if (this.options.inputCrs.toUpperCase() !== "EPSG:4326") {
+					bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
+				}
 				this.options.params.srsName = this.options.inputCrs;
 			}
 			this.options.params.bbox = this._boundsToBbox(bounds, reverseBbox);
@@ -12326,12 +11606,12 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		var url,
 			params = null;
 		if (this.options.xhrType === "GET") {
-			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
+			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
 			params = null;
 		}
 		else {
 			// POST
-			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
+			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
 			params = this.options.params;
 		}
 		
@@ -12346,19 +11626,29 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			data: params,
 			context: this,
 			success: function(response) {
-				if (response.type && response.type == "FeatureCollection") {
-					this.jsonData = response;
-					this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
-					
-					callback();
-					this.fire("load", {layer: this});
-				}
+				this.onGetFeatureSuccess(response, callback);
 			},
-			error: function() {
-				this.fire("loaderror", {layer: this});
-			},
+			error: this.onGetFeatureError,
 			dataType: "json"
 		});
+	},
+
+	/**
+	 * The function must be called with context <this> (this class instance).
+	 * @param  {[type]} response [description]
+	 * @return {[type]}          [description]
+	 */
+	onGetFeatureSuccess: function(response, callback) {
+		if (response.type && response.type == "FeatureCollection") {
+			this.jsonData = response;
+			this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
+			callback();
+			this.fire("load", {layer: this});
+		}
+	},
+
+	onGetFeatureError: function(e) {
+		this.fire("loaderror", {layer: this});
 	},
 	
 	swapCoords: function(coords) {
@@ -12443,6 +11733,751 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		}
 	}
 });
+
+/*
+	Leaflet.print, implements the Mapfish print protocol allowing a Leaflet map to be printed using either the Mapfish or GeoServer print module.
+	(c) 2013, Adam Ratcliffe, GeoSmart Maps Limited
+*/
+
+L.print = L.print || {};
+
+L.print.Provider = L.Class.extend({
+
+	includes: L.Mixin.Events,
+
+	statics: {
+		MAX_RESOLUTION: 156543.03390625,
+		MAX_EXTENT: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+		SRS: 'EPSG:3857',
+		INCHES_PER_METER: 39.3701,
+		DPI: 72,
+		UNITS: 'm'
+	},
+
+	options: {
+		autoLoad: false,
+		autoOpen: true,
+		outputFormat: 'pdf',
+		outputFilename: 'leaflet-map',
+		method: 'POST',
+		rotation: 0,
+		customParams: {},
+		legends: false
+	},
+
+	initialize: function (options) {
+		if (L.version <= '0.5.1') {
+			throw 'Leaflet.print requires Leaflet 0.6.0+. Download latest from https://github.com/Leaflet/Leaflet/';
+		}
+
+		var context;
+
+		options = L.setOptions(this, options);
+
+		if (options.map) {
+			this.setMap(options.map);
+		}
+
+		if (options.capabilities) {
+			this._capabilities = options.capabilities;
+		} else if (this.options.autoLoad) {
+			this.loadCapabilities();
+		}
+
+		if (options.listeners) {
+			if (options.listeners.context) {
+				context = options.listeners.context;
+				delete options.listeners.context;
+			}
+			this.addEventListener(options.listeners, context);
+		}
+	},
+
+	loadCapabilities: function () {
+		if (!this.options.url) {
+			return;
+		}
+
+		var url;
+
+		url = this.options.url + '/info.json';
+		if (this.options.proxy) {
+			url = this.options.proxy + url;
+		}
+
+		return $.ajax({
+			type: 'GET',
+			dataType: 'json',
+			url: url,
+			success: L.Util.bind(this.onCapabilitiesLoad, this)
+		});
+	},
+
+	print: function (options) {
+		options = L.extend(L.extend({}, this.options), options);
+
+		if (!options.layout || !options.dpi) {
+			throw 'Must provide a layout name and dpi value to print';
+		}
+
+		this.fire('beforeprint', {
+			provider: this,
+			map: this._map
+		});
+
+		var jsonData = JSON.stringify(L.extend({
+			units: L.print.Provider.UNITS,
+			srs: L.print.Provider.SRS,
+			layout: options.layout,
+			dpi: options.dpi,
+			outputFormat: options.outputFormat,
+			comment: options.comment,
+			mapTitle: options.mapTitle,
+			outputFilename: options.outputFilename,
+			layers: this._encodeLayers(this._map),
+			pages: [{
+				center: this._projectCoords(L.print.Provider.SRS, this._map.getCenter()),
+				scale: this._getScale(),
+				rotation: options.rotation,
+				copy: options.copy
+			}]
+		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
+			url;
+
+		if (options.method === 'GET') {
+			url = this._capabilities.printURL + '?spec=' + encodeURIComponent(jsonData);
+
+			if (options.proxy) {
+				url = options.proxy + encodeURIComponent(url);
+			}
+
+			window.open(url);
+
+			this.fire('print', {
+				provider: this,
+				map: this._map
+			});
+		} else {
+			url = this._capabilities.createURL;
+
+			if (options.proxy) {
+				url = options.proxy + url;
+			}
+
+			if (this._xhr) {
+				this._xhr.abort();
+			}
+			this.fire('print', {
+				provider: this,
+				map: this._map
+			});
+			this._xhr = $.ajax({
+				type: 'POST',
+				contentType: 'application/json; charset=UTF-8',
+				processData: false,
+				dataType: 'json',
+				url: url,
+				data: jsonData,
+				success: L.Util.bind(this.onPrintSuccess, this),
+				error: L.Util.bind(this.onPrintError, this)
+			});
+		}
+
+	},
+
+	getCapabilities: function () {
+		return this._capabilities;
+	},
+
+	setMap: function (map) {
+		this._map = map;
+	},
+
+	setDpi: function (dpi) {
+		var oldDpi = this.options.dpi;
+
+		if (oldDpi !== dpi) {
+			this.options.dpi = dpi;
+			this.fire('dpichange', {
+				provider: this,
+				dpi: dpi
+			});
+		}
+	},
+
+	setLayout: function (name) {
+		var oldName = this.options.layout;
+
+		if (oldName !== name) {
+			this.options.layout = name;
+			this.fire('layoutchange', {
+				provider: this,
+				layout: name
+			});
+		}
+	},
+
+	setRotation: function (rotation) {
+		var oldRotation = this.options.rotation;
+
+		if (oldRotation !== this.options.rotation) {
+			this.options.rotation = rotation;
+			this.fire('rotationchange', {
+				provider: this,
+				rotation: rotation
+			});
+		}
+	},
+
+	_getLayers: function (map) {
+		var markers = [],
+			vectors = [],
+			tiles = [],
+			imageOverlays = [],
+			imageNodes,
+			pathNodes,
+			id;
+
+		for (id in map._layers) {
+			if (map._layers.hasOwnProperty(id)) {
+				if (!map._layers.hasOwnProperty(id)) { continue; }
+				var lyr = map._layers[id];
+
+				if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
+					tiles.push(lyr);
+				} else if (lyr instanceof L.ImageOverlay) {
+					imageOverlays.push(lyr);
+				} else if (lyr instanceof L.Marker) {
+					markers.push(lyr);
+				} else if (lyr instanceof L.Path && lyr.toGeoJSON) {
+					vectors.push(lyr);
+				}
+			}
+		}
+		markers.sort(function (a, b) {
+			return a._icon.style.zIndex - b._icon.style.zIndex;
+		});
+
+		var i;
+		// Layers with equal zIndexes can cause problems with mapfish print
+		for(i = 1;i<markers.length;i++){
+			if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
+				markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
+			}
+		}
+
+		tiles.sort(function (a, b) {
+			return a._container.style.zIndex - b._container.style.zIndex;
+		});
+
+		// Layers with equal zIndexes can cause problems with mapfish print
+		for(i = 1;i<tiles.length;i++){
+			if(tiles[i]._container.style.zIndex <= tiles[i - 1]._container.style.zIndex){
+				tiles[i]._container.style.zIndex = tiles[i - 1]._container.style.zIndex + 1;
+			}
+		}
+
+		imageNodes = [].slice.call(this, map._panes.overlayPane.childNodes);
+		imageOverlays.sort(function (a, b) {
+			return $.inArray(a._image, imageNodes) - $.inArray(b._image, imageNodes);
+		});
+
+		if (map._pathRoot) {
+			pathNodes = [].slice.call(this, map._pathRoot.childNodes);
+			vectors.sort(function (a, b) {
+				return $.inArray(a._container, pathNodes) - $.inArray(b._container, pathNodes);
+			});
+		}
+
+		return tiles.concat(vectors).concat(imageOverlays).concat(markers);
+	},
+
+	_getScale: function () {
+		var map = this._map,
+			bounds = map.getBounds(),
+			inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
+			scales = this._capabilities.scales,
+			sw = bounds.getSouthWest(),
+			ne = bounds.getNorthEast(),
+			halfLat = (sw.lat + ne.lat) / 2,
+			midLeft = L.latLng(halfLat, sw.lng),
+			midRight = L.latLng(halfLat, ne.lng),
+			mwidth = midLeft.distanceTo(midRight),
+			pxwidth = map.getSize().x,
+			kmPx = mwidth / pxwidth / 1000,
+			mscale = (kmPx || 0.000001) * inchesKm * L.print.Provider.DPI,
+			closest = Number.POSITIVE_INFINITY,
+			i = scales.length,
+			diff,
+			scale;
+
+		while (i--) {
+			diff = Math.abs(mscale - scales[i].value);
+			if (diff < closest) {
+				closest = diff;
+				scale = parseInt(scales[i].value, 10);
+			}
+		}
+		return 16000; //scale;
+	},
+
+	_getLayoutByName: function (name) {
+		var layout, i, l;
+
+		for (i = 0, l = this._capabilities.layouts.length; i < l; i++) {
+			if (this._capabilities.layouts[i].name === name) {
+				layout = this._capabilities.layouts[i];
+				break;
+			}
+		}
+		return layout;
+	},
+
+	_encodeLayers: function (map) {
+		var enc = [],
+			vectors = [],
+			layer,
+			i;
+
+		var layers = this._getLayers(map);
+		for (i = 0; i < layers.length; i++) {
+			layer = layers[i];
+			if (layer.options.printLayer) {
+				var t = layer.options.printLayer;
+				var layerClass = eval(t.init);
+				layer = new layerClass(t.url, t.options);
+			}
+			if (layer instanceof L.TileLayer.WMS) {
+				enc.push(this._encoders.layers.tilelayerwms.call(this, layer));
+			} else if (layer instanceof L.mapbox.TileLayer){
+				enc.push(this._encoders.layers.tilelayermapbox.call(this,layer));
+			} else if (layer instanceof L.TileLayer) {
+				if (layer.options.tms) {
+					enc.push(this._encoders.layers.TMS.call(this, layer));
+				}
+				else {
+					enc.push(this._encoders.layers.tilelayer.call(this, layer));
+				}
+			} else if (layer instanceof L.ImageOverlay) {
+				enc.push(this._encoders.layers.image.call(this, layer));
+			} else if (layer instanceof L.Marker || (layer instanceof L.Path && layer.toGeoJSON)) {
+				vectors.push(layer);
+			}
+		}
+		if (vectors.length) {
+			enc.push(this._encoders.layers.vector.call(this, vectors));
+		}
+		return enc;
+	},
+
+	_makeLegends: function(map,options){
+		if(!this.options.legends){
+			return [];
+		}
+
+		var legends = [],legendReq,singlelayers,url,i;
+
+		var layers = this._getLayers(map);
+		var layer,oneLegend;
+		for (i = 0; i < layers.length; i++) {
+			layer = layers[i];
+			if (layer instanceof L.TileLayer.WMS) {
+
+				oneLegend = {
+					name: layer.options.title || layer.wmsParams.layers,
+					classes: []
+				};
+
+				// defaults
+				legendReq = {
+					'SERVICE'	 : 'WMS',
+					'LAYER'	   : layer.wmsParams.layers,
+					'REQUEST'	 : 'GetLegendGraphic',
+					'VERSION'	 : layer.wmsParams.version,
+					'FORMAT'	  : layer.wmsParams.format,
+					'STYLE'	   : layer.wmsParams.styles,
+					'WIDTH'	   : 15,
+					'HEIGHT'	  : 15
+				};
+
+				legendReq = L.extend(legendReq,options);
+				url = L.Util.template(layer._url);
+
+				singlelayers = layer.wmsParams.layers.split(',');
+
+				// If a WMS layer doesn't have multiple server layers, only show one graphic
+				if(singlelayers.length === 1){
+					oneLegend.icons = [this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))];
+				}else{
+					for(i = 0;i<singlelayers.length;i++){
+						legendReq.LAYER = singlelayers[i];
+						oneLegend.classes.push({
+							name:singlelayers[i],
+							icons:[this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))]
+						});
+					}
+				}
+
+				legends.push(oneLegend);
+			}
+		}
+
+		return {legends:legends};
+	},
+
+	_encoders: {
+		layers: {
+			httprequest: function (layer) {
+				var baseUrl = layer._url;
+
+				if (baseUrl.indexOf('{s}') !== -1) {
+					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
+				}
+				baseUrl = this._getAbsoluteUrl(baseUrl);
+
+				return {
+					baseURL: baseUrl,
+					opacity: layer.options.opacity
+				};
+			},
+			TMS: function(layer) {
+				var enc = this._encoders.layers.tilelayer.call(this, layer);
+				return $.extend(enc, {
+					type : 'TMS',
+					format : enc.extension,
+					layer: layer.options.layer
+				});
+			},
+			tilelayer: function (layer) {
+				var enc = this._encoders.layers.httprequest.call(this, layer),
+					baseUrl = layer.options.baseUrl || layer._url.substring(0, layer._url.indexOf('{z}') > 0 ? layer._url.indexOf('{z}') : layer._url.length),
+					resolutions = [],
+					zoom;
+
+				// If using multiple subdomains, replace the subdomain placeholder
+				if (baseUrl.indexOf('{s}') !== -1) {
+					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
+				}
+
+				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
+					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
+				}
+
+				var ext = layer._url.split(".");
+				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
+				if (ext.search(/[^a-zA-Z0-9]/) > -1) {
+					// No extension provided
+					ext = "";
+				}
+
+				return L.extend(enc, {
+					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
+					// See https://github.com/mapfish/mapfish-print/pull/38
+					type: 'OSM',
+					baseURL: baseUrl,
+					extension: ext || 'png',
+					tileSize: [layer.options.tileSize, layer.options.tileSize],
+					maxExtent: L.print.Provider.MAX_EXTENT,
+					resolutions: resolutions,
+					singleTile: false
+				});
+			},
+			tilelayerwms: function (layer) {
+				var enc = this._encoders.layers.httprequest.call(this, layer),
+					layerOpts = layer.options,
+					p;
+
+				L.extend(enc, {
+					type: 'WMS',
+					layers: [layerOpts.layers].join(',').split(',').filter(function(x){return x !== "";}), //filter out empty strings from the array
+					format: layerOpts.format,
+					styles: [layerOpts.styles].join(',').split(',').filter(function(x){return x !== "";}),
+					singleTile: true
+				});
+
+				for (p in layer.wmsParams) {
+					if (layer.wmsParams.hasOwnProperty(p)) {
+						if ('detectretina,format,height,layers,request,service,srs,styles,version,width'.indexOf(p.toLowerCase()) === -1) {
+							if (!enc.customParams) {
+								enc.customParams = {};
+							}
+							enc.customParams[p] = layer.wmsParams[p];
+						}
+					}
+				}
+				return enc;
+			},
+			tilelayermapbox: function(layer) {
+				var resolutions = [], zoom;
+
+				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
+					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
+				}
+
+				return {
+					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
+					// See https://github.com/mapfish/mapfish-print/pull/38
+					type: 'OSM',
+					baseURL: layer.options.tiles[0].substring(0,layer.options.tiles[0].indexOf('{z}')),
+					opacity:layer.options.opacity,
+					extension: 'png',
+					tileSize: [layer.options.tileSize, layer.options.tileSize],
+					maxExtent: L.print.Provider.MAX_EXTENT,
+					resolutions: resolutions,
+					singleTile: false
+				};
+			},
+			image: function (layer) {
+				return {
+					type: 'Image',
+					opacity: layer.options.opacity,
+					name: 'image',
+					baseURL: this._getAbsoluteUrl(layer._url),
+					extent: this._projectBounds(L.print.Provider.SRS, layer._bounds)
+				};
+			},
+			vector: function (features) {
+				var encFeatures = [],
+					encStyles = {},
+					opacity,
+					feature,
+					style,
+					dictKey,
+					dictItem = {},
+					styleDict = {},
+					styleName,
+					nextId = 1,
+					featureGeoJson,
+					i, l;
+
+				for (i = 0, l = features.length; i < l; i++) {
+					feature = features[i];
+
+					if (feature instanceof L.Marker) {
+						var icon = feature.options.icon,
+							iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
+							iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
+							iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
+							scaleFactor = (this.options.dpi / L.print.Provider.DPI);
+
+						style = {
+							externalGraphic: this._getAbsoluteUrl(iconUrl),
+							graphicWidth: (iconSize.x / scaleFactor),
+							graphicHeight: (iconSize.y / scaleFactor),
+							graphicXOffset: (-iconAnchor.x / scaleFactor),
+							graphicYOffset: (-iconAnchor.y / scaleFactor)
+						};
+					} else {
+						style = this._extractFeatureStyle(feature);
+					}
+
+					dictKey = JSON.stringify(style);
+					dictItem = styleDict[dictKey];
+					if (dictItem) {
+						styleName = dictItem;
+					} else {
+						styleDict[dictKey] = styleName = nextId++;
+						encStyles[styleName] = style;
+					}
+
+					featureGeoJson = (feature instanceof L.Circle) ? this._circleGeoJSON(feature) : feature.toGeoJSON();
+					featureGeoJson.geometry.coordinates = this._projectCoords(L.print.Provider.SRS, featureGeoJson.geometry.coordinates);
+					featureGeoJson.properties._leaflet_style = styleName;
+
+					// All markers will use the same opacity as the first marker found
+					if (opacity === null) {
+						opacity = feature.options.opacity || 1.0;
+					}
+
+					encFeatures.push(featureGeoJson);
+				}
+
+				return {
+					type: 'Vector',
+					styles: encStyles,
+					opacity: opacity,
+					styleProperty: '_leaflet_style',
+					geoJson: {
+						type: 'FeatureCollection',
+						features: encFeatures
+					}
+				};
+			}
+		}
+	},
+
+	_circleGeoJSON: function (circle) {
+		var projection = circle._map.options.crs.projection;
+		var earthRadius = 1, i;
+
+		if (projection === L.Projection.SphericalMercator) {
+			earthRadius = 6378137;
+		} else if (projection === L.Projection.Mercator) {
+			earthRadius = projection.R_MAJOR;
+		}
+		var cnt = projection.project(circle.getLatLng());
+		var scale = 1.0 / Math.cos(circle.getLatLng().lat * Math.PI / 180.0);
+		var points = [];
+		for (i = 0; i < 64; i++) {
+			var radian = i * 2.0 * Math.PI / 64.0;
+			var shift = L.point(Math.cos(radian), Math.sin(radian));
+			points.push(projection.unproject(cnt.add(shift.multiplyBy(circle.getRadius() * scale / earthRadius))));
+		}
+		return L.polygon(points).toGeoJSON();
+	},
+
+	_extractFeatureStyle: function (feature) {
+		var options = feature.options;
+
+		// From smap4 (working)
+		// cursor: "pointer"
+		// fillColor: "#ff5b00"
+		// fillOpacity: 0.3
+		// graphicName: "square"
+		// pointRadius: 6
+		// strokeColor: "#ff5b00"
+		// strokeOpacity: 1
+		// strokeWidth: 4
+
+
+		return {
+			stroke: options.stroke,
+			strokeColor: options.color,
+			strokeWidth: options.weight,
+			strokeOpacity: options.opacity,
+			strokeLinecap: 'round',
+			pointRadius: 200, //options.radius,
+			fill: options.fill,
+			fillColor: options.fillColor,
+			fillOpacity: options.fillOpacity,
+			graphicZIndex: options.zIndex,
+			graphicWidth: options.graphicWidth,
+			graphicHeight: options.graphicHeight,
+			label: options.label,
+			name: "The layer name"
+		};
+
+
+		// cursor: "pointer"
+		// fillColor: "#00FFFF"
+		// fillOpacity: 0.3
+		// graphicName: "circle"
+		// graphicZIndex: 499
+		// pointRadius: 6
+		// strokeColor: "#00FFFF"
+		// strokeOpacity: 1
+		// strokeWidth: 4
+	},
+
+	_getAbsoluteUrl: function (url) {
+		var a;
+
+		if (L.Browser.ie) {
+			a = document.createElement('a');
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.href = url;
+			document.body.removeChild(a);
+		} else {
+			a = document.createElement('a');
+			a.href = url;
+		}
+		return a.href;
+	},
+
+	_projectBounds: function (crs, bounds) {
+		var sw = bounds.getSouthWest(),
+			ne = bounds.getNorthEast();
+
+		return this._projectCoords(crs, sw).concat(this._projectCoords(crs, ne));
+	},
+
+	_projectCoords: function (crs, coords) {
+		var crsKey = crs.toUpperCase().replace(':', ''),
+			crsClass = L.CRS[crsKey];
+
+		if (!crsClass) {
+			throw 'Unsupported coordinate reference system: ' + crs;
+		}
+
+		return this._project(crsClass, coords);
+	},
+
+	_project: function (crsClass, coords) {
+		var projected,
+			pt,
+			i, l;
+
+		if (typeof coords[0] === 'number') {
+			coords = new L.LatLng(coords[1], coords[0]);
+		}
+
+		if (coords instanceof L.LatLng) {
+			pt = crsClass.project(coords);
+			return [pt.x, pt.y];
+		} else {
+			projected = [];
+			for (i = 0, l = coords.length; i < l; i++) {
+				projected.push(this._project(crsClass, coords[i]));
+			}
+			return projected;
+		}
+	},
+
+	// --------------------------------------------------
+	// Event handlers
+	// --------------------------------------------------
+
+	onCapabilitiesLoad: function (response) {
+		this._capabilities = response;
+
+		if (!this.options.layout) {
+			this.options.layout = this._capabilities.layouts[0].name;
+		}
+
+		if (!this.options.dpi) {
+			this.options.dpi = this._capabilities.dpis[0].value;
+		}
+
+		this.fire('capabilitiesload', {
+			provider: this,
+			capabilities: this._capabilities
+		});
+	},
+
+	onPrintSuccess: function (response) {
+		var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
+
+		if (this.options.autoOpen) {
+			if (L.Browser.ie) {
+				window.open(url);
+			} else {
+				window.location.href = url;
+			}
+		}
+
+		this._xhr = null;
+
+		this.fire('print', {
+			provider: this,
+			response: response
+		});
+	},
+
+	onPrintError: function (jqXHR) {
+		this._xhr = null;
+
+		this.fire('printexception', {
+			provider: this,
+			response: jqXHR
+		});
+	}
+});
+
+L.print.provider = function (options) {
+	return new L.print.Provider(options);
+};
+
 
 /*
  * L.TileLayer.EsriRest is used for putting ESRI REST tile layers on the map.
@@ -14484,6 +14519,1994 @@ this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale
 (a+="&where="+encodeURIComponent(this.options.where));this._makeJsonpRequest(a)}});lvector.GitSpatial=lvector.GeoJSONLayer.extend({initialize:function(a){for(var b=0,d=this._requiredParams.length;b<d;b++)if(!a[this._requiredParams[b]])throw Error('No "'+this._requiredParams[b]+'" parameter found.');lvector.Layer.prototype.initialize.call(this,a);this._globalPointer="GitSpatial_"+Math.floor(Math.random()*1E5);window[this._globalPointer]=this;this._vectors=[];if(this.options.map){if(this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===
 2)a=this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale=a>=b[0]&&a<=b[1];this._show()}},options:{},_requiredParams:["user","repo","featureSet"],_getFeatures:function(){var a="http://gitspatial.com/api/v1/"+this.options.user+"/"+this.options.repo+"/"+this.options.featureSet+"?callback="+this._globalPointer+"._processFeatures";this.options.showAll||(a+="&bbox="+this.options.map.getBounds().toBBoxString());this._makeJsonpRequest(a)}});
 
+/*!
+ * Modernizr v2.6.3
+ * www.modernizr.com
+ *
+ * Copyright (c) Faruk Ates, Paul Irish, Alex Sexton
+ * Available under the BSD and MIT licenses: www.modernizr.com/license/
+ */
+
+/*
+ * Modernizr tests which native CSS3 and HTML5 features are available in
+ * the current UA and makes the results available to you in two ways:
+ * as properties on a global Modernizr object, and as classes on the
+ * <html> element. This information allows you to progressively enhance
+ * your pages with a granular level of control over the experience.
+ *
+ * Modernizr has an optional (not included) conditional resource loader
+ * called Modernizr.load(), based on Yepnope.js (yepnopejs.com).
+ * To get a build that includes Modernizr.load(), as well as choosing
+ * which tests to include, go to www.modernizr.com/download/
+ *
+ * Authors        Faruk Ates, Paul Irish, Alex Sexton
+ * Contributors   Ryan Seddon, Ben Alman
+ */
+
+window.Modernizr = (function( window, document, undefined ) {
+
+    var version = '2.6.3',
+
+    Modernizr = {},
+
+    /*>>cssclasses*/
+    // option for enabling the HTML classes to be added
+    enableClasses = true,
+    /*>>cssclasses*/
+
+    docElement = document.documentElement,
+
+    /**
+     * Create our "modernizr" element that we do most feature tests on.
+     */
+    mod = 'modernizr',
+    modElem = document.createElement(mod),
+    mStyle = modElem.style,
+
+    /**
+     * Create the input element for various Web Forms feature tests.
+     */
+    inputElem /*>>inputelem*/ = document.createElement('input') /*>>inputelem*/ ,
+
+    /*>>smile*/
+    smile = ':)',
+    /*>>smile*/
+
+    toString = {}.toString,
+
+    // TODO :: make the prefixes more granular
+    /*>>prefixes*/
+    // List of property values to set for css tests. See ticket #21
+    prefixes = ' -webkit- -moz- -o- -ms- '.split(' '),
+    /*>>prefixes*/
+
+    /*>>domprefixes*/
+    // Following spec is to expose vendor-specific style properties as:
+    //   elem.style.WebkitBorderRadius
+    // and the following would be incorrect:
+    //   elem.style.webkitBorderRadius
+
+    // Webkit ghosts their properties in lowercase but Opera & Moz do not.
+    // Microsoft uses a lowercase `ms` instead of the correct `Ms` in IE8+
+    //   erik.eae.net/archives/2008/03/10/21.48.10/
+
+    // More here: github.com/Modernizr/Modernizr/issues/issue/21
+    omPrefixes = 'Webkit Moz O ms',
+
+    cssomPrefixes = omPrefixes.split(' '),
+
+    domPrefixes = omPrefixes.toLowerCase().split(' '),
+    /*>>domprefixes*/
+
+    /*>>ns*/
+    ns = {'svg': 'http://www.w3.org/2000/svg'},
+    /*>>ns*/
+
+    tests = {},
+    inputs = {},
+    attrs = {},
+
+    classes = [],
+
+    slice = classes.slice,
+
+    featureName, // used in testing loop
+
+
+    /*>>teststyles*/
+    // Inject element with style element and some CSS rules
+    injectElementWithStyles = function( rule, callback, nodes, testnames ) {
+
+      var style, ret, node, docOverflow,
+          div = document.createElement('div'),
+          // After page load injecting a fake body doesn't work so check if body exists
+          body = document.body,
+          // IE6 and 7 won't return offsetWidth or offsetHeight unless it's in the body element, so we fake it.
+          fakeBody = body || document.createElement('body');
+
+      if ( parseInt(nodes, 10) ) {
+          // In order not to give false positives we create a node for each test
+          // This also allows the method to scale for unspecified uses
+          while ( nodes-- ) {
+              node = document.createElement('div');
+              node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
+              div.appendChild(node);
+          }
+      }
+
+      // <style> elements in IE6-9 are considered 'NoScope' elements and therefore will be removed
+      // when injected with innerHTML. To get around this you need to prepend the 'NoScope' element
+      // with a 'scoped' element, in our case the soft-hyphen entity as it won't mess with our measurements.
+      // msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.aspx
+      // Documents served as xml will throw if using &shy; so use xml friendly encoded version. See issue #277
+      style = ['&#173;','<style id="s', mod, '">', rule, '</style>'].join('');
+      div.id = mod;
+      // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
+      // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
+      (body ? div : fakeBody).innerHTML += style;
+      fakeBody.appendChild(div);
+      if ( !body ) {
+          //avoid crashing IE8, if background image is used
+          fakeBody.style.background = '';
+          //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
+          fakeBody.style.overflow = 'hidden';
+          docOverflow = docElement.style.overflow;
+          docElement.style.overflow = 'hidden';
+          docElement.appendChild(fakeBody);
+      }
+
+      ret = callback(div, rule);
+      // If this is done after page load we don't want to remove the body so check if body exists
+      if ( !body ) {
+          fakeBody.parentNode.removeChild(fakeBody);
+          docElement.style.overflow = docOverflow;
+      } else {
+          div.parentNode.removeChild(div);
+      }
+
+      return !!ret;
+
+    },
+    /*>>teststyles*/
+
+    /*>>mq*/
+    // adapted from matchMedia polyfill
+    // by Scott Jehl and Paul Irish
+    // gist.github.com/786768
+    testMediaQuery = function( mq ) {
+
+      var matchMedia = window.matchMedia || window.msMatchMedia;
+      if ( matchMedia ) {
+        return matchMedia(mq).matches;
+      }
+
+      var bool;
+
+      injectElementWithStyles('@media ' + mq + ' { #' + mod + ' { position: absolute; } }', function( node ) {
+        bool = (window.getComputedStyle ?
+                  getComputedStyle(node, null) :
+                  node.currentStyle)['position'] == 'absolute';
+      });
+
+      return bool;
+
+     },
+     /*>>mq*/
+
+
+    /*>>hasevent*/
+    //
+    // isEventSupported determines if a given element supports the given event
+    // kangax.github.com/iseventsupported/
+    //
+    // The following results are known incorrects:
+    //   Modernizr.hasEvent("webkitTransitionEnd", elem) // false negative
+    //   Modernizr.hasEvent("textInput") // in Webkit. github.com/Modernizr/Modernizr/issues/333
+    //   ...
+    isEventSupported = (function() {
+
+      var TAGNAMES = {
+        'select': 'input', 'change': 'input',
+        'submit': 'form', 'reset': 'form',
+        'error': 'img', 'load': 'img', 'abort': 'img'
+      };
+
+      function isEventSupported( eventName, element ) {
+
+        element = element || document.createElement(TAGNAMES[eventName] || 'div');
+        eventName = 'on' + eventName;
+
+        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
+        var isSupported = eventName in element;
+
+        if ( !isSupported ) {
+          // If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+          if ( !element.setAttribute ) {
+            element = document.createElement('div');
+          }
+          if ( element.setAttribute && element.removeAttribute ) {
+            element.setAttribute(eventName, '');
+            isSupported = is(element[eventName], 'function');
+
+            // If property was created, "remove it" (by setting value to `undefined`)
+            if ( !is(element[eventName], 'undefined') ) {
+              element[eventName] = undefined;
+            }
+            element.removeAttribute(eventName);
+          }
+        }
+
+        element = null;
+        return isSupported;
+      }
+      return isEventSupported;
+    })(),
+    /*>>hasevent*/
+
+    // TODO :: Add flag for hasownprop ? didn't last time
+
+    // hasOwnProperty shim by kangax needed for Safari 2.0 support
+    _hasOwnProperty = ({}).hasOwnProperty, hasOwnProp;
+
+    if ( !is(_hasOwnProperty, 'undefined') && !is(_hasOwnProperty.call, 'undefined') ) {
+      hasOwnProp = function (object, property) {
+        return _hasOwnProperty.call(object, property);
+      };
+    }
+    else {
+      hasOwnProp = function (object, property) { /* yes, this can give false positives/negatives, but most of the time we don't care about those */
+        return ((property in object) && is(object.constructor.prototype[property], 'undefined'));
+      };
+    }
+
+    // Adapted from ES5-shim https://github.com/kriskowal/es5-shim/blob/master/es5-shim.js
+    // es5.github.com/#x15.3.4.5
+
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function bind(that) {
+
+        var target = this;
+
+        if (typeof target != "function") {
+            throw new TypeError();
+        }
+
+        var args = slice.call(arguments, 1),
+            bound = function () {
+
+            if (this instanceof bound) {
+
+              var F = function(){};
+              F.prototype = target.prototype;
+              var self = new F();
+
+              var result = target.apply(
+                  self,
+                  args.concat(slice.call(arguments))
+              );
+              if (Object(result) === result) {
+                  return result;
+              }
+              return self;
+
+            } else {
+
+              return target.apply(
+                  that,
+                  args.concat(slice.call(arguments))
+              );
+
+            }
+
+        };
+
+        return bound;
+      };
+    }
+
+    /**
+     * setCss applies given styles to the Modernizr DOM node.
+     */
+    function setCss( str ) {
+        mStyle.cssText = str;
+    }
+
+    /**
+     * setCssAll extrapolates all vendor-specific css strings.
+     */
+    function setCssAll( str1, str2 ) {
+        return setCss(prefixes.join(str1 + ';') + ( str2 || '' ));
+    }
+
+    /**
+     * is returns a boolean for if typeof obj is exactly type.
+     */
+    function is( obj, type ) {
+        return typeof obj === type;
+    }
+
+    /**
+     * contains returns a boolean for if substr is found within str.
+     */
+    function contains( str, substr ) {
+        return !!~('' + str).indexOf(substr);
+    }
+
+    /*>>testprop*/
+
+    // testProps is a generic CSS / DOM property test.
+
+    // In testing support for a given CSS property, it's legit to test:
+    //    `elem.style[styleName] !== undefined`
+    // If the property is supported it will return an empty string,
+    // if unsupported it will return undefined.
+
+    // We'll take advantage of this quick test and skip setting a style
+    // on our modernizr element, but instead just testing undefined vs
+    // empty string.
+
+    // Because the testing of the CSS property names (with "-", as
+    // opposed to the camelCase DOM properties) is non-portable and
+    // non-standard but works in WebKit and IE (but not Gecko or Opera),
+    // we explicitly reject properties with dashes so that authors
+    // developing in WebKit or IE first don't end up with
+    // browser-specific content by accident.
+
+    function testProps( props, prefixed ) {
+        for ( var i in props ) {
+            var prop = props[i];
+            if ( !contains(prop, "-") && mStyle[prop] !== undefined ) {
+                return prefixed == 'pfx' ? prop : true;
+            }
+        }
+        return false;
+    }
+    /*>>testprop*/
+
+    // TODO :: add testDOMProps
+    /**
+     * testDOMProps is a generic DOM property test; if a browser supports
+     *   a certain property, it won't return undefined for it.
+     */
+    function testDOMProps( props, obj, elem ) {
+        for ( var i in props ) {
+            var item = obj[props[i]];
+            if ( item !== undefined) {
+
+                // return the property name as a string
+                if (elem === false) return props[i];
+
+                // let's bind a function
+                if (is(item, 'function')){
+                  // default to autobind unless override
+                  return item.bind(elem || obj);
+                }
+
+                // return the unbound function or obj or value
+                return item;
+            }
+        }
+        return false;
+    }
+
+    /*>>testallprops*/
+    /**
+     * testPropsAll tests a list of DOM properties we want to check against.
+     *   We specify literally ALL possible (known and/or likely) properties on
+     *   the element including the non-vendor prefixed one, for forward-
+     *   compatibility.
+     */
+    function testPropsAll( prop, prefixed, elem ) {
+
+        var ucProp  = prop.charAt(0).toUpperCase() + prop.slice(1),
+            props   = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
+
+        // did they call .prefixed('boxSizing') or are we just testing a prop?
+        if(is(prefixed, "string") || is(prefixed, "undefined")) {
+          return testProps(props, prefixed);
+
+        // otherwise, they called .prefixed('requestAnimationFrame', window[, elem])
+        } else {
+          props = (prop + ' ' + (domPrefixes).join(ucProp + ' ') + ucProp).split(' ');
+          return testDOMProps(props, prefixed, elem);
+        }
+    }
+    /*>>testallprops*/
+
+
+    /**
+     * Tests
+     * -----
+     */
+
+    // The *new* flexbox
+    // dev.w3.org/csswg/css3-flexbox
+
+    tests['flexbox'] = function() {
+      return testPropsAll('flexWrap');
+    };
+
+    // The *old* flexbox
+    // www.w3.org/TR/2009/WD-css3-flexbox-20090723/
+
+    tests['flexboxlegacy'] = function() {
+        return testPropsAll('boxDirection');
+    };
+
+    // On the S60 and BB Storm, getContext exists, but always returns undefined
+    // so we actually have to call getContext() to verify
+    // github.com/Modernizr/Modernizr/issues/issue/97/
+
+    tests['canvas'] = function() {
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    };
+
+    tests['canvastext'] = function() {
+        return !!(Modernizr['canvas'] && is(document.createElement('canvas').getContext('2d').fillText, 'function'));
+    };
+
+    // webk.it/70117 is tracking a legit WebGL feature detect proposal
+
+    // We do a soft detect which may false positive in order to avoid
+    // an expensive context creation: bugzil.la/732441
+
+    tests['webgl'] = function() {
+        return !!window.WebGLRenderingContext;
+    };
+
+    /*
+     * The Modernizr.touch test only indicates if the browser supports
+     *    touch events, which does not necessarily reflect a touchscreen
+     *    device, as evidenced by tablets running Windows 7 or, alas,
+     *    the Palm Pre / WebOS (touch) phones.
+     *
+     * Additionally, Chrome (desktop) used to lie about its support on this,
+     *    but that has since been rectified: crbug.com/36415
+     *
+     * We also test for Firefox 4 Multitouch Support.
+     *
+     * For more info, see: modernizr.github.com/Modernizr/touch.html
+     */
+
+    tests['touch'] = function() {
+        var bool;
+
+        if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+          bool = true;
+        } else {
+          injectElementWithStyles(['@media (',prefixes.join('touch-enabled),('),mod,')','{#modernizr{top:9px;position:absolute}}'].join(''), function( node ) {
+            bool = node.offsetTop === 9;
+          });
+        }
+
+        return bool;
+    };
+
+
+    // geolocation is often considered a trivial feature detect...
+    // Turns out, it's quite tricky to get right:
+    //
+    // Using !!navigator.geolocation does two things we don't want. It:
+    //   1. Leaks memory in IE9: github.com/Modernizr/Modernizr/issues/513
+    //   2. Disables page caching in WebKit: webk.it/43956
+    //
+    // Meanwhile, in Firefox < 8, an about:config setting could expose
+    // a false positive that would throw an exception: bugzil.la/688158
+
+    tests['geolocation'] = function() {
+        return 'geolocation' in navigator;
+    };
+
+
+    tests['postmessage'] = function() {
+      return !!window.postMessage;
+    };
+
+
+    // Chrome incognito mode used to throw an exception when using openDatabase
+    // It doesn't anymore.
+    tests['websqldatabase'] = function() {
+      return !!window.openDatabase;
+    };
+
+    // Vendors had inconsistent prefixing with the experimental Indexed DB:
+    // - Webkit's implementation is accessible through webkitIndexedDB
+    // - Firefox shipped moz_indexedDB before FF4b9, but since then has been mozIndexedDB
+    // For speed, we don't test the legacy (and beta-only) indexedDB
+    tests['indexedDB'] = function() {
+      return !!testPropsAll("indexedDB", window);
+    };
+
+    // documentMode logic from YUI to filter out IE8 Compat Mode
+    //   which false positives.
+    tests['hashchange'] = function() {
+      return isEventSupported('hashchange', window) && (document.documentMode === undefined || document.documentMode > 7);
+    };
+
+    // Per 1.6:
+    // This used to be Modernizr.historymanagement but the longer
+    // name has been deprecated in favor of a shorter and property-matching one.
+    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
+    // and in the first release thereafter disappear entirely.
+    tests['history'] = function() {
+      return !!(window.history && history.pushState);
+    };
+
+    tests['draganddrop'] = function() {
+        var div = document.createElement('div');
+        return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+    };
+
+    // FF3.6 was EOL'ed on 4/24/12, but the ESR version of FF10
+    // will be supported until FF19 (2/12/13), at which time, ESR becomes FF17.
+    // FF10 still uses prefixes, so check for it until then.
+    // for more ESR info, see: mozilla.org/en-US/firefox/organizations/faq/
+    tests['websockets'] = function() {
+        return 'WebSocket' in window || 'MozWebSocket' in window;
+    };
+
+
+    // css-tricks.com/rgba-browser-support/
+    tests['rgba'] = function() {
+        // Set an rgba() color and check the returned value
+
+        setCss('background-color:rgba(150,255,150,.5)');
+
+        return contains(mStyle.backgroundColor, 'rgba');
+    };
+
+    tests['hsla'] = function() {
+        // Same as rgba(), in fact, browsers re-map hsla() to rgba() internally,
+        //   except IE9 who retains it as hsla
+
+        setCss('background-color:hsla(120,40%,100%,.5)');
+
+        return contains(mStyle.backgroundColor, 'rgba') || contains(mStyle.backgroundColor, 'hsla');
+    };
+
+    tests['multiplebgs'] = function() {
+        // Setting multiple images AND a color on the background shorthand property
+        //  and then querying the style.background property value for the number of
+        //  occurrences of "url(" is a reliable method for detecting ACTUAL support for this!
+
+        setCss('background:url(https://),url(https://),red url(https://)');
+
+        // If the UA supports multiple backgrounds, there should be three occurrences
+        //   of the string "url(" in the return value for elemStyle.background
+
+        return (/(url\s*\(.*?){3}/).test(mStyle.background);
+    };
+
+
+
+    // this will false positive in Opera Mini
+    //   github.com/Modernizr/Modernizr/issues/396
+
+    tests['backgroundsize'] = function() {
+        return testPropsAll('backgroundSize');
+    };
+
+    tests['borderimage'] = function() {
+        return testPropsAll('borderImage');
+    };
+
+
+    // Super comprehensive table about all the unique implementations of
+    // border-radius: muddledramblings.com/table-of-css3-border-radius-compliance
+
+    tests['borderradius'] = function() {
+        return testPropsAll('borderRadius');
+    };
+
+    // WebOS unfortunately false positives on this test.
+    tests['boxshadow'] = function() {
+        return testPropsAll('boxShadow');
+    };
+
+    // FF3.0 will false positive on this test
+    tests['textshadow'] = function() {
+        return document.createElement('div').style.textShadow === '';
+    };
+
+
+    tests['opacity'] = function() {
+        // Browsers that actually have CSS Opacity implemented have done so
+        //  according to spec, which means their return values are within the
+        //  range of [0.0,1.0] - including the leading zero.
+
+        setCssAll('opacity:.55');
+
+        // The non-literal . in this regex is intentional:
+        //   German Chrome returns this value as 0,55
+        // github.com/Modernizr/Modernizr/issues/#issue/59/comment/516632
+        return (/^0.55$/).test(mStyle.opacity);
+    };
+
+
+    // Note, Android < 4 will pass this test, but can only animate
+    //   a single property at a time
+    //   daneden.me/2011/12/putting-up-with-androids-bullshit/
+    tests['cssanimations'] = function() {
+        return testPropsAll('animationName');
+    };
+
+
+    tests['csscolumns'] = function() {
+        return testPropsAll('columnCount');
+    };
+
+
+    tests['cssgradients'] = function() {
+        /**
+         * For CSS Gradients syntax, please see:
+         * webkit.org/blog/175/introducing-css-gradients/
+         * developer.mozilla.org/en/CSS/-moz-linear-gradient
+         * developer.mozilla.org/en/CSS/-moz-radial-gradient
+         * dev.w3.org/csswg/css3-images/#gradients-
+         */
+
+        var str1 = 'background-image:',
+            str2 = 'gradient(linear,left top,right bottom,from(#9f9),to(white));',
+            str3 = 'linear-gradient(left top,#9f9, white);';
+
+        setCss(
+             // legacy webkit syntax (FIXME: remove when syntax not in use anymore)
+              (str1 + '-webkit- '.split(' ').join(str2 + str1) +
+             // standard syntax             // trailing 'background-image:'
+              prefixes.join(str3 + str1)).slice(0, -str1.length)
+        );
+
+        return contains(mStyle.backgroundImage, 'gradient');
+    };
+
+
+    tests['cssreflections'] = function() {
+        return testPropsAll('boxReflect');
+    };
+
+
+    tests['csstransforms'] = function() {
+        return !!testPropsAll('transform');
+    };
+
+
+    tests['csstransforms3d'] = function() {
+
+        var ret = !!testPropsAll('perspective');
+
+        // Webkit's 3D transforms are passed off to the browser's own graphics renderer.
+        //   It works fine in Safari on Leopard and Snow Leopard, but not in Chrome in
+        //   some conditions. As a result, Webkit typically recognizes the syntax but
+        //   will sometimes throw a false positive, thus we must do a more thorough check:
+        if ( ret && 'webkitPerspective' in docElement.style ) {
+
+          // Webkit allows this media query to succeed only if the feature is enabled.
+          // `@media (transform-3d),(-webkit-transform-3d){ ... }`
+          injectElementWithStyles('@media (transform-3d),(-webkit-transform-3d){#modernizr{left:9px;position:absolute;height:3px;}}', function( node, rule ) {
+            ret = node.offsetLeft === 9 && node.offsetHeight === 3;
+          });
+        }
+        return ret;
+    };
+
+
+    tests['csstransitions'] = function() {
+        return testPropsAll('transition');
+    };
+
+
+    /*>>fontface*/
+    // @font-face detection routine by Diego Perini
+    // javascript.nwbox.com/CSSSupport/
+
+    // false positives:
+    //   WebOS github.com/Modernizr/Modernizr/issues/342
+    //   WP7   github.com/Modernizr/Modernizr/issues/538
+    tests['fontface'] = function() {
+        var bool;
+
+        injectElementWithStyles('@font-face {font-family:"font";src:url("https://")}', function( node, rule ) {
+          var style = document.getElementById('smodernizr'),
+              sheet = style.sheet || style.styleSheet,
+              cssText = sheet ? (sheet.cssRules && sheet.cssRules[0] ? sheet.cssRules[0].cssText : sheet.cssText || '') : '';
+
+          bool = /src/i.test(cssText) && cssText.indexOf(rule.split(' ')[0]) === 0;
+        });
+
+        return bool;
+    };
+    /*>>fontface*/
+
+    // CSS generated content detection
+    tests['generatedcontent'] = function() {
+        var bool;
+
+        injectElementWithStyles(['#',mod,'{font:0/0 a}#',mod,':after{content:"',smile,'";visibility:hidden;font:3px/1 a}'].join(''), function( node ) {
+          bool = node.offsetHeight >= 3;
+        });
+
+        return bool;
+    };
+
+
+
+    // These tests evaluate support of the video/audio elements, as well as
+    // testing what types of content they support.
+    //
+    // We're using the Boolean constructor here, so that we can extend the value
+    // e.g.  Modernizr.video     // true
+    //       Modernizr.video.ogg // 'probably'
+    //
+    // Codec values from : github.com/NielsLeenheer/html5test/blob/9106a8/index.html#L845
+    //                     thx to NielsLeenheer and zcorpan
+
+    // Note: in some older browsers, "no" was a return value instead of empty string.
+    //   It was live in FF3.5.0 and 3.5.1, but fixed in 3.5.2
+    //   It was also live in Safari 4.0.0 - 4.0.4, but fixed in 4.0.5
+
+    tests['video'] = function() {
+        var elem = document.createElement('video'),
+            bool = false;
+
+        // IE9 Running on Windows Server SKU can cause an exception to be thrown, bug #224
+        try {
+            if ( bool = !!elem.canPlayType ) {
+                bool      = new Boolean(bool);
+                bool.ogg  = elem.canPlayType('video/ogg; codecs="theora"')      .replace(/^no$/,'');
+
+                // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
+                bool.h264 = elem.canPlayType('video/mp4; codecs="avc1.42E01E"') .replace(/^no$/,'');
+
+                bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/,'');
+            }
+
+        } catch(e) { }
+
+        return bool;
+    };
+
+    tests['audio'] = function() {
+        var elem = document.createElement('audio'),
+            bool = false;
+
+        try {
+            if ( bool = !!elem.canPlayType ) {
+                bool      = new Boolean(bool);
+                bool.ogg  = elem.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,'');
+                bool.mp3  = elem.canPlayType('audio/mpeg;')               .replace(/^no$/,'');
+
+                // Mimetypes accepted:
+                //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
+                //   bit.ly/iphoneoscodecs
+                bool.wav  = elem.canPlayType('audio/wav; codecs="1"')     .replace(/^no$/,'');
+                bool.m4a  = ( elem.canPlayType('audio/x-m4a;')            ||
+                              elem.canPlayType('audio/aac;'))             .replace(/^no$/,'');
+            }
+        } catch(e) { }
+
+        return bool;
+    };
+
+
+    // In FF4, if disabled, window.localStorage should === null.
+
+    // Normally, we could not test that directly and need to do a
+    //   `('localStorage' in window) && ` test first because otherwise Firefox will
+    //   throw bugzil.la/365772 if cookies are disabled
+
+    // Also in iOS5 Private Browsing mode, attempting to use localStorage.setItem
+    // will throw the exception:
+    //   QUOTA_EXCEEDED_ERRROR DOM Exception 22.
+    // Peculiarly, getItem and removeItem calls do not throw.
+
+    // Because we are forced to try/catch this, we'll go aggressive.
+
+    // Just FWIW: IE8 Compat mode supports these features completely:
+    //   www.quirksmode.org/dom/html5.html
+    // But IE8 doesn't support either with local files
+
+    tests['localstorage'] = function() {
+        try {
+            localStorage.setItem(mod, mod);
+            localStorage.removeItem(mod);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    };
+
+    tests['sessionstorage'] = function() {
+        try {
+            sessionStorage.setItem(mod, mod);
+            sessionStorage.removeItem(mod);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    };
+
+
+    tests['webworkers'] = function() {
+        return !!window.Worker;
+    };
+
+
+    tests['applicationcache'] = function() {
+        return !!window.applicationCache;
+    };
+
+
+    // Thanks to Erik Dahlstrom
+    tests['svg'] = function() {
+        return !!document.createElementNS && !!document.createElementNS(ns.svg, 'svg').createSVGRect;
+    };
+
+    // specifically for SVG inline in HTML, not within XHTML
+    // test page: paulirish.com/demo/inline-svg
+    tests['inlinesvg'] = function() {
+      var div = document.createElement('div');
+      div.innerHTML = '<svg/>';
+      return (div.firstChild && div.firstChild.namespaceURI) == ns.svg;
+    };
+
+    // SVG SMIL animation
+    tests['smil'] = function() {
+        return !!document.createElementNS && /SVGAnimate/.test(toString.call(document.createElementNS(ns.svg, 'animate')));
+    };
+
+    // This test is only for clip paths in SVG proper, not clip paths on HTML content
+    // demo: srufaculty.sru.edu/david.dailey/svg/newstuff/clipPath4.svg
+
+    // However read the comments to dig into applying SVG clippaths to HTML content here:
+    //   github.com/Modernizr/Modernizr/issues/213#issuecomment-1149491
+    tests['svgclippaths'] = function() {
+        return !!document.createElementNS && /SVGClipPath/.test(toString.call(document.createElementNS(ns.svg, 'clipPath')));
+    };
+
+    /*>>webforms*/
+    // input features and input types go directly onto the ret object, bypassing the tests loop.
+    // Hold this guy to execute in a moment.
+    function webforms() {
+        /*>>input*/
+        // Run through HTML5's new input attributes to see if the UA understands any.
+        // We're using f which is the <input> element created early on
+        // Mike Taylr has created a comprehensive resource for testing these attributes
+        //   when applied to all input types:
+        //   miketaylr.com/code/input-type-attr.html
+        // spec: www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
+
+        // Only input placeholder is tested while textarea's placeholder is not.
+        // Currently Safari 4 and Opera 11 have support only for the input placeholder
+        // Both tests are available in feature-detects/forms-placeholder.js
+        Modernizr['input'] = (function( props ) {
+            for ( var i = 0, len = props.length; i < len; i++ ) {
+                attrs[ props[i] ] = !!(props[i] in inputElem);
+            }
+            if (attrs.list){
+              // safari false positive's on datalist: webk.it/74252
+              // see also github.com/Modernizr/Modernizr/issues/146
+              attrs.list = !!(document.createElement('datalist') && window.HTMLDataListElement);
+            }
+            return attrs;
+        })('autocomplete autofocus list placeholder max min multiple pattern required step'.split(' '));
+        /*>>input*/
+
+        /*>>inputtypes*/
+        // Run through HTML5's new input types to see if the UA understands any.
+        //   This is put behind the tests runloop because it doesn't return a
+        //   true/false like all the other tests; instead, it returns an object
+        //   containing each input type with its corresponding true/false value
+
+        // Big thanks to @miketaylr for the html5 forms expertise. miketaylr.com/
+        Modernizr['inputtypes'] = (function(props) {
+
+            for ( var i = 0, bool, inputElemType, defaultView, len = props.length; i < len; i++ ) {
+
+                inputElem.setAttribute('type', inputElemType = props[i]);
+                bool = inputElem.type !== 'text';
+
+                // We first check to see if the type we give it sticks..
+                // If the type does, we feed it a textual value, which shouldn't be valid.
+                // If the value doesn't stick, we know there's input sanitization which infers a custom UI
+                if ( bool ) {
+
+                    inputElem.value         = smile;
+                    inputElem.style.cssText = 'position:absolute;visibility:hidden;';
+
+                    if ( /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ) {
+
+                      docElement.appendChild(inputElem);
+                      defaultView = document.defaultView;
+
+                      // Safari 2-4 allows the smiley as a value, despite making a slider
+                      bool =  defaultView.getComputedStyle &&
+                              defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
+                              // Mobile android web browser has false positive, so must
+                              // check the height to see if the widget is actually there.
+                              (inputElem.offsetHeight !== 0);
+
+                      docElement.removeChild(inputElem);
+
+                    } else if ( /^(search|tel)$/.test(inputElemType) ){
+                      // Spec doesn't define any special parsing or detectable UI
+                      //   behaviors so we pass these through as true
+
+                      // Interestingly, opera fails the earlier test, so it doesn't
+                      //  even make it here.
+
+                    } else if ( /^(url|email)$/.test(inputElemType) ) {
+                      // Real url and email support comes with prebaked validation.
+                      bool = inputElem.checkValidity && inputElem.checkValidity() === false;
+
+                    } else {
+                      // If the upgraded input compontent rejects the :) text, we got a winner
+                      bool = inputElem.value != smile;
+                    }
+                }
+
+                inputs[ props[i] ] = !!bool;
+            }
+            return inputs;
+        })('search tel url email datetime date month week time datetime-local number range color'.split(' '));
+        /*>>inputtypes*/
+    }
+    /*>>webforms*/
+
+
+    // End of test definitions
+    // -----------------------
+
+
+
+    // Run through all tests and detect their support in the current UA.
+    // todo: hypothetically we could be doing an array of tests and use a basic loop here.
+    for ( var feature in tests ) {
+        if ( hasOwnProp(tests, feature) ) {
+            // run the test, throw the return value into the Modernizr,
+            //   then based on that boolean, define an appropriate className
+            //   and push it into an array of classes we'll join later.
+            featureName  = feature.toLowerCase();
+            Modernizr[featureName] = tests[feature]();
+
+            classes.push((Modernizr[featureName] ? '' : 'no-') + featureName);
+        }
+    }
+
+    /*>>webforms*/
+    // input tests need to run.
+    Modernizr.input || webforms();
+    /*>>webforms*/
+
+
+    /**
+     * addTest allows the user to define their own feature tests
+     * the result will be added onto the Modernizr object,
+     * as well as an appropriate className set on the html element
+     *
+     * @param feature - String naming the feature
+     * @param test - Function returning true if feature is supported, false if not
+     */
+     Modernizr.addTest = function ( feature, test ) {
+       if ( typeof feature == 'object' ) {
+         for ( var key in feature ) {
+           if ( hasOwnProp( feature, key ) ) {
+             Modernizr.addTest( key, feature[ key ] );
+           }
+         }
+       } else {
+
+         feature = feature.toLowerCase();
+
+         if ( Modernizr[feature] !== undefined ) {
+           // we're going to quit if you're trying to overwrite an existing test
+           // if we were to allow it, we'd do this:
+           //   var re = new RegExp("\\b(no-)?" + feature + "\\b");
+           //   docElement.className = docElement.className.replace( re, '' );
+           // but, no rly, stuff 'em.
+           return Modernizr;
+         }
+
+         test = typeof test == 'function' ? test() : test;
+
+         if (typeof enableClasses !== "undefined" && enableClasses) {
+           docElement.className += ' ' + (test ? '' : 'no-') + feature;
+         }
+         Modernizr[feature] = test;
+
+       }
+
+       return Modernizr; // allow chaining.
+     };
+
+
+    // Reset modElem.cssText to nothing to reduce memory footprint.
+    setCss('');
+    modElem = inputElem = null;
+
+    /*>>shiv*/
+    /*! HTML5 Shiv v3.6.1 | @afarkas @jdalton @jon_neal @rem | MIT/GPL2 Licensed */
+    ;(function(window, document) {
+    /*jshint evil:true */
+      /** Preset options */
+      var options = window.html5 || {};
+
+      /** Used to skip problem elements */
+      var reSkip = /^<|^(?:button|map|select|textarea|object|iframe|option|optgroup)$/i;
+
+      /** Not all elements can be cloned in IE **/
+      var saveClones = /^(?:a|b|code|div|fieldset|h1|h2|h3|h4|h5|h6|i|label|li|ol|p|q|span|strong|style|table|tbody|td|th|tr|ul)$/i;
+
+      /** Detect whether the browser supports default html5 styles */
+      var supportsHtml5Styles;
+
+      /** Name of the expando, to work with multiple documents or to re-shiv one document */
+      var expando = '_html5shiv';
+
+      /** The id for the the documents expando */
+      var expanID = 0;
+
+      /** Cached data for each document */
+      var expandoData = {};
+
+      /** Detect whether the browser supports unknown elements */
+      var supportsUnknownElements;
+
+      (function() {
+        try {
+            var a = document.createElement('a');
+            a.innerHTML = '<xyz></xyz>';
+            //if the hidden property is implemented we can assume, that the browser supports basic HTML5 Styles
+            supportsHtml5Styles = ('hidden' in a);
+
+            supportsUnknownElements = a.childNodes.length == 1 || (function() {
+              // assign a false positive if unable to shiv
+              (document.createElement)('a');
+              var frag = document.createDocumentFragment();
+              return (
+                typeof frag.cloneNode == 'undefined' ||
+                typeof frag.createDocumentFragment == 'undefined' ||
+                typeof frag.createElement == 'undefined'
+              );
+            }());
+        } catch(e) {
+          supportsHtml5Styles = true;
+          supportsUnknownElements = true;
+        }
+
+      }());
+
+      /*--------------------------------------------------------------------------*/
+
+      /**
+       * Creates a style sheet with the given CSS text and adds it to the document.
+       * @private
+       * @param {Document} ownerDocument The document.
+       * @param {String} cssText The CSS text.
+       * @returns {StyleSheet} The style element.
+       */
+      function addStyleSheet(ownerDocument, cssText) {
+        var p = ownerDocument.createElement('p'),
+            parent = ownerDocument.getElementsByTagName('head')[0] || ownerDocument.documentElement;
+
+        p.innerHTML = 'x<style>' + cssText + '</style>';
+        return parent.insertBefore(p.lastChild, parent.firstChild);
+      }
+
+      /**
+       * Returns the value of `html5.elements` as an array.
+       * @private
+       * @returns {Array} An array of shived element node names.
+       */
+      function getElements() {
+        var elements = html5.elements;
+        return typeof elements == 'string' ? elements.split(' ') : elements;
+      }
+
+        /**
+       * Returns the data associated to the given document
+       * @private
+       * @param {Document} ownerDocument The document.
+       * @returns {Object} An object of data.
+       */
+      function getExpandoData(ownerDocument) {
+        var data = expandoData[ownerDocument[expando]];
+        if (!data) {
+            data = {};
+            expanID++;
+            ownerDocument[expando] = expanID;
+            expandoData[expanID] = data;
+        }
+        return data;
+      }
+
+      /**
+       * returns a shived element for the given nodeName and document
+       * @memberOf html5
+       * @param {String} nodeName name of the element
+       * @param {Document} ownerDocument The context document.
+       * @returns {Object} The shived element.
+       */
+      function createElement(nodeName, ownerDocument, data){
+        if (!ownerDocument) {
+            ownerDocument = document;
+        }
+        if(supportsUnknownElements){
+            return ownerDocument.createElement(nodeName);
+        }
+        if (!data) {
+            data = getExpandoData(ownerDocument);
+        }
+        var node;
+
+        if (data.cache[nodeName]) {
+            node = data.cache[nodeName].cloneNode();
+        } else if (saveClones.test(nodeName)) {
+            node = (data.cache[nodeName] = data.createElem(nodeName)).cloneNode();
+        } else {
+            node = data.createElem(nodeName);
+        }
+
+        // Avoid adding some elements to fragments in IE < 9 because
+        // * Attributes like `name` or `type` cannot be set/changed once an element
+        //   is inserted into a document/fragment
+        // * Link elements with `src` attributes that are inaccessible, as with
+        //   a 403 response, will cause the tab/window to crash
+        // * Script elements appended to fragments will execute when their `src`
+        //   or `text` property is set
+        return node.canHaveChildren && !reSkip.test(nodeName) ? data.frag.appendChild(node) : node;
+      }
+
+      /**
+       * returns a shived DocumentFragment for the given document
+       * @memberOf html5
+       * @param {Document} ownerDocument The context document.
+       * @returns {Object} The shived DocumentFragment.
+       */
+      function createDocumentFragment(ownerDocument, data){
+        if (!ownerDocument) {
+            ownerDocument = document;
+        }
+        if(supportsUnknownElements){
+            return ownerDocument.createDocumentFragment();
+        }
+        data = data || getExpandoData(ownerDocument);
+        var clone = data.frag.cloneNode(),
+            i = 0,
+            elems = getElements(),
+            l = elems.length;
+        for(;i<l;i++){
+            clone.createElement(elems[i]);
+        }
+        return clone;
+      }
+
+      /**
+       * Shivs the `createElement` and `createDocumentFragment` methods of the document.
+       * @private
+       * @param {Document|DocumentFragment} ownerDocument The document.
+       * @param {Object} data of the document.
+       */
+      function shivMethods(ownerDocument, data) {
+        if (!data.cache) {
+            data.cache = {};
+            data.createElem = ownerDocument.createElement;
+            data.createFrag = ownerDocument.createDocumentFragment;
+            data.frag = data.createFrag();
+        }
+
+
+        ownerDocument.createElement = function(nodeName) {
+          //abort shiv
+          if (!html5.shivMethods) {
+              return data.createElem(nodeName);
+          }
+          return createElement(nodeName, ownerDocument, data);
+        };
+
+        ownerDocument.createDocumentFragment = Function('h,f', 'return function(){' +
+          'var n=f.cloneNode(),c=n.createElement;' +
+          'h.shivMethods&&(' +
+            // unroll the `createElement` calls
+            getElements().join().replace(/\w+/g, function(nodeName) {
+              data.createElem(nodeName);
+              data.frag.createElement(nodeName);
+              return 'c("' + nodeName + '")';
+            }) +
+          ');return n}'
+        )(html5, data.frag);
+      }
+
+      /*--------------------------------------------------------------------------*/
+
+      /**
+       * Shivs the given document.
+       * @memberOf html5
+       * @param {Document} ownerDocument The document to shiv.
+       * @returns {Document} The shived document.
+       */
+      function shivDocument(ownerDocument) {
+        if (!ownerDocument) {
+            ownerDocument = document;
+        }
+        var data = getExpandoData(ownerDocument);
+
+        if (html5.shivCSS && !supportsHtml5Styles && !data.hasCSS) {
+          data.hasCSS = !!addStyleSheet(ownerDocument,
+            // corrects block display not defined in IE6/7/8/9
+            'article,aside,figcaption,figure,footer,header,hgroup,nav,section{display:block}' +
+            // adds styling not present in IE6/7/8/9
+            'mark{background:#FF0;color:#000}'
+          );
+        }
+        if (!supportsUnknownElements) {
+          shivMethods(ownerDocument, data);
+        }
+        return ownerDocument;
+      }
+
+      /*--------------------------------------------------------------------------*/
+
+      /**
+       * The `html5` object is exposed so that more elements can be shived and
+       * existing shiving can be detected on iframes.
+       * @type Object
+       * @example
+       *
+       * // options can be changed before the script is included
+       * html5 = { 'elements': 'mark section', 'shivCSS': false, 'shivMethods': false };
+       */
+      var html5 = {
+
+        /**
+         * An array or space separated string of node names of the elements to shiv.
+         * @memberOf html5
+         * @type Array|String
+         */
+        'elements': options.elements || 'abbr article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output progress section summary time video',
+
+        /**
+         * A flag to indicate that the HTML5 style sheet should be inserted.
+         * @memberOf html5
+         * @type Boolean
+         */
+        'shivCSS': (options.shivCSS !== false),
+
+        /**
+         * Is equal to true if a browser supports creating unknown/HTML5 elements
+         * @memberOf html5
+         * @type boolean
+         */
+        'supportsUnknownElements': supportsUnknownElements,
+
+        /**
+         * A flag to indicate that the document's `createElement` and `createDocumentFragment`
+         * methods should be overwritten.
+         * @memberOf html5
+         * @type Boolean
+         */
+        'shivMethods': (options.shivMethods !== false),
+
+        /**
+         * A string to describe the type of `html5` object ("default" or "default print").
+         * @memberOf html5
+         * @type String
+         */
+        'type': 'default',
+
+        // shivs the document according to the specified `html5` object options
+        'shivDocument': shivDocument,
+
+        //creates a shived element
+        createElement: createElement,
+
+        //creates a shived documentFragment
+        createDocumentFragment: createDocumentFragment
+      };
+
+      /*--------------------------------------------------------------------------*/
+
+      // expose html5
+      window.html5 = html5;
+
+      // shiv the document
+      shivDocument(document);
+
+    }(this, document));
+    /*>>shiv*/
+
+    // Assign private properties to the return object with prefix
+    Modernizr._version      = version;
+
+    // expose these for the plugin API. Look in the source for how to join() them against your input
+    /*>>prefixes*/
+    Modernizr._prefixes     = prefixes;
+    /*>>prefixes*/
+    /*>>domprefixes*/
+    Modernizr._domPrefixes  = domPrefixes;
+    Modernizr._cssomPrefixes  = cssomPrefixes;
+    /*>>domprefixes*/
+
+    /*>>mq*/
+    // Modernizr.mq tests a given media query, live against the current state of the window
+    // A few important notes:
+    //   * If a browser does not support media queries at all (eg. oldIE) the mq() will always return false
+    //   * A max-width or orientation query will be evaluated against the current state, which may change later.
+    //   * You must specify values. Eg. If you are testing support for the min-width media query use:
+    //       Modernizr.mq('(min-width:0)')
+    // usage:
+    // Modernizr.mq('only screen and (max-width:768)')
+    Modernizr.mq            = testMediaQuery;
+    /*>>mq*/
+
+    /*>>hasevent*/
+    // Modernizr.hasEvent() detects support for a given event, with an optional element to test on
+    // Modernizr.hasEvent('gesturestart', elem)
+    Modernizr.hasEvent      = isEventSupported;
+    /*>>hasevent*/
+
+    /*>>testprop*/
+    // Modernizr.testProp() investigates whether a given style property is recognized
+    // Note that the property names must be provided in the camelCase variant.
+    // Modernizr.testProp('pointerEvents')
+    Modernizr.testProp      = function(prop){
+        return testProps([prop]);
+    };
+    /*>>testprop*/
+
+    /*>>testallprops*/
+    // Modernizr.testAllProps() investigates whether a given style property,
+    //   or any of its vendor-prefixed variants, is recognized
+    // Note that the property names must be provided in the camelCase variant.
+    // Modernizr.testAllProps('boxSizing')
+    Modernizr.testAllProps  = testPropsAll;
+    /*>>testallprops*/
+
+
+    /*>>teststyles*/
+    // Modernizr.testStyles() allows you to add custom styles to the document and test an element afterwards
+    // Modernizr.testStyles('#modernizr { position:absolute }', function(elem, rule){ ... })
+    Modernizr.testStyles    = injectElementWithStyles;
+    /*>>teststyles*/
+
+
+    /*>>prefixed*/
+    // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
+    // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
+
+    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hypentated style.
+    // Return values will also be the camelCase variant, if you need to translate that to hypenated style use:
+    //
+    //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
+
+    // If you're trying to ascertain which transition end event to bind to, you might do something like...
+    //
+    //     var transEndEventNames = {
+    //       'WebkitTransition' : 'webkitTransitionEnd',
+    //       'MozTransition'    : 'transitionend',
+    //       'OTransition'      : 'oTransitionEnd',
+    //       'msTransition'     : 'MSTransitionEnd',
+    //       'transition'       : 'transitionend'
+    //     },
+    //     transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
+
+    Modernizr.prefixed      = function(prop, obj, elem){
+      if(!obj) {
+        return testPropsAll(prop, 'pfx');
+      } else {
+        // Testing DOM property e.g. Modernizr.prefixed('requestAnimationFrame', window) // 'mozRequestAnimationFrame'
+        return testPropsAll(prop, obj, elem);
+      }
+    };
+    /*>>prefixed*/
+
+
+    /*>>cssclasses*/
+    // Remove "no-js" class from <html> element, if it exists:
+    docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, '$1$2') +
+
+                            // Add the new classes to the <html> element.
+                            (enableClasses ? ' js ' + classes.join(' ') : '');
+    /*>>cssclasses*/
+
+    return Modernizr;
+
+})(this, this.document);
+
+/** Notify.js - v0.3.1 - 2014/06/29
+ * http://notifyjs.com/
+ * Copyright (c) 2014 Jaime Pillora - MIT
+ */
+(function(window,document,$,undefined) {
+'use strict';
+
+var Notification, addStyle, blankFieldName, coreStyle, createElem, defaults, encode, find, findFields, getAnchorElement, getStyle, globalAnchors, hAligns, incr, inherit, insertCSS, mainPositions, opposites, parsePosition, pluginClassName, pluginName, pluginOptions, positions, realign, stylePrefixes, styles, vAligns,
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+pluginName = 'notify';
+
+pluginClassName = pluginName + 'js';
+
+blankFieldName = pluginName + "!blank";
+
+positions = {
+  t: 'top',
+  m: 'middle',
+  b: 'bottom',
+  l: 'left',
+  c: 'center',
+  r: 'right'
+};
+
+hAligns = ['l', 'c', 'r'];
+
+vAligns = ['t', 'm', 'b'];
+
+mainPositions = ['t', 'b', 'l', 'r'];
+
+opposites = {
+  t: 'b',
+  m: null,
+  b: 't',
+  l: 'r',
+  c: null,
+  r: 'l'
+};
+
+parsePosition = function(str) {
+  var pos;
+  pos = [];
+  $.each(str.split(/\W+/), function(i, word) {
+    var w;
+    w = word.toLowerCase().charAt(0);
+    if (positions[w]) {
+      return pos.push(w);
+    }
+  });
+  return pos;
+};
+
+styles = {};
+
+coreStyle = {
+  name: 'core',
+  html: "<div class=\"" + pluginClassName + "-wrapper\">\n  <div class=\"" + pluginClassName + "-arrow\"></div>\n  <div class=\"" + pluginClassName + "-container\"></div>\n</div>",
+  css: "." + pluginClassName + "-corner {\n  position: fixed;\n  margin: 5px;\n  z-index: 1050;\n}\n\n." + pluginClassName + "-corner ." + pluginClassName + "-wrapper,\n." + pluginClassName + "-corner ." + pluginClassName + "-container {\n  position: relative;\n  display: block;\n  height: inherit;\n  width: inherit;\n  margin: 3px;\n}\n\n." + pluginClassName + "-wrapper {\n  z-index: 1;\n  position: absolute;\n  display: inline-block;\n  height: 0;\n  width: 0;\n}\n\n." + pluginClassName + "-container {\n  display: none;\n  z-index: 1;\n  position: absolute;\n}\n\n." + pluginClassName + "-hidable {\n  cursor: pointer;\n}\n\n[data-notify-text],[data-notify-html] {\n  position: relative;\n}\n\n." + pluginClassName + "-arrow {\n  position: absolute;\n  z-index: 2;\n  width: 0;\n  height: 0;\n}"
+};
+
+stylePrefixes = {
+  "border-radius": ["-webkit-", "-moz-"]
+};
+
+getStyle = function(name) {
+  return styles[name];
+};
+
+addStyle = function(name, def) {
+  var cssText, elem, fields, _ref;
+  if (!name) {
+    throw "Missing Style name";
+  }
+  if (!def) {
+    throw "Missing Style definition";
+  }
+  if (!def.html) {
+    throw "Missing Style HTML";
+  }
+  if ((_ref = styles[name]) != null ? _ref.cssElem : void 0) {
+    if (window.console) {
+      console.warn("" + pluginName + ": overwriting style '" + name + "'");
+    }
+    styles[name].cssElem.remove();
+  }
+  def.name = name;
+  styles[name] = def;
+  cssText = "";
+  if (def.classes) {
+    $.each(def.classes, function(className, props) {
+      cssText += "." + pluginClassName + "-" + def.name + "-" + className + " {\n";
+      $.each(props, function(name, val) {
+        if (stylePrefixes[name]) {
+          $.each(stylePrefixes[name], function(i, prefix) {
+            return cssText += "  " + prefix + name + ": " + val + ";\n";
+          });
+        }
+        return cssText += "  " + name + ": " + val + ";\n";
+      });
+      return cssText += "}\n";
+    });
+  }
+  if (def.css) {
+    cssText += "/* styles for " + def.name + " */\n" + def.css;
+  }
+  if (cssText) {
+    def.cssElem = insertCSS(cssText);
+    def.cssElem.attr('id', "notify-" + def.name);
+  }
+  fields = {};
+  elem = $(def.html);
+  findFields('html', elem, fields);
+  findFields('text', elem, fields);
+  return def.fields = fields;
+};
+
+insertCSS = function(cssText) {
+  var elem;
+  elem = createElem("style");
+  elem.attr('type', 'text/css');
+  $("head").append(elem);
+  try {
+    elem.html(cssText);
+  } catch (e) {
+    elem[0].styleSheet.cssText = cssText;
+  }
+  return elem;
+};
+
+findFields = function(type, elem, fields) {
+  var attr;
+  if (type !== 'html') {
+    type = 'text';
+  }
+  attr = "data-notify-" + type;
+  return find(elem, "[" + attr + "]").each(function() {
+    var name;
+    name = $(this).attr(attr);
+    if (!name) {
+      name = blankFieldName;
+    }
+    return fields[name] = type;
+  });
+};
+
+find = function(elem, selector) {
+  if (elem.is(selector)) {
+    return elem;
+  } else {
+    return elem.find(selector);
+  }
+};
+
+pluginOptions = {
+  clickToHide: true,
+  autoHide: true,
+  autoHideDelay: 5000,
+  arrowShow: true,
+  arrowSize: 5,
+  breakNewLines: true,
+  elementPosition: 'bottom',
+  globalPosition: 'top right',
+  style: 'bootstrap',
+  className: 'error',
+  showAnimation: 'slideDown',
+  showDuration: 400,
+  hideAnimation: 'slideUp',
+  hideDuration: 200,
+  gap: 5
+};
+
+inherit = function(a, b) {
+  var F;
+  F = function() {};
+  F.prototype = a;
+  return $.extend(true, new F(), b);
+};
+
+defaults = function(opts) {
+  return $.extend(pluginOptions, opts);
+};
+
+createElem = function(tag) {
+  return $("<" + tag + "></" + tag + ">");
+};
+
+globalAnchors = {};
+
+getAnchorElement = function(element) {
+  var radios;
+  if (element.is('[type=radio]')) {
+    radios = element.parents('form:first').find('[type=radio]').filter(function(i, e) {
+      return $(e).attr('name') === element.attr('name');
+    });
+    element = radios.first();
+  }
+  return element;
+};
+
+incr = function(obj, pos, val) {
+  var opp, temp;
+  if (typeof val === 'string') {
+    val = parseInt(val, 10);
+  } else if (typeof val !== 'number') {
+    return;
+  }
+  if (isNaN(val)) {
+    return;
+  }
+  opp = positions[opposites[pos.charAt(0)]];
+  temp = pos;
+  if (obj[opp] !== undefined) {
+    pos = positions[opp.charAt(0)];
+    val = -val;
+  }
+  if (obj[pos] === undefined) {
+    obj[pos] = val;
+  } else {
+    obj[pos] += val;
+  }
+  return null;
+};
+
+realign = function(alignment, inner, outer) {
+  if (alignment === 'l' || alignment === 't') {
+    return 0;
+  } else if (alignment === 'c' || alignment === 'm') {
+    return outer / 2 - inner / 2;
+  } else if (alignment === 'r' || alignment === 'b') {
+    return outer - inner;
+  }
+  throw "Invalid alignment";
+};
+
+encode = function(text) {
+  encode.e = encode.e || createElem("div");
+  return encode.e.text(text).html();
+};
+
+Notification = (function() {
+
+  function Notification(elem, data, options) {
+    if (typeof options === 'string') {
+      options = {
+        className: options
+      };
+    }
+    this.options = inherit(pluginOptions, $.isPlainObject(options) ? options : {});
+    this.loadHTML();
+    this.wrapper = $(coreStyle.html);
+    if (this.options.clickToHide) {
+      this.wrapper.addClass("" + pluginClassName + "-hidable");
+    }
+    this.wrapper.data(pluginClassName, this);
+    this.arrow = this.wrapper.find("." + pluginClassName + "-arrow");
+    this.container = this.wrapper.find("." + pluginClassName + "-container");
+    this.container.append(this.userContainer);
+    if (elem && elem.length) {
+      this.elementType = elem.attr('type');
+      this.originalElement = elem;
+      this.elem = getAnchorElement(elem);
+      this.elem.data(pluginClassName, this);
+      this.elem.before(this.wrapper);
+    }
+    this.container.hide();
+    this.run(data);
+  }
+
+  Notification.prototype.loadHTML = function() {
+    var style;
+    style = this.getStyle();
+    this.userContainer = $(style.html);
+    return this.userFields = style.fields;
+  };
+
+  Notification.prototype.show = function(show, userCallback) {
+    var args, callback, elems, fn, hidden,
+      _this = this;
+    callback = function() {
+      if (!show && !_this.elem) {
+        _this.destroy();
+      }
+      if (userCallback) {
+        return userCallback();
+      }
+    };
+    hidden = this.container.parent().parents(':hidden').length > 0;
+    elems = this.container.add(this.arrow);
+    args = [];
+    if (hidden && show) {
+      fn = 'show';
+    } else if (hidden && !show) {
+      fn = 'hide';
+    } else if (!hidden && show) {
+      fn = this.options.showAnimation;
+      args.push(this.options.showDuration);
+    } else if (!hidden && !show) {
+      fn = this.options.hideAnimation;
+      args.push(this.options.hideDuration);
+    } else {
+      return callback();
+    }
+    args.push(callback);
+    return elems[fn].apply(elems, args);
+  };
+
+  Notification.prototype.setGlobalPosition = function() {
+    var align, anchor, css, key, main, pAlign, pMain, _ref;
+    _ref = this.getPosition(), pMain = _ref[0], pAlign = _ref[1];
+    main = positions[pMain];
+    align = positions[pAlign];
+    key = pMain + "|" + pAlign;
+    anchor = globalAnchors[key];
+    if (!anchor) {
+      anchor = globalAnchors[key] = createElem("div");
+      css = {};
+      css[main] = 0;
+      if (align === 'middle') {
+        css.top = '45%';
+      } else if (align === 'center') {
+        css.left = '45%';
+      } else {
+        css[align] = 0;
+      }
+      anchor.css(css).addClass("" + pluginClassName + "-corner");
+      $("body").append(anchor);
+    }
+    return anchor.prepend(this.wrapper);
+  };
+
+  Notification.prototype.setElementPosition = function() {
+    var arrowColor, arrowCss, arrowSize, color, contH, contW, css, elemH, elemIH, elemIW, elemPos, elemW, gap, mainFull, margin, opp, oppFull, pAlign, pArrow, pMain, pos, posFull, position, wrapPos, _i, _j, _len, _len1, _ref;
+    position = this.getPosition();
+    pMain = position[0], pAlign = position[1], pArrow = position[2];
+    elemPos = this.elem.position();
+    elemH = this.elem.outerHeight();
+    elemW = this.elem.outerWidth();
+    elemIH = this.elem.innerHeight();
+    elemIW = this.elem.innerWidth();
+    wrapPos = this.wrapper.position();
+    contH = this.container.height();
+    contW = this.container.width();
+    mainFull = positions[pMain];
+    opp = opposites[pMain];
+    oppFull = positions[opp];
+    css = {};
+    css[oppFull] = pMain === 'b' ? elemH : pMain === 'r' ? elemW : 0;
+    incr(css, 'top', elemPos.top - wrapPos.top);
+    incr(css, 'left', elemPos.left - wrapPos.left);
+    _ref = ['top', 'left'];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      pos = _ref[_i];
+      margin = parseInt(this.elem.css("margin-" + pos), 10);
+      if (margin) {
+        incr(css, pos, margin);
+      }
+    }
+    gap = Math.max(0, this.options.gap - (this.options.arrowShow ? arrowSize : 0));
+    incr(css, oppFull, gap);
+    if (!this.options.arrowShow) {
+      this.arrow.hide();
+    } else {
+      arrowSize = this.options.arrowSize;
+      arrowCss = $.extend({}, css);
+      arrowColor = this.userContainer.css("border-color") || this.userContainer.css("background-color") || 'white';
+      for (_j = 0, _len1 = mainPositions.length; _j < _len1; _j++) {
+        pos = mainPositions[_j];
+        posFull = positions[pos];
+        if (pos === opp) {
+          continue;
+        }
+        color = posFull === mainFull ? arrowColor : 'transparent';
+        arrowCss["border-" + posFull] = "" + arrowSize + "px solid " + color;
+      }
+      incr(css, positions[opp], arrowSize);
+      if (__indexOf.call(mainPositions, pAlign) >= 0) {
+        incr(arrowCss, positions[pAlign], arrowSize * 2);
+      }
+    }
+    if (__indexOf.call(vAligns, pMain) >= 0) {
+      incr(css, 'left', realign(pAlign, contW, elemW));
+      if (arrowCss) {
+        incr(arrowCss, 'left', realign(pAlign, arrowSize, elemIW));
+      }
+    } else if (__indexOf.call(hAligns, pMain) >= 0) {
+      incr(css, 'top', realign(pAlign, contH, elemH));
+      if (arrowCss) {
+        incr(arrowCss, 'top', realign(pAlign, arrowSize, elemIH));
+      }
+    }
+    if (this.container.is(":visible")) {
+      css.display = 'block';
+    }
+    this.container.removeAttr('style').css(css);
+    if (arrowCss) {
+      return this.arrow.removeAttr('style').css(arrowCss);
+    }
+  };
+
+  Notification.prototype.getPosition = function() {
+    var pos, text, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+    text = this.options.position || (this.elem ? this.options.elementPosition : this.options.globalPosition);
+    pos = parsePosition(text);
+    if (pos.length === 0) {
+      pos[0] = 'b';
+    }
+    if (_ref = pos[0], __indexOf.call(mainPositions, _ref) < 0) {
+      throw "Must be one of [" + mainPositions + "]";
+    }
+    if (pos.length === 1 || ((_ref1 = pos[0], __indexOf.call(vAligns, _ref1) >= 0) && (_ref2 = pos[1], __indexOf.call(hAligns, _ref2) < 0)) || ((_ref3 = pos[0], __indexOf.call(hAligns, _ref3) >= 0) && (_ref4 = pos[1], __indexOf.call(vAligns, _ref4) < 0))) {
+      pos[1] = (_ref5 = pos[0], __indexOf.call(hAligns, _ref5) >= 0) ? 'm' : 'l';
+    }
+    if (pos.length === 2) {
+      pos[2] = pos[1];
+    }
+    return pos;
+  };
+
+  Notification.prototype.getStyle = function(name) {
+    var style;
+    if (!name) {
+      name = this.options.style;
+    }
+    if (!name) {
+      name = 'default';
+    }
+    style = styles[name];
+    if (!style) {
+      throw "Missing style: " + name;
+    }
+    return style;
+  };
+
+  Notification.prototype.updateClasses = function() {
+    var classes, style;
+    classes = ['base'];
+    if ($.isArray(this.options.className)) {
+      classes = classes.concat(this.options.className);
+    } else if (this.options.className) {
+      classes.push(this.options.className);
+    }
+    style = this.getStyle();
+    classes = $.map(classes, function(n) {
+      return "" + pluginClassName + "-" + style.name + "-" + n;
+    }).join(' ');
+    return this.userContainer.attr('class', classes);
+  };
+
+  Notification.prototype.run = function(data, options) {
+    var d, datas, name, type, value,
+      _this = this;
+    if ($.isPlainObject(options)) {
+      $.extend(this.options, options);
+    } else if ($.type(options) === 'string') {
+      this.options.className = options;
+    }
+    if (this.container && !data) {
+      this.show(false);
+      return;
+    } else if (!this.container && !data) {
+      return;
+    }
+    datas = {};
+    if ($.isPlainObject(data)) {
+      datas = data;
+    } else {
+      datas[blankFieldName] = data;
+    }
+    for (name in datas) {
+      d = datas[name];
+      type = this.userFields[name];
+      if (!type) {
+        continue;
+      }
+      if (type === 'text') {
+        d = encode(d);
+        if (this.options.breakNewLines) {
+          d = d.replace(/\n/g, '<br/>');
+        }
+      }
+      value = name === blankFieldName ? '' : '=' + name;
+      find(this.userContainer, "[data-notify-" + type + value + "]").html(d);
+    }
+    this.updateClasses();
+    if (this.elem) {
+      this.setElementPosition();
+    } else {
+      this.setGlobalPosition();
+    }
+    this.show(true);
+    if (this.options.autoHide) {
+      clearTimeout(this.autohideTimer);
+      return this.autohideTimer = setTimeout(function() {
+        return _this.show(false);
+      }, this.options.autoHideDelay);
+    }
+  };
+
+  Notification.prototype.destroy = function() {
+    return this.wrapper.remove();
+  };
+
+  return Notification;
+
+})();
+
+$[pluginName] = function(elem, data, options) {
+  if ((elem && elem.nodeName) || elem.jquery) {
+    $(elem)[pluginName](data, options);
+  } else {
+    options = data;
+    data = elem;
+    new Notification(null, data, options);
+  }
+  return elem;
+};
+
+$.fn[pluginName] = function(data, options) {
+  $(this).each(function() {
+    var inst;
+    inst = getAnchorElement($(this)).data(pluginClassName);
+    if (inst) {
+      return inst.run(data, options);
+    } else {
+      return new Notification($(this), data, options);
+    }
+  });
+  return this;
+};
+
+$.extend($[pluginName], {
+  defaults: defaults,
+  addStyle: addStyle,
+  pluginOptions: pluginOptions,
+  getStyle: getStyle,
+  insertCSS: insertCSS
+});
+
+$(function() {
+  insertCSS(coreStyle.css).attr('id', 'core-notify');
+  $(document).on('click', "." + pluginClassName + "-hidable", function(e) {
+    return $(this).trigger('notify-hide');
+  });
+  return $(document).on('notify-hide', "." + pluginClassName + "-wrapper", function(e) {
+    var _ref;
+    return (_ref = $(this).data(pluginClassName)) != null ? _ref.show(false) : void 0;
+  });
+});
+
+}(window,document,jQuery));
+
+$.notify.addStyle("bootstrap", {
+  html: "<div>\n<span data-notify-text></span>\n</div>",
+  classes: {
+    base: {
+      "font-weight": "bold",
+      "padding": "8px 15px 8px 14px",
+      "text-shadow": "0 1px 0 rgba(255, 255, 255, 0.5)",
+      "background-color": "#fcf8e3",
+      "border": "1px solid #fbeed5",
+      "border-radius": "4px",
+      "white-space": "nowrap",
+      "padding-left": "25px",
+      "background-repeat": "no-repeat",
+      "background-position": "3px 7px"
+    },
+    error: {
+      "color": "#B94A48",
+      "background-color": "#F2DEDE",
+      "border-color": "#EED3D7",
+      "background-image": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtRJREFUeNqkVc1u00AQHq+dOD+0poIQfkIjalW0SEGqRMuRnHos3DjwAH0ArlyQeANOOSMeAA5VjyBxKBQhgSpVUKKQNGloFdw4cWw2jtfMOna6JOUArDTazXi/b3dm55socPqQhFka++aHBsI8GsopRJERNFlY88FCEk9Yiwf8RhgRyaHFQpPHCDmZG5oX2ui2yilkcTT1AcDsbYC1NMAyOi7zTX2Agx7A9luAl88BauiiQ/cJaZQfIpAlngDcvZZMrl8vFPK5+XktrWlx3/ehZ5r9+t6e+WVnp1pxnNIjgBe4/6dAysQc8dsmHwPcW9C0h3fW1hans1ltwJhy0GxK7XZbUlMp5Ww2eyan6+ft/f2FAqXGK4CvQk5HueFz7D6GOZtIrK+srupdx1GRBBqNBtzc2AiMr7nPplRdKhb1q6q6zjFhrklEFOUutoQ50xcX86ZlqaZpQrfbBdu2R6/G19zX6XSgh6RX5ubyHCM8nqSID6ICrGiZjGYYxojEsiw4PDwMSL5VKsC8Yf4VRYFzMzMaxwjlJSlCyAQ9l0CW44PBADzXhe7xMdi9HtTrdYjFYkDQL0cn4Xdq2/EAE+InCnvADTf2eah4Sx9vExQjkqXT6aAERICMewd/UAp/IeYANM2joxt+q5VI+ieq2i0Wg3l6DNzHwTERPgo1ko7XBXj3vdlsT2F+UuhIhYkp7u7CarkcrFOCtR3H5JiwbAIeImjT/YQKKBtGjRFCU5IUgFRe7fF4cCNVIPMYo3VKqxwjyNAXNepuopyqnld602qVsfRpEkkz+GFL1wPj6ySXBpJtWVa5xlhpcyhBNwpZHmtX8AGgfIExo0ZpzkWVTBGiXCSEaHh62/PoR0p/vHaczxXGnj4bSo+G78lELU80h1uogBwWLf5YlsPmgDEd4M236xjm+8nm4IuE/9u+/PH2JXZfbwz4zw1WbO+SQPpXfwG/BBgAhCNZiSb/pOQAAAAASUVORK5CYII=)"
+    },
+    success: {
+      "color": "#468847",
+      "background-color": "#DFF0D8",
+      "border-color": "#D6E9C6",
+      "background-image": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAutJREFUeNq0lctPE0Ecx38zu/RFS1EryqtgJFA08YCiMZIAQQ4eRG8eDGdPJiYeTIwHTfwPiAcvXIwXLwoXPaDxkWgQ6islKlJLSQWLUraPLTv7Gme32zoF9KSTfLO7v53vZ3d/M7/fIth+IO6INt2jjoA7bjHCJoAlzCRw59YwHYjBnfMPqAKWQYKjGkfCJqAF0xwZjipQtA3MxeSG87VhOOYegVrUCy7UZM9S6TLIdAamySTclZdYhFhRHloGYg7mgZv1Zzztvgud7V1tbQ2twYA34LJmF4p5dXF1KTufnE+SxeJtuCZNsLDCQU0+RyKTF27Unw101l8e6hns3u0PBalORVVVkcaEKBJDgV3+cGM4tKKmI+ohlIGnygKX00rSBfszz/n2uXv81wd6+rt1orsZCHRdr1Imk2F2Kob3hutSxW8thsd8AXNaln9D7CTfA6O+0UgkMuwVvEFFUbbAcrkcTA8+AtOk8E6KiQiDmMFSDqZItAzEVQviRkdDdaFgPp8HSZKAEAL5Qh7Sq2lIJBJwv2scUqkUnKoZgNhcDKhKg5aH+1IkcouCAdFGAQsuWZYhOjwFHQ96oagWgRoUov1T9kRBEODAwxM2QtEUl+Wp+Ln9VRo6BcMw4ErHRYjH4/B26AlQoQQTRdHWwcd9AH57+UAXddvDD37DmrBBV34WfqiXPl61g+vr6xA9zsGeM9gOdsNXkgpEtTwVvwOklXLKm6+/p5ezwk4B+j6droBs2CsGa/gNs6RIxazl4Tc25mpTgw/apPR1LYlNRFAzgsOxkyXYLIM1V8NMwyAkJSctD1eGVKiq5wWjSPdjmeTkiKvVW4f2YPHWl3GAVq6ymcyCTgovM3FzyRiDe2TaKcEKsLpJvNHjZgPNqEtyi6mZIm4SRFyLMUsONSSdkPeFtY1n0mczoY3BHTLhwPRy9/lzcziCw9ACI+yql0VLzcGAZbYSM5CCSZg1/9oc/nn7+i8N9p/8An4JMADxhH+xHfuiKwAAAABJRU5ErkJggg==)"
+    },
+    info: {
+      "color": "#3A87AD",
+      "background-color": "#D9EDF7",
+      "border-color": "#BCE8F1",
+      "background-image": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYFAhkSsdes/QAAA8dJREFUOMvVlGtMW2UYx//POaWHXg6lLaW0ypAtw1UCgbniNOLcVOLmAjHZolOYlxmTGXVZdAnRfXQm+7SoU4mXaOaiZsEpC9FkiQs6Z6bdCnNYruM6KNBw6YWewzl9z+sHImEWv+vz7XmT95f/+3/+7wP814v+efDOV3/SoX3lHAA+6ODeUFfMfjOWMADgdk+eEKz0pF7aQdMAcOKLLjrcVMVX3xdWN29/GhYP7SvnP0cWfS8caSkfHZsPE9Fgnt02JNutQ0QYHB2dDz9/pKX8QjjuO9xUxd/66HdxTeCHZ3rojQObGQBcuNjfplkD3b19Y/6MrimSaKgSMmpGU5WevmE/swa6Oy73tQHA0Rdr2Mmv/6A1n9w9suQ7097Z9lM4FlTgTDrzZTu4StXVfpiI48rVcUDM5cmEksrFnHxfpTtU/3BFQzCQF/2bYVoNbH7zmItbSoMj40JSzmMyX5qDvriA7QdrIIpA+3cdsMpu0nXI8cV0MtKXCPZev+gCEM1S2NHPvWfP/hL+7FSr3+0p5RBEyhEN5JCKYr8XnASMT0xBNyzQGQeI8fjsGD39RMPk7se2bd5ZtTyoFYXftF6y37gx7NeUtJJOTFlAHDZLDuILU3j3+H5oOrD3yWbIztugaAzgnBKJuBLpGfQrS8wO4FZgV+c1IxaLgWVU0tMLEETCos4xMzEIv9cJXQcyagIwigDGwJgOAtHAwAhisQUjy0ORGERiELgG4iakkzo4MYAxcM5hAMi1WWG1yYCJIcMUaBkVRLdGeSU2995TLWzcUAzONJ7J6FBVBYIggMzmFbvdBV44Corg8vjhzC+EJEl8U1kJtgYrhCzgc/vvTwXKSib1paRFVRVORDAJAsw5FuTaJEhWM2SHB3mOAlhkNxwuLzeJsGwqWzf5TFNdKgtY5qHp6ZFf67Y/sAVadCaVY5YACDDb3Oi4NIjLnWMw2QthCBIsVhsUTU9tvXsjeq9+X1d75/KEs4LNOfcdf/+HthMnvwxOD0wmHaXr7ZItn2wuH2SnBzbZAbPJwpPx+VQuzcm7dgRCB57a1uBzUDRL4bfnI0RE0eaXd9W89mpjqHZnUI5Hh2l2dkZZUhOqpi2qSmpOmZ64Tuu9qlz/SEXo6MEHa3wOip46F1n7633eekV8ds8Wxjn37Wl63VVa+ej5oeEZ/82ZBETJjpJ1Rbij2D3Z/1trXUvLsblCK0XfOx0SX2kMsn9dX+d+7Kf6h8o4AIykuffjT8L20LU+w4AZd5VvEPY+XpWqLV327HR7DzXuDnD8r+ovkBehJ8i+y8YAAAAASUVORK5CYII=)"
+    },
+    warn: {
+      "color": "#C09853",
+      "background-color": "#FCF8E3",
+      "border-color": "#FBEED5",
+      "background-image": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAABJlBMVEXr6eb/2oD/wi7/xjr/0mP/ykf/tQD/vBj/3o7/uQ//vyL/twebhgD/4pzX1K3z8e349vK6tHCilCWbiQymn0jGworr6dXQza3HxcKkn1vWvV/5uRfk4dXZ1bD18+/52YebiAmyr5S9mhCzrWq5t6ufjRH54aLs0oS+qD751XqPhAybhwXsujG3sm+Zk0PTwG6Shg+PhhObhwOPgQL4zV2nlyrf27uLfgCPhRHu7OmLgAafkyiWkD3l49ibiAfTs0C+lgCniwD4sgDJxqOilzDWowWFfAH08uebig6qpFHBvH/aw26FfQTQzsvy8OyEfz20r3jAvaKbhgG9q0nc2LbZxXanoUu/u5WSggCtp1anpJKdmFz/zlX/1nGJiYmuq5Dx7+sAAADoPUZSAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfdBgUBGhh4aah5AAAAlklEQVQY02NgoBIIE8EUcwn1FkIXM1Tj5dDUQhPU502Mi7XXQxGz5uVIjGOJUUUW81HnYEyMi2HVcUOICQZzMMYmxrEyMylJwgUt5BljWRLjmJm4pI1hYp5SQLGYxDgmLnZOVxuooClIDKgXKMbN5ggV1ACLJcaBxNgcoiGCBiZwdWxOETBDrTyEFey0jYJ4eHjMGWgEAIpRFRCUt08qAAAAAElFTkSuQmCC)"
+    }
+  }
+});
+
 /**
  * Copyright (c) 2011-2014 Felix Gnass
  * Licensed under the MIT license
@@ -14969,33 +16992,6 @@ this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale
 	https://github.com/jacobtoye
 */
 (function(){L.labelVersion="0.2.1",L.Label=L.Class.extend({includes:L.Mixin.Events,options:{className:"",clickable:!1,direction:"right",noHide:!1,offset:[12,-15],opacity:1,zoomAnimation:!0},initialize:function(t,e){L.setOptions(this,t),this._source=e,this._animated=L.Browser.any3d&&this.options.zoomAnimation,this._isOpen=!1},onAdd:function(t){this._map=t,this._pane=this._source instanceof L.Marker?t._panes.markerPane:t._panes.popupPane,this._container||this._initLayout(),this._pane.appendChild(this._container),this._initInteraction(),this._update(),this.setOpacity(this.options.opacity),t.on("moveend",this._onMoveEnd,this).on("viewreset",this._onViewReset,this),this._animated&&t.on("zoomanim",this._zoomAnimation,this),L.Browser.touch&&!this.options.noHide&&L.DomEvent.on(this._container,"click",this.close,this)},onRemove:function(t){this._pane.removeChild(this._container),t.off({zoomanim:this._zoomAnimation,moveend:this._onMoveEnd,viewreset:this._onViewReset},this),this._removeInteraction(),this._map=null},setLatLng:function(t){return this._latlng=L.latLng(t),this._map&&this._updatePosition(),this},setContent:function(t){return this._previousContent=this._content,this._content=t,this._updateContent(),this},close:function(){var t=this._map;t&&(L.Browser.touch&&!this.options.noHide&&L.DomEvent.off(this._container,"click",this.close),t.removeLayer(this))},updateZIndex:function(t){this._zIndex=t,this._container&&this._zIndex&&(this._container.style.zIndex=t)},setOpacity:function(t){this.options.opacity=t,this._container&&L.DomUtil.setOpacity(this._container,t)},_initLayout:function(){this._container=L.DomUtil.create("div","leaflet-label "+this.options.className+" leaflet-zoom-animated"),this.updateZIndex(this._zIndex)},_update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updatePosition(),this._container.style.visibility="")},_updateContent:function(){this._content&&this._map&&this._prevContent!==this._content&&"string"==typeof this._content&&(this._container.innerHTML=this._content,this._prevContent=this._content,this._labelWidth=this._container.offsetWidth)},_updatePosition:function(){var t=this._map.latLngToLayerPoint(this._latlng);this._setPosition(t)},_setPosition:function(t){var e=this._map,i=this._container,n=e.latLngToContainerPoint(e.getCenter()),o=e.layerPointToContainerPoint(t),s=this.options.direction,a=this._labelWidth,l=L.point(this.options.offset);"right"===s||"auto"===s&&o.x<n.x?(L.DomUtil.addClass(i,"leaflet-label-right"),L.DomUtil.removeClass(i,"leaflet-label-left"),t=t.add(l)):(L.DomUtil.addClass(i,"leaflet-label-left"),L.DomUtil.removeClass(i,"leaflet-label-right"),t=t.add(L.point(-l.x-a,l.y))),L.DomUtil.setPosition(i,t)},_zoomAnimation:function(t){var e=this._map._latLngToNewLayerPoint(this._latlng,t.zoom,t.center).round();this._setPosition(e)},_onMoveEnd:function(){this._animated&&"auto"!==this.options.direction||this._updatePosition()},_onViewReset:function(t){t&&t.hard&&this._update()},_initInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.addClass(t,"leaflet-clickable"),L.DomEvent.on(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.on(t,e[i],this._fireMouseEvent,this)}},_removeInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.removeClass(t,"leaflet-clickable"),L.DomEvent.off(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.off(t,e[i],this._fireMouseEvent,this)}},_onMouseClick:function(t){this.hasEventListeners(t.type)&&L.DomEvent.stopPropagation(t),this.fire(t.type,{originalEvent:t})},_fireMouseEvent:function(t){this.fire(t.type,{originalEvent:t}),"contextmenu"===t.type&&this.hasEventListeners(t.type)&&L.DomEvent.preventDefault(t),"mousedown"!==t.type?L.DomEvent.stopPropagation(t):L.DomEvent.preventDefault(t)}}),L.BaseMarkerMethods={showLabel:function(){return this.label&&this._map&&(this.label.setLatLng(this._latlng),this._map.showLabel(this.label)),this},hideLabel:function(){return this.label&&this.label.close(),this},setLabelNoHide:function(t){this._labelNoHide!==t&&(this._labelNoHide=t,t?(this._removeLabelRevealHandlers(),this.showLabel()):(this._addLabelRevealHandlers(),this.hideLabel()))},bindLabel:function(t,e){var i=this.options.icon?this.options.icon.options.labelAnchor:this.options.labelAnchor,n=L.point(i)||L.point(0,0);return n=n.add(L.Label.prototype.options.offset),e&&e.offset&&(n=n.add(e.offset)),e=L.Util.extend({offset:n},e),this._labelNoHide=e.noHide,this.label||(this._labelNoHide||this._addLabelRevealHandlers(),this.on("remove",this.hideLabel,this).on("move",this._moveLabel,this).on("add",this._onMarkerAdd,this),this._hasLabelHandlers=!0),this.label=new L.Label(e,this).setContent(t),this},unbindLabel:function(){return this.label&&(this.hideLabel(),this.label=null,this._hasLabelHandlers&&(this._labelNoHide||this._removeLabelRevealHandlers(),this.off("remove",this.hideLabel,this).off("move",this._moveLabel,this).off("add",this._onMarkerAdd,this)),this._hasLabelHandlers=!1),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},getLabel:function(){return this.label},_onMarkerAdd:function(){this._labelNoHide&&this.showLabel()},_addLabelRevealHandlers:function(){this.on("mouseover",this.showLabel,this).on("mouseout",this.hideLabel,this),L.Browser.touch&&this.on("click",this.showLabel,this)},_removeLabelRevealHandlers:function(){this.off("mouseover",this.showLabel,this).off("mouseout",this.hideLabel,this),L.Browser.touch&&this.off("click",this.showLabel,this)},_moveLabel:function(t){this.label.setLatLng(t.latlng)}},L.Icon.Default.mergeOptions({labelAnchor:new L.Point(9,-20)}),L.Marker.mergeOptions({icon:new L.Icon.Default}),L.Marker.include(L.BaseMarkerMethods),L.Marker.include({_originalUpdateZIndex:L.Marker.prototype._updateZIndex,_updateZIndex:function(t){var e=this._zIndex+t;this._originalUpdateZIndex(t),this.label&&this.label.updateZIndex(e)},_originalSetOpacity:L.Marker.prototype.setOpacity,setOpacity:function(t,e){this.options.labelHasSemiTransparency=e,this._originalSetOpacity(t)},_originalUpdateOpacity:L.Marker.prototype._updateOpacity,_updateOpacity:function(){var t=0===this.options.opacity?0:1;this._originalUpdateOpacity(),this.label&&this.label.setOpacity(this.options.labelHasSemiTransparency?this.options.opacity:t)},_originalSetLatLng:L.Marker.prototype.setLatLng,setLatLng:function(t){return this.label&&!this._labelNoHide&&this.hideLabel(),this._originalSetLatLng(t)}}),L.CircleMarker.mergeOptions({labelAnchor:new L.Point(0,0)}),L.CircleMarker.include(L.BaseMarkerMethods),L.Path.include({bindLabel:function(t,e){return this.label&&this.label.options===e||(this.label=new L.Label(e,this)),this.label.setContent(t),this._showLabelAdded||(this.on("mouseover",this._showLabel,this).on("mousemove",this._moveLabel,this).on("mouseout remove",this._hideLabel,this),L.Browser.touch&&this.on("click",this._showLabel,this),this._showLabelAdded=!0),this},unbindLabel:function(){return this.label&&(this._hideLabel(),this.label=null,this._showLabelAdded=!1,this.off("mouseover",this._showLabel,this).off("mousemove",this._moveLabel,this).off("mouseout remove",this._hideLabel,this)),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},_showLabel:function(t){this.label.setLatLng(t.latlng),this._map.showLabel(this.label)},_moveLabel:function(t){this.label.setLatLng(t.latlng)},_hideLabel:function(){this.label.close()}}),L.Map.include({showLabel:function(t){return this.addLayer(t)}}),L.FeatureGroup.include({clearLayers:function(){return this.unbindLabel(),this.eachLayer(this.removeLayer,this),this},bindLabel:function(t,e){return this.invoke("bindLabel",t,e)},unbindLabel:function(){return this.invoke("unbindLabel")},updateLabelContent:function(t){this.invoke("updateLabelContent",t)}})})(this,document);
-/*! Esri-Leaflet - v0.0.1-beta.4 - 2014-03-09
-*   Copyright (c) 2014 Environmental Systems Research Institute, Inc.
-*   Apache License*/
-L.esri={_callback:{}},L.esri.Support={CORS:!!(window.XMLHttpRequest&&"withCredentials"in new XMLHttpRequest)},L.esri.RequestHandlers={CORS:function(a,b,c,d){var e=new XMLHttpRequest;b.f="json",e.onreadystatechange=function(){var a;if(4===e.readyState){try{a=JSON.parse(e.responseText)}catch(b){a={error:"Could not parse response as JSON."}}d?c.call(d,a):c(a)}},e.open("GET",a+"?"+L.esri.Util.serialize(b),!0),e.send(null)},JSONP:function(a,b,c,d){var e="c"+(1e9*Math.random()).toString(36).replace(".","_");b.f="json",b.callback="L.esri._callback."+e;var f=L.DomUtil.create("script",null,document.body);f.type="text/javascript",f.src=a+"?"+L.esri.Util.serialize(b),f.id=e,L.esri._callback[e]=function(a){d?c.call(d,a):c(a),document.body.removeChild(f),delete L.esri._callback[e]}}},L.esri.get=L.esri.Support.CORS?L.esri.RequestHandlers.CORS:L.esri.RequestHandlers.JSONP,L.esri.Mixins={},L.esri.Mixins.featureGrid={_activeRequests:0,_initializeFeatureGrid:function(a){this._map=a,this._previousCells=[],this.center=this._map.getCenter(),this.origin=this._map.project(this.center),this._moveHandler=L.esri.Util.debounce(function(a){"zoomend"===a.type&&(this.origin=this._map.project(this.center),this._previousCells=[]),this._requestFeatures(a.target.getBounds())},this.options.debounce,this),a.on("zoomend resize move",this._moveHandler,this),this._requestFeatures(a.getBounds())},_destroyFeatureGrid:function(a){a.off("zoomend resize move",this._moveHandler,this)},_requestFeatures:function(a){var b=this._cellsWithin(a);b&&b.length>0&&this.fire("loading",{bounds:a});for(var c=0;c<b.length;c++)this._makeRequest(b[c],b,a)},_makeRequest:function(a,b,c){this._activeRequests++;var d={geometryType:"esriGeometryEnvelope",geometry:JSON.stringify(L.esri.Util.boundsToExtent(a.bounds)),outFields:this.options.fields.join(","),outSR:4326,inSR:4326,where:this.options.where};this.options.token&&(d.token=this.options.token),L.esri.get(this.url+"query",d,function(a){this._activeRequests--,this._activeRequests<=0&&this.fire("load",{bounds:c}),!a.error||499!==a.error.code&&498!==a.error.code?this._render(a):this._authenticating||(this._authenticating=!0,this.fire("authenticationrequired",{retry:L.Util.bind(function(a){this._authenticating=!1,this.options.token=a,this._previousCells=[],this._requestFeatures(this._map.getBounds())},this)}))},this)},_cellsWithin:function(a){var b=this._map.getSize(),c=this._map.project(this._map.getCenter());Math.min(this.options.cellSize/b.x,this.options.cellSize/b.y);for(var d=a.pad(.1),e=[],f=this._map.project(d.getNorthWest()),g=this._map.project(d.getSouthEast()),h=f.subtract(c).divideBy(this.options.cellSize),i=g.subtract(c).divideBy(this.options.cellSize),j=Math.round((this.origin.x-c.x)/this.options.cellSize),k=Math.round((this.origin.y-c.y)/this.options.cellSize),l=L.esri.Util.roundAwayFromZero(h.x)-j,m=L.esri.Util.roundAwayFromZero(i.x)-j,n=L.esri.Util.roundAwayFromZero(h.y)-k,o=L.esri.Util.roundAwayFromZero(i.y)-k,p=l;m>p;p++)for(var q=n;o>q;q++){var r="cell:"+p+":"+q,s=L.esri.Util.indexOf(this._previousCells,r)>=0;if(!s||!this.options.deduplicate){var t=this._cellExtent(p,q),u=t.getCenter(),v=u.distanceTo(t.getNorthWest()),w=u.distanceTo(this.center),x={row:p,col:q,id:r,center:u,bounds:t,distance:w,radius:v};e.push(x),this._previousCells.push(r)}}return e.sort(function(a,b){return a.distance-b.distance}),e},_cellExtent:function(a,b){var c=this._cellPoint(a,b),d=this._cellPoint(a+1,b+1),e=this._map.unproject(c),f=this._map.unproject(d);return L.latLngBounds(e,f)},_cellPoint:function(a,b){var c=this.origin.x+a*this.options.cellSize,d=this.origin.y+b*this.options.cellSize;return[c,d]}},L.esri.Mixins.identifiableLayer={identify:function(a,b,c){var d={sr:"4326",mapExtent:JSON.stringify(L.esri.Util.boundsToExtent(this._map.getBounds())),tolerance:5,geometryType:"esriGeometryPoint",imageDisplay:this._map._size.x+","+this._map._size.y+",96",geometry:JSON.stringify({x:a.lng,y:a.lat,spatialReference:{wkid:4326}})};this.options.layers&&(d.layers=this.options.layers);var e;"function"==typeof b&&"undefined"==typeof c?(c=b,e=d):"object"==typeof b&&(b.layerDefs&&(b.layerDefs=this.parseLayerDefs(b.layerDefs)),e=L.Util.extend(d,b)),L.esri.get(this.url+"/identify",e,c)},parseLayerDefs:function(a){return a instanceof Array?"":"object"==typeof a?JSON.stringify(a):a}},L.esri.Mixins.metadata={_getMetadata:function(){var a={};this.options.token&&(a.token=this.options.token),L.esri.get(this.url,a,function(a){if(!a.error||499!==a.error.code&&498!==a.error.code){var b=a.extent||a.initialExtent||a.fullExtent,c={metadata:a};b&&this._map&&(!this._map||102100!==b.spatialReference.wkid&&3857!==b.spatialReference.wkid?4326===b.spatialReference.wkid&&(c.bounds=L.esri.Util.extentToBounds(b)):c.bounds=L.esri.Util.mercatorExtentToBounds(b,this._map)),this.fire("metadata",c)}else this._authenticating||(this._authenticating=!0,this.fire("authenticationrequired",{retry:L.Util.bind(function(a){this.options.token=a,this._getMetadata(),this._update()},this)}))},this)}},function(L){function a(a){var b={};for(var c in a)a.hasOwnProperty(c)&&(b[c]=a[c]);return b}function b(a){var b,c=0,d=0,e=a.length,f=a[d];for(d;e-1>d;d++)b=a[d+1],c+=(b[0]-f[0])*(b[1]+f[1]),f=b;return c>=0}function c(a,b,c,d){var e=(d[0]-c[0])*(a[1]-c[1])-(d[1]-c[1])*(a[0]-c[0]),f=(b[0]-a[0])*(a[1]-c[1])-(b[1]-a[1])*(a[0]-c[0]),g=(d[1]-c[1])*(b[0]-a[0])-(d[0]-c[0])*(b[1]-a[1]);if(0!==g){var h=e/g,i=f/g;if(h>=0&&1>=h&&i>=0&&1>=i)return!0}return!1}function d(a,b){for(var d=0;d<a.length-1;d++)for(var e=0;e<b.length-1;e++)if(c(a[d],a[d+1],b[e],b[e+1]))return!0;return!1}function e(a,b){for(var c=!1,d=-1,e=a.length,f=e-1;++d<e;f=d)(a[d][1]<=b[1]&&b[1]<a[f][1]||a[f][1]<=b[1]&&b[1]<a[d][1])&&b[0]<(a[f][0]-a[d][0])*(b[1]-a[d][1])/(a[f][1]-a[d][1])+a[d][0]&&(c=!c);return c}function f(a,b){var c=d(a,b),f=e(a,b[0]);return!c&&f?!0:!1}function g(a){for(var c=[],d=[],e=0;e<a.length;e++){var g=a[e].slice(0);if(b(g)){var h=[g];c.push(h)}else d.push(g)}for(;d.length;){for(var i=d.pop(),j=!1,k=c.length-1;k>=0;k--){var l=c[k][0];if(f(l,i)){c[k].push(i),j=!0;break}}j||c.push([i.reverse()])}return 1===c.length?{type:"Polygon",coordinates:c[0]}:{type:"MultiPolygon",coordinates:c}}function h(a){for(var b=null,c=null,d=null,e=null,f=0;f<a.length;f++){var g=a[f],h=g[0],i=g[1];null===b?b=h:b>h&&(b=h),null===c?c=h:h>c&&(c=h),null===d?d=i:d>i&&(d=i),null===e?e=i:i>e&&(e=i)}return[b,d,c,e]}function i(a){for(var b=null,c=null,d=null,e=null,f=0;f<a.length;f++)for(var g=a[f],h=0;h<g.length;h++){var i=g[h],j=i[0],k=i[1];null===b?b=j:b>j&&(b=j),null===c?c=j:j>c&&(c=j),null===d?d=k:d>k&&(d=k),null===e?e=k:k>e&&(e=k)}return[b,d,c,e]}function j(a){for(var b=null,c=null,d=null,e=null,f=0;f<a.length;f++)for(var g=a[f],h=0;h<g.length;h++)for(var i=g[h],j=0;j<i.length;j++){var k=i[j],l=k[0],m=k[1];null===b?b=l:b>l&&(b=l),null===c?c=l:l>c&&(c=l),null===d?d=m:d>m&&(d=m),null===e?e=m:m>e&&(e=m)}return[b,d,c,e]}function k(a){var c=[],d=a.slice(0),e=d.shift().slice(0);b(e)||e.reverse(),c.push(e);for(var f=0;f<d.length;f++){var g=d[f].slice(0);b(g)&&g.reverse(),c.push(g)}return c}function l(a){for(var b=[],c=0;c<a.length;c++)for(var d=k(a[c]),e=d.length-1;e>=0;e--){var f=d[e].slice(0);b.push(f)}return b}L.esri.Util={debounce:function(a,b){var c=null;return function(){var d=this||d,e=arguments;clearTimeout(c),c=setTimeout(function(){a.apply(d,e)},b)}},roundAwayFromZero:function(a){return a>0?Math.ceil(a):Math.floor(a)},trim:function(a){return a.replace(/^\s\s*/,"").replace(/\s\s*$/,"")},cleanUrl:function(a){return a=L.esri.Util.trim(a),"/"!==a[a.length-1]&&(a+="/"),a},serialize:function(a){var b="";for(var c in a)if(a.hasOwnProperty(c)){var d=c,e=a[c];b+=encodeURIComponent(d),b+="=",b+=encodeURIComponent(e),b+="&"}return b.substring(0,b.length-1)},indexOf:function(a,b,c){if(c=c||0,a.indexOf)return a.indexOf(b,c);for(var d=c,e=a.length;e>d;d++)if(a[d]===b)return d;return-1},extentToBounds:function(a){var b=new L.LatLng(a.ymin,a.xmin),c=new L.LatLng(a.ymax,a.xmax);return new L.LatLngBounds(b,c)},mercatorExtentToBounds:function(a,b){var c=b.unproject(L.point([a.ymin,a.xmin])),d=b.unproject(L.point([a.ymax,a.xmax]));return new L.LatLngBounds(c,d)},boundsToExtent:function(a){return{xmin:a.getSouthWest().lng,ymin:a.getSouthWest().lat,xmax:a.getNorthEast().lng,ymax:a.getNorthEast().lat,spatialReference:{wkid:4326}}},boundsToEnvelope:function(a){var b=L.esri.Util.boundsToExtent(a);return{x:b.xmin,y:b.ymin,w:Math.abs(b.xmin-b.xmax),h:Math.abs(b.ymin-b.ymax)}},arcgisToGeojson:function(b,c){var d={};return c=c||{},c.idAttribute=c.idAttribute||void 0,b.x&&b.y&&(d.type="Point",d.coordinates=[b.x,b.y]),b.points&&(d.type="MultiPoint",d.coordinates=b.points.slice(0)),b.paths&&(1===b.paths.length?(d.type="LineString",d.coordinates=b.paths[0].slice(0)):(d.type="MultiLineString",d.coordinates=b.paths.slice(0))),b.rings&&(d=g(b.rings.slice(0))),(b.geometry||b.attributes)&&(d.type="Feature",d.geometry=b.geometry?L.esri.Util.arcgisToGeojson(b.geometry):null,d.properties=b.attributes?a(b.attributes):null,b.attributes&&(d.id=b.attributes[c.idAttribute]||b.attributes.OBJECTID||b.attributes.FID)),d},geojsonToArcGIS:function(a,b){var c,d=b&&b.idAttribute?b.idAttribute:"OBJECTID",e=b&&b.sr?{wkid:b.sr}:{wkid:4326},f={};switch(a.type){case"Point":f.x=a.coordinates[0],f.y=a.coordinates[1],f.spatialReference=e;break;case"MultiPoint":f.points=a.coordinates.slice(0),f.spatialReference=e;break;case"LineString":f.paths=[a.coordinates.slice(0)],f.spatialReference=e;break;case"MultiLineString":f.paths=a.coordinates.slice(0),f.spatialReference=e;break;case"Polygon":f.rings=k(a.coordinates.slice(0)),f.spatialReference=e;break;case"MultiPolygon":f.rings=l(a.coordinates.slice(0)),f.spatialReference=e;break;case"Feature":a.geometry&&(f.geometry=L.esri.Util.geojsonToArcGIS(a.geometry,b)),f.attributes=a.properties?L.esri.Util.clone(a.properties):{},f.attributes[d]=a.id;break;case"FeatureCollection":for(f=[],c=0;c<a.features.length;c++)f.push(L.esri.Util.geojsonToArcGIS(a.features[c],b));break;case"GeometryCollection":for(f=[],c=0;c<a.geometries.length;c++)f.push(L.esri.Util.geojsonToArcGIS(a.geometries[c],b))}return f},geojsonBounds:function(a){if(a.type)switch(a.type){case"Point":return[a.coordinates[0],a.coordinates[1],a.coordinates[0],a.coordinates[1]];case"MultiPoint":return h(a.coordinates);case"LineString":return h(a.coordinates);case"MultiLineString":return i(a.coordinates);case"Polygon":return i(a.coordinates);case"MultiPolygon":return j(a.coordinates);case"Feature":return a.geometry?L.esri.Util.geojsonBounds(a.geometry):null;default:throw new Error("Unknown type: "+a.type)}return null}}}(L),function(L){"use strict";function a(b,c){return this instanceof a?(this._maxEntries=Math.max(4,b||9),this._minEntries=Math.max(2,Math.ceil(.4*this._maxEntries)),c&&this._initFormat(c),this.clear(),void 0):new a(b,c)}a.prototype={all:function(){return this._all(this.data,[])},search:function(a){var b=this.data,c=[];if(!this._intersects(a,b.bbox))return c;for(var d,e,f,g,h=[];b;){for(d=0,e=b.children.length;e>d;d++)f=b.children[d],g=b.leaf?this.toBBox(f):f.bbox,this._intersects(a,g)&&(b.leaf?c.push(f):this._contains(a,g)?this._all(f,c):h.push(f));b=h.pop()}return c},load:function(a){if(!a||!a.length)return this;if(a.length<this._minEntries){for(var b=0,c=a.length;c>b;b++)this.insert(a[b]);return this}var d=this._build(a.slice(),0);if(this.data.children.length)if(this.data.height===d.height)this._splitRoot(this.data,d);else{if(this.data.height<d.height){var e=this.data;this.data=d,d=e}this._insert(d,this.data.height-d.height-1,!0)}else this.data=d;return this},insert:function(a){return a&&this._insert(a,this.data.height-1),this},clear:function(){return this.data={children:[],leaf:!0,bbox:this._empty(),height:1},this},remove:function(a){if(!a)return this;for(var b,c,d,e,f=this.data,g=this.toBBox(a),h=[],i=[];f||h.length;){if(f||(f=h.pop(),c=h[h.length-1],b=i.pop(),e=!0),f.leaf&&(d=f.children.indexOf(a),-1!==d))return f.children.splice(d,1),h.push(f),this._condense(h),this;e||f.leaf||!this._intersects(g,f.bbox)?c?(b++,f=c.children[b],e=!1):f=null:(h.push(f),i.push(b),b=0,c=f,f=f.children[0])}return this},toBBox:function(a){return a},compareMinX:function(a,b){return a[0]-b[0]},compareMinY:function(a,b){return a[1]-b[1]},toJSON:function(){return this.data},fromJSON:function(a){return this.data=a,this},_all:function(a,b){for(var c=[];a;)a.leaf?b.push.apply(b,a.children):c.push.apply(c,a.children),a=c.pop();return b},_build:function(a,b,c){var d,e=a.length,f=this._maxEntries;if(f>=e)return d={children:a,leaf:!0,height:1},this._calcBBox(d),d;b||(c=Math.ceil(Math.log(e)/Math.log(f)),f=Math.ceil(e/Math.pow(f,c-1)),a.sort(this.compareMinX)),d={children:[],height:c};var g,h,i,j,k,l=Math.ceil(e/f)*Math.ceil(Math.sqrt(f)),m=Math.ceil(e/f),n=1===b%2?this.compareMinX:this.compareMinY;for(g=0;e>g;g+=l)for(i=a.slice(g,g+l).sort(n),h=0,j=i.length;j>h;h+=m)k=this._build(i.slice(h,h+m),b+1,c-1),d.children.push(k);return this._calcBBox(d),d},_chooseSubtree:function(a,b,c,d){for(var e,f,g,h,i,j,k,l;;){if(d.push(b),b.leaf||d.length-1===c)break;for(k=l=1/0,e=0,f=b.children.length;f>e;e++)g=b.children[e],i=this._area(g.bbox),j=this._enlargedArea(a,g.bbox)-i,l>j?(l=j,k=k>i?i:k,h=g):j===l&&k>i&&(k=i,h=g);b=h}return b},_insert:function(a,b,c,d){var e,f=c?a.bbox:this.toBBox(a),g=[],h=this._chooseSubtree(f,d||this.data,b,g);h.children.push(a),this._extend(h.bbox,f);do e=!1,g[b].children.length>this._maxEntries&&(this._split(g,b),e=!0,b--);while(b>=0&&e);this._adjustParentBBoxes(f,g,b)},_split:function(a,b){var c=a[b],d=c.children.length,e=this._minEntries;this._chooseSplitAxis(c,e,d);var f={children:c.children.splice(this._chooseSplitIndex(c,e,d)),height:c.height};c.leaf&&(f.leaf=!0),this._calcBBox(c),this._calcBBox(f),b?a[b-1].children.push(f):this._splitRoot(c,f)},_splitRoot:function(a,b){this.data={},this.data.children=[a,b],this.data.height=a.height+1,this._calcBBox(this.data)},_chooseSplitIndex:function(a,b,c){var d,e,f,g,h,i,j,k;for(i=j=1/0,d=b;c-b>=d;d++)e=this._distBBox(a,0,d),f=this._distBBox(a,d,c),g=this._intersectionArea(e,f),h=this._area(e)+this._area(f),i>g?(i=g,k=d,j=j>h?h:j):g===i&&j>h&&(j=h,k=d);return k},_chooseSplitAxis:function(a,b,c){var d=a.leaf?this.compareMinX:this._compareNodeMinX,e=a.leaf?this.compareMinY:this._compareNodeMinY,f=this._allDistMargin(a,b,c,d),g=this._allDistMargin(a,b,c,e);g>f&&a.children.sort(d)},_allDistMargin:function(a,b,c,d){a.children.sort(d);var e,f,g=this._distBBox(a,0,b),h=this._distBBox(a,c-b,c),i=this._margin(g)+this._margin(h);for(e=b;c-b>e;e++)f=a.children[e],this._extend(g,a.leaf?this.toBBox(f):f.bbox),i+=this._margin(g);for(e=c-b-1;e>=0;e--)f=a.children[e],this._extend(h,a.leaf?this.toBBox(f):f.bbox),i+=this._margin(h);return i},_distBBox:function(a,b,c){for(var d,e=this._empty(),f=b;c>f;f++)d=a.children[f],this._extend(e,a.leaf?this.toBBox(d):d.bbox);return e},_calcBBox:function(a){a.bbox=this._empty();for(var b,c=0,d=a.children.length;d>c;c++)b=a.children[c],this._extend(a.bbox,a.leaf?this.toBBox(b):b.bbox)},_adjustParentBBoxes:function(a,b,c){for(var d=c;d>=0;d--)this._extend(b[d].bbox,a)},_condense:function(a){for(var b,c=a.length-1;c>=0;c--)0===a[c].children.length?c>0?(b=a[c-1].children,b.splice(b.indexOf(a[c]),1)):this.clear():this._calcBBox(a[c])},_contains:function(a,b){return a[0]<=b[0]&&a[1]<=b[1]&&b[2]<=a[2]&&b[3]<=a[3]},_intersects:function(a,b){return b[0]<=a[2]&&b[1]<=a[3]&&b[2]>=a[0]&&b[3]>=a[1]},_extend:function(a,b){return a[0]=Math.min(a[0],b[0]),a[1]=Math.min(a[1],b[1]),a[2]=Math.max(a[2],b[2]),a[3]=Math.max(a[3],b[3]),a},_area:function(a){return(a[2]-a[0])*(a[3]-a[1])},_margin:function(a){return a[2]-a[0]+(a[3]-a[1])},_enlargedArea:function(a,b){return(Math.max(b[2],a[2])-Math.min(b[0],a[0]))*(Math.max(b[3],a[3])-Math.min(b[1],a[1]))},_intersectionArea:function(a,b){var c=Math.max(a[0],b[0]),d=Math.max(a[1],b[1]),e=Math.min(a[2],b[2]),f=Math.min(a[3],b[3]);return Math.max(0,e-c)*Math.max(0,f-d)},_empty:function(){return[1/0,1/0,-1/0,-1/0]},_compareNodeMinX:function(a,b){return a.bbox[0]-b.bbox[0]},_compareNodeMinY:function(a,b){return a.bbox[1]-b.bbox[1]},_initFormat:function(a){var b=["return a"," - b",";"];this.compareMinX=new Function("a","b",b.join(a[0])),this.compareMinY=new Function("a","b",b.join(a[1])),this.toBBox=new Function("a","return [a"+a.join(", a")+"];")}},L.esri._rbush=a}(L),function(L){var a="https:"!==window.location.protocol?"http:":"https:",b="line-height:9px; text-overflow:ellipsis; white-space:nowrap;overflow:hidden; display:inline-block;",c="position:absolute; top:-38px; right:2px;",d="<img src='https://serverapi.arcgisonline.com/jsapi/arcgis/3.5/js/esri/images/map/logo-med.png' alt='Powered by Esri' class='esri-attribution-logo' style='"+c+"'>",e=function(a){return"<span class='esri-attributions' style='"+b+"'>"+a+"</span>"};L.esri.BasemapLayer=L.TileLayer.extend({statics:{TILES:{Streets:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",attributionUrl:"https://static.arcgis.com/attribution/World_Street_Map",options:{minZoom:1,maxZoom:19,subdomains:["server","services"],attribution:e("Esri")+d}},Topographic:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",attributionUrl:"https://static.arcgis.com/attribution/World_Topo_Map",options:{minZoom:1,maxZoom:19,subdomains:["server","services"],attribution:e("Esri")+d}},Oceans:{urlTemplate:a+"//server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}",attributionUrl:"https://static.arcgis.com/attribution/Ocean_Basemap",options:{minZoom:1,maxZoom:16,subdomains:["server","services"],attribution:e("Esri")+d}},NationalGeographic:{urlTemplate:"https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:16,subdomains:["server","services"],attribution:e("Esri")+d}},DarkGray:{urlTemplate:a+"//tiles{s}.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Dark_Gray_Base_Beta/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:10,subdomains:[1,2],attribution:e("Esri, DeLorme, HERE")+d}},DarkGrayLabels:{urlTemplate:a+"//tiles{s}.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Dark_Gray_Reference_Beta/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:10,subdomains:[1,2]}},Gray:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:16,subdomains:["server","services"],attribution:e("Esri, NAVTEQ, DeLorme")+d}},GrayLabels:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:16,subdomains:["server","services"]}},Imagery:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:19,subdomains:["server","services"],attribution:e("Esri, DigitalGlobe, GeoEye, i-cubed, USDA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community")+d}},ImageryLabels:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:19,subdomains:["server","services"]}},ImageryTransportation:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:19,subdomains:["server","services"]}},ShadedRelief:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:13,subdomains:["server","services"],attribution:e("ESRI, NAVTEQ, DeLorme")+d}},ShadedReliefLabels:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:12,subdomains:["server","services"]}},Terrain:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:13,subdomains:["server","services"],attribution:e("Esri, USGS, NOAA")+d}},TerrainLabels:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:13,subdomains:["server","services"]}}}},initialize:function(a,b){var c;if("object"==typeof a&&a.urlTemplate&&a.options)c=a;else{if("string"!=typeof a||!L.esri.BasemapLayer.TILES[a])throw new Error("L.esri.BasemapLayer: Invalid parameter. Use one of 'Streets', 'Topographic', 'Oceans', 'NationalGeographic', 'Gray', 'GrayLabels', 'DarkGray', 'DarkGrayLabels', 'Imagery', 'ImageryLabels', 'ImageryTransportation', 'ShadedRelief' or 'ShadedReliefLabels'");c=L.esri.BasemapLayer.TILES[a]}var d=L.Util.extend(c.options,b);if(L.TileLayer.prototype.initialize.call(this,c.urlTemplate,L.Util.setOptions(this,d)),c.attributionUrl){var e=c.attributionUrl;this._dynamicAttribution=!0,this._getAttributionData(e)}},_dynamicAttribution:!1,bounds:null,zoom:null,onAdd:function(a){return!a.attributionControl&&console?(console.warn("L.esri.BasemapLayer requires attribution. Please set attributionControl to true on your map"),void 0):(L.TileLayer.prototype.onAdd.call(this,a),this._dynamicAttribution&&(this.on("load",this._handleTileUpdates,this),this._map.on("viewreset zoomend dragend",this._handleTileUpdates,this)),this._map.on("resize",this._resizeAttribution,this),void 0)},onRemove:function(a){this._dynamicAttribution&&(this.off("load",this._handleTileUpdates,this),this._map.off("viewreset zoomend dragend",this._handleTileUpdates,this)),this._map.off("resize",this._resizeAttribution,this),L.TileLayer.prototype.onRemove.call(this,a)},_handleTileUpdates:function(a){var b,c;"load"===a.type&&(b=this._map.getBounds(),c=this._map.getZoom()),("viewreset"===a.type||"dragend"===a.type||"zoomend"===a.type)&&(b=a.target.getBounds(),c=a.target.getZoom()),this.attributionBoundingBoxes&&b&&c&&(b.equals(this.bounds)&&c===this.zoom||(this.bounds=b,this.zoom=c,this._updateMapAttribution()))},_resizeAttribution:function(){var a=this._map.getSize().x;this._getAttributionLogo().style.display=600>a?"none":"block",this._getAttributionSpan().style.maxWidth=.75*a+"px"},_getAttributionData:function(a){this.attributionBoundingBoxes=[],L.esri.RequestHandlers.JSONP(a,{},this._processAttributionData,this)},_processAttributionData:function(a){for(var b=0;b<a.contributors.length;b++)for(var c=a.contributors[b],d=0;d<c.coverageAreas.length;d++){var e=c.coverageAreas[d],f=new L.LatLng(e.bbox[0],e.bbox[1]),g=new L.LatLng(e.bbox[2],e.bbox[3]);this.attributionBoundingBoxes.push({attribution:c.attribution,score:e.score,bounds:new L.LatLngBounds(f,g),minZoom:e.zoomMin,maxZoom:e.zoomMax})}this.attributionBoundingBoxes.sort(function(a,b){return a.score<b.score?-1:a.score>b.score?1:0}),this.bounds&&this._updateMapAttribution()},_getAttributionSpan:function(){return this._map._container.querySelectorAll(".esri-attributions")[0]},_getAttributionLogo:function(){return this._map._container.querySelectorAll(".esri-attribution-logo")[0]},_updateMapAttribution:function(){for(var a="",b=0;b<this.attributionBoundingBoxes.length;b++){var c=this.attributionBoundingBoxes[b];if(this.bounds.intersects(c.bounds)&&this.zoom>=c.minZoom&&this.zoom<=c.maxZoom){var d=this.attributionBoundingBoxes[b].attribution;-1===a.indexOf(d)&&(a.length>0&&(a+=", "),a+=d)}}this._getAttributionSpan().innerHTML=a,this._resizeAttribution()}}),L.esri.basemapLayer=function(a,b){return new L.esri.BasemapLayer(a,b)}}(L),function(L){function a(a,b){var c=b?"block":"none";if(a._icon&&(a._icon.style.display=c),a._shadow&&(a._shadow.style.display=c),a._layers)for(var d in a._layers)a._layers.hasOwnProperty(d)&&(a._layers[d]._container.style.display=c)}L.esri.FeatureLayer=L.GeoJSON.extend({includes:L.esri.Mixins.featureGrid,options:{cellSize:512,debounce:100,deduplicate:!0,where:"1=1",fields:["*"]},initialize:function(a,b){this.index=L.esri._rbush(),this.url=L.esri.Util.cleanUrl(a),L.Util.setOptions(this,b),L.Util.setOptions(this,b),this._getMetadata(),L.GeoJSON.prototype.initialize.call(this,[],b)},onAdd:function(a){this._updateHandler=L.esri.Util.debounce(this._update,this.options.debounce),L.LayerGroup.prototype.onAdd.call(this,a),a.on("zoomend resize moveend",this._updateHandler,this),this._initializeFeatureGrid(a)},onRemove:function(a){a.off("zoomend resize moveend",this._updateHandler,this),L.LayerGroup.prototype.onRemove.call(this,a),this._destroyFeatureGrid(a)},getLayerId:function(a){return a.feature.id},getWhere:function(){return this.options.where},setWhere:function(a){return this.options.where=a,this.refresh(),this},getFields:function(){return this.options.fields},setFields:function(a){return this.options.fields=a,this.refresh(),this},refresh:function(){this.clearLayers(),this._loaded=[],this._previousCells=[],this._requestFeatures(this._map.getBounds())},_update:function(b){L.esri.Util.boundsToEnvelope(b.target.getBounds());for(var c=this.index.search(b.target.getBounds().toBBoxString().split(",")),d=[],e=0;e<c.length;e++)d.push(c[e][4]);this.eachLayer(L.Util.bind(function(b){var c=b.feature.id;a(b,L.esri.Util.indexOf(d,c)>=0)},this))},_setObjectIdField:function(a){if(a.objectIdFieldName)this._objectIdField=a.objectIdFieldName;else for(var b=0;b<=a.fields.length-1;b++)if("esriFieldTypeOID"===a.fields[b].type){this._objectIdField=a.fields[b].name;break}},_render:function(a){if(a.features&&a.features.length&&!a.error){this._objectIdField||this._setObjectIdField(a);for(var b=[],c=a.features.length-1;c>=0;c--){var d=a.features[c],e=d.attributes[this._objectIdField];if(!this._layers[e]){var f=L.esri.Util.arcgisToGeojson(d,{idAttribute:this._objectIdField}),g=L.esri.Util.geojsonBounds(f);g.push(f.id),b.push(g),this.addData(f)}}this.index.load(b)}}}),L.esri.FeatureLayer.include(L.esri.Mixins.metadata),L.esri.featureLayer=function(a,b){return new L.esri.FeatureLayer(a,b)}}(L),L.esri.TiledMapLayer=L.TileLayer.extend({includes:L.esri.Mixins.identifiableLayer,initialize:function(a,b){b=b||{},this.url=L.esri.Util.cleanUrl(a),this.tileUrl=L.esri.Util.cleanUrl(a)+"tile/{z}/{y}/{x}",this.tileUrl.match("://tiles.arcgis.com")&&(this.tileUrl=this.tileUrl.replace("://tiles.arcgis.com","://tiles{s}.arcgis.com"),b.subdomains=["1","2","3","4"]),L.Util.setOptions(this,b),this._getMetadata(),L.TileLayer.prototype.initialize.call(this,this.tileUrl,b)}}),L.esri.TiledMapLayer.include(L.esri.Mixins.metadata),L.esri.tiledMapLayer=function(a,b){return new L.esri.TiledMapLayer(a,b)},/*!
- * The MIT License (MIT)
- *
- * Copyright (c) 2013 Sanborn Map Company, Inc.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-L.esri.DynamicMapLayer=L.Class.extend({includes:L.esri.Mixins.identifiableLayer,options:{opacity:1,position:"front"},_defaultLayerParams:{format:"png24",transparent:!0,f:"image",bboxSR:3875,imageSR:3875,layers:"",layerDefs:""},initialize:function(a,b){this.url=L.esri.Util.cleanUrl(a),this._layerParams=L.Util.extend({},this._defaultLayerParams);for(var c in b)b.hasOwnProperty(c)&&this._defaultLayerParams.hasOwnProperty(c)&&(this._layerParams[c]=b[c]);this._parseLayers(),this._parseLayerDefs(),L.Util.setOptions(this,b),this._getMetadata(),this._layerParams.transparent||(this.options.opacity=1)},onAdd:function(a){if(this._map=a,this._moveHandler=L.esri.Util.debounce(this._update,150,this),a.on("moveend",this._moveHandler,this),a.options.crs&&a.options.crs.code){var b=a.options.crs.code.split(":")[1];this._layerParams.bboxSR=b,this._layerParams.imageSR=b}this._update()},onRemove:function(a){this._currentImage&&this._map.removeLayer(this._currentImage),a.off("moveend",this._moveHandler,this)},addTo:function(a){return a.addLayer(this),this},setOpacity:function(a){this.options.opacity=a,this._currentImage.setOpacity(a)},bringToFront:function(){return this.options.position="front",this._currentImage.bringToFront(),this},bringToBack:function(){return this.options.position="back",this._currentImage.bringToBack(),this},_parseLayers:function(){if("undefined"==typeof this._layerParams.layers)return delete this._layerParams.layerOption,void 0;var a=this._layerParams.layerOption||null,b=this._layerParams.layers||null,c="show",d=["show","hide","include","exclude"];if(delete this._layerParams.layerOption,a)-1!==d.indexOf(a)&&(c=a),this._layerParams.layers=c+":"+b;else if(b instanceof Array)this._layerParams.layers=c+":"+b.join(",");else if("string"==typeof b){var e=b.match(":");e&&(b=b.split(e[0]),Number(b[1].split(",")[0])&&(-1!==d.indexOf(b[0])&&(c=b[0]),b=b[1])),this._layerParams.layers=c+":"+b}},_parseLayerDefs:function(){if("undefined"!=typeof this._layerParams.layerDefs){var a=this._layerParams.layerDefs,b=[];if(a instanceof Array)for(var c=a.length,d=0;c>d;d++)a[d]&&b.push(d+":"+a[d]);else{if("object"!=typeof a)return delete this._layerParams.layerDefs,void 0;for(var e in a)a.hasOwnProperty(e)&&b.push(e+":"+a[e])}this._layerParams.layerDefs=b.join(";")}},_getImageUrl:function(){var a=this._map.getBounds(),b=this._map.getSize(),c=this._map.options.crs.project(a._northEast),d=this._map.options.crs.project(a._southWest);this._layerParams.bbox=[d.x,d.y,c.x,c.y].join(","),this._layerParams.size=b.x+","+b.y,this.options.token&&(this._layerParams.token=this.options.token);var e=this.url+"export"+L.Util.getParamString(this._layerParams);return e},_update:function(){if(!(this._animatingZoom||this._map._panTransition&&this._map._panTransition._inProgress)){var a=this._map.getZoom();if(!(a>this.options.maxZoom||a<this.options.minZoom)){var b=this._map.getBounds();b._southWest.wrap(),b._northEast.wrap();var c=new L.ImageOverlay(this._getImageUrl(),b,{opacity:0}).addTo(this._map);c.on("load",function(a){var c=a.target,d=this._currentImage;c._bounds.equals(b)?(this._currentImage=c,"front"===this.options.position?this._currentImage.bringToFront():this._currentImage.bringToBack(),this._currentImage.setOpacity(this.options.opacity),d&&this._map.removeLayer(d)):this._map.removeLayer(c)},this),this.fire("loading",{bounds:b})}}}}),L.esri.DynamicMapLayer.include(L.Mixin.Events),L.esri.DynamicMapLayer.include(L.esri.Mixins.metadata),L.esri.dynamicMapLayer=function(a,b){return new L.esri.DynamicMapLayer(a,b)};
 /**
  * jQuery plugin to convert a given $.ajax response xml object to json.
  *
@@ -15278,6 +17274,33 @@ L.PolylineUtil = {
     };
 })(window);
 
+/*! Esri-Leaflet - v0.0.1-beta.4 - 2014-03-09
+*   Copyright (c) 2014 Environmental Systems Research Institute, Inc.
+*   Apache License*/
+L.esri={_callback:{}},L.esri.Support={CORS:!!(window.XMLHttpRequest&&"withCredentials"in new XMLHttpRequest)},L.esri.RequestHandlers={CORS:function(a,b,c,d){var e=new XMLHttpRequest;b.f="json",e.onreadystatechange=function(){var a;if(4===e.readyState){try{a=JSON.parse(e.responseText)}catch(b){a={error:"Could not parse response as JSON."}}d?c.call(d,a):c(a)}},e.open("GET",a+"?"+L.esri.Util.serialize(b),!0),e.send(null)},JSONP:function(a,b,c,d){var e="c"+(1e9*Math.random()).toString(36).replace(".","_");b.f="json",b.callback="L.esri._callback."+e;var f=L.DomUtil.create("script",null,document.body);f.type="text/javascript",f.src=a+"?"+L.esri.Util.serialize(b),f.id=e,L.esri._callback[e]=function(a){d?c.call(d,a):c(a),document.body.removeChild(f),delete L.esri._callback[e]}}},L.esri.get=L.esri.Support.CORS?L.esri.RequestHandlers.CORS:L.esri.RequestHandlers.JSONP,L.esri.Mixins={},L.esri.Mixins.featureGrid={_activeRequests:0,_initializeFeatureGrid:function(a){this._map=a,this._previousCells=[],this.center=this._map.getCenter(),this.origin=this._map.project(this.center),this._moveHandler=L.esri.Util.debounce(function(a){"zoomend"===a.type&&(this.origin=this._map.project(this.center),this._previousCells=[]),this._requestFeatures(a.target.getBounds())},this.options.debounce,this),a.on("zoomend resize move",this._moveHandler,this),this._requestFeatures(a.getBounds())},_destroyFeatureGrid:function(a){a.off("zoomend resize move",this._moveHandler,this)},_requestFeatures:function(a){var b=this._cellsWithin(a);b&&b.length>0&&this.fire("loading",{bounds:a});for(var c=0;c<b.length;c++)this._makeRequest(b[c],b,a)},_makeRequest:function(a,b,c){this._activeRequests++;var d={geometryType:"esriGeometryEnvelope",geometry:JSON.stringify(L.esri.Util.boundsToExtent(a.bounds)),outFields:this.options.fields.join(","),outSR:4326,inSR:4326,where:this.options.where};this.options.token&&(d.token=this.options.token),L.esri.get(this.url+"query",d,function(a){this._activeRequests--,this._activeRequests<=0&&this.fire("load",{bounds:c}),!a.error||499!==a.error.code&&498!==a.error.code?this._render(a):this._authenticating||(this._authenticating=!0,this.fire("authenticationrequired",{retry:L.Util.bind(function(a){this._authenticating=!1,this.options.token=a,this._previousCells=[],this._requestFeatures(this._map.getBounds())},this)}))},this)},_cellsWithin:function(a){var b=this._map.getSize(),c=this._map.project(this._map.getCenter());Math.min(this.options.cellSize/b.x,this.options.cellSize/b.y);for(var d=a.pad(.1),e=[],f=this._map.project(d.getNorthWest()),g=this._map.project(d.getSouthEast()),h=f.subtract(c).divideBy(this.options.cellSize),i=g.subtract(c).divideBy(this.options.cellSize),j=Math.round((this.origin.x-c.x)/this.options.cellSize),k=Math.round((this.origin.y-c.y)/this.options.cellSize),l=L.esri.Util.roundAwayFromZero(h.x)-j,m=L.esri.Util.roundAwayFromZero(i.x)-j,n=L.esri.Util.roundAwayFromZero(h.y)-k,o=L.esri.Util.roundAwayFromZero(i.y)-k,p=l;m>p;p++)for(var q=n;o>q;q++){var r="cell:"+p+":"+q,s=L.esri.Util.indexOf(this._previousCells,r)>=0;if(!s||!this.options.deduplicate){var t=this._cellExtent(p,q),u=t.getCenter(),v=u.distanceTo(t.getNorthWest()),w=u.distanceTo(this.center),x={row:p,col:q,id:r,center:u,bounds:t,distance:w,radius:v};e.push(x),this._previousCells.push(r)}}return e.sort(function(a,b){return a.distance-b.distance}),e},_cellExtent:function(a,b){var c=this._cellPoint(a,b),d=this._cellPoint(a+1,b+1),e=this._map.unproject(c),f=this._map.unproject(d);return L.latLngBounds(e,f)},_cellPoint:function(a,b){var c=this.origin.x+a*this.options.cellSize,d=this.origin.y+b*this.options.cellSize;return[c,d]}},L.esri.Mixins.identifiableLayer={identify:function(a,b,c){var d={sr:"4326",mapExtent:JSON.stringify(L.esri.Util.boundsToExtent(this._map.getBounds())),tolerance:5,geometryType:"esriGeometryPoint",imageDisplay:this._map._size.x+","+this._map._size.y+",96",geometry:JSON.stringify({x:a.lng,y:a.lat,spatialReference:{wkid:4326}})};this.options.layers&&(d.layers=this.options.layers);var e;"function"==typeof b&&"undefined"==typeof c?(c=b,e=d):"object"==typeof b&&(b.layerDefs&&(b.layerDefs=this.parseLayerDefs(b.layerDefs)),e=L.Util.extend(d,b)),L.esri.get(this.url+"/identify",e,c)},parseLayerDefs:function(a){return a instanceof Array?"":"object"==typeof a?JSON.stringify(a):a}},L.esri.Mixins.metadata={_getMetadata:function(){var a={};this.options.token&&(a.token=this.options.token),L.esri.get(this.url,a,function(a){if(!a.error||499!==a.error.code&&498!==a.error.code){var b=a.extent||a.initialExtent||a.fullExtent,c={metadata:a};b&&this._map&&(!this._map||102100!==b.spatialReference.wkid&&3857!==b.spatialReference.wkid?4326===b.spatialReference.wkid&&(c.bounds=L.esri.Util.extentToBounds(b)):c.bounds=L.esri.Util.mercatorExtentToBounds(b,this._map)),this.fire("metadata",c)}else this._authenticating||(this._authenticating=!0,this.fire("authenticationrequired",{retry:L.Util.bind(function(a){this.options.token=a,this._getMetadata(),this._update()},this)}))},this)}},function(L){function a(a){var b={};for(var c in a)a.hasOwnProperty(c)&&(b[c]=a[c]);return b}function b(a){var b,c=0,d=0,e=a.length,f=a[d];for(d;e-1>d;d++)b=a[d+1],c+=(b[0]-f[0])*(b[1]+f[1]),f=b;return c>=0}function c(a,b,c,d){var e=(d[0]-c[0])*(a[1]-c[1])-(d[1]-c[1])*(a[0]-c[0]),f=(b[0]-a[0])*(a[1]-c[1])-(b[1]-a[1])*(a[0]-c[0]),g=(d[1]-c[1])*(b[0]-a[0])-(d[0]-c[0])*(b[1]-a[1]);if(0!==g){var h=e/g,i=f/g;if(h>=0&&1>=h&&i>=0&&1>=i)return!0}return!1}function d(a,b){for(var d=0;d<a.length-1;d++)for(var e=0;e<b.length-1;e++)if(c(a[d],a[d+1],b[e],b[e+1]))return!0;return!1}function e(a,b){for(var c=!1,d=-1,e=a.length,f=e-1;++d<e;f=d)(a[d][1]<=b[1]&&b[1]<a[f][1]||a[f][1]<=b[1]&&b[1]<a[d][1])&&b[0]<(a[f][0]-a[d][0])*(b[1]-a[d][1])/(a[f][1]-a[d][1])+a[d][0]&&(c=!c);return c}function f(a,b){var c=d(a,b),f=e(a,b[0]);return!c&&f?!0:!1}function g(a){for(var c=[],d=[],e=0;e<a.length;e++){var g=a[e].slice(0);if(b(g)){var h=[g];c.push(h)}else d.push(g)}for(;d.length;){for(var i=d.pop(),j=!1,k=c.length-1;k>=0;k--){var l=c[k][0];if(f(l,i)){c[k].push(i),j=!0;break}}j||c.push([i.reverse()])}return 1===c.length?{type:"Polygon",coordinates:c[0]}:{type:"MultiPolygon",coordinates:c}}function h(a){for(var b=null,c=null,d=null,e=null,f=0;f<a.length;f++){var g=a[f],h=g[0],i=g[1];null===b?b=h:b>h&&(b=h),null===c?c=h:h>c&&(c=h),null===d?d=i:d>i&&(d=i),null===e?e=i:i>e&&(e=i)}return[b,d,c,e]}function i(a){for(var b=null,c=null,d=null,e=null,f=0;f<a.length;f++)for(var g=a[f],h=0;h<g.length;h++){var i=g[h],j=i[0],k=i[1];null===b?b=j:b>j&&(b=j),null===c?c=j:j>c&&(c=j),null===d?d=k:d>k&&(d=k),null===e?e=k:k>e&&(e=k)}return[b,d,c,e]}function j(a){for(var b=null,c=null,d=null,e=null,f=0;f<a.length;f++)for(var g=a[f],h=0;h<g.length;h++)for(var i=g[h],j=0;j<i.length;j++){var k=i[j],l=k[0],m=k[1];null===b?b=l:b>l&&(b=l),null===c?c=l:l>c&&(c=l),null===d?d=m:d>m&&(d=m),null===e?e=m:m>e&&(e=m)}return[b,d,c,e]}function k(a){var c=[],d=a.slice(0),e=d.shift().slice(0);b(e)||e.reverse(),c.push(e);for(var f=0;f<d.length;f++){var g=d[f].slice(0);b(g)&&g.reverse(),c.push(g)}return c}function l(a){for(var b=[],c=0;c<a.length;c++)for(var d=k(a[c]),e=d.length-1;e>=0;e--){var f=d[e].slice(0);b.push(f)}return b}L.esri.Util={debounce:function(a,b){var c=null;return function(){var d=this||d,e=arguments;clearTimeout(c),c=setTimeout(function(){a.apply(d,e)},b)}},roundAwayFromZero:function(a){return a>0?Math.ceil(a):Math.floor(a)},trim:function(a){return a.replace(/^\s\s*/,"").replace(/\s\s*$/,"")},cleanUrl:function(a){return a=L.esri.Util.trim(a),"/"!==a[a.length-1]&&(a+="/"),a},serialize:function(a){var b="";for(var c in a)if(a.hasOwnProperty(c)){var d=c,e=a[c];b+=encodeURIComponent(d),b+="=",b+=encodeURIComponent(e),b+="&"}return b.substring(0,b.length-1)},indexOf:function(a,b,c){if(c=c||0,a.indexOf)return a.indexOf(b,c);for(var d=c,e=a.length;e>d;d++)if(a[d]===b)return d;return-1},extentToBounds:function(a){var b=new L.LatLng(a.ymin,a.xmin),c=new L.LatLng(a.ymax,a.xmax);return new L.LatLngBounds(b,c)},mercatorExtentToBounds:function(a,b){var c=b.unproject(L.point([a.ymin,a.xmin])),d=b.unproject(L.point([a.ymax,a.xmax]));return new L.LatLngBounds(c,d)},boundsToExtent:function(a){return{xmin:a.getSouthWest().lng,ymin:a.getSouthWest().lat,xmax:a.getNorthEast().lng,ymax:a.getNorthEast().lat,spatialReference:{wkid:4326}}},boundsToEnvelope:function(a){var b=L.esri.Util.boundsToExtent(a);return{x:b.xmin,y:b.ymin,w:Math.abs(b.xmin-b.xmax),h:Math.abs(b.ymin-b.ymax)}},arcgisToGeojson:function(b,c){var d={};return c=c||{},c.idAttribute=c.idAttribute||void 0,b.x&&b.y&&(d.type="Point",d.coordinates=[b.x,b.y]),b.points&&(d.type="MultiPoint",d.coordinates=b.points.slice(0)),b.paths&&(1===b.paths.length?(d.type="LineString",d.coordinates=b.paths[0].slice(0)):(d.type="MultiLineString",d.coordinates=b.paths.slice(0))),b.rings&&(d=g(b.rings.slice(0))),(b.geometry||b.attributes)&&(d.type="Feature",d.geometry=b.geometry?L.esri.Util.arcgisToGeojson(b.geometry):null,d.properties=b.attributes?a(b.attributes):null,b.attributes&&(d.id=b.attributes[c.idAttribute]||b.attributes.OBJECTID||b.attributes.FID)),d},geojsonToArcGIS:function(a,b){var c,d=b&&b.idAttribute?b.idAttribute:"OBJECTID",e=b&&b.sr?{wkid:b.sr}:{wkid:4326},f={};switch(a.type){case"Point":f.x=a.coordinates[0],f.y=a.coordinates[1],f.spatialReference=e;break;case"MultiPoint":f.points=a.coordinates.slice(0),f.spatialReference=e;break;case"LineString":f.paths=[a.coordinates.slice(0)],f.spatialReference=e;break;case"MultiLineString":f.paths=a.coordinates.slice(0),f.spatialReference=e;break;case"Polygon":f.rings=k(a.coordinates.slice(0)),f.spatialReference=e;break;case"MultiPolygon":f.rings=l(a.coordinates.slice(0)),f.spatialReference=e;break;case"Feature":a.geometry&&(f.geometry=L.esri.Util.geojsonToArcGIS(a.geometry,b)),f.attributes=a.properties?L.esri.Util.clone(a.properties):{},f.attributes[d]=a.id;break;case"FeatureCollection":for(f=[],c=0;c<a.features.length;c++)f.push(L.esri.Util.geojsonToArcGIS(a.features[c],b));break;case"GeometryCollection":for(f=[],c=0;c<a.geometries.length;c++)f.push(L.esri.Util.geojsonToArcGIS(a.geometries[c],b))}return f},geojsonBounds:function(a){if(a.type)switch(a.type){case"Point":return[a.coordinates[0],a.coordinates[1],a.coordinates[0],a.coordinates[1]];case"MultiPoint":return h(a.coordinates);case"LineString":return h(a.coordinates);case"MultiLineString":return i(a.coordinates);case"Polygon":return i(a.coordinates);case"MultiPolygon":return j(a.coordinates);case"Feature":return a.geometry?L.esri.Util.geojsonBounds(a.geometry):null;default:throw new Error("Unknown type: "+a.type)}return null}}}(L),function(L){"use strict";function a(b,c){return this instanceof a?(this._maxEntries=Math.max(4,b||9),this._minEntries=Math.max(2,Math.ceil(.4*this._maxEntries)),c&&this._initFormat(c),this.clear(),void 0):new a(b,c)}a.prototype={all:function(){return this._all(this.data,[])},search:function(a){var b=this.data,c=[];if(!this._intersects(a,b.bbox))return c;for(var d,e,f,g,h=[];b;){for(d=0,e=b.children.length;e>d;d++)f=b.children[d],g=b.leaf?this.toBBox(f):f.bbox,this._intersects(a,g)&&(b.leaf?c.push(f):this._contains(a,g)?this._all(f,c):h.push(f));b=h.pop()}return c},load:function(a){if(!a||!a.length)return this;if(a.length<this._minEntries){for(var b=0,c=a.length;c>b;b++)this.insert(a[b]);return this}var d=this._build(a.slice(),0);if(this.data.children.length)if(this.data.height===d.height)this._splitRoot(this.data,d);else{if(this.data.height<d.height){var e=this.data;this.data=d,d=e}this._insert(d,this.data.height-d.height-1,!0)}else this.data=d;return this},insert:function(a){return a&&this._insert(a,this.data.height-1),this},clear:function(){return this.data={children:[],leaf:!0,bbox:this._empty(),height:1},this},remove:function(a){if(!a)return this;for(var b,c,d,e,f=this.data,g=this.toBBox(a),h=[],i=[];f||h.length;){if(f||(f=h.pop(),c=h[h.length-1],b=i.pop(),e=!0),f.leaf&&(d=f.children.indexOf(a),-1!==d))return f.children.splice(d,1),h.push(f),this._condense(h),this;e||f.leaf||!this._intersects(g,f.bbox)?c?(b++,f=c.children[b],e=!1):f=null:(h.push(f),i.push(b),b=0,c=f,f=f.children[0])}return this},toBBox:function(a){return a},compareMinX:function(a,b){return a[0]-b[0]},compareMinY:function(a,b){return a[1]-b[1]},toJSON:function(){return this.data},fromJSON:function(a){return this.data=a,this},_all:function(a,b){for(var c=[];a;)a.leaf?b.push.apply(b,a.children):c.push.apply(c,a.children),a=c.pop();return b},_build:function(a,b,c){var d,e=a.length,f=this._maxEntries;if(f>=e)return d={children:a,leaf:!0,height:1},this._calcBBox(d),d;b||(c=Math.ceil(Math.log(e)/Math.log(f)),f=Math.ceil(e/Math.pow(f,c-1)),a.sort(this.compareMinX)),d={children:[],height:c};var g,h,i,j,k,l=Math.ceil(e/f)*Math.ceil(Math.sqrt(f)),m=Math.ceil(e/f),n=1===b%2?this.compareMinX:this.compareMinY;for(g=0;e>g;g+=l)for(i=a.slice(g,g+l).sort(n),h=0,j=i.length;j>h;h+=m)k=this._build(i.slice(h,h+m),b+1,c-1),d.children.push(k);return this._calcBBox(d),d},_chooseSubtree:function(a,b,c,d){for(var e,f,g,h,i,j,k,l;;){if(d.push(b),b.leaf||d.length-1===c)break;for(k=l=1/0,e=0,f=b.children.length;f>e;e++)g=b.children[e],i=this._area(g.bbox),j=this._enlargedArea(a,g.bbox)-i,l>j?(l=j,k=k>i?i:k,h=g):j===l&&k>i&&(k=i,h=g);b=h}return b},_insert:function(a,b,c,d){var e,f=c?a.bbox:this.toBBox(a),g=[],h=this._chooseSubtree(f,d||this.data,b,g);h.children.push(a),this._extend(h.bbox,f);do e=!1,g[b].children.length>this._maxEntries&&(this._split(g,b),e=!0,b--);while(b>=0&&e);this._adjustParentBBoxes(f,g,b)},_split:function(a,b){var c=a[b],d=c.children.length,e=this._minEntries;this._chooseSplitAxis(c,e,d);var f={children:c.children.splice(this._chooseSplitIndex(c,e,d)),height:c.height};c.leaf&&(f.leaf=!0),this._calcBBox(c),this._calcBBox(f),b?a[b-1].children.push(f):this._splitRoot(c,f)},_splitRoot:function(a,b){this.data={},this.data.children=[a,b],this.data.height=a.height+1,this._calcBBox(this.data)},_chooseSplitIndex:function(a,b,c){var d,e,f,g,h,i,j,k;for(i=j=1/0,d=b;c-b>=d;d++)e=this._distBBox(a,0,d),f=this._distBBox(a,d,c),g=this._intersectionArea(e,f),h=this._area(e)+this._area(f),i>g?(i=g,k=d,j=j>h?h:j):g===i&&j>h&&(j=h,k=d);return k},_chooseSplitAxis:function(a,b,c){var d=a.leaf?this.compareMinX:this._compareNodeMinX,e=a.leaf?this.compareMinY:this._compareNodeMinY,f=this._allDistMargin(a,b,c,d),g=this._allDistMargin(a,b,c,e);g>f&&a.children.sort(d)},_allDistMargin:function(a,b,c,d){a.children.sort(d);var e,f,g=this._distBBox(a,0,b),h=this._distBBox(a,c-b,c),i=this._margin(g)+this._margin(h);for(e=b;c-b>e;e++)f=a.children[e],this._extend(g,a.leaf?this.toBBox(f):f.bbox),i+=this._margin(g);for(e=c-b-1;e>=0;e--)f=a.children[e],this._extend(h,a.leaf?this.toBBox(f):f.bbox),i+=this._margin(h);return i},_distBBox:function(a,b,c){for(var d,e=this._empty(),f=b;c>f;f++)d=a.children[f],this._extend(e,a.leaf?this.toBBox(d):d.bbox);return e},_calcBBox:function(a){a.bbox=this._empty();for(var b,c=0,d=a.children.length;d>c;c++)b=a.children[c],this._extend(a.bbox,a.leaf?this.toBBox(b):b.bbox)},_adjustParentBBoxes:function(a,b,c){for(var d=c;d>=0;d--)this._extend(b[d].bbox,a)},_condense:function(a){for(var b,c=a.length-1;c>=0;c--)0===a[c].children.length?c>0?(b=a[c-1].children,b.splice(b.indexOf(a[c]),1)):this.clear():this._calcBBox(a[c])},_contains:function(a,b){return a[0]<=b[0]&&a[1]<=b[1]&&b[2]<=a[2]&&b[3]<=a[3]},_intersects:function(a,b){return b[0]<=a[2]&&b[1]<=a[3]&&b[2]>=a[0]&&b[3]>=a[1]},_extend:function(a,b){return a[0]=Math.min(a[0],b[0]),a[1]=Math.min(a[1],b[1]),a[2]=Math.max(a[2],b[2]),a[3]=Math.max(a[3],b[3]),a},_area:function(a){return(a[2]-a[0])*(a[3]-a[1])},_margin:function(a){return a[2]-a[0]+(a[3]-a[1])},_enlargedArea:function(a,b){return(Math.max(b[2],a[2])-Math.min(b[0],a[0]))*(Math.max(b[3],a[3])-Math.min(b[1],a[1]))},_intersectionArea:function(a,b){var c=Math.max(a[0],b[0]),d=Math.max(a[1],b[1]),e=Math.min(a[2],b[2]),f=Math.min(a[3],b[3]);return Math.max(0,e-c)*Math.max(0,f-d)},_empty:function(){return[1/0,1/0,-1/0,-1/0]},_compareNodeMinX:function(a,b){return a.bbox[0]-b.bbox[0]},_compareNodeMinY:function(a,b){return a.bbox[1]-b.bbox[1]},_initFormat:function(a){var b=["return a"," - b",";"];this.compareMinX=new Function("a","b",b.join(a[0])),this.compareMinY=new Function("a","b",b.join(a[1])),this.toBBox=new Function("a","return [a"+a.join(", a")+"];")}},L.esri._rbush=a}(L),function(L){var a="https:"!==window.location.protocol?"http:":"https:",b="line-height:9px; text-overflow:ellipsis; white-space:nowrap;overflow:hidden; display:inline-block;",c="position:absolute; top:-38px; right:2px;",d="<img src='https://serverapi.arcgisonline.com/jsapi/arcgis/3.5/js/esri/images/map/logo-med.png' alt='Powered by Esri' class='esri-attribution-logo' style='"+c+"'>",e=function(a){return"<span class='esri-attributions' style='"+b+"'>"+a+"</span>"};L.esri.BasemapLayer=L.TileLayer.extend({statics:{TILES:{Streets:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",attributionUrl:"https://static.arcgis.com/attribution/World_Street_Map",options:{minZoom:1,maxZoom:19,subdomains:["server","services"],attribution:e("Esri")+d}},Topographic:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",attributionUrl:"https://static.arcgis.com/attribution/World_Topo_Map",options:{minZoom:1,maxZoom:19,subdomains:["server","services"],attribution:e("Esri")+d}},Oceans:{urlTemplate:a+"//server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}",attributionUrl:"https://static.arcgis.com/attribution/Ocean_Basemap",options:{minZoom:1,maxZoom:16,subdomains:["server","services"],attribution:e("Esri")+d}},NationalGeographic:{urlTemplate:"https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:16,subdomains:["server","services"],attribution:e("Esri")+d}},DarkGray:{urlTemplate:a+"//tiles{s}.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Dark_Gray_Base_Beta/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:10,subdomains:[1,2],attribution:e("Esri, DeLorme, HERE")+d}},DarkGrayLabels:{urlTemplate:a+"//tiles{s}.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Dark_Gray_Reference_Beta/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:10,subdomains:[1,2]}},Gray:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:16,subdomains:["server","services"],attribution:e("Esri, NAVTEQ, DeLorme")+d}},GrayLabels:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:16,subdomains:["server","services"]}},Imagery:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:19,subdomains:["server","services"],attribution:e("Esri, DigitalGlobe, GeoEye, i-cubed, USDA, USGS, AEX, Getmapping, Aerogrid, IGN, IGP, swisstopo, and the GIS User Community")+d}},ImageryLabels:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:19,subdomains:["server","services"]}},ImageryTransportation:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:19,subdomains:["server","services"]}},ShadedRelief:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:13,subdomains:["server","services"],attribution:e("ESRI, NAVTEQ, DeLorme")+d}},ShadedReliefLabels:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:12,subdomains:["server","services"]}},Terrain:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:13,subdomains:["server","services"],attribution:e("Esri, USGS, NOAA")+d}},TerrainLabels:{urlTemplate:a+"//{s}.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{z}/{y}/{x}",options:{minZoom:1,maxZoom:13,subdomains:["server","services"]}}}},initialize:function(a,b){var c;if("object"==typeof a&&a.urlTemplate&&a.options)c=a;else{if("string"!=typeof a||!L.esri.BasemapLayer.TILES[a])throw new Error("L.esri.BasemapLayer: Invalid parameter. Use one of 'Streets', 'Topographic', 'Oceans', 'NationalGeographic', 'Gray', 'GrayLabels', 'DarkGray', 'DarkGrayLabels', 'Imagery', 'ImageryLabels', 'ImageryTransportation', 'ShadedRelief' or 'ShadedReliefLabels'");c=L.esri.BasemapLayer.TILES[a]}var d=L.Util.extend(c.options,b);if(L.TileLayer.prototype.initialize.call(this,c.urlTemplate,L.Util.setOptions(this,d)),c.attributionUrl){var e=c.attributionUrl;this._dynamicAttribution=!0,this._getAttributionData(e)}},_dynamicAttribution:!1,bounds:null,zoom:null,onAdd:function(a){return!a.attributionControl&&console?(console.warn("L.esri.BasemapLayer requires attribution. Please set attributionControl to true on your map"),void 0):(L.TileLayer.prototype.onAdd.call(this,a),this._dynamicAttribution&&(this.on("load",this._handleTileUpdates,this),this._map.on("viewreset zoomend dragend",this._handleTileUpdates,this)),this._map.on("resize",this._resizeAttribution,this),void 0)},onRemove:function(a){this._dynamicAttribution&&(this.off("load",this._handleTileUpdates,this),this._map.off("viewreset zoomend dragend",this._handleTileUpdates,this)),this._map.off("resize",this._resizeAttribution,this),L.TileLayer.prototype.onRemove.call(this,a)},_handleTileUpdates:function(a){var b,c;"load"===a.type&&(b=this._map.getBounds(),c=this._map.getZoom()),("viewreset"===a.type||"dragend"===a.type||"zoomend"===a.type)&&(b=a.target.getBounds(),c=a.target.getZoom()),this.attributionBoundingBoxes&&b&&c&&(b.equals(this.bounds)&&c===this.zoom||(this.bounds=b,this.zoom=c,this._updateMapAttribution()))},_resizeAttribution:function(){var a=this._map.getSize().x;this._getAttributionLogo().style.display=600>a?"none":"block",this._getAttributionSpan().style.maxWidth=.75*a+"px"},_getAttributionData:function(a){this.attributionBoundingBoxes=[],L.esri.RequestHandlers.JSONP(a,{},this._processAttributionData,this)},_processAttributionData:function(a){for(var b=0;b<a.contributors.length;b++)for(var c=a.contributors[b],d=0;d<c.coverageAreas.length;d++){var e=c.coverageAreas[d],f=new L.LatLng(e.bbox[0],e.bbox[1]),g=new L.LatLng(e.bbox[2],e.bbox[3]);this.attributionBoundingBoxes.push({attribution:c.attribution,score:e.score,bounds:new L.LatLngBounds(f,g),minZoom:e.zoomMin,maxZoom:e.zoomMax})}this.attributionBoundingBoxes.sort(function(a,b){return a.score<b.score?-1:a.score>b.score?1:0}),this.bounds&&this._updateMapAttribution()},_getAttributionSpan:function(){return this._map._container.querySelectorAll(".esri-attributions")[0]},_getAttributionLogo:function(){return this._map._container.querySelectorAll(".esri-attribution-logo")[0]},_updateMapAttribution:function(){for(var a="",b=0;b<this.attributionBoundingBoxes.length;b++){var c=this.attributionBoundingBoxes[b];if(this.bounds.intersects(c.bounds)&&this.zoom>=c.minZoom&&this.zoom<=c.maxZoom){var d=this.attributionBoundingBoxes[b].attribution;-1===a.indexOf(d)&&(a.length>0&&(a+=", "),a+=d)}}this._getAttributionSpan().innerHTML=a,this._resizeAttribution()}}),L.esri.basemapLayer=function(a,b){return new L.esri.BasemapLayer(a,b)}}(L),function(L){function a(a,b){var c=b?"block":"none";if(a._icon&&(a._icon.style.display=c),a._shadow&&(a._shadow.style.display=c),a._layers)for(var d in a._layers)a._layers.hasOwnProperty(d)&&(a._layers[d]._container.style.display=c)}L.esri.FeatureLayer=L.GeoJSON.extend({includes:L.esri.Mixins.featureGrid,options:{cellSize:512,debounce:100,deduplicate:!0,where:"1=1",fields:["*"]},initialize:function(a,b){this.index=L.esri._rbush(),this.url=L.esri.Util.cleanUrl(a),L.Util.setOptions(this,b),L.Util.setOptions(this,b),this._getMetadata(),L.GeoJSON.prototype.initialize.call(this,[],b)},onAdd:function(a){this._updateHandler=L.esri.Util.debounce(this._update,this.options.debounce),L.LayerGroup.prototype.onAdd.call(this,a),a.on("zoomend resize moveend",this._updateHandler,this),this._initializeFeatureGrid(a)},onRemove:function(a){a.off("zoomend resize moveend",this._updateHandler,this),L.LayerGroup.prototype.onRemove.call(this,a),this._destroyFeatureGrid(a)},getLayerId:function(a){return a.feature.id},getWhere:function(){return this.options.where},setWhere:function(a){return this.options.where=a,this.refresh(),this},getFields:function(){return this.options.fields},setFields:function(a){return this.options.fields=a,this.refresh(),this},refresh:function(){this.clearLayers(),this._loaded=[],this._previousCells=[],this._requestFeatures(this._map.getBounds())},_update:function(b){L.esri.Util.boundsToEnvelope(b.target.getBounds());for(var c=this.index.search(b.target.getBounds().toBBoxString().split(",")),d=[],e=0;e<c.length;e++)d.push(c[e][4]);this.eachLayer(L.Util.bind(function(b){var c=b.feature.id;a(b,L.esri.Util.indexOf(d,c)>=0)},this))},_setObjectIdField:function(a){if(a.objectIdFieldName)this._objectIdField=a.objectIdFieldName;else for(var b=0;b<=a.fields.length-1;b++)if("esriFieldTypeOID"===a.fields[b].type){this._objectIdField=a.fields[b].name;break}},_render:function(a){if(a.features&&a.features.length&&!a.error){this._objectIdField||this._setObjectIdField(a);for(var b=[],c=a.features.length-1;c>=0;c--){var d=a.features[c],e=d.attributes[this._objectIdField];if(!this._layers[e]){var f=L.esri.Util.arcgisToGeojson(d,{idAttribute:this._objectIdField}),g=L.esri.Util.geojsonBounds(f);g.push(f.id),b.push(g),this.addData(f)}}this.index.load(b)}}}),L.esri.FeatureLayer.include(L.esri.Mixins.metadata),L.esri.featureLayer=function(a,b){return new L.esri.FeatureLayer(a,b)}}(L),L.esri.TiledMapLayer=L.TileLayer.extend({includes:L.esri.Mixins.identifiableLayer,initialize:function(a,b){b=b||{},this.url=L.esri.Util.cleanUrl(a),this.tileUrl=L.esri.Util.cleanUrl(a)+"tile/{z}/{y}/{x}",this.tileUrl.match("://tiles.arcgis.com")&&(this.tileUrl=this.tileUrl.replace("://tiles.arcgis.com","://tiles{s}.arcgis.com"),b.subdomains=["1","2","3","4"]),L.Util.setOptions(this,b),this._getMetadata(),L.TileLayer.prototype.initialize.call(this,this.tileUrl,b)}}),L.esri.TiledMapLayer.include(L.esri.Mixins.metadata),L.esri.tiledMapLayer=function(a,b){return new L.esri.TiledMapLayer(a,b)},/*!
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2013 Sanborn Map Company, Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+L.esri.DynamicMapLayer=L.Class.extend({includes:L.esri.Mixins.identifiableLayer,options:{opacity:1,position:"front"},_defaultLayerParams:{format:"png24",transparent:!0,f:"image",bboxSR:3875,imageSR:3875,layers:"",layerDefs:""},initialize:function(a,b){this.url=L.esri.Util.cleanUrl(a),this._layerParams=L.Util.extend({},this._defaultLayerParams);for(var c in b)b.hasOwnProperty(c)&&this._defaultLayerParams.hasOwnProperty(c)&&(this._layerParams[c]=b[c]);this._parseLayers(),this._parseLayerDefs(),L.Util.setOptions(this,b),this._getMetadata(),this._layerParams.transparent||(this.options.opacity=1)},onAdd:function(a){if(this._map=a,this._moveHandler=L.esri.Util.debounce(this._update,150,this),a.on("moveend",this._moveHandler,this),a.options.crs&&a.options.crs.code){var b=a.options.crs.code.split(":")[1];this._layerParams.bboxSR=b,this._layerParams.imageSR=b}this._update()},onRemove:function(a){this._currentImage&&this._map.removeLayer(this._currentImage),a.off("moveend",this._moveHandler,this)},addTo:function(a){return a.addLayer(this),this},setOpacity:function(a){this.options.opacity=a,this._currentImage.setOpacity(a)},bringToFront:function(){return this.options.position="front",this._currentImage.bringToFront(),this},bringToBack:function(){return this.options.position="back",this._currentImage.bringToBack(),this},_parseLayers:function(){if("undefined"==typeof this._layerParams.layers)return delete this._layerParams.layerOption,void 0;var a=this._layerParams.layerOption||null,b=this._layerParams.layers||null,c="show",d=["show","hide","include","exclude"];if(delete this._layerParams.layerOption,a)-1!==d.indexOf(a)&&(c=a),this._layerParams.layers=c+":"+b;else if(b instanceof Array)this._layerParams.layers=c+":"+b.join(",");else if("string"==typeof b){var e=b.match(":");e&&(b=b.split(e[0]),Number(b[1].split(",")[0])&&(-1!==d.indexOf(b[0])&&(c=b[0]),b=b[1])),this._layerParams.layers=c+":"+b}},_parseLayerDefs:function(){if("undefined"!=typeof this._layerParams.layerDefs){var a=this._layerParams.layerDefs,b=[];if(a instanceof Array)for(var c=a.length,d=0;c>d;d++)a[d]&&b.push(d+":"+a[d]);else{if("object"!=typeof a)return delete this._layerParams.layerDefs,void 0;for(var e in a)a.hasOwnProperty(e)&&b.push(e+":"+a[e])}this._layerParams.layerDefs=b.join(";")}},_getImageUrl:function(){var a=this._map.getBounds(),b=this._map.getSize(),c=this._map.options.crs.project(a._northEast),d=this._map.options.crs.project(a._southWest);this._layerParams.bbox=[d.x,d.y,c.x,c.y].join(","),this._layerParams.size=b.x+","+b.y,this.options.token&&(this._layerParams.token=this.options.token);var e=this.url+"export"+L.Util.getParamString(this._layerParams);return e},_update:function(){if(!(this._animatingZoom||this._map._panTransition&&this._map._panTransition._inProgress)){var a=this._map.getZoom();if(!(a>this.options.maxZoom||a<this.options.minZoom)){var b=this._map.getBounds();b._southWest.wrap(),b._northEast.wrap();var c=new L.ImageOverlay(this._getImageUrl(),b,{opacity:0}).addTo(this._map);c.on("load",function(a){var c=a.target,d=this._currentImage;c._bounds.equals(b)?(this._currentImage=c,"front"===this.options.position?this._currentImage.bringToFront():this._currentImage.bringToBack(),this._currentImage.setOpacity(this.options.opacity),d&&this._map.removeLayer(d)):this._map.removeLayer(c)},this),this.fire("loading",{bounds:b})}}}}),L.esri.DynamicMapLayer.include(L.Mixin.Events),L.esri.DynamicMapLayer.include(L.esri.Mixins.metadata),L.esri.dynamicMapLayer=function(a,b){return new L.esri.DynamicMapLayer(a,b)};
 /*
 	Leaflet.draw, a plugin that adds drawing and editing tools to Leaflet powered maps.
 	(c) 2012-2013, Jacob Toye, Smartrak

@@ -37,17 +37,16 @@
     "sass-bootstrap": "~3.0.0",
     "add-to-homescreen": "~3.0.7",
     "screenfull": "~1.2.1",
-    "leaflet-vector-layers": "https://github.com/JasonSanford/leaflet-vector-layers",
     "esri-leaflet": "~0.0.1-beta.4-patch-1",
-    "lvector": "https://raw.githubusercontent.com/JasonSanford/leaflet-vector-layers/master/dist/lvector.js",
     "leaflet.draw": "~0.2.3",
     "leaflet-plugins": "~1.2.0",
     "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
     "leaflet-polyline-distance": "./lib/leaflet-polyline-distance/",
-    "Leaflet.print-smap": "./lib/Leaflet.print-smap/",
     "bootstrap-stylus": "~3.2.0",
     "proj4": "~2.2.2",
-    "jquery": "~2.1.1"
+    "jquery": "~2.1.1",
+    "bootstrap-3": "./lib/bootstrap-3/",
+    "notify-custom": "./lib/notify-custom/"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -55,15 +54,18 @@
         "dist/L.Polyline.measuredDistance.js"
       ]
     },
+    "bootstrap3-typeahead": {
+      "main": [
+        "bootstrap3-typeahead.min.js"
+      ]
+    },
+    "notify-custom":{
+    	"main":["notify.js"]
+    },
     "bootstrap-3": {
       "main": [
         "css/bootstrap.icon-large.css",
         "fonts/glyphicons-draw.png"
-      ]
-    },
-    "bootstrap3-typeahead": {
-      "main": [
-        "bootstrap3-typeahead.min.js"
       ]
     },
     "es5-shim": {
