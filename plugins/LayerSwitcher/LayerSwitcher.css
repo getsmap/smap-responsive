@@ -42,6 +42,9 @@
   -ms-overflow-style: -ms-autohiding-scrollbar !important;
   font-size: 1.4em;
 }
+.lswitch-panel .panel-heading {
+  margin-bottom: 2px;
+}
 .map-with-header .lswitch-panel {
   padding-top: 4em;
 }

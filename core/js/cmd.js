@@ -14,14 +14,14 @@ smap.cmd = {
 		 * 		- toggle {Boolean} If true, renders as active/inactive.
 		 * @returns {void}
 		 */
-		addToolButton: function(label, iconClass, onClick, options) {
-			options = options || {
-				index: null,
-				toggle: false,
-				callback: null  // function called when the toolbar plugin is done creating the button
-			};
-			smap.core.pluginHandlerInst.callPlugin(smap.core.mainConfig.toolbarPlugin, "addButton", [label, iconClass, onClick, options]); 
-		},
+		// addToolButton: function(label, iconClass, onClick, options) {
+		// 	options = options || {
+		// 		index: null,
+		// 		toggle: false,
+		// 		callback: null  // function called when the toolbar plugin is done creating the button
+		// 	};
+		// 	smap.core.pluginHandlerInst.callPlugin(smap.core.mainConfig.toolbarPlugin, "addButton", [label, iconClass, onClick, options]); 
+		// },
 
 
 		/**

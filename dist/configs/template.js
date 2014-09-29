@@ -40,12 +40,12 @@ var config = {
 						displayName: "Stigar",
 						xhrType: "POST",
 						attribution: "Stadsbyggnadskontoret, Malmö",
-						inputCrs: "EPSG:4326",
+						inputCrs: "EPSG:3006",
 						reverseAxis: false,
-						reverseAxisBbox: false,
+						reverseAxisBbox: true,
 						selectable: true,
-						popup: '${id}',
-						uniqueKey: "gid",
+						popup: '<h3>${lokal}</h3>',
+						uniqueKey: "lokal",
 						params: {
 							typeName: "malmows:hl_vidsidanstigen_pt_3006",
 							version: "1.1.0",
@@ -70,11 +70,30 @@ var config = {
 					FORMAT_OPTIONS: "antialias",
 					minZoom: 10,
 					maxZoom: 18,
+					selectable: true,
+					popup: '<p><span>Kvarter: </span><span>${name}</span></p>\
+							<a href="${url_snedbi}">Till snedbild</a>',
 					format: 'image/png',
 					attribution: "@ Malmö stad",
 					transparent: true
 				}
-
+			},
+			{
+				init: "L.TileLayer.WMS",
+				url: "http://localhost/geoserver/wms",
+				options: {
+					displayName: "Cykelväg",
+					layerId: "Cykelväg",
+					layers: "malmows:GK_CYKELVAG_L",
+					FORMAT_OPTIONS: "antialias",
+					minZoom: 10,
+					maxZoom: 18,
+					selectable: true,
+					popup: '<p><span>Typ: </span><span>${typ}</span></p>',
+					format: 'image/png',
+					attribution: "@ Malmö stad",
+					transparent: true
+				}
 			}
 
 		],
@@ -168,10 +187,10 @@ var config = {
 							imperial: false
 						}
 					},
-					{
-						init: "L.Control.MalmoHeader",
-						options: {}
-					},
+					// {
+					// 	init: "L.Control.MalmoHeader",
+					// 	options: {}
+					// },
 					{
 						init: "L.Control.LayerSwitcher",
 						options: {}

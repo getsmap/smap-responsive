@@ -282,7 +282,7 @@ L.print.Provider = L.Class.extend({
 				scale = parseInt(scales[i].value, 10);
 			}
 		}
-		return 16000; //scale;
+		return scale;
 	},
 
 	_getLayoutByName: function (name) {

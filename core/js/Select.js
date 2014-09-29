@@ -151,7 +151,7 @@ smap.core.Select = L.Class.extend({
 					if (lay._popup) {
 						lay.unbindPopup();
 					}
-					lay.bindPopup(html, {autoPan: true, keepInView: false, autoPanPadding: L.point(0, 50)});
+					lay.bindPopup(html, {autoPan: true, keepInView: false, autoPanPadding: L.point(0, 200)});
 //					lay.off("click", lay.togglePopup); // Unbind the default listener that comes with bindPopup
 //					lay._popup.options.autoPanPaddingTopLeft = [0, 50];
 					lay.openPopup(latLng);					

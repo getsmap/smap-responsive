@@ -80,7 +80,7 @@
 		_createBtn: function() {
 			var self = this;
 
-			this.$btn = $('<button id="smap-print-btn" title="' + self.lang.btnExpand + '" class="btn btn-default"><span class="fa fa-print"></span></button>');
+			this.$btn = $('<button id="smap-print-btn" title="' + self.lang.caption + '" class="btn btn-default"><span class="fa fa-print"></span></button>');
 			this.$btn.on("click", function () {
 				self.show();
 				return false;
