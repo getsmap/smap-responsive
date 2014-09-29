@@ -51,7 +51,7 @@ var config = {
 					xhrType: "POST",
 					layerId: "vhamnen_pt",
 					displayName: "Punkter av intresse",
-					// proxy: proxy,
+					//proxy: proxy,
 					attribution: "Malmö stads WFS",
 					inputCrs: "EPSG:4326",
 					uniqueKey: "gid",
@@ -152,17 +152,18 @@ var config = {
 		
 	bl: [
 		 	{
-			init: "L.TileLayer",
-			url: 'http://xyz.malmo.se/data_e/Tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
-			options: {
-				layerId: "malmotile",
-				displayName: "Malmö karta",
-				attribution: "© Malmö Stadsbyggnadskontor",
-				minZoom: 6,
-				maxZoom: 18,
-				tms: true
+				init: "L.TileLayer",
+				url: 'http://kartor.malmo.se/wwwroot_data/tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
+				options: {
+					layerId: "malmotileKartor",
+					displayName: "Malmö karta",
+					attribution: "© Malmö Stadsbyggnadskontor",
+					minZoom: 6,
+					extension: "jpeg",
+					// maxZoom: 18,
+					tms: true
+				}
 			}
-		}
 	],
 	
 	plugins: [
