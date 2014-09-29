@@ -46,7 +46,7 @@ L.Control.FullScreen = L.Control.extend({
 	},
 
 	activate: function() {
-		var elem = document.getElementById('maindiv');
+		var elem = document.getElementById('body');
 
 		if (screenfull.enabled) {
 			screenfull.toggle(elem);
