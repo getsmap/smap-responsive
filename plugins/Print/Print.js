@@ -20,7 +20,10 @@
 				portrait: "Stående",
 				landscape: "Liggande",
 				create: "Skapa bild",
-				close: "Stäng"
+				close: "Stäng",
+				loading: "Laddar konfiguration…",
+				northarrow: "Nordpil",
+				scalebar: "Skalstock"
 			},
 			"en": {
 				caption: "Skriv ut",
@@ -35,7 +38,10 @@
 				portrait: "Portrait",
 				landscape: "landscape",
 				create: "Create image",
-				close: "Stäng"
+				close: "Stäng",
+				loading: "Loading capabilities…",
+				northarrow: "North arrow",
+				scalebar: "Scalebar"
 			}
 		},
 
@@ -92,8 +98,6 @@
 				method: 'POST',
 				url: this.options.printUrl,
 				autoLoad: true,
-				mapTitle: "Malmö stad",
-				comment: "Hej Hej",
 				copy: "© Stadsbyggnadskontoret, Malmö stad",
 				dpi: 96,
 				layout: "A4_Portrait_NoArrow_NoBar", // A4 portrait
@@ -106,7 +110,7 @@
 				orientation: "Portrait",
 				arrow: false,
 				scalebar: false,
-				dpi: "96"
+				dpi: 96
 			}
 			this.printProvider.on('capabilitiesload', function(e) {
 				// Go through proxy to avoid cross-domain.
@@ -159,6 +163,7 @@
 			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
+				self._modal.addClass("sprint-modal");
 				self._modal.find("form").submit(function() {
 					var p = utils.paramsStringToObject( $(this).serialize(), false );
 					p = self._preprocessPrintOptions(p);
@@ -169,8 +174,20 @@
 			});
 		},
 
+		_loadCapabilities: function() {
+			var self = this;
+			this._modal.find('button[type="submit"]').button("loading");
+			this.printProvider.loadCapabilities().done(function() {
+				self._modal.find('button[type="submit"]').button("reset");
+			});
+		},
+
 		show: function() {
 			var self = this;
+
+			if (!this.printProvider._capabilities) {
+				this._loadCapabilities();
+			}
 			if (this._modal) {
 				this._modal.modal("show");
 			}

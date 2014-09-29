@@ -69,7 +69,7 @@ L.print.Provider = L.Class.extend({
 			url = this.options.proxy + url;
 		}
 
-		$.ajax({
+		return $.ajax({
 			type: 'GET',
 			dataType: 'json',
 			url: url,
@@ -282,7 +282,7 @@ L.print.Provider = L.Class.extend({
 				scale = parseInt(scales[i].value, 10);
 			}
 		}
-		return scale;
+		return 16000; //scale;
 	},
 
 	_getLayoutByName: function (name) {
