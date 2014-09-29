@@ -627,12 +627,12 @@ var config = {
  							position: "topright"
  						}
  				 	},
-					{
- 						init: "L.Control.Print",
- 						options: {
- 							position: "topright"
- 						}
- 				 	},
+//					{
+// 						init: "L.Control.Print",
+// 						options: {
+// 							position: "topright"
+// 						}
+// 				 	},
  				 	{
 						init: "L.Control.Opacity",
 						options: {

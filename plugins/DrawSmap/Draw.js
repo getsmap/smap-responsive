@@ -11,7 +11,8 @@ L.Control.DrawSmap = L.Control.extend({
             	addToPopover: true,
             	iconCss: "fa icon-large icon-vector-path-polygon",
             	displayName: "Polygon",
-            	iconClass: "drawBtns"
+            	iconClass: "drawBtns",
+            	showArea: true
             },
             rectangle: {
             	addToPopover: true,
@@ -165,7 +166,6 @@ L.Control.DrawSmap = L.Control.extend({
         self.$drawcontainer = $(self._drawcontainer);
         self.initDone = false;
         self.currentTool = {};
-        //self._createDrawTool();
         self.initDraw(self.$drawcontainer);
         return self._drawcontainer;
     },
@@ -198,29 +198,13 @@ L.Control.DrawSmap = L.Control.extend({
         });
 
         self.setTexts();
-
+        
         smap.map.on('draw:created', function (e) {
             var type = e.layerType,
             layer = e.layer;
-            
-            if(type === "polyline"){
-            
-			var polyline = L.polyline(e.layer._latlngs).addTo(this);
 			
-			var result = polyline.measuredDistance();
-       
-       		var testinglabel = e.layer.bindLabel(''+result+'',{ noHide: true });
-       		
-            // Returns the distance in imperial units
-            var result_imp =  polyline.measuredDistance({
-              metric: false
-            });
-            }
-            
-
-       		
-            
-            
+			self.bindLabelNotify(e);
+			            
             layer.on("click", function(e){
                 if(self.delModeOn == true){
                     self.featureGroup.removeLayer(layer);
@@ -242,8 +226,12 @@ L.Control.DrawSmap = L.Control.extend({
         });
 
         smap.map.on('draw:edited', function (e) {
-
+			console.log('STARTED!');
         });
+        smap.map.on('draw:editstop', function (e) {
+        	self.bindLabelNotify(this);
+        });
+        
         
         $.each(self.options.buttons,function(k,v){
             if (v.addToPopover === true){
@@ -255,9 +243,127 @@ L.Control.DrawSmap = L.Control.extend({
         return popoverdiv;
     },
     
-    bindLabeltoFeature: function(f){
-		    
+    hideNotify: function(){
+    	var nc = $('.notifyjs-container').is(":visible");
+    	if(nc){
+    		$('.notifyjs-container').parent().remove();
+    	}
     },
+    
+    bindLabelNotify: function(e){
+    	var self = this;
+		if(e.layerType === "marker"){
+			self.hideNotify();
+
+			var result = e.layer._latlng;
+			var sticklbl = e.layer.bindLabel(''+result+'',{ noHide: false });
+			sticklbl.on('click',function(evt){
+				self.hideNotify();
+				self.showResults(result);
+			});
+			self.showHideLbl(sticklbl);			
+			self.showResults(result);
+			
+		}
+		if(e.layerType === "circle"){
+			self.hideNotify();
+
+		 	var result = e.layer._mRadius.toFixed(2);
+		 	var sticklbl = e.layer.bindLabel(''+result+'',{ noHide: true });
+		 	sticklbl.on('click',function(evt){
+		 		self.hideNotify();
+				self.showResults("Radius: "+result);
+		 	});
+			self.showHideLbl(sticklbl);
+		 	self.showResults("Radius: "+result);
+		 	
+		}
+		if(e.layerType === "rectangle"){
+			self.hideNotify();
+			var da = e.layer._latlngs[0];
+			var db = e.layer._latlngs[1];
+			var dab = da.distanceTo(db);
+			var dc = e.layer._latlngs[2];
+			var dd = e.layer._latlngs[3];
+			var dcd = dc.distanceTo(dd);
+
+			var area = (dab*dcd).toFixed(2);
+			
+			var sticklbl = e.layer.bindLabel(''+area+'',{ noHide: true });
+			sticklbl.on('click',function(evt){
+				self.hideNotify();
+				self.showResults("Area: "+area);
+			});
+			self.showHideLbl(sticklbl);
+			self.showResults("Area: "+area);
+		}
+		if(e.layerType === "polygon"){
+			self.hideNotify();
+			
+		}
+		
+		if(e.layerType === "polyline" || e.handler === "edit"){
+			self.hideNotify();
+			var polyline = L.polyline(e.layer._latlngs);
+			var result = polyline.measuredDistance();
+			self.showResults(result);
+			var sticklbl = e.layer.bindLabel(''+result+'',{ noHide: true });
+			sticklbl.on('click',function(evt){
+				self.hideNotify();
+				self.showResults(result);
+			});
+
+			self.showHideLbl(sticklbl);
+		
+		     //Returns the distance in imperial units
+		     //var result_imp =  polyline.measuredDistance({
+		     	//metric: false
+		     //});
+		 }
+    },
+    
+    showHideLbl: function(sticklbl){
+    	sticklbl.on('mouseover', function(){
+    		var draw  = $('.leaflet-draw-tooltip').is(':visible');
+    		if(draw){
+    			$('.leaflet-draw-tooltip').hide();
+    		}
+    	}, this)
+    	.on('mouseout', function() {
+    		$('.leaflet-draw-tooltip').show();
+    	},this);
+    },
+        
+    showResults: function(results){
+    	$.notify.addStyle('happywhite', {
+    	  "html": '<div>'
+    	  +'<span data-notify-text/>'
+    	  +'<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'
+    	  +'</div>',
+    	  "classes": {
+    	    "base": {
+    	      "white-space": "nowrap",
+    	      "background-color": "#fff",
+    	      "padding": "15px",
+    	      "width": "auto",
+    	      "height": "auto",
+    	      "font-size": "16px"
+    	    },
+    	    "superblue": {
+    	      "color": "#000",
+    	      "background-color": "#fff"
+    	    }
+    	  }
+    	});
+    	
+    	$.notify(''+results+'', {
+    		"position": "b c",
+       		"style": 'happywhite',
+       		"clickToHide": false,
+       		"autoHide": false
+    	});
+    },
+    
 
     _createToolBtn : function(tooltype,obj){
         var self = this;
