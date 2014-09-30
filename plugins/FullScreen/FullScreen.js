@@ -38,9 +38,11 @@ L.Control.FullScreen = L.Control.extend({
 
 		this._createBtn();
 
-		document.addEventListener(screenfull.raw.fullscreenchange, function () {
-			self._updateButton();
-		});
+		if (screenfull.enabled) {
+			document.addEventListener(screenfull.raw.fullscreenchange, function () {
+				self._updateButton();
+			});
+		}
 		
 		return this._container;
 	},
