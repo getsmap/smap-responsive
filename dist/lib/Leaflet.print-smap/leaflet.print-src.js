@@ -14,7 +14,7 @@ L.print.Provider = L.Class.extend({
 		MAX_EXTENT: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
 		SRS: 'EPSG:3857',
 		INCHES_PER_METER: 39.3701,
-		DPI: 72,
+		DPI: 96, //72,
 		UNITS: 'm'
 	},
 
