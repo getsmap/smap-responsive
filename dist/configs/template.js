@@ -188,6 +188,12 @@ var config = {
 						}
 					},
 					// {
+					// 	init: "L.Control.Test",
+					// 	options: {
+					// 		imperial: false
+					// 	}
+					// },
+					// {
 					// 	init: "L.Control.MalmoHeader",
 					// 	options: {}
 					// },

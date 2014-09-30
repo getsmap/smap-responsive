@@ -91,9 +91,9 @@ var config = {
 								'}'+
 								'else {return "";}'+
 								'pic = $.trim(pic);'+
-								'return "<img style=\'width:100%;max-height:200px;margin-top: 1em;\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
+								'return "<img style=\'width:100%;max-height:200px;margin-top: 1em;\' src=\'//kartor.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
 							'}}'
-						//xyz.malmo.se/rest/resources/vara_fotspar/${bilder}"></img>'
+						//kartor.malmo.se/rest/resources/vara_fotspar/${bilder}"></img>'
 				}
 			},
 			{
@@ -267,7 +267,7 @@ var config = {
 								'}'+
 								'else {return "";}'+
 								'pic = $.trim(pic);'+
-								'return "<img style=\'max-width:70%;max-height:300px;margin-bottom: 1em;\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
+								'return "<img style=\'max-width:70%;max-height:300px;margin-bottom: 1em;\' src=\'//kartor.malmo.se/rest/resources/vara_fotspar/"+pic+"\'></img>";'+
 							'}}'+
 							"<div>${beskrivning}</div>",
 							tabMedia: [{
@@ -277,7 +277,7 @@ var config = {
 								label: 'Fler bilder av "${titel}"',
 								mediaType: "image",
 								sources: '${function(p){var pics = p.bilder.split(","); '+
-										'var baseUrl = "//xyz.malmo.se/rest/resources/vara_fotspar/";'+
+										'var baseUrl = "//kartor.malmo.se/rest/resources/vara_fotspar/";'+
 										'var out = [];'+
 										'for (var i=0,len=pics.length; i<len; i++) {'+
 											'out.push(baseUrl + $.trim(pics[i]));'+
@@ -301,7 +301,7 @@ var config = {
 							// 	'<p>'+
 							// 		'${function(p){var pics = p.bilder && p.bilder.length ? p.bilder.split(",") : []; '+
 							// 			'if (pics.length) {'+
-							// 				'return "<img height=\'25%\' width=\'25%\' class=\'img-thumbnail\' src=\'//xyz.malmo.se/rest/resources/vara_fotspar/"+$.trim(pics[0])+"\'></img>";'+
+							// 				'return "<img height=\'25%\' width=\'25%\' class=\'img-thumbnail\' src=\'//kartor.malmo.se/rest/resources/vara_fotspar/"+$.trim(pics[0])+"\'></img>";'+
 							// 			'} else {return "";}'+
 							// 		'}}'+
 							// 	'"</p>'+

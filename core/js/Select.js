@@ -165,21 +165,23 @@ smap.core.Select = L.Class.extend({
 			 * If WMS GetFeatureInfo – create a popup with the response.
 			 */
 			if (!isVector && latLng) {
-				for (var typeName in props) {} // because of the way typename is stored
-				
-				// Get popup html for this typename
-				var typeNameArr = typeName.split(":");
-				var cutTypeName = typeNameArr[typeNameArr.length-1];
-				var t = smap.cmd.getLayerConfigBy("layers", cutTypeName, {
-					inText: true
-				});
-				if (!t) {
-					return false;
-				}
-				props = props[typeName][0];
-				props._displayName = t.options.displayName;
-				var html = utils.extractToHtml(t.options.popup, props);
-				html = html.replace("${_displayName}", t.options.displayName);
+				var html = ""
+				for (var typeName in props) {
+					// Get popup html for this typename
+					var typeNameArr = typeName.split(":");
+					var cutTypeName = typeNameArr[typeNameArr.length-1];
+					var t = smap.cmd.getLayerConfigBy("layers", cutTypeName, {
+						inText: true
+					});
+					if (!t) {
+						return false;
+					}
+					props = props[typeName][0];
+					props._displayName = t.options.displayName;
+					html += utils.extractToHtml(t.options.popup, props);
+					// html = html.replace("${_displayName}", t.options.displayName);
+					
+				} // because of the way typename is stored
 				
 				// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
 				// (This issue was only found for touch devices.)
@@ -200,6 +202,7 @@ smap.core.Select = L.Class.extend({
 					.setLatLng(latLng)
 					.setContent(html)
 					.openOn(map);
+				
 			}
 		});
 		

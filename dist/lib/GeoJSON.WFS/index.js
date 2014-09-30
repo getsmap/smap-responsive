@@ -37,9 +37,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		
 		L.GeoJSON.prototype.initialize.call(this, null, options);
 		
-		// if (options.proxy || L.GeoJSON.WFS.proxy) {
-		// 	this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
-		// }
+		if (options.proxy || L.GeoJSON.WFS.proxy) {
+			this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
+		}
 		this._featureIndexes = [];
 		this.getFeatureUrl = serviceUrl;
 	},
@@ -221,15 +221,12 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
     },
 	
 	getFeature: function(bounds, callback) {
-		var proxy = this.options.proxy || null;
 		if (bounds && !this.options.params.filter) {
 			// Make a filter so that we only fetch features within current viewport.
 			// Don't use bbox if filter is specified (wfs does not support a combination)
 			var reverseBbox = this.options.hasOwnProperty("reverseAxisBbox") ? this.options.reverseAxisBbox : this.options.reverseAxis;
 			if (this.options.inputCrs) {
-				if (this.options.inputCrs.toUpperCase() !== "EPSG:4326") {
-					bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
-				}
+				bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
 				this.options.params.srsName = this.options.inputCrs;
 			}
 			this.options.params.bbox = this._boundsToBbox(bounds, reverseBbox);
@@ -237,12 +234,12 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		var url,
 			params = null;
 		if (this.options.xhrType === "GET") {
-			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
+			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
 			params = null;
 		}
 		else {
 			// POST
-			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
+			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
 			params = this.options.params;
 		}
 		
@@ -257,29 +254,19 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			data: params,
 			context: this,
 			success: function(response) {
-				this.onGetFeatureSuccess(response, callback);
+				if (response.type && response.type == "FeatureCollection") {
+					this.jsonData = response;
+					this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
+					
+					callback();
+					this.fire("load", {layer: this});
+				}
 			},
-			error: this.onGetFeatureError,
+			error: function() {
+				this.fire("loaderror", {layer: this});
+			},
 			dataType: "json"
 		});
-	},
-
-	/**
-	 * The function must be called with context <this> (this class instance).
-	 * @param  {[type]} response [description]
-	 * @return {[type]}          [description]
-	 */
-	onGetFeatureSuccess: function(response, callback) {
-		if (response.type && response.type == "FeatureCollection") {
-			this.jsonData = response;
-			this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
-			callback();
-			this.fire("load", {layer: this});
-		}
-	},
-
-	onGetFeatureError: function(e) {
-		this.fire("loaderror", {layer: this});
 	},
 	
 	swapCoords: function(coords) {

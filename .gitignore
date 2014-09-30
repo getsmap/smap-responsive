@@ -1,4 +1,3 @@
-configs/*.js
 node_modules/
 bower_components/
 *.scssc

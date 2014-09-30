@@ -36,10 +36,7 @@ L.Control.Template = L.Control.extend({
 		return this._container;
 	},
 
-	onRemove: function(map) {
-		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
-		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
-	}
+	onRemove: function(map) {}
 });
 
 /*
