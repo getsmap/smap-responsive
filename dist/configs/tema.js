@@ -10,7 +10,7 @@ var config = {
 		ol: [
 			{
 					init: "L.GeoJSON.WFS",
-					url: "http://localhost/geoserver/wfs",
+					url: "http://kartor.malmo.se/geoserver/wfs",
 					options: {
 						params: {
 							typeName: "malmows:HL_FORSK_BUSS_PT_3006"
@@ -23,18 +23,21 @@ var config = {
 						reverseAxis: false,
 						reverseAxisBbox: true,
 						selectable: true,
-						popup: '${id}',
-						uniqueKey: "id"
-						// ,
-						// style: {
-						// 	color: '#00F',
-						// 	fillOpacity: 0.3
-						// }
+						popup: 'Kvarter ${id}',
+						uniqueKey: "id",
+						style: {
+							color: '#F00',
+							fillOpacity: 0.3
+						},
+						selectStyle: {
+							color: '#F0F',
+							fillOpacity: 0.3
+						}
 				}
 			},
 			{
 					init: "L.GeoJSON.WFS",
-					url: "http://localhost/geoserver/wfs",
+					url: "http://kartor.malmo.se/geoserver/wfs",
 					options: {
 						layerId: "Stigar",
 						displayName: "Stigar",
@@ -62,7 +65,7 @@ var config = {
 			},
 			{
 				init: "L.TileLayer.WMS",
-				url: "http://localhost/geoserver/wms",
+				url: "http://kartor.malmo.se/geoserver/wms",
 				options: {
 					displayName: "Kvarter",
 					layerId: "kvarter",
@@ -80,7 +83,7 @@ var config = {
 			},
 			{
 				init: "L.TileLayer.WMS",
-				url: "http://localhost/geoserver/wms",
+				url: "http://kartor.malmo.se/geoserver/wms",
 				options: {
 					displayName: "Cykelväg",
 					layerId: "Cykelväg",
