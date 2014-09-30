@@ -366,10 +366,13 @@ L.Control.Search = L.Control.extend({
 			q = utils.extractToHtml(this.options.qPattern, {q: q});
 		}
 
-		var url = encodeURIComponent( this.options.wsLocateUrl + "?q="+q);
-		var whitespace = this.options.whitespace;
-		if (whitespace) {
-			url = url.replace(/%20/g, whitespace);					
+		var url = this.options.wsLocateUrl + "?q="+q;
+		if (this.options.useProxy) {
+			url = smap.config.ws.proxy + encodeURIComponent(url);
+			var whitespace = this.options.whitespace;
+			if (whitespace) {
+				url = url.replace(/%20/g, whitespace);					
+			}
 		}
 
 
@@ -428,7 +431,7 @@ L.Control.Search = L.Control.extend({
 
 
 		$.ajax({
-			url: smap.config.ws.proxy + url,
+			url: url,
 			type: "GET",
 			dataType: "json",
 			context: this,

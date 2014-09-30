@@ -246,8 +246,8 @@ var config = {
 						options: {
 							wsOrgProj: "EPSG:3008",
 							useProxy: true,
-							wsAcUrl: "http://kartor.malmo.se/WS/mKarta/autocomplete.ashx", // autocomplete
-							wsLocateUrl: "http://kartor.malmo.se/WS/mKarta/sokexakt.ashx" // locate
+							wsAcUrl: "http://kartor.malmo.se/WS/search-1.0/autocomplete.ashx", // autocomplete
+							wsLocateUrl: "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx" // locate
 						}
 >>>>>>> .r781
 					},
