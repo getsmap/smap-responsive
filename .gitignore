@@ -5,3 +5,5 @@ bower_components/
 configs/config_lund.js
 dist/configs/config_lund.js
 plugins/GuidePopup/qgis_calc_cat.txt
+
+dist/configs/tema.js
