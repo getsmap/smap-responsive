@@ -22,6 +22,7 @@
 				create: "Skapa bild",
 				close: "Stäng",
 				loading: "Laddar konfiguration…",
+				processingPrint: "Skapar bild…",
 				northarrow: "Nordpil",
 				scalebar: "Skalstock"
 			},
@@ -40,6 +41,7 @@
 				create: "Create image",
 				close: "Stäng",
 				loading: "Loading capabilities…",
+				processingPrint: "Creating image…",
 				northarrow: "North arrow",
 				scalebar: "Scalebar"
 			}
@@ -93,6 +95,7 @@
 		},
 
 		_initPrint: function() {
+			var self = this;
 			L.mapbox = L.mapbox || {TileLayer: L.Class.extend({})};
 			this.printProvider = L.print.provider({
 				method: 'POST',
@@ -104,6 +107,12 @@
 				outputFormat: "pdf",
 				map: this.map
 			});
+			this.printProvider.on("printexception printsuccess", function() {
+				var b = self._modal.find("button[type='submit']");
+				b.button("reset");
+				smap.cmd.loading(false);
+			});
+
 			// Print options picked from the GUI. Will be sent into print func when printing.
 			this.printOptions = {
 				paperFormat: "A4",
@@ -151,7 +160,10 @@
 				console.log("Print capabilities could not be loaded. Cannot print.");
 				return false;
 			}
-			// this._modal.find("button[type='submit']").prop("data-loading-text", "Test");
+			var b = this._modal.find("button[type='submit']");
+			b.attr("data-loading-text", this.lang.processingPrint);
+			b.button("loading");
+			smap.cmd.loading(true);
 			this.printProvider.print(options);
 		},
 
