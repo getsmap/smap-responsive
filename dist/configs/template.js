@@ -101,7 +101,7 @@ var config = {
 		bl: [
 		{
 				init: "L.TileLayer.EsriRest",
-				url: "http://161.52.15.157/arcgis/rest/services/malmo_karta_sv_3857/MapServer",
+				url: "http://kartor.malmo.se/arcgis/rest/services/malmo_karta_sv_3857/MapServer",
 				options: {
 					//layers: "0",
 					transparent: true,
@@ -113,7 +113,7 @@ var config = {
 					layer: "malmo_karta_sv_3857",
 					printLayer: {
 						init: "L.TileLayer.WMS",
-						url: "http://161.52.15.157:6080/arcgis/services/malmo_karta_sv_3857/MapServer/WMSServer",
+						url: "http://kartor.malmo.se:6080/arcgis/services/malmo_karta_sv_3857/MapServer/WMSServer",
 						options: {
 							displayName: "AGS wms",
 							layers: '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,64,65,66',
@@ -130,7 +130,7 @@ var config = {
 		},
 		{
 			init: "L.TileLayer.WMS",
-			url: "http://161.52.15.157:6080/arcgis/services/malmo_karta_sv_3857/MapServer/WMSServer",
+			url: "http://kartor.malmo.se:6080/arcgis/services/malmo_karta_sv_3857/MapServer/WMSServer",
 			parentTag: "bobyggmiljo",
 			options: {
 				layerId: "dp_gallandejkasjk",
@@ -148,7 +148,7 @@ var config = {
 		},
 		{
 			init: "L.TileLayer",
-			url: 'http://161.52.15.157/wwwroot_data/tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
+			url: 'http://kartor.malmo.se/wwwroot_data/tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
 			options: {
 				layerId: "malmotileKartor",
 				displayName: "Malmö karta",
@@ -251,7 +251,7 @@ var config = {
 					{
  						init: "L.Control.Print",
  						options: {
- 							printUrl: "http://localhost/print-servlet/print", // http://161.52.15.157/geoserver/pdf
+ 							printUrl: "http://localhost/print-servlet/print", // http://kartor.malmo.se/geoserver/pdf
  							position: "topright"
  						}
  				 	},
