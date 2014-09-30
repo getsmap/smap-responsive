@@ -72,6 +72,13 @@ body {
   line-height: 4em;
   font-weight: bold;
 }
+.popup-divider {
+  border-top: 1px dotted #aaa;
+  margin: 1.5em 0;
+  width: calc(100% + 40px);
+  left: -20px;
+  position: relative;
+}
 .panel-default > .panel-heading {
   outline: 1px solid #ccc;
   border: none;

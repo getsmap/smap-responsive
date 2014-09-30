@@ -151,6 +151,7 @@
 				console.log("Print capabilities could not be loaded. Cannot print.");
 				return false;
 			}
+			// this._modal.find("button[type='submit']").prop("data-loading-text", "Test");
 			this.printProvider.print(options);
 		},
 

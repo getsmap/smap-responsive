@@ -109,26 +109,32 @@ smap.cmd = {
 			options = options || {};
 			
 			var arr = smap.config.bl.concat(smap.config.ol || []),
-				i, t;
+				i, t, compVal;
 			for (i=0,len=arr.length; i<len; i++) {
 				t = arr[i];
-//				try {
-//					val = eval("t." + key);
-//				} catch(e) {
-//					continue;
-//				}
-//				return val;
-				
-				var exVal = t.options[key];
+				if (key.search(/\./) !== -1) {
+					// Extract the value using eval
+					try {
+						compVal = eval("t." + key);
+					} catch(e) {
+						continue;
+					}
+				}
+				else {
+					// Extract the value in a normal way
+					compVal = t.options[key];
+				}
 				if (options.inText) {
-					if (exVal !== undefined && exVal.search(val) > -1) {
+					// Require in text match
+					if (compVal !== undefined && compVal.search(val) > -1) {
 						return t;
 					}
 				}
 				else {
-					if (exVal !== undefined && exVal === val) {
+					// Require exact match
+					if (compVal !== undefined && compVal === val) {
 						return t;
-					}					
+					}
 				}
 			}
 			return null;

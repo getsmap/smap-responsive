@@ -22,7 +22,7 @@ smap.core.Select = L.Class.extend({
 			val = props[keyArr[0]] + ";" + props[keyArr[1]];
 		}
 		else {
-			val = props[key];						
+			val = props[key];
 		}
 		return val;
 	},
@@ -86,8 +86,7 @@ smap.core.Select = L.Class.extend({
 				selectedFeature = e.feature,
 				selectedFeatures = e.selectedFeatures || [],
 				uniqueKey = layer.options.uniqueKey || "-",
-				shiftKeyWasPressed = e.shiftKeyWasPressed, //e.clickEvent.originalEvent ? e.clickEvent.originalEvent.shiftKey || false : false,
-				latLng = e.latLng;
+				shiftKeyWasPressed = e.shiftKeyWasPressed; //e.clickEvent.originalEvent ? e.clickEvent.originalEvent.shiftKey || false : false,
 			var props = selectedFeature.properties;
 			
 			
@@ -158,27 +157,20 @@ smap.core.Select = L.Class.extend({
 				}
 			}
 			
-			
-			
-			
 			/**
 			 * If WMS GetFeatureInfo – create a popup with the response.
 			 */
-			if (!isVector && latLng) {
-				var html = ""
-				for (var typeName in props) {
-					// Get popup html for this typename
-					var typeNameArr = typeName.split(":");
-					var cutTypeName = typeNameArr[typeNameArr.length-1];
-					var t = smap.cmd.getLayerConfigBy("layers", cutTypeName, {
-						inText: true
-					});
-					if (!t) {
-						return false;
+			if (!isVector) {
+				var html = "", f, props;
+				for (var i=0,len=selectedFeatures.length; i<len; i++) {
+					f = selectedFeatures[i];
+					props = f.properties;
+					// props._displayName = t.options.displayName;
+					if (f.options.popup) {
+						html += '<h4>'+f.options.displayName+'</h4>';
+						html += utils.extractToHtml(f.options.popup, props);
+						html += '<div class="popup-divider"></div>';
 					}
-					props = props[typeName][0];
-					props._displayName = t.options.displayName;
-					html += utils.extractToHtml(t.options.popup, props);
 					// html = html.replace("${_displayName}", t.options.displayName);
 					
 				} // because of the way typename is stored
@@ -186,6 +178,7 @@ smap.core.Select = L.Class.extend({
 				// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
 				// (This issue was only found for touch devices.)
 				var $html = $("<div>"+html+"</div>");
+				$html.find(".popup-divider:last").remove();
 				$html.find("a").each(function() {
 					var href = $(this).attr("href"),
 						text = $(this).text();
@@ -199,7 +192,7 @@ smap.core.Select = L.Class.extend({
 				});
 				map.closePopup();
 				var popup = L.popup()
-					.setLatLng(latLng)
+					.setLatLng(f.latLng)
 					.setContent(html)
 					.openOn(map);
 				
