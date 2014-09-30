@@ -322,7 +322,7 @@ L.Control.Search = L.Control.extend({
 
 		if (this.options.wsAcUrl) {
 			typeheadOptions.source = function(q, process) {
-				var url = encodeURIComponent( self.options.wsAcUrl + "?q="+q);
+				var url = self.options.wsAcUrl + "?q="+q;
 				if (whitespace) {
 					url = url.replace(/%20/g, whitespace);					
 				}
@@ -331,7 +331,7 @@ L.Control.Search = L.Control.extend({
 				}
 				self.proxyInst = $.ajax({
 					type: "GET",
-					url: smap.config.ws.proxy + url,
+					url: self.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url) : url,
 					dataType: "text",
 					success: function(resp) {
 						var arr = resp.split("\n");

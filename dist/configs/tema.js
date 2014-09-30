@@ -1,11 +1,27 @@
+var ws = {
+		"localhost": {
+			proxy: "http://localhost/cgi-bin/proxy.py?url="
+		},
+		"kartor.malmo.se": {
+			proxy: "http://localhost/cgi-bin/proxy.py?url="
+		},
+		"mobile.smap.se": {
+			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
+		},
+		"kartor.helsingborg.se": {
+			proxy: "http://kartor.helsingborg.se/cgi-bin/proxy.py?url="
+		}
+};
 
 var config = {
 
 		params:{
 			center: [13.0, 55.6],
-			zoom: 14,
+			zoom: 12,
 			hash: false
 		},
+
+		ws: ws,
 				
 		ol: [
 			{
@@ -102,66 +118,57 @@ var config = {
 		],
 			
 		bl: [
+
 		{
 				init: "L.TileLayer.EsriRest",
-				url: "http://kartor.malmo.se/arcgis/rest/services/malmo_karta_sv_3857/MapServer",
+				url: "http://161.52.15.157/arcgis/rest/services/malmo_karta_3857/MapServer",
 				options: {
 					//layers: "0",
 					transparent: true,
-					layerId: "blablablablhjasjkasjasaaa",
-					displayName: "Esri-rest-leaflet2",
-					opacity: 0.8,
-					minZoom: 10,
+					layerId: "malmo_karta_3857",
+					displayName: "Malmö stadskarta",
+					opacity: 1.0,
+					minZoom: 0,
 					maxZoom: 18,
-					layer: "malmo_karta_sv_3857",
+					//layer: "malmo_karta_sv_3857",
 					printLayer: {
 						init: "L.TileLayer.WMS",
-						url: "http://kartor.malmo.se:6080/arcgis/services/malmo_karta_sv_3857/MapServer/WMSServer",
+						url: "http://161.52.15.157/arcgis/services/malmo_karta_3857/MapServer/WMSServer",
 						options: {
 							displayName: "AGS wms",
 							layers: '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,64,65,66',
-							minZoom: 10,
+							minZoom: 0,
 							maxZoom: 18,
 							format: 'image/png',
 							transparent: true,
-							attribution: "@ Malmö stad"
+							attribution: "@ Malmö Stadsbyggnadskontor"
 						}
 					},
 					//singleTile : true,  //Funkar ej
-					attribution: '<span>© Uffe contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>'
+					attribution: '<span>© Malmö Stadsbyggnadskontor</span>'
 				}
 		},
+
 		{
-			init: "L.TileLayer.WMS",
-			url: "http://kartor.malmo.se:6080/arcgis/services/malmo_karta_sv_3857/MapServer/WMSServer",
-			parentTag: "bobyggmiljo",
-			options: {
-				layerId: "dp_gallandejkasjk",
-				displayName: "AGS wms",
-				layers: '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,64,65,66',
-				minZoom: 10,
-				maxZoom: 18,
-				format: 'image/png',
-				//featureType: "polygon",
-				//selectable: true,
-				transparent: true,
-				attribution: "@ Helsingborg stad",
-				zIndex: 9
-			}
+				init: "L.TileLayer.WMS",
+				url: "http://161.52.15.157/geoserver/malmows/wms?",
+				//parentTag: "orto_2013",
+				options: {
+					layerId: "malmows_malmo_orto_2013",
+					displayName: "Fotokarta 2013",
+					layers: 'malmows:malmo_orto_2013',
+					minZoom: 0,
+					maxZoom: 21,
+					format: 'image/png',
+					transparent: true,
+					opacity: 0.9,
+					attribution: "© Malmö Stadsbyggnadskontor",
+					zIndex: 9
+					
+				}
 		},
-		{
-			init: "L.TileLayer",
-			url: 'http://kartor.malmo.se/wwwroot_data/tilecache/malmo/malmo_leaflet_cache_EPSG900913/{z}/{x}/{y}.jpeg',
-			options: {
-				layerId: "malmotileKartor",
-				displayName: "Malmö karta",
-				attribution: "© Malmö Stadsbyggnadskontor",
-				minZoom: 6,
-				extension: "jpeg",
-				// maxZoom: 18,
-				tms: true
-			}
-		},
+
+
 		{
 			init: "L.TileLayer",
 			url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -230,7 +237,12 @@ var config = {
 					// },
 					{
 						init: "L.Control.Search",
-						options: {}
+						options: {
+							wsOrgProj: "EPSG:3008",
+							useProxy: true,
+							wsAcUrl: "http://kartor.malmo.se/WS/mKarta/autocomplete.ashx", // autocomplete
+							wsLocateUrl: "http://kartor.malmo.se/WS/mKarta/sokexakt.ashx" // locate
+						}
 					},
 					{
 						init: "L.Control.ShareLink",

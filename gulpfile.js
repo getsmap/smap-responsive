@@ -176,10 +176,10 @@ gulp.task('ourjs', function() {
 		// .pipe(order(p.ourJs.concat("*")))
 		// .pipe(jshint())
   // 		.pipe(jshint.reporter('default'))
-  		.pipe(concat("smap.js"))
   		.pipe(stripDebug())
   		.pipe(ngAnnotate())
 		.pipe(uglify())  // {mangle: false}
+  		.pipe(concat("smap.js"))
 		.pipe(gulp.dest("dist"));
 });
 
