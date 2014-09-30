@@ -251,7 +251,7 @@ var config = {
 					{
  						init: "L.Control.Print",
  						options: {
- 							printUrl: "http://localhost/print-servlet/print", // http://kartor.malmo.se/geoserver/pdf
+ 							printUrl: "http://kartor.malmo.se/print-servlet/print", // http://161.52.15.157/geoserver/pdf
  							position: "topright"
  						}
  				 	},
