@@ -11207,166 +11207,6 @@ break}e||r.push(t),t.touches=r.slice(),t.changedTouches=[t],n(t)};if(t[a+"touchs
 /*! jQuery Mobile v1.4.0 | Copyright 2010, 2013 jQuery Foundation, Inc. | jquery.org/license */
 
 (function(e,t,n){typeof define=="function"&&define.amd?define(["jquery"],function(r){return n(r,e,t),r.mobile}):n(e.jQuery,e,t)})(this,document,function(e,t,n,r){(function(e,n){e.extend(e.support,{orientation:"orientation"in t&&"onorientationchange"in t})})(e),function(e){e.event.special.throttledresize={setup:function(){e(this).bind("resize",n)},teardown:function(){e(this).unbind("resize",n)}};var t=250,n=function(){s=(new Date).getTime(),o=s-r,o>=t?(r=s,e(this).trigger("throttledresize")):(i&&clearTimeout(i),i=setTimeout(n,t-o))},r=0,i,s,o}(e),function(e,t){function p(){var e=s();e!==o&&(o=e,r.trigger(i))}var r=e(t),i="orientationchange",s,o,u,a,f={0:!0,180:!0},l,c,h;if(e.support.orientation){l=t.innerWidth||r.width(),c=t.innerHeight||r.height(),h=50,u=l>c&&l-c>h,a=f[t.orientation];if(u&&a||!u&&!a)f={"-90":!0,90:!0}}e.event.special.orientationchange=e.extend({},e.event.special.orientationchange,{setup:function(){if(e.support.orientation&&!e.event.special.orientationchange.disabled)return!1;o=s(),r.bind("throttledresize",p)},teardown:function(){if(e.support.orientation&&!e.event.special.orientationchange.disabled)return!1;r.unbind("throttledresize",p)},add:function(e){var t=e.handler;e.handler=function(e){return e.orientation=s(),t.apply(this,arguments)}}}),e.event.special.orientationchange.orientation=s=function(){var r=!0,i=n.documentElement;return e.support.orientation?r=f[t.orientation]:r=i&&i.clientWidth/i.clientHeight<1.1,r?"portrait":"landscape"},e.fn[i]=function(e){return e?this.bind(i,e):this.trigger(i)},e.attrFn&&(e.attrFn[i]=!0)}(e,this),function(e,t,n,r){function T(e){while(e&&typeof e.originalEvent!="undefined")e=e.originalEvent;return e}function N(t,n){var i=t.type,s,o,a,l,c,h,p,d,v;t=e.Event(t),t.type=n,s=t.originalEvent,o=e.event.props,i.search(/^(mouse|click)/)>-1&&(o=f);if(s)for(p=o.length,l;p;)l=o[--p],t[l]=s[l];i.search(/mouse(down|up)|click/)>-1&&!t.which&&(t.which=1);if(i.search(/^touch/)!==-1){a=T(s),i=a.touches,c=a.changedTouches,h=i&&i.length?i[0]:c&&c.length?c[0]:r;if(h)for(d=0,v=u.length;d<v;d++)l=u[d],t[l]=h[l]}return t}function C(t){var n={},r,s;while(t){r=e.data(t,i);for(s in r)r[s]&&(n[s]=n.hasVirtualBinding=!0);t=t.parentNode}return n}function k(t,n){var r;while(t){r=e.data(t,i);if(r&&(!n||r[n]))return t;t=t.parentNode}return null}function L(){g=!1}function A(){g=!0}function O(){E=0,v.length=0,m=!1,A()}function M(){L()}function _(){D(),c=setTimeout(function(){c=0,O()},e.vmouse.resetTimerDuration)}function D(){c&&(clearTimeout(c),c=0)}function P(t,n,r){var i;if(r&&r[t]||!r&&k(n.target,t))i=N(n,t),e(n.target).trigger(i);return i}function H(t){var n=e.data(t.target,s),r;!m&&(!E||E!==n)&&(r=P("v"+t.type,t),r&&(r.isDefaultPrevented()&&t.preventDefault(),r.isPropagationStopped()&&t.stopPropagation(),r.isImmediatePropagationStopped()&&t.stopImmediatePropagation()))}function B(t){var n=T(t).touches,r,i,o;n&&n.length===1&&(r=t.target,i=C(r),i.hasVirtualBinding&&(E=w++,e.data(r,s,E),D(),M(),d=!1,o=T(t).touches[0],h=o.pageX,p=o.pageY,P("vmouseover",t,i),P("vmousedown",t,i)))}function j(e){if(g)return;d||P("vmousecancel",e,C(e.target)),d=!0,_()}function F(t){if(g)return;var n=T(t).touches[0],r=d,i=e.vmouse.moveDistanceThreshold,s=C(t.target);d=d||Math.abs(n.pageX-h)>i||Math.abs(n.pageY-p)>i,d&&!r&&P("vmousecancel",t,s),P("vmousemove",t,s),_()}function I(e){if(g)return;A();var t=C(e.target),n,r;P("vmouseup",e,t),d||(n=P("vclick",e,t),n&&n.isDefaultPrevented()&&(r=T(e).changedTouches[0],v.push({touchID:E,x:r.clientX,y:r.clientY}),m=!0)),P("vmouseout",e,t),d=!1,_()}function q(t){var n=e.data(t,i),r;if(n)for(r in n)if(n[r])return!0;return!1}function R(){}function U(t){var n=t.substr(1);return{setup:function(){q(this)||e.data(this,i,{});var r=e.data(this,i);r[t]=!0,l[t]=(l[t]||0)+1,l[t]===1&&b.bind(n,H),e(this).bind(n,R),y&&(l.touchstart=(l.touchstart||0)+1,l.touchstart===1&&b.bind("touchstart",B).bind("touchend",I).bind("touchmove",F).bind("scroll",j))},teardown:function(){--l[t],l[t]||b.unbind(n,H),y&&(--l.touchstart,l.touchstart||b.unbind("touchstart",B).unbind("touchmove",F).unbind("touchend",I).unbind("scroll",j));var r=e(this),s=e.data(this,i);s&&(s[t]=!1),r.unbind(n,R),q(this)||r.removeData(i)}}}var i="virtualMouseBindings",s="virtualTouchID",o="vmouseover vmousedown vmousemove vmouseup vclick vmouseout vmousecancel".split(" "),u="clientX clientY pageX pageY screenX screenY".split(" "),a=e.event.mouseHooks?e.event.mouseHooks.props:[],f=e.event.props.concat(a),l={},c=0,h=0,p=0,d=!1,v=[],m=!1,g=!1,y="addEventListener"in n,b=e(n),w=1,E=0,S,x;e.vmouse={moveDistanceThreshold:10,clickDistanceThreshold:10,resetTimerDuration:1500};for(x=0;x<o.length;x++)e.event.special[o[x]]=U(o[x]);y&&n.addEventListener("click",function(t){var n=v.length,r=t.target,i,o,u,a,f,l;if(n){i=t.clientX,o=t.clientY,S=e.vmouse.clickDistanceThreshold,u=r;while(u){for(a=0;a<n;a++){f=v[a],l=0;if(u===r&&Math.abs(f.x-i)<S&&Math.abs(f.y-o)<S||e.data(u,s)===f.touchID){t.preventDefault(),t.stopPropagation();return}}u=u.parentNode}}},!0)}(e,t,n),function(e){e.mobile={}}(e),function(e,t){var r={touch:"ontouchend"in n};e.mobile.support=e.mobile.support||{},e.extend(e.support,r),e.extend(e.mobile.support,r)}(e),function(e,t,r){function l(t,n,r){var i=r.type;r.type=n,e.event.dispatch.call(t,r),r.type=i}var i=e(n),s=e.mobile.support.touch,o="touchmove scroll",u=s?"touchstart":"mousedown",a=s?"touchend":"mouseup",f=s?"touchmove":"mousemove";e.each("touchstart touchmove touchend tap taphold swipe swipeleft swiperight scrollstart scrollstop".split(" "),function(t,n){e.fn[n]=function(e){return e?this.bind(n,e):this.trigger(n)},e.attrFn&&(e.attrFn[n]=!0)}),e.event.special.scrollstart={enabled:!0,setup:function(){function s(e,n){r=n,l(t,r?"scrollstart":"scrollstop",e)}var t=this,n=e(t),r,i;n.bind(o,function(t){if(!e.event.special.scrollstart.enabled)return;r||s(t,!0),clearTimeout(i),i=setTimeout(function(){s(t,!1)},50)})},teardown:function(){e(this).unbind(o)}},e.event.special.tap={tapholdThreshold:750,emitTapOnTaphold:!0,setup:function(){var t=this,n=e(t),r=!1;n.bind("vmousedown",function(s){function a(){clearTimeout(u)}function f(){a(),n.unbind("vclick",c).unbind("vmouseup",a),i.unbind("vmousecancel",f)}function c(e){f(),!r&&o===e.target?l(t,"tap",e):r&&e.stopPropagation()}r=!1;if(s.which&&s.which!==1)return!1;var o=s.target,u;n.bind("vmouseup",a).bind("vclick",c),i.bind("vmousecancel",f),u=setTimeout(function(){e.event.special.tap.emitTapOnTaphold||(r=!0),l(t,"taphold",e.Event("taphold",{target:o}))},e.event.special.tap.tapholdThreshold)})},teardown:function(){e(this).unbind("vmousedown").unbind("vclick").unbind("vmouseup"),i.unbind("vmousecancel")}},e.event.special.swipe={scrollSupressionThreshold:30,durationThreshold:1e3,horizontalDistanceThreshold:30,verticalDistanceThreshold:75,start:function(t){var n=t.originalEvent.touches?t.originalEvent.touches[0]:t;return{time:(new Date).getTime(),coords:[n.pageX,n.pageY],origin:e(t.target)}},stop:function(e){var t=e.originalEvent.touches?e.originalEvent.touches[0]:e;return{time:(new Date).getTime(),coords:[t.pageX,t.pageY]}},handleSwipe:function(t,n,r,i){if(n.time-t.time<e.event.special.swipe.durationThreshold&&Math.abs(t.coords[0]-n.coords[0])>e.event.special.swipe.horizontalDistanceThreshold&&Math.abs(t.coords[1]-n.coords[1])<e.event.special.swipe.verticalDistanceThreshold){var s=t.coords[0]>n.coords[0]?"swipeleft":"swiperight";return l(r,"swipe",e.Event("swipe",{target:i,swipestart:t,swipestop:n})),l(r,s,e.Event(s,{target:i,swipestart:t,swipestop:n})),!0}return!1},setup:function(){var t=this,n=e(t);n.bind(u,function(r){function l(n){if(!s)return;i=e.event.special.swipe.stop(n),u||(u=e.event.special.swipe.handleSwipe(s,i,t,o)),Math.abs(s.coords[0]-i.coords[0])>e.event.special.swipe.scrollSupressionThreshold&&n.preventDefault()}var i,s=e.event.special.swipe.start(r),o=r.target,u=!1;n.bind(f,l).one(a,function(){u=!0,n.unbind(f,l)})})},teardown:function(){e(this).unbind(u).unbind(f).unbind(a)}},e.each({scrollstop:"scrollstart",taphold:"tap",swipeleft:"swipe",swiperight:"swipe"},function(t,n){e.event.special[t]={setup:function(){e(this).bind(n,e.noop)},teardown:function(){e(this).unbind(n)}}})}(e,this),function(e,t,n){e.extend(e.mobile,{version:"1.4.0",subPageUrlKey:"ui-page",hideUrlBar:!0,keepNative:":jqmData(role='none'), :jqmData(role='nojs')",activePageClass:"ui-page-active",activeBtnClass:"ui-btn-active",focusClass:"ui-focus",ajaxEnabled:!0,hashListeningEnabled:!0,linkBindingEnabled:!0,defaultPageTransition:"fade",maxTransitionWidth:!1,minScrollBack:0,defaultDialogTransition:"pop",pageLoadErrorMessage:"Error Loading Page",pageLoadErrorMessageTheme:"a",phonegapNavigationEnabled:!1,autoInitializePage:!0,pushStateEnabled:!0,ignoreContentEnabled:!1,buttonMarkup:{hoverDelay:200},dynamicBaseEnabled:!0,pageContainer:e(),allowCrossDomainPages:!1,dialogHashKey:"&ui-state=dialog"})}(e,this),function(e,t,n){var r={},i=e.find,s=/(?:\{[\s\S]*\}|\[[\s\S]*\])$/,o=/:jqmData\(([^)]*)\)/g;e.extend(e.mobile,{ns:"",getAttribute:function(t,n){var r;t=t.jquery?t[0]:t,t&&t.getAttribute&&(r=t.getAttribute("data-"+e.mobile.ns+n));try{r=r==="true"?!0:r==="false"?!1:r==="null"?null:+r+""===r?+r:s.test(r)?JSON.parse(r):r}catch(i){}return r},nsNormalizeDict:r,nsNormalize:function(t){return r[t]||(r[t]=e.camelCase(e.mobile.ns+t))},closestPageData:function(e){return e.closest(":jqmData(role='page'), :jqmData(role='dialog')").data("mobile-page")}}),e.fn.jqmData=function(t,r){var i;return typeof t!="undefined"&&(t&&(t=e.mobile.nsNormalize(t)),arguments.length<2||r===n?i=this.data(t):i=this.data(t,r)),i},e.jqmData=function(t,n,r){var i;return typeof n!="undefined"&&(i=e.data(t,n?e.mobile.nsNormalize(n):n,r)),i},e.fn.jqmRemoveData=function(t){return this.removeData(e.mobile.nsNormalize(t))},e.jqmRemoveData=function(t,n){return e.removeData(t,e.mobile.nsNormalize(n))},e.find=function(t,n,r,s){return t.indexOf(":jqmData")>-1&&(t=t.replace(o,"[data-"+(e.mobile.ns||"")+"$1]")),i.call(this,t,n,r,s)},e.extend(e.find,i)}(e,this),function(e,t){function s(t,n){var r,i,s,u=t.nodeName.toLowerCase();return"area"===u?(r=t.parentNode,i=r.name,!t.href||!i||r.nodeName.toLowerCase()!=="map"?!1:(s=e("img[usemap=#"+i+"]")[0],!!s&&o(s))):(/input|select|textarea|button|object/.test(u)?!t.disabled:"a"===u?t.href||n:n)&&o(t)}function o(t){return e.expr.filters.visible(t)&&!e(t).parents().addBack().filter(function(){return e.css(this,"visibility")==="hidden"}).length}var r=0,i=/^ui-id-\d+$/;e.ui=e.ui||{},e.extend(e.ui,{version:"c0ab71056b936627e8a7821f03c044aec6280a40",keyCode:{BACKSPACE:8,COMMA:188,DELETE:46,DOWN:40,END:35,ENTER:13,ESCAPE:27,HOME:36,LEFT:37,PAGE_DOWN:34,PAGE_UP:33,PERIOD:190,RIGHT:39,SPACE:32,TAB:9,UP:38}}),e.fn.extend({focus:function(t){return function(n,r){return typeof n=="number"?this.each(function(){var t=this;setTimeout(function(){e(t).focus(),r&&r.call(t)},n)}):t.apply(this,arguments)}}(e.fn.focus),scrollParent:function(){var t;return e.ui.ie&&/(static|relative)/.test(this.css("position"))||/absolute/.test(this.css("position"))?t=this.parents().filter(function(){return/(relative|absolute|fixed)/.test(e.css(this,"position"))&&/(auto|scroll)/.test(e.css(this,"overflow")+e.css(this,"overflow-y")+e.css(this,"overflow-x"))}).eq(0):t=this.parents().filter(function(){return/(auto|scroll)/.test(e.css(this,"overflow")+e.css(this,"overflow-y")+e.css(this,"overflow-x"))}).eq(0),/fixed/.test(this.css("position"))||!t.length?e(this[0].ownerDocument||n):t},uniqueId:function(){return this.each(function(){this.id||(this.id="ui-id-"+ ++r)})},removeUniqueId:function(){return this.each(function(){i.test(this.id)&&e(this).removeAttr("id")})}}),e.extend(e.expr[":"],{data:e.expr.createPseudo?e.expr.createPseudo(function(t){return function(n){return!!e.data(n,t)}}):function(t,n,r){return!!e.data(t,r[3])},focusable:function(t){return s(t,!isNaN(e.attr(t,"tabindex")))},tabbable:function(t){var n=e.attr(t,"tabindex"),r=isNaN(n);return(r||n>=0)&&s(t,!r)}}),e("<a>").outerWidth(1).jquery||e.each(["Width","Height"],function(n,r){function u(t,n,r,s){return e.each(i,function(){n-=parseFloat(e.css(t,"padding"+this))||0,r&&(n-=parseFloat(e.css(t,"border"+this+"Width"))||0),s&&(n-=parseFloat(e.css(t,"margin"+this))||0)}),n}var i=r==="Width"?["Left","Right"]:["Top","Bottom"],s=r.toLowerCase(),o={innerWidth:e.fn.innerWidth,innerHeight:e.fn.innerHeight,outerWidth:e.fn.outerWidth,outerHeight:e.fn.outerHeight};e.fn["inner"+r]=function(n){return n===t?o["inner"+r].call(this):this.each(function(){e(this).css(s,u(this,n)+"px")})},e.fn["outer"+r]=function(t,n){return typeof t!="number"?o["outer"+r].call(this,t):this.each(function(){e(this).css(s,u(this,t,!0,n)+"px")})}}),e.fn.addBack||(e.fn.addBack=function(e){return this.add(e==null?this.prevObject:this.prevObject.filter(e))}),e("<a>").data("a-b","a").removeData("a-b").data("a-b")&&(e.fn.removeData=function(t){return function(n){return arguments.length?t.call(this,e.camelCase(n)):t.call(this)}}(e.fn.removeData)),e.ui.ie=!!/msie [\w.]+/.exec(navigator.userAgent.toLowerCase()),e.support.selectstart="onselectstart"in n.createElement("div"),e.fn.extend({disableSelection:function(){return this.bind((e.support.selectstart?"selectstart":"mousedown")+".ui-disableSelection",function(e){e.preventDefault()})},enableSelection:function(){return this.unbind(".ui-disableSelection")},zIndex:function(r){if(r!==t)return this.css("zIndex",r);if(this.length){var i=e(this[0]),s,o;while(i.length&&i[0]!==n){s=i.css("position");if(s==="absolute"||s==="relative"||s==="fixed"){o=parseInt(i.css("zIndex"),10);if(!isNaN(o)&&o!==0)return o}i=i.parent()}}return 0}}),e.ui.plugin={add:function(t,n,r){var i,s=e.ui[t].prototype;for(i in r)s.plugins[i]=s.plugins[i]||[],s.plugins[i].push([n,r[i]])},call:function(e,t,n,r){var i,s=e.plugins[t];if(!s)return;if(!r&&(!e.element[0].parentNode||e.element[0].parentNode.nodeType===11))return;for(i=0;i<s.length;i++)e.options[s[i][0]]&&s[i][1].apply(e.element,n)}}}(e),function(e,t,r){e.extend(e.mobile,{window:e(t),document:e(n),keyCode:e.ui.keyCode,behaviors:{},silentScroll:function(n){e.type(n)!=="number"&&(n=e.mobile.defaultHomeScroll),e.event.special.scrollstart.enabled=!1,setTimeout(function(){t.scrollTo(0,n),e.mobile.document.trigger("silentscroll",{x:0,y:n})},20),setTimeout(function(){e.event.special.scrollstart.enabled=!0},150)},getClosestBaseUrl:function(t){var n=e(t).closest(".ui-page").jqmData("url"),r=e.mobile.path.documentBase.hrefNoHash;if(!e.mobile.dynamicBaseEnabled||!n||!e.mobile.path.isPath(n))n=r;return e.mobile.path.makeUrlAbsolute(n,r)},removeActiveLinkClass:function(t){!!e.mobile.activeClickedLink&&(!e.mobile.activeClickedLink.closest("."+e.mobile.activePageClass).length||t)&&e.mobile.activeClickedLink.removeClass(e.mobile.activeBtnClass),e.mobile.activeClickedLink=null},getInheritedTheme:function(e,t){var n=e[0],r="",i=/ui-(bar|body|overlay)-([a-z])\b/,s,o;while(n){s=n.className||"";if(s&&(o=i.exec(s))&&(r=o[2]))break;n=n.parentNode}return r||t||"a"},enhanceable:function(e){return this.haveParents(e,"enhance")},hijackable:function(e){return this.haveParents(e,"ajax")},haveParents:function(t,n){if(!e.mobile.ignoreContentEnabled)return t;var r=t.length,i=e(),s,o,u,a,f;for(a=0;a<r;a++){o=t.eq(a),u=!1,s=t[a];while(s){f=s.getAttribute?s.getAttribute("data-"+e.mobile.ns+n):"";if(f==="false"){u=!0;break}s=s.parentNode}u||(i=i.add(o))}return i},getScreenHeight:function(){return t.innerHeight||e.mobile.window.height()},resetActivePageHeight:function(t){var n=e("."+e.mobile.activePageClass),r=n.height(),i=n.outerHeight(!0);t=typeof t=="number"?t:e.mobile.getScreenHeight(),n.css("min-height",t-(i-r))},loading:function(){var t=this.loading._widget||e(e.mobile.loader.prototype.defaultHtml).loader(),n=t.loader.apply(t,arguments);return this.loading._widget=t,n}}),e.addDependents=function(t,n){var r=e(t),i=r.jqmData("dependents")||e();r.jqmData("dependents",e(i).add(n))},e.fn.extend({removeWithDependents:function(){e.removeWithDependents(this)},enhanceWithin:function(){var t,n={},r=e.mobile.page.prototype.keepNativeSelector(),i=this;e.mobile.nojs&&e.mobile.nojs(this),e.mobile.links&&e.mobile.links(this),e.mobile.degradeInputsWithin&&e.mobile.degradeInputsWithin(this),e.fn.buttonMarkup&&this.find(e.fn.buttonMarkup.initSelector).not(r).jqmEnhanceable().buttonMarkup(),e.fn.fieldcontain&&this.find(":jqmData(role='fieldcontain')").not(r).jqmEnhanceable().fieldcontain(),e.each(e.mobile.widgets,function(t,s){if(s.initSelector){var o=e.mobile.enhanceable(i.find(s.initSelector));o.length>0&&(o=o.not(r)),o.length>0&&(n[s.prototype.widgetName]=o)}});for(t in n)n[t][t]();return this},addDependents:function(t){e.addDependents(this,t)},getEncodedText:function(){return e("<a>").text(this.text()).html()},jqmEnhanceable:function(){return e.mobile.enhanceable(this)},jqmHijackable:function(){return e.mobile.hijackable(this)}}),e.removeWithDependents=function(t){var n=e(t);(n.jqmData("dependents")||e()).remove(),n.remove()},e.addDependents=function(t,n){var r=e(t),i=r.jqmData("dependents")||e();r.jqmData("dependents",e(i).add(n))},e.find.matches=function(t,n){return e.find(t,null,null,n)},e.find.matchesSelector=function(t,n){return e.find(n,null,null,[t]).length>0}}(e,this),function(e,r){t.matchMedia=t.matchMedia||function(e,t){var n,r=e.documentElement,i=r.firstElementChild||r.firstChild,s=e.createElement("body"),o=e.createElement("div");return o.id="mq-test-1",o.style.cssText="position:absolute;top:-100em",s.style.background="none",s.appendChild(o),function(e){return o.innerHTML='&shy;<style media="'+e+'"> #mq-test-1 { width: 42px; }</style>',r.insertBefore(s,i),n=o.offsetWidth===42,r.removeChild(s),{matches:n,media:e}}}(n),e.mobile.media=function(e){return t.matchMedia(e).matches}}(e)});
-L.GeoJSON.Custom = L.GeoJSON.extend({
-	
-	CLASS_NAME: "L.GeoJSON.Custom",
-	
-	options: {
-		params: {},
-		style: {},
-		inputCrs: "EPSG:4326",
-		pointToLayer: function (feature, latlng) {
-			return L.circleMarker(latlng, this.style);
-		}
-	},
-	
-	initialize: function(serviceUrl, options) {
-		options = options || {};
-		
-		L.GeoJSON.prototype.initialize.call(this, null, options);
-//		$.each(options.params, function(param){
-//			var tempString = "&" + param + "=" + options.params[param];
-//			serviceUrl += tempString;
-//		});
-		serviceUrl += $.param(options.params);
-		this.serviceUrl = serviceUrl;
-		
-		var self = this;
-		this.getFeature(function() {
-			var layer = self.addData(self.jsonData);
-		});
-		
-	},
-	
-	//onAdd: function(map) {
-	//	L.LayerGroup.prototype.onAdd.call(this, map);
-	//},
-    
-    /*_projectBounds: function(bounds, fromEpsg, toEpsg) {
-    	this.centerLonLat = null;
-    	
-    	var sw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getSouth()]),
-    		se = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getSouth()]),
-    		ne = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getNorth()]),
-    		nw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getNorth()]);
-
-        var left   = Math.min(sw[0], se[0]),
-        	bottom = Math.min(sw[1], se[1]),
-        	right  = Math.max(nw[0], ne[0]),
-        	top    = Math.max(nw[1], ne[1]);
-        
-        bounds = L.latLngBounds(L.latLng(bottom, left), L.latLng(top, right));
-        return bounds;
-    },*/
-	
-	getFeature: function(callback) {
-		var url = this.proxy ? this.proxy + encodeURIComponent(this.serviceUrl) : this.serviceUrl;
-		this.fire("loading", {layer: this});
-		if (this.xhr) {
-			this.xhr.abort();
-			this.xhr = null;
-		}
-		this.xhr = $.ajax({
-			url: url,
-			type: "POST",
-			data: this.options.params,
-			context: this,
-			success: function(response) {
-				if (response.type && response.type == "FeatureCollection") {
-					this.jsonData = response;
-					if (this.options.inputCrs !== "EPSG:4326") {
-						this.toGeographicCoords(this.options.inputCrs);
-					}
-					callback();
-					this.fire("load", {layer: this});
-				}				
-			},
-			dataType: "json"
-		});
-	},
-	
-	swapCoords: function(coords) {
-		coords = [coords[1], coords[0]];
-		return coords;
-	},
-	
-	toGeographicCoords: function(inputCrs) {
-		function projectPoint(coordinates /*[easting, northing]*/, inputCrs) {
-			var source = inputCrs || "EPSG:4326",
-				dest = "EPSG:4326",
-				x = coordinates[0], 
-				y = coordinates[1];
-			return window.proj4(source, dest, [x, y]); // [easting, northing]
-		};
-		
-		var coords, coordsArr, projectedCoords, i, p, geom,
-			features = this.jsonData.features || [];
-		for (i=0,len=features.length; i<len; i++) {
-			geom = features[i].geometry;
-			switch (geom.type) {
-				case "Point":
-					coords = geom.coordinates;
-					if (this.options.reverseAxis) {
-						coords = this.swapCoords(coords);
-					}
-					projectedCoords = projectPoint(coords, inputCrs);
-					geom.coordinates = projectedCoords;
-					break;
-				case "MultiPoint":
-					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
-						coords = geom.coordinates[p];
-						if (this.options.reverseAxis) {
-							coords = this.swapCoords(coords);
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						features[i].geometry.coordinates[p] = projectedCoords;
-					}
-					break;
-				case "MultiLineString":
-					coordsArr = [];
-					var pp, ii,
-						newCoords = [];
-					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
-						coordsArr = geom.coordinates[p];
-						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
-							coords = coordsArr[pp];
-							if (this.options.reverseAxis) {
-								coords = this.swapCoords( coords );								
-							}
-							projectedCoords = projectPoint(coords, inputCrs);
-							coordsArr[pp] = projectedCoords;
-						}
-						geom.coordinates[p] = coordsArr; // needed?
-					}
-					break;
-				case "Polygon":
-					coordsArr = geom.coordinates[0];
-					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
-						coords = coordsArr[p];
-						if (this.options.reverseAxis) {
-							coords = this.swapCoords( coords );								
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						coordsArr[p] = projectedCoords;
-					}
-					
-					break;
-				case "MultiPolygon":
-					coordsArr = geom.coordinates[0][0];
-					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
-						coords = coordsArr[p];
-						if (this.options.reverseAxis) {
-							coords = this.swapCoords( coords );								
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						coordsArr[p] = projectedCoords;
-					}
-//					geom.coordinates[0][0] = coordsArr; // needed?
-					break;
-			}
-		}
-	}
-});
 L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	CLASS_NAME: "L.GeoJSON.WFS",
@@ -11721,751 +11561,166 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 	}
 });
 
-/*
-	Leaflet.print, implements the Mapfish print protocol allowing a Leaflet map to be printed using either the Mapfish or GeoServer print module.
-	(c) 2013, Adam Ratcliffe, GeoSmart Maps Limited
-*/
-
-L.print = L.print || {};
-
-L.print.Provider = L.Class.extend({
-
-	includes: L.Mixin.Events,
-
-	statics: {
-		MAX_RESOLUTION: 156543.03390625,
-		MAX_EXTENT: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-		SRS: 'EPSG:3857',
-		INCHES_PER_METER: 39.3701,
-		DPI: 72,
-		UNITS: 'm'
-	},
-
+L.GeoJSON.Custom = L.GeoJSON.extend({
+	
+	CLASS_NAME: "L.GeoJSON.Custom",
+	
 	options: {
-		autoLoad: false,
-		autoOpen: true,
-		outputFormat: 'pdf',
-		outputFilename: 'leaflet-map',
-		method: 'POST',
-		rotation: 0,
-		customParams: {},
-		legends: false
-	},
-
-	initialize: function (options) {
-		if (L.version <= '0.5.1') {
-			throw 'Leaflet.print requires Leaflet 0.6.0+. Download latest from https://github.com/Leaflet/Leaflet/';
-		}
-
-		var context;
-
-		options = L.setOptions(this, options);
-
-		if (options.map) {
-			this.setMap(options.map);
-		}
-
-		if (options.capabilities) {
-			this._capabilities = options.capabilities;
-		} else if (this.options.autoLoad) {
-			this.loadCapabilities();
-		}
-
-		if (options.listeners) {
-			if (options.listeners.context) {
-				context = options.listeners.context;
-				delete options.listeners.context;
-			}
-			this.addEventListener(options.listeners, context);
+		params: {},
+		style: {},
+		inputCrs: "EPSG:4326",
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, this.style);
 		}
 	},
+	
+	initialize: function(serviceUrl, options) {
+		options = options || {};
+		
+		L.GeoJSON.prototype.initialize.call(this, null, options);
+//		$.each(options.params, function(param){
+//			var tempString = "&" + param + "=" + options.params[param];
+//			serviceUrl += tempString;
+//		});
+		serviceUrl += $.param(options.params);
+		this.serviceUrl = serviceUrl;
+		
+		var self = this;
+		this.getFeature(function() {
+			var layer = self.addData(self.jsonData);
+		});
+		
+	},
+	
+	//onAdd: function(map) {
+	//	L.LayerGroup.prototype.onAdd.call(this, map);
+	//},
+    
+    /*_projectBounds: function(bounds, fromEpsg, toEpsg) {
+    	this.centerLonLat = null;
+    	
+    	var sw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getSouth()]),
+    		se = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getSouth()]),
+    		ne = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getNorth()]),
+    		nw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getNorth()]);
 
-	loadCapabilities: function () {
-		if (!this.options.url) {
-			return;
+        var left   = Math.min(sw[0], se[0]),
+        	bottom = Math.min(sw[1], se[1]),
+        	right  = Math.max(nw[0], ne[0]),
+        	top    = Math.max(nw[1], ne[1]);
+        
+        bounds = L.latLngBounds(L.latLng(bottom, left), L.latLng(top, right));
+        return bounds;
+    },*/
+	
+	getFeature: function(callback) {
+		var url = this.proxy ? this.proxy + encodeURIComponent(this.serviceUrl) : this.serviceUrl;
+		this.fire("loading", {layer: this});
+		if (this.xhr) {
+			this.xhr.abort();
+			this.xhr = null;
 		}
-
-		var url;
-
-		url = this.options.url + '/info.json';
-		if (this.options.proxy) {
-			url = this.options.proxy + url;
-		}
-
-		return $.ajax({
-			type: 'GET',
-			dataType: 'json',
+		this.xhr = $.ajax({
 			url: url,
-			success: L.Util.bind(this.onCapabilitiesLoad, this)
+			type: "POST",
+			data: this.options.params,
+			context: this,
+			success: function(response) {
+				if (response.type && response.type == "FeatureCollection") {
+					this.jsonData = response;
+					if (this.options.inputCrs !== "EPSG:4326") {
+						this.toGeographicCoords(this.options.inputCrs);
+					}
+					callback();
+					this.fire("load", {layer: this});
+				}				
+			},
+			dataType: "json"
 		});
 	},
-
-	print: function (options) {
-		options = L.extend(L.extend({}, this.options), options);
-
-		if (!options.layout || !options.dpi) {
-			throw 'Must provide a layout name and dpi value to print';
-		}
-
-		this.fire('beforeprint', {
-			provider: this,
-			map: this._map
-		});
-
-		var jsonData = JSON.stringify(L.extend({
-			units: L.print.Provider.UNITS,
-			srs: L.print.Provider.SRS,
-			layout: options.layout,
-			dpi: options.dpi,
-			outputFormat: options.outputFormat,
-			comment: options.comment,
-			mapTitle: options.mapTitle,
-			outputFilename: options.outputFilename,
-			layers: this._encodeLayers(this._map),
-			pages: [{
-				center: this._projectCoords(L.print.Provider.SRS, this._map.getCenter()),
-				scale: this._getScale(),
-				rotation: options.rotation,
-				copy: options.copy
-			}]
-		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
-			url;
-
-		if (options.method === 'GET') {
-			url = this._capabilities.printURL + '?spec=' + encodeURIComponent(jsonData);
-
-			if (options.proxy) {
-				url = options.proxy + encodeURIComponent(url);
-			}
-
-			window.open(url);
-
-			this.fire('print', {
-				provider: this,
-				map: this._map
-			});
-		} else {
-			url = this._capabilities.createURL;
-
-			if (options.proxy) {
-				url = options.proxy + url;
-			}
-
-			if (this._xhr) {
-				this._xhr.abort();
-			}
-			this.fire('print', {
-				provider: this,
-				map: this._map
-			});
-			this._xhr = $.ajax({
-				type: 'POST',
-				contentType: 'application/json; charset=UTF-8',
-				processData: false,
-				dataType: 'json',
-				url: url,
-				data: jsonData,
-				success: L.Util.bind(this.onPrintSuccess, this),
-				error: L.Util.bind(this.onPrintError, this)
-			});
-		}
-
+	
+	swapCoords: function(coords) {
+		coords = [coords[1], coords[0]];
+		return coords;
 	},
-
-	getCapabilities: function () {
-		return this._capabilities;
-	},
-
-	setMap: function (map) {
-		this._map = map;
-	},
-
-	setDpi: function (dpi) {
-		var oldDpi = this.options.dpi;
-
-		if (oldDpi !== dpi) {
-			this.options.dpi = dpi;
-			this.fire('dpichange', {
-				provider: this,
-				dpi: dpi
-			});
-		}
-	},
-
-	setLayout: function (name) {
-		var oldName = this.options.layout;
-
-		if (oldName !== name) {
-			this.options.layout = name;
-			this.fire('layoutchange', {
-				provider: this,
-				layout: name
-			});
-		}
-	},
-
-	setRotation: function (rotation) {
-		var oldRotation = this.options.rotation;
-
-		if (oldRotation !== this.options.rotation) {
-			this.options.rotation = rotation;
-			this.fire('rotationchange', {
-				provider: this,
-				rotation: rotation
-			});
-		}
-	},
-
-	_getLayers: function (map) {
-		var markers = [],
-			vectors = [],
-			tiles = [],
-			imageOverlays = [],
-			imageNodes,
-			pathNodes,
-			id;
-
-		for (id in map._layers) {
-			if (map._layers.hasOwnProperty(id)) {
-				if (!map._layers.hasOwnProperty(id)) { continue; }
-				var lyr = map._layers[id];
-
-				if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
-					tiles.push(lyr);
-				} else if (lyr instanceof L.ImageOverlay) {
-					imageOverlays.push(lyr);
-				} else if (lyr instanceof L.Marker) {
-					markers.push(lyr);
-				} else if (lyr instanceof L.Path && lyr.toGeoJSON) {
-					vectors.push(lyr);
-				}
-			}
-		}
-		markers.sort(function (a, b) {
-			return a._icon.style.zIndex - b._icon.style.zIndex;
-		});
-
-		var i;
-		// Layers with equal zIndexes can cause problems with mapfish print
-		for(i = 1;i<markers.length;i++){
-			if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
-				markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
-			}
-		}
-
-		tiles.sort(function (a, b) {
-			return a._container.style.zIndex - b._container.style.zIndex;
-		});
-
-		// Layers with equal zIndexes can cause problems with mapfish print
-		for(i = 1;i<tiles.length;i++){
-			if(tiles[i]._container.style.zIndex <= tiles[i - 1]._container.style.zIndex){
-				tiles[i]._container.style.zIndex = tiles[i - 1]._container.style.zIndex + 1;
-			}
-		}
-
-		imageNodes = [].slice.call(this, map._panes.overlayPane.childNodes);
-		imageOverlays.sort(function (a, b) {
-			return $.inArray(a._image, imageNodes) - $.inArray(b._image, imageNodes);
-		});
-
-		if (map._pathRoot) {
-			pathNodes = [].slice.call(this, map._pathRoot.childNodes);
-			vectors.sort(function (a, b) {
-				return $.inArray(a._container, pathNodes) - $.inArray(b._container, pathNodes);
-			});
-		}
-
-		return tiles.concat(vectors).concat(imageOverlays).concat(markers);
-	},
-
-	_getScale: function () {
-		var map = this._map,
-			bounds = map.getBounds(),
-			inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
-			scales = this._capabilities.scales,
-			sw = bounds.getSouthWest(),
-			ne = bounds.getNorthEast(),
-			halfLat = (sw.lat + ne.lat) / 2,
-			midLeft = L.latLng(halfLat, sw.lng),
-			midRight = L.latLng(halfLat, ne.lng),
-			mwidth = midLeft.distanceTo(midRight),
-			pxwidth = map.getSize().x,
-			kmPx = mwidth / pxwidth / 1000,
-			mscale = (kmPx || 0.000001) * inchesKm * L.print.Provider.DPI,
-			closest = Number.POSITIVE_INFINITY,
-			i = scales.length,
-			diff,
-			scale;
-
-		while (i--) {
-			diff = Math.abs(mscale - scales[i].value);
-			if (diff < closest) {
-				closest = diff;
-				scale = parseInt(scales[i].value, 10);
-			}
-		}
-		return scale;
-	},
-
-	_getLayoutByName: function (name) {
-		var layout, i, l;
-
-		for (i = 0, l = this._capabilities.layouts.length; i < l; i++) {
-			if (this._capabilities.layouts[i].name === name) {
-				layout = this._capabilities.layouts[i];
-				break;
-			}
-		}
-		return layout;
-	},
-
-	_encodeLayers: function (map) {
-		var enc = [],
-			vectors = [],
-			layer,
-			i;
-
-		var layers = this._getLayers(map);
-		for (i = 0; i < layers.length; i++) {
-			layer = layers[i];
-			if (layer.options.printLayer) {
-				var t = layer.options.printLayer;
-				var layerClass = eval(t.init);
-				layer = new layerClass(t.url, t.options);
-			}
-			if (layer instanceof L.TileLayer.WMS) {
-				enc.push(this._encoders.layers.tilelayerwms.call(this, layer));
-			} else if (layer instanceof L.mapbox.TileLayer){
-				enc.push(this._encoders.layers.tilelayermapbox.call(this,layer));
-			} else if (layer instanceof L.TileLayer) {
-				if (layer.options.tms) {
-					enc.push(this._encoders.layers.TMS.call(this, layer));
-				}
-				else {
-					enc.push(this._encoders.layers.tilelayer.call(this, layer));
-				}
-			} else if (layer instanceof L.ImageOverlay) {
-				enc.push(this._encoders.layers.image.call(this, layer));
-			} else if (layer instanceof L.Marker || (layer instanceof L.Path && layer.toGeoJSON)) {
-				vectors.push(layer);
-			}
-		}
-		if (vectors.length) {
-			enc.push(this._encoders.layers.vector.call(this, vectors));
-		}
-		return enc;
-	},
-
-	_makeLegends: function(map,options){
-		if(!this.options.legends){
-			return [];
-		}
-
-		var legends = [],legendReq,singlelayers,url,i;
-
-		var layers = this._getLayers(map);
-		var layer,oneLegend;
-		for (i = 0; i < layers.length; i++) {
-			layer = layers[i];
-			if (layer instanceof L.TileLayer.WMS) {
-
-				oneLegend = {
-					name: layer.options.title || layer.wmsParams.layers,
-					classes: []
-				};
-
-				// defaults
-				legendReq = {
-					'SERVICE'	 : 'WMS',
-					'LAYER'	   : layer.wmsParams.layers,
-					'REQUEST'	 : 'GetLegendGraphic',
-					'VERSION'	 : layer.wmsParams.version,
-					'FORMAT'	  : layer.wmsParams.format,
-					'STYLE'	   : layer.wmsParams.styles,
-					'WIDTH'	   : 15,
-					'HEIGHT'	  : 15
-				};
-
-				legendReq = L.extend(legendReq,options);
-				url = L.Util.template(layer._url);
-
-				singlelayers = layer.wmsParams.layers.split(',');
-
-				// If a WMS layer doesn't have multiple server layers, only show one graphic
-				if(singlelayers.length === 1){
-					oneLegend.icons = [this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))];
-				}else{
-					for(i = 0;i<singlelayers.length;i++){
-						legendReq.LAYER = singlelayers[i];
-						oneLegend.classes.push({
-							name:singlelayers[i],
-							icons:[this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))]
-						});
-					}
-				}
-
-				legends.push(oneLegend);
-			}
-		}
-
-		return {legends:legends};
-	},
-
-	_encoders: {
-		layers: {
-			httprequest: function (layer) {
-				var baseUrl = layer._url;
-
-				if (baseUrl.indexOf('{s}') !== -1) {
-					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
-				}
-				baseUrl = this._getAbsoluteUrl(baseUrl);
-
-				return {
-					baseURL: baseUrl,
-					opacity: layer.options.opacity
-				};
-			},
-			TMS: function(layer) {
-				var enc = this._encoders.layers.tilelayer.call(this, layer);
-				return $.extend(enc, {
-					type : 'TMS',
-					format : enc.extension,
-					layer: layer.options.layer
-				});
-			},
-			tilelayer: function (layer) {
-				var enc = this._encoders.layers.httprequest.call(this, layer),
-					baseUrl = layer.options.baseUrl || layer._url.substring(0, layer._url.indexOf('{z}') > 0 ? layer._url.indexOf('{z}') : layer._url.length),
-					resolutions = [],
-					zoom;
-
-				// If using multiple subdomains, replace the subdomain placeholder
-				if (baseUrl.indexOf('{s}') !== -1) {
-					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
-				}
-
-				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
-					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
-				}
-
-				var ext = layer._url.split(".");
-				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
-				if (ext.search(/[^a-zA-Z0-9]/) > -1) {
-					// No extension provided
-					ext = "";
-				}
-
-				return L.extend(enc, {
-					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
-					// See https://github.com/mapfish/mapfish-print/pull/38
-					type: 'OSM',
-					baseURL: baseUrl,
-					extension: ext || 'png',
-					tileSize: [layer.options.tileSize, layer.options.tileSize],
-					maxExtent: L.print.Provider.MAX_EXTENT,
-					resolutions: resolutions,
-					singleTile: false
-				});
-			},
-			tilelayerwms: function (layer) {
-				var enc = this._encoders.layers.httprequest.call(this, layer),
-					layerOpts = layer.options,
-					p;
-
-				L.extend(enc, {
-					type: 'WMS',
-					layers: [layerOpts.layers].join(',').split(',').filter(function(x){return x !== "";}), //filter out empty strings from the array
-					format: layerOpts.format,
-					styles: [layerOpts.styles].join(',').split(',').filter(function(x){return x !== "";}),
-					singleTile: true
-				});
-
-				for (p in layer.wmsParams) {
-					if (layer.wmsParams.hasOwnProperty(p)) {
-						if ('detectretina,format,height,layers,request,service,srs,styles,version,width'.indexOf(p.toLowerCase()) === -1) {
-							if (!enc.customParams) {
-								enc.customParams = {};
-							}
-							enc.customParams[p] = layer.wmsParams[p];
-						}
-					}
-				}
-				return enc;
-			},
-			tilelayermapbox: function(layer) {
-				var resolutions = [], zoom;
-
-				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
-					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
-				}
-
-				return {
-					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
-					// See https://github.com/mapfish/mapfish-print/pull/38
-					type: 'OSM',
-					baseURL: layer.options.tiles[0].substring(0,layer.options.tiles[0].indexOf('{z}')),
-					opacity:layer.options.opacity,
-					extension: 'png',
-					tileSize: [layer.options.tileSize, layer.options.tileSize],
-					maxExtent: L.print.Provider.MAX_EXTENT,
-					resolutions: resolutions,
-					singleTile: false
-				};
-			},
-			image: function (layer) {
-				return {
-					type: 'Image',
-					opacity: layer.options.opacity,
-					name: 'image',
-					baseURL: this._getAbsoluteUrl(layer._url),
-					extent: this._projectBounds(L.print.Provider.SRS, layer._bounds)
-				};
-			},
-			vector: function (features) {
-				var encFeatures = [],
-					encStyles = {},
-					opacity,
-					feature,
-					style,
-					dictKey,
-					dictItem = {},
-					styleDict = {},
-					styleName,
-					nextId = 1,
-					featureGeoJson,
-					i, l;
-
-				for (i = 0, l = features.length; i < l; i++) {
-					feature = features[i];
-
-					if (feature instanceof L.Marker) {
-						var icon = feature.options.icon,
-							iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
-							iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
-							iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
-							scaleFactor = (this.options.dpi / L.print.Provider.DPI);
-
-						style = {
-							externalGraphic: this._getAbsoluteUrl(iconUrl),
-							graphicWidth: (iconSize.x / scaleFactor),
-							graphicHeight: (iconSize.y / scaleFactor),
-							graphicXOffset: (-iconAnchor.x / scaleFactor),
-							graphicYOffset: (-iconAnchor.y / scaleFactor)
-						};
-					} else {
-						style = this._extractFeatureStyle(feature);
-					}
-
-					dictKey = JSON.stringify(style);
-					dictItem = styleDict[dictKey];
-					if (dictItem) {
-						styleName = dictItem;
-					} else {
-						styleDict[dictKey] = styleName = nextId++;
-						encStyles[styleName] = style;
-					}
-
-					featureGeoJson = (feature instanceof L.Circle) ? this._circleGeoJSON(feature) : feature.toGeoJSON();
-					featureGeoJson.geometry.coordinates = this._projectCoords(L.print.Provider.SRS, featureGeoJson.geometry.coordinates);
-					featureGeoJson.properties._leaflet_style = styleName;
-
-					// All markers will use the same opacity as the first marker found
-					if (opacity === null) {
-						opacity = feature.options.opacity || 1.0;
-					}
-
-					encFeatures.push(featureGeoJson);
-				}
-
-				return {
-					type: 'Vector',
-					styles: encStyles,
-					opacity: opacity,
-					styleProperty: '_leaflet_style',
-					geoJson: {
-						type: 'FeatureCollection',
-						features: encFeatures
-					}
-				};
-			}
-		}
-	},
-
-	_circleGeoJSON: function (circle) {
-		var projection = circle._map.options.crs.projection;
-		var earthRadius = 1, i;
-
-		if (projection === L.Projection.SphericalMercator) {
-			earthRadius = 6378137;
-		} else if (projection === L.Projection.Mercator) {
-			earthRadius = projection.R_MAJOR;
-		}
-		var cnt = projection.project(circle.getLatLng());
-		var scale = 1.0 / Math.cos(circle.getLatLng().lat * Math.PI / 180.0);
-		var points = [];
-		for (i = 0; i < 64; i++) {
-			var radian = i * 2.0 * Math.PI / 64.0;
-			var shift = L.point(Math.cos(radian), Math.sin(radian));
-			points.push(projection.unproject(cnt.add(shift.multiplyBy(circle.getRadius() * scale / earthRadius))));
-		}
-		return L.polygon(points).toGeoJSON();
-	},
-
-	_extractFeatureStyle: function (feature) {
-		var options = feature.options;
-
-		// From smap4 (working)
-		// cursor: "pointer"
-		// fillColor: "#ff5b00"
-		// fillOpacity: 0.3
-		// graphicName: "square"
-		// pointRadius: 6
-		// strokeColor: "#ff5b00"
-		// strokeOpacity: 1
-		// strokeWidth: 4
-
-
-		return {
-			stroke: options.stroke,
-			strokeColor: options.color,
-			strokeWidth: options.weight,
-			strokeOpacity: options.opacity,
-			strokeLinecap: 'round',
-			pointRadius: 200, //options.radius,
-			fill: options.fill,
-			fillColor: options.fillColor,
-			fillOpacity: options.fillOpacity,
-			graphicZIndex: options.zIndex,
-			graphicWidth: options.graphicWidth,
-			graphicHeight: options.graphicHeight,
-			label: options.label,
-			name: "The layer name"
+	
+	toGeographicCoords: function(inputCrs) {
+		function projectPoint(coordinates /*[easting, northing]*/, inputCrs) {
+			var source = inputCrs || "EPSG:4326",
+				dest = "EPSG:4326",
+				x = coordinates[0], 
+				y = coordinates[1];
+			return window.proj4(source, dest, [x, y]); // [easting, northing]
 		};
-
-
-		// cursor: "pointer"
-		// fillColor: "#00FFFF"
-		// fillOpacity: 0.3
-		// graphicName: "circle"
-		// graphicZIndex: 499
-		// pointRadius: 6
-		// strokeColor: "#00FFFF"
-		// strokeOpacity: 1
-		// strokeWidth: 4
-	},
-
-	_getAbsoluteUrl: function (url) {
-		var a;
-
-		if (L.Browser.ie) {
-			a = document.createElement('a');
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.href = url;
-			document.body.removeChild(a);
-		} else {
-			a = document.createElement('a');
-			a.href = url;
-		}
-		return a.href;
-	},
-
-	_projectBounds: function (crs, bounds) {
-		var sw = bounds.getSouthWest(),
-			ne = bounds.getNorthEast();
-
-		return this._projectCoords(crs, sw).concat(this._projectCoords(crs, ne));
-	},
-
-	_projectCoords: function (crs, coords) {
-		var crsKey = crs.toUpperCase().replace(':', ''),
-			crsClass = L.CRS[crsKey];
-
-		if (!crsClass) {
-			throw 'Unsupported coordinate reference system: ' + crs;
-		}
-
-		return this._project(crsClass, coords);
-	},
-
-	_project: function (crsClass, coords) {
-		var projected,
-			pt,
-			i, l;
-
-		if (typeof coords[0] === 'number') {
-			coords = new L.LatLng(coords[1], coords[0]);
-		}
-
-		if (coords instanceof L.LatLng) {
-			pt = crsClass.project(coords);
-			return [pt.x, pt.y];
-		} else {
-			projected = [];
-			for (i = 0, l = coords.length; i < l; i++) {
-				projected.push(this._project(crsClass, coords[i]));
-			}
-			return projected;
-		}
-	},
-
-	// --------------------------------------------------
-	// Event handlers
-	// --------------------------------------------------
-
-	onCapabilitiesLoad: function (response) {
-		this._capabilities = response;
-
-		if (!this.options.layout) {
-			this.options.layout = this._capabilities.layouts[0].name;
-		}
-
-		if (!this.options.dpi) {
-			this.options.dpi = this._capabilities.dpis[0].value;
-		}
-
-		this.fire('capabilitiesload', {
-			provider: this,
-			capabilities: this._capabilities
-		});
-	},
-
-	onPrintSuccess: function (response) {
-		var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
-
-		if (this.options.autoOpen) {
-			if (L.Browser.ie) {
-				window.open(url);
-			} else {
-				window.location.href = url;
+		
+		var coords, coordsArr, projectedCoords, i, p, geom,
+			features = this.jsonData.features || [];
+		for (i=0,len=features.length; i<len; i++) {
+			geom = features[i].geometry;
+			switch (geom.type) {
+				case "Point":
+					coords = geom.coordinates;
+					if (this.options.reverseAxis) {
+						coords = this.swapCoords(coords);
+					}
+					projectedCoords = projectPoint(coords, inputCrs);
+					geom.coordinates = projectedCoords;
+					break;
+				case "MultiPoint":
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coords = geom.coordinates[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords(coords);
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						features[i].geometry.coordinates[p] = projectedCoords;
+					}
+					break;
+				case "MultiLineString":
+					coordsArr = [];
+					var pp, ii,
+						newCoords = [];
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coordsArr = geom.coordinates[p];
+						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
+							coords = coordsArr[pp];
+							if (this.options.reverseAxis) {
+								coords = this.swapCoords( coords );								
+							}
+							projectedCoords = projectPoint(coords, inputCrs);
+							coordsArr[pp] = projectedCoords;
+						}
+						geom.coordinates[p] = coordsArr; // needed?
+					}
+					break;
+				case "Polygon":
+					coordsArr = geom.coordinates[0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+					
+					break;
+				case "MultiPolygon":
+					coordsArr = geom.coordinates[0][0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+//					geom.coordinates[0][0] = coordsArr; // needed?
+					break;
 			}
 		}
-
-		this._xhr = null;
-
-		this.fire('print', {
-			provider: this,
-			response: response
-		});
-	},
-
-	onPrintError: function (jqXHR) {
-		this._xhr = null;
-
-		this.fire('printexception', {
-			provider: this,
-			response: jqXHR
-		});
 	}
 });
-
-L.print.provider = function (options) {
-	return new L.print.Provider(options);
-};
-
-
 /*
  * L.TileLayer.EsriRest is used for putting ESRI REST tile layers on the map.
  */
@@ -14458,2041 +13713,749 @@ var ToUint32 = function ToUint32(x) {
 }));
 
 /*
- Copyright (c) 2013, Jason Sanford
- Leaflet Vector Layers is a library for showing geometry objects
- from multiple geoweb services in a Leaflet map
+	Leaflet.print, implements the Mapfish print protocol allowing a Leaflet map to be printed using either the Mapfish or GeoServer print module.
+	(c) 2013, Adam Ratcliffe, GeoSmart Maps Limited
 */
-(function(a){a.lvector={VERSION:"1.5.1",noConflict:function(){a.lvector=this._originallvector;return this},_originallvector:a.lvector}})(this);lvector.Layer=L.Class.extend({options:{fields:"",scaleRange:null,map:null,uniqueField:null,visibleAtScale:!0,dynamic:!1,autoUpdate:!1,autoUpdateInterval:null,popupTemplate:null,popupOptions:{},singlePopup:!1,symbology:null,showAll:!1},initialize:function(a){L.Util.setOptions(this,a)},setMap:function(a){if(!a||!this.options.map)if(a){this.options.map=a;if(this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===2){var a=this.options.map.getZoom(),b=this.options.scaleRange;
-this.options.visibleAtScale=a>=b[0]&&a<=b[1]}this._show()}else if(this.options.map)this._hide(),this.options.map=a},getMap:function(){return this.options.map},setOptions:function(){},_show:function(){this._addIdleListener();this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===2&&this._addZoomChangeListener();if(this.options.visibleAtScale){if(this.options.autoUpdate&&this.options.autoUpdateInterval){var a=this;this._autoUpdateInterval=setInterval(function(){a._getFeatures()},
-this.options.autoUpdateInterval)}this.options.map.fire("moveend").fire("zoomend")}},_hide:function(){this._idleListener&&this.options.map.off("moveend",this._idleListener);this._zoomChangeListener&&this.options.map.off("zoomend",this._zoomChangeListener);this._autoUpdateInterval&&clearInterval(this._autoUpdateInterval);this._clearFeatures();this._lastQueriedBounds=null;if(this._gotAll)this._gotAll=!1},_hideVectors:function(){for(var a=0;a<this._vectors.length;a++){if(this._vectors[a].vector)if(this.options.map.removeLayer(this._vectors[a].vector),
-this._vectors[a].popup)this.options.map.removeLayer(this._vectors[a].popup);else if(this.popup&&this.popup.associatedFeature&&this.popup.associatedFeature==this._vectors[a])this.options.map.removeLayer(this.popup),this.popup=null;if(this._vectors[a].vectors&&this._vectors[a].vectors.length)for(var b=0;b<this._vectors[a].vectors.length;b++)if(this.options.map.removeLayer(this._vectors[a].vectors[b]),this._vectors[a].vectors[b].popup)this.options.map.removeLayer(this._vectors[a].vectors[b].popup);else if(this.popup&&
-this.popup.associatedFeature&&this.popup.associatedFeature==this._vectors[a])this.options.map.removeLayer(this.popup),this.popup=null}},_showVectors:function(){for(var a=0;a<this._vectors.length;a++)if(this._vectors[a].vector&&this.options.map.addLayer(this._vectors[a].vector),this._vectors[a].vectors&&this._vectors[a].vectors.length)for(var b=0;b<this._vectors[a].vectors.length;b++)this.options.map.addLayer(this._vectors[a].vectors[b])},_clearFeatures:function(){this._hideVectors();this._vectors=
-[]},_addZoomChangeListener:function(){this._zoomChangeListener=this._zoomChangeListenerTemplate();this.options.map.on("zoomend",this._zoomChangeListener,this)},_zoomChangeListenerTemplate:function(){var a=this;return function(){a._checkLayerVisibility()}},_idleListenerTemplate:function(){var a=this;return function(){if(a.options.visibleAtScale)if(a.options.showAll){if(!a._gotAll)a._getFeatures(),a._gotAll=!0}else a._getFeatures()}},_addIdleListener:function(){this._idleListener=this._idleListenerTemplate();
-this.options.map.on("moveend",this._idleListener,this)},_checkLayerVisibility:function(){var a=this.options.visibleAtScale,b=this.options.map.getZoom(),d=this.options.scaleRange;this.options.visibleAtScale=b>=d[0]&&b<=d[1];if(a!==this.options.visibleAtScale)this[this.options.visibleAtScale?"_showVectors":"_hideVectors"]();if(a&&!this.options.visibleAtScale&&this._autoUpdateInterval)clearInterval(this._autoUpdateInterval);else if(!a&&this.options.autoUpdate&&this.options.autoUpdateInterval){var e=
-this;this._autoUpdateInterval=setInterval(function(){e._getFeatures()},this.options.autoUpdateInterval)}},_setPopupContent:function(a){var b=a.popupContent,d=a.attributes||a.properties,e;if(typeof this.options.popupTemplate=="string"){e=this.options.popupTemplate;for(var c in d)e=e.replace(RegExp("{"+c+"}","g"),d[c])}else if(typeof this.options.popupTemplate=="function")e=this.options.popupTemplate(d);else return;a.popupContent=e;a.popup?a.popupContent!==b&&a.popup.setContent(a.popupContent):this.popup&&
-this.popup.associatedFeature==a&&a.popupContent!==b&&this.popup.setContent(a.popupContent)},_showPopup:function(a,b){var d=b.latlng;d||L.Util.extend(this.options.popupOptions,{offset:b.target.options.icon.options.popupAnchor});var e;if(this.options.singlePopup){if(this.popup)this.options.map.removeLayer(this.popup),this.popup=null;this.popup=new L.Popup(this.options.popupOptions,a.vector);this.popup.associatedFeature=a;e=this}else a.popup=new L.Popup(this.options.popupOptions,a.vector),e=a;e.popup.setLatLng(d?
-b.latlng:b.target.getLatLng());e.popup.setContent(a.popupContent);this.options.map.addLayer(e.popup)},_fireClickEvent:function(a,b){this.options.clickEvent(a,b)},_getFeatureVectorOptions:function(a){var b={},a=a.attributes||a.properties;if(this.options.symbology)switch(this.options.symbology.type){case "single":for(var d in this.options.symbology.vectorOptions)if(b[d]=this.options.symbology.vectorOptions[d],b.title)for(var e in a){var c=RegExp("{"+e+"}","g");b.title=b.title.replace(c,a[e])}break;
-case "unique":for(var f=this.options.symbology.property,g=0,h=this.options.symbology.values.length;g<h;g++)if(a[f]==this.options.symbology.values[g].value)for(d in this.options.symbology.values[g].vectorOptions)if(b[d]=this.options.symbology.values[g].vectorOptions[d],b.title)for(e in a)c=RegExp("{"+e+"}","g"),b.title=b.title.replace(c,a[e]);break;case "range":f=this.options.symbology.property;g=0;for(h=this.options.symbology.ranges.length;g<h;g++)if(a[f]>=this.options.symbology.ranges[g].range[0]&&
-a[f]<=this.options.symbology.ranges[g].range[1])for(d in this.options.symbology.ranges[g].vectorOptions)if(b[d]=this.options.symbology.ranges[g].vectorOptions[d],b.title)for(e in a)c=RegExp("{"+e+"}","g"),b.title=b.title.replace(c,a[e])}return b},_getPropertiesChanged:function(a,b){var d=!1,e;for(e in a)a[e]!=b[e]&&(d=!0);return d},_getPropertyChanged:function(a,b,d){return a[d]!=b[d]},_getGeometryChanged:function(a,b){var d=!1;a.coordinates&&a.coordinates instanceof Array?a.coordinates[0]==b.coordinates[0]&&
-a.coordinates[1]==b.coordinates[1]||(d=!0):a.x==b.x&&a.y==b.y||(d=!0);return d},_makeJsonpRequest:function(a){var b=document.getElementsByTagName("head")[0],d=document.createElement("script");d.type="text/javascript";d.src=a;b.appendChild(d)},_processFeatures:function(a){if(this.options.map){var b=this.options.map.getBounds();if(!this._lastQueriedBounds||!this._lastQueriedBounds.equals(b)||this.options.autoUpdate){this._lastQueriedBounds=b;featuresHaveIds=a.features&&a.features.length&&a.features[0].id?
-!0:!1;!this.options.uniqueField&&!featuresHaveIds&&this._clearFeatures();if(this instanceof lvector.PRWSF){a.features=a.rows;delete a.rows;for(var b=0,d=a.features.length;b<d;b++){a.features[b].type="Feature";a.features[b].properties={};for(var e in a.features[b].row)e=="geojson"?a.features[b].geometry=a.features[b].row.geojson:a.features[b].properties[e]=a.features[b].row[e];delete a.features[b].row}}if(this instanceof lvector.GISCloud){a.features=a.data;delete a.data;b=0;for(d=a.features.length;b<
-d;b++)a.features[b].type="Feature",a.features[b].properties=a.features[b].data,a.features[b].properties.id=a.features[b].__id,delete a.features[b].data,a.features[b].geometry=a.features[b].__geometry,delete a.features[b].__geometry}if(a&&a.features&&a.features.length)for(b=0;b<a.features.length;b++){if(this instanceof lvector.EsriJSONLayer)a.features[b].properties=a.features[b].attributes,delete a.features[b].attributes;e=!1;d=a.features[b].id?!0:!1;if(this.options.uniqueField||d)for(var c=0;c<this._vectors.length;c++){var f=
-this._vectors[c].id?!0:!1;if(d&&f&&a.features[b].id==this._vectors[c].id||this.options.uniqueField&&a.features[b].properties[this.options.uniqueField]==this._vectors[c].properties[this.options.uniqueField])if(e=!0,this.options.dynamic){if(this._getGeometryChanged(this._vectors[c].geometry,a.features[b].geometry)&&!isNaN(a.features[b].geometry.coordinates[0])&&!isNaN(a.features[b].geometry.coordinates[1]))this._vectors[c].geometry=a.features[b].geometry,this._vectors[c].vector.setLatLng(new L.LatLng(this._vectors[c].geometry.coordinates[1],
-this._vectors[c].geometry.coordinates[0]));if(this._getPropertiesChanged(this._vectors[c].properties,a.features[b].properties)&&(f=this._getPropertyChanged(this._vectors[c].properties,a.features[b].properties,this.options.symbology.property),this._vectors[c].properties=a.features[b].properties,this.options.popupTemplate&&this._setPopupContent(this._vectors[c]),this.options.symbology&&this.options.symbology.type!="single"&&f))if(this._vectors[c].vectors)for(var f=0,g=this._vectors[c].vectors.length;f<
-g;f++)this._vectors[c].vectors[f].setStyle?this._vectors[c].vectors[f].setStyle(this._getFeatureVectorOptions(this._vectors[c])):this._vectors[c].vectors[f].setIcon&&this._vectors[c].vectors[f].setIcon(this._getFeatureVectorOptions(this._vectors[c]).icon);else this._vectors[c].vector&&(this._vectors[c].vector.setStyle?this._vectors[c].vector.setStyle(this._getFeatureVectorOptions(this._vectors[c])):this._vectors[c].vector.setIcon&&this._vectors[c].vector.setIcon(this._getFeatureVectorOptions(this._vectors[c]).icon))}}if(!e){this instanceof
-lvector.GeoJSONLayer?(e=this._geoJsonGeometryToLeaflet(a.features[b].geometry,this._getFeatureVectorOptions(a.features[b])),a.features[b][e instanceof Array?"vectors":"vector"]=e):this instanceof lvector.EsriJSONLayer&&(e=this._esriJsonGeometryToLeaflet(a.features[b].geometry,this._getFeatureVectorOptions(a.features[b])),a.features[b][e instanceof Array?"vectors":"vector"]=e);if(a.features[b].vector)this.options.map.addLayer(a.features[b].vector);else if(a.features[b].vectors&&a.features[b].vectors.length)for(f=
-0;f<a.features[b].vectors.length;f++)this.options.map.addLayer(a.features[b].vectors[f]);this._vectors.push(a.features[b]);if(this.options.popupTemplate){var h=this;e=a.features[b];this._setPopupContent(e);(function(a){if(a.vector)a.vector.on("click",function(b){h._showPopup(a,b)});else if(a.vectors)for(var b=0,c=a.vectors.length;b<c;b++)a.vectors[b].on("click",function(b){h._showPopup(a,b)})})(e)}this.options.clickEvent&&(h=this,e=a.features[b],function(a){if(a.vector)a.vector.on("click",function(b){h._fireClickEvent(a,
-b)});else if(a.vectors)for(var b=0,c=a.vectors.length;b<c;b++)a.vectors[b].on("click",function(b){h._fireClickEvent(a,b)})}(e))}}}}}});lvector.GeoJSONLayer=lvector.Layer.extend({_geoJsonGeometryToLeaflet:function(a,b){var d,e;switch(a.type){case "Point":d=b.circleMarker?new L.CircleMarker(new L.LatLng(a.coordinates[1],a.coordinates[0]),b):new L.Marker(new L.LatLng(a.coordinates[1],a.coordinates[0]),b);break;case "MultiPoint":e=[];for(var c=0,f=a.coordinates.length;c<f;c++)e.push(new L.Marker(new L.LatLng(a.coordinates[c][1],a.coordinates[c][0]),b));break;case "LineString":for(var g=[],c=0,f=a.coordinates.length;c<f;c++)g.push(new L.LatLng(a.coordinates[c][1],
-a.coordinates[c][0]));d=new L.Polyline(g,b);break;case "MultiLineString":e=[];c=0;for(f=a.coordinates.length;c<f;c++){for(var g=[],h=0,j=a.coordinates[c].length;h<j;h++)g.push(new L.LatLng(a.coordinates[c][h][1],a.coordinates[c][h][0]));e.push(new L.Polyline(g,b))}break;case "Polygon":for(var i=[],c=0,f=a.coordinates.length;c<f;c++){g=[];h=0;for(j=a.coordinates[c].length;h<j;h++)g.push(new L.LatLng(a.coordinates[c][h][1],a.coordinates[c][h][0]));i.push(g)}d=new L.Polygon(i,b);break;case "MultiPolygon":e=
-[];c=0;for(f=a.coordinates.length;c<f;c++){i=[];h=0;for(j=a.coordinates[c].length;h<j;h++){for(var g=[],k=0,l=a.coordinates[c][h].length;k<l;k++)g.push(new L.LatLng(a.coordinates[c][h][k][1],a.coordinates[c][h][k][0]));i.push(g)}e.push(new L.Polygon(i,b))}break;case "GeometryCollection":e=[];c=0;for(f=a.geometries.length;c<f;c++)e.push(this._geoJsonGeometryToLeaflet(a.geometries[c],b))}return d||e}});lvector.EsriJSONLayer=lvector.Layer.extend({_esriJsonGeometryToLeaflet:function(a,b){var d,e;if(a.x&&a.y)d=new L.Marker(new L.LatLng(a.y,a.x),b);else if(a.points){e=[];for(var c=0,f=a.points.length;c<f;c++)e.push(new L.Marker(new L.LatLng(a.points[c].y,a.points[c].x),b))}else if(a.paths)if(a.paths.length>1){e=[];c=0;for(f=a.paths.length;c<f;c++){for(var g=[],h=0,j=a.paths[c].length;h<j;h++)g.push(new L.LatLng(a.paths[c][h][1],a.paths[c][h][0]));e.push(new L.Polyline(g,b))}}else{g=[];c=0;for(f=a.paths[0].length;c<
-f;c++)g.push(new L.LatLng(a.paths[0][c][1],a.paths[0][c][0]));d=new L.Polyline(g,b)}else if(a.rings)if(a.rings.length>1){e=[];c=0;for(f=a.rings.length;c<f;c++){for(var i=[],g=[],h=0,j=a.rings[c].length;h<j;h++)g.push(new L.LatLng(a.rings[c][h][1],a.rings[c][h][0]));i.push(g);e.push(new L.Polygon(i,b))}}else{i=[];g=[];c=0;for(f=a.rings[0].length;c<f;c++)g.push(new L.LatLng(a.rings[0][c][1],a.rings[0][c][0]));i.push(g);d=new L.Polygon(i,b)}return d||e}});lvector.AGS=lvector.EsriJSONLayer.extend({initialize:function(a){for(var b=0,d=this._requiredParams.length;b<d;b++)if(!a[this._requiredParams[b]])throw Error('No "'+this._requiredParams[b]+'" parameter found.');this._globalPointer="AGS_"+Math.floor(Math.random()*1E5);window[this._globalPointer]=this;a.url.substr(a.url.length-1,1)!=="/"&&(a.url+="/");this._originalOptions=L.Util.extend({},a);if(a.esriOptions)if(typeof a.esriOptions=="object")L.Util.extend(a,this._convertEsriOptions(a.esriOptions));
-else{this._getEsriOptions();return}lvector.Layer.prototype.initialize.call(this,a);if(this.options.where)this.options.where=encodeURIComponent(this.options.where);this._vectors=[];if(this.options.map){if(this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===2)a=this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale=a>=b[0]&&a<=b[1];this._show()}},options:{where:"1=1",url:null,useEsriOptions:!1},_requiredParams:["url"],_convertEsriOptions:function(a){var b=
-{};if(!(a.minScale==void 0||a.maxScale==void 0)){var d=this._scaleToLevel(a.minScale),e=this._scaleToLevel(a.maxScale);e==0&&(e=20);b.scaleRange=[d,e]}if(a.drawingInfo&&a.drawingInfo.renderer)b.symbology=this._renderOptionsToSymbology(a.drawingInfo.renderer);return b},_getEsriOptions:function(){this._makeJsonpRequest(this._originalOptions.url+"?f=json&callback="+this._globalPointer+"._processEsriOptions")},_processEsriOptions:function(a){var b=this._originalOptions;b.esriOptions=a;this.initialize(b)},
-_scaleToLevel:function(a){var b=[5.91657527591555E8,2.95828763795777E8,1.47914381897889E8,7.3957190948944E7,3.6978595474472E7,1.8489297737236E7,9244648.868618,4622324.434309,2311162.217155,1155581.108577,577790.554289,288895.277144,144447.638572,72223.819286,36111.909643,18055.954822,9027.977411,4513.988705,2256.994353,1128.497176,564.248588,282.124294];if(a==0)return 0;for(var d=0,e=0;e<b.length-1;e++){var c=b[e+1];if(a<=b[e]&&a>c){d=e;break}}return d},_renderOptionsToSymbology:function(a){symbology=
-{};switch(a.type){case "simple":symbology.type="single";symbology.vectorOptions=this._parseSymbology(a.symbol);break;case "uniqueValue":symbology.type="unique";symbology.property=a.field1;for(var b=[],d=0;d<a.uniqueValueInfos.length;d++){var e=a.uniqueValueInfos[d],c={};c.value=e.value;c.vectorOptions=this._parseSymbology(e.symbol);c.label=e.label;b.push(c)}symbology.values=b;break;case "classBreaks":symbology.type="range";symbology.property=rend.field;b=[];e=a.minValue;for(d=0;d<a.classBreakInfos.length;d++){var c=
-a.classBreakInfos[d],f={};f.range=[e,c.classMaxValue];e=c.classMaxValue;f.vectorOptions=this._parseSymbology(c.symbol);f.label=c.label;b.push(f)}symbology.ranges=b}return symbology},_parseSymbology:function(a){var b={};switch(a.type){case "esriSMS":case "esriPMS":a=L.icon({iconUrl:"data:"+a.contentType+";base64,"+a.imageData,shadowUrl:null,iconSize:new L.Point(a.width,a.height),iconAnchor:new L.Point(a.width/2+a.xoffset,a.height/2+a.yoffset),popupAnchor:new L.Point(0,-(a.height/2))});b.icon=a;break;
-case "esriSLS":b.weight=a.width;b.color=this._parseColor(a.color);b.opacity=this._parseAlpha(a.color[3]);break;case "esriSFS":a.outline?(b.weight=a.outline.width,b.color=this._parseColor(a.outline.color),b.opacity=this._parseAlpha(a.outline.color[3])):(b.weight=0,b.color="#000000",b.opacity=0),a.style!="esriSFSNull"?(b.fillColor=this._parseColor(a.color),b.fillOpacity=this._parseAlpha(a.color[3])):(b.fillColor="#000000",b.fillOpacity=0)}return b},_parseColor:function(a){red=this._normalize(a[0]);
-green=this._normalize(a[1]);blue=this._normalize(a[2]);return"#"+this._pad(red.toString(16))+this._pad(green.toString(16))+this._pad(blue.toString(16))},_normalize:function(a){return a<1&&a>0?Math.floor(a*255):a},_pad:function(a){return a.length>1?a.toUpperCase():"0"+a.toUpperCase()},_parseAlpha:function(a){return a/255},_getFeatures:function(){var a=this.options.url+"query?returnGeometry=true&outSR=4326&f=json&outFields="+this.options.fields+"&where="+this.options.where+"&callback="+this._globalPointer+
-"._processFeatures";this.options.showAll||(a+="&inSR=4326&spatialRel=esriSpatialRelIntersects&geometryType=esriGeometryEnvelope&geometry="+this.options.map.getBounds().toBBoxString());this._makeJsonpRequest(a)}});lvector.A2E=lvector.AGS.extend({initialize:function(a){for(var b=0,d=this._requiredParams.length;b<d;b++)if(!a[this._requiredParams[b]])throw Error('No "'+this._requiredParams[b]+'" parameter found.');this._globalPointer="A2E_"+Math.floor(Math.random()*1E5);window[this._globalPointer]=this;a.url.substr(a.url.length-1,1)!=="/"&&(a.url+="/");this._originalOptions=L.Util.extend({},a);if(a.esriOptions)if(typeof a.esriOptions=="object")L.Util.extend(a,this._convertEsriOptions(a.esriOptions));else{this._getEsriOptions();
-return}lvector.Layer.prototype.initialize.call(this,a);if(this.options.where)this.options.where=encodeURIComponent(this.options.where);this._vectors=[];if(this.options.map){if(this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===2)a=this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale=a>=b[0]&&a<=b[1];this._show()}if(this.options.autoUpdate&&this.options.esriOptions.editFeedInfo){this._makeJsonpRequest("http://cdn.pubnub.com/pubnub-3.1.min.js");
-var e=this;this._pubNubScriptLoaderInterval=setInterval(function(){window.PUBNUB&&e._pubNubScriptLoaded()},200)}},_pubNubScriptLoaded:function(){clearInterval(this._pubNubScriptLoaderInterval);this.pubNub=PUBNUB.init({subscribe_key:this.options.esriOptions.editFeedInfo.pubnubSubscribeKey,ssl:!1,origin:"pubsub.pubnub.com"});var a=this;this.pubNub.subscribe({channel:this.options.esriOptions.editFeedInfo.pubnubChannel,callback:function(){a._getFeatures()},error:function(){}})}});lvector.GeoIQ=lvector.GeoJSONLayer.extend({initialize:function(a){for(var b=0,d=this._requiredParams.length;b<d;b++)if(!a[this._requiredParams[b]])throw Error('No "'+this._requiredParams[b]+'" parameter found.');lvector.Layer.prototype.initialize.call(this,a);this._globalPointer="GeoIQ_"+Math.floor(Math.random()*1E5);window[this._globalPointer]=this;this._vectors=[];if(this.options.map){if(this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===2)a=this.options.map.getZoom(),
-b=this.options.scaleRange,this.options.visibleAtScale=a>=b[0]&&a<=b[1];this._show()}},options:{dataset:null},_requiredParams:["dataset"],_getFeatures:function(){var a="http://geocommons.com/datasets/"+this.options.dataset+"/features.json?geojson=1&callback="+this._globalPointer+"._processFeatures&limit=999";this.options.showAll||(a+="&bbox="+this.options.map.getBounds().toBBoxString()+"&intersect=full");this._makeJsonpRequest(a)}});lvector.CartoDB=lvector.GeoJSONLayer.extend({initialize:function(a){for(var b=0,d=this._requiredParams.length;b<d;b++)if(!a[this._requiredParams[b]])throw Error('No "'+this._requiredParams[b]+'" parameter found.');lvector.Layer.prototype.initialize.call(this,a);this._globalPointer="CartoDB_"+Math.floor(Math.random()*1E5);window[this._globalPointer]=this;this._vectors=[];if(this.options.map){if(this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===2)a=
-this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale=a>=b[0]&&a<=b[1];this._show()}},options:{version:1,user:null,table:null,fields:"*",where:null,limit:null,uniqueField:"cartodb_id"},_requiredParams:["user","table"],_getFeatures:function(){var a=this.options.where||"";if(!this.options.showAll)for(var b=this.options.map.getBounds(),d=b.getSouthWest(),b=b.getNorthEast(),e=this.options.table.split(",").length,c=0;c<e;c++)a+=(a.length?" AND ":"")+(e>1?this.options.table.split(",")[c].split(".")[0]+
-".the_geom":"the_geom")+" && st_setsrid(st_makebox2d(st_point("+d.lng+","+d.lat+"),st_point("+b.lng+","+b.lat+")),4326)";this.options.limit&&(a+=(a.length?" ":"")+"limit "+this.options.limit);a=a.length?" "+a:"";this._makeJsonpRequest("http://"+this.options.user+".cartodb.com/api/v"+this.options.version+"/sql?q="+encodeURIComponent("SELECT "+this.options.fields+" FROM "+this.options.table+(a.length?" WHERE "+a:""))+"&format=geojson&callback="+this._globalPointer+"._processFeatures")}});lvector.PRWSF=lvector.GeoJSONLayer.extend({initialize:function(a){for(var b=0,d=this._requiredParams.length;b<d;b++)if(!a[this._requiredParams[b]])throw Error('No "'+this._requiredParams[b]+'" parameter found.');a.url.substr(a.url.length-1,1)!=="/"&&(a.url+="/");lvector.Layer.prototype.initialize.call(this,a);this._globalPointer="PRWSF_"+Math.floor(Math.random()*1E5);window[this._globalPointer]=this;this._vectors=[];if(this.options.map){if(this.options.scaleRange&&this.options.scaleRange instanceof
-Array&&this.options.scaleRange.length===2)a=this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale=a>=b[0]&&a<=b[1];this._show()}},options:{geotable:null,srid:null,geomFieldName:"the_geom",geomPrecision:"",fields:"",where:null,limit:null,uniqueField:null},_requiredParams:["url","geotable"],_getFeatures:function(){var a=this.options.where||"";if(!this.options.showAll){var b=this.options.map.getBounds(),d=b.getSouthWest(),b=b.getNorthEast();a+=a.length?" AND ":"";a+=this.options.srid?
-this.options.geomFieldName+" && transform(st_setsrid(st_makebox2d(st_point("+d.lng+","+d.lat+"),st_point("+b.lng+","+b.lat+")),4326),"+this.options.srid+")":"transform("+this.options.geomFieldName+",4326) && st_setsrid(st_makebox2d(st_point("+d.lng+","+d.lat+"),st_point("+b.lng+","+b.lat+")),4326)"}this.options.limit&&(a+=(a.length?" ":"")+"limit "+this.options.limit);d=(this.options.fields.length?this.options.fields+",":"")+"st_asgeojson(transform("+this.options.geomFieldName+",4326)"+(this.options.geomPrecision?
-","+this.options.geomPrecision:"")+") as geojson";this._makeJsonpRequest(this.options.url+"v1/ws_geo_attributequery.php?parameters="+encodeURIComponent(a)+"&geotable="+this.options.geotable+"&fields="+encodeURIComponent(d)+"&format=json&callback="+this._globalPointer+"._processFeatures")}});lvector.GISCloud=lvector.GeoJSONLayer.extend({initialize:function(a){for(var b=0,d=this._requiredParams.length;b<d;b++)if(!a[this._requiredParams[b]])throw Error('No "'+this._requiredParams[b]+'" parameter found.');lvector.Layer.prototype.initialize.call(this,a);this._globalPointer="GISCloud_"+Math.floor(Math.random()*1E5);window[this._globalPointer]=this;this._vectors=[];if(this.options.map){if(this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===2)a=
-this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale=a>=b[0]&&a<=b[1];this._show()}},options:{mapID:null,layerID:null,uniqueField:"id"},_requiredParams:["mapID","layerID"],_getFeatures:function(){var a="http://api.giscloud.com/1/maps/"+this.options.mapID+"/layers/"+this.options.layerID+"/features.json?geometry=geojson&epsg=4326&callback="+this._globalPointer+"._processFeatures";this.options.showAll||(a+="&bounds="+this.options.map.getBounds().toBBoxString());this.options.where&&
-(a+="&where="+encodeURIComponent(this.options.where));this._makeJsonpRequest(a)}});lvector.GitSpatial=lvector.GeoJSONLayer.extend({initialize:function(a){for(var b=0,d=this._requiredParams.length;b<d;b++)if(!a[this._requiredParams[b]])throw Error('No "'+this._requiredParams[b]+'" parameter found.');lvector.Layer.prototype.initialize.call(this,a);this._globalPointer="GitSpatial_"+Math.floor(Math.random()*1E5);window[this._globalPointer]=this;this._vectors=[];if(this.options.map){if(this.options.scaleRange&&this.options.scaleRange instanceof Array&&this.options.scaleRange.length===
-2)a=this.options.map.getZoom(),b=this.options.scaleRange,this.options.visibleAtScale=a>=b[0]&&a<=b[1];this._show()}},options:{},_requiredParams:["user","repo","featureSet"],_getFeatures:function(){var a="http://gitspatial.com/api/v1/"+this.options.user+"/"+this.options.repo+"/"+this.options.featureSet+"?callback="+this._globalPointer+"._processFeatures";this.options.showAll||(a+="&bbox="+this.options.map.getBounds().toBBoxString());this._makeJsonpRequest(a)}});
-
-/*!
- * Modernizr v2.6.3
- * www.modernizr.com
- *
- * Copyright (c) Faruk Ates, Paul Irish, Alex Sexton
- * Available under the BSD and MIT licenses: www.modernizr.com/license/
- */
-
-/*
- * Modernizr tests which native CSS3 and HTML5 features are available in
- * the current UA and makes the results available to you in two ways:
- * as properties on a global Modernizr object, and as classes on the
- * <html> element. This information allows you to progressively enhance
- * your pages with a granular level of control over the experience.
- *
- * Modernizr has an optional (not included) conditional resource loader
- * called Modernizr.load(), based on Yepnope.js (yepnopejs.com).
- * To get a build that includes Modernizr.load(), as well as choosing
- * which tests to include, go to www.modernizr.com/download/
- *
- * Authors        Faruk Ates, Paul Irish, Alex Sexton
- * Contributors   Ryan Seddon, Ben Alman
- */
-
-window.Modernizr = (function( window, document, undefined ) {
-
-    var version = '2.6.3',
-
-    Modernizr = {},
-
-    /*>>cssclasses*/
-    // option for enabling the HTML classes to be added
-    enableClasses = true,
-    /*>>cssclasses*/
-
-    docElement = document.documentElement,
-
-    /**
-     * Create our "modernizr" element that we do most feature tests on.
-     */
-    mod = 'modernizr',
-    modElem = document.createElement(mod),
-    mStyle = modElem.style,
-
-    /**
-     * Create the input element for various Web Forms feature tests.
-     */
-    inputElem /*>>inputelem*/ = document.createElement('input') /*>>inputelem*/ ,
-
-    /*>>smile*/
-    smile = ':)',
-    /*>>smile*/
-
-    toString = {}.toString,
-
-    // TODO :: make the prefixes more granular
-    /*>>prefixes*/
-    // List of property values to set for css tests. See ticket #21
-    prefixes = ' -webkit- -moz- -o- -ms- '.split(' '),
-    /*>>prefixes*/
-
-    /*>>domprefixes*/
-    // Following spec is to expose vendor-specific style properties as:
-    //   elem.style.WebkitBorderRadius
-    // and the following would be incorrect:
-    //   elem.style.webkitBorderRadius
-
-    // Webkit ghosts their properties in lowercase but Opera & Moz do not.
-    // Microsoft uses a lowercase `ms` instead of the correct `Ms` in IE8+
-    //   erik.eae.net/archives/2008/03/10/21.48.10/
-
-    // More here: github.com/Modernizr/Modernizr/issues/issue/21
-    omPrefixes = 'Webkit Moz O ms',
-
-    cssomPrefixes = omPrefixes.split(' '),
-
-    domPrefixes = omPrefixes.toLowerCase().split(' '),
-    /*>>domprefixes*/
-
-    /*>>ns*/
-    ns = {'svg': 'http://www.w3.org/2000/svg'},
-    /*>>ns*/
-
-    tests = {},
-    inputs = {},
-    attrs = {},
-
-    classes = [],
-
-    slice = classes.slice,
-
-    featureName, // used in testing loop
-
-
-    /*>>teststyles*/
-    // Inject element with style element and some CSS rules
-    injectElementWithStyles = function( rule, callback, nodes, testnames ) {
-
-      var style, ret, node, docOverflow,
-          div = document.createElement('div'),
-          // After page load injecting a fake body doesn't work so check if body exists
-          body = document.body,
-          // IE6 and 7 won't return offsetWidth or offsetHeight unless it's in the body element, so we fake it.
-          fakeBody = body || document.createElement('body');
-
-      if ( parseInt(nodes, 10) ) {
-          // In order not to give false positives we create a node for each test
-          // This also allows the method to scale for unspecified uses
-          while ( nodes-- ) {
-              node = document.createElement('div');
-              node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
-              div.appendChild(node);
-          }
-      }
-
-      // <style> elements in IE6-9 are considered 'NoScope' elements and therefore will be removed
-      // when injected with innerHTML. To get around this you need to prepend the 'NoScope' element
-      // with a 'scoped' element, in our case the soft-hyphen entity as it won't mess with our measurements.
-      // msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.aspx
-      // Documents served as xml will throw if using &shy; so use xml friendly encoded version. See issue #277
-      style = ['&#173;','<style id="s', mod, '">', rule, '</style>'].join('');
-      div.id = mod;
-      // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
-      // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
-      (body ? div : fakeBody).innerHTML += style;
-      fakeBody.appendChild(div);
-      if ( !body ) {
-          //avoid crashing IE8, if background image is used
-          fakeBody.style.background = '';
-          //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
-          fakeBody.style.overflow = 'hidden';
-          docOverflow = docElement.style.overflow;
-          docElement.style.overflow = 'hidden';
-          docElement.appendChild(fakeBody);
-      }
-
-      ret = callback(div, rule);
-      // If this is done after page load we don't want to remove the body so check if body exists
-      if ( !body ) {
-          fakeBody.parentNode.removeChild(fakeBody);
-          docElement.style.overflow = docOverflow;
-      } else {
-          div.parentNode.removeChild(div);
-      }
-
-      return !!ret;
-
-    },
-    /*>>teststyles*/
-
-    /*>>mq*/
-    // adapted from matchMedia polyfill
-    // by Scott Jehl and Paul Irish
-    // gist.github.com/786768
-    testMediaQuery = function( mq ) {
-
-      var matchMedia = window.matchMedia || window.msMatchMedia;
-      if ( matchMedia ) {
-        return matchMedia(mq).matches;
-      }
-
-      var bool;
-
-      injectElementWithStyles('@media ' + mq + ' { #' + mod + ' { position: absolute; } }', function( node ) {
-        bool = (window.getComputedStyle ?
-                  getComputedStyle(node, null) :
-                  node.currentStyle)['position'] == 'absolute';
-      });
-
-      return bool;
-
-     },
-     /*>>mq*/
-
-
-    /*>>hasevent*/
-    //
-    // isEventSupported determines if a given element supports the given event
-    // kangax.github.com/iseventsupported/
-    //
-    // The following results are known incorrects:
-    //   Modernizr.hasEvent("webkitTransitionEnd", elem) // false negative
-    //   Modernizr.hasEvent("textInput") // in Webkit. github.com/Modernizr/Modernizr/issues/333
-    //   ...
-    isEventSupported = (function() {
-
-      var TAGNAMES = {
-        'select': 'input', 'change': 'input',
-        'submit': 'form', 'reset': 'form',
-        'error': 'img', 'load': 'img', 'abort': 'img'
-      };
-
-      function isEventSupported( eventName, element ) {
-
-        element = element || document.createElement(TAGNAMES[eventName] || 'div');
-        eventName = 'on' + eventName;
-
-        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
-        var isSupported = eventName in element;
-
-        if ( !isSupported ) {
-          // If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
-          if ( !element.setAttribute ) {
-            element = document.createElement('div');
-          }
-          if ( element.setAttribute && element.removeAttribute ) {
-            element.setAttribute(eventName, '');
-            isSupported = is(element[eventName], 'function');
-
-            // If property was created, "remove it" (by setting value to `undefined`)
-            if ( !is(element[eventName], 'undefined') ) {
-              element[eventName] = undefined;
-            }
-            element.removeAttribute(eventName);
-          }
-        }
-
-        element = null;
-        return isSupported;
-      }
-      return isEventSupported;
-    })(),
-    /*>>hasevent*/
-
-    // TODO :: Add flag for hasownprop ? didn't last time
-
-    // hasOwnProperty shim by kangax needed for Safari 2.0 support
-    _hasOwnProperty = ({}).hasOwnProperty, hasOwnProp;
-
-    if ( !is(_hasOwnProperty, 'undefined') && !is(_hasOwnProperty.call, 'undefined') ) {
-      hasOwnProp = function (object, property) {
-        return _hasOwnProperty.call(object, property);
-      };
-    }
-    else {
-      hasOwnProp = function (object, property) { /* yes, this can give false positives/negatives, but most of the time we don't care about those */
-        return ((property in object) && is(object.constructor.prototype[property], 'undefined'));
-      };
-    }
-
-    // Adapted from ES5-shim https://github.com/kriskowal/es5-shim/blob/master/es5-shim.js
-    // es5.github.com/#x15.3.4.5
-
-    if (!Function.prototype.bind) {
-      Function.prototype.bind = function bind(that) {
-
-        var target = this;
-
-        if (typeof target != "function") {
-            throw new TypeError();
-        }
-
-        var args = slice.call(arguments, 1),
-            bound = function () {
-
-            if (this instanceof bound) {
-
-              var F = function(){};
-              F.prototype = target.prototype;
-              var self = new F();
-
-              var result = target.apply(
-                  self,
-                  args.concat(slice.call(arguments))
-              );
-              if (Object(result) === result) {
-                  return result;
-              }
-              return self;
-
-            } else {
-
-              return target.apply(
-                  that,
-                  args.concat(slice.call(arguments))
-              );
-
-            }
-
-        };
-
-        return bound;
-      };
-    }
-
-    /**
-     * setCss applies given styles to the Modernizr DOM node.
-     */
-    function setCss( str ) {
-        mStyle.cssText = str;
-    }
-
-    /**
-     * setCssAll extrapolates all vendor-specific css strings.
-     */
-    function setCssAll( str1, str2 ) {
-        return setCss(prefixes.join(str1 + ';') + ( str2 || '' ));
-    }
-
-    /**
-     * is returns a boolean for if typeof obj is exactly type.
-     */
-    function is( obj, type ) {
-        return typeof obj === type;
-    }
-
-    /**
-     * contains returns a boolean for if substr is found within str.
-     */
-    function contains( str, substr ) {
-        return !!~('' + str).indexOf(substr);
-    }
-
-    /*>>testprop*/
-
-    // testProps is a generic CSS / DOM property test.
-
-    // In testing support for a given CSS property, it's legit to test:
-    //    `elem.style[styleName] !== undefined`
-    // If the property is supported it will return an empty string,
-    // if unsupported it will return undefined.
-
-    // We'll take advantage of this quick test and skip setting a style
-    // on our modernizr element, but instead just testing undefined vs
-    // empty string.
-
-    // Because the testing of the CSS property names (with "-", as
-    // opposed to the camelCase DOM properties) is non-portable and
-    // non-standard but works in WebKit and IE (but not Gecko or Opera),
-    // we explicitly reject properties with dashes so that authors
-    // developing in WebKit or IE first don't end up with
-    // browser-specific content by accident.
-
-    function testProps( props, prefixed ) {
-        for ( var i in props ) {
-            var prop = props[i];
-            if ( !contains(prop, "-") && mStyle[prop] !== undefined ) {
-                return prefixed == 'pfx' ? prop : true;
-            }
-        }
-        return false;
-    }
-    /*>>testprop*/
-
-    // TODO :: add testDOMProps
-    /**
-     * testDOMProps is a generic DOM property test; if a browser supports
-     *   a certain property, it won't return undefined for it.
-     */
-    function testDOMProps( props, obj, elem ) {
-        for ( var i in props ) {
-            var item = obj[props[i]];
-            if ( item !== undefined) {
-
-                // return the property name as a string
-                if (elem === false) return props[i];
-
-                // let's bind a function
-                if (is(item, 'function')){
-                  // default to autobind unless override
-                  return item.bind(elem || obj);
-                }
-
-                // return the unbound function or obj or value
-                return item;
-            }
-        }
-        return false;
-    }
-
-    /*>>testallprops*/
-    /**
-     * testPropsAll tests a list of DOM properties we want to check against.
-     *   We specify literally ALL possible (known and/or likely) properties on
-     *   the element including the non-vendor prefixed one, for forward-
-     *   compatibility.
-     */
-    function testPropsAll( prop, prefixed, elem ) {
-
-        var ucProp  = prop.charAt(0).toUpperCase() + prop.slice(1),
-            props   = (prop + ' ' + cssomPrefixes.join(ucProp + ' ') + ucProp).split(' ');
-
-        // did they call .prefixed('boxSizing') or are we just testing a prop?
-        if(is(prefixed, "string") || is(prefixed, "undefined")) {
-          return testProps(props, prefixed);
-
-        // otherwise, they called .prefixed('requestAnimationFrame', window[, elem])
-        } else {
-          props = (prop + ' ' + (domPrefixes).join(ucProp + ' ') + ucProp).split(' ');
-          return testDOMProps(props, prefixed, elem);
-        }
-    }
-    /*>>testallprops*/
-
-
-    /**
-     * Tests
-     * -----
-     */
-
-    // The *new* flexbox
-    // dev.w3.org/csswg/css3-flexbox
-
-    tests['flexbox'] = function() {
-      return testPropsAll('flexWrap');
-    };
-
-    // The *old* flexbox
-    // www.w3.org/TR/2009/WD-css3-flexbox-20090723/
-
-    tests['flexboxlegacy'] = function() {
-        return testPropsAll('boxDirection');
-    };
-
-    // On the S60 and BB Storm, getContext exists, but always returns undefined
-    // so we actually have to call getContext() to verify
-    // github.com/Modernizr/Modernizr/issues/issue/97/
-
-    tests['canvas'] = function() {
-        var elem = document.createElement('canvas');
-        return !!(elem.getContext && elem.getContext('2d'));
-    };
-
-    tests['canvastext'] = function() {
-        return !!(Modernizr['canvas'] && is(document.createElement('canvas').getContext('2d').fillText, 'function'));
-    };
-
-    // webk.it/70117 is tracking a legit WebGL feature detect proposal
-
-    // We do a soft detect which may false positive in order to avoid
-    // an expensive context creation: bugzil.la/732441
-
-    tests['webgl'] = function() {
-        return !!window.WebGLRenderingContext;
-    };
-
-    /*
-     * The Modernizr.touch test only indicates if the browser supports
-     *    touch events, which does not necessarily reflect a touchscreen
-     *    device, as evidenced by tablets running Windows 7 or, alas,
-     *    the Palm Pre / WebOS (touch) phones.
-     *
-     * Additionally, Chrome (desktop) used to lie about its support on this,
-     *    but that has since been rectified: crbug.com/36415
-     *
-     * We also test for Firefox 4 Multitouch Support.
-     *
-     * For more info, see: modernizr.github.com/Modernizr/touch.html
-     */
-
-    tests['touch'] = function() {
-        var bool;
-
-        if(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
-          bool = true;
-        } else {
-          injectElementWithStyles(['@media (',prefixes.join('touch-enabled),('),mod,')','{#modernizr{top:9px;position:absolute}}'].join(''), function( node ) {
-            bool = node.offsetTop === 9;
-          });
-        }
-
-        return bool;
-    };
-
-
-    // geolocation is often considered a trivial feature detect...
-    // Turns out, it's quite tricky to get right:
-    //
-    // Using !!navigator.geolocation does two things we don't want. It:
-    //   1. Leaks memory in IE9: github.com/Modernizr/Modernizr/issues/513
-    //   2. Disables page caching in WebKit: webk.it/43956
-    //
-    // Meanwhile, in Firefox < 8, an about:config setting could expose
-    // a false positive that would throw an exception: bugzil.la/688158
-
-    tests['geolocation'] = function() {
-        return 'geolocation' in navigator;
-    };
-
-
-    tests['postmessage'] = function() {
-      return !!window.postMessage;
-    };
-
-
-    // Chrome incognito mode used to throw an exception when using openDatabase
-    // It doesn't anymore.
-    tests['websqldatabase'] = function() {
-      return !!window.openDatabase;
-    };
-
-    // Vendors had inconsistent prefixing with the experimental Indexed DB:
-    // - Webkit's implementation is accessible through webkitIndexedDB
-    // - Firefox shipped moz_indexedDB before FF4b9, but since then has been mozIndexedDB
-    // For speed, we don't test the legacy (and beta-only) indexedDB
-    tests['indexedDB'] = function() {
-      return !!testPropsAll("indexedDB", window);
-    };
-
-    // documentMode logic from YUI to filter out IE8 Compat Mode
-    //   which false positives.
-    tests['hashchange'] = function() {
-      return isEventSupported('hashchange', window) && (document.documentMode === undefined || document.documentMode > 7);
-    };
-
-    // Per 1.6:
-    // This used to be Modernizr.historymanagement but the longer
-    // name has been deprecated in favor of a shorter and property-matching one.
-    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
-    // and in the first release thereafter disappear entirely.
-    tests['history'] = function() {
-      return !!(window.history && history.pushState);
-    };
-
-    tests['draganddrop'] = function() {
-        var div = document.createElement('div');
-        return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
-    };
-
-    // FF3.6 was EOL'ed on 4/24/12, but the ESR version of FF10
-    // will be supported until FF19 (2/12/13), at which time, ESR becomes FF17.
-    // FF10 still uses prefixes, so check for it until then.
-    // for more ESR info, see: mozilla.org/en-US/firefox/organizations/faq/
-    tests['websockets'] = function() {
-        return 'WebSocket' in window || 'MozWebSocket' in window;
-    };
-
-
-    // css-tricks.com/rgba-browser-support/
-    tests['rgba'] = function() {
-        // Set an rgba() color and check the returned value
-
-        setCss('background-color:rgba(150,255,150,.5)');
-
-        return contains(mStyle.backgroundColor, 'rgba');
-    };
-
-    tests['hsla'] = function() {
-        // Same as rgba(), in fact, browsers re-map hsla() to rgba() internally,
-        //   except IE9 who retains it as hsla
-
-        setCss('background-color:hsla(120,40%,100%,.5)');
-
-        return contains(mStyle.backgroundColor, 'rgba') || contains(mStyle.backgroundColor, 'hsla');
-    };
-
-    tests['multiplebgs'] = function() {
-        // Setting multiple images AND a color on the background shorthand property
-        //  and then querying the style.background property value for the number of
-        //  occurrences of "url(" is a reliable method for detecting ACTUAL support for this!
-
-        setCss('background:url(https://),url(https://),red url(https://)');
-
-        // If the UA supports multiple backgrounds, there should be three occurrences
-        //   of the string "url(" in the return value for elemStyle.background
-
-        return (/(url\s*\(.*?){3}/).test(mStyle.background);
-    };
-
-
-
-    // this will false positive in Opera Mini
-    //   github.com/Modernizr/Modernizr/issues/396
-
-    tests['backgroundsize'] = function() {
-        return testPropsAll('backgroundSize');
-    };
-
-    tests['borderimage'] = function() {
-        return testPropsAll('borderImage');
-    };
-
-
-    // Super comprehensive table about all the unique implementations of
-    // border-radius: muddledramblings.com/table-of-css3-border-radius-compliance
-
-    tests['borderradius'] = function() {
-        return testPropsAll('borderRadius');
-    };
-
-    // WebOS unfortunately false positives on this test.
-    tests['boxshadow'] = function() {
-        return testPropsAll('boxShadow');
-    };
-
-    // FF3.0 will false positive on this test
-    tests['textshadow'] = function() {
-        return document.createElement('div').style.textShadow === '';
-    };
-
-
-    tests['opacity'] = function() {
-        // Browsers that actually have CSS Opacity implemented have done so
-        //  according to spec, which means their return values are within the
-        //  range of [0.0,1.0] - including the leading zero.
-
-        setCssAll('opacity:.55');
-
-        // The non-literal . in this regex is intentional:
-        //   German Chrome returns this value as 0,55
-        // github.com/Modernizr/Modernizr/issues/#issue/59/comment/516632
-        return (/^0.55$/).test(mStyle.opacity);
-    };
-
-
-    // Note, Android < 4 will pass this test, but can only animate
-    //   a single property at a time
-    //   daneden.me/2011/12/putting-up-with-androids-bullshit/
-    tests['cssanimations'] = function() {
-        return testPropsAll('animationName');
-    };
-
-
-    tests['csscolumns'] = function() {
-        return testPropsAll('columnCount');
-    };
-
-
-    tests['cssgradients'] = function() {
-        /**
-         * For CSS Gradients syntax, please see:
-         * webkit.org/blog/175/introducing-css-gradients/
-         * developer.mozilla.org/en/CSS/-moz-linear-gradient
-         * developer.mozilla.org/en/CSS/-moz-radial-gradient
-         * dev.w3.org/csswg/css3-images/#gradients-
-         */
-
-        var str1 = 'background-image:',
-            str2 = 'gradient(linear,left top,right bottom,from(#9f9),to(white));',
-            str3 = 'linear-gradient(left top,#9f9, white);';
-
-        setCss(
-             // legacy webkit syntax (FIXME: remove when syntax not in use anymore)
-              (str1 + '-webkit- '.split(' ').join(str2 + str1) +
-             // standard syntax             // trailing 'background-image:'
-              prefixes.join(str3 + str1)).slice(0, -str1.length)
-        );
-
-        return contains(mStyle.backgroundImage, 'gradient');
-    };
-
-
-    tests['cssreflections'] = function() {
-        return testPropsAll('boxReflect');
-    };
-
-
-    tests['csstransforms'] = function() {
-        return !!testPropsAll('transform');
-    };
-
-
-    tests['csstransforms3d'] = function() {
-
-        var ret = !!testPropsAll('perspective');
-
-        // Webkit's 3D transforms are passed off to the browser's own graphics renderer.
-        //   It works fine in Safari on Leopard and Snow Leopard, but not in Chrome in
-        //   some conditions. As a result, Webkit typically recognizes the syntax but
-        //   will sometimes throw a false positive, thus we must do a more thorough check:
-        if ( ret && 'webkitPerspective' in docElement.style ) {
-
-          // Webkit allows this media query to succeed only if the feature is enabled.
-          // `@media (transform-3d),(-webkit-transform-3d){ ... }`
-          injectElementWithStyles('@media (transform-3d),(-webkit-transform-3d){#modernizr{left:9px;position:absolute;height:3px;}}', function( node, rule ) {
-            ret = node.offsetLeft === 9 && node.offsetHeight === 3;
-          });
-        }
-        return ret;
-    };
-
-
-    tests['csstransitions'] = function() {
-        return testPropsAll('transition');
-    };
-
-
-    /*>>fontface*/
-    // @font-face detection routine by Diego Perini
-    // javascript.nwbox.com/CSSSupport/
-
-    // false positives:
-    //   WebOS github.com/Modernizr/Modernizr/issues/342
-    //   WP7   github.com/Modernizr/Modernizr/issues/538
-    tests['fontface'] = function() {
-        var bool;
-
-        injectElementWithStyles('@font-face {font-family:"font";src:url("https://")}', function( node, rule ) {
-          var style = document.getElementById('smodernizr'),
-              sheet = style.sheet || style.styleSheet,
-              cssText = sheet ? (sheet.cssRules && sheet.cssRules[0] ? sheet.cssRules[0].cssText : sheet.cssText || '') : '';
-
-          bool = /src/i.test(cssText) && cssText.indexOf(rule.split(' ')[0]) === 0;
-        });
-
-        return bool;
-    };
-    /*>>fontface*/
-
-    // CSS generated content detection
-    tests['generatedcontent'] = function() {
-        var bool;
-
-        injectElementWithStyles(['#',mod,'{font:0/0 a}#',mod,':after{content:"',smile,'";visibility:hidden;font:3px/1 a}'].join(''), function( node ) {
-          bool = node.offsetHeight >= 3;
-        });
-
-        return bool;
-    };
-
-
-
-    // These tests evaluate support of the video/audio elements, as well as
-    // testing what types of content they support.
-    //
-    // We're using the Boolean constructor here, so that we can extend the value
-    // e.g.  Modernizr.video     // true
-    //       Modernizr.video.ogg // 'probably'
-    //
-    // Codec values from : github.com/NielsLeenheer/html5test/blob/9106a8/index.html#L845
-    //                     thx to NielsLeenheer and zcorpan
-
-    // Note: in some older browsers, "no" was a return value instead of empty string.
-    //   It was live in FF3.5.0 and 3.5.1, but fixed in 3.5.2
-    //   It was also live in Safari 4.0.0 - 4.0.4, but fixed in 4.0.5
-
-    tests['video'] = function() {
-        var elem = document.createElement('video'),
-            bool = false;
-
-        // IE9 Running on Windows Server SKU can cause an exception to be thrown, bug #224
-        try {
-            if ( bool = !!elem.canPlayType ) {
-                bool      = new Boolean(bool);
-                bool.ogg  = elem.canPlayType('video/ogg; codecs="theora"')      .replace(/^no$/,'');
-
-                // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
-                bool.h264 = elem.canPlayType('video/mp4; codecs="avc1.42E01E"') .replace(/^no$/,'');
-
-                bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"').replace(/^no$/,'');
-            }
-
-        } catch(e) { }
-
-        return bool;
-    };
-
-    tests['audio'] = function() {
-        var elem = document.createElement('audio'),
-            bool = false;
-
-        try {
-            if ( bool = !!elem.canPlayType ) {
-                bool      = new Boolean(bool);
-                bool.ogg  = elem.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/,'');
-                bool.mp3  = elem.canPlayType('audio/mpeg;')               .replace(/^no$/,'');
-
-                // Mimetypes accepted:
-                //   developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
-                //   bit.ly/iphoneoscodecs
-                bool.wav  = elem.canPlayType('audio/wav; codecs="1"')     .replace(/^no$/,'');
-                bool.m4a  = ( elem.canPlayType('audio/x-m4a;')            ||
-                              elem.canPlayType('audio/aac;'))             .replace(/^no$/,'');
-            }
-        } catch(e) { }
-
-        return bool;
-    };
-
-
-    // In FF4, if disabled, window.localStorage should === null.
-
-    // Normally, we could not test that directly and need to do a
-    //   `('localStorage' in window) && ` test first because otherwise Firefox will
-    //   throw bugzil.la/365772 if cookies are disabled
-
-    // Also in iOS5 Private Browsing mode, attempting to use localStorage.setItem
-    // will throw the exception:
-    //   QUOTA_EXCEEDED_ERRROR DOM Exception 22.
-    // Peculiarly, getItem and removeItem calls do not throw.
-
-    // Because we are forced to try/catch this, we'll go aggressive.
-
-    // Just FWIW: IE8 Compat mode supports these features completely:
-    //   www.quirksmode.org/dom/html5.html
-    // But IE8 doesn't support either with local files
-
-    tests['localstorage'] = function() {
-        try {
-            localStorage.setItem(mod, mod);
-            localStorage.removeItem(mod);
-            return true;
-        } catch(e) {
-            return false;
-        }
-    };
-
-    tests['sessionstorage'] = function() {
-        try {
-            sessionStorage.setItem(mod, mod);
-            sessionStorage.removeItem(mod);
-            return true;
-        } catch(e) {
-            return false;
-        }
-    };
-
-
-    tests['webworkers'] = function() {
-        return !!window.Worker;
-    };
-
-
-    tests['applicationcache'] = function() {
-        return !!window.applicationCache;
-    };
-
-
-    // Thanks to Erik Dahlstrom
-    tests['svg'] = function() {
-        return !!document.createElementNS && !!document.createElementNS(ns.svg, 'svg').createSVGRect;
-    };
-
-    // specifically for SVG inline in HTML, not within XHTML
-    // test page: paulirish.com/demo/inline-svg
-    tests['inlinesvg'] = function() {
-      var div = document.createElement('div');
-      div.innerHTML = '<svg/>';
-      return (div.firstChild && div.firstChild.namespaceURI) == ns.svg;
-    };
-
-    // SVG SMIL animation
-    tests['smil'] = function() {
-        return !!document.createElementNS && /SVGAnimate/.test(toString.call(document.createElementNS(ns.svg, 'animate')));
-    };
-
-    // This test is only for clip paths in SVG proper, not clip paths on HTML content
-    // demo: srufaculty.sru.edu/david.dailey/svg/newstuff/clipPath4.svg
-
-    // However read the comments to dig into applying SVG clippaths to HTML content here:
-    //   github.com/Modernizr/Modernizr/issues/213#issuecomment-1149491
-    tests['svgclippaths'] = function() {
-        return !!document.createElementNS && /SVGClipPath/.test(toString.call(document.createElementNS(ns.svg, 'clipPath')));
-    };
-
-    /*>>webforms*/
-    // input features and input types go directly onto the ret object, bypassing the tests loop.
-    // Hold this guy to execute in a moment.
-    function webforms() {
-        /*>>input*/
-        // Run through HTML5's new input attributes to see if the UA understands any.
-        // We're using f which is the <input> element created early on
-        // Mike Taylr has created a comprehensive resource for testing these attributes
-        //   when applied to all input types:
-        //   miketaylr.com/code/input-type-attr.html
-        // spec: www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
-
-        // Only input placeholder is tested while textarea's placeholder is not.
-        // Currently Safari 4 and Opera 11 have support only for the input placeholder
-        // Both tests are available in feature-detects/forms-placeholder.js
-        Modernizr['input'] = (function( props ) {
-            for ( var i = 0, len = props.length; i < len; i++ ) {
-                attrs[ props[i] ] = !!(props[i] in inputElem);
-            }
-            if (attrs.list){
-              // safari false positive's on datalist: webk.it/74252
-              // see also github.com/Modernizr/Modernizr/issues/146
-              attrs.list = !!(document.createElement('datalist') && window.HTMLDataListElement);
-            }
-            return attrs;
-        })('autocomplete autofocus list placeholder max min multiple pattern required step'.split(' '));
-        /*>>input*/
-
-        /*>>inputtypes*/
-        // Run through HTML5's new input types to see if the UA understands any.
-        //   This is put behind the tests runloop because it doesn't return a
-        //   true/false like all the other tests; instead, it returns an object
-        //   containing each input type with its corresponding true/false value
-
-        // Big thanks to @miketaylr for the html5 forms expertise. miketaylr.com/
-        Modernizr['inputtypes'] = (function(props) {
-
-            for ( var i = 0, bool, inputElemType, defaultView, len = props.length; i < len; i++ ) {
-
-                inputElem.setAttribute('type', inputElemType = props[i]);
-                bool = inputElem.type !== 'text';
-
-                // We first check to see if the type we give it sticks..
-                // If the type does, we feed it a textual value, which shouldn't be valid.
-                // If the value doesn't stick, we know there's input sanitization which infers a custom UI
-                if ( bool ) {
-
-                    inputElem.value         = smile;
-                    inputElem.style.cssText = 'position:absolute;visibility:hidden;';
-
-                    if ( /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ) {
-
-                      docElement.appendChild(inputElem);
-                      defaultView = document.defaultView;
-
-                      // Safari 2-4 allows the smiley as a value, despite making a slider
-                      bool =  defaultView.getComputedStyle &&
-                              defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
-                              // Mobile android web browser has false positive, so must
-                              // check the height to see if the widget is actually there.
-                              (inputElem.offsetHeight !== 0);
-
-                      docElement.removeChild(inputElem);
-
-                    } else if ( /^(search|tel)$/.test(inputElemType) ){
-                      // Spec doesn't define any special parsing or detectable UI
-                      //   behaviors so we pass these through as true
-
-                      // Interestingly, opera fails the earlier test, so it doesn't
-                      //  even make it here.
-
-                    } else if ( /^(url|email)$/.test(inputElemType) ) {
-                      // Real url and email support comes with prebaked validation.
-                      bool = inputElem.checkValidity && inputElem.checkValidity() === false;
-
-                    } else {
-                      // If the upgraded input compontent rejects the :) text, we got a winner
-                      bool = inputElem.value != smile;
-                    }
-                }
-
-                inputs[ props[i] ] = !!bool;
-            }
-            return inputs;
-        })('search tel url email datetime date month week time datetime-local number range color'.split(' '));
-        /*>>inputtypes*/
-    }
-    /*>>webforms*/
-
-
-    // End of test definitions
-    // -----------------------
-
-
-
-    // Run through all tests and detect their support in the current UA.
-    // todo: hypothetically we could be doing an array of tests and use a basic loop here.
-    for ( var feature in tests ) {
-        if ( hasOwnProp(tests, feature) ) {
-            // run the test, throw the return value into the Modernizr,
-            //   then based on that boolean, define an appropriate className
-            //   and push it into an array of classes we'll join later.
-            featureName  = feature.toLowerCase();
-            Modernizr[featureName] = tests[feature]();
-
-            classes.push((Modernizr[featureName] ? '' : 'no-') + featureName);
-        }
-    }
-
-    /*>>webforms*/
-    // input tests need to run.
-    Modernizr.input || webforms();
-    /*>>webforms*/
-
-
-    /**
-     * addTest allows the user to define their own feature tests
-     * the result will be added onto the Modernizr object,
-     * as well as an appropriate className set on the html element
-     *
-     * @param feature - String naming the feature
-     * @param test - Function returning true if feature is supported, false if not
-     */
-     Modernizr.addTest = function ( feature, test ) {
-       if ( typeof feature == 'object' ) {
-         for ( var key in feature ) {
-           if ( hasOwnProp( feature, key ) ) {
-             Modernizr.addTest( key, feature[ key ] );
-           }
-         }
-       } else {
-
-         feature = feature.toLowerCase();
-
-         if ( Modernizr[feature] !== undefined ) {
-           // we're going to quit if you're trying to overwrite an existing test
-           // if we were to allow it, we'd do this:
-           //   var re = new RegExp("\\b(no-)?" + feature + "\\b");
-           //   docElement.className = docElement.className.replace( re, '' );
-           // but, no rly, stuff 'em.
-           return Modernizr;
-         }
-
-         test = typeof test == 'function' ? test() : test;
-
-         if (typeof enableClasses !== "undefined" && enableClasses) {
-           docElement.className += ' ' + (test ? '' : 'no-') + feature;
-         }
-         Modernizr[feature] = test;
-
-       }
-
-       return Modernizr; // allow chaining.
-     };
-
-
-    // Reset modElem.cssText to nothing to reduce memory footprint.
-    setCss('');
-    modElem = inputElem = null;
-
-    /*>>shiv*/
-    /*! HTML5 Shiv v3.6.1 | @afarkas @jdalton @jon_neal @rem | MIT/GPL2 Licensed */
-    ;(function(window, document) {
-    /*jshint evil:true */
-      /** Preset options */
-      var options = window.html5 || {};
-
-      /** Used to skip problem elements */
-      var reSkip = /^<|^(?:button|map|select|textarea|object|iframe|option|optgroup)$/i;
-
-      /** Not all elements can be cloned in IE **/
-      var saveClones = /^(?:a|b|code|div|fieldset|h1|h2|h3|h4|h5|h6|i|label|li|ol|p|q|span|strong|style|table|tbody|td|th|tr|ul)$/i;
-
-      /** Detect whether the browser supports default html5 styles */
-      var supportsHtml5Styles;
-
-      /** Name of the expando, to work with multiple documents or to re-shiv one document */
-      var expando = '_html5shiv';
-
-      /** The id for the the documents expando */
-      var expanID = 0;
-
-      /** Cached data for each document */
-      var expandoData = {};
-
-      /** Detect whether the browser supports unknown elements */
-      var supportsUnknownElements;
-
-      (function() {
-        try {
-            var a = document.createElement('a');
-            a.innerHTML = '<xyz></xyz>';
-            //if the hidden property is implemented we can assume, that the browser supports basic HTML5 Styles
-            supportsHtml5Styles = ('hidden' in a);
-
-            supportsUnknownElements = a.childNodes.length == 1 || (function() {
-              // assign a false positive if unable to shiv
-              (document.createElement)('a');
-              var frag = document.createDocumentFragment();
-              return (
-                typeof frag.cloneNode == 'undefined' ||
-                typeof frag.createDocumentFragment == 'undefined' ||
-                typeof frag.createElement == 'undefined'
-              );
-            }());
-        } catch(e) {
-          supportsHtml5Styles = true;
-          supportsUnknownElements = true;
-        }
-
-      }());
-
-      /*--------------------------------------------------------------------------*/
-
-      /**
-       * Creates a style sheet with the given CSS text and adds it to the document.
-       * @private
-       * @param {Document} ownerDocument The document.
-       * @param {String} cssText The CSS text.
-       * @returns {StyleSheet} The style element.
-       */
-      function addStyleSheet(ownerDocument, cssText) {
-        var p = ownerDocument.createElement('p'),
-            parent = ownerDocument.getElementsByTagName('head')[0] || ownerDocument.documentElement;
-
-        p.innerHTML = 'x<style>' + cssText + '</style>';
-        return parent.insertBefore(p.lastChild, parent.firstChild);
-      }
-
-      /**
-       * Returns the value of `html5.elements` as an array.
-       * @private
-       * @returns {Array} An array of shived element node names.
-       */
-      function getElements() {
-        var elements = html5.elements;
-        return typeof elements == 'string' ? elements.split(' ') : elements;
-      }
-
-        /**
-       * Returns the data associated to the given document
-       * @private
-       * @param {Document} ownerDocument The document.
-       * @returns {Object} An object of data.
-       */
-      function getExpandoData(ownerDocument) {
-        var data = expandoData[ownerDocument[expando]];
-        if (!data) {
-            data = {};
-            expanID++;
-            ownerDocument[expando] = expanID;
-            expandoData[expanID] = data;
-        }
-        return data;
-      }
-
-      /**
-       * returns a shived element for the given nodeName and document
-       * @memberOf html5
-       * @param {String} nodeName name of the element
-       * @param {Document} ownerDocument The context document.
-       * @returns {Object} The shived element.
-       */
-      function createElement(nodeName, ownerDocument, data){
-        if (!ownerDocument) {
-            ownerDocument = document;
-        }
-        if(supportsUnknownElements){
-            return ownerDocument.createElement(nodeName);
-        }
-        if (!data) {
-            data = getExpandoData(ownerDocument);
-        }
-        var node;
-
-        if (data.cache[nodeName]) {
-            node = data.cache[nodeName].cloneNode();
-        } else if (saveClones.test(nodeName)) {
-            node = (data.cache[nodeName] = data.createElem(nodeName)).cloneNode();
-        } else {
-            node = data.createElem(nodeName);
-        }
-
-        // Avoid adding some elements to fragments in IE < 9 because
-        // * Attributes like `name` or `type` cannot be set/changed once an element
-        //   is inserted into a document/fragment
-        // * Link elements with `src` attributes that are inaccessible, as with
-        //   a 403 response, will cause the tab/window to crash
-        // * Script elements appended to fragments will execute when their `src`
-        //   or `text` property is set
-        return node.canHaveChildren && !reSkip.test(nodeName) ? data.frag.appendChild(node) : node;
-      }
-
-      /**
-       * returns a shived DocumentFragment for the given document
-       * @memberOf html5
-       * @param {Document} ownerDocument The context document.
-       * @returns {Object} The shived DocumentFragment.
-       */
-      function createDocumentFragment(ownerDocument, data){
-        if (!ownerDocument) {
-            ownerDocument = document;
-        }
-        if(supportsUnknownElements){
-            return ownerDocument.createDocumentFragment();
-        }
-        data = data || getExpandoData(ownerDocument);
-        var clone = data.frag.cloneNode(),
-            i = 0,
-            elems = getElements(),
-            l = elems.length;
-        for(;i<l;i++){
-            clone.createElement(elems[i]);
-        }
-        return clone;
-      }
-
-      /**
-       * Shivs the `createElement` and `createDocumentFragment` methods of the document.
-       * @private
-       * @param {Document|DocumentFragment} ownerDocument The document.
-       * @param {Object} data of the document.
-       */
-      function shivMethods(ownerDocument, data) {
-        if (!data.cache) {
-            data.cache = {};
-            data.createElem = ownerDocument.createElement;
-            data.createFrag = ownerDocument.createDocumentFragment;
-            data.frag = data.createFrag();
-        }
-
-
-        ownerDocument.createElement = function(nodeName) {
-          //abort shiv
-          if (!html5.shivMethods) {
-              return data.createElem(nodeName);
-          }
-          return createElement(nodeName, ownerDocument, data);
-        };
-
-        ownerDocument.createDocumentFragment = Function('h,f', 'return function(){' +
-          'var n=f.cloneNode(),c=n.createElement;' +
-          'h.shivMethods&&(' +
-            // unroll the `createElement` calls
-            getElements().join().replace(/\w+/g, function(nodeName) {
-              data.createElem(nodeName);
-              data.frag.createElement(nodeName);
-              return 'c("' + nodeName + '")';
-            }) +
-          ');return n}'
-        )(html5, data.frag);
-      }
-
-      /*--------------------------------------------------------------------------*/
-
-      /**
-       * Shivs the given document.
-       * @memberOf html5
-       * @param {Document} ownerDocument The document to shiv.
-       * @returns {Document} The shived document.
-       */
-      function shivDocument(ownerDocument) {
-        if (!ownerDocument) {
-            ownerDocument = document;
-        }
-        var data = getExpandoData(ownerDocument);
-
-        if (html5.shivCSS && !supportsHtml5Styles && !data.hasCSS) {
-          data.hasCSS = !!addStyleSheet(ownerDocument,
-            // corrects block display not defined in IE6/7/8/9
-            'article,aside,figcaption,figure,footer,header,hgroup,nav,section{display:block}' +
-            // adds styling not present in IE6/7/8/9
-            'mark{background:#FF0;color:#000}'
-          );
-        }
-        if (!supportsUnknownElements) {
-          shivMethods(ownerDocument, data);
-        }
-        return ownerDocument;
-      }
-
-      /*--------------------------------------------------------------------------*/
-
-      /**
-       * The `html5` object is exposed so that more elements can be shived and
-       * existing shiving can be detected on iframes.
-       * @type Object
-       * @example
-       *
-       * // options can be changed before the script is included
-       * html5 = { 'elements': 'mark section', 'shivCSS': false, 'shivMethods': false };
-       */
-      var html5 = {
-
-        /**
-         * An array or space separated string of node names of the elements to shiv.
-         * @memberOf html5
-         * @type Array|String
-         */
-        'elements': options.elements || 'abbr article aside audio bdi canvas data datalist details figcaption figure footer header hgroup mark meter nav output progress section summary time video',
-
-        /**
-         * A flag to indicate that the HTML5 style sheet should be inserted.
-         * @memberOf html5
-         * @type Boolean
-         */
-        'shivCSS': (options.shivCSS !== false),
-
-        /**
-         * Is equal to true if a browser supports creating unknown/HTML5 elements
-         * @memberOf html5
-         * @type boolean
-         */
-        'supportsUnknownElements': supportsUnknownElements,
-
-        /**
-         * A flag to indicate that the document's `createElement` and `createDocumentFragment`
-         * methods should be overwritten.
-         * @memberOf html5
-         * @type Boolean
-         */
-        'shivMethods': (options.shivMethods !== false),
-
-        /**
-         * A string to describe the type of `html5` object ("default" or "default print").
-         * @memberOf html5
-         * @type String
-         */
-        'type': 'default',
-
-        // shivs the document according to the specified `html5` object options
-        'shivDocument': shivDocument,
-
-        //creates a shived element
-        createElement: createElement,
-
-        //creates a shived documentFragment
-        createDocumentFragment: createDocumentFragment
-      };
-
-      /*--------------------------------------------------------------------------*/
-
-      // expose html5
-      window.html5 = html5;
-
-      // shiv the document
-      shivDocument(document);
-
-    }(this, document));
-    /*>>shiv*/
-
-    // Assign private properties to the return object with prefix
-    Modernizr._version      = version;
-
-    // expose these for the plugin API. Look in the source for how to join() them against your input
-    /*>>prefixes*/
-    Modernizr._prefixes     = prefixes;
-    /*>>prefixes*/
-    /*>>domprefixes*/
-    Modernizr._domPrefixes  = domPrefixes;
-    Modernizr._cssomPrefixes  = cssomPrefixes;
-    /*>>domprefixes*/
-
-    /*>>mq*/
-    // Modernizr.mq tests a given media query, live against the current state of the window
-    // A few important notes:
-    //   * If a browser does not support media queries at all (eg. oldIE) the mq() will always return false
-    //   * A max-width or orientation query will be evaluated against the current state, which may change later.
-    //   * You must specify values. Eg. If you are testing support for the min-width media query use:
-    //       Modernizr.mq('(min-width:0)')
-    // usage:
-    // Modernizr.mq('only screen and (max-width:768)')
-    Modernizr.mq            = testMediaQuery;
-    /*>>mq*/
-
-    /*>>hasevent*/
-    // Modernizr.hasEvent() detects support for a given event, with an optional element to test on
-    // Modernizr.hasEvent('gesturestart', elem)
-    Modernizr.hasEvent      = isEventSupported;
-    /*>>hasevent*/
-
-    /*>>testprop*/
-    // Modernizr.testProp() investigates whether a given style property is recognized
-    // Note that the property names must be provided in the camelCase variant.
-    // Modernizr.testProp('pointerEvents')
-    Modernizr.testProp      = function(prop){
-        return testProps([prop]);
-    };
-    /*>>testprop*/
-
-    /*>>testallprops*/
-    // Modernizr.testAllProps() investigates whether a given style property,
-    //   or any of its vendor-prefixed variants, is recognized
-    // Note that the property names must be provided in the camelCase variant.
-    // Modernizr.testAllProps('boxSizing')
-    Modernizr.testAllProps  = testPropsAll;
-    /*>>testallprops*/
-
-
-    /*>>teststyles*/
-    // Modernizr.testStyles() allows you to add custom styles to the document and test an element afterwards
-    // Modernizr.testStyles('#modernizr { position:absolute }', function(elem, rule){ ... })
-    Modernizr.testStyles    = injectElementWithStyles;
-    /*>>teststyles*/
-
-
-    /*>>prefixed*/
-    // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
-    // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
-
-    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hypentated style.
-    // Return values will also be the camelCase variant, if you need to translate that to hypenated style use:
-    //
-    //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
-
-    // If you're trying to ascertain which transition end event to bind to, you might do something like...
-    //
-    //     var transEndEventNames = {
-    //       'WebkitTransition' : 'webkitTransitionEnd',
-    //       'MozTransition'    : 'transitionend',
-    //       'OTransition'      : 'oTransitionEnd',
-    //       'msTransition'     : 'MSTransitionEnd',
-    //       'transition'       : 'transitionend'
-    //     },
-    //     transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
-
-    Modernizr.prefixed      = function(prop, obj, elem){
-      if(!obj) {
-        return testPropsAll(prop, 'pfx');
-      } else {
-        // Testing DOM property e.g. Modernizr.prefixed('requestAnimationFrame', window) // 'mozRequestAnimationFrame'
-        return testPropsAll(prop, obj, elem);
-      }
-    };
-    /*>>prefixed*/
-
-
-    /*>>cssclasses*/
-    // Remove "no-js" class from <html> element, if it exists:
-    docElement.className = docElement.className.replace(/(^|\s)no-js(\s|$)/, '$1$2') +
-
-                            // Add the new classes to the <html> element.
-                            (enableClasses ? ' js ' + classes.join(' ') : '');
-    /*>>cssclasses*/
-
-    return Modernizr;
-
-})(this, this.document);
-
-/** Notify.js - v0.3.1 - 2014/06/29
- * http://notifyjs.com/
- * Copyright (c) 2014 Jaime Pillora - MIT
- */
-(function(window,document,$,undefined) {
-'use strict';
-
-var Notification, addStyle, blankFieldName, coreStyle, createElem, defaults, encode, find, findFields, getAnchorElement, getStyle, globalAnchors, hAligns, incr, inherit, insertCSS, mainPositions, opposites, parsePosition, pluginClassName, pluginName, pluginOptions, positions, realign, stylePrefixes, styles, vAligns,
-  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-pluginName = 'notify';
-
-pluginClassName = pluginName + 'js';
-
-blankFieldName = pluginName + "!blank";
-
-positions = {
-  t: 'top',
-  m: 'middle',
-  b: 'bottom',
-  l: 'left',
-  c: 'center',
-  r: 'right'
-};
-
-hAligns = ['l', 'c', 'r'];
-
-vAligns = ['t', 'm', 'b'];
-
-mainPositions = ['t', 'b', 'l', 'r'];
-
-opposites = {
-  t: 'b',
-  m: null,
-  b: 't',
-  l: 'r',
-  c: null,
-  r: 'l'
-};
-
-parsePosition = function(str) {
-  var pos;
-  pos = [];
-  $.each(str.split(/\W+/), function(i, word) {
-    var w;
-    w = word.toLowerCase().charAt(0);
-    if (positions[w]) {
-      return pos.push(w);
-    }
-  });
-  return pos;
-};
-
-styles = {};
-
-coreStyle = {
-  name: 'core',
-  html: "<div class=\"" + pluginClassName + "-wrapper\">\n  <div class=\"" + pluginClassName + "-arrow\"></div>\n  <div class=\"" + pluginClassName + "-container\"></div>\n</div>",
-  css: "." + pluginClassName + "-corner {\n  position: fixed;\n  margin: 5px;\n  z-index: 1050;\n}\n\n." + pluginClassName + "-corner ." + pluginClassName + "-wrapper,\n." + pluginClassName + "-corner ." + pluginClassName + "-container {\n  position: relative;\n  display: block;\n  height: inherit;\n  width: inherit;\n  margin: 3px;\n}\n\n." + pluginClassName + "-wrapper {\n  z-index: 1;\n  position: absolute;\n  display: inline-block;\n  height: 0;\n  width: 0;\n}\n\n." + pluginClassName + "-container {\n  display: none;\n  z-index: 1;\n  position: absolute;\n}\n\n." + pluginClassName + "-hidable {\n  cursor: pointer;\n}\n\n[data-notify-text],[data-notify-html] {\n  position: relative;\n}\n\n." + pluginClassName + "-arrow {\n  position: absolute;\n  z-index: 2;\n  width: 0;\n  height: 0;\n}"
-};
-
-stylePrefixes = {
-  "border-radius": ["-webkit-", "-moz-"]
-};
-
-getStyle = function(name) {
-  return styles[name];
-};
-
-addStyle = function(name, def) {
-  var cssText, elem, fields, _ref;
-  if (!name) {
-    throw "Missing Style name";
-  }
-  if (!def) {
-    throw "Missing Style definition";
-  }
-  if (!def.html) {
-    throw "Missing Style HTML";
-  }
-  if ((_ref = styles[name]) != null ? _ref.cssElem : void 0) {
-    if (window.console) {
-      console.warn("" + pluginName + ": overwriting style '" + name + "'");
-    }
-    styles[name].cssElem.remove();
-  }
-  def.name = name;
-  styles[name] = def;
-  cssText = "";
-  if (def.classes) {
-    $.each(def.classes, function(className, props) {
-      cssText += "." + pluginClassName + "-" + def.name + "-" + className + " {\n";
-      $.each(props, function(name, val) {
-        if (stylePrefixes[name]) {
-          $.each(stylePrefixes[name], function(i, prefix) {
-            return cssText += "  " + prefix + name + ": " + val + ";\n";
-          });
-        }
-        return cssText += "  " + name + ": " + val + ";\n";
-      });
-      return cssText += "}\n";
-    });
-  }
-  if (def.css) {
-    cssText += "/* styles for " + def.name + " */\n" + def.css;
-  }
-  if (cssText) {
-    def.cssElem = insertCSS(cssText);
-    def.cssElem.attr('id', "notify-" + def.name);
-  }
-  fields = {};
-  elem = $(def.html);
-  findFields('html', elem, fields);
-  findFields('text', elem, fields);
-  return def.fields = fields;
-};
-
-insertCSS = function(cssText) {
-  var elem;
-  elem = createElem("style");
-  elem.attr('type', 'text/css');
-  $("head").append(elem);
-  try {
-    elem.html(cssText);
-  } catch (e) {
-    elem[0].styleSheet.cssText = cssText;
-  }
-  return elem;
-};
-
-findFields = function(type, elem, fields) {
-  var attr;
-  if (type !== 'html') {
-    type = 'text';
-  }
-  attr = "data-notify-" + type;
-  return find(elem, "[" + attr + "]").each(function() {
-    var name;
-    name = $(this).attr(attr);
-    if (!name) {
-      name = blankFieldName;
-    }
-    return fields[name] = type;
-  });
-};
-
-find = function(elem, selector) {
-  if (elem.is(selector)) {
-    return elem;
-  } else {
-    return elem.find(selector);
-  }
-};
-
-pluginOptions = {
-  clickToHide: true,
-  autoHide: true,
-  autoHideDelay: 5000,
-  arrowShow: true,
-  arrowSize: 5,
-  breakNewLines: true,
-  elementPosition: 'bottom',
-  globalPosition: 'top right',
-  style: 'bootstrap',
-  className: 'error',
-  showAnimation: 'slideDown',
-  showDuration: 400,
-  hideAnimation: 'slideUp',
-  hideDuration: 200,
-  gap: 5
-};
-
-inherit = function(a, b) {
-  var F;
-  F = function() {};
-  F.prototype = a;
-  return $.extend(true, new F(), b);
-};
-
-defaults = function(opts) {
-  return $.extend(pluginOptions, opts);
-};
-
-createElem = function(tag) {
-  return $("<" + tag + "></" + tag + ">");
-};
-
-globalAnchors = {};
-
-getAnchorElement = function(element) {
-  var radios;
-  if (element.is('[type=radio]')) {
-    radios = element.parents('form:first').find('[type=radio]').filter(function(i, e) {
-      return $(e).attr('name') === element.attr('name');
-    });
-    element = radios.first();
-  }
-  return element;
-};
-
-incr = function(obj, pos, val) {
-  var opp, temp;
-  if (typeof val === 'string') {
-    val = parseInt(val, 10);
-  } else if (typeof val !== 'number') {
-    return;
-  }
-  if (isNaN(val)) {
-    return;
-  }
-  opp = positions[opposites[pos.charAt(0)]];
-  temp = pos;
-  if (obj[opp] !== undefined) {
-    pos = positions[opp.charAt(0)];
-    val = -val;
-  }
-  if (obj[pos] === undefined) {
-    obj[pos] = val;
-  } else {
-    obj[pos] += val;
-  }
-  return null;
-};
-
-realign = function(alignment, inner, outer) {
-  if (alignment === 'l' || alignment === 't') {
-    return 0;
-  } else if (alignment === 'c' || alignment === 'm') {
-    return outer / 2 - inner / 2;
-  } else if (alignment === 'r' || alignment === 'b') {
-    return outer - inner;
-  }
-  throw "Invalid alignment";
-};
-
-encode = function(text) {
-  encode.e = encode.e || createElem("div");
-  return encode.e.text(text).html();
-};
-
-Notification = (function() {
-
-  function Notification(elem, data, options) {
-    if (typeof options === 'string') {
-      options = {
-        className: options
-      };
-    }
-    this.options = inherit(pluginOptions, $.isPlainObject(options) ? options : {});
-    this.loadHTML();
-    this.wrapper = $(coreStyle.html);
-    if (this.options.clickToHide) {
-      this.wrapper.addClass("" + pluginClassName + "-hidable");
-    }
-    this.wrapper.data(pluginClassName, this);
-    this.arrow = this.wrapper.find("." + pluginClassName + "-arrow");
-    this.container = this.wrapper.find("." + pluginClassName + "-container");
-    this.container.append(this.userContainer);
-    if (elem && elem.length) {
-      this.elementType = elem.attr('type');
-      this.originalElement = elem;
-      this.elem = getAnchorElement(elem);
-      this.elem.data(pluginClassName, this);
-      this.elem.before(this.wrapper);
-    }
-    this.container.hide();
-    this.run(data);
-  }
-
-  Notification.prototype.loadHTML = function() {
-    var style;
-    style = this.getStyle();
-    this.userContainer = $(style.html);
-    return this.userFields = style.fields;
-  };
-
-  Notification.prototype.show = function(show, userCallback) {
-    var args, callback, elems, fn, hidden,
-      _this = this;
-    callback = function() {
-      if (!show && !_this.elem) {
-        _this.destroy();
-      }
-      if (userCallback) {
-        return userCallback();
-      }
-    };
-    hidden = this.container.parent().parents(':hidden').length > 0;
-    elems = this.container.add(this.arrow);
-    args = [];
-    if (hidden && show) {
-      fn = 'show';
-    } else if (hidden && !show) {
-      fn = 'hide';
-    } else if (!hidden && show) {
-      fn = this.options.showAnimation;
-      args.push(this.options.showDuration);
-    } else if (!hidden && !show) {
-      fn = this.options.hideAnimation;
-      args.push(this.options.hideDuration);
-    } else {
-      return callback();
-    }
-    args.push(callback);
-    return elems[fn].apply(elems, args);
-  };
-
-  Notification.prototype.setGlobalPosition = function() {
-    var align, anchor, css, key, main, pAlign, pMain, _ref;
-    _ref = this.getPosition(), pMain = _ref[0], pAlign = _ref[1];
-    main = positions[pMain];
-    align = positions[pAlign];
-    key = pMain + "|" + pAlign;
-    anchor = globalAnchors[key];
-    if (!anchor) {
-      anchor = globalAnchors[key] = createElem("div");
-      css = {};
-      css[main] = 0;
-      if (align === 'middle') {
-        css.top = '45%';
-      } else if (align === 'center') {
-        css.left = '45%';
-      } else {
-        css[align] = 0;
-      }
-      anchor.css(css).addClass("" + pluginClassName + "-corner");
-      $("body").append(anchor);
-    }
-    return anchor.prepend(this.wrapper);
-  };
-
-  Notification.prototype.setElementPosition = function() {
-    var arrowColor, arrowCss, arrowSize, color, contH, contW, css, elemH, elemIH, elemIW, elemPos, elemW, gap, mainFull, margin, opp, oppFull, pAlign, pArrow, pMain, pos, posFull, position, wrapPos, _i, _j, _len, _len1, _ref;
-    position = this.getPosition();
-    pMain = position[0], pAlign = position[1], pArrow = position[2];
-    elemPos = this.elem.position();
-    elemH = this.elem.outerHeight();
-    elemW = this.elem.outerWidth();
-    elemIH = this.elem.innerHeight();
-    elemIW = this.elem.innerWidth();
-    wrapPos = this.wrapper.position();
-    contH = this.container.height();
-    contW = this.container.width();
-    mainFull = positions[pMain];
-    opp = opposites[pMain];
-    oppFull = positions[opp];
-    css = {};
-    css[oppFull] = pMain === 'b' ? elemH : pMain === 'r' ? elemW : 0;
-    incr(css, 'top', elemPos.top - wrapPos.top);
-    incr(css, 'left', elemPos.left - wrapPos.left);
-    _ref = ['top', 'left'];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      pos = _ref[_i];
-      margin = parseInt(this.elem.css("margin-" + pos), 10);
-      if (margin) {
-        incr(css, pos, margin);
-      }
-    }
-    gap = Math.max(0, this.options.gap - (this.options.arrowShow ? arrowSize : 0));
-    incr(css, oppFull, gap);
-    if (!this.options.arrowShow) {
-      this.arrow.hide();
-    } else {
-      arrowSize = this.options.arrowSize;
-      arrowCss = $.extend({}, css);
-      arrowColor = this.userContainer.css("border-color") || this.userContainer.css("background-color") || 'white';
-      for (_j = 0, _len1 = mainPositions.length; _j < _len1; _j++) {
-        pos = mainPositions[_j];
-        posFull = positions[pos];
-        if (pos === opp) {
-          continue;
-        }
-        color = posFull === mainFull ? arrowColor : 'transparent';
-        arrowCss["border-" + posFull] = "" + arrowSize + "px solid " + color;
-      }
-      incr(css, positions[opp], arrowSize);
-      if (__indexOf.call(mainPositions, pAlign) >= 0) {
-        incr(arrowCss, positions[pAlign], arrowSize * 2);
-      }
-    }
-    if (__indexOf.call(vAligns, pMain) >= 0) {
-      incr(css, 'left', realign(pAlign, contW, elemW));
-      if (arrowCss) {
-        incr(arrowCss, 'left', realign(pAlign, arrowSize, elemIW));
-      }
-    } else if (__indexOf.call(hAligns, pMain) >= 0) {
-      incr(css, 'top', realign(pAlign, contH, elemH));
-      if (arrowCss) {
-        incr(arrowCss, 'top', realign(pAlign, arrowSize, elemIH));
-      }
-    }
-    if (this.container.is(":visible")) {
-      css.display = 'block';
-    }
-    this.container.removeAttr('style').css(css);
-    if (arrowCss) {
-      return this.arrow.removeAttr('style').css(arrowCss);
-    }
-  };
-
-  Notification.prototype.getPosition = function() {
-    var pos, text, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
-    text = this.options.position || (this.elem ? this.options.elementPosition : this.options.globalPosition);
-    pos = parsePosition(text);
-    if (pos.length === 0) {
-      pos[0] = 'b';
-    }
-    if (_ref = pos[0], __indexOf.call(mainPositions, _ref) < 0) {
-      throw "Must be one of [" + mainPositions + "]";
-    }
-    if (pos.length === 1 || ((_ref1 = pos[0], __indexOf.call(vAligns, _ref1) >= 0) && (_ref2 = pos[1], __indexOf.call(hAligns, _ref2) < 0)) || ((_ref3 = pos[0], __indexOf.call(hAligns, _ref3) >= 0) && (_ref4 = pos[1], __indexOf.call(vAligns, _ref4) < 0))) {
-      pos[1] = (_ref5 = pos[0], __indexOf.call(hAligns, _ref5) >= 0) ? 'm' : 'l';
-    }
-    if (pos.length === 2) {
-      pos[2] = pos[1];
-    }
-    return pos;
-  };
-
-  Notification.prototype.getStyle = function(name) {
-    var style;
-    if (!name) {
-      name = this.options.style;
-    }
-    if (!name) {
-      name = 'default';
-    }
-    style = styles[name];
-    if (!style) {
-      throw "Missing style: " + name;
-    }
-    return style;
-  };
-
-  Notification.prototype.updateClasses = function() {
-    var classes, style;
-    classes = ['base'];
-    if ($.isArray(this.options.className)) {
-      classes = classes.concat(this.options.className);
-    } else if (this.options.className) {
-      classes.push(this.options.className);
-    }
-    style = this.getStyle();
-    classes = $.map(classes, function(n) {
-      return "" + pluginClassName + "-" + style.name + "-" + n;
-    }).join(' ');
-    return this.userContainer.attr('class', classes);
-  };
-
-  Notification.prototype.run = function(data, options) {
-    var d, datas, name, type, value,
-      _this = this;
-    if ($.isPlainObject(options)) {
-      $.extend(this.options, options);
-    } else if ($.type(options) === 'string') {
-      this.options.className = options;
-    }
-    if (this.container && !data) {
-      this.show(false);
-      return;
-    } else if (!this.container && !data) {
-      return;
-    }
-    datas = {};
-    if ($.isPlainObject(data)) {
-      datas = data;
-    } else {
-      datas[blankFieldName] = data;
-    }
-    for (name in datas) {
-      d = datas[name];
-      type = this.userFields[name];
-      if (!type) {
-        continue;
-      }
-      if (type === 'text') {
-        d = encode(d);
-        if (this.options.breakNewLines) {
-          d = d.replace(/\n/g, '<br/>');
-        }
-      }
-      value = name === blankFieldName ? '' : '=' + name;
-      find(this.userContainer, "[data-notify-" + type + value + "]").html(d);
-    }
-    this.updateClasses();
-    if (this.elem) {
-      this.setElementPosition();
-    } else {
-      this.setGlobalPosition();
-    }
-    this.show(true);
-    if (this.options.autoHide) {
-      clearTimeout(this.autohideTimer);
-      return this.autohideTimer = setTimeout(function() {
-        return _this.show(false);
-      }, this.options.autoHideDelay);
-    }
-  };
-
-  Notification.prototype.destroy = function() {
-    return this.wrapper.remove();
-  };
-
-  return Notification;
-
-})();
-
-$[pluginName] = function(elem, data, options) {
-  if ((elem && elem.nodeName) || elem.jquery) {
-    $(elem)[pluginName](data, options);
-  } else {
-    options = data;
-    data = elem;
-    new Notification(null, data, options);
-  }
-  return elem;
-};
-
-$.fn[pluginName] = function(data, options) {
-  $(this).each(function() {
-    var inst;
-    inst = getAnchorElement($(this)).data(pluginClassName);
-    if (inst) {
-      return inst.run(data, options);
-    } else {
-      return new Notification($(this), data, options);
-    }
-  });
-  return this;
-};
-
-$.extend($[pluginName], {
-  defaults: defaults,
-  addStyle: addStyle,
-  pluginOptions: pluginOptions,
-  getStyle: getStyle,
-  insertCSS: insertCSS
+
+L.print = L.print || {};
+
+L.print.Provider = L.Class.extend({
+
+	includes: L.Mixin.Events,
+
+	statics: {
+		MAX_RESOLUTION: 156543.03390625,
+		MAX_EXTENT: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+		SRS: 'EPSG:3857',
+		INCHES_PER_METER: 39.3701,
+		DPI: 72,
+		UNITS: 'm'
+	},
+
+	options: {
+		autoLoad: false,
+		autoOpen: true,
+		outputFormat: 'pdf',
+		outputFilename: 'leaflet-map',
+		method: 'POST',
+		rotation: 0,
+		customParams: {},
+		legends: false
+	},
+
+	initialize: function (options) {
+		if (L.version <= '0.5.1') {
+			throw 'Leaflet.print requires Leaflet 0.6.0+. Download latest from https://github.com/Leaflet/Leaflet/';
+		}
+
+		var context;
+
+		options = L.setOptions(this, options);
+
+		if (options.map) {
+			this.setMap(options.map);
+		}
+
+		if (options.capabilities) {
+			this._capabilities = options.capabilities;
+		} else if (this.options.autoLoad) {
+			this.loadCapabilities();
+		}
+
+		if (options.listeners) {
+			if (options.listeners.context) {
+				context = options.listeners.context;
+				delete options.listeners.context;
+			}
+			this.addEventListener(options.listeners, context);
+		}
+	},
+
+	loadCapabilities: function () {
+		if (!this.options.url) {
+			return;
+		}
+
+		var url;
+
+		url = this.options.url + '/info.json';
+		if (this.options.proxy) {
+			url = this.options.proxy + url;
+		}
+
+		return $.ajax({
+			type: 'GET',
+			dataType: 'json',
+			url: url,
+			success: L.Util.bind(this.onCapabilitiesLoad, this)
+		});
+	},
+
+	print: function (options) {
+		options = L.extend(L.extend({}, this.options), options);
+
+		if (!options.layout || !options.dpi) {
+			throw 'Must provide a layout name and dpi value to print';
+		}
+
+		this.fire('beforeprint', {
+			provider: this,
+			map: this._map
+		});
+
+		var jsonData = JSON.stringify(L.extend({
+			units: L.print.Provider.UNITS,
+			srs: L.print.Provider.SRS,
+			layout: options.layout,
+			dpi: options.dpi,
+			outputFormat: options.outputFormat,
+			comment: options.comment,
+			mapTitle: options.mapTitle,
+			outputFilename: options.outputFilename,
+			layers: this._encodeLayers(this._map),
+			pages: [{
+				center: this._projectCoords(L.print.Provider.SRS, this._map.getCenter()),
+				scale: this._getScale(),
+				rotation: options.rotation,
+				copy: options.copy
+			}]
+		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
+			url;
+
+		if (options.method === 'GET') {
+			url = this._capabilities.printURL + '?spec=' + encodeURIComponent(jsonData);
+
+			if (options.proxy) {
+				url = options.proxy + encodeURIComponent(url);
+			}
+
+			window.open(url);
+
+			this.fire('print', {
+				provider: this,
+				map: this._map
+			});
+		} else {
+			url = this._capabilities.createURL;
+
+			if (options.proxy) {
+				url = options.proxy + url;
+			}
+
+			if (this._xhr) {
+				this._xhr.abort();
+			}
+			this.fire('print', {
+				provider: this,
+				map: this._map
+			});
+			this._xhr = $.ajax({
+				type: 'POST',
+				contentType: 'application/json; charset=UTF-8',
+				processData: false,
+				dataType: 'json',
+				url: url,
+				data: jsonData,
+				success: L.Util.bind(this.onPrintSuccess, this),
+				error: L.Util.bind(this.onPrintError, this)
+			});
+		}
+
+	},
+
+	getCapabilities: function () {
+		return this._capabilities;
+	},
+
+	setMap: function (map) {
+		this._map = map;
+	},
+
+	setDpi: function (dpi) {
+		var oldDpi = this.options.dpi;
+
+		if (oldDpi !== dpi) {
+			this.options.dpi = dpi;
+			this.fire('dpichange', {
+				provider: this,
+				dpi: dpi
+			});
+		}
+	},
+
+	setLayout: function (name) {
+		var oldName = this.options.layout;
+
+		if (oldName !== name) {
+			this.options.layout = name;
+			this.fire('layoutchange', {
+				provider: this,
+				layout: name
+			});
+		}
+	},
+
+	setRotation: function (rotation) {
+		var oldRotation = this.options.rotation;
+
+		if (oldRotation !== this.options.rotation) {
+			this.options.rotation = rotation;
+			this.fire('rotationchange', {
+				provider: this,
+				rotation: rotation
+			});
+		}
+	},
+
+	_getLayers: function (map) {
+		var markers = [],
+			vectors = [],
+			tiles = [],
+			imageOverlays = [],
+			imageNodes,
+			pathNodes,
+			id;
+
+		for (id in map._layers) {
+			if (map._layers.hasOwnProperty(id)) {
+				if (!map._layers.hasOwnProperty(id)) { continue; }
+				var lyr = map._layers[id];
+
+				if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
+					tiles.push(lyr);
+				} else if (lyr instanceof L.ImageOverlay) {
+					imageOverlays.push(lyr);
+				} else if (lyr instanceof L.Marker) {
+					markers.push(lyr);
+				} else if (lyr instanceof L.Path && lyr.toGeoJSON) {
+					vectors.push(lyr);
+				}
+			}
+		}
+		markers.sort(function (a, b) {
+			return a._icon.style.zIndex - b._icon.style.zIndex;
+		});
+
+		var i;
+		// Layers with equal zIndexes can cause problems with mapfish print
+		for(i = 1;i<markers.length;i++){
+			if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
+				markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
+			}
+		}
+
+		tiles.sort(function (a, b) {
+			return a._container.style.zIndex - b._container.style.zIndex;
+		});
+
+		// Layers with equal zIndexes can cause problems with mapfish print
+		for(i = 1;i<tiles.length;i++){
+			if(tiles[i]._container.style.zIndex <= tiles[i - 1]._container.style.zIndex){
+				tiles[i]._container.style.zIndex = tiles[i - 1]._container.style.zIndex + 1;
+			}
+		}
+
+		imageNodes = [].slice.call(this, map._panes.overlayPane.childNodes);
+		imageOverlays.sort(function (a, b) {
+			return $.inArray(a._image, imageNodes) - $.inArray(b._image, imageNodes);
+		});
+
+		if (map._pathRoot) {
+			pathNodes = [].slice.call(this, map._pathRoot.childNodes);
+			vectors.sort(function (a, b) {
+				return $.inArray(a._container, pathNodes) - $.inArray(b._container, pathNodes);
+			});
+		}
+
+		return tiles.concat(vectors).concat(imageOverlays).concat(markers);
+	},
+
+	_getScale: function () {
+		var map = this._map,
+			bounds = map.getBounds(),
+			inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
+			scales = this._capabilities.scales,
+			sw = bounds.getSouthWest(),
+			ne = bounds.getNorthEast(),
+			halfLat = (sw.lat + ne.lat) / 2,
+			midLeft = L.latLng(halfLat, sw.lng),
+			midRight = L.latLng(halfLat, ne.lng),
+			mwidth = midLeft.distanceTo(midRight),
+			pxwidth = map.getSize().x,
+			kmPx = mwidth / pxwidth / 1000,
+			mscale = (kmPx || 0.000001) * inchesKm * L.print.Provider.DPI,
+			closest = Number.POSITIVE_INFINITY,
+			i = scales.length,
+			diff,
+			scale;
+
+		while (i--) {
+			diff = Math.abs(mscale - scales[i].value);
+			if (diff < closest) {
+				closest = diff;
+				scale = parseInt(scales[i].value, 10);
+			}
+		}
+		return scale;
+	},
+
+	_getLayoutByName: function (name) {
+		var layout, i, l;
+
+		for (i = 0, l = this._capabilities.layouts.length; i < l; i++) {
+			if (this._capabilities.layouts[i].name === name) {
+				layout = this._capabilities.layouts[i];
+				break;
+			}
+		}
+		return layout;
+	},
+
+	_encodeLayers: function (map) {
+		var enc = [],
+			vectors = [],
+			layer,
+			i;
+
+		var layers = this._getLayers(map);
+		for (i = 0; i < layers.length; i++) {
+			layer = layers[i];
+			if (layer.options.printLayer) {
+				var t = layer.options.printLayer;
+				var layerClass = eval(t.init);
+				layer = new layerClass(t.url, t.options);
+			}
+			if (layer instanceof L.TileLayer.WMS) {
+				enc.push(this._encoders.layers.tilelayerwms.call(this, layer));
+			} else if (layer instanceof L.mapbox.TileLayer){
+				enc.push(this._encoders.layers.tilelayermapbox.call(this,layer));
+			} else if (layer instanceof L.TileLayer) {
+				if (layer.options.tms) {
+					enc.push(this._encoders.layers.TMS.call(this, layer));
+				}
+				else {
+					enc.push(this._encoders.layers.tilelayer.call(this, layer));
+				}
+			} else if (layer instanceof L.ImageOverlay) {
+				enc.push(this._encoders.layers.image.call(this, layer));
+			} else if (layer instanceof L.Marker || (layer instanceof L.Path && layer.toGeoJSON)) {
+				vectors.push(layer);
+			}
+		}
+		if (vectors.length) {
+			enc.push(this._encoders.layers.vector.call(this, vectors));
+		}
+		return enc;
+	},
+
+	_makeLegends: function(map,options){
+		if(!this.options.legends){
+			return [];
+		}
+
+		var legends = [],legendReq,singlelayers,url,i;
+
+		var layers = this._getLayers(map);
+		var layer,oneLegend;
+		for (i = 0; i < layers.length; i++) {
+			layer = layers[i];
+			if (layer instanceof L.TileLayer.WMS) {
+
+				oneLegend = {
+					name: layer.options.title || layer.wmsParams.layers,
+					classes: []
+				};
+
+				// defaults
+				legendReq = {
+					'SERVICE'	 : 'WMS',
+					'LAYER'	   : layer.wmsParams.layers,
+					'REQUEST'	 : 'GetLegendGraphic',
+					'VERSION'	 : layer.wmsParams.version,
+					'FORMAT'	  : layer.wmsParams.format,
+					'STYLE'	   : layer.wmsParams.styles,
+					'WIDTH'	   : 15,
+					'HEIGHT'	  : 15
+				};
+
+				legendReq = L.extend(legendReq,options);
+				url = L.Util.template(layer._url);
+
+				singlelayers = layer.wmsParams.layers.split(',');
+
+				// If a WMS layer doesn't have multiple server layers, only show one graphic
+				if(singlelayers.length === 1){
+					oneLegend.icons = [this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))];
+				}else{
+					for(i = 0;i<singlelayers.length;i++){
+						legendReq.LAYER = singlelayers[i];
+						oneLegend.classes.push({
+							name:singlelayers[i],
+							icons:[this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))]
+						});
+					}
+				}
+
+				legends.push(oneLegend);
+			}
+		}
+
+		return {legends:legends};
+	},
+
+	_encoders: {
+		layers: {
+			httprequest: function (layer) {
+				var baseUrl = layer._url;
+
+				if (baseUrl.indexOf('{s}') !== -1) {
+					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
+				}
+				baseUrl = this._getAbsoluteUrl(baseUrl);
+
+				return {
+					baseURL: baseUrl,
+					opacity: layer.options.opacity
+				};
+			},
+			TMS: function(layer) {
+				var enc = this._encoders.layers.tilelayer.call(this, layer);
+				return $.extend(enc, {
+					type : 'TMS',
+					format : enc.extension,
+					layer: layer.options.layer
+				});
+			},
+			tilelayer: function (layer) {
+				var enc = this._encoders.layers.httprequest.call(this, layer),
+					baseUrl = layer.options.baseUrl || layer._url.substring(0, layer._url.indexOf('{z}') > 0 ? layer._url.indexOf('{z}') : layer._url.length),
+					resolutions = [],
+					zoom;
+
+				// If using multiple subdomains, replace the subdomain placeholder
+				if (baseUrl.indexOf('{s}') !== -1) {
+					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
+				}
+
+				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
+					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
+				}
+
+				var ext = layer._url.split(".");
+				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
+				if (ext.search(/[^a-zA-Z0-9]/) > -1) {
+					// No extension provided
+					ext = "";
+				}
+
+				return L.extend(enc, {
+					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
+					// See https://github.com/mapfish/mapfish-print/pull/38
+					type: 'OSM',
+					baseURL: baseUrl,
+					extension: ext || 'png',
+					tileSize: [layer.options.tileSize, layer.options.tileSize],
+					maxExtent: L.print.Provider.MAX_EXTENT,
+					resolutions: resolutions,
+					singleTile: false
+				});
+			},
+			tilelayerwms: function (layer) {
+				var enc = this._encoders.layers.httprequest.call(this, layer),
+					layerOpts = layer.options,
+					p;
+
+				L.extend(enc, {
+					type: 'WMS',
+					layers: [layerOpts.layers].join(',').split(',').filter(function(x){return x !== "";}), //filter out empty strings from the array
+					format: layerOpts.format,
+					styles: [layerOpts.styles].join(',').split(',').filter(function(x){return x !== "";}),
+					singleTile: true
+				});
+
+				for (p in layer.wmsParams) {
+					if (layer.wmsParams.hasOwnProperty(p)) {
+						if ('detectretina,format,height,layers,request,service,srs,styles,version,width'.indexOf(p.toLowerCase()) === -1) {
+							if (!enc.customParams) {
+								enc.customParams = {};
+							}
+							enc.customParams[p] = layer.wmsParams[p];
+						}
+					}
+				}
+				return enc;
+			},
+			tilelayermapbox: function(layer) {
+				var resolutions = [], zoom;
+
+				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
+					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
+				}
+
+				return {
+					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
+					// See https://github.com/mapfish/mapfish-print/pull/38
+					type: 'OSM',
+					baseURL: layer.options.tiles[0].substring(0,layer.options.tiles[0].indexOf('{z}')),
+					opacity:layer.options.opacity,
+					extension: 'png',
+					tileSize: [layer.options.tileSize, layer.options.tileSize],
+					maxExtent: L.print.Provider.MAX_EXTENT,
+					resolutions: resolutions,
+					singleTile: false
+				};
+			},
+			image: function (layer) {
+				return {
+					type: 'Image',
+					opacity: layer.options.opacity,
+					name: 'image',
+					baseURL: this._getAbsoluteUrl(layer._url),
+					extent: this._projectBounds(L.print.Provider.SRS, layer._bounds)
+				};
+			},
+			vector: function (features) {
+				var encFeatures = [],
+					encStyles = {},
+					opacity,
+					feature,
+					style,
+					dictKey,
+					dictItem = {},
+					styleDict = {},
+					styleName,
+					nextId = 1,
+					featureGeoJson,
+					i, l;
+
+				for (i = 0, l = features.length; i < l; i++) {
+					feature = features[i];
+
+					if (feature instanceof L.Marker) {
+						var icon = feature.options.icon,
+							iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
+							iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
+							iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
+							scaleFactor = (this.options.dpi / L.print.Provider.DPI);
+
+						style = {
+							externalGraphic: this._getAbsoluteUrl(iconUrl),
+							graphicWidth: (iconSize.x / scaleFactor),
+							graphicHeight: (iconSize.y / scaleFactor),
+							graphicXOffset: (-iconAnchor.x / scaleFactor),
+							graphicYOffset: (-iconAnchor.y / scaleFactor)
+						};
+					} else {
+						style = this._extractFeatureStyle(feature);
+					}
+
+					dictKey = JSON.stringify(style);
+					dictItem = styleDict[dictKey];
+					if (dictItem) {
+						styleName = dictItem;
+					} else {
+						styleDict[dictKey] = styleName = nextId++;
+						encStyles[styleName] = style;
+					}
+
+					featureGeoJson = (feature instanceof L.Circle) ? this._circleGeoJSON(feature) : feature.toGeoJSON();
+					featureGeoJson.geometry.coordinates = this._projectCoords(L.print.Provider.SRS, featureGeoJson.geometry.coordinates);
+					featureGeoJson.properties._leaflet_style = styleName;
+
+					// All markers will use the same opacity as the first marker found
+					if (opacity === null) {
+						opacity = feature.options.opacity || 1.0;
+					}
+
+					encFeatures.push(featureGeoJson);
+				}
+
+				return {
+					type: 'Vector',
+					styles: encStyles,
+					opacity: opacity,
+					styleProperty: '_leaflet_style',
+					geoJson: {
+						type: 'FeatureCollection',
+						features: encFeatures
+					}
+				};
+			}
+		}
+	},
+
+	_circleGeoJSON: function (circle) {
+		var projection = circle._map.options.crs.projection;
+		var earthRadius = 1, i;
+
+		if (projection === L.Projection.SphericalMercator) {
+			earthRadius = 6378137;
+		} else if (projection === L.Projection.Mercator) {
+			earthRadius = projection.R_MAJOR;
+		}
+		var cnt = projection.project(circle.getLatLng());
+		var scale = 1.0 / Math.cos(circle.getLatLng().lat * Math.PI / 180.0);
+		var points = [];
+		for (i = 0; i < 64; i++) {
+			var radian = i * 2.0 * Math.PI / 64.0;
+			var shift = L.point(Math.cos(radian), Math.sin(radian));
+			points.push(projection.unproject(cnt.add(shift.multiplyBy(circle.getRadius() * scale / earthRadius))));
+		}
+		return L.polygon(points).toGeoJSON();
+	},
+
+	_extractFeatureStyle: function (feature) {
+		var options = feature.options;
+
+		// From smap4 (working)
+		// cursor: "pointer"
+		// fillColor: "#ff5b00"
+		// fillOpacity: 0.3
+		// graphicName: "square"
+		// pointRadius: 6
+		// strokeColor: "#ff5b00"
+		// strokeOpacity: 1
+		// strokeWidth: 4
+
+
+		return {
+			stroke: options.stroke,
+			strokeColor: options.color,
+			strokeWidth: options.weight,
+			strokeOpacity: options.opacity,
+			strokeLinecap: 'round',
+			pointRadius: 200, //options.radius,
+			fill: options.fill,
+			fillColor: options.fillColor,
+			fillOpacity: options.fillOpacity,
+			graphicZIndex: options.zIndex,
+			graphicWidth: options.graphicWidth,
+			graphicHeight: options.graphicHeight,
+			label: options.label,
+			name: "The layer name"
+		};
+
+
+		// cursor: "pointer"
+		// fillColor: "#00FFFF"
+		// fillOpacity: 0.3
+		// graphicName: "circle"
+		// graphicZIndex: 499
+		// pointRadius: 6
+		// strokeColor: "#00FFFF"
+		// strokeOpacity: 1
+		// strokeWidth: 4
+	},
+
+	_getAbsoluteUrl: function (url) {
+		var a;
+
+		if (L.Browser.ie) {
+			a = document.createElement('a');
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.href = url;
+			document.body.removeChild(a);
+		} else {
+			a = document.createElement('a');
+			a.href = url;
+		}
+		return a.href;
+	},
+
+	_projectBounds: function (crs, bounds) {
+		var sw = bounds.getSouthWest(),
+			ne = bounds.getNorthEast();
+
+		return this._projectCoords(crs, sw).concat(this._projectCoords(crs, ne));
+	},
+
+	_projectCoords: function (crs, coords) {
+		var crsKey = crs.toUpperCase().replace(':', ''),
+			crsClass = L.CRS[crsKey];
+
+		if (!crsClass) {
+			throw 'Unsupported coordinate reference system: ' + crs;
+		}
+
+		return this._project(crsClass, coords);
+	},
+
+	_project: function (crsClass, coords) {
+		var projected,
+			pt,
+			i, l;
+
+		if (typeof coords[0] === 'number') {
+			coords = new L.LatLng(coords[1], coords[0]);
+		}
+
+		if (coords instanceof L.LatLng) {
+			pt = crsClass.project(coords);
+			return [pt.x, pt.y];
+		} else {
+			projected = [];
+			for (i = 0, l = coords.length; i < l; i++) {
+				projected.push(this._project(crsClass, coords[i]));
+			}
+			return projected;
+		}
+	},
+
+	// --------------------------------------------------
+	// Event handlers
+	// --------------------------------------------------
+
+	onCapabilitiesLoad: function (response) {
+		this._capabilities = response;
+
+		if (!this.options.layout) {
+			this.options.layout = this._capabilities.layouts[0].name;
+		}
+
+		if (!this.options.dpi) {
+			this.options.dpi = this._capabilities.dpis[0].value;
+		}
+
+		this.fire('capabilitiesload', {
+			provider: this,
+			capabilities: this._capabilities
+		});
+	},
+
+	onPrintSuccess: function (response) {
+		var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
+
+		if (this.options.autoOpen) {
+			if (L.Browser.ie) {
+				window.open(url);
+			} else {
+				window.location.href = url;
+			}
+		}
+
+		this._xhr = null;
+
+		this.fire('print', {
+			provider: this,
+			response: response
+		});
+	},
+
+	onPrintError: function (jqXHR) {
+		this._xhr = null;
+
+		this.fire('printexception', {
+			provider: this,
+			response: jqXHR
+		});
+	}
 });
 
-$(function() {
-  insertCSS(coreStyle.css).attr('id', 'core-notify');
-  $(document).on('click', "." + pluginClassName + "-hidable", function(e) {
-    return $(this).trigger('notify-hide');
-  });
-  return $(document).on('notify-hide', "." + pluginClassName + "-wrapper", function(e) {
-    var _ref;
-    return (_ref = $(this).data(pluginClassName)) != null ? _ref.show(false) : void 0;
-  });
-});
+L.print.provider = function (options) {
+	return new L.print.Provider(options);
+};
 
-}(window,document,jQuery));
-
-$.notify.addStyle("bootstrap", {
-  html: "<div>\n<span data-notify-text></span>\n</div>",
-  classes: {
-    base: {
-      "font-weight": "bold",
-      "padding": "8px 15px 8px 14px",
-      "text-shadow": "0 1px 0 rgba(255, 255, 255, 0.5)",
-      "background-color": "#fcf8e3",
-      "border": "1px solid #fbeed5",
-      "border-radius": "4px",
-      "white-space": "nowrap",
-      "padding-left": "25px",
-      "background-repeat": "no-repeat",
-      "background-position": "3px 7px"
-    },
-    error: {
-      "color": "#B94A48",
-      "background-color": "#F2DEDE",
-      "border-color": "#EED3D7",
-      "background-image": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtRJREFUeNqkVc1u00AQHq+dOD+0poIQfkIjalW0SEGqRMuRnHos3DjwAH0ArlyQeANOOSMeAA5VjyBxKBQhgSpVUKKQNGloFdw4cWw2jtfMOna6JOUArDTazXi/b3dm55socPqQhFka++aHBsI8GsopRJERNFlY88FCEk9Yiwf8RhgRyaHFQpPHCDmZG5oX2ui2yilkcTT1AcDsbYC1NMAyOi7zTX2Agx7A9luAl88BauiiQ/cJaZQfIpAlngDcvZZMrl8vFPK5+XktrWlx3/ehZ5r9+t6e+WVnp1pxnNIjgBe4/6dAysQc8dsmHwPcW9C0h3fW1hans1ltwJhy0GxK7XZbUlMp5Ww2eyan6+ft/f2FAqXGK4CvQk5HueFz7D6GOZtIrK+srupdx1GRBBqNBtzc2AiMr7nPplRdKhb1q6q6zjFhrklEFOUutoQ50xcX86ZlqaZpQrfbBdu2R6/G19zX6XSgh6RX5ubyHCM8nqSID6ICrGiZjGYYxojEsiw4PDwMSL5VKsC8Yf4VRYFzMzMaxwjlJSlCyAQ9l0CW44PBADzXhe7xMdi9HtTrdYjFYkDQL0cn4Xdq2/EAE+InCnvADTf2eah4Sx9vExQjkqXT6aAERICMewd/UAp/IeYANM2joxt+q5VI+ieq2i0Wg3l6DNzHwTERPgo1ko7XBXj3vdlsT2F+UuhIhYkp7u7CarkcrFOCtR3H5JiwbAIeImjT/YQKKBtGjRFCU5IUgFRe7fF4cCNVIPMYo3VKqxwjyNAXNepuopyqnld602qVsfRpEkkz+GFL1wPj6ySXBpJtWVa5xlhpcyhBNwpZHmtX8AGgfIExo0ZpzkWVTBGiXCSEaHh62/PoR0p/vHaczxXGnj4bSo+G78lELU80h1uogBwWLf5YlsPmgDEd4M236xjm+8nm4IuE/9u+/PH2JXZfbwz4zw1WbO+SQPpXfwG/BBgAhCNZiSb/pOQAAAAASUVORK5CYII=)"
-    },
-    success: {
-      "color": "#468847",
-      "background-color": "#DFF0D8",
-      "border-color": "#D6E9C6",
-      "background-image": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAutJREFUeNq0lctPE0Ecx38zu/RFS1EryqtgJFA08YCiMZIAQQ4eRG8eDGdPJiYeTIwHTfwPiAcvXIwXLwoXPaDxkWgQ6islKlJLSQWLUraPLTv7Gme32zoF9KSTfLO7v53vZ3d/M7/fIth+IO6INt2jjoA7bjHCJoAlzCRw59YwHYjBnfMPqAKWQYKjGkfCJqAF0xwZjipQtA3MxeSG87VhOOYegVrUCy7UZM9S6TLIdAamySTclZdYhFhRHloGYg7mgZv1Zzztvgud7V1tbQ2twYA34LJmF4p5dXF1KTufnE+SxeJtuCZNsLDCQU0+RyKTF27Unw101l8e6hns3u0PBalORVVVkcaEKBJDgV3+cGM4tKKmI+ohlIGnygKX00rSBfszz/n2uXv81wd6+rt1orsZCHRdr1Imk2F2Kob3hutSxW8thsd8AXNaln9D7CTfA6O+0UgkMuwVvEFFUbbAcrkcTA8+AtOk8E6KiQiDmMFSDqZItAzEVQviRkdDdaFgPp8HSZKAEAL5Qh7Sq2lIJBJwv2scUqkUnKoZgNhcDKhKg5aH+1IkcouCAdFGAQsuWZYhOjwFHQ96oagWgRoUov1T9kRBEODAwxM2QtEUl+Wp+Ln9VRo6BcMw4ErHRYjH4/B26AlQoQQTRdHWwcd9AH57+UAXddvDD37DmrBBV34WfqiXPl61g+vr6xA9zsGeM9gOdsNXkgpEtTwVvwOklXLKm6+/p5ezwk4B+j6droBs2CsGa/gNs6RIxazl4Tc25mpTgw/apPR1LYlNRFAzgsOxkyXYLIM1V8NMwyAkJSctD1eGVKiq5wWjSPdjmeTkiKvVW4f2YPHWl3GAVq6ymcyCTgovM3FzyRiDe2TaKcEKsLpJvNHjZgPNqEtyi6mZIm4SRFyLMUsONSSdkPeFtY1n0mczoY3BHTLhwPRy9/lzcziCw9ACI+yql0VLzcGAZbYSM5CCSZg1/9oc/nn7+i8N9p/8An4JMADxhH+xHfuiKwAAAABJRU5ErkJggg==)"
-    },
-    info: {
-      "color": "#3A87AD",
-      "background-color": "#D9EDF7",
-      "border-color": "#BCE8F1",
-      "background-image": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYFAhkSsdes/QAAA8dJREFUOMvVlGtMW2UYx//POaWHXg6lLaW0ypAtw1UCgbniNOLcVOLmAjHZolOYlxmTGXVZdAnRfXQm+7SoU4mXaOaiZsEpC9FkiQs6Z6bdCnNYruM6KNBw6YWewzl9z+sHImEWv+vz7XmT95f/+3/+7wP814v+efDOV3/SoX3lHAA+6ODeUFfMfjOWMADgdk+eEKz0pF7aQdMAcOKLLjrcVMVX3xdWN29/GhYP7SvnP0cWfS8caSkfHZsPE9Fgnt02JNutQ0QYHB2dDz9/pKX8QjjuO9xUxd/66HdxTeCHZ3rojQObGQBcuNjfplkD3b19Y/6MrimSaKgSMmpGU5WevmE/swa6Oy73tQHA0Rdr2Mmv/6A1n9w9suQ7097Z9lM4FlTgTDrzZTu4StXVfpiI48rVcUDM5cmEksrFnHxfpTtU/3BFQzCQF/2bYVoNbH7zmItbSoMj40JSzmMyX5qDvriA7QdrIIpA+3cdsMpu0nXI8cV0MtKXCPZev+gCEM1S2NHPvWfP/hL+7FSr3+0p5RBEyhEN5JCKYr8XnASMT0xBNyzQGQeI8fjsGD39RMPk7se2bd5ZtTyoFYXftF6y37gx7NeUtJJOTFlAHDZLDuILU3j3+H5oOrD3yWbIztugaAzgnBKJuBLpGfQrS8wO4FZgV+c1IxaLgWVU0tMLEETCos4xMzEIv9cJXQcyagIwigDGwJgOAtHAwAhisQUjy0ORGERiELgG4iakkzo4MYAxcM5hAMi1WWG1yYCJIcMUaBkVRLdGeSU2995TLWzcUAzONJ7J6FBVBYIggMzmFbvdBV44Corg8vjhzC+EJEl8U1kJtgYrhCzgc/vvTwXKSib1paRFVRVORDAJAsw5FuTaJEhWM2SHB3mOAlhkNxwuLzeJsGwqWzf5TFNdKgtY5qHp6ZFf67Y/sAVadCaVY5YACDDb3Oi4NIjLnWMw2QthCBIsVhsUTU9tvXsjeq9+X1d75/KEs4LNOfcdf/+HthMnvwxOD0wmHaXr7ZItn2wuH2SnBzbZAbPJwpPx+VQuzcm7dgRCB57a1uBzUDRL4bfnI0RE0eaXd9W89mpjqHZnUI5Hh2l2dkZZUhOqpi2qSmpOmZ64Tuu9qlz/SEXo6MEHa3wOip46F1n7633eekV8ds8Wxjn37Wl63VVa+ej5oeEZ/82ZBETJjpJ1Rbij2D3Z/1trXUvLsblCK0XfOx0SX2kMsn9dX+d+7Kf6h8o4AIykuffjT8L20LU+w4AZd5VvEPY+XpWqLV327HR7DzXuDnD8r+ovkBehJ8i+y8YAAAAASUVORK5CYII=)"
-    },
-    warn: {
-      "color": "#C09853",
-      "background-color": "#FCF8E3",
-      "border-color": "#FBEED5",
-      "background-image": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAABJlBMVEXr6eb/2oD/wi7/xjr/0mP/ykf/tQD/vBj/3o7/uQ//vyL/twebhgD/4pzX1K3z8e349vK6tHCilCWbiQymn0jGworr6dXQza3HxcKkn1vWvV/5uRfk4dXZ1bD18+/52YebiAmyr5S9mhCzrWq5t6ufjRH54aLs0oS+qD751XqPhAybhwXsujG3sm+Zk0PTwG6Shg+PhhObhwOPgQL4zV2nlyrf27uLfgCPhRHu7OmLgAafkyiWkD3l49ibiAfTs0C+lgCniwD4sgDJxqOilzDWowWFfAH08uebig6qpFHBvH/aw26FfQTQzsvy8OyEfz20r3jAvaKbhgG9q0nc2LbZxXanoUu/u5WSggCtp1anpJKdmFz/zlX/1nGJiYmuq5Dx7+sAAADoPUZSAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfdBgUBGhh4aah5AAAAlklEQVQY02NgoBIIE8EUcwn1FkIXM1Tj5dDUQhPU502Mi7XXQxGz5uVIjGOJUUUW81HnYEyMi2HVcUOICQZzMMYmxrEyMylJwgUt5BljWRLjmJm4pI1hYp5SQLGYxDgmLnZOVxuooClIDKgXKMbN5ggV1ACLJcaBxNgcoiGCBiZwdWxOETBDrTyEFey0jYJ4eHjMGWgEAIpRFRCUt08qAAAAAElFTkSuQmCC)"
-    }
-  }
-});
 
 /**
  * Copyright (c) 2011-2014 Felix Gnass

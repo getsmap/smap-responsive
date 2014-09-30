@@ -46,7 +46,8 @@
     "proj4": "~2.2.2",
     "jquery": "~2.1.1",
     "bootstrap-3": "./lib/bootstrap-3/",
-    "notify-custom": "./lib/notify-custom/"
+    "notify-custom": "./lib/notify-custom/",
+    "leaflet.print-smap": "latest"
   },
   "overrides": {
     "leaflet-polyline-distance": {
