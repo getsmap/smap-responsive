@@ -133,17 +133,41 @@ var config = {
 					//layer: "malmo_karta_sv_3857",
 					printLayer: {
 						init: "L.TileLayer.WMS",
-						url: "http://161.52.15.157/arcgis/services/malmo_karta_3857/MapServer/WMSServer",
+						url: "http://161.52.15.157:6080/arcgis/services/malmo_karta/MapServer/WMSServer",
+						//parentTag: "orto_2013",
 						options: {
-							displayName: "AGS wms",
-							layers: '0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,64,65,66',
+							layerId: "malmows_malmo_3857_print",
+							displayName: "Malmö stadskarta print",
+							layers: '0,2,3,4,5,7,8,9,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,28,29,30,31,33,33,34,35,37,38,39,40,41,42,43,44,45,46,48,50,52,54,56,57,59,60,62,63,65,66,67,69,70,72,73,75,76,77,78,79,80,81',
 							minZoom: 0,
-							maxZoom: 18,
+							maxZoom: 21,
 							format: 'image/png',
 							transparent: true,
-							attribution: "@ Malmö Stadsbyggnadskontor"
+							opacity: 0.9,
+							attribution: "© Malmö Stadsbyggnadskontor",
+							zIndex: 9
 						}
 					},
+					
+					
+/*					printLayer: {
+						init: "L.TileLayer.WMS",
+						url: "http://161.52.15.157/geoserver/malmows/wms?",
+						//parentTag: "orto_2013",
+						options: {
+							layerId: "malmows_malmo_orto_2013",
+							displayName: "Fotokarta 2013",
+							layers: 'malmows:malmo_orto_2013',
+							minZoom: 0,
+							maxZoom: 21,
+							format: 'image/png',
+							transparent: true,
+							opacity: 0.9,
+							attribution: "© Malmö Stadsbyggnadskontor",
+							zIndex: 9
+						}
+					},
+*/
 					//singleTile : true,  //Funkar ej
 					attribution: '<span>© Malmö Stadsbyggnadskontor</span>'
 				}
@@ -164,7 +188,6 @@ var config = {
 					opacity: 0.9,
 					attribution: "© Malmö Stadsbyggnadskontor",
 					zIndex: 9
-					
 				}
 		},
 
