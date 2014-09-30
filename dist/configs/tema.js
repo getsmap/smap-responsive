@@ -237,12 +237,19 @@ var config = {
 					// },
 					{
 						init: "L.Control.Search",
+<<<<<<< .mine
+						options: {
+							wsAcUrl: "http://kartor.malmo.se/WS/mKarta/autocomplete.ashx", // autocomplete
+							wsLocateUrl: "http://kartor.malmo.se/WS/mKarta/sokexakt.ashx" // locate
+						}
+=======
 						options: {
 							wsOrgProj: "EPSG:3008",
 							useProxy: true,
 							wsAcUrl: "http://kartor.malmo.se/WS/mKarta/autocomplete.ashx", // autocomplete
 							wsLocateUrl: "http://kartor.malmo.se/WS/mKarta/sokexakt.ashx" // locate
 						}
+>>>>>>> .r781
 					},
 					{
 						init: "L.Control.ShareLink",
