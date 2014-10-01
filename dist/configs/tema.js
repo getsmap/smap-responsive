@@ -42,11 +42,11 @@ var config = {
 						popup: 'Kvarter ${id}',
 						uniqueKey: "id",
 						style: {
-							color: '#F00',
+							color: '#FF0000',
 							fillOpacity: 0.3
 						},
 						selectStyle: {
-							color: '#F0F',
+							color: '#FF00FF',
 							fillOpacity: 0.3
 						}
 				}
@@ -74,7 +74,7 @@ var config = {
 						}
 						// ,
 						// style: {
-						// 	color: '#00F',
+						// 	color: '#0000FF',
 						// 	fillOpacity: 0.3
 						// }
 				}
