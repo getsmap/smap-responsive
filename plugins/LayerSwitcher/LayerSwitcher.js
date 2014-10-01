@@ -258,7 +258,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			"margin-left": panelWidth + "px",
 			"width": $("#mapdiv").outerWidth() - panelWidth + "px"
 		});
-		// $("#lswitch-btn").hide();
+		$("#lswitch-btn").hide();
 	},
 	
 	hidePanel: function() {
@@ -279,6 +279,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			this._panelIsSliding = false;
 			this.$panel.hide();
 			$("#maindiv").removeClass("lswitch-overflow-hidden");
+			$("#lswitch-btn").show();
 		}, this), 300);
 	},
 	
