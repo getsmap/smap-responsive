@@ -1,15 +1,7 @@
-dist/configs/*.js
 node_modules/
 bower_components/
 *.scssc
 configs/config_lund.js
 dist/configs/config_lund.js
 plugins/GuidePopup/qgis_calc_cat.txt
-
-dist/configs/tema.js
-
-dist/configs/tema.js
-
-dist/configs/tema_adress.js
-
-dist/configs/tema_adress.js
+dist/configs/*.js
