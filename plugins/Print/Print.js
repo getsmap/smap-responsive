@@ -123,8 +123,8 @@
 			}
 			this.printProvider.on('capabilitiesload', function(e) {
 				// Go through proxy to avoid cross-domain.
-				e.capabilities.printURL = e.capabilities.printURL.replace(/localhost:8080/g, "localhost");
-				e.capabilities.createURL = e.capabilities.createURL.replace(/localhost:8080/g, "localhost");
+				e.capabilities.printURL = e.capabilities.printURL.replace(/localhost:8080/g, "localhost").replace(document.domain, "localhost");
+				e.capabilities.createURL = e.capabilities.createURL.replace(/localhost:8080/g, "localhost").replace(document.domain, "localhost");
 			});
 		},
 
