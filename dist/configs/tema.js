@@ -252,7 +252,7 @@ var config = {
 						init: "L.Control.SelectWMS",
 						options: {
 							buffer: 5,
-							useProxy: true
+							useProxy: false
 						}
 					},
 					{
@@ -296,7 +296,7 @@ var config = {
 					{
  						init: "L.Control.Print",
  						options: {
- 							printUrl: "http://localhost/print-servlet/pdf", // http://161.52.15.157/geoserver/pdf
+ 							printUrl: "http://kartor.malmo.se/print-servlet/pdf", // http://161.52.15.157/geoserver/pdf
  							position: "topright"
  						}
  				 	},
@@ -310,15 +310,15 @@ var config = {
 					{
 						init: "L.Control.ToolHandler",
 						options: {}
-					},
+					}
 					// {
 					//  	init: "L.Control.Add2HomeScreen",
 					//  	options: {}
 					// },
-					{
-						 init: "L.Control.FullScreen",
-							options: {position: 'topright'}
-					}
+					//{
+					//	 init: "L.Control.FullScreen",
+					//		options: {position: 'topright'}
+					//}
 					// ,
 					// {
 					// 	init: "L.Control.DrawSmap",
