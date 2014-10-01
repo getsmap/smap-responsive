@@ -46,18 +46,18 @@ var config = {
 						//parentTag: "orto_2013",
 						options: {
 							layerId: "malmows_malmo_3857_print",
-							displayName: "Malmö stadskarta print",
+							displayName: "MalmÃ¶ stadskarta print",
 							layers: '0,2,3,4,5,7,8,9,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,28,29,30,31,33,33,34,35,37,38,39,40,41,42,43,44,45,46,48,50,52,54,56,57,59,60,62,63,65,66,67,69,70,72,73,75,76,77,78,79,80,81',
 							minZoom: 0,
 							maxZoom: 21,
 							format: 'image/png',
 							transparent: true,
 							opacity: 0.9,
-							attribution: "© Malmö Stadsbyggnadskontor",
+							attribution: " Malmö Stadsbyggnadskontor",
 							zIndex: 9
 						}
 					},
-					attribution: '<span>© Malmö Stadsbyggnadskontor</span>'
+					attribution: '<span> Malmö Stadsbyggnadskontor</span>'
 				}
 		},
 		{
@@ -74,7 +74,7 @@ var config = {
 					format: 'image/png',
 					transparent: true,
 					opacity: 0.9,
-					attribution: "© Malmö Stadsbyggnadskontor",
+					attribution: "Â© MalmÃ¶ Stadsbyggnadskontor",
 					zIndex: 9
 				}
 		},
@@ -85,7 +85,7 @@ var config = {
 				detectRetina: true,
 				layerId: "osm",
 				displayName: "OSM",
-				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
+				attribution: '<span>Â© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
 				maxZoom: 18
 			}
 		}
