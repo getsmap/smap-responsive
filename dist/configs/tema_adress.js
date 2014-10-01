@@ -126,6 +126,7 @@ var config = {
 					{
 						init: "L.Control.Search",
 						options: {
+							gui: false,
 							wsOrgProj: "EPSG:3008",
 							useProxy: false,
 							wsAcUrl: "http://kartor.malmo.se/WS/search-1.0/autocomplete.ashx", // autocomplete

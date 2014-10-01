@@ -8,6 +8,7 @@ L.Control.Search = L.Control.extend({
 		whitespace: "%2B",
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
+		gui: false,
 		addToMenu: false
 		// _geoLocate: function(q) {
 			// // TODO: When this function is completed, move to config file cultmap.js
@@ -169,11 +170,16 @@ L.Control.Search = L.Control.extend({
 	onAdd: function(map) {
 		var self = this;
 		this.map = map;
+		
 		this._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
-		this.$container = $(this._container);
-		this.$container.css("display", "none");
-		this._makeSearchField();
+		
+		if (this.options.gui === undefined || this.options.gui === true) {
+			this.$container = $(this._container);
+			this.$container.css("display", "none");
+			this._makeSearchField();
+			this.map.on("click", this._blurSearch);
+		}
 		
 		// Bind events
 		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
@@ -182,7 +188,6 @@ L.Control.Search = L.Control.extend({
 		this.__onCreateParams = this.__onCreateParams || $.proxy( this._onCreateParams, this );
 		smap.event.on("smap.core.createparams", this.__onCreateParams);
 		
-		this.map.on("click", this._blurSearch);
 		
 		return self._container;
 	},

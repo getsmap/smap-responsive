@@ -270,6 +270,7 @@ var config = {
 					{
 						init: "L.Control.Search",
 						options: {
+							gui: true,
 							wsOrgProj: "EPSG:3008",
 							useProxy: false,
 							wsAcUrl: "http://kartor.malmo.se/WS/search-1.0/autocomplete.ashx", // autocomplete
@@ -298,7 +299,7 @@ var config = {
 					{
  						init: "L.Control.Print",
  						options: {
- 							printUrl: "http://kartor.malmo.se/print-servlet/pdf", // http://161.52.15.157/geoserver/pdf
+ 							printUrl: "http://localhost/print-servlet/pdf", // http://161.52.15.157/geoserver/pdf
  							position: "topright"
  						}
  				 	},
