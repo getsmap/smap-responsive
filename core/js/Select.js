@@ -188,8 +188,8 @@ smap.core.Select = L.Class.extend({
 	//					$(this).removeAttr("href");
 					$(this).after($btn);
 					$(this).remove();
-					html = $html.html();
 				});
+				html = $html.html();
 				map.closePopup();
 				var popup = L.popup()
 					.setLatLng(f.latLng)
@@ -270,7 +270,7 @@ smap.core.Select = L.Class.extend({
 				var i = 0;
 				for (var k in obj) {
 					i += 1;
-					if (i > 1 || (obj[k].vals || obj[k].vals.length > 1)) {
+					if (i > 1 || (obj[k].vals && obj[k].vals.length > 1)) {
 						selectMany = true;
 						break;
 					}

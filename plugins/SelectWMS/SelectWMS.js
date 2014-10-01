@@ -6,6 +6,7 @@ L.Control.SelectWMS = L.Control.extend({
 		info_format: "text/plain",
 		featureCount: 3,
 		buffer: 5,
+		useProxy: false,
 		onSuccess: function(props, other) {
 			var self = other.context;
 			
@@ -325,10 +326,10 @@ L.Control.SelectWMS = L.Control.extend({
 		params = params || {};
 		options = options || {};
 		
-		var proxy = this.proxy || L.Control.SelectWMS.proxy;
+		url = this.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url) : url;
 		
 		this.xhr = $.ajax({
-			url: (proxy ? proxy + encodeURIComponent(url) : url),
+			url: url,
 			data: params,
 			type: "POST",
 			dataType: "text",

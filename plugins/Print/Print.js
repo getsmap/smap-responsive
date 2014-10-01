@@ -175,6 +175,11 @@
 			}
 			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
+				var $html = $(html);
+				$html.find(".form-group").remove();
+				var d = $("<div />");
+				$html.appendTo( d );
+				html = d.html();
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
 				self._modal.addClass("sprint-modal");
 				self._modal.find("form").submit(function() {

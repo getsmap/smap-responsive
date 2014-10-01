@@ -13735,8 +13735,8 @@ L.print.Provider = L.Class.extend({
 	options: {
 		autoLoad: false,
 		autoOpen: true,
-		outputFormat: 'pdf',
-		outputFilename: 'leaflet-map',
+		// outputFormat: 'pdf',
+		// outputFilename: 'leaflet-map',
 		method: 'POST',
 		rotation: 0,
 		customParams: {},
@@ -13808,10 +13808,10 @@ L.print.Provider = L.Class.extend({
 			srs: L.print.Provider.SRS,
 			layout: options.layout,
 			dpi: options.dpi,
-			outputFormat: options.outputFormat,
+			// outputFormat: options.outputFormat,
 			comment: options.comment,
 			mapTitle: options.mapTitle,
-			outputFilename: options.outputFilename,
+			// outputFilename: options.outputFilename,
 			layers: this._encodeLayers(this._map),
 			pages: [{
 				center: this._projectCoords(L.print.Provider.SRS, this._map.getCenter()),
