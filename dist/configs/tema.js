@@ -269,7 +269,7 @@ var config = {
 						init: "L.Control.Search",
 						options: {
 							wsOrgProj: "EPSG:3008",
-							useProxy: true,
+							useProxy: false,
 							wsAcUrl: "http://kartor.malmo.se/WS/search-1.0/autocomplete.ashx", // autocomplete
 							wsLocateUrl: "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx" // locate
 						}
