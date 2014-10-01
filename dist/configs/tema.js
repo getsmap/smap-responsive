@@ -83,6 +83,7 @@ var config = {
 				init: "L.TileLayer.WMS",
 				url: "http://kartor.malmo.se/geoserver/wms",
 				options: {
+					detectRetina: true,
 					displayName: "Kvarter",
 					layerId: "kvarter",
 					layers: "malmows:SMA_SUM_KVARTER_P",
@@ -101,6 +102,7 @@ var config = {
 				init: "L.TileLayer.WMS",
 				url: "http://kartor.malmo.se/geoserver/wms",
 				options: {
+					detectRetina: true,
 					displayName: "Cykelväg",
 					layerId: "Cykelväg",
 					layers: "malmows:GK_CYKELVAG_L",
@@ -126,6 +128,7 @@ var config = {
 					//layers: "0",
 					reuseTiles: true,
 					transparent: true,
+					detectRetina: true,
 					layerId: "malmo_karta_3857",
 					displayName: "Malmö stadskarta",
 					opacity: 1.0,
@@ -179,6 +182,7 @@ var config = {
 				url: "http://161.52.15.157/geoserver/malmows/wms?",
 				//parentTag: "orto_2013",
 				options: {
+					detectRetina: true,
 					layerId: "malmows_malmo_orto_2013",
 					displayName: "Fotokarta 2013",
 					layers: 'malmows:malmo_orto_2013',
@@ -197,6 +201,7 @@ var config = {
 			init: "L.TileLayer",
 			url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 			options: {
+				detectRetina: true,
 				layerId: "osm",
 				displayName: "OSM",
 				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
@@ -291,7 +296,7 @@ var config = {
 					{
  						init: "L.Control.Print",
  						options: {
- 							printUrl: "http://localhost/print-servlet/export", // http://161.52.15.157/geoserver/pdf
+ 							printUrl: "http://kartor.malmo.se/print-servlet/export", // http://161.52.15.157/geoserver/pdf
  							position: "topright"
  						}
  				 	},
