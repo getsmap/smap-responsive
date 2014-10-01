@@ -207,8 +207,14 @@ L.Control.Search = L.Control.extend({
 			var q = p.POI instanceof Array ? p.POI[0] : p.POI;
 			q = q.replace(/--c--/g, ",");
 			var showPopup = p.POI instanceof Array && p.POI.length > 1 ? p.POI[1] : false;
+
+			var setView = false;
+			var orgParams = smap.core.paramInst.getParams();
+			if (!orgParams.ZOOM && !orgParams.CENTER) {
+				setView = true;
+			}
 			this._geoLocate(decodeURIComponent(q), {
-				setView: false,
+				setView: setView,
 				showPopup: showPopup
 			});
 		}
