@@ -31,7 +31,7 @@ var config = {
 						params: {
 							typeName: "malmows:HL_FORSK_BUSS_PT_3006"
 						},
-						useProxy: true,
+						useProxy: false,
 						displayName: "Stadsdel",
 						layerId: "stadsdel",
 						xhrType: "POST",
@@ -56,7 +56,7 @@ var config = {
 					init: "L.GeoJSON.WFS",
 					url: "http://kartor.malmo.se/geoserver/wfs",
 					options: {
-						useProxy: true,
+						useProxy: false,
 						layerId: "Stigar",
 						displayName: "Stigar",
 						xhrType: "POST",
@@ -68,11 +68,7 @@ var config = {
 						popup: '<h3>${lokal}</h3>',
 						uniqueKey: "lokal",
 						params: {
-							typeName: "malmows:hl_vidsidanstigen_pt_3006",
-							version: "1.1.0",
-							maxFeatures: 10000,
-							format: "text/geojson",
-							outputFormat: "json"
+							typeName: "malmows:hl_vidsidanstigen_pt_3006"
 						}
 						// ,
 						// style: {
@@ -267,21 +263,21 @@ var config = {
 					// 	init: "L.Control.SharePosition",
 					// 	options: {}
 					// },
-					{
-						init: "L.Control.Search",
-						options: {
-							wsOrgProj: "EPSG:3008",
-							useProxy: false,
-							wsAcUrl: "http://kartor.malmo.se/WS/search-1.0/autocomplete.ashx", // autocomplete
-							wsLocateUrl: "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx" // locate
-						}
-					},
-					{
-						init: "L.Control.ShareLink",
-						options: {
-							position: "topright"
-						}
-					},
+					// {
+						// init: "L.Control.Search",
+						// options: {
+							// wsOrgProj: "EPSG:3008",
+							// useProxy: false,
+							// wsAcUrl: "http://kartor.malmo.se/WS/search-1.0/autocomplete.ashx", // autocomplete
+							// wsLocateUrl: "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx" // locate
+						// }
+					// },
+					// {
+						// init: "L.Control.ShareLink",
+						// options: {
+							// position: "topright"
+						// }
+					// },
 					// {
 					// 	init : "L.Control.RedirectClick",		
 					// 	option: {
@@ -309,10 +305,10 @@ var config = {
 					//  		position: "topright"
 					// 	}
 					// },
-					{
-						init: "L.Control.ToolHandler",
-						options: {}
-					}
+					// {
+						// init: "L.Control.ToolHandler",
+						// options: {}
+					// }
 					// {
 					//  	init: "L.Control.Add2HomeScreen",
 					//  	options: {}
