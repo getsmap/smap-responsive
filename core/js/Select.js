@@ -88,7 +88,7 @@ smap.core.Select = L.Class.extend({
 				uniqueKey = layer.options.uniqueKey || "-",
 				shiftKeyWasPressed = e.shiftKeyWasPressed; //e.clickEvent.originalEvent ? e.clickEvent.originalEvent.shiftKey || false : false,
 			var props = selectedFeature.properties;
-			
+			var latLng = e.latLng;
 			
 			if (isVector) {
 				self._selectedFeaturesWms = []; // We don't allow mixing vector and raster "features" in current version
@@ -153,7 +153,7 @@ smap.core.Select = L.Class.extend({
 					lay.bindPopup(html, {autoPan: true, keepInView: false, autoPanPadding: L.point(0, 70)});
 //					lay.off("click", lay.togglePopup); // Unbind the default listener that comes with bindPopup
 //					lay._popup.options.autoPanPaddingTopLeft = [0, 50];
-					lay.openPopup(latLng);					
+					lay.openPopup(latLng);
 				}
 			}
 			

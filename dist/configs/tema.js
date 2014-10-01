@@ -31,6 +31,7 @@ var config = {
 						params: {
 							typeName: "malmows:HL_FORSK_BUSS_PT_3006"
 						},
+						useProxy: true,
 						displayName: "Stadsdel",
 						layerId: "stadsdel",
 						xhrType: "POST",
@@ -55,6 +56,7 @@ var config = {
 					init: "L.GeoJSON.WFS",
 					url: "http://kartor.malmo.se/geoserver/wfs",
 					options: {
+						useProxy: true,
 						layerId: "Stigar",
 						displayName: "Stigar",
 						xhrType: "POST",
