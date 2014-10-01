@@ -194,7 +194,16 @@ L.Control.LayerSwitcher = L.Control.extend({
 		var btn = $('<div id="lswitch-btn"><span class="fa fa-bars fa-2x"></span></div>');
 		$("#mapdiv").prepend(btn);
 		btn.on("click mousedown "+L.DomEvent._touchstart, $.proxy(function() {
-			this.showPanel();
+			if (!this._panelIsSliding) {
+				var isVisible = $(".lswitch-panel").hasClass("panel-visible");
+				if (isVisible) {
+					this.hidePanel();
+				}
+				else {
+					this.showPanel();
+				}
+				
+			}
 			return false;
 		}, this));
 		btn.on("dblclick", function() {
@@ -239,12 +248,15 @@ L.Control.LayerSwitcher = L.Control.extend({
 	showPanel: function() {
 		var self = this;
 
+
 		this.$panel.show();
 		if (this._panelIsSliding) {
 			utils.log("no slide");
 			return false;
 		}
 		this._panelIsSliding = true;
+		$("#lswitch-btn span").removeClass("fa-bars").addClass("fa-chevron-left");
+
 		setTimeout(function() {
 			$(".lswitch-panel").addClass("panel-visible");
 		}, 1);
@@ -258,7 +270,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			"margin-left": panelWidth + "px",
 			"width": $("#mapdiv").outerWidth() - panelWidth + "px"
 		});
-		$("#lswitch-btn").hide();
+		// $("#lswitch-btn").hide();
 	},
 	
 	hidePanel: function() {
@@ -266,11 +278,11 @@ L.Control.LayerSwitcher = L.Control.extend({
 			utils.log("no slide");
 			return false;
 		}
+		$("#lswitch-btn span").removeClass("fa-chevron-left").addClass("fa-bars");
 		$("#mapdiv").css({
 			"margin-left": "0",
 			"width": "100%"
 		});
-		// $("#lswitch-btn").show();
 		$(".lswitch-panel").removeClass("panel-visible");
 		
 		$("#maindiv").addClass("lswitch-overflow-hidden");
@@ -279,7 +291,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			this._panelIsSliding = false;
 			this.$panel.hide();
 			$("#maindiv").removeClass("lswitch-overflow-hidden");
-			$("#lswitch-btn").show();
+			// $("#lswitch-btn").show();
 		}, this), 300);
 	},
 	

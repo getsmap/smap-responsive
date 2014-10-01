@@ -38,6 +38,11 @@ body {
   max-width: 3.1em;
   min-width: 3.1em;
 }
+.leaflet-top.leaflet-right {
+  margin-right: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+}
 .leaflet-top.leaflet-right .leaflet-control {
   clear: none !important;
   margin: 0;
