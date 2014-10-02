@@ -28,7 +28,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	_setLang: function(langCode) {
-		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
+		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "sv";
 		if (this._lang) {
 			this.lang = this._lang ? this._lang[langCode] : null;
 		}
@@ -190,6 +190,14 @@ L.Control.LayerSwitcher = L.Control.extend({
 				}
 			}
 		});
+
+		smap.event.on("smap.core.createparams", function(e, p) {
+			// Keep this param when creating new params
+			var oldP = smap.core.paramInst.getParams();
+			if (oldP.LSW) {
+				p.lsw = oldP.LSW;
+			}
+		});
 	},
 	
 	_addBtn: function() {
@@ -214,9 +222,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		if (btn.is(":visible")) {
 			var p = smap.core.paramInst.getParams();
 			if (p.LSW && p.LSW === "1") {
-				// smap.event.on("smap.core.applyparams", function() {
 				btn.trigger("mousedown");
-				// });
 			}
 		}
 	},
