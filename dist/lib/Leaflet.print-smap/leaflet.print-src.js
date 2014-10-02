@@ -604,13 +604,17 @@ L.print.Provider = L.Class.extend({
 		// strokeWidth: 4
 
 
+		if (options.radius) {
+			options.strokeWidth = options.radius;
+			options.strokeColor = options.fillColor;
+		}
+
 		return {
 			stroke: options.stroke,
 			strokeColor: options.color,
 			strokeWidth: options.weight,
 			strokeOpacity: options.opacity,
 			strokeLinecap: 'round',
-			strokeWidth: options.radius,
 			pointRadius: options.radius,
 			fill: options.fill,
 			fillColor: options.fillColor,
