@@ -42,6 +42,7 @@ var p = {
 		'dist/lib/**/*.css'
 	],
 	libsJs: [
+		'dist/lib/es5-shim/*.js',
 		'dist/lib/proj4/**/*.js',
 		'dist/lib/jquery/**/*.js',
 		'dist/lib/sass-bootstrap/**/*.js',
