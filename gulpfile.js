@@ -42,7 +42,6 @@ var p = {
 	],
 	libsJs: [
 		'dist/lib/es5-shim/es5-shim.js',
-		'dist/lib/es5-shim/es5-sham.js',
 		'dist/lib/proj4/**/*.js',
 		'dist/lib/jquery/**/*.js',
 		'dist/lib/sass-bootstrap/**/*.js',

@@ -2,9 +2,9 @@ L.Control.SharePosition = L.Control.extend({
 	options: {
 		position: 'bottomright', // just an example
 		autoActivate: false,
-		wfsSource: "http://xyz.malmo.se:8081/geoserver/wfs",
+		wfsSource: "//xyz.malmo.se:8081/geoserver/wfs",
 		wfsFeatureType: "sandbox:sharedpositions",
-		wfsUri: "http://www.malmo.se/sandbox/",
+		wfsUri: "//www.malmo.se/sandbox/",
 		useProxy: true,
 		maxAge: 15,
 		_refreshIntervalMs: 10000,
@@ -379,12 +379,12 @@ L.Control.SharePosition = L.Control.extend({
 			  + '  service="WFS"\n'
 			  + '  version="1.1.0"\n'
 			  + '  xmlns:grp="'+this.options.wfsUri+'"\n'
-			  + '  xmlns:wfs="http://www.opengis.net/wfs"\n'
-			  + '  xmlns:ogc="http://www.opengis.net/ogc"\n'
-			  + '  xmlns:gml="http://www.opengis.net/gml"\n'
-			  + '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
-			  + '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
-			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd">\n'
+			  + '  xmlns:wfs="//www.opengis.net/wfs"\n'
+			  + '  xmlns:ogc="//www.opengis.net/ogc"\n'
+			  + '  xmlns:gml="//www.opengis.net/gml"\n'
+			  + '  xmlns:xsi="//www.w3.org/2001/XMLSchema-instance"\n'
+			  + '  xsi:schemaLocation="//www.opengis.net/wfs\n'
+			  + '                      //schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd">\n'
 			  + '  <wfs:Update typeName="grp:'+dbName+'">\n'
 			  + '	 <wfs:Property><wfs:Name>text_username</wfs:Name><wfs:Value>' + uName + '</wfs:Value></wfs:Property>'
 			  + '	 <wfs:Property><wfs:Name>int_accuracy</wfs:Name><wfs:Value>' + accuracy + '</wfs:Value></wfs:Property>'
@@ -410,11 +410,11 @@ L.Control.SharePosition = L.Control.extend({
 				+ '  service="WFS"\n'
 				+ '  version="1.1.0"\n'
 				+ '  xmlns:grp="'+this.options.wfsUri+'"\n'
-				+ '  xmlns:wfs="http://www.opengis.net/wfs"\n'
-				+ '  xmlns:gml="http://www.opengis.net/gml"\n'
-				+ '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
-				+ '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
-				+ '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
+				+ '  xmlns:wfs="//www.opengis.net/wfs"\n'
+				+ '  xmlns:gml="//www.opengis.net/gml"\n'
+				+ '  xmlns:xsi="//www.w3.org/2001/XMLSchema-instance"\n'
+				+ '  xsi:schemaLocation="//www.opengis.net/wfs\n'
+				+ '                      //schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
 				+ '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
 				+ '  <wfs:Insert>\n'
 				+ '    <grp:'+dbName+'>\n'

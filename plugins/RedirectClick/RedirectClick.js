@@ -5,8 +5,8 @@ L.Control.RedirectClick = L.Control.extend({
 		btnID: "redirect-click-btn", //plugin ID which can be used with jquery e.g.
 		displayName : 'Snedbild',
 		toolbarIndex: 4,
-		//url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
-		url: "http://kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}",
+		//url: "//xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
+		url: "//kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}",
 		overrideName: "snedbild",
 		btnLabel: "Snedbild",
 		btnHover: "Verktyg för att se snedbilder",

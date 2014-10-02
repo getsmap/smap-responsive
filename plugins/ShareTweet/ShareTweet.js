@@ -1,7 +1,7 @@
 L.Control.ShareTweet = L.Control.extend({
 	options: {
 		position: 'topright',
-		wfsSource: "http://localhost:8080/geoserver/wfs",
+		wfsSource: "//localhost:8080/geoserver/wfs",
 		wfsFeatureType: "local:tweets"
 	},
 	
@@ -267,12 +267,12 @@ L.Control.ShareTweet = L.Control.extend({
 		var xml = '<wfs:Transaction\n'
 			  + '  service="WFS"\n'
 			  + '  version="1.1.0"\n'
-			  + '  xmlns:grp="http://localhost/"\n'
-			  + '  xmlns:wfs="http://www.opengis.net/wfs"\n'
-			  + '  xmlns:gml="http://www.opengis.net/gml"\n'
-			  + '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'
-			  + '  xsi:schemaLocation="http://www.opengis.net/wfs\n'
-			  + '                      http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
+			  + '  xmlns:grp="//localhost/"\n'
+			  + '  xmlns:wfs="//www.opengis.net/wfs"\n'
+			  + '  xmlns:gml="//www.opengis.net/gml"\n'
+			  + '  xmlns:xsi="//www.w3.org/2001/XMLSchema-instance"\n'
+			  + '  xsi:schemaLocation="//www.opengis.net/wfs\n'
+			  + '                      //schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd\n'
 			  + '                      '+this.options.wfsSource+'/DescribeFeatureType?typename='+this.options.wfsFeatureType+'">\n'
 			  + '  <wfs:Insert>\n'
 			  + '    <grp:tweets>\n'

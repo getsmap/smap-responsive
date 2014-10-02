@@ -1,9 +1,9 @@
 L.Control.Search = L.Control.extend({
 	options: {
-		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
-		//wsAcUrl : "http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
-		// wsAcUrl: "http://xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sok.py?",
-		// wsLocateUrl: "http://xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"http://localhost/cgi-bin/proxy.py?url=http://kartor.helsingborg.se/Hws/sokexakkt.py",
+		//wsAcUrl : "//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
+		//wsAcUrl : "//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
+		// wsAcUrl: "//xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/sok.py?",
+		// wsLocateUrl: "//xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/sokexakkt.py",
 		
 		whitespace: "%2B",
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
@@ -40,7 +40,7 @@ L.Control.Search = L.Control.extend({
 			// if (lswitchInst) {
 				// var t = {
 						// init: "L.GeoJSON.WFS",
-						// url: "http://localhost/cherrypy/cultmap/getdata", //"http://localhost/cgi-bin/cultMap/getGeoData.py",
+						// url: "//localhost/cherrypy/cultmap/getdata", //"//localhost/cgi-bin/cultMap/getGeoData.py",
 						// options: {
 							// proxy: null,
 							// // zoomToExtent: true,
@@ -246,7 +246,7 @@ L.Control.Search = L.Control.extend({
 		
 		/**
 		* Force keyboard to appear on Windows Phone: 
-		* http://stackoverflow.com/questions/11855609/forcing-numeric-keyboard-in-internet-explorer-on-windows-phone-7-5
+		* //stackoverflow.com/questions/11855609/forcing-numeric-keyboard-in-internet-explorer-on-windows-phone-7-5
 		*/
 		if (L.Browser.msTouch) {
 			$entry.attr("pattern", "[0-9]");

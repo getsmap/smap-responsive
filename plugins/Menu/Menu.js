@@ -92,8 +92,8 @@ L.Control.Menu = L.Control.extend({
 	      '    <ul id="btns" class="nav navbar-nav navbar-right">'+
 	      '    </ul>'+
 	//      '    <ul class="nav navbar-nav navbar-right">'+
-	//      '      <li><a href="http://expo.getbootstrap.com" onclick="_gaq.push(['_trackEvent', 'Navbar', 'Community links', 'Expo']);">Expo</a></li>'+
-	//      '      <li><a href="http://blog.getbootstrap.com" onclick="_gaq.push(['_trackEvent', 'Navbar', 'Community links', 'Blog']);">Blog</a></li>'+
+	//      '      <li><a href="//expo.getbootstrap.com" onclick="_gaq.push(['_trackEvent', 'Navbar', 'Community links', 'Expo']);">Expo</a></li>'+
+	//      '      <li><a href="//blog.getbootstrap.com" onclick="_gaq.push(['_trackEvent', 'Navbar', 'Community links', 'Blog']);">Blog</a></li>'+
 	//      '    </ul>'+
 	      '  </nav>'+
 	      '</div>'+

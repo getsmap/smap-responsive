@@ -3,7 +3,7 @@
 		options: {
 			position: 'topleft',
 			addToMenu: false,
-			printUrl: "http://localhost/print-servlet/print" //http://localhost/geoserver/pdf"
+			printUrl: "//localhost/print-servlet/print" ////localhost/geoserver/pdf"
 		},
 
 		_lang: {
