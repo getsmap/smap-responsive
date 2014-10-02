@@ -121,8 +121,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 			$(".lswitch-panel").remove();
 		}
 
-		this._setSwitcherPosition();
-		$(window).on("resize", this._setSwitcherPosition);
+		// this._setSwitcherPosition();
+		this.__setSwitcherPosition = this.__setSwitcherPosition || $.proxy(this._setSwitcherPosition, this);
+		$(window).on("resize", this.__setSwitcherPosition);
 	},
 
 	_setSwitcherPosition: function() {
@@ -139,6 +140,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			console.log("relative");
 			$(".lswitch-panel").css("position", "relative");
 		}
+		this.hidePanel();
 	},
 	
 	_bindEvents: function() {
@@ -193,7 +195,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	_addBtn: function() {
 		var btn = $('<div id="lswitch-btn"><span class="fa fa-bars fa-2x"></span></div>');
 		$("#mapdiv").prepend(btn);
-		btn.on("click mousedown "+L.DomEvent._touchstart, $.proxy(function() {
+		btn.on("mousedown "+L.DomEvent._touchstart, $.proxy(function() {
 			if (!this._panelIsSliding) {
 				var isVisible = $(".lswitch-panel").hasClass("panel-visible");
 				if (isVisible) {
@@ -202,13 +204,21 @@ L.Control.LayerSwitcher = L.Control.extend({
 				else {
 					this.showPanel();
 				}
-				
 			}
 			return false;
 		}, this));
 		btn.on("dblclick", function() {
 			return false;
 		});
+
+		if (btn.is(":visible")) {
+			var p = smap.core.paramInst.getParams();
+			if (p.LSW && p.LSW === "1") {
+				// smap.event.on("smap.core.applyparams", function() {
+				btn.trigger("mousedown");
+				// });
+			}
+		}
 	},
 	
 	_addPanel: function() {
@@ -221,7 +231,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 		// 	}
 		// });
 		
-		
 		this.$panel.on("swipeleft", $.proxy(function() {
 			this.hidePanel();
 		}, this));
@@ -230,7 +239,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this.$panel.on("touchstart", function() {
 			$(this).css("overflow-y", "auto");
 		});
-		
 		
 		this.$list = $(
 			'<div class="panel panel-default lswitch-panel-bl">'+
@@ -247,7 +255,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 	
 	showPanel: function() {
 		var self = this;
-
 
 		this.$panel.show();
 		if (this._panelIsSliding) {

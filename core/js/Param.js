@@ -21,12 +21,14 @@ smap.core.Param = L.Class.extend({
 	},
 
 	
-	getParams: function(param) {
-		var sep = "?";
-		var p = location.href.split(sep);
-    	var pString = p.length > 1 ? p[1] : "";
-		
-		return utils.paramsStringToObject(pString, true);
+	getParams: function() {
+		if (!this._cachedParams) {
+			var sep = "?";
+			var p = location.href.split(sep);
+	    	var pString = p.length > 1 ? p[1] : "";
+	    	this._cachedParams = utils.paramsStringToObject(pString, true);
+		}
+		return this._cachedParams;
 	},
 	
 	createParamsAsObject: function() {

@@ -27,7 +27,7 @@ smap.core.Init = L.Class.extend({
 		// 	});
 		// }
 
-		this.bindEvents(this.map);
+		// this.bindEvents(this.map);
 		smap.core.layerInst = new smap.core.Layer(this.map);
 		smap.core.selectInst = new smap.core.Select(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
@@ -108,9 +108,9 @@ smap.core.Init = L.Class.extend({
 		delete smap.core.paramInst;
 	},
 	
-	bindEvents: function(map) {
+	// bindEvents: function(map) {
 		
-	},
+	// },
 	
 	drawMap: function(options) {
 		options = options || {};
