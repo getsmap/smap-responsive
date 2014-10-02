@@ -58,6 +58,10 @@ body {
 .leaflet-bottom .leaflet-control {
   margin-bottom: 1em;
 }
+.leaflet-bottom-right-ie9 {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
 .unselectable {
   -webkit-user-select: none;
   -moz-user-select: none;
