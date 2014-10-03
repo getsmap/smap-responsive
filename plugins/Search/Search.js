@@ -377,16 +377,18 @@ L.Control.Search = L.Control.extend({
 			// Modify the question value according to the pattern, e.g. 'qPattern: {"txt_cat": ${q}}'
 			q = utils.extractToHtml(this.options.qPattern, {q: q});
 		}
-
-		var url = this.options.wsLocateUrl + "?q="+q;
+		q = encodeURIComponent(q);
+		var url = this.options.wsLocateUrl;
 		if (this.options.useProxy) {
-			url = smap.config.ws.proxy + encodeURIComponent(url);
+			url = smap.config.ws.proxy + encodeURIComponent(url+"?q=")+q;
 			var whitespace = this.options.whitespace;
 			if (whitespace) {
 				url = url.replace(/%20/g, whitespace);					
 			}
 		}
-
+		else {
+			url = url+"?q="+q
+		}
 
 		var callbacks = {
 				success: function(json) {
