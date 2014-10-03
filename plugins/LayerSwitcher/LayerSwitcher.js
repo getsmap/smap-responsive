@@ -276,6 +276,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		setTimeout(function() {
 			self._panelIsSliding = false;
 			self.map.invalidateSize();
+			self.map.closePopup();
 		}, 300);
 		
 		$("#mapdiv").addClass("mapdiv-slidetransition");
