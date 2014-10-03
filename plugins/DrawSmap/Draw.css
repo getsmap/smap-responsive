@@ -45,7 +45,8 @@
 
 @media (max-width: 1470px){
 	.leaflet-top.leaflet-right .leaflet-control-drawsmap {
-	  margin: 45px -270px 0px 0px;
+	  margin: 45px -216px 0px 0px;
+	  width:  216px;
 	}
 }
 .close span{
