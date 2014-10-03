@@ -106,7 +106,9 @@ L.Control.ToolHandler = L.Control.extend({
 					$popover.addClass("thandler-popover");
 
 					// Move control divs into the popover - but only those which contains a button tag
-					$popCont.append( $(".thandler-container").children(":has('button')") );
+					var btns = $(".thandler-container").children(":has('button')");
+					$popCont.empty();
+					$popCont.append( btns );
 					
 					var drawBtns = $('.leaflet-control-drawsmap').children();
 					if(drawBtns.length > 0){
