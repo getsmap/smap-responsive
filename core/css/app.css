@@ -85,9 +85,7 @@ body {
   position: relative;
 }
 .esri-attribution-logo {
-  position: relative;
-  top: auto;
-  right: auto;
+  display: none;
 }
 .panel-default > .panel-heading {
   outline: 1px solid #ccc;
