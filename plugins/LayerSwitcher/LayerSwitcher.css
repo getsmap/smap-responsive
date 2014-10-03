@@ -194,7 +194,7 @@
   .lswitch-cat i {
     -webkit-transition: -webkit-transform 0.2s, color 0.1s;
     transition: transform 0.2s, color 0.1s;
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
   .lswitch-cat i:hover {
     color: #00eded;
