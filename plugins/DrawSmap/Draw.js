@@ -1,3 +1,13 @@
+/*
+
+This plugin requires:
+leaflet.draw.js, 
+bootstrap-3/bootstrap.icon-large.css,
+notify-custom/notify.js
+leaflet.label.js
+
+*/
+
 L.Control.DrawSmap = L.Control.extend({
     options: {
         buttons: {
@@ -42,6 +52,12 @@ L.Control.DrawSmap = L.Control.extend({
             	addToPopover: true,
             	iconCss: "fa fa-times",
             	displayName: "Remove",
+            	iconClass: ""
+            },
+            save: {
+            	addToPopover: true,
+            	iconCss: "fa icon-large icon-map-save",
+            	displayName: "Save",
             	iconClass: ""
             }
         }
@@ -224,6 +240,14 @@ L.Control.DrawSmap = L.Control.extend({
             $("#drawsmapedit").prop("disabled",false);
             self.currentTool = {};
         });
+
+        smap.map.on('draw:edited', function (e) {
+			console.log('STARTED!');
+        });
+        smap.map.on('draw:editstop', function (e) {
+        	self.bindLabelNotify(this);
+        });
+        
         
         $.each(self.options.buttons,function(k,v){
             if (v.addToPopover === true){
@@ -253,8 +277,7 @@ L.Control.DrawSmap = L.Control.extend({
 				self.hideNotify();
 				self.showResults(result);
 			});
-			self.showHideLbl(sticklbl);	
-			self.updateLogoPosition(window.innerWidth);		
+			self.showHideLbl(sticklbl);			
 			self.showResults(result);
 			
 		}
@@ -313,10 +336,6 @@ L.Control.DrawSmap = L.Control.extend({
 		     	//metric: false
 		     //});
 		 }
-		 window.onresize = function() {
-		 	w = window.innerWidth;
-		 		self.updateLogoPosition(w);
-		 }
     },
     
     showHideLbl: function(sticklbl){
@@ -361,16 +380,6 @@ L.Control.DrawSmap = L.Control.extend({
     	});
     },
     
-    updateLogoPosition: function(w){
-    	var logo = $('.happywhite');
-    	
-    	if(w < 769){
-    		wwidth  =  (window.innerWidth - logo.width())/2;
-    		logo.css({
-    			"left": wwidth + "px"
-    		}); 
-    	}
-    },
 
     _createToolBtn : function(tooltype,obj){
         var self = this;
@@ -412,6 +421,9 @@ L.Control.DrawSmap = L.Control.extend({
                  if(!self.featureGroup.getLayers().length){
                     $toolbtn.prop("disabled",true);
                 }
+                break;
+            case "Save":
+                
                 break;
             default:
                 return;
