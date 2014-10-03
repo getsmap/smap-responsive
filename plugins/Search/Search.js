@@ -333,16 +333,17 @@ L.Control.Search = L.Control.extend({
 
 		if (this.options.wsAcUrl) {
 			typeheadOptions.source = function(q, process) {
-				var url = self.options.wsAcUrl + "?q="+q;
+				q = encodeURIComponent(q);
+				var url = self.options.wsAcUrl;
 				if (whitespace) {
-					url = url.replace(/%20/g, whitespace);					
+					q = q.replace(/%20/g, whitespace);
 				}
 				if (self.proxyInst) {
 					self.proxyInst.abort();
 				}
 				self.proxyInst = $.ajax({
 					type: "GET",
-					url: self.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url) : url,
+					url: self.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url + "?q=") + q : url + "?q="+q,
 					dataType: "text",
 					success: function(resp) {
 						var arr = resp.split("\n");

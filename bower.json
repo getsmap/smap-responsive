@@ -20,6 +20,7 @@
     "tests"
   ],
   "dependencies": {
+    "5757305": "https://gist.github.com/5757305.git",
     "GeoJSON.WFS": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.WFS.js",
     "Leaflet.label": "~0.2.1",
     "GeoJSON.Custom": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js",
@@ -47,7 +48,7 @@
     "jquery": "~2.1.1",
     "bootstrap-3": "./lib/bootstrap-3/",
     "notify-custom": "./lib/notify-custom/",
-    "leaflet.print-smap": "latest"
+    "leaflet.print-smap": "./lib/leaflet.print-smap/"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -60,8 +61,10 @@
         "bootstrap3-typeahead.min.js"
       ]
     },
-    "notify-custom":{
-    	"main":["notify.js"]
+    "notify-custom": {
+      "main": [
+        "notify.js"
+      ]
     },
     "bootstrap-3": {
       "main": [
@@ -117,6 +120,9 @@
       "main": [
         "build/openlayers.js"
       ]
+    },
+    "singleTileWms": {
+      "main": "SingleTile.js"
     }
   }
 }
