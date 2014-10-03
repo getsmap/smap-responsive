@@ -1,4 +1,5 @@
 .thandler-btn {
+  z-index: 1001;
   position: absolute;
   left: auto;
   right: 10px;

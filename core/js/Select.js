@@ -167,7 +167,7 @@ smap.core.Select = L.Class.extend({
 					props = f.properties;
 					// props._displayName = t.options.displayName;
 					if (f.options.popup) {
-						html += '<h4>'+f.options.displayName+'</h4>';
+						html += '<h5>'+f.options.displayName+'</h5>';
 						html += utils.extractToHtml(f.options.popup, props);
 						html += '<div class="popup-divider"></div>';
 					}
