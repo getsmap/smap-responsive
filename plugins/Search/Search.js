@@ -5,7 +5,7 @@ L.Control.Search = L.Control.extend({
 		// wsAcUrl: "//xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/sok.py?",
 		// wsLocateUrl: "//xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/sokexakkt.py",
 		
-		whitespace: "%2B",
+		whitespace: "%20", //"%2B",
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
 		gui: false,
@@ -383,7 +383,7 @@ L.Control.Search = L.Control.extend({
 			url = smap.config.ws.proxy + encodeURIComponent(url+"?q=")+q;
 			var whitespace = this.options.whitespace;
 			if (whitespace) {
-				url = url.replace(/%20/g, whitespace);					
+				url = url.replace(/%20/g, whitespace);			
 			}
 		}
 		else {
