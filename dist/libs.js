@@ -14322,26 +14322,26 @@ L.print.Provider = L.Class.extend({
 
 
 		if (options.radius) {
-            options.strokeWidth = options.radius;
-            options.strokeColor = options.fillColor;
-        }
+			options.strokeWidth = options.radius;
+			options.strokeColor = options.fillColor;
+		}
 
-        return {
-            stroke: options.stroke,
-            strokeColor: options.color,
-            strokeWidth: options.weight,
-            strokeOpacity: options.opacity,
-            strokeLinecap: 'round',
-            pointRadius: options.radius,
-            fill: options.fill,
-            fillColor: options.fillColor,
-            fillOpacity: options.fillOpacity,
-            graphicZIndex: options.zIndex,
-            graphicWidth: options.graphicWidth,
-            graphicHeight: options.graphicHeight,
-            label: options.label,
-            name: "The layer name"
-        };
+		return {
+			stroke: options.stroke,
+			strokeColor: options.color,
+			strokeWidth: options.weight,
+			strokeOpacity: options.opacity,
+			strokeLinecap: 'round',
+			pointRadius: options.radius,
+			fill: options.fill,
+			fillColor: options.fillColor,
+			fillOpacity: options.fillOpacity,
+			graphicZIndex: options.zIndex,
+			graphicWidth: options.graphicWidth,
+			graphicHeight: options.graphicHeight,
+			label: options.label,
+			name: "The layer name"
+		};
 
 
 		// cursor: "pointer"

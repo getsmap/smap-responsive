@@ -82,7 +82,8 @@ var p = {
 		"!plugins/MyPlugin/**/*.css",
 		"!plugins/SideBars/**/*.css",
 		"!plugins/ThreeD/**/*.css",
-		"!plugins/WorkshopPlugin/**/*.css"
+		"!plugins/WorkshopPlugin/**/*.css",
+		"core/css/themes/theme-malmo.css"
 
 		
 	],
