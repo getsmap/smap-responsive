@@ -424,7 +424,7 @@ L.Control.Search = L.Control.extend({
 					this.marker = L.marker(latLng).addTo(this.map);
 					this.marker.options.q = q; // Store for creating link to map
 					
-					this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
+					this.marker.bindPopup('<p class="lead">'+decodeURIComponent(q)+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 					
 					if (options.setView) {
 						this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
