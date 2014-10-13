@@ -1,7 +1,6 @@
 node_modules/
 bower_components/
 *.scssc
-configs/config_lund.js
-dist/configs/config_lund.js
 plugins/GuidePopup/qgis_calc_cat.txt
 dist/configs/*.js
+!dist/configs/config.js
