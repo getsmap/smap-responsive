@@ -2,11 +2,11 @@
 	<form action="" role="form">
 		<div class="form-group">
 			<label for="sprint_header">${header}</label>
-			<input type="text" class="form-control" id="sprint_header" name="mapTitle" placeholder="${tip_header}">
+			<input maxlength="40" type="text" class="form-control" id="sprint_header" name="mapTitle" placeholder="${tip_header}">
 		</div>
 		<div class="form-group">
 			<label for="sprint_descript">${descript}</label>
-			<textarea class="form-control" id="sprint_descript" name="comment" placeholder="${tip_descript}" rows="3" />
+			<textarea maxlength="100" class="form-control" id="sprint_descript" name="comment" placeholder="${tip_descript}" rows="3" />
 		</div>
 		
 		<div class="row">
@@ -49,15 +49,10 @@
 				</div>
 			</div>
 			<div class="col-xs-12 col-sm-6">
-				<h5>Övrigt</h5>
+				<h5>${misc}</h5>
 				<div class="checkbox">
 					<label>
-						<input name="arrow" type="checkbox">${northarrow}
-					</label>
-				</div>
-				<div class="checkbox">
-					<label>
-						<input name="scalebar" type="checkbox">${scalebar}
+						<input name="legend" type="checkbox">${legend}
 					</label>
 				</div>
 			</div>

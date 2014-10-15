@@ -24,7 +24,10 @@
 				loading: "Laddar konfiguration…",
 				processingPrint: "Skapar bild…",
 				northarrow: "Nordpil",
-				scalebar: "Skalstock"
+				scale: "Skala",
+				misc: "Övrigt",
+				legend: "Teckenförklaring"
+				// , scalebar: "Skalstock"
 			},
 			"en": {
 				caption: "Skriv ut",
@@ -43,7 +46,10 @@
 				loading: "Loading capabilities…",
 				processingPrint: "Creating image…",
 				northarrow: "North arrow",
-				scalebar: "Scalebar"
+				scale: "Scale",
+				misc: "Miscellaneous",
+				legend: "Legend"
+				// , scalebar: "Scalebar"
 			}
 		},
 
@@ -102,7 +108,7 @@
 				url: this.options.printUrl,
 				autoLoad: true,
 				copy: "© Stadsbyggnadskontoret, Malmö stad",
-				dpi: 96,
+				// dpi: 96,
 				layout: "A4_Portrait_NoArrow_NoBar", // A4 portrait
 				outputFormat: "pdf",
 				map: this.map
@@ -119,8 +125,9 @@
 				orientation: "Portrait",
 				arrow: false,
 				scalebar: false,
-				dpi: 96
-			}
+				dpi: 96,
+				legends: []
+			};
 			this.printProvider.on('capabilitiesload', function(e) {
 				// Go through proxy to avoid cross-domain.
 				e.capabilities.printURL = e.capabilities.printURL.replace(/localhost:8080/g, "localhost").replace(document.domain, "localhost");  // .replace(/localhost:6080/g, "localhost")
@@ -136,6 +143,54 @@
 		},
 
 		/**
+		 * Web Mercator's scale is only valid for distance calculation
+		 * at the equator. Therefore, we need to correct based on our
+		 * latitude.
+		 * @return {Integer} The corrected scale – i.e. where you can measure 
+		 * on the print-out and multiply by the scale to get the real-world 
+		 * distance value – well, that's what I thought a scale was for...)
+		 */
+		_getMercatorScaleForLat: function() {
+			var lat = this.map.getCenter().lat;
+			var scale = this.printProvider._getScale()
+			var coeff = 1 / Math.cos(lat*Math.PI/180);
+			scale = parseInt(Math.round(scale / coeff)); // modify scale for our latitude
+			return scale;
+		},
+
+		_makeLegends: function() {
+			var classes = [];
+			var layers = this.map._layers;
+			var layInst, url, displayName, o, useLegend;
+			for (lid in layers) {
+				layInst = layers[lid];
+				o = layInst.options;
+				if (!o || o.legend !== undefined && o.legend === false) {
+					continue;
+				}
+				if (o && (o.legend || (layInst instanceof L.TileLayer.WMS || layInst instanceof L.GeoJSON.WFS))) {
+					url = o.legend;
+					if (!url || !url.length) {
+						url = layInst._url.search(/\?/) === -1 ? layInst._url + "?" : layInst._url;
+						url = url + "request=GetLegendGraphic&format=image/png&width=20&height=20&layer="+o.layers;
+					}
+					if (url) {
+						displayName = o.displayName || "Unnamed layer";
+					}
+					classes.push({
+						name: displayName,
+						icon: url
+					});
+				}
+			}
+			var legends = [{
+		            name: "Teckenförklaring",
+		            classes: classes
+		    }];
+		    return legends;
+		},
+
+		/**
 		 * Adapt params from form to fit the server-side print service.
 		 * @param  {Object} o Params from form submit (as Object).
 		 * @return {Object}   Params ready to send server-side.
@@ -144,12 +199,13 @@
 			var out = {
 					mapTitle: o.mapTitle,
 					comment: o.comment,
-					dpi: parseInt(o.dpi),
+					dpi: o.dpi,
+					legends: this._makeLegends(),
+					displayscale: this.lang.scale + " 1:",
 					layout: [
 						o.paperFormat,
 						o.orientation,
-						o.arrow ? "Arrow" : "NoArrow",
-						o.scalebar ? "Bar" : "NoBar"
+						o.legend ? "Legend" : "NoLegend"
 					].join("_")
 			};
 			return out;
@@ -170,7 +226,7 @@
 		_drawModal: function() {
 			var self = this;
 			var src = "resources/PrintModal.html";
-			if (document.domain === "localhost") {
+			if (document.URL.search(/\/dev.html/) > -1) {
 				src = "plugins/Print/"+src;
 			}
 			$.get(src, function(html) {
@@ -185,6 +241,7 @@
 				self._modal.find("form").submit(function() {
 					var p = utils.paramsStringToObject( $(this).serialize(), false );
 					p = self._preprocessPrintOptions(p);
+					self.printProvider.setDpi(p.dpi);
 					self.print(p);
 					return false;
 				});

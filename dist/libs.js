@@ -14848,8 +14848,8 @@ L.print.Provider = L.Class.extend({
 		MAX_RESOLUTION: 156543.03390625,
 		MAX_EXTENT: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
 		SRS: 'EPSG:3857',
-		INCHES_PER_METER: 39.3701,
-		DPI: 96, //72,
+		INCHES_PER_METER: 39.3701, //*1.77,
+		DPI: 170, //72,
 		UNITS: 'm'
 	},
 
@@ -14912,6 +14912,22 @@ L.print.Provider = L.Class.extend({
 		});
 	},
 
+	/**
+	 * Web Mercator's scale is only valid for distance calculation
+	 * at the equator. Therefore, we need to correct based on our
+	 * latitude.
+	 * @return {Integer} The corrected scale – i.e. where you can measure 
+	 * on the print-out and multiply by the scale to get the real-world 
+	 * distance value – well, that's what I thought a scale was for...)
+	 */
+	_getMercatorScaleForLat: function() {
+		var lat = this._map.getCenter().lat;
+		var scale = this._getScale()
+		var coeff = 1 / Math.cos(lat*Math.PI/180);
+		scale = parseInt(Math.round(scale / coeff)); // modify scale for our latitude
+		return scale;
+	},
+
 	print: function (options) {
 		options = L.extend(L.extend({}, this.options), options);
 
@@ -14932,6 +14948,7 @@ L.print.Provider = L.Class.extend({
 			// outputFormat: options.outputFormat,
 			comment: options.comment,
 			mapTitle: options.mapTitle,
+			displayscale: options.displayscale ? options.displayscale + this._getMercatorScaleForLat() : this._getMercatorScaleForLat(),
 			// outputFilename: options.outputFilename,
 			layers: this._encodeLayers(this._map),
 			pages: [{
@@ -14939,7 +14956,8 @@ L.print.Provider = L.Class.extend({
 				scale: this._getScale(),
 				rotation: options.rotation,
 				copy: options.copy
-			}]
+			}],
+			legends: options.legends
 		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
 			url;
 
@@ -15109,7 +15127,6 @@ L.print.Provider = L.Class.extend({
 			i = scales.length,
 			diff,
 			scale;
-
 		while (i--) {
 			diff = Math.abs(mscale - scales[i].value);
 			if (diff < closest) {

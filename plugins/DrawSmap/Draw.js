@@ -321,7 +321,9 @@ L.Control.DrawSmap = L.Control.extend({
 		if(e.layerType === "polyline" || e.handler === "edit"){
 			self.hideNotify();
 			var polyline = L.polyline(e.layer._latlngs);
-			var result = polyline.measuredDistance();
+            
+            var result = utils.getLength(e.layer._latlngs);
+			// var result = polyline.measuredDistance();
 			self.showResults(result);
 			var sticklbl = e.layer.bindLabel(''+result+'',{ noHide: true });
 			sticklbl.on('click',function(evt){

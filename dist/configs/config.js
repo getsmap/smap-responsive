@@ -3,21 +3,24 @@
 // on localhost – the proxy (e.g.) will point to another URL than if you run on kartor.malmo.se.
 
 // var ws = {
-// 		"localhost": {
-// 			proxy: "http://localhost/cgi-bin/proxy.py?url="
-// 		},
-// 		"kartor.malmo.se": {
-// 			proxy: "http://localhost/cgi-bin/proxy.py?url="
-// 		},
-// 		"mobile.smap.se": {
-// 			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
-// 		},
-// 		"kartor.helsingborg.se": {
-// 			proxy: "http://kartor.helsingborg.se/cgi-bin/proxy.py?url="
-// 		}
+//		"localhost": {
+//			proxy: "http://localhost/cgi-bin/proxy.py?url="
+//		},
+//		"kartor.malmo.se": {
+//			proxy: "http://localhost/cgi-bin/proxy.py?url="
+//		},
+//		"mobile.smap.se": {
+//			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
+//		},
+//		"kartor.helsingborg.se": {
+//			proxy: "http://kartor.helsingborg.se/cgi-bin/proxy.py?url="
+//		}
 // };
 
 var config = {
+
+		// Web-services can be defined here if they are to be used by the core and/or plugins.
+		// Otherwise, it is adviced to set any web-services as parameters of plugins.
 		// ws: ws,
 
 		// These are optional default parameters for the map.
@@ -30,7 +33,24 @@ var config = {
 		},
 
 		// These are the overlays in the map
-		ol: [],
+		ol: [
+			{
+				init: "L.TileLayer.WMS",
+				url: "http://opendata-view.smhi.se/klim-stat_moln/wms",
+				options: {
+					legend: false,
+					layers: "klara_dagar",
+					layerId: "smhi_klaradagar",
+					displayName: "Klara dagar (år)",
+					format: 'image/png',
+					transparent: true,
+					opacity: 1,
+					attribution: "© SMHI",
+					zIndex: 100
+				}
+			}
+
+		],
 
 		// These are the baselayers ("background" layers) of the map
 		bl: [
@@ -41,10 +61,9 @@ var config = {
 					//layers: "0",
 					reuseTiles: true,
 					transparent: true,
-					detectRetina: true,
 					layerId: "malmo_karta_3857",
 					displayName: "Malmö stadskarta",
-					opacity: 1.0,
+					opacity: 1,
 					minZoom: 0,
 					maxZoom: 18,
 					//layer: "malmo_karta_sv_3857",
@@ -60,7 +79,7 @@ var config = {
 							maxZoom: 21,
 							format: 'image/png',
 							transparent: true,
-							opacity: 0.9,
+							opacity: 1,
 							attribution: " Malmö Stadsbyggnadskontor",
 							zIndex: 9
 						}
@@ -73,7 +92,6 @@ var config = {
 				url: "http://kartor.malmo.se/geoserver/malmows/wms?",
 				//parentTag: "orto_2013",
 				options: {
-					detectRetina: true,
 					layerId: "malmows_malmo_orto_2013",
 					displayName: "Fotokarta 2013",
 					layers: 'malmows:malmo_orto_2013',
@@ -81,7 +99,7 @@ var config = {
 					maxZoom: 21,
 					format: 'image/png',
 					transparent: true,
-					opacity: 0.9,
+					opacity: 1,
 					attribution: "© Malmö Stadsbyggnadskontor",
 					zIndex: 9
 				}
@@ -90,7 +108,6 @@ var config = {
 			init: "L.TileLayer",
 			url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 			options: {
-				detectRetina: true,
 				layerId: "osm",
 				displayName: "OSM",
 				attribution: '<span>Â© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png"></span>',
@@ -143,6 +160,17 @@ var config = {
 							wsLocateUrl: "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx" // geolocate
 						}
 					},
+					{
+						init: "L.Control.Print",
+						options: {
+							printUrl: "http://localhost/print-servlet/leaflet_print",
+							position: "topright"
+						}
+					},
+					{
+						init: "L.Control.DrawSmap",
+						options: {}
+					}
 					// ,
 					// {
 					// 	init: "L.Control.ShareLink",
@@ -158,31 +186,24 @@ var config = {
 					// 	}
 					// },
 					// {
- 				// 		init: "L.Control.Info",
- 				// 		options: {
- 				// 			position: "topright"
- 				// 		}
- 				//  	},
-					{
- 						init: "L.Control.Print",
- 						options: {
- 							printUrl: "http://kartor.malmo.se/print-servlet/pdf",
- 							position: "topright"
- 						}
- 				 	}
- 				 	// ,
+					// 	init: "L.Control.Info",
+					// 	options: {
+					// 		position: "topright"
+					// 	}
+					// },
+					// ,
 					// {
 					// 	init: "L.Control.ToolHandler",
 					// 	options: {}
 					// }
 					// {
-					//  	init: "L.Control.Add2HomeScreen",
-					//  	options: {}
+					// 	init: "L.Control.Add2HomeScreen",
+					// 	options: {}
 					// },
-					//{
-					//	 init: "L.Control.FullScreen",
-					//		options: {position: 'topright'}
-					//}
+					// {
+					// 	init: "L.Control.FullScreen",
+					// 	options: {position: 'topright'}
+					// }
 					// ,
 					// {
 					// 	init: "L.Control.DrawSmap",

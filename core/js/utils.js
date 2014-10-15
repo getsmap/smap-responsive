@@ -183,6 +183,19 @@ var utils = {
 			return html;
 		},
 
+		/**
+		 * Get real-world distance from an array of latLng.
+		 * @param  {Array({LatLng})} arrLatLng Array containing latLngs
+		 * @return {Integer} Length of polyline in meters.
+		 */
+		getLength: function(arrLatLng) {
+			var dist = 0, i;
+			for (i=0,len=arrLatLng.length-1; i<len; i++) {
+				dist += arrLatLng[i].distanceTo(arrLatLng[i+1]);
+			}
+			return dist; // in meters
+		},
+
 		paramsStringToObject: function(pString, keysToUpperCase) {
 			keysToUpperCase = keysToUpperCase || false;
 
