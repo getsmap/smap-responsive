@@ -2,26 +2,26 @@
 // object, the framework will pick the service corresponding to your domain. E.g. if you are running
 // on localhost – the proxy (e.g.) will point to another URL than if you run on kartor.malmo.se.
 
-// var ws = {
-//		"localhost": {
-//			proxy: "http://localhost/cgi-bin/proxy.py?url="
-//		},
-//		"kartor.malmo.se": {
-//			proxy: "http://localhost/cgi-bin/proxy.py?url="
-//		},
-//		"mobile.smap.se": {
-//			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
-//		},
-//		"kartor.helsingborg.se": {
-//			proxy: "http://kartor.helsingborg.se/cgi-bin/proxy.py?url="
-//		}
-// };
+var ws = {
+		"localhost": {
+			proxy: "http://localhost/cgi-bin/proxy.py?url="
+		},
+		"kartor.malmo.se": {
+			proxy: "http://localhost/cgi-bin/proxy.py?url="
+		},
+		"mobile.smap.se": {
+			proxy: "http://mobile.smap.se/smap-mobile/ws/proxy.py?url="
+		},
+		"kartor.helsingborg.se": {
+			proxy: "http://kartor.helsingborg.se/cgi-bin/proxy.py?url="
+		}
+};
 
 var config = {
 
 		// Web-services can be defined here if they are to be used by the core and/or plugins.
 		// Otherwise, it is adviced to set any web-services as parameters of plugins.
-		// ws: ws,
+		ws: ws,
 
 		// These are optional default parameters for the map.
 		// These parameters will be overridden by any parameters after "?" in the URL.
@@ -168,9 +168,16 @@ var config = {
 						}
 					},
 					{
-						init: "L.Control.DrawSmap",
-						options: {}
+						init: "L.Control.Editor",
+						options: {
+							useProxy: true,
+							reverseAxis: true
+						}
 					}
+					// {
+					// 	init: "L.Control.DrawSmap",
+					// 	options: {}
+					// }
 					// ,
 					// {
 					// 	init: "L.Control.ShareLink",

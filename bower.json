@@ -47,7 +47,8 @@
     "jquery": "1.11.1",
     "bootstrap-3": "./lib/bootstrap-3/",
     "notify-custom": "./lib/notify-custom/",
-    "leaflet.print-smap": "./lib/leaflet.print-smap/"
+    "leaflet.print-smap": "./lib/leaflet.print-smap/",
+    "leaflet.wfs-t": "https://github.com/flatrockgeo/leaflet.wfs-t.git"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -114,6 +115,12 @@
         "dist/leaflet.label.js",
         "dist/leaflet.label.css"
       ]
+    },
+    "leaflet.wfs-t": {
+        "main": [
+          "js/leaflet.gml.js",
+          "js/leaflet.wfst.js"
+        ]
     },
     "openlayers": {
       "main": [

@@ -1,0 +1,10 @@
+.leaflet-bar {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: 1px solid #ccc;
+  border-radius: 0;
+}
+.leaflet-bar a,
+.leaflet-bar a:last-child {
+  border-radius: 0;
+}

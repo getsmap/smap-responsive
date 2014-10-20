@@ -46,6 +46,9 @@ var p = {
 		'dist/lib/jquery/**/*.js',
 		'dist/lib/sass-bootstrap/**/*.js',
 		'dist/lib/leaflet/**/*.js',
+		'dist/lib/GeoJSON.WFS.js',
+		'dist/lib/leaflet.draw/**/*.js',
+
 		//'dist/lib/Leaflet.print-smap/**/*.js',
 		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
 		'dist/lib/**/*.js',
