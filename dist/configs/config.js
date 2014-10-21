@@ -19,6 +19,11 @@ var ws = {
 
 var config = {
 
+		mapConfig: {
+			maxBounds: [[55.71628170645908, 12.6507568359375], [55.42589636057864, 13.34564208984375]],
+			minZoom: 11
+		},
+
 		// Web-services can be defined here if they are to be used by the core and/or plugins.
 		// Otherwise, it is adviced to set any web-services as parameters of plugins.
 		ws: ws,

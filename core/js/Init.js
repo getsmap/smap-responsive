@@ -61,7 +61,10 @@ smap.core.Init = L.Class.extend({
 		// }
 		
 		// Extend map options
-		$.extend(this.map.options, theConfig.mapOptions || {});
+		$.extend(this.map.options, theConfig.mapConfig || {});
+		if (theConfig.mapConfig.maxBounds) {
+			this.map.setMaxBounds(theConfig.mapConfig.maxBounds); // [[north, west], [south, east]]
+		}
 		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
 
