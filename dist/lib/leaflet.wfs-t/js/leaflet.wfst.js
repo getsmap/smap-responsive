@@ -49,7 +49,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 
 	},
 	removeLayer: function(layer,options) {
-		this.wfstRemove(layer,options);
+		// this.wfstRemove(layer,options);
 
 		// Call to parent removeLayer
 		L.GeoJSON.prototype.removeLayer.call(this,layer);
@@ -80,9 +80,11 @@ L.WFST = L.GeoJSON.WFS.extend({
 
 		layers = layers ? (L.Util.isArray(layers) ? layers : [layers]) : [];
 
+		var defs = [];
 		for (var i = 0, len = layers.length; i < len; i++) {
-			this._wfstRemove(layers[i],options);
+			defs.push( this._wfstRemove(layers[i],options) );
 		}
+		return $.when.apply($, defs);
 	},
 
 	wfstSave: function(layers,options){
@@ -214,7 +216,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 		xml += "</wfs:Delete>";
 		xml += "</wfs:Transaction>";
 
-		this._ajax( L.extend({type:'POST', data:xml},options));
+		return this._ajax( L.extend({type:'POST', data:xml},options));
 	},
 
 

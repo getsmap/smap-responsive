@@ -28,6 +28,7 @@ L.Control.Editor = L.Control.extend({
 
 		this._inserts = [];
 		this._updates = [];
+		this._deletes = [];
 	},
 
 	onAdd: function(map) {
@@ -72,39 +73,89 @@ L.Control.Editor = L.Control.extend({
 			self._inserts.push(e.layer);
 			// editLayer.wfstAdd([e.layer]);
 		});
+
+		var theId, f, ff, fMod,
+			inserts = this._inserts,
+			updates = this._updates,
+			deletes = this._deletes;
 		map.on('draw:edited', function (e) {
 			console.log("edited");
-			// if ($.inArray(e.layers, self._inserts) === -1) {
+
+			f = e.layers;
+			fMod = $.extend({}, {
+				_layers: {}
+			});
+			for (theId in f._layers) {
 				// Don't try to update a feature that has not yet been added (inserted).
-				self._updates.push(e.layers);
-			// }
-			// editLayer.wfstSave(e.layers);
+				ff = f._layers[theId];
+				if ( $.inArray(ff, inserts) === -1 ) {
+					fMod._layers[theId] = ff;
+				}
+				else {
+					alert("already in inserts arr");
+				}
+			}
+			updates.push(fMod);
+			// self._updates.push(e.layers);
+
 		});
 		this.editLayer = editLayer;
 
+		editLayer.on("layerremove", function(e) {
+			var layer = e.layer;
+			deletes.push(layer);
+		});
+
+
+	},
+
+	wfstSave: function(layers){
+		layers = layers ? (L.Util.isArray(layers) ? layers : [layers]) : [];
+
+		var defs = [];
+		var inst = this.editLayer;
+		var updates = this._updates;
+		var v, i;
+		for (i=0, len=layers.length; i<len; i++) {
+			if (typeof layers[i]._layers == 'object') {
+				for (v in layers[i]._layers) {
+					defs.push( inst._wfstSave(layers[i]._layers[v]) );
+				}
+			}
+			else {
+				defs.push( inst._wfstSave(layers[i]) );
+			}
+		}
+		return $.when.apply($, defs);
 	},
 
 	save: function() {
-		var inserts = this._inserts || [],
-			updates = this._updates || [],
+		var inserts = this._inserts,
+			updates = this._updates,
+			deletes = this._deletes,
 			i, f,
-			editLayer = this.editLayer;
-		var insertLength = inserts.length;
-		for (i=0,len=inserts.length; i<len; i++) {
+			editLayer = this.editLayer,
+			len = inserts.length;
+		for (i=0; i<len; i++) {
 			f = inserts[i];
 			editLayer._wfstAdd(f).done(function() {
 				inserts.splice(f, 1);
 			});
 		}
-		for (i=0,len=updates.length; i<len; i++) {
+		len = updates.length;
+		for (i=0; i<len; i++) {
 			f = updates[i];
-			editLayer._wfstSave(f).done(function() {
+			this.wfstSave(f).done(function() {
 				updates.splice(f, 1);
 			});
 		}
+		editLayer.wfstRemove(deletes).done(function() {
+			deletes = [];
+		});
 	},
 
 	_drawGui: function() {
+
 		var btn = $('<button class="btn btn-primary btn-lg">Save</button>');
 		$("#mapdiv").append(btn);
 		btn.css({
