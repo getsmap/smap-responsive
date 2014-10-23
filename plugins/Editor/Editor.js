@@ -70,7 +70,7 @@ L.Control.Editor = L.Control.extend({
 				useProxy: false,
 				srs: "EPSG:4326",
 				layerId: "mylayerid",
-				popup: '${*}<div style="white-space:nowrap;min-width:12em;margin-top:.5em;" class="btn-group btn-group-sm"><button id="editor-popup-move" type="button" class="btn btn-default">Move</button><button id="editor-popup-edit" type="button" class="btn btn-default">Edit</button></div>'
+				popup: '${*}<div style="white-space:nowrap;min-width:18em;margin-top:.5em;" class="btn-group btn-group-sm"><button id="editor-popup-remove" type="button" class="btn btn-default"><i class="fa fa-times"></i>&nbsp;Remove</button><button id="editor-popup-move" type="button" class="btn btn-default"><i class="fa fa-arrows"></i>&nbsp;Move</button><button id="editor-popup-edit" type="button" class="btn btn-default"><i class="fa fa-edit"></i>&nbsp;Edit</button></div>'
 		};
 		var editLayer = L.wfst(url, $.extend({}, defaults, t));
 		map.addLayer(editLayer);
@@ -83,11 +83,14 @@ L.Control.Editor = L.Control.extend({
 				featureGroup: editLayer
 			}
 		});
+		this._drawControl = drawControl;
 		map.addControl(drawControl);
 		map.on('draw:created', function (e) {
 			console.log("created");
 			editLayer.addLayer(e.layer);
-			self._inserts.push(e.layer);
+			self._marker = e.layer;
+			self._showSaveToolbar("insert");
+
 			// editLayer.wfstAdd([e.layer]);
 		});
 
@@ -116,7 +119,7 @@ L.Control.Editor = L.Control.extend({
 			// self._updates.push(e.layers);
 
 		});
-		this.editLayer = editLayer;
+		this._editLayer = editLayer;
 
 		editLayer.on("layerremove", function(e) {
 			var layer = e.layer;
@@ -125,19 +128,29 @@ L.Control.Editor = L.Control.extend({
 
 		this.map.on("popupopen", function(e) {
 			var cont = $(e.popup._container);
+			// var layer = e.popup._source;
+			self._marker = e.popup._source;
+			// layer.off('dragend').on('dragend', function(e) {
+			// 	// Save on client (not commit)
+			// 	var lay = e.target;
+			// 	self.wfstSave(lay);
+			// 	lay.edited = true;
+			// });
+			cont.find("#editor-popup-remove").on("click", function() {
+				if (confirm("Remove?") === true) {
+					alert("Remove");
+				}
+				return false;
+			});
 			cont.find("#editor-popup-move").on("click", function() {
 				// Activate move
-				var tBar;
-				for (var theId in drawControl._toolbars) {
-					tBar = drawControl._toolbars[theId];
-					if (tBar && tBar._modes && tBar._modes.edit) {
-						tBar._modes.edit.handler.enable();
-						break;
-					}
-				}
+				self._marker.closePopup();
+				var editToolbar = self._getEditToolbar();
+				editToolbar.handler.enable();
+				self._showSaveToolbar("update");
 
 				// self.map._toolbars[1]._modes["edit"].handler.enable();
-				// self.editLayer.eachLayer(drawControl._enableLayerEdit, drawControl);
+				// self._editLayer.eachLayer(drawControl._enableLayerEdit, drawControl);
 				return false;
 			});
 			cont.find("#editor-popup-edit").on("click", function() {
@@ -145,15 +158,24 @@ L.Control.Editor = L.Control.extend({
 				return false;
 			});
 		});
+	},
 
-
+	_getEditToolbar: function() {
+		var tBar;
+		for (var theId in this._drawControl._toolbars) {
+			tBar = this._drawControl._toolbars[theId];
+			if (tBar && tBar._modes && tBar._modes.edit) {
+				return tBar._modes.edit;
+			}
+		}
+		return null;
 	},
 
 	wfstSave: function(layers){
 		layers = layers ? (L.Util.isArray(layers) ? layers : [layers]) : [];
 
 		var defs = [];
-		var inst = this.editLayer;
+		var inst = this._editLayer;
 		var updates = this._updates;
 		var v, i;
 		for (i=0, len=layers.length; i<len; i++) {
@@ -169,17 +191,22 @@ L.Control.Editor = L.Control.extend({
 		return $.when.apply($, defs);
 	},
 
-	save: function() {
+	save: function(onInsertDone) {
+		onInsertDone = onInsertDone || null;
+
 		var inserts = this._inserts,
 			updates = this._updates,
 			deletes = this._deletes,
 			i, f,
-			editLayer = this.editLayer,
+			editLayer = this._editLayer,
 			len = inserts.length;
 		for (i=0; i<len; i++) {
 			f = inserts[i];
 			editLayer._wfstAdd(f).done(function() {
 				inserts.splice(f, 1);
+				if (onInsertDone) {
+					onInsertDone();
+				}
 			});
 		}
 		len = updates.length;
@@ -197,8 +224,53 @@ L.Control.Editor = L.Control.extend({
 	_saveAttributes: function(props) {
 		props = props || {};
 
+	},
 
-		
+	_showSaveToolbar: function(type) {
+
+		if (!this._saveToolbar) {
+			var self = this;
+			this._saveToolbar = $('<div class="smap-editor-savetoolbar" />');
+			var btnSave = $('<button class="btn btn-success btn-lg">Save</button>'),
+				btnCancel = $('<button class="btn btn-default btn-lg">Cancel</button>');
+
+			this._saveToolbar.append(btnCancel).append(btnSave);
+			$("#mapdiv").append(this._saveToolbar);
+			btnSave.on("click", function() {
+				if (type === "update") {
+					self.wfstSave(self._marker);
+				}
+				var editToolbar = self._getEditToolbar();
+				editToolbar.handler.disable();
+				
+				if (type === "insert") {
+					self._inserts.push(self._marker);
+					self.save(function() {
+						self._editLayer.clearLayers();
+						self._editLayer._refresh(true);
+						self._hideSaveToolbar();
+					});
+				}
+				else if (type === "update") {
+					self.save();
+					self._hideSaveToolbar();
+				}
+				return false;
+			});
+			btnCancel.on("click", function() {
+				// alert("TODO Revert (stop editing and force reload features from source)");
+				var editToolbar = self._getEditToolbar();
+				editToolbar.handler.disable();
+				self._editLayer.clearLayers();
+				self._editLayer._refresh(true);
+				return false;
+			});
+		}
+		this._saveToolbar.show();
+	},
+
+	_hideSaveToolbar: function() {
+		this._saveToolbar.hide();
 	},
 
 	_drawGui: function() {
