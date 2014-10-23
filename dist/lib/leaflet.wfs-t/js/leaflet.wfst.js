@@ -21,7 +21,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 			// url: <WFS service URL> 
 			// featureNS: <Feature NameSpace>
 			// featureType: <Feature Type>
-			// primaryKeyField: <The Primary Key field for using when doing deletes and updates>
+			// uniqueKey: <The Primary Key field for using when doing deletes and updates>
 			// xsdNs: Namespace used in XSD schemas, XSD returned by TinyOWS uses 'xs:' while GeoServer uses 'xsd:'
 		},options);
 
@@ -32,27 +32,34 @@ L.WFST = L.GeoJSON.WFS.extend({
 
 		initOptions.typename = initOptions.featureNS + ':' + initOptions.featureType;
 
+		initOptions.params = {
+			typeName: initOptions.typename,
+			srsName: initOptions.srs
+		};
+
 		// Call to parent initialize
-		L.GeoJSON.prototype.initialize.call(this,geojson,initOptions);
+
+		L.GeoJSON.WFS.prototype.initialize.call(this, geojson, initOptions);
 
 		// Now probably an ajax call to get existing features
-		if(this.options.showExisting){
-			this._loadExistingFeatures();
-		}
-		this._loadFeatureDescription();
+		// if(this.options.showExisting){
+		// 	this._loadExistingFeatures();
+		// }
+		// this._loadFeatureDescription();
 	},
 	// Additional functionality for these functions
 	addLayer: function(layer, options) {
 		// this.wfstAdd(layer,options);
 		// Call to parent addLayer
-		L.GeoJSON.prototype.addLayer.call(this,layer);
+		L.GeoJSON.WFS.prototype.addLayer.call(this,layer);
+		this._loadFeatureDescription();
 
 	},
 	removeLayer: function(layer,options) {
 		// this.wfstRemove(layer,options);
 
 		// Call to parent removeLayer
-		L.GeoJSON.prototype.removeLayer.call(this,layer);
+		L.GeoJSON.WFS.prototype.removeLayer.call(this,layer);
 	},
 
 
@@ -152,7 +159,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 					// Since we do one insert at a time, it should always be object 0
 					var fid = this._getElementsByTagName(xml,'ogc:FeatureId')[0].getAttribute('fid');
 					layer.feature.id = fid;
-					layer.feature.properties[this.options.primaryKeyField] = fid.replace(this.options.featureType + '.','');
+					layer.feature.properties[this.options.uniqueKey] = fid.replace(this.options.featureType + '.','');
 
 					realsuccess(res);
 				}else if(typeof options.error == 'function'){ 
@@ -175,8 +182,8 @@ L.WFST = L.GeoJSON.WFS.extend({
 
 	// Remove a layers with WFS-T
 	_wfstRemove: function(layer,options) {
-		if(typeof this.options.primaryKeyField == 'undefined' && typeof options.where == 'undefined'){
-			console.log("I can't do deletes without a primaryKeyField!");
+		if(typeof this.options.uniqueKey == 'undefined' && typeof options.where == 'undefined'){
+			console.log("I can't do deletes without a uniqueKey!");
 			if(typeof options.error == 'function'){
 				options.error();
 			}
@@ -205,7 +212,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 		var where; 
 		if(typeof options.where == 'undefined'){
 			where = {};
-			where[this.options.primaryKeyField] = layer.feature.properties[this.options.primaryKeyField];
+			where[this.options.uniqueKey] = layer.feature.properties[this.options.uniqueKey];
 		}else{
 			where = options.where;
 		}
@@ -222,8 +229,8 @@ L.WFST = L.GeoJSON.WFS.extend({
 
 	//  Save changes to a single layer with WFS-T
 	_wfstSave: function(layer,options){
-		if(typeof this.options.primaryKeyField == 'undefined'){
-			console.log("I can't do saves without a primaryKeyField!");
+		if(typeof this.options.uniqueKey == 'undefined'){
+			console.log("I can't do saves without a uniqueKey!");
 			if(typeof options.error == 'function'){
 				options.error();
 			}
@@ -248,7 +255,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 		});
 
 		var where = {};
-		where[this.options.primaryKeyField] = layer.feature.properties[this.options.primaryKeyField];
+		where[this.options.uniqueKey] = layer.feature.properties[this.options.uniqueKey];
 
 		var xml = this.options._xmlpre;
 		xml += "<wfs:Update typeName='"+this.options.typename+"'>";
@@ -405,36 +412,35 @@ L.WFST = L.GeoJSON.WFS.extend({
 
 	},
 
-	_swapCoords: function(coords) {
-		coords = [coords[1], coords[0]];
-		return coords;
-	},
+	// _swapCoords: function(coords) {
+	// 	coords = [coords[1], coords[0]];
+	// 	return coords;
+	// },
 
 	/*
 	Get all existing objects from the WFS service and draw them
 	*/
-	_loadExistingFeatures: function(){
-		var geoJsonUrl = this.options.url + '?service=WFS&version=' + this.options.version + '&request=GetFeature&typeName=' + this.options.featureNS + ':' + this.options.featureType + '&outputFormat=application/json';
-		this._ajax({
-			url: geoJsonUrl,
-			success: function(res) {
-				res = JSON.parse(res);
-				var features = res.features,
-					reverseAxis = this.options.reverseAxis,
-					swapCoords = this._swapCoords,
-					i, f;
-				for (i=0,len=features.length; i<len; i++) {
-					f = features[i];
-					if (reverseAxis && f.geometry && f.geometry.coordinates) {
-						// Swap coords
-						f.geometry.coordinates = swapCoords(f.geometry.coordinates);
-					}
-					f._wfstSaved = true;
-				}
-				this.addData(res.features);
-			}
-		});
-	},
+	// _loadExistingFeatures: function(){
+	// 	var geoJsonUrl = this.options.url + '?service=WFS&version=' + this.options.version + '&request=GetFeature&typeName=' + this.options.featureNS + ':' + this.options.featureType + '&outputFormat=application/json';
+	// 	this._ajax({
+	// 		url: geoJsonUrl,
+	// 		success: function(res) {
+	// 			res = JSON.parse(res);
+	// 			var features = res.features,
+	// 				reverseAxis = this.options.reverseAxis,
+	// 				i, f;
+	// 			for (i=0,len=features.length; i<len; i++) {
+	// 				f = features[i];
+	// 				if (reverseAxis && f.geometry && f.geometry.coordinates) {
+	// 					// Swap coords
+	// 					f.geometry.coordinates = swapCoords(f.geometry.coordinates);
+	// 				}
+	// 				f._wfstSaved = true;
+	// 			}
+	// 			this.addData(res.features);
+	// 		}
+	// 	});
+	// },
 	/*
 	Get the feature description
 	*/
@@ -454,6 +460,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 			}
 		});
 	},
+
 	// Deal with XML -- should probably put this into gml and do reading and writing there
 	_parseXml: function(rawxml){
 		if (window.DOMParser)

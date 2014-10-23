@@ -8,10 +8,12 @@ L.Control.Editor = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			exampleLabel: "Ett exempel"
+			dTitle: "Objektets attribut",
+			close: "Avbryt"
 		},
 		"en": {
-			exampleLabel: "An example"
+			dTitle: "Object attributes",
+			close: "Cancel"
 		}
 	},
 	
@@ -50,15 +52,30 @@ L.Control.Editor = L.Control.extend({
 	_initEditor: function() {
 		var self = this,
 			map = this.map;
-		var editLayer = L.wfst(null, {
-			// Required
-			url : 'http://kartor.malmo.se/geoserver/wfs',
-			featureNS : 'sandbox',
-			featureType : 'wfstpoints',
-			primaryKeyField: 'fid',
-			proxy: smap.config.ws.proxy,
-			reverseAxis: this.options.reverseAxis
-		}).addTo(map);
+		var url = "http://localhost/geoserver/wfs";
+
+		var defaults = {
+				// Required
+				xhrType: "POST",
+				reverseAxis: this.options.reverseAxis
+		};
+		var t = {
+				url : url,
+				featureNS : "sandbox",
+				featureType : "wfstpoints",
+				uniqueKey: 'fid',
+				selectable: true,
+				reverseAxis: false,
+				reverseAxisBbox: true,
+				useProxy: false,
+				srs: "EPSG:4326",
+				layerId: "mylayerid",
+				popup: '${*}<div style="white-space:nowrap;min-width:12em;margin-top:.5em;" class="btn-group btn-group-sm"><button id="editor-popup-move" type="button" class="btn btn-default">Move</button><button id="editor-popup-edit" type="button" class="btn btn-default">Edit</button></div>'
+		};
+		var editLayer = L.wfst(url, $.extend({}, defaults, t));
+		map.addLayer(editLayer);
+
+		
 
 		// Initialize the draw control and pass it the FeatureGroup of editable layers
 		var drawControl = new L.Control.Draw({
@@ -104,6 +121,29 @@ L.Control.Editor = L.Control.extend({
 		editLayer.on("layerremove", function(e) {
 			var layer = e.layer;
 			deletes.push(layer);
+		});
+
+		this.map.on("popupopen", function(e) {
+			var cont = $(e.popup._container);
+			cont.find("#editor-popup-move").on("click", function() {
+				// Activate move
+				var tBar;
+				for (var theId in drawControl._toolbars) {
+					tBar = drawControl._toolbars[theId];
+					if (tBar && tBar._modes && tBar._modes.edit) {
+						tBar._modes.edit.handler.enable();
+						break;
+					}
+				}
+
+				// self.map._toolbars[1]._modes["edit"].handler.enable();
+				// self.editLayer.eachLayer(drawControl._enableLayerEdit, drawControl);
+				return false;
+			});
+			cont.find("#editor-popup-edit").on("click", function() {
+				// Open edit modal
+				return false;
+			});
 		});
 
 
@@ -154,31 +194,44 @@ L.Control.Editor = L.Control.extend({
 		});
 	},
 
+	_saveAttributes: function(props) {
+		props = props || {};
+
+
+		
+	},
+
 	_drawGui: function() {
-
-		var btn = $('<button class="btn btn-primary btn-lg">Save</button>');
-		$("#mapdiv").append(btn);
-		btn.css({
-			"position": "absolute",
-			"left": "50%",
-			"bottom": "10%",
-			"z-index": "2000"
-		});
 		var self = this;
-		btn.on("click", function() {
-			self.save();
-			return false;
-		});
+		var bodyContent = $('<div id="smap-editor-content" />');
+		var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+		var d = utils.drawDialog(this.lang.dTitle, bodyContent, footerContent, {});
+		// d.modal("show");
+		// d.on("shown.bs.modal", function() {
+			
+		// });
+		// d.on("hidden.bs.modal", function() {
+		// 	self._saveAttributes(props);
+		// 	bodyContent.find("input, textarea").val("");
+		// });
+
+
+		// var btn = $('<button class="btn btn-primary btn-lg">Save</button>');
+		// $("#mapdiv").append(btn);
+		// btn.css({
+		// 	"position": "absolute",
+		// 	"left": "50%",
+		// 	"bottom": "10%",
+		// 	"z-index": "2000"
+		// });
+		// var self = this;
+		// btn.on("click", function() {
+		// 	self.save();
+		// 	return false;
+		// });
 	}
-
-
-
 });
 
-/*
- * This code lets us skip "new" before the
- * Class name when instantiating it.
- */
 //L.control.editor = function (options) {
 //	return new L.Control.Editor(options);
 //};

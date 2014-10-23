@@ -142,6 +142,19 @@ smap.core.Select = L.Class.extend({
 						}
 					}
 					
+					if (layer.options.popup && layer.options.popup === "*" || layer.options.popup.search(/\$\{\*\}/) > -1) {
+						// Options for extracting all keys and attributes in a table-like manner.
+						var popup = "";
+						var template = '<div><strong>_key_:</strong>&nbsp;<span>_val_</span></div>';
+						for (var key in props) {
+							popup += template.replace(/_key_/g, key).replace(/_val_/g, "${"+key+"}");
+						}
+						var repl = "*";
+						if (layer.options.popup.search(/\$\{\*\}/) > -1) {
+							repl = /\$\{\*\}/g;
+						}
+						layer.options.popup = layer.options.popup.replace(repl, popup);
+					}
 					var html = utils.extractToHtml(layer.options.popup, props);
 					var lay = utils.getLayerFromFeature(selectedFeature, layer);
 					// if (!lay) {
