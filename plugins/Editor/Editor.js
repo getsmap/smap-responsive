@@ -98,38 +98,42 @@ L.Control.Editor = L.Control.extend({
 			inserts = this._inserts,
 			updates = this._updates,
 			deletes = this._deletes;
-		map.on('draw:edited', function (e) {
-			console.log("edited");
-
-			f = e.layers;
-			fMod = $.extend({}, {
-				_layers: {}
-			});
-			for (theId in f._layers) {
-				// Don't try to update a feature that has not yet been added (inserted).
-				ff = f._layers[theId];
-				if ( $.inArray(ff, inserts) === -1 ) {
-					fMod._layers[theId] = ff;
-				}
-				else {
-					alert("already in inserts arr");
-				}
-			}
-			updates.push(fMod);
-			// self._updates.push(e.layers);
-
-		});
+		
 		this._editLayer = editLayer;
 
-		editLayer.on("layerremove", function(e) {
-			var layer = e.layer;
-			deletes.push(layer);
-		});
+		// editLayer.on("layerremove", function(e) {
+		// 	var layer = e.layer;
+		// 	deletes.push(layer);
+		// });
 
 		this.map.on("popupopen", function(e) {
+
+
 			var cont = $(e.popup._container);
 			// var layer = e.popup._source;
 			self._marker = e.popup._source;
+			
+			// I used this before: map.on('draw:edited', function (e) {
+			// But this one applies only to one marker (the marker that was selected for being moved)
+			self._marker.off('dragend').on('dragend', function(e) {
+				f = self._marker;
+				for (theId in f._layers) {
+					// Don't try to update a feature that has not yet been added (inserted).
+					fMod = $.extend({}, {
+						_layers: {}
+					});
+					ff = f._layers[theId];
+					if ( $.inArray(ff, inserts) === -1 ) {
+						fMod._layers[theId] = ff;
+					}
+					else {
+						alert("already in inserts arr");
+					}
+				}
+				updates.push(fMod);
+				// self._updates.push(e.layers);
+			});
+
 			// layer.off('dragend').on('dragend', function(e) {
 			// 	// Save on client (not commit)
 			// 	var lay = e.target;
@@ -138,7 +142,8 @@ L.Control.Editor = L.Control.extend({
 			// });
 			cont.find("#editor-popup-remove").on("click", function() {
 				if (confirm("Remove?") === true) {
-					alert("Remove");
+					editLayer.wfstRemove(self._marker);
+					// .done(function(){});
 				}
 				return false;
 			});
@@ -196,7 +201,6 @@ L.Control.Editor = L.Control.extend({
 
 		var inserts = this._inserts,
 			updates = this._updates,
-			deletes = this._deletes,
 			i, f,
 			editLayer = this._editLayer,
 			len = inserts.length;
@@ -216,9 +220,6 @@ L.Control.Editor = L.Control.extend({
 				updates.splice(f, 1);
 			});
 		}
-		editLayer.wfstRemove(deletes).done(function() {
-			deletes = [];
-		});
 	},
 
 	_saveAttributes: function(props) {
@@ -230,9 +231,9 @@ L.Control.Editor = L.Control.extend({
 
 		if (!this._saveToolbar) {
 			var self = this;
-			this._saveToolbar = $('<div class="smap-editor-savetoolbar" />');
-			var btnSave = $('<button class="btn btn-success btn-lg">Save</button>'),
-				btnCancel = $('<button class="btn btn-default btn-lg">Cancel</button>');
+			this._saveToolbar = $('<div class="smap-editor-savetoolbar btn-group btn-group-lg" />');
+			var btnSave = $('<button class="btn btn-success">Save</button>'),
+				btnCancel = $('<button class="btn btn-default">Cancel</button>');
 
 			this._saveToolbar.append(btnCancel).append(btnSave);
 			$("#mapdiv").append(this._saveToolbar);
@@ -263,9 +264,14 @@ L.Control.Editor = L.Control.extend({
 				editToolbar.handler.disable();
 				self._editLayer.clearLayers();
 				self._editLayer._refresh(true);
+				self._hideSaveToolbar();
 				return false;
 			});
 		}
+		var btnSaveLbl = type == "insert" ? "Save new marker" : "Save move";
+		var btnCancelLbl = type == "insert" ? "Undo" : "Undo move";
+		this._saveToolbar.find("button:eq(0)").text(btnCancelLbl);
+		this._saveToolbar.find("button:eq(1)").text(btnSaveLbl);
 		this._saveToolbar.show();
 	},
 

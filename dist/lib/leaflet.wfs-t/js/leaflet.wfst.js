@@ -55,12 +55,12 @@ L.WFST = L.GeoJSON.WFS.extend({
 		this._loadFeatureDescription();
 
 	},
-	removeLayer: function(layer,options) {
-		// this.wfstRemove(layer,options);
+	// removeLayer: function(layer,options) {
+	// 	// this.wfstRemove(layer,options);
 
-		// Call to parent removeLayer
-		L.GeoJSON.WFS.prototype.removeLayer.call(this,layer);
-	},
+	// 	// Call to parent removeLayer
+	// 	L.GeoJSON.WFS.prototype.removeLayer.call(this,layer);
+	// },
 
 
 	// These functions are unique to WFST
@@ -79,7 +79,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 			this._wfstAdd(layers[i],options);
 		}
 	},
-	wfstRemove: function(layers,options){
+	wfstRemove: function(layers,options) {
 		options = options || {};
 		if(layers === null){
 			this._wfstRemove(null,options);

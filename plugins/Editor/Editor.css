@@ -14,3 +14,7 @@
   left: 50%;
   z-index: 1002;
 }
+.leaflet-edit-marker-selected {
+  width: 33px !important;
+  height: 49px !important;
+}

@@ -92,7 +92,7 @@
     "leaflet.draw": {
       "main": [
         "dist/leaflet.draw.css",
-        "dist/leaflet.draw.js",
+        "dist/leaflet.draw-src.js",
         "dist/images/*.png"
       ]
     },
