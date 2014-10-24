@@ -8,13 +8,29 @@
 .leaflet-bar a:last-child {
   border-radius: 0;
 }
-.smap-editor-savetoolbar {
-  position: absolute;
-  top: 1em;
-  left: 50%;
+.leaflet-control-container .smap-editor-savetoolbar {
   z-index: 1002;
+  top: 0.25em;
+  left: 1em;
+  pointer-events: all;
+  white-space: nowrap;
+  min-width: 25em;
+}
+.leaflet-control-container .smap-editor-savetoolbar button {
+  max-width: none;
 }
 .leaflet-edit-marker-selected {
   width: 33px !important;
   height: 49px !important;
+}
+.editor-popup-edit button {
+  min-width: 6em;
+}
+.smap-editor-btnadd {
+  z-index: 2000;
+  top: 0.5em;
+  margin-left: 0.5em;
+  position: relative;
+  cursor: pointer;
+  pointer-events: all;
 }

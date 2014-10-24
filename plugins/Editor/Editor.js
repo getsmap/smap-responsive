@@ -10,14 +10,34 @@ L.Control.Editor = L.Control.extend({
 		"sv": {
 			dTitle: "Objektets attribut",
 			close: "Avbryt",
-			save: "Spara"
+			save: "Spara",
+			remove: "Ta bort",
+			move: "Flytta",
+			editProps: "Ändra",
+			ruSureRemove: "Ta bort objektet? Åtgärden kan inte ångras.",
+			saveNewMarker: "Spara ny markör",
+			saveMove: "Spara ny position",
+			undo: "Ångra",
+			cancel: "Avbryt"
 		},
 		"en": {
 			dTitle: "Object attributes",
 			close: "Cancel",
-			save: "Save"
+			save: "Save",
+			remove: "Remove",
+			move: "Move",
+			editProps: "Edit",
+			doYouWantTo: "Do you want to",
+			cannotBeUndoed: "Cannot be undoed",
+			ruSureRemove: "Remove feature? Cannot be undoed.",
+			saveNewMarker: "Save new marker",
+			saveMove: "Save move",
+			undo: "Undo",
+			cancel: "Cancel"
 		}
 	},
+
+	_geomType: "marker",
 	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode;
@@ -45,11 +65,31 @@ L.Control.Editor = L.Control.extend({
 
 		this._initEditor();
 		this._drawModal();
+		this._addBtnAdd();
+
 		
 		return this._container;
 	},
 
 	onRemove: function(map) {},
+
+	_addBtnAdd: function() {
+		var self = this;
+		var btnAdd = $('<button class="btn btn-default btn-lg smap-editor-btnadd"><i class="fa fa-map-marker fa-2x"></i></button>');
+		$(".leaflet-top.leaflet-left").append(btnAdd);
+		btnAdd.on("click", function() {
+			var drawToolbar = self._getDrawToolbar();
+			$(this).toggleClass("btn-danger");
+			if ($(this).hasClass("btn-danger")) {
+				drawToolbar.handler.enable();
+			}
+			else {
+				drawToolbar.handler.disable();
+			}
+			return false;
+		});
+		
+	},
 
 	_initEditor: function() {
 		var self = this,
@@ -72,7 +112,7 @@ L.Control.Editor = L.Control.extend({
 				useProxy: false,
 				srs: "EPSG:4326",
 				layerId: "mylayerid",
-				popup: '${*}<div style="white-space:nowrap;min-width:18em;margin-top:.5em;" class="btn-group btn-group-sm"><button id="editor-popup-remove" type="button" class="btn btn-default"><i class="fa fa-times"></i>&nbsp;Remove</button><button id="editor-popup-move" type="button" class="btn btn-default"><i class="fa fa-arrows"></i>&nbsp;Move</button><button id="editor-popup-edit" type="button" class="btn btn-default"><i class="fa fa-edit"></i>&nbsp;Edit</button></div>'
+				popup: '${*}<div class="popup-divider"></div><div style="white-space:nowrap;min-width:18em;" class="btn-group btn-group-sm editor-popup-edit"><button id="editor-popup-edit" type="button" class="btn btn-default">'+this.lang.editProps+'</button><button id="editor-popup-move" type="button" class="btn btn-default">'+this.lang.move+'</button><button id="editor-popup-remove" type="button" class="btn btn-default">'+this.lang.remove+'</button></div>'
 		};
 		var editLayer = L.wfst(url, $.extend({}, defaults, t));
 		map.addLayer(editLayer);
@@ -85,10 +125,14 @@ L.Control.Editor = L.Control.extend({
 				featureGroup: editLayer
 			}
 		});
+
 		this._drawControl = drawControl;
 		map.addControl(drawControl);
+		$(".leaflet-draw").remove();
+
 		map.on('draw:created', function (e) {
 			console.log("created");
+			$(".smap-editor-btnadd").removeClass("btn-danger");
 			editLayer.addLayer(e.layer);
 			self._marker = e.layer;
 			self._showSaveToolbar("insert");
@@ -147,7 +191,7 @@ L.Control.Editor = L.Control.extend({
 			// 	lay.edited = true;
 			// });
 			cont.find("#editor-popup-remove").on("click", function() {
-				if (confirm("Remove?") === true) {
+				if (confirm(self.lang.ruSureRemove) === true) {
 					editLayer.wfstRemove(self._marker).done(function() {
 						self._editLayer.clearLayers();
 						self._editLayer._refresh(true);
@@ -180,6 +224,17 @@ L.Control.Editor = L.Control.extend({
 			tBar = this._drawControl._toolbars[theId];
 			if (tBar && tBar._modes && tBar._modes.edit) {
 				return tBar._modes.edit;
+			}
+		}
+		return null;
+	},
+
+	_getDrawToolbar: function() {
+		var tBar;
+		for (var theId in this._drawControl._toolbars) {
+			tBar = this._drawControl._toolbars[theId];
+			if (tBar && tBar._modes && tBar._modes[this._geomType]) {
+				return tBar._modes[this._geomType];
 			}
 		}
 		return null;
@@ -254,7 +309,7 @@ L.Control.Editor = L.Control.extend({
 				btnCancel = $('<button class="btn btn-default">Cancel</button>');
 
 			this._saveToolbar.append(btnCancel).append(btnSave);
-			$("#mapdiv").append(this._saveToolbar);
+			$(".leaflet-top.leaflet-left").append(this._saveToolbar);
 			btnSave.on("click", function() {
 				if (type === "update") {
 					self.wfstSave(self._marker);
@@ -281,8 +336,9 @@ L.Control.Editor = L.Control.extend({
 				return false;
 			});
 		}
-		var btnSaveLbl = type == "insert" ? "Save new marker" : "Save move";
-		var btnCancelLbl = type == "insert" ? "Undo" : "Cancel";
+
+		var btnSaveLbl = type == "insert" ? this.lang.saveNewMarker : this.lang.saveMove;
+		var btnCancelLbl = this.lang.cancel;
 		this._saveToolbar.find("button:eq(0)").text(btnCancelLbl);
 		this._saveToolbar.find("button:eq(1)").text(btnSaveLbl);
 		this._saveToolbar.show();
@@ -327,6 +383,8 @@ L.Control.Editor = L.Control.extend({
 				'<button id="smap-editor-editmodal-btnsave" type="button" class="btn btn-primary">'+this.lang.save+'</button>';
 		this._modalEdit = utils.drawDialog(this.lang.dTitle, bodyContent, footerContent, {});
 		this._modalEdit.find("#smap-editor-editmodal-btnsave").on("click", function() {
+			// Save new attributes
+
 			var orgProps = self._marker.feature.properties,
 				newProps = {};
 			var inputs = bodyContent.find("form").find('input.changed');
@@ -340,8 +398,14 @@ L.Control.Editor = L.Control.extend({
 			var saveProps = $.extend({}, orgProps, newProps);
 			self._marker.feature.properties = saveProps;
 			self._editLayer._wfstSave(self._marker, {newProps: newProps}); // Hack for saving new propetrties (otherwise extracted from the old XML response)
-			self.save();
 			self._modalEdit.modal("hide");
+
+			self.map.closePopup();
+			self._marker.fire("click", {
+				properties: saveProps,
+				latlng: self._marker.getLatLng(),
+				originalEvent: {shiftKey: false}
+			});
 			return false;
 		});
 

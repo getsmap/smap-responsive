@@ -6,14 +6,36 @@
 		border-radius 0
 
 
-.smap-editor-savetoolbar
-	position absolute
-	top 1em
-	left 50%
+.leaflet-control-container .smap-editor-savetoolbar
 	z-index 1002
+	top .25em
+	left 1em
+	pointer-events all
+	white-space nowrap
+	min-width 25em
+	button
+		// min-width 8em
+		max-width none
+
 	// text-align center
 
 .leaflet-edit-marker-selected
 	// Fix the width and height which is distorted otherwise
 	width 33px !important
 	height 49px !important
+
+
+.editor-popup-edit button
+	min-width 6em
+
+.smap-editor-btnadd
+	z-index 2000
+	top .5em
+	margin-left .5em
+	position relative
+	cursor pointer
+	pointer-events all
+
+
+
+
