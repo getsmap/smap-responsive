@@ -107,7 +107,16 @@ L.Control.Editor = L.Control.extend({
 		// });
 
 		this.map.on("popupopen", function(e) {
-
+			if (self._marker && self._marker.dragging._draggable && self._marker.dragging._draggable._enabled === true) {
+				self.map.closePopup();
+				// self._marker.openPopup();
+				if (confirm("Do you to stop editing this feature? Any changes made to the feature will be removed.") === true) {
+					self.cancelEdit();
+				}
+				else {
+					return;
+				}
+			}
 
 			var cont = $(e.popup._container);
 			// var layer = e.popup._source;
@@ -142,8 +151,10 @@ L.Control.Editor = L.Control.extend({
 			// });
 			cont.find("#editor-popup-remove").on("click", function() {
 				if (confirm("Remove?") === true) {
-					editLayer.wfstRemove(self._marker);
-					// .done(function(){});
+					editLayer.wfstRemove(self._marker).done(function() {
+						self._editLayer.clearLayers();
+						self._editLayer._refresh(true);
+					});
 				}
 				return false;
 			});
@@ -228,6 +239,14 @@ L.Control.Editor = L.Control.extend({
 
 	},
 
+	cancelEdit: function() {
+		var editToolbar = this._getEditToolbar();
+		editToolbar.handler._disableLayerEdit(this._marker);
+		this._editLayer.clearLayers();
+		this._editLayer._refresh(true);
+		this._hideSaveToolbar();
+	},
+
 	_showSaveToolbar: function(type) {
 
 		if (!this._saveToolbar) {
@@ -260,12 +279,7 @@ L.Control.Editor = L.Control.extend({
 				return false;
 			});
 			btnCancel.on("click", function() {
-				// alert("TODO Revert (stop editing and force reload features from source)");
-				var editToolbar = self._getEditToolbar();
-				editToolbar.handler._disableLayerEdit(self._marker);
-				self._editLayer.clearLayers();
-				self._editLayer._refresh(true);
-				self._hideSaveToolbar();
+				self.cancelEdit();
 				return false;
 			});
 		}
