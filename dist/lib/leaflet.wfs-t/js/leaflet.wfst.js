@@ -259,7 +259,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 
 		var xml = this.options._xmlpre;
 		xml += "<wfs:Update typeName='"+this.options.typename+"'>";
-		xml += this._wfstUpdateValues(layer);
+		xml += this._wfstUpdateValues(layer, options.newProps);
 		xml += this._whereFilter(where);
 		xml += "</wfs:Update>";
 		xml += "</wfs:Transaction>";
@@ -278,7 +278,6 @@ L.WFST = L.GeoJSON.WFS.extend({
 		if(!field){
 			return false;
 		}
-
 		for(var f in field){
 			xml += "<" + this.options.featureNS + ":" + f +">";
 			xml += field[f];
@@ -287,12 +286,18 @@ L.WFST = L.GeoJSON.WFS.extend({
 
 		return xml;
 	},
-	_wfstUpdateValues: function(layer){
+	_wfstUpdateValues: function(layer, newProps){
+		newProps = newProps || {};
+
 		var xml = '';
 		var field = this._wfstValueKeyPairs(layer);
 
 		if(!field){
 			return false;
+		}
+
+		if (newProps) {
+			$.extend(field, newProps);
 		}
 
 		for(var f in field){

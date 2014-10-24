@@ -9,11 +9,13 @@ L.Control.Editor = L.Control.extend({
 	_lang: {
 		"sv": {
 			dTitle: "Objektets attribut",
-			close: "Avbryt"
+			close: "Avbryt",
+			save: "Spara"
 		},
 		"en": {
 			dTitle: "Object attributes",
-			close: "Cancel"
+			close: "Cancel",
+			save: "Save"
 		}
 	},
 	
@@ -42,7 +44,7 @@ L.Control.Editor = L.Control.extend({
 		this.$container = $(this._container);
 
 		this._initEditor();
-		this._drawGui();
+		this._drawModal();
 		
 		return this._container;
 	},
@@ -101,11 +103,6 @@ L.Control.Editor = L.Control.extend({
 		
 		this._editLayer = editLayer;
 
-		// editLayer.on("layerremove", function(e) {
-		// 	var layer = e.layer;
-		// 	deletes.push(layer);
-		// });
-
 		this.map.on("popupopen", function(e) {
 			if (self._marker && self._marker.dragging._draggable && self._marker.dragging._draggable._enabled === true) {
 				self.map.closePopup();
@@ -124,24 +121,24 @@ L.Control.Editor = L.Control.extend({
 			
 			// I used this before: map.on('draw:edited', function (e) {
 			// But this one applies only to one marker (the marker that was selected for being moved)
-			self._marker.off('dragend').on('dragend', function(e) {
-				f = self._marker;
-				for (theId in f._layers) {
-					// Don't try to update a feature that has not yet been added (inserted).
-					fMod = $.extend({}, {
-						_layers: {}
-					});
-					ff = f._layers[theId];
-					if ( $.inArray(ff, inserts) === -1 ) {
-						fMod._layers[theId] = ff;
-					}
-					else {
-						alert("already in inserts arr");
-					}
-				}
-				updates.push(fMod);
-				// self._updates.push(e.layers);
-			});
+			// self._marker.off('dragend').on('dragend', function(e) {
+			// 	f = e.layers;
+			// 	for (theId in f._layers) {
+			// 		// Don't try to update a feature that has not yet been added (inserted).
+			// 		fMod = $.extend({}, {
+			// 			_layers: {}
+			// 		});
+			// 		ff = f._layers[theId];
+			// 		if ( $.inArray(ff, inserts) === -1 ) {
+			// 			fMod._layers[theId] = ff;
+			// 		}
+			// 		else {
+			// 			alert("already in inserts arr");
+			// 		}
+			// 	}
+			// 	updates.push(fMod);
+			// 	// self._updates.push(e.layers);
+			// });
 
 			// layer.off('dragend').on('dragend', function(e) {
 			// 	// Save on client (not commit)
@@ -171,7 +168,7 @@ L.Control.Editor = L.Control.extend({
 			});
 			cont.find("#editor-popup-edit").on("click", function() {
 				// Open edit modal
-
+				self._modalEdit.modal("show");
 				return false;
 			});
 		});
@@ -193,7 +190,6 @@ L.Control.Editor = L.Control.extend({
 
 		var defs = [];
 		var inst = this._editLayer;
-		var updates = this._updates;
 		var v, i;
 		for (i=0, len=layers.length; i<len; i++) {
 			if (typeof layers[i]._layers == 'object') {
@@ -236,6 +232,8 @@ L.Control.Editor = L.Control.extend({
 
 	_saveAttributes: function(props) {
 		props = props || {};
+
+
 
 	},
 
@@ -294,19 +292,73 @@ L.Control.Editor = L.Control.extend({
 		this._saveToolbar.hide();
 	},
 
-	_drawGui: function() {
+	_fillModal: function(props) {
+		props = props || null;
+
+		if (props === null) {
+			return false;
+		}
+
+		var cont = this._modalEdit.find("#smap-editor-content");
+		var key, val, group, inputId,
+			form = $('<form role="form" />');
+		for (key in props) {
+			if (key === "fid" || key === "id" || key === "gid") {
+				continue;
+			}
+			val = props[key];
+			inputId = "smap-editor-propentry-"+key;
+			group = '<div class="form-group">\
+					<label for="'+inputId+'">'+key+'</label>\
+					<input type="text" name="'+key+'" class="form-control" id="'+inputId+'" value="'+(val || "")+'">\
+				</div>';
+			form.append(group);
+		}
+		form.find("input").on("change", function() {
+			$(this).addClass("changed");
+		});
+		cont.append(form);
+	},
+
+	_drawModal: function() {
 		var self = this;
 		var bodyContent = $('<div id="smap-editor-content" />');
-		var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
-		var d = utils.drawDialog(this.lang.dTitle, bodyContent, footerContent, {});
+		var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>'+
+				'<button id="smap-editor-editmodal-btnsave" type="button" class="btn btn-primary">'+this.lang.save+'</button>';
+		this._modalEdit = utils.drawDialog(this.lang.dTitle, bodyContent, footerContent, {});
+		this._modalEdit.find("#smap-editor-editmodal-btnsave").on("click", function() {
+			var orgProps = self._marker.feature.properties,
+				newProps = {};
+			var inputs = bodyContent.find("form").find('input.changed');
+			if (!inputs.length) {
+				self._modalEdit.modal("hide");
+				return false;
+			}
+			inputs.each(function() {
+				newProps[$(this).attr("name")] = $(this).val();
+			});
+			var saveProps = $.extend({}, orgProps, newProps);
+			self._marker.feature.properties = saveProps;
+			self._editLayer._wfstSave(self._marker, {newProps: newProps}); // Hack for saving new propetrties (otherwise extracted from the old XML response)
+			self.save();
+			self._modalEdit.modal("hide");
+			return false;
+		});
+
+		this._modalEdit.on("shown.bs.modal", function() {
+			var props = self._marker.feature.properties;
+			self._fillModal(props);
+		});
+		
+
 		// d.modal("show");
 		// d.on("shown.bs.modal", function() {
 			
 		// });
-		// d.on("hidden.bs.modal", function() {
-		// 	self._saveAttributes(props);
-		// 	bodyContent.find("input, textarea").val("");
-		// });
+		self._modalEdit.on("hidden.bs.modal", function() {
+			// self._saveAttributes(props);
+			bodyContent.empty();
+		});
 
 
 		// var btn = $('<button class="btn btn-primary btn-lg">Save</button>');
