@@ -151,7 +151,7 @@ L.Control.Editor = L.Control.extend({
 				// Activate move
 				self._marker.closePopup();
 				var editToolbar = self._getEditToolbar();
-				editToolbar.handler.enable();
+				editToolbar.handler._enableLayerEdit(self._marker);
 				self._showSaveToolbar("update");
 
 				// self.map._toolbars[1]._modes["edit"].handler.enable();
@@ -160,6 +160,7 @@ L.Control.Editor = L.Control.extend({
 			});
 			cont.find("#editor-popup-edit").on("click", function() {
 				// Open edit modal
+
 				return false;
 			});
 		});
@@ -242,7 +243,7 @@ L.Control.Editor = L.Control.extend({
 					self.wfstSave(self._marker);
 				}
 				var editToolbar = self._getEditToolbar();
-				editToolbar.handler.disable();
+				editToolbar.handler._disableLayerEdit(self._marker);
 				
 				if (type === "insert") {
 					self._inserts.push(self._marker);
@@ -261,7 +262,7 @@ L.Control.Editor = L.Control.extend({
 			btnCancel.on("click", function() {
 				// alert("TODO Revert (stop editing and force reload features from source)");
 				var editToolbar = self._getEditToolbar();
-				editToolbar.handler.disable();
+				editToolbar.handler._disableLayerEdit(self._marker);
 				self._editLayer.clearLayers();
 				self._editLayer._refresh(true);
 				self._hideSaveToolbar();
@@ -269,7 +270,7 @@ L.Control.Editor = L.Control.extend({
 			});
 		}
 		var btnSaveLbl = type == "insert" ? "Save new marker" : "Save move";
-		var btnCancelLbl = type == "insert" ? "Undo" : "Undo move";
+		var btnCancelLbl = type == "insert" ? "Undo" : "Cancel";
 		this._saveToolbar.find("button:eq(0)").text(btnCancelLbl);
 		this._saveToolbar.find("button:eq(1)").text(btnSaveLbl);
 		this._saveToolbar.show();

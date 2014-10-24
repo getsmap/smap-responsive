@@ -180,6 +180,10 @@ var config = {
 						}
 					}
 					// {
+					// 	init: "L.Control.Mapillary",
+					// 	options: {}
+					// }
+					// {
 					// 	init: "L.Control.DrawSmap",
 					// 	options: {}
 					// }
