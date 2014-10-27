@@ -454,6 +454,30 @@ L.Control.Editor = L.Control.extend({
 		cont.append(form);
 	},
 
+	_saveAttributes: function() {
+		var orgProps = this._marker.feature.properties,
+			newProps = {};
+		var inputs = this._modalEdit.find("form").find('input.changed');
+		if (!inputs.length) {
+			this._modalEdit.modal("hide");
+			return false;
+		}
+		inputs.each(function() {
+			newProps[$(this).attr("name")] = $(this).val();
+		});
+		var saveProps = $.extend({}, orgProps, newProps);
+		this._marker.feature.properties = saveProps;
+		this._editLayer._wfstSave(this._marker, {newProps: newProps}); // Hack for saving new propetrties (otherwise extracted from the old XML response)
+		this._modalEdit.modal("hide");
+
+		this.map.closePopup();
+		this._marker.fire("click", {
+			properties: saveProps,
+			latlng: this._marker.getLatLng(),
+			originalEvent: {shiftKey: false}
+		});
+	},
+
 	_drawModal: function() {
 		var self = this;
 		var bodyContent = $('<div id="smap-editor-content" />');
@@ -462,34 +486,22 @@ L.Control.Editor = L.Control.extend({
 		this._modalEdit = utils.drawDialog(this.lang.dTitle, bodyContent, footerContent, {});
 		this._modalEdit.find("#smap-editor-editmodal-btnsave").on("click", function() {
 			// Save new attributes
-
-			var orgProps = self._marker.feature.properties,
-				newProps = {};
-			var inputs = bodyContent.find("form").find('input.changed');
-			if (!inputs.length) {
-				self._modalEdit.modal("hide");
-				return false;
-			}
-			inputs.each(function() {
-				newProps[$(this).attr("name")] = $(this).val();
-			});
-			var saveProps = $.extend({}, orgProps, newProps);
-			self._marker.feature.properties = saveProps;
-			self._editLayer._wfstSave(self._marker, {newProps: newProps}); // Hack for saving new propetrties (otherwise extracted from the old XML response)
-			self._modalEdit.modal("hide");
-
-			self.map.closePopup();
-			self._marker.fire("click", {
-				properties: saveProps,
-				latlng: self._marker.getLatLng(),
-				originalEvent: {shiftKey: false}
-			});
+			self._saveAttributes();
 			return false;
 		});
 
 		this._modalEdit.on("shown.bs.modal", function() {
 			var props = self._marker.feature.properties;
 			self._fillModal(props);
+			self._modalEdit.on("keypress", function(e) {
+				if (e.which === 13) {
+					// Trigger save and prevent event bubbling
+					$("#smap-editor-editmodal-btnsave").focus();
+					self._saveAttributes();
+					self._modalEdit.modal("hide");
+					e.preventDefault();
+				}
+			});
 		});
 		
 
@@ -500,6 +512,7 @@ L.Control.Editor = L.Control.extend({
 		self._modalEdit.on("hidden.bs.modal", function() {
 			// self._saveAttributes(props);
 			bodyContent.empty();
+			self._modalEdit.off("keypress");
 		});
 
 
