@@ -301,6 +301,7 @@ L.Control.Editor = L.Control.extend({
 	},
 
 	_showSaveToolbar: function(type) {
+		this._editType = type;
 
 		if (!this._saveToolbar) {
 			var self = this;
@@ -311,13 +312,13 @@ L.Control.Editor = L.Control.extend({
 			this._saveToolbar.append(btnCancel).append(btnSave);
 			$(".leaflet-top.leaflet-left").append(this._saveToolbar);
 			btnSave.on("click", function() {
-				if (type === "update") {
+				if (self._editType === "update") {
 					self.wfstSave(self._marker);
 				}
 				var editToolbar = self._getEditToolbar();
 				editToolbar.handler._disableLayerEdit(self._marker);
 				
-				if (type === "insert") {
+				if (self._editType === "insert") {
 					self._inserts.push(self._marker);
 					self.save(function() {
 						self._editLayer.clearLayers();
@@ -325,7 +326,7 @@ L.Control.Editor = L.Control.extend({
 						self._hideSaveToolbar();
 					});
 				}
-				else if (type === "update") {
+				else if (self._editType === "update") {
 					self.save();
 					self._hideSaveToolbar();
 				}
@@ -337,7 +338,7 @@ L.Control.Editor = L.Control.extend({
 			});
 		}
 
-		var btnSaveLbl = type == "insert" ? this.lang.saveNewMarker : this.lang.saveMove;
+		var btnSaveLbl = this._editType == "insert" ? this.lang.saveNewMarker : this.lang.saveMove;
 		var btnCancelLbl = this.lang.cancel;
 		this._saveToolbar.find("button:eq(0)").text(btnCancelLbl);
 		this._saveToolbar.find("button:eq(1)").text(btnSaveLbl);

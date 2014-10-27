@@ -178,7 +178,7 @@ var config = {
 							useProxy: true,
 							reverseAxis: true
 						}
-					}
+					},
 					// {
 					// 	init: "L.Control.Mapillary",
 					// 	options: {}
@@ -188,12 +188,12 @@ var config = {
 					// 	options: {}
 					// }
 					// ,
-					// {
-					// 	init: "L.Control.ShareLink",
-					// 	options: {
-					// 		position: "topright"
-					// 	}
-					// },
+					{
+						init: "L.Control.ShareLink",
+						options: {
+							position: "topright"
+						}
+					}
 					// {
 					// 	init : "L.Control.RedirectClick",		
 					// 	option: {
