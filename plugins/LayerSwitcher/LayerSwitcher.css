@@ -133,9 +133,9 @@
     background: #000 !important;
     color: #fff;
   }
-  div.list-group-item.active,
-  div.list-group-item.active:hover,
-  div.list-group-item.active:focus {
+  a.list-group-item.active,
+  a.list-group-item.active:hover,
+  a.list-group-item.active:focus {
     background: #000 !important;
     color: #fff;
   }
@@ -151,12 +151,15 @@
   }
 }
 @media (min-width: 992px) {
-  div.list-group-item.active,
-  div.list-group-item.active:hover,
-  div.list-group-item.active:focus {
+  a.list-group-item {
+    color: #000;
+  }
+  a.list-group-item.active,
+  a.list-group-item.active:hover,
+  a.list-group-item.active:focus {
     z-index: 2;
     background-color: #fff;
-    color: #555;
+    color: #000;
     font-weight: bold;
   }
   .lswitch-panel a.active,
@@ -177,10 +180,10 @@
   .lswitch-cat.open,
   .lswitch-cat.open:hover {
     background-color: #fff;
-    color: #555;
+    color: #000;
   }
   .lswitch-cat {
-    color: #555;
+    color: #000;
     background-color: #fff;
     outline: 1px solid #ccc;
   }

@@ -63,11 +63,12 @@ L.Control.Editor = L.Control.extend({
 		
 		this.$container = $(this._container);
 
-		this._initEditor();
 		this._drawModal();
-		this._addBtnAdd();
 
-		
+		var self = this;
+		smap.event.on("smap.core.pluginsadded", function() {
+			self._setEditableLayer();
+		});
 		return this._container;
 	},
 
@@ -75,146 +76,222 @@ L.Control.Editor = L.Control.extend({
 
 	_addBtnAdd: function() {
 		var self = this;
-		var btnAdd = $('<button class="btn btn-default btn-lg smap-editor-btnadd"><i class="fa fa-map-marker fa-2x"></i></button>');
-		$(".leaflet-top.leaflet-left").append(btnAdd);
-		btnAdd.on("click", function() {
-			var drawToolbar = self._getDrawToolbar();
-			$(this).toggleClass("btn-danger");
-			if ($(this).hasClass("btn-danger")) {
-				drawToolbar.handler.enable();
-			}
-			else {
-				drawToolbar.handler.disable();
-			}
-			return false;
-		});
-		
+		var btnAdd = $(".smap-editor-btnadd");
+		if (!btnAdd.length) {
+			var btnAdd = $('<button class="btn btn-default btn-lg smap-editor-btnadd"><i class="fa fa-map-marker fa-2x"></i></button>');
+			$(".leaflet-top.leaflet-left").prepend(btnAdd);
+			btnAdd.on("click", function() {
+				var drawToolbar = self._getDrawToolbar();
+				$(this).toggleClass("btn-danger");
+				if ($(this).hasClass("btn-danger")) {
+					drawToolbar.handler.enable();
+				}
+				else {
+					drawToolbar.handler.disable();
+				}
+				return false;
+			});
+		}
 	},
 
-	_initEditor: function() {
+	_setEditableLayer: function() {
+		var ols = smap.config.ol || [],
+			t, row, editIcon;
+		var s = smap.cmd.getControl("LayerSwitcher");
+		if (!s)
+			return false;
+
+		var self = this;
+		function onClick() {
+			if ($(this).parent().hasClass("list-group-item-danger")) {
+				self.stopEditing();
+			}
+			else {
+				// Initiate editing of this layer
+				var t = $(this).data("t") || {};
+				if (t.init === "L.GeoJSON.WFS") {
+					self.startEditing(t, $(this).parent());
+				}
+				else {
+					alert("Kan inte redigera lager av typen "+t.init);
+				}
+			}
+			return false;
+		};
+		for (var i=0,len=ols.length; i<len; i++) {
+			t = ols[i];
+			editIcon = $('<i class="fa fa-edit smap-editor-switcher-icon"></i>')
+			if (t.options.editable) {
+				// Add the edit icon
+				row = $("#"+s._makeId(t.options.layerId));
+				row.append(editIcon);
+				editIcon.data("t", t);
+				editIcon.on("click", onClick);
+			}
+
+		}
+	},
+
+	_disabledRowClick: function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		$(e.target).tooltip("show");
+		setTimeout(function() {
+			$(e.target).tooltip("hide");
+		}, 2000);
+		return false;
+	},
+
+	stopEditing: function() {
+		if (this._editLayer) {
+			// var res = confirm("Do you want to switch editing layer?");
+			// if ( res !== true) {
+			// 	return false;
+			// }
+			
+			// Force the WFS layer to refresh all features by removing them all
+			var lid = this._editLayer.options.layerId;
+			var wfsLayerId = lid.substring(0, lid.length - "-edit".length);
+			var wfsLayer = smap.cmd.getLayer(wfsLayerId);
+			if (wfsLayer && wfsLayer.clearLayers) {
+				wfsLayer.clearLayers();
+			}
+			if (wfsLayer && wfsLayer._refresh) {
+				wfsLayer._refresh(true);
+			}
+			this.map.removeLayer(this._editLayer);
+		}
+		$(".lswitch-panel-ol .list-group-item")
+			.off("click", this._disabledRowClick)
+			.removeClass("list-group-item-danger");
+		$(".lswitch-panel-ol .list-group-item").tooltip("destroy");
+
+
+		this.map.off('draw:created');
+		this.map.off("popupopen", this.__onPopupOpen);
+
+		this._addBtnAdd();
+		$(".smap-editor-btnadd").remove();
+		return true;
+	},
+
+	startEditing: function(t, row) {
 		var self = this,
 			map = this.map;
-		var url = "http://localhost/geoserver/wfs";
 
-		var defaults = {
-				// Required
-				xhrType: "POST",
-				reverseAxis: this.options.reverseAxis
-		};
-		var t = {
-				url : url,
-				featureNS : "sandbox",
-				featureType : "wfstpoints",
-				uniqueKey: 'fid',
-				selectable: true,
-				reverseAxis: false,
-				reverseAxisBbox: true,
-				useProxy: false,
-				srs: "EPSG:4326",
-				layerId: "mylayerid",
-				popup: '${*}<div class="popup-divider"></div><div style="white-space:nowrap;min-width:18em;" class="btn-group btn-group-sm editor-popup-edit"><button id="editor-popup-edit" type="button" class="btn btn-default">'+this.lang.editProps+'</button><button id="editor-popup-move" type="button" class="btn btn-default">'+this.lang.move+'</button><button id="editor-popup-remove" type="button" class="btn btn-default">'+this.lang.remove+'</button></div>'
-		};
-		var editLayer = L.wfst(url, $.extend({}, defaults, t));
-		map.addLayer(editLayer);
+		if (this.stopEditing() !== true) {
+			return false;
+		}
+		this._addBtnAdd();
 
-		
+		$(".lswitch-panel-ol .list-group-item.active").trigger("tap"); // Hide all layers
+		$(".lswitch-panel-ol .list-group-item-danger").removeClass("list-group-item-danger");
+		$(".lswitch-panel-ol .list-group-item")
+			.tooltip({
+				title: "Redigering är aktiv. Deaktivera redigering för att tända lagret.",
+				trigger: "manual",
+				placement: "right",
+				container: "#maindiv"
+			})
+			.on("click", this._disabledRowClick);
+		row.addClass("list-group-item-danger");
+
+		// var defaults = {
+		// 		// Required
+		// 		xhrType: "POST",
+		// 		reverseAxis: this.options.reverseAxis
+		// };
+
+		var opts = $.extend({}, t.options); // Clone options
+		var tn = opts.params.typeName;
+		opts.url = t.url;
+		opts.featureNS = tn.split(":")[0];
+		opts.featureType = tn.split(":")[1];
+		opts.layerId = opts.layerId + "-edit";
+		opts.popup = '${*}<div class="popup-divider"></div><div style="white-space:nowrap;min-width:18em;" class="btn-group btn-group-sm editor-popup-edit"><button id="editor-popup-edit" type="button" class="btn btn-default">'+this.lang.editProps+'</button><button id="editor-popup-move" type="button" class="btn btn-default">'+this.lang.move+'</button><button id="editor-popup-remove" type="button" class="btn btn-default">'+this.lang.remove+'</button></div>';
+		// var t = {
+		// 		url : url,
+		// 		featureNS : "sandbox",
+		// 		featureType : "wfstpoints",
+		// 		uniqueKey: 'fid',
+		// 		selectable: true,
+		// 		reverseAxis: false,
+		// 		reverseAxisBbox: true,
+		// 		useProxy: false,
+		// 		srs: "EPSG:4326",
+		// 		layerId: "mylayerid",
+		// 		popup: '${*}<div class="popup-divider"></div><div style="white-space:nowrap;min-width:18em;" class="btn-group btn-group-sm editor-popup-edit"><button id="editor-popup-edit" type="button" class="btn btn-default">'+this.lang.editProps+'</button><button id="editor-popup-move" type="button" class="btn btn-default">'+this.lang.move+'</button><button id="editor-popup-remove" type="button" class="btn btn-default">'+this.lang.remove+'</button></div>'
+		// };
+		this._editLayer = L.wfst(t.url, opts);
+		map.addLayer(this._editLayer);
 
 		// Initialize the draw control and pass it the FeatureGroup of editable layers
-		var drawControl = new L.Control.Draw({
+		this._drawControl = new L.Control.Draw({
 			edit: {
-				featureGroup: editLayer
+				featureGroup: this._editLayer
 			}
 		});
 
-		this._drawControl = drawControl;
-		map.addControl(drawControl);
+		map.addControl(this._drawControl);
 		$(".leaflet-draw").remove();
 
 		map.on('draw:created', function (e) {
-			console.log("created");
 			$(".smap-editor-btnadd").removeClass("btn-danger");
-			editLayer.addLayer(e.layer);
+			self._editLayer.addLayer(e.layer);
 			self._marker = e.layer;
 			self._showSaveToolbar("insert");
-
-			// editLayer.wfstAdd([e.layer]);
 		});
 
-		var theId, f, ff, fMod,
-			inserts = this._inserts,
-			updates = this._updates,
-			deletes = this._deletes;
-		
-		this._editLayer = editLayer;
+		this.__onPopupOpen = this.__onPopupOpen || $.proxy(this._onPopupOpen, this);
+		this.map.on("popupopen", this.__onPopupOpen);
+	},
 
-		this.map.on("popupopen", function(e) {
-			if (self._marker && self._marker.dragging._draggable && self._marker.dragging._draggable._enabled === true) {
-				self.map.closePopup();
-				// self._marker.openPopup();
-				if (confirm("Do you to stop editing this feature? Any changes made to the feature will be removed.") === true) {
-					self.cancelEdit();
-				}
-				else {
-					return;
-				}
+	_onPopupOpen: function(e) {
+		// var theId, f, ff, fMod,
+		// 	inserts = this._inserts,
+		// 	updates = this._updates,
+		// 	deletes = this._deletes;
+
+		var self = this;
+		if (this._marker && this._marker.dragging._draggable && this._marker.dragging._draggable._enabled === true) {
+			this.map.closePopup();
+			// this._marker.openPopup();
+			if (confirm("Do you to stop editing this feature? Any changes made to the feature will be removed.") === true) {
+				this.cancelEdit();
 			}
+			else {
+				return;
+			}
+		}
 
-			var cont = $(e.popup._container);
-			// var layer = e.popup._source;
-			self._marker = e.popup._source;
-			
-			// I used this before: map.on('draw:edited', function (e) {
-			// But this one applies only to one marker (the marker that was selected for being moved)
-			// self._marker.off('dragend').on('dragend', function(e) {
-			// 	f = e.layers;
-			// 	for (theId in f._layers) {
-			// 		// Don't try to update a feature that has not yet been added (inserted).
-			// 		fMod = $.extend({}, {
-			// 			_layers: {}
-			// 		});
-			// 		ff = f._layers[theId];
-			// 		if ( $.inArray(ff, inserts) === -1 ) {
-			// 			fMod._layers[theId] = ff;
-			// 		}
-			// 		else {
-			// 			alert("already in inserts arr");
-			// 		}
-			// 	}
-			// 	updates.push(fMod);
-			// 	// self._updates.push(e.layers);
-			// });
+		var cont = $(e.popup._container);
+		// var layer = e.popup._source;
+		this._marker = e.popup._source;
+		
+		cont.find("#editor-popup-remove").on("click", function() {
+			if (confirm(self.lang.ruSureRemove) === true) {
+				self._editLayer.wfstRemove(self._marker).done(function() {
+					self._editLayer.clearLayers();
+					self._editLayer._refresh(true);
+				});
+			}
+			return false;
+		});
+		cont.find("#editor-popup-move").on("click", function() {
+			// Activate move
+			self._marker.closePopup();
+			var editToolbar = self._getEditToolbar();
+			editToolbar.handler._enableLayerEdit(self._marker);
+			self._showSaveToolbar("update");
 
-			// layer.off('dragend').on('dragend', function(e) {
-			// 	// Save on client (not commit)
-			// 	var lay = e.target;
-			// 	self.wfstSave(lay);
-			// 	lay.edited = true;
-			// });
-			cont.find("#editor-popup-remove").on("click", function() {
-				if (confirm(self.lang.ruSureRemove) === true) {
-					editLayer.wfstRemove(self._marker).done(function() {
-						self._editLayer.clearLayers();
-						self._editLayer._refresh(true);
-					});
-				}
-				return false;
-			});
-			cont.find("#editor-popup-move").on("click", function() {
-				// Activate move
-				self._marker.closePopup();
-				var editToolbar = self._getEditToolbar();
-				editToolbar.handler._enableLayerEdit(self._marker);
-				self._showSaveToolbar("update");
-
-				// self.map._toolbars[1]._modes["edit"].handler.enable();
-				// self._editLayer.eachLayer(drawControl._enableLayerEdit, drawControl);
-				return false;
-			});
-			cont.find("#editor-popup-edit").on("click", function() {
-				// Open edit modal
-				self._modalEdit.modal("show");
-				return false;
-			});
+			// this.map._toolbars[1]._modes["edit"].handler.enable();
+			// this._editLayer.eachLayer(drawControl._enableLayerEdit, drawControl);
+			return false;
+		});
+		cont.find("#editor-popup-edit").on("click", function() {
+			// Open edit modal
+			self._modalEdit.modal("show");
+			return false;
 		});
 	},
 

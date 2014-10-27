@@ -53,6 +53,48 @@ var config = {
 					attribution: "© SMHI",
 					zIndex: 100
 				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "skane:POI_VHAMN_PT"
+					},
+					editable: true,
+					xhrType: "GET",
+					layerId: "vhamnen_pt",
+					displayName: "Punkter av intresse",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:4326",
+					uniqueKey: "gid",
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "Hej"
+				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "sandbox:wfstpoints"
+					},
+					editable: true,
+					xhrType: "GET",
+					layerId: "wfstpoints",
+					displayName: "WFST-points",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:4326",
+					uniqueKey: 'fid',
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "Jojo"
+				}
 			}
 
 		],
@@ -180,12 +222,12 @@ var config = {
 						}
 					},
 					// {
-					// 	init: "L.Control.Mapillary",
-					// 	options: {}
+					//	init: "L.Control.Mapillary",
+					//	options: {}
 					// }
 					// {
-					// 	init: "L.Control.DrawSmap",
-					// 	options: {}
+					//	init: "L.Control.DrawSmap",
+					//	options: {}
 					// }
 					// ,
 					{
@@ -195,37 +237,37 @@ var config = {
 						}
 					}
 					// {
-					// 	init : "L.Control.RedirectClick",		
-					// 	option: {
-					// 		url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
-					// 		position: "topright"
-					// 	}
+					//	init : "L.Control.RedirectClick",		
+					//	option: {
+					//		url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
+					//		position: "topright"
+					//	}
 					// },
 					// {
-					// 	init: "L.Control.Info",
-					// 	options: {
-					// 		position: "topright"
-					// 	}
+					//	init: "L.Control.Info",
+					//	options: {
+					//		position: "topright"
+					//	}
 					// },
 					// ,
 					// {
-					// 	init: "L.Control.ToolHandler",
-					// 	options: {}
+					//	init: "L.Control.ToolHandler",
+					//	options: {}
 					// }
 					// {
-					// 	init: "L.Control.Add2HomeScreen",
-					// 	options: {}
+					//	init: "L.Control.Add2HomeScreen",
+					//	options: {}
 					// },
 					// {
-					// 	init: "L.Control.FullScreen",
-					// 	options: {position: 'topright'}
+					//	init: "L.Control.FullScreen",
+					//	options: {position: 'topright'}
 					// }
 					// ,
 					// {
-					// 	init: "L.Control.DrawSmap",
-					// 	options: {
-					// 		position: "topright"
-					// 	}
+					//	init: "L.Control.DrawSmap",
+					//	options: {
+					//		position: "topright"
+					//	}
 					// }
 		]
 };
