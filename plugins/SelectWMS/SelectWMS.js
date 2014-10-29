@@ -177,7 +177,14 @@ L.Control.SelectWMS = L.Control.extend({
 						layerId: layer.options.layerId
 				};
 			}
-			ts[URL].layerNames.push(layer.options.layers);
+			//ts[URL].layerNames.push(layer.options.layers);
+			if(layer.options.selectLayers){
+				//ts[URL].selectLayerNames.push(layer.options.selectLayers);
+				ts[URL].layerNames.push(layer.options.selectLayers);
+				}
+			else{
+				ts[URL].layerNames.push(layer.options.layers);
+				}
 		});
 
 		var params;
