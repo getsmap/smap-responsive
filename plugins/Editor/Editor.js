@@ -37,6 +37,15 @@ L.Control.Editor = L.Control.extend({
 		}
 	},
 
+	_geomTypes: {
+		POINT: "marker",
+		MULTIPOINT: "marker",
+		LINESTRING: "polyline",
+		MULTILINESTRING: "polyline",
+		POLYGON: "polygon",
+		MULTIPOLYGON: "polygon"
+	},
+
 	_geomType: "marker",
 	
 	_setLang: function(langCode) {
@@ -121,7 +130,7 @@ L.Control.Editor = L.Control.extend({
 		for (var i=0,len=ols.length; i<len; i++) {
 			t = ols[i];
 			editIcon = $('<i class="fa fa-edit smap-editor-switcher-icon"></i>')
-			if (t.options.editable) {
+			if (t.options.isEditable) {
 				// Add the edit icon
 				row = $("#"+s._makeId(t.options.layerId));
 				row.append(editIcon);
@@ -150,6 +159,7 @@ L.Control.Editor = L.Control.extend({
 			// }
 			
 			// Force the WFS layer to refresh all features by removing them all
+			this._editLayer.options.editable = false;
 			var lid = this._editLayer.options.layerId;
 			var wfsLayerId = lid.substring(0, lid.length - "-edit".length);
 			var wfsLayer = smap.cmd.getLayer(wfsLayerId);
@@ -172,6 +182,9 @@ L.Control.Editor = L.Control.extend({
 
 		this._addBtnAdd();
 		$(".smap-editor-btnadd").remove();
+
+		self._marker = null;
+		self._markerGeometry = null;
 		return true;
 	},
 
@@ -235,6 +248,37 @@ L.Control.Editor = L.Control.extend({
 		map.addControl(this._drawControl);
 		$(".leaflet-draw").remove();
 
+		function onLoad(e) {
+			var fs = e.layer.jsonData.features || [];
+			if (fs.length) {
+				self._geomType = self._geomTypes[fs[0].geometry.type.toUpperCase()];
+				if (!self._geomType) {
+					alert("Could not detect geometry type. Please set it explicitly.");
+				}
+				// else {
+				// 	alert(self._geomType);
+				// }
+			}
+			else {
+				var geomType = e.layer.options.geomType;
+				if (!geomType) {
+					alert("You must define a geomType in the options of this layer! Set of these: (POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON).");
+				}
+				else {
+					self._geomType = self._geomTypes[geomType.toUpperCase()];
+				}
+			}
+		};
+		this._editLayer.on("load", onLoad);
+
+		// this._editLayer.options.onEachFeature = function(json, layer) {
+		// 	var onEdit = function() {
+		// 		self._marker = this;
+		// 		self._showSaveToolbar("update");
+		// 	}
+		// 	layer.on("edit", onEdit);
+		// };
+
 		map.on('draw:created', function (e) {
 			$(".smap-editor-btnadd").removeClass("btn-danger");
 			self._editLayer.addLayer(e.layer);
@@ -246,6 +290,41 @@ L.Control.Editor = L.Control.extend({
 		this.map.on("popupopen", this.__onPopupOpen);
 	},
 
+	_getLayerById: function(layer, theId) {
+		var topLevelId;
+		var level = 0;
+		function digIntoTheMud(_layer) {
+			var lays = _layer._layers || {};
+			if (!lays) {
+				return null;
+			}
+			if (lays.hasOwnProperty(theId)) {
+				return {
+					marker: lays[theId],
+					markerGeometry: lays[theId]
+
+				}
+			}
+			var resp, lid;
+			for (lid in lays) {
+				if (level === 0) {
+					topLevelId = lid;
+				}
+				level += 1;
+				resp = digIntoTheMud(lays[lid]);
+				level -= 1;
+				if (resp) {
+					return {
+						marker: layer._layers[topLevelId],
+						markerGeometry: resp.marker
+					}
+				}
+			}
+			return null;
+		};
+		return digIntoTheMud(layer);
+	},
+
 	_onPopupOpen: function(e) {
 		// var theId, f, ff, fMod,
 		// 	inserts = this._inserts,
@@ -253,7 +332,7 @@ L.Control.Editor = L.Control.extend({
 		// 	deletes = this._deletes;
 
 		var self = this;
-		if (this._marker && this._marker.dragging._draggable && this._marker.dragging._draggable._enabled === true) {
+		if (this._marker && this._marker.dragging && this._marker.dragging._draggable && this._marker.dragging._draggable._enabled) {
 			this.map.closePopup();
 			// this._marker.openPopup();
 			if (confirm("Do you to stop editing this feature? Any changes made to the feature will be removed.") === true) {
@@ -266,7 +345,14 @@ L.Control.Editor = L.Control.extend({
 
 		var cont = $(e.popup._container);
 		// var layer = e.popup._source;
-		this._marker = e.popup._source;
+		if (this._geomType == "polyline") {
+			var m = this._getLayerById(this._editLayer, e.popup._source._leaflet_id);
+			this._marker = m.marker;
+			this._markerGeometry = m.markerGeometry;
+		}
+		else {
+			this._marker = e.popup._source;
+		}
 		
 		cont.find("#editor-popup-remove").on("click", function() {
 			if (confirm(self.lang.ruSureRemove) === true) {
@@ -279,10 +365,12 @@ L.Control.Editor = L.Control.extend({
 		});
 		cont.find("#editor-popup-move").on("click", function() {
 			// Activate move
-			self._marker.closePopup();
+			// self._marker.closePopup();
+			self.map.closePopup();
 			var editToolbar = self._getEditToolbar();
-			editToolbar.handler._enableLayerEdit(self._marker);
+			editToolbar.handler._enableLayerEdit(self._markerGeometry || self._marker);
 			self._showSaveToolbar("update");
+			self._editLayer.options.editable = true;
 
 			// this.map._toolbars[1]._modes["edit"].handler.enable();
 			// this._editLayer.eachLayer(drawControl._enableLayerEdit, drawControl);
@@ -362,13 +450,6 @@ L.Control.Editor = L.Control.extend({
 		}
 	},
 
-	_saveAttributes: function(props) {
-		props = props || {};
-
-
-
-	},
-
 	cancelEdit: function() {
 		var editToolbar = this._getEditToolbar();
 		editToolbar.handler._disableLayerEdit(this._marker);
@@ -390,10 +471,16 @@ L.Control.Editor = L.Control.extend({
 			$(".leaflet-top.leaflet-left").append(this._saveToolbar);
 			btnSave.on("click", function() {
 				if (self._editType === "update") {
-					self.wfstSave(self._marker);
+					if (self._geomType === "marker" || self._geomType === "polygon") {
+						self.wfstSave(self._marker);
+					}
+					else if (self._geomType === "polyline") {
+						self._markerGeometry.feature = $.extend({}, self._marker.feature);
+						self.wfstSave(self._markerGeometry);
+					}
 				}
 				var editToolbar = self._getEditToolbar();
-				editToolbar.handler._disableLayerEdit(self._marker);
+				editToolbar.handler._disableLayerEdit(self._markerGeometry || self._marker);
 				
 				if (self._editType === "insert") {
 					self._inserts.push(self._marker);
@@ -467,13 +554,19 @@ L.Control.Editor = L.Control.extend({
 		});
 		var saveProps = $.extend({}, orgProps, newProps);
 		this._marker.feature.properties = saveProps;
-		this._editLayer._wfstSave(this._marker, {newProps: newProps}); // Hack for saving new propetrties (otherwise extracted from the old XML response)
+
+
+		if (!this._marker.toGML) {
+			this._markerGeometry.feature = $.extend({}, this._marker.feature);
+		}
+		
+		this._editLayer._wfstSave(this._markerGeometry || this._marker, {newProps: newProps}); // Hack for saving new properties (otherwise extracted from the old XML response)
 		this._modalEdit.modal("hide");
 
 		this.map.closePopup();
 		this._marker.fire("click", {
 			properties: saveProps,
-			latlng: this._marker.getLatLng(),
+			latlng: this._marker.getLatLng ? this._marker.getLatLng() : null,
 			originalEvent: {shiftKey: false}
 		});
 	},

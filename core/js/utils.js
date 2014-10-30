@@ -21,6 +21,10 @@ var utils = {
 			};
 		},
 
+		projectPoint: function(east, north, srsSrc, srsDest) {
+			return window.proj4(srsSrc, srsDest, [east, north]);
+		},
+
 		isInIframe: function() {
 			return top.location != self.location;
 		},

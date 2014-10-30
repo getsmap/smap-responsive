@@ -20,8 +20,8 @@ var ws = {
 var config = {
 
 		mapConfig: {
-			maxBounds: [[55.71628170645908, 12.6507568359375], [55.42589636057864, 13.34564208984375]],
-			minZoom: 11
+			// maxBounds: [[55.71628170645908, 12.6507568359375], [55.42589636057864, 13.34564208984375]],
+			// minZoom: 11
 		},
 
 		// Web-services can be defined here if they are to be used by the core and/or plugins.
@@ -61,7 +61,7 @@ var config = {
 					params: {
 						typeName: "skane:POI_VHAMN_PT"
 					},
-					editable: true,
+					isEditable: true,
 					xhrType: "GET",
 					layerId: "vhamnen_pt",
 					displayName: "Punkter av intresse",
@@ -82,7 +82,7 @@ var config = {
 					params: {
 						typeName: "sandbox:wfstpoints"
 					},
-					editable: true,
+					isEditable: true,
 					xhrType: "GET",
 					layerId: "wfstpoints",
 					displayName: "WFST-points",
@@ -94,6 +94,104 @@ var config = {
 					reverseAxis: false,
 					reverseAxisBbox: true,
 					popup: "Jojo"
+				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "sandbox:multilines"
+					},
+					isEditable: true,
+					xhrType: "GET",
+					layerId: "multilines",
+					displayName: "multilines",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:4326",
+					uniqueKey: 'id',
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "*",
+					style: {
+						lineWidth: 20
+					}
+				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "sandbox:lines"
+					},
+					isEditable: true,
+					xhrType: "GET",
+					layerId: "lines",
+					displayName: "lines",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:4326",
+					uniqueKey: 'id',
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "*",
+					style: {
+						lineWidth: 20
+					}
+				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "sandbox:polygons"
+					},
+					isEditable: true,
+					geomType: "polygon",
+					xhrType: "GET",
+					layerId: "polygons",
+					displayName: "polygons",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:4326",
+					uniqueKey: 'fid',
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "*",
+					style: {
+						lineWidth: 20
+					}
+				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "sandbox:multipolygons"
+					},
+					isEditable: true,
+					geomType: "multipolygon",
+					xhrType: "GET",
+					layerId: "multipolygons",
+					displayName: "multipolygons",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:4326",
+					uniqueKey: 'fid',
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "*",
+					style: {
+						lineWidth: 20
+					}
 				}
 			}
 

@@ -124,7 +124,7 @@
     },
     "openlayers": {
       "main": [
-        "build/openlayers.js"
+        "build/OpenLayers.js"
       ]
     },
     "singleTileWms": {
