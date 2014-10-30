@@ -251,7 +251,7 @@ L.Control.Editor = L.Control.extend({
 		function onLoad(e) {
 			var fs = e.layer.jsonData.features || [];
 			if (fs.length) {
-				self._geomType = self._geomTypes[fs[0].geometry.type.toUpperCase()];
+				self.options.geomType = self._geomType = self._geomTypes[fs[0].geometry.type.toUpperCase()];
 				if (!self._geomType) {
 					alert("Could not detect geometry type. Please set it explicitly.");
 				}
@@ -345,7 +345,7 @@ L.Control.Editor = L.Control.extend({
 
 		var cont = $(e.popup._container);
 		// var layer = e.popup._source;
-		if (this._geomType == "polyline") {
+		if (!e.popup._source.feature || this._geomType == "polyline") {
 			var m = this._getLayerById(this._editLayer, e.popup._source._leaflet_id);
 			this._marker = m.marker;
 			this._markerGeometry = m.markerGeometry;
@@ -470,11 +470,13 @@ L.Control.Editor = L.Control.extend({
 			this._saveToolbar.append(btnCancel).append(btnSave);
 			$(".leaflet-top.leaflet-left").append(this._saveToolbar);
 			btnSave.on("click", function() {
+				self._marker.options.geomType = self._editLayer.options.geomType;
+
 				if (self._editType === "update") {
-					if (self._geomType === "marker" || self._geomType === "polygon") {
+					if (self._geomType === "marker" || self._marker.options.geomType.toUpperCase() === "POLYGON") {
 						self.wfstSave(self._marker);
 					}
-					else if (self._geomType === "polyline") {
+					else { //if (self._geomType === "polyline") {
 						self._markerGeometry.feature = $.extend({}, self._marker.feature);
 						self.wfstSave(self._markerGeometry);
 					}

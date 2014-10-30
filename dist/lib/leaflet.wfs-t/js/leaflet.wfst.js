@@ -168,7 +168,11 @@ L.WFST = L.GeoJSON.WFS.extend({
             }
         });
 
-        var xml = this.options._xmlpre;
+        var xmlPre = this.options._xmlpre;
+        if (layer.options.geomType.toUpperCase() === "MULTIPOLYGON") {
+            xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
+        }
+        var xml = xmlPre;
 
         xml += "<wfs:Insert>";
         xml += "<" + this.options.typename + ">";
@@ -217,7 +221,11 @@ L.WFST = L.GeoJSON.WFS.extend({
             where = options.where;
         }
 
-        var xml = this.options._xmlpre;
+        var xmlPre = this.options._xmlpre;
+        if (layer.options.geomType.toUpperCase() === "MULTIPOLYGON") {
+            xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
+        }
+        var xml = xmlPre;
         xml += '<wfs:Delete typeName="'+this.options.typename+'">';
         xml += this._whereFilter(where);
         xml += "</wfs:Delete>";
@@ -257,7 +265,11 @@ L.WFST = L.GeoJSON.WFS.extend({
         var where = {};
         where[this.options.uniqueKey] = layer.feature.properties[this.options.uniqueKey];
 
-        var xml = this.options._xmlpre;
+        var xmlPre = this.options._xmlpre;
+        if (layer.options.geomType.toUpperCase() === "MULTIPOLYGON") {
+            xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
+        }
+        var xml = xmlPre;
         xml += '<wfs:Update typeName="'+this.options.typename+'">';
         xml += this._wfstUpdateValues(layer, options.newProps);
         xml += this._whereFilter(where);

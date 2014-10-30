@@ -4,8 +4,32 @@ L.Path.include(
 		toGML: function(){
 			var coords,xml = '';
 
-			if (this instanceof L.MultiPolygon) {
-				console.log("GML TODO: L.MultiPolygon and L.MultiPolyline"); //MultiPolygon and MultiLineString
+			if (this instanceof L.MultiPolygon || (this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOLYGON" )) {
+
+				var latLngs = this.getLatLngs(),
+					latLng;
+
+				var P = OpenLayers.Geometry.Point,
+					points = [];
+
+				for (var i=0,len=latLngs.length; i<len; i++) {
+					latLng = latLngs[i];
+					points.push(new P(latLng.lng, latLng.lat) );
+				}
+				var ring = new OpenLayers.Geometry.LinearRing(points);
+				var polygon = new OpenLayers.Geometry.Polygon(ring);
+
+				var geom = new OpenLayers.Geometry.MultiPolygon([polygon]);
+
+				var f = new OpenLayers.Feature.Vector(geom);
+				var format = new OpenLayers.Format.GML();
+				xml = format.write([f]);
+				var splitWord = "gml:MultiPolygon";
+				var xmlArr = xml.split(splitWord);
+				xml = '<'+splitWord+' srsName="EPSG:4326"'+xmlArr[1]+splitWord+'>'; // 
+				return xml;
+
+
 			} else if (this instanceof L.Polygon) {
 				//Polygon
 				xml += '<gml:Polygon srsName="EPSG:4326">';

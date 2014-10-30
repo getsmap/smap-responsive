@@ -63,6 +63,7 @@ var config = {
 					},
 					isEditable: true,
 					xhrType: "GET",
+					geomType: "point",
 					layerId: "vhamnen_pt",
 					displayName: "Punkter av intresse",
 					useProxy: false,
@@ -84,6 +85,7 @@ var config = {
 					},
 					isEditable: true,
 					xhrType: "GET",
+					geomType: "point",
 					layerId: "wfstpoints",
 					displayName: "WFST-points",
 					useProxy: false,
@@ -104,6 +106,7 @@ var config = {
 						typeName: "sandbox:multilines"
 					},
 					isEditable: true,
+					geomType: "multilinestring",
 					xhrType: "GET",
 					layerId: "multilines",
 					displayName: "multilines",
@@ -128,6 +131,7 @@ var config = {
 						typeName: "sandbox:lines"
 					},
 					isEditable: true,
+					geomType: "linestring",
 					xhrType: "GET",
 					layerId: "lines",
 					displayName: "lines",
