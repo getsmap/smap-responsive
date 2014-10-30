@@ -55,7 +55,7 @@ L.Path.include(
 				var latLngs = this.getLatLngs();
 
 				var p = OpenLayers.Geometry.Point,
-					geomCoords1 = [].concat(this.feature.geometry.coordinates),
+					// geomCoords1 = [].concat(this.feature.geometry.coordinates),
 					components, coords,
 					level = 0,
 					latLng,
@@ -64,7 +64,7 @@ L.Path.include(
 					splitWord,
 					geom;
 
-				var isMulti = geomCoords1[0][0].length;
+				var isMulti = this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOLYGON"; //geomCoords1[0][0].length;
 				if (isMulti) {
 					// -- MultiLineString --
 					for (var i=0,len=latLngs.length; i<len; i++) {

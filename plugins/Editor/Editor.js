@@ -14,6 +14,8 @@ L.Control.Editor = L.Control.extend({
 			remove: "Ta bort",
 			move: "Flytta",
 			editProps: "Ändra",
+			moveLP: "Ändra geometri",
+			editPropsLP: "Ändra attribut",
 			ruSureRemove: "Ta bort objektet? Åtgärden kan inte ångras.",
 			saveNewMarker: "Spara ny markör",
 			saveMove: "Spara ny position",
@@ -27,6 +29,8 @@ L.Control.Editor = L.Control.extend({
 			remove: "Remove",
 			move: "Move",
 			editProps: "Edit",
+			moveLP: "Edit geometry",
+			editPropsLP: "Edit attributes",
 			doYouWantTo: "Do you want to",
 			cannotBeUndoed: "Cannot be undoed",
 			ruSureRemove: "Remove feature? Cannot be undoed.",
@@ -159,6 +163,10 @@ L.Control.Editor = L.Control.extend({
 			// }
 			
 			// Force the WFS layer to refresh all features by removing them all
+			// if (this._editToolbar) {
+			// 	this._editToolbar.handler._disableLayerEdit(this._marker);
+			// 	// this._editToolbar = null;
+			// }
 			this._editLayer.options.editable = false;
 			var lid = this._editLayer.options.layerId;
 			var wfsLayerId = lid.substring(0, lid.length - "-edit".length);
@@ -180,11 +188,15 @@ L.Control.Editor = L.Control.extend({
 		this.map.off('draw:created');
 		this.map.off("popupopen", this.__onPopupOpen);
 
-		this._addBtnAdd();
+		// this._addBtnAdd();
 		$(".smap-editor-btnadd").remove();
+		// if (this._marker) {
+		// 	this.map.removeLayer(this._marker);
+		// 	this._marker = null;
+		// }
+		// this._marker = null;
+		// this._markerGeometry = null;
 
-		self._marker = null;
-		self._markerGeometry = null;
 		return true;
 	},
 
@@ -221,7 +233,12 @@ L.Control.Editor = L.Control.extend({
 		opts.featureNS = tn.split(":")[0];
 		opts.featureType = tn.split(":")[1];
 		opts.layerId = opts.layerId + "-edit";
-		opts.popup = '${*}<div class="popup-divider"></div><div style="white-space:nowrap;min-width:18em;" class="btn-group btn-group-sm editor-popup-edit"><button id="editor-popup-edit" type="button" class="btn btn-default">'+this.lang.editProps+'</button><button id="editor-popup-move" type="button" class="btn btn-default">'+this.lang.move+'</button><button id="editor-popup-remove" type="button" class="btn btn-default">'+this.lang.remove+'</button></div>';
+		
+		var geomType = opts.geomType.toUpperCase();
+		var langMove = geomType === "POINT" ? this.lang.move : this.lang.moveLP;
+		var langEditProps = geomType === "POINT" ? this.lang.editProps : this.lang.editPropsLP;
+		var langRemove = this.lang.remove;
+		opts.popup = '${*}<div class="popup-divider"></div><div style="white-space:nowrap;min-width:25em;" class="btn-group btn-group-sm editor-popup-edit"><button id="editor-popup-edit" type="button" class="btn btn-default">'+langEditProps+'</button><button id="editor-popup-move" type="button" class="btn btn-default">'+langMove+'</button><button id="editor-popup-remove" type="button" class="btn btn-default">'+langRemove+'</button></div>';
 		// var t = {
 		// 		url : url,
 		// 		featureNS : "sandbox",
@@ -348,10 +365,11 @@ L.Control.Editor = L.Control.extend({
 		if (!e.popup._source.feature || this._geomType == "polyline") {
 			var m = this._getLayerById(this._editLayer, e.popup._source._leaflet_id);
 			this._marker = m.marker;
-			this._markerGeometry = m.markerGeometry;
+			this._markerGeometry = e.popup._source; //m.markerGeometry;
 		}
 		else {
 			this._marker = e.popup._source;
+			this._markerGeometry = null;
 		}
 		
 		cont.find("#editor-popup-remove").on("click", function() {
@@ -452,7 +470,7 @@ L.Control.Editor = L.Control.extend({
 
 	cancelEdit: function() {
 		var editToolbar = this._getEditToolbar();
-		editToolbar.handler._disableLayerEdit(this._marker);
+		editToolbar.handler._disableLayerEdit(this._markerGeometry || this._marker);
 		this._editLayer.clearLayers();
 		this._editLayer._refresh(true);
 		this._hideSaveToolbar();
@@ -496,6 +514,7 @@ L.Control.Editor = L.Control.extend({
 					self.save();
 					self._hideSaveToolbar();
 				}
+				// self.cancelEdit();
 				return false;
 			});
 			btnCancel.on("click", function() {
@@ -591,6 +610,7 @@ L.Control.Editor = L.Control.extend({
 			self._modalEdit.on("keypress", function(e) {
 				if (e.which === 13) {
 					// Trigger save and prevent event bubbling
+					// self._modalEdit.blur();
 					$("#smap-editor-editmodal-btnsave").focus();
 					self._saveAttributes();
 					self._modalEdit.modal("hide");
