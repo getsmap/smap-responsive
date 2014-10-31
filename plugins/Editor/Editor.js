@@ -501,7 +501,8 @@ L.Control.Editor = L.Control.extend({
 				self._marker.options.geomType = self._editLayer.options.geomType;
 
 				if (self._editType === "update") {
-					if (self._geomType === "marker" || self._marker.options.geomType.toUpperCase() === "POLYGON") {
+					var geomType = self._marker.options.geomType.toUpperCase();
+					if (geomType === "POINT" || geomType === "POLYGON") {
 						self.wfstSave(self._marker);
 					}
 					else { //if (self._geomType === "polyline") {
@@ -572,6 +573,10 @@ L.Control.Editor = L.Control.extend({
 		cont.append(form);
 	},
 
+	_onSaveAttributesSuccess: function(e) {
+		this._marker.fire("click");
+	},
+
 	_saveAttributes: function() {
 		var orgProps = this._marker.feature.properties,
 			newProps = {};
@@ -591,15 +596,16 @@ L.Control.Editor = L.Control.extend({
 			this._markerGeometry.feature = $.extend({}, this._marker.feature);
 		}
 		
+		this.__onSaveAttributesSuccess = this.__onSaveAttributesSuccess || $.proxy(this._onSaveAttributesSuccess, this);
+		this._editLayer
+			.off("wfst:savesuccess", this.__onSaveAttributesSuccess)
+			.on("wfst:savesuccess", this.__onSaveAttributesSuccess);
 		this._editLayer._wfstSave(this._markerGeometry || this._marker, {newProps: newProps}); // Hack for saving new properties (otherwise extracted from the old XML response)
 		this._modalEdit.modal("hide");
 
 		this.map.closePopup();
-		this._marker.fire("click", {
-			properties: saveProps,
-			latlng: this._marker.getLatLng ? this._marker.getLatLng() : null,
-			originalEvent: {shiftKey: false}
-		});
+
+		var self = this;
 	},
 
 	_drawModal: function() {

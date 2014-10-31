@@ -73,7 +73,7 @@ var config = {
 					selectable: true,
 					reverseAxis: false,
 					reverseAxisBbox: true,
-					popup: "Hej"
+					popup: "*"
 				}
 			},
 			{
@@ -95,7 +95,29 @@ var config = {
 					selectable: true,
 					reverseAxis: false,
 					reverseAxisBbox: true,
-					popup: "Jojo"
+					popup: "*"
+				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "sandbox:multipoints"
+					},
+					isEditable: true,
+					xhrType: "GET",
+					geomType: "multipoint",
+					layerId: "multipoints",
+					displayName: "Multipoints",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:4326",
+					uniqueKey: 'fid',
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "*"
 				}
 			},
 			{

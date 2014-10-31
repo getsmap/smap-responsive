@@ -124,10 +124,23 @@ L.Path.include(
 
 L.Marker.include({
 	toGML: function(){
-		var xml;
-		xml = '<gml:Point srsName="EPSG:4326"><gml:coordinates cs="," decimal="." ts=" ">';
+		var xml = "",
+			splitWord = "gml:Point";
+		var isMulti = this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOINT" || 
+				(this.feature && this.feature.geometry && this.feature.geometry.type && this.feature.geometry.type.toUpperCase() === "MULTIPOINT");
+		if (isMulti) {
+			xml += '<gml:MultiPoint><gml:pointMember>';
+			splitWord = "gml:MultiPoint";
+		}
+		xml += '<gml:Point><gml:coordinates cs="," decimal="." ts=" ">'; // srsName="EPSG:4326"
 		xml += this.getLatLng().lng + ',' + this.getLatLng().lat;
 		xml += '</gml:coordinates></gml:Point>';
+		if (isMulti) {
+			xml += '</gml:pointMember></gml:MultiPoint>';
+		}
+		// Add projection declaration
+		var xmlArr = xml.split(splitWord);
+		xml = '<'+splitWord+' srsName="EPSG:4326"'+xmlArr[1]+splitWord+'>';
 		return xml;
 	}
 });

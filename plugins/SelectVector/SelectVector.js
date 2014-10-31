@@ -156,7 +156,7 @@ L.Control.SelectVector = L.Control.extend({
 	},
 	
 	onFeatureClick: function(e) {
-		var f = e.target.feature,
+		var f = e.layer && e.layer.feature ? e.layer.feature : e.target.feature,
 			shiftKeyWasPressed = e.originalEvent ? e.originalEvent.shiftKey || false : false, 
 			target = e.target,
 			paramVal = null;

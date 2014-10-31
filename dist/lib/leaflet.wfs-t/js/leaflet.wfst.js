@@ -151,8 +151,8 @@ L.WFST = L.GeoJSON.WFS.extend({
         options = L.extend(options,{
             success: function(res){
                 var xml = this._wfstSuccess(res);
+                self.fire("wfst:savesuccess");
                 if(typeof realsuccess == 'function' && xml !== false){
-                    self.fire("wfst:savesuccess");
                     layer.feature = layer.feature || {};
                     layer.feature._wfstSaved = true;
 
@@ -203,8 +203,8 @@ L.WFST = L.GeoJSON.WFS.extend({
         var self = this;
         options = L.extend(options,{
             success: function(res){
+                self.fire("wfst:savesuccess");
                 if(typeof realsuccess == 'function' && this._wfstSuccess(res)){
-                    self.fire("wfst:savesuccess");
                     if(layer !== null){
                         layer.feature = layer.feature || {};
                         layer.feature._wfstSaved = true;
@@ -258,8 +258,8 @@ L.WFST = L.GeoJSON.WFS.extend({
         var self = this;
         options = L.extend(options, {
             success: function(res) {
+                self.fire("wfst:savesuccess");
                 if(typeof realsuccess == 'function' && this._wfstSuccess(res)){
-                    self.fire("wfst:savesuccess");
                     layer.feature._wfstSaved = true;
                     realsuccess(res);
                 }else if(typeof options.error == 'function'){
@@ -355,6 +355,7 @@ L.WFST = L.GeoJSON.WFS.extend({
             }else if(
                 elems[p].getAttribute('type') === 'gml:GeometryPropertyType' || 
                 elems[p].getAttribute('type') === 'gml:PointPropertyType' || 
+                elems[p].getAttribute('type') === 'gml:MultiPointPropertyType' ||
                 elems[p].getAttribute('type') === 'gml:MultiSurfacePropertyType' || 
                 elems[p].getAttribute('type') === 'gml:SurfacePropertyType'  ||
                 // Johan was here
