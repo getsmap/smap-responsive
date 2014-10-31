@@ -113,7 +113,32 @@ var config = {
 					useProxy: false,
 					attribution: "Malmö stads WFS",
 					inputCrs: "EPSG:4326",
-					uniqueKey: 'id',
+					uniqueKey: 'fid',
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "*",
+					style: {
+						lineWidth: 20
+					}
+				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "sandbox:GK_CYKELVAG_L"
+					},
+					isEditable: true,
+					geomType: "multilinestring",
+					xhrType: "GET",
+					layerId: "GK_CYKELVAG_L",
+					displayName: "Cykelvägar (multilinestring)",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:3008",
+					uniqueKey: 'gid',
 					selectable: true,
 					reverseAxis: false,
 					reverseAxisBbox: true,
@@ -138,7 +163,7 @@ var config = {
 					useProxy: false,
 					attribution: "Malmö stads WFS",
 					inputCrs: "EPSG:4326",
-					uniqueKey: 'id',
+					uniqueKey: 'fid',
 					selectable: true,
 					reverseAxis: false,
 					reverseAxisBbox: true,

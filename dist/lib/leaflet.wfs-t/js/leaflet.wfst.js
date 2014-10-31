@@ -147,11 +147,12 @@ L.WFST = L.GeoJSON.WFS.extend({
         if(typeof options.success == 'function'){
             realsuccess = options.success;
         }
-
+        var self = this;
         options = L.extend(options,{
             success: function(res){
                 var xml = this._wfstSuccess(res);
                 if(typeof realsuccess == 'function' && xml !== false){
+                    self.fire("wfst:savesuccess");
                     layer.feature = layer.feature || {};
                     layer.feature._wfstSaved = true;
 
@@ -162,7 +163,8 @@ L.WFST = L.GeoJSON.WFS.extend({
                     layer.feature.properties[this.options.uniqueKey] = fid.replace(this.options.featureType + '.','');
 
                     realsuccess(res);
-                }else if(typeof options.error == 'function'){ 
+                }else if(typeof options.error == 'function'){
+                    self.fire("wfst:saveerror");
                     options.error(res);
                 }
             }
@@ -198,16 +200,18 @@ L.WFST = L.GeoJSON.WFS.extend({
         if(typeof options.success == 'function'){
             realsuccess = options.success;
         }
-
+        var self = this;
         options = L.extend(options,{
             success: function(res){
                 if(typeof realsuccess == 'function' && this._wfstSuccess(res)){
+                    self.fire("wfst:savesuccess");
                     if(layer !== null){
                         layer.feature = layer.feature || {};
                         layer.feature._wfstSaved = true;
                     }
                     realsuccess(res);
-                }else if(typeof options.error == 'function'){ 
+                }else if(typeof options.error == 'function'){
+                    self.fire("wfst:saveerror");
                     options.error(res);
                 }
             }
@@ -251,12 +255,15 @@ L.WFST = L.GeoJSON.WFS.extend({
         if (typeof options.success == 'function'){
             realsuccess = options.success;
         }
+        var self = this;
         options = L.extend(options, {
             success: function(res) {
                 if(typeof realsuccess == 'function' && this._wfstSuccess(res)){
+                    self.fire("wfst:savesuccess");
                     layer.feature._wfstSaved = true;
                     realsuccess(res);
-                }else if(typeof options.error == 'function'){ 
+                }else if(typeof options.error == 'function'){
+                    self.fire("wfst:saveerror");
                     options.error(res);
                 }
             }
@@ -411,7 +418,10 @@ L.WFST = L.GeoJSON.WFS.extend({
             context: this,
             dataType: "text",
             success: function(r){console.log(r);},
-            error: function(r){console.log("AJAX error!");console.log(r);}
+            error: function(r){
+                self.fire("wfst:ajaxerror");
+                console.log(r);
+            }
         }, options);
 
         // var xmlhttpreq = (window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));

@@ -17,8 +17,8 @@ L.Control.Editor = L.Control.extend({
 			moveLP: "Ändra geometri",
 			editPropsLP: "Ändra attribut",
 			ruSureRemove: "Ta bort objektet? Åtgärden kan inte ångras.",
-			saveNewMarker: "Spara ny markör",
-			saveMove: "Spara ny position",
+			saveNewMarker: "Spara",
+			saveMove: "Spara",
 			undo: "Ångra",
 			cancel: "Avbryt"
 		},
@@ -34,8 +34,8 @@ L.Control.Editor = L.Control.extend({
 			doYouWantTo: "Do you want to",
 			cannotBeUndoed: "Cannot be undoed",
 			ruSureRemove: "Remove feature? Cannot be undoed.",
-			saveNewMarker: "Save new marker",
-			saveMove: "Save move",
+			saveNewMarker: "Save",
+			saveMove: "Save",
 			undo: "Undo",
 			cancel: "Cancel"
 		}
@@ -253,6 +253,15 @@ L.Control.Editor = L.Control.extend({
 		// 		popup: '${*}<div class="popup-divider"></div><div style="white-space:nowrap;min-width:18em;" class="btn-group btn-group-sm editor-popup-edit"><button id="editor-popup-edit" type="button" class="btn btn-default">'+this.lang.editProps+'</button><button id="editor-popup-move" type="button" class="btn btn-default">'+this.lang.move+'</button><button id="editor-popup-remove" type="button" class="btn btn-default">'+this.lang.remove+'</button></div>'
 		// };
 		this._editLayer = L.wfst(t.url, opts);
+		this._editLayer.on("wfst:savesuccess", function() {
+			smap.cmd.loading(false);
+		});
+		this._editLayer.on("wfst:saveerror", function() {
+			smap.cmd.loading(false);
+		});
+		this._editLayer.on("wfst:ajaxerror", function() {
+			smap.cmd.loading(false);
+		});
 		map.addLayer(this._editLayer);
 
 		// Initialize the draw control and pass it the FeatureGroup of editable layers
@@ -432,6 +441,7 @@ L.Control.Editor = L.Control.extend({
 		for (i=0, len=layers.length; i<len; i++) {
 			if (typeof layers[i]._layers == 'object') {
 				for (v in layers[i]._layers) {
+					smap.cmd.loading(true);
 					defs.push( inst._wfstSave(layers[i]._layers[v]) );
 				}
 			}

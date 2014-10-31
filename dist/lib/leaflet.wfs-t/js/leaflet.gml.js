@@ -64,7 +64,7 @@ L.Path.include(
 					splitWord,
 					geom;
 
-				var isMulti = this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOLYGON"; //geomCoords1[0][0].length;
+				var isMulti = this.options.geomType && this.options.geomType.toUpperCase() === "MULTILINESTRING"; //geomCoords1[0][0].length;
 				if (isMulti) {
 					// -- MultiLineString --
 					for (var i=0,len=latLngs.length; i<len; i++) {
