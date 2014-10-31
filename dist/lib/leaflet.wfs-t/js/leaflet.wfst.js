@@ -171,7 +171,7 @@ L.WFST = L.GeoJSON.WFS.extend({
         });
 
         var xmlPre = this.options._xmlpre;
-        if (layer.options.geomType && layer.options.geomType.toUpperCase() === "MULTIPOLYGON") {
+        if (this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOLYGON") {
             xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
         }
         var xml = xmlPre;

@@ -157,7 +157,13 @@ smap.core.Layer = L.Class.extend({
 		
 		var self = this;
 		if (layer._layers) {
-			layer.options.style = layer.options.style || $.extend({}, self.options.defaultStyle);
+			if (!layer.options.style && layer.options.geomType && layer.options.geomType.search(/POINT/gi) > -1) {
+				// Render as markers if no style (but only for point layers, which must be declared with geomType)
+				layer.options.style = null;
+			}
+			else {
+				layer.options.style = layer.options.style || $.extend({}, self.options.defaultStyle);
+			}
 			layer.on("load", function(e) {
 				smap.cmd.loading(false);
 			});

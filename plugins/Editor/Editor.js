@@ -277,7 +277,7 @@ L.Control.Editor = L.Control.extend({
 		function onLoad(e) {
 			var fs = e.layer.jsonData.features || [];
 			if (fs.length) {
-				self.options.geomType = self._geomType = self._geomTypes[fs[0].geometry.type.toUpperCase()];
+				self.options.geomType = self._geomType = self._geomTypes[e.layer.options.geomType.toUpperCase()];
 				if (!self._geomType) {
 					alert("Could not detect geometry type. Please set it explicitly.");
 				}
@@ -498,10 +498,10 @@ L.Control.Editor = L.Control.extend({
 			this._saveToolbar.append(btnCancel).append(btnSave);
 			$(".leaflet-top.leaflet-left").append(this._saveToolbar);
 			btnSave.on("click", function() {
-				self._marker.options.geomType = self._editLayer.options.geomType;
+				self._marker.options.geomType = self._editLayer.options.geomType.toUpperCase();
 
 				if (self._editType === "update") {
-					var geomType = self._marker.options.geomType.toUpperCase();
+					var geomType = self._marker.options.geomType;
 					if (geomType === "POINT" || geomType === "POLYGON") {
 						self.wfstSave(self._marker);
 					}

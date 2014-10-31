@@ -103,6 +103,28 @@ var config = {
 				url: "http://localhost/geoserver/wfs",
 				options: {
 					params: {
+						typeName: "skane:features"
+					},
+					isEditable: true,
+					xhrType: "GET",
+					geomType: "point",
+					layerId: "Kulturpunkter",
+					displayName: "Kulturpunkter",
+					useProxy: false,
+					attribution: "Malmö stads WFS",
+					inputCrs: "EPSG:4326",
+					uniqueKey: 'id',
+					selectable: true,
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "*"
+				}
+			},
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://localhost/geoserver/wfs",
+				options: {
+					params: {
 						typeName: "sandbox:multipoints"
 					},
 					isEditable: true,
