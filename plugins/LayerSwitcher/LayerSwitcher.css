@@ -169,7 +169,7 @@
     background-image: none !important;
     text-shadow: none !important;
     background-color: #fff;
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(255,255,255,0.7);
     color: #000;
     color: #000;
     font-weight: bold;
@@ -222,11 +222,13 @@
   }
   .lswitch-panel a {
     border-color: #fff;
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(255,255,255,0.7);
   }
   .lswitch-panel a:hover,
-  .lswitch-panel a:active {
-    background-color: rgba(210,210,210,0.5);
+  .lswitch-panel a:active,
+  .lswitch-panel a.active:hover,
+  .lswitch-panel a.active:active {
+    background-color: rgba(255,255,255,0.8);
   }
   .lswitch-panel .panel-default {
     border: none;

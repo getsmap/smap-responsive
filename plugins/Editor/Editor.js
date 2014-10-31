@@ -91,7 +91,7 @@ L.Control.Editor = L.Control.extend({
 		var self = this;
 		var btnAdd = $(".smap-editor-btnadd");
 		if (!btnAdd.length) {
-			var btnAdd = $('<button class="btn btn-default btn-lg smap-editor-btnadd"><i class="fa fa-map-marker fa-2x"></i></button>');
+			var btnAdd = $('<button class="btn btn-default btn-lg smap-editor-btnadd"><i class="glyphicon glyphicon-plus"></i></button>');
 			$(".leaflet-top.leaflet-left").prepend(btnAdd);
 			btnAdd.on("click", function() {
 				var drawToolbar = self._getDrawToolbar();
