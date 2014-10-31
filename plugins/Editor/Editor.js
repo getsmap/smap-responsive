@@ -200,10 +200,29 @@ L.Control.Editor = L.Control.extend({
 		return true;
 	},
 
+	_validateConfig: function(t) {
+		t = t || {};
+		
+		var o = t.options || {};
+		var arr = [];
+		for (var geomType in this._geomTypes) {
+			arr.push(geomType);
+		}
+		
+		if (!o.geomType) {
+			alert("You must specify one of these geomTypes: "+arr.join(", "));
+			return false;
+		}
+		if ($.inArray(o.geomType.toUpperCase(),  arr) === -1) {
+			alert("You must specify one of these geomTypes: "+arr.join(", "));
+			return false;
+		}
+		return true;
+	},
+
 	startEditing: function(t, row) {
 		var self = this,
 			map = this.map;
-
 		if (this.stopEditing() !== true) {
 			return false;
 		}
@@ -226,7 +245,9 @@ L.Control.Editor = L.Control.extend({
 		// 		xhrType: "POST",
 		// 		reverseAxis: this.options.reverseAxis
 		// };
-
+		if (this._validateConfig(t) === false) {
+			return false;
+		}
 		var opts = $.extend({}, t.options); // Clone options
 		var tn = opts.params.typeName;
 		opts.url = t.url;

@@ -388,8 +388,7 @@ var config = {
 					{
 						init: "L.Control.Editor",
 						options: {
-							useProxy: true,
-							reverseAxis: true
+							useProxy: false
 						}
 					},
 					// {
