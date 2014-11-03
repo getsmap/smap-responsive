@@ -2683,7 +2683,7 @@ L.EditToolbar.Edit = L.Handler.extend({
 			pathOptions = L.Util.extend({}, this._selectedPathOptions);
 
 			if (isMarker) {
-				// this._toggleMarkerHighlight(layer);
+				this._toggleMarkerHighlight(layer);
 			} else {
 				layer.options.previousOptions = L.Util.extend({ dashArray: null }, layer.options);
 
