@@ -412,6 +412,7 @@ L.WFST = L.GeoJSON.WFS.extend({
     }
     */
     _ajax: function(options){
+        var self = this;
         var url = options.url || this.options.url;
         options.url = this.options.proxy ? this.options.proxy + encodeURIComponent(url) : url;
         options = L.extend({

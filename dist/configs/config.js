@@ -405,14 +405,14 @@ var config = {
 						options: {
 							position: "topright"
 						}
+					},
+					{
+						init : "L.Control.RedirectClick",		
+						option: {
+							url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
+							position: "topright"
+						}
 					}
-					// {
-					//	init : "L.Control.RedirectClick",		
-					//	option: {
-					//		url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
-					//		position: "topright"
-					//	}
-					// },
 					// {
 					//	init: "L.Control.Info",
 					//	options: {
