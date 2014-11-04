@@ -153,6 +153,10 @@ smap.core.Layer = L.Class.extend({
 			else {
 				layer = new init(t.url, t.options);
 			}
+			// For ESRI bug
+			if (layer instanceof L.esri.DynamicMapLayer) {
+				this._layers[t.options.layerId] = layer;
+			}
 		}
 		
 		var self = this;
