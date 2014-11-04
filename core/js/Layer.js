@@ -149,6 +149,9 @@ smap.core.Layer = L.Class.extend({
 				if(t.options.key) {
 				//then it is for ex a Bing layer we assume
 					layer = new init(t.options.key);
+					layer.options.layerid=t.options.layerId;
+					//layer.options.isBaseLayer=true;
+					this._layers[t.options.layerId] = layer;
 				}
 				else {
 				// Some layers only use options.
