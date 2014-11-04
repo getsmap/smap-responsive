@@ -122,7 +122,6 @@ smap.core.Layer = L.Class.extend({
 		}
 
 		var init = eval(t.init);
-		
 		init.options = init.options || {};
 
 		/**
@@ -147,8 +146,14 @@ smap.core.Layer = L.Class.extend({
 		}
 		else {
 			if (!t.url) {
+				if(t.options.key) {
+				//then it is for ex a Bing layer we assume
+					layer = new init(t.options.key);
+				}
+				else {
 				// Some layers only use options.
-				layer = new init(t.options);	
+					layer = new init(t.options);
+				}					
 			}
 			else {
 				layer = new init(t.url, t.options);

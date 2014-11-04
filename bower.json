@@ -129,6 +129,9 @@
     },
     "singleTileWms": {
       "main": "SingleTile.js"
+    },
+    "leaflet-plugins": {
+      "main": "layer/tile/Bing.js"
     }
   }
 }
