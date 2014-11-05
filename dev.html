@@ -10,10 +10,6 @@
 		
 		<title>smap-responsive</title>
 
-		<link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico" />
-		<link href="//assets.malmo.se/external/v4/malmo.css" media="all" rel="stylesheet" type="text/css" />
-		<noscript><link href="//assets.malmo.se/external/v4/icons.fallback.css" rel="stylesheet"></noscript>
-
 		<!-- inject:css -->
 		<link rel="stylesheet" href="dist/lib/font-awesome/css/font-awesome.css">
 		<link rel="stylesheet" href="dist/lib/sass-bootstrap/dist/css/bootstrap.css">
@@ -26,8 +22,8 @@
 		<link rel="stylesheet" href="dist/lib/leaflet.draw/dist/leaflet.draw.css">
 		<link rel="stylesheet" href="core/css/app.css">
 		<link rel="stylesheet" href="core/css/lib-overrides.css">
-		<link rel="stylesheet" href="plugins/Editor/Editor.css">
 		<link rel="stylesheet" href="plugins/DrawSmap/Draw.css">
+		<link rel="stylesheet" href="plugins/Editor/Editor.css">
 		<link rel="stylesheet" href="plugins/Geolocate/Geolocate.css">
 		<link rel="stylesheet" href="plugins/GuideIntroScreen/GuideIntroScreen.css">
 		<link rel="stylesheet" href="plugins/GuidePopup/GuidePopup.css">
@@ -58,12 +54,12 @@
 		<script src="dist/lib/leaflet.draw/dist/leaflet.draw-src.js"></script>
 		<script src="dist/lib/leaflet.draw/dist/leaflet.draw.js"></script>
 		<script src="lib/jquery.mobile.custom/jquery.mobile.custom.min.js"></script>
-		<script src="dist/lib/GeoJSON.WFS/index.js"></script>
-		<script src="dist/lib/Leaflet.print-smap/leaflet.print-src.js"></script>
 		<script src="dist/lib/GeoJSON.Custom/index.js"></script>
+		<script src="dist/lib/GeoJSON.WFS/index.js"></script>
 		<script src="dist/lib/TileLayer.EsriRest/index.js"></script>
 		<script src="dist/lib/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
 		<script src="dist/lib/es5-shim/es5-sham.js"></script>
+		<script src="dist/lib/leaflet.print-smap/leaflet.print-src.js"></script>
 		<script src="dist/lib/notify-custom/notify.js"></script>
 		<script src="dist/lib/spinjs/spin.js"></script>
 		<script src="dist/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
@@ -91,29 +87,35 @@
 		<script src="plugins/DrawSmap/Draw.js"></script>
 		<script src="plugins/Editor/Editor.js"></script>
 		<script src="plugins/FullScreen/FullScreen.js"></script>
-		<script src="plugins/GuideIntroScreen/GuideIntroScreen.js"></script>
 		<script src="plugins/Geolocate/Geolocate.js"></script>
+		<script src="plugins/GuideIntroScreen/GuideIntroScreen.js"></script>
 		<script src="plugins/GuidePopup/GuidePopup.js"></script>
-		<script src="plugins/LayerSwitcher/LayerSwitcher.js"></script>
 		<script src="plugins/Info/Info.js"></script>
+		<script src="plugins/LayerSwitcher/LayerSwitcher.js"></script>
 		<script src="plugins/MalmoHeader/MalmoHeader.js"></script>
 		<script src="plugins/Mapillary/Mapillary.js"></script>
 		<script src="plugins/Menu/Menu.js"></script>
-		<script src="plugins/OpenSearch/OpenSearch.js"></script>
 		<script src="plugins/Opacity/Opacity.js"></script>
+		<script src="plugins/OpenSearch/OpenSearch.js"></script>
 		<script src="plugins/Print/Print.js"></script>
 		<script src="plugins/Printer/Printer.js"></script>
 		<script src="plugins/RedirectClick/RedirectClick.js"></script>
+		<script src="plugins/Search/Search.js"></script>
 		<script src="plugins/SelectVector/SelectVector.js"></script>
 		<script src="plugins/SelectWMS/SelectWMS.js"></script>
 		<script src="plugins/ShareLink/ShareLink.js"></script>
-		<script src="plugins/Search/Search.js"></script>
-		<script src="plugins/ShareTweet/ShareTweet.js"></script>
 		<script src="plugins/SharePosition/SharePosition.js"></script>
+		<script src="plugins/ShareTweet/ShareTweet.js"></script>
 		<script src="plugins/Test/Test.js"></script>
 		<script src="plugins/ToolHandler/ToolHandler.js"></script>
 		<script src="plugins/Zoombar/Zoombar.js"></script>
 		<!-- endinject -->
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				smap.core.initInst = new smap.core.Init();	
+			});
+		</script>
 	</body>
 
 </html>

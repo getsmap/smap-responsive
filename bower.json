@@ -131,8 +131,14 @@
 		"singleTileWms": {
 			"main": "SingleTile.js"
 		},
-    "leaflet-plugins": {
-      "main": "layer/tile/Bing.js"
-    }
+		"leaflet-plugins": {
+			"main": "layer/tile/Bing.js"
+		},
+		"malmo_shared_assets": {
+			"main": [
+				"stylesheets/**/*.scss",
+				"!stylesheets/internal/*.scss"
+			]
+		}
 	}
 }

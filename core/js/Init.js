@@ -173,7 +173,3 @@ smap.core.Init = L.Class.extend({
 	
 	CLASS_NAME: "smap.core.Init"
 });
-
-$(document).ready(function() {
-	smap.core.initInst = new smap.core.Init();	
-});

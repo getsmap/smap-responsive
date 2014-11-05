@@ -6,10 +6,15 @@ smap.core.Div = L.Class.extend({
 	},
 	
 	draw: function() {
-		var mapDiv = $('<div id="mapdiv" />');
-		var mainDiv = $('<div id="maindiv" />');
-		mainDiv.append(mapDiv);
-		this.parentTag.append(mainDiv);
+		var mapDiv = $("#mapdiv");
+		
+		if ( !mapDiv.length ) {
+			// It is is possbile to run smap with custom divs
+			var mapDiv = $('<div id="mapdiv" />');
+			var mainDiv = $('<div id="maindiv" />');
+			mainDiv.append(mapDiv);
+			this.parentTag.append(mainDiv);
+		}
 		
 		// Fix things after orientation change.
 		if (L.Browser.touch) {

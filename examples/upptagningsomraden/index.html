@@ -9,27 +9,34 @@
 		<link href="//assets.malmo.se/external/v4/malmo.css" media="all" rel="stylesheet" type="text/css" />
 		<!--[if lte IE 8]><link href="//assets.malmo.se/external/v4/legacy/ie8.css" media="all" rel="stylesheet" type="text/css"/><![endif]-->
 		<noscript><link href="//assets.malmo.se/external/v4/icons.fallback.css" rel="stylesheet"></noscript>
+		
+		<link rel="stylesheet" type="text/css" href="lib/bootstrap-3/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="lib/bootstrap-3/css/bootstrap-theme.min.css">
+		
+		<link rel="stylesheet" type="text/css" href="lib/leaflet/dist/leaflet.css" />
 		<link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<style type="text/css">
-			body {
-				padding: 0;
-				margin: 0;
-			}
-			.schoolform {
-				margin-top: 4em;
-			}
-			.batchselect input[type=radio] {
-				position: relative !important;
-				float: right;
-				top: 1.1em;
-				left: 0.1em;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+		<!-- smap -->
+		<!-- <link rel="stylesheet" href="../../dist/lib/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" href="../../dist/lib/sass-bootstrap/dist/css/bootstrap.css">
+		<link rel="stylesheet" href="../../dist/lib/leaflet/dist/leaflet.css">
+		<link rel="stylesheet" href="../../dist/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css">
+		<link rel="stylesheet" href="../../dist/lib/Leaflet.label/dist/leaflet.label.css">
+		<link rel="stylesheet" href="../../dist/lib/add-to-homescreen/style/addtohomescreen.css">
+		<link rel="stylesheet" href="../../dist/lib/bootstrap-3/css/bootstrap.icon-large.css">
+		<link rel="stylesheet" href="../../dist/lib/leaflet-usermarker/src/leaflet.usermarker.css">
+		<link rel="stylesheet" href="../../dist/lib/leaflet.draw/dist/leaflet.draw.css"> -->
+		<!-- <link rel="stylesheet" href="../../dist/smap.css"> -->
+
+		<!--script src="../../dist/libs.js"></script>
+		<script src="../../dist/smap.js"></script-->
+
+
 	</head>
 	<body class="mf-v4 test">
 		<article>
-			<form class="schoolform" action="#" method="get">
+			<form class="schoolform" action="" method="POST">
 				<label>Ange årskurs</label>
 				<div class="form-group batchselect">
 					<label class="radio-inline">
@@ -65,25 +72,27 @@
 				</div>
 				<br>
 				<label>Ange läsår</label>
-				<div class="form-group termselect">
-					<label class="radio-inline">
-						<input type="radio" name="term" value="2014-2015"> 2014/2015
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="term" value="2015-2016"> 2015/2016
-					</label>
-				</div>
+				<div class="form-group termselect"></div>
 
 				<label>Ange barnets folkbokföringsadress</label>
 				<div class="form-group addresssearch">
-					<input name="q" class="form-control" placeholder="Ange adress och tryck på sök" type="text" autocapitalize="off" />
+					<input autocorrect="off" autocomplete="off" data-provide="typeahead" name="q" class="form-control typeahead" placeholder="Skriv och välj adress" type="text" autocapitalize="off" />
 				</div>
-				<span class="input-group-btn">
-					<input class="btn btn-default" name="" type="submit" value="Search" />
-				</span>
+				<div class="controls">
+					<button type="submit" class="btn btn-primary disabled" data-loading-text="Laddar. Var god vänta…">Visa resultat</button>
+				</div>
+				
+				<div id="mapdiv" class="hidden"></div>
 
 			</form>
 		</article>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="lib/bootstrap-3/js/bootstrap.min.js"></script>
+		<script src="lib/bootstrap3-typeahead.min.js"></script>
+		<script type="text/javascript" src="lib/proj4.js"></script>
+		<script type="text/javascript" src="lib/leaflet/dist/leaflet.js"></script>
+		<script type="text/javascript" src="lib/TileLayer.EsriRest/index.js"></script>
+		<script src="js/app.js"></script>
 	</body>
 
  </html>

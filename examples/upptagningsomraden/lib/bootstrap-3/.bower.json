@@ -1,0 +1,24 @@
+{
+  "name": "bootstrap-3",
+  "version": "3.0.0",
+  "authors": [
+    "Cleber"
+  ],
+  "main": [
+    "css/bootstrap.icon-large.css",
+    "fonts/glyphicons-draw.png"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">=1.7.0"
+  },
+  "_source": "/Library/WebServer/Documents/smap-responsive/lib/bootstrap-3",
+  "_target": "*",
+  "_originalSource": "./lib/bootstrap-3/"
+}

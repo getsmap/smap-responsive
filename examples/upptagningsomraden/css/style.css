@@ -1,3 +1,31 @@
-article {
-	max-width: 50%;
+body {
+	padding: 0;
+	margin: 0;
 }
+.schoolform {
+	margin-top: 4em;
+	padding: 0 1em;
+}
+.batchselect input[type=radio] {
+	position: relative !important;
+	float: right;
+	top: 1.1em;
+	left: 0.1em;
+}
+.addresssearch {
+	max-width: 27em;
+}
+
+#mapdiv {
+	width: 100%;
+	height: 22em;
+	max-width: 31.5em;
+	margin-top: 1em;
+	border: 1px solid #ccc;
+}
+
+/*@media (max-width: 42em) {
+	article {
+		max-width: 50%;
+	}
+}*/

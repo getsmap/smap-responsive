@@ -33,6 +33,8 @@ var pngcrush = require('imagemin-pngcrush');
 
 var p = {
 
+	htmlTemplate: "index_template.html",
+
 	// ----- Our libs ------
 	libsCss: [
 		'dist/lib/font-awesome/**/*.css',
@@ -247,7 +249,7 @@ gulp.task('htmlinjectdev', ["libs", "ourcss", "ourjs"], function() {
 	var libsJs = p.libsJs.slice(0, p.libsJs.length-1); // we don't want buildLibOverrides.js because we don't compress libs
 	var devSrcs = libsJs.concat(p.libsCss).concat(p.ourJs).concat(p.ourCss);
 	return gulp
-		.src('index_template.html')
+		.src(p.htmlTemplate)
 		.pipe(inject(gulp.src(devSrcs, {read: false}), {addRootSlash: false}))
 		.pipe(rename("dev.html"))
 		.pipe(gulp.dest("."));
@@ -258,7 +260,7 @@ gulp.task('htmlinjectprod', ["libsjs", "ourcss", "ourjs"], function() {
 	var libsCss = p.libsCss; //["dist/libs.css"];
 	var prodSrcs = libsJs.concat(libsCss).concat("dist/smap.js").concat("dist/smap.css");
 	return gulp
-		.src('index_template.html')
+		.src(p.htmlTemplate)
 		.pipe(inject(gulp.src(prodSrcs, {read: false}), {addRootSlash: false, ignorePath: 'dist/'}))
 		.pipe(rename("index.html"))
 		.pipe(gulp.dest("dist"));
@@ -288,7 +290,8 @@ gulp.task('full', ["cleancode"], function() {
 });
 
 gulp.task('fullmalmo', ["cleancode"], function() {
-	p.ourSass.unshift("dist/lib/malmo_shared_assets/**/*.scss");
+	// p.ourSass.unshift("dist/lib/malmo_shared_assets/**/*.scss");  In case we need advanced sass functionality from malmo assets
+	p.htmlTemplate = "index_template_malmo.html"
 	return gulp.start("_full");
 });
 
