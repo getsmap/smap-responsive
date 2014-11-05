@@ -287,6 +287,11 @@ gulp.task('full', ["cleancode"], function() {
 	return gulp.start("_full");
 });
 
+gulp.task('fullmalmo', ["cleancode"], function() {
+	p.ourSass.unshift("dist/lib/malmo_shared_assets/**/*.scss");
+	return gulp.start("_full");
+});
+
 // Note! It's wise to run <bower update> before resetting. Thereby, packages will be
 // up to date and any missing files (however that might happen...) will be filled-in.
 gulp.task('reset', ["cleantotal", "full"]);
