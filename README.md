@@ -19,7 +19,7 @@ The sMap package (i.e. the contents of this repository) consists of the sMap pro
 
 Data sources – whether belonging to the contributors' organisation, or to anyone else – are not included, neither in the product, nor in the package. You need to seek permission from the publisher and/or from the copyright owner to use these data. This also applies if the data is linked from any other code.
 
-###Get started
+###Getting started…
 
 There are two ways to get ready, depending on if your goal is to:
 - a) **Develop** the source code
@@ -37,7 +37,7 @@ There are two ways to get ready, depending on if your goal is to:
 1. Clone or download the source code of this repository (note that Git doesn't allow downloading a subfolder)
 ```svn checkout https://github.com/getsmap/smap-responsive/trunk/dist myDeployedMap```
 2. Adapt the file configs/config.js (or any other config-file you want to use) so that it refers to already published data (e.g. WMS or WFS)
-3. Point the browser to dev.html and point out the config-file by adding the parameter e.g. like this: ?config=configs/config.js or ?config=config.js  ("configs/" is added as default)
+3. Point the browser to index.html and set the config parameter to a desired config-file, like this: ?config=config.js or ?config=config.js  or if you want to use a config file from a different server: ?config=http://someserver.with.smapconfigfiles/configs/mySmapConfig.js
 
 
 ###Support
