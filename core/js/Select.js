@@ -44,6 +44,32 @@ smap.core.Select = L.Class.extend({
 			layer.resetStyle(lay);
 		});
 	},
+
+	_processHtml: function(html) {
+		// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
+		// (This issue was only found for touch devices.)
+		var $html = $("<div>"+html+"</div>");
+		$html.find(".popup-divider:last").remove();
+		$html.find("a").each(function() {
+			var $this = $(this);
+			var href = $this.attr("href"),
+				text = $this.text();
+
+			if (href && href.length > 4) {
+				if (href.substring(0, 4).toUpperCase() !== "HTTP") {
+					// Add http
+					href = "http://" + href;
+				}
+				var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
+				// Get the anchor href value and set it to the onclick value.
+				$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
+				$this.after($btn);
+			}
+			// If no valid href - just remove it. Fix for: https://github.com/getsmap/smap-responsive/issues/115
+			$this.remove();
+		});
+		return $html.html();
+	},
 	
 	_bindEvents: function(map) {
 		var self = this;
@@ -156,6 +182,7 @@ smap.core.Select = L.Class.extend({
 						layer.options.popup = layer.options.popup.replace(repl, popup);
 					}
 					var html = utils.extractToHtml(layer.options.popup, props);
+					html = self._processHtml(html);
 					var lay = utils.getLayerFromFeature(selectedFeature, layer);
 					// if (!lay) {
 					// 	lay = layer;
@@ -188,27 +215,12 @@ smap.core.Select = L.Class.extend({
 					
 				} // because of the way typename is stored
 				
-				// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
-				// (This issue was only found for touch devices.)
-				var $html = $("<div>"+html+"</div>");
-				$html.find(".popup-divider:last").remove();
-				$html.find("a").each(function() {
-					var href = $(this).attr("href"),
-						text = $(this).text();
-					var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
-					// Get the anchor href value and set it to the onclick value.
-					$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
-	//					$(this).removeAttr("href");
-					$(this).after($btn);
-					$(this).remove();
-				});
-				html = $html.html();
+				html = self._processHtml(html);
 				map.closePopup();
 				var popup = L.popup()
 					.setLatLng(f.latLng)
 					.setContent(html)
 					.openOn(map);
-				
 			}
 		});
 		
