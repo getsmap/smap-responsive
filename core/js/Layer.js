@@ -87,7 +87,7 @@ smap.core.Layer = L.Class.extend({
 	
 	onLayerAdd: function(e) {
 		var layer = e.layer;
-		if (!layer.options || !layer.options.layerId || layer.feature || !(layer._tileContainer || layer._layers)) {
+		if (!layer.options || !layer.options.layerId || layer.feature || !(layer instanceof L.NonTiledLayer) && !(layer._tileContainer || layer._layers)) {
 			return;
 		}
 		var layerId = layer.options.layerId;
