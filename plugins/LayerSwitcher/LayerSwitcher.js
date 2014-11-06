@@ -442,6 +442,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 				}
 			});
 		}
+
+		this._setSwitcherPosition(); // Check whether position relative or absolute (affects scroll)
 		return false;
 	},
 
