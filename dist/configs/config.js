@@ -381,7 +381,7 @@ var config = {
 					{
 						init: "L.Control.Print",
 						options: {
-							printUrl: "http://localhost/print-servlet/leaflet_print",
+							printUrl: "http://localhost/print-servlet/leaflet_print/",
 							position: "topright"
 						}
 					},

@@ -167,14 +167,14 @@ L.Control.SelectWMS = L.Control.extend({
 		var t, url, URL,
 			ts = {};
 		$.each(layers, function(i, layer) {
-			url = layer._url;
+			url = layer._url || layer._wmsUrl;  // _wmsUrl for L.NonTiledLayer.WMS
 			URL = url.toUpperCase();
 			if (!ts[URL]) {
 				ts[URL] = {
-						layerNames: [],
-						url: url,
-						wmsVersion: layer._wmsVersion,
-						layerId: layer.options.layerId
+					layerNames: [],
+					url: url,
+					wmsVersion: layer._wmsVersion,
+					layerId: layer.options.layerId
 				};
 			}
 			//ts[URL].layerNames.push(layer.options.layers);
@@ -208,7 +208,7 @@ L.Control.SelectWMS = L.Control.extend({
 	},
 	
 	_layerShouldBeAdded: function(layer) {
-		var isWmsLayer = layer._wmsVersion ? true : false;
+		var isWmsLayer = layer.wmsParams ? true : false;  // layer._wmsVersion
 		if (layer.options && layer.options.selectable && layer.options.selectable === true
 				&& this._hasLayer(layer) === false
 				&& isWmsLayer === true) {

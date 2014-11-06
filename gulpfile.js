@@ -48,6 +48,7 @@ var p = {
 		'dist/lib/jquery/**/*.js',
 		'dist/lib/sass-bootstrap/**/*.js',
 		'dist/lib/leaflet/**/*.js',
+		"dist/lib/Leaflet.NonTiledLayer/NonTiledLayer.js", // Must come before NonTiledLayer.WMS.js
 		'dist/lib/GeoJSON.WFS.js',
 		'dist/lib/leaflet.draw/**/*.js',
 
