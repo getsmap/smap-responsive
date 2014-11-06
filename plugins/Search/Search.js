@@ -144,12 +144,12 @@ L.Control.Search = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			search: "Sök",
+			search: "Sök Adress",
 			addressNotFound: "Den sökta adressen hittades inte",
 			remove: "Ta bort"
 		},
 		"en": {
-			search: "Search",
+			search: "Search adress",
 			addressNotFound: "The searched address was not found",
 			remove: "Remove"
 		}

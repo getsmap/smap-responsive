@@ -1,154 +1,21 @@
 L.Control.OpenSearch = L.Control.extend({
 	options: {
-		//wsAcUrl : "//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/sok_json_fme.py?term=",
-		//wsAcUrl : "//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/autocomplete_hbg.ashx?q=",
-		// wsAcUrl: "//xyz.malmo.se/WS/sKarta/autocomplete_limit.ashx",  //"//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/sok.py?",
-		// wsLocateUrl: "//xyz.malmo.se/WS/sKarta/sokexakt.ashx",  //"//localhost/cgi-bin/proxy.py?url=//kartor.helsingborg.se/Hws/sokexakkt.py",
-		
-		whitespace: "%2B",
+
+		whitespace: "%2B", //%20
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
 		addToMenu: false
-		// _geoLocate: function(q) {
-			// // TODO: When this function is completed, move to config file cultmap.js
-			// function cleanUp() {
-				// // Hide layer if added and
-				// $(".lswitch-temprow.active").tap();
-				// $(".lswitch-temprow").remove(); // Remove old searches
-				// // $(".lswitch-temprow.active").each(function() {
-				// // 	var t = $(this).data("t");
-				// // 	var layer = smap.cmd.getLayer( t.options.layerId );
-				// // 	if (layer) {
-				// // 		layer.destroy();
-				// // 	}
-				// // });
-			// }
-
-			// function onKeyUp(e) {
-				// if (e.keyCode === 8 && $(this).val() == "") {
-					// cleanUp();
-				// }
-			// }
-			// // This code should not be here, but it's ok because it doesn't harm anyone
-			// this._onKeyUp = this._onKeyUp || onKeyUp;
-			// $("#smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
-
-			// cleanUp(); // clean up old searches
-
-			// var lswitchInst = smap.cmd.getControl("L.Control.LayerSwitcher");
-			// if (lswitchInst) {
-				// var t = {
-						// init: "L.GeoJSON.WFS",
-						// url: "//localhost/cherrypy/cultmap/getdata", //"//localhost/cgi-bin/cultMap/getGeoData.py",
-						// options: {
-							// proxy: null,
-							// // zoomToExtent: true,
-							// // xhrType: "GET",
-							// layerId: "searchresults",
-							// displayName: "Sökresultat: "+'"'+q+'"',
-							// category: null,
-							// attribution: "Stadsbyggnadskontoret, Malmö",
-							// inputCrs: "EPSG:4326",
-							// reverseAxis: false,
-							// reverseAxisBbox: false,
-							// selectable: true,
-							// popup: '<h4>${txt_name}</h4>',
-							// uniqueKey: "id",
-							// params: {
-								// q: encodeURIComponent(q)
-							// },
-							// style: {
-								// radius: 8,
-								// fillColor: "#ff7800",
-								// color: "#000",
-								// weight: 1,
-								// opacity: 1,
-								// fillOpacity: 0.8
-							// },
-							// selectStyle: {
-								// radius: 8,
-								// fillColor: "#0FF",
-								// color: "#0FF",
-								// weight: 1,
-								// opacity: 1,
-								// fillOpacity: 0.5
-							// }
-						// }
-				// };
-				// var row = lswitchInst._addRow(t);
-				// row.data("t", t);
-				// row.addClass("lswitch-temprow");
-				// row.tap();
-
-			// }
-		// }
-
-							// onLocateSuccess: function(json) {
-							// 	// Simply add all the features to a new layer we call "searchlayer"
-							// 	// TODO: This layer should have the same popup interaction as all other layers.
-							// 	// TODO: Probably the layer should be cleared when an overlay is turned on.
-								
-							// 	var self = this;
-							// 	function clearMarkerLayer() {
-							// 		if (self.markerLayer) {
-							// 			self.map.removeLayer(self.markerLayer);
-							// 			self.markerLayer = null;
-							// 		}
-							// 	}
-							// 	function onKeyUp(e) {
-							// 		if (e.keyCode === 8 && $(this).val() == "") {
-							// 			clearMarkerLayer();
-							// 		}
-							// 	}
-							// 	// This code should not be here, but it's ok because it doesn't harm anyone
-							// 	this._onKeyUp = this._onKeyUp || onKeyUp;
-							// 	$("#smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
-
-							// 	if (!json.features.length) {
-							// 		smap.cmd.notify("Inga sökträffar", "error");
-							// 		return;
-							// 	}
-							// 	var geoJson = L.geoJson(json);
-							// 	if (this.markerLayer) {
-							// 		clearMarkerLayer()
-							// 	}
-							// 	this.markerLayer = L.geoJson(null, {
-							// 		layerId: "searchlayer",
-							// 		selectable: true,
-							// 		popup: '${txt_cat}',
-							// 		uniqueKey: "id",
-							// 		style: {
-							// 			radius: 8,
-							// 			fillColor: "#00F",
-							// 			color: "#00F",
-							// 			weight: 2,
-							// 			opacity: 1,
-							// 			fillOpacity: 0.2
-							// 		},
-							// 		selectStyle: {
-							// 			weight: 5,
-							// 			fillColor: "#0FF",
-							// 	       color: "#0FF",
-							// 	       opacity: 1,
-							// 	       fillOpacity: 1
-							// 		}
-							// 	}).addTo(this.map);
-							// 	this.map.addLayer(this.markerLayer);
-							// 	this.markerLayer.addData(json);
-							// 	this.markerLayer.fire("load"); // Make all features selectable
-							// 	this.map.fitBounds(this.markerLayer.getBounds());
-							// }
-		// qPattern: '{"txt_cat": ${q}}'
+		
 	},
 	
 	_lang: {
 		"sv": {
-			search: "Sök",
+			search: "Sök fastighet",
 			addressNotFound: "Den sökta adressen hittades inte",
 			remove: "Ta bort"
 		},
 		"en": {
-			search: "Search",
+			search: "Search property",
 			addressNotFound: "The searched address was not found",
 			remove: "Remove"
 		}
@@ -322,7 +189,7 @@ L.Control.OpenSearch = L.Control.extend({
 
 		if (this.options.wsAcUrl) {
 			typeheadOptions.source = function(q, process) {
-				var url = encodeURIComponent( self.options.wsAcUrl + "?q="+q);
+				var url = encodeURIComponent( self.options.wsAcUrl + "&where=FASTIGHET+LIKE+'"+q+"'");
 				if (whitespace) {
 					url = url.replace(/%20/g, whitespace);					
 				}
@@ -334,8 +201,17 @@ L.Control.OpenSearch = L.Control.extend({
 					url: smap.config.ws.proxy + url,
 					dataType: "text",
 					success: function(resp) {
-						var arr = resp.split("\n");
-						process(arr);
+						//var arr = resp.split("\n");
+						var arr = $.parseJSON(resp);
+						//alert (arr.completions[0].name);
+						var arr2 = [];
+						for (i=0, len=arr.completions.length; i<len; i++) {
+							//alert("in");
+							arr2[i]= arr.completions[i].name.split(",")[0];
+							//alert("ut");
+						}
+						//alert(arr2[0]);
+						process(arr2);
 					},
 					error: function() {}
 				});
@@ -366,7 +242,7 @@ L.Control.OpenSearch = L.Control.extend({
 			q = utils.extractToHtml(this.options.qPattern, {q: q});
 		}
 
-		var url = encodeURIComponent( this.options.wsLocateUrl + "?q="+q);
+		var url = encodeURIComponent( this.options.wsLocateUrl + "&where=FASTIGHET+LIKE+'"+q+"'");
 		var whitespace = this.options.whitespace;
 		if (whitespace) {
 			url = url.replace(/%20/g, whitespace);					
@@ -380,13 +256,13 @@ L.Control.OpenSearch = L.Control.extend({
 						this.map.removeLayer(this.marker);
 						this.marker = null;
 					}
-					if (!json.features.length) {
+					if (!json.completions.length) {
 						// This means the searched place does not exist – inform user
 						smap.cmd.notify(this.lang.addressNotFound, "error");
 						return;
 					}
-					var coords = json.features[0].geometry.coordinates;
-					var latLng = L.latLng( coords[1], coords[0] );
+					var coords = json.completions[0].latLng;
+					var latLng = L.latLng( coords[0], coords[1] );
 					
 					var wgs84 = "EPSG:4326";
 					if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
