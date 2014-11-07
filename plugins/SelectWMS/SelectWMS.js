@@ -4,7 +4,7 @@ L.Control.SelectWMS = L.Control.extend({
 		outputFormat: "GML2",
 		srs: "EPSG:4326",
 		info_format: "text/plain",
-		featureCount: 3,
+		featureCount: 10,
 		buffer: 5,
 		useProxy: false,
 		onSuccess: function(props, other) {
@@ -12,10 +12,9 @@ L.Control.SelectWMS = L.Control.extend({
 			
 			var latLng = other.latLng;
 
+			var ps, p;
 			for (var typishName in props) {
-				var p = props[typishName][0];
-
-				// Fetch layerId
+				ps = props[typishName];
 				var valArr = typishName.split(":");
 				var val = valArr[valArr.length-1];
 				var t = smap.cmd.getLayerConfigBy("layers", val, {inText: true});
@@ -23,20 +22,25 @@ L.Control.SelectWMS = L.Control.extend({
 					continue;
 				}
 				var layerId = t.options.layerId;
-				
-				// Create a pseudo feature based on properties and latLng
-				var f = {
-					geometry: {coordinates: [latLng.lng, latLng.lat]},
-					latLng: latLng,
-					properties: p,
-					layerId: layerId,
-					options: t.options
-				};
-				
-				if (p && $.isEmptyObject(p) === false) {
-					self._selectedFeatures.push(f);
-					// self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
+				for (var i=0,len=ps.length; i<len; i++) {
+					p = ps[i];
+					
+					// Create a pseudo feature based on properties and latLng
+					var f = {
+						geometry: {coordinates: [latLng.lng, latLng.lat]},
+						latLng: latLng,
+						properties: p,
+						layerId: layerId,
+						options: t.options
+					};
+					
+					if (p && $.isEmptyObject(p) === false) {
+						self._selectedFeatures.push(f);
+						// self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
+					}
+					
 				}
+
 			}
 			if (self._selectedFeatures.length) {
 				other.map.fire("selected", {
