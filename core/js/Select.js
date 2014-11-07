@@ -55,7 +55,7 @@ smap.core.Select = L.Class.extend({
 			var href = $this.attr("href"),
 				text = $this.text();
 
-			if (href && href.length > 4) {
+			if (href && href.length >= 4) {
 				if (href.substring(0, 4).toUpperCase() !== "HTTP") {
 					// Add http
 					href = "http://" + href;
@@ -217,10 +217,23 @@ smap.core.Select = L.Class.extend({
 				
 				html = self._processHtml(html);
 				map.closePopup();
-				var popup = L.popup()
-					.setLatLng(f.latLng)
-					.setContent(html)
-					.openOn(map);
+
+				// Wait for possible dblclick to be detected. If that happens,
+				// SelectWMS will set _dblclickWasRegistered to true.
+				setTimeout(function() {
+					var c = smap.cmd.getControl("SelectWMS");
+					if (c && c._dblclickWasRegistered === true) {
+						// c._dblclickWasRegistered = false;
+						console.log("Cancelling show popup");
+						return false;
+					}
+					else {
+						var popup = L.popup()
+							.setLatLng(f.latLng)
+							.setContent(html)
+							.openOn(map);
+					}
+				}, 100);
 			}
 		});
 		

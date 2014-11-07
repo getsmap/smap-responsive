@@ -94,7 +94,6 @@ L.Control.SelectWMS = L.Control.extend({
 					latlng: latLng,
 					_layers: [layer]
 				});
-				
 			}
 		}
 		
@@ -116,13 +115,15 @@ L.Control.SelectWMS = L.Control.extend({
 		this.map
 			.on("layeradd", this.onLayerAdd, this)
 			.on("layerremove", this.onLayerRemove, this)
-			.on("click", this.onMapClick, this);
+			.on("click", this.onMapClick, this)
+			.on("dblclick", this.onMapDblClick, this);
 	},
 	_unbindEvents: function() {
 		this.map
 			.off("layeradd", this.onLayerAdd, this)
 			.off("layerremove", this.onLayerRemove, this)
-			.off("click", this.onMapClick, this);
+			.off("click", this.onMapClick, this)
+			.off("dblclick", this.onMapDblClick, this);
 	},
 	
 	onLayerAdd: function(e) {
@@ -142,6 +143,19 @@ L.Control.SelectWMS = L.Control.extend({
 		}
 	},
 	
+	onMapDblClick: function(e) {
+		// Cancel getfeatureinfo request and stop popup from being shown on map
+		// by setting _dblclickWasRegistered to true.
+		this._dblclickWasRegistered = true;
+		if (this.xhr) {
+			this.xhr.abort();
+		}
+		setTimeout($.proxy(function() {
+			// Revert in case no click
+			this._dblclickWasRegistered = false;
+		}, this), 400);
+	},
+
 	/**
 	 * Prepare and execute the WMS GetFeatureInfo request.
 	 * @param e {Object}
@@ -154,6 +168,8 @@ L.Control.SelectWMS = L.Control.extend({
 		// Reset properties
 		this._selectedFeatures = [];
 		var latLng = e.latlng;
+
+		
 		
 		if (this.xhr) {
 			this.xhr.abort();
@@ -178,13 +194,13 @@ L.Control.SelectWMS = L.Control.extend({
 				};
 			}
 			//ts[URL].layerNames.push(layer.options.layers);
-			if(layer.options.selectLayers){
+			if (layer.options.selectLayers) {
 				//ts[URL].selectLayerNames.push(layer.options.selectLayers);
 				ts[URL].layerNames.push(layer.options.selectLayers);
-				}
-			else{
+			}
+			else {
 				ts[URL].layerNames.push(layer.options.layers);
-				}
+			}
 		});
 
 		var params;
@@ -196,15 +212,23 @@ L.Control.SelectWMS = L.Control.extend({
 				info_format: this.options.info_format,
 				latLng: latLng
 			});
-			this.request(t.url, params, {
-				onSuccess: this.options.onSuccess,
-				onError: function() {},
-				layerId: t.layerId,
-				latLng: latLng
-			});		
+			setTimeout($.proxy(function() {
+				if (this._dblclickWasRegistered === true) {
+					console.log("NOT requesting");
+				}
+				else {
+					console.log("requesting");
+					this.request(t.url, params, {
+						onSuccess: this.options.onSuccess,
+						onError: function() {},
+						layerId: t.layerId,
+						latLng: latLng
+					});		
+					
+				}
+				
+			}, this), 100);
 		}
-		
-		
 	},
 	
 	_layerShouldBeAdded: function(layer) {

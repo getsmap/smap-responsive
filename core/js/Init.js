@@ -122,8 +122,16 @@ smap.core.Init = L.Class.extend({
 			options.tapTolerance = 30;
 		}
 		var defaultOptions = smap.core.mainConfig.mapConfig || {};
-		this.map = L.map("mapdiv", $.extend(defaultOptions, options));
+		var mapOptions = $.extend(defaultOptions, options);
+		this.map = L.map("mapdiv", mapOptions);
 		smap.map = this.map;
+
+		if (mapOptions.disabledRightClick) {
+			this.map.on("contextmenu", function(e) {
+				e.originalEvent.preventDefault();
+				e.originalEvent.stopPropagation();
+			});
+		}
 
 		if (utils.getBrowser().ie9) {
 			$(".leaflet-bottom.leaflet-right").addClass(".leaflet-bottom-right-ie9");
