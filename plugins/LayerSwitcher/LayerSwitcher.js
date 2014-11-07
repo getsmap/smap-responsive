@@ -133,11 +133,11 @@ L.Control.LayerSwitcher = L.Control.extend({
 		});
 
 		if (panelsHeight > ( $("#mapdiv").innerHeight() - 35) ) {
-			console.log("absolute");
+			// Allow scroll (panel is going outside map)
 			$(".lswitch-panel").css("position", "absolute");
 		}
 		else {
-			console.log("relative");
+			// Allow interacting with map "behind" layer switcher (panel is within map and no scroll needed)
 			$(".lswitch-panel").css("position", "relative");
 		}
 		this.hidePanel();
@@ -442,8 +442,13 @@ L.Control.LayerSwitcher = L.Control.extend({
 				}
 			});
 		}
-
-		this._setSwitcherPosition(); // Check whether position relative or absolute (affects scroll)
+		if ( $(window).width() > this.options.pxDesktop) {
+			this._setSwitcherPosition(); // Check whether position relative or absolute (affects scroll)
+		}
+		else {
+			// We are in a mobile environment … always allow scroll (no map to interact with behind the switcher)
+			$(".lswitch-panel").css("position", "absolute");
+		}
 		return false;
 	},
 
