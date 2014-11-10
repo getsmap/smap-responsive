@@ -24,6 +24,10 @@ body {
 	border: 1px solid #ccc;
 }
 
+.btn-togglemap {
+	margin-top: 1em;
+}
+
 /*@media (max-width: 42em) {
 	article {
 		max-width: 50%;

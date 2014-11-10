@@ -2,7 +2,7 @@
 
 var app = {
 		options: {
-			proxy: null //http://localhost/cgi-bin/proxy.py?url="
+			proxy: null //"http://localhost/cgi-bin/proxy.py?url="
 		},
 
 		init: function() {
@@ -11,20 +11,47 @@ var app = {
 			this.defineProjs();
 
 			$("form").on("submit", function(e) {
-				return false;
-			});
-			$('button[type="submit"]').on("click", function(e) {
-				self.showMap({
-					latLng: self.latLng
+				var arr = $(this).serializeArray();
+				var formData = {}, t;
+				for (var i=0,len=arr.length; i<len; i++) {
+					t = arr[i];
+					formData[t.name] = t.value;
+				}
+				self._calcResult(formData).done(function(e) {
+					// e.text;
+					$("#result").html("Om man är folkbokförd på <strong>"+formData.q+"</strong> ska man gå på <strong>"+e.schoolName+"</strong> i <strong>årskurs "+formData.batch+"</strong>");
+					// TODO: Call script to fetch result. On fetch done – show a button
+					// which toggles the map
 				});
+				self._addBtnToggleMap();
 				return false;
 			});
+			// $('button[type="submit"]').on("click", function(e) {
+				
+			// 	return false;
+			// });
 
 			this._appendTerms();
 
-			$(".schoolform").find("input").on("change", function() {
+			var geoLocate = this._geoLocate;
+			$(".schoolform").find(".addresssearch input").on("change", function() {
+				self.latLng = null;
+				geoLocate.call(self, $.trim($(this).val()) ).done(function(e) {
+					self.okToSubmit();
+				});
+			});
+
+			$(".schoolform").find('input[type="radio"]').on("change", function() {
 				self.okToSubmit();
 			});
+		},
+
+		_calcResult: function() {
+			var def = $.Deferred();
+			def.resolve({
+				schoolName: "Kallebergsskolan"
+			});
+			return def.promise();
 		},
 
 		_appendTerms: function() {
@@ -33,8 +60,13 @@ var app = {
 			var yearNow = now.getFullYear(),
 				m = now.getMonth() + 1;
 
-			// If month is earlier than June (6th month), then include "previous year's" term.
-			// If later, then the option will be visible but disabled.
+			if (yearNow < 2014) {
+				alert("Din dators datuminställningar är fel. Tjänsten kan inte användas.");
+			}
+
+			// If month is earlier than June (6th month), then include "previous year's" 
+			// term and the term starting after summer.
+			// If later than June, then the option will be visible but disabled.
 			var startYear = m < 6 ? yearNow - 1 : yearNow;
 			var years = [startYear, startYear+1],
 				y, tag;
@@ -72,6 +104,34 @@ var app = {
 			// else {
 			// 	$('button[type="submit"]').button("reset");
 			// }
+		},
+
+		_addBtnToggleMap: function() {
+			var self = this;
+
+			var btn = $("#btn-togglemap");
+			if (!btn.length) {
+				btn = $('<button id="btn-togglemap" class="btn btn-default btn-togglemap">Visa karta</button>');
+				$(".controls").after(btn);
+			}
+
+			btn.on("click", function() {
+				var $this = $(this);
+				if ( $this.hasClass("active")) {
+					$this.text("Visa karta");
+					self.hideMap();
+					$this.removeClass("active");
+
+				}
+				else {
+					$this.text("Göm karta");
+					self.showMap({
+						latLng: self.latLng
+					});
+					$this.addClass("active");
+				}
+				return false;
+			});
 		},
 
 		showMap: function(params) {
@@ -114,7 +174,7 @@ var app = {
 		_geoLocate: function(address) {
 			this.loading(true);
 			var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt_v.ashx?q="+encodeURIComponent(address);
-			$.ajax({
+			return $.ajax({
 				url: this.options.proxy ? this.options.proxy + encodeURIComponent(url) : url,
 				type: "GET",
 				dataType: "json",
@@ -133,7 +193,7 @@ var app = {
 				},
 				complete: function() {
 					this.loading(false);
-				},
+				}
 			});
 		},
 
@@ -163,7 +223,6 @@ var app = {
 				self.okToSubmit();
 			});
 
-			var geoLocate = this._geoLocate;
 			var typeheadOptions = {
 					items: 5,
 					minLength: 2,
@@ -189,7 +248,6 @@ var app = {
 					updater: function(val) {
 						self._addressFound = true;
 						self.okToSubmit();
-						geoLocate.call(self, val);
 						return val;
 					}
 		//		   displayKey: 'value',
