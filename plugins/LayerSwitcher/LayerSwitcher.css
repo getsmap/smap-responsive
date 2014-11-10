@@ -75,22 +75,22 @@
   overflow: visible;
 }
 .lswitch-catcont.lswitch-catcont-visible .lswitch-cat {
-  margin-left: 1em;
+  padding-left: 2.3em;
 }
 .lswitch-catcont.lswitch-catcont-visible .lswitch-catcont .lswitch-cat {
-  margin-left: 2em;
+  padding-left: 3.9em;
 }
 .lswitch-catcont.lswitch-catcont-visible .lswitch-catcont .lswitch-catcont.lswitch-catcont-visible a {
-  margin-left: 2em;
+  padding-left: 5.2em;
 }
 .lswitch-catcont.lswitch-catcont-visible .lswitch-catcont a {
-  margin-left: 1em;
+  padding-left: 3.3em;
 }
 .lswitch-catcont a {
   border-radius: 0 !important;
 }
 .lswitch-catcont.lswitch-catcont-visible a {
-  padding-left: 2em;
+  padding-left: 2.5em;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
@@ -102,7 +102,7 @@
   margin-top: 1px;
 }
 .lswitch-cat {
-  margin-top: 2px;
+  margin-top: 1px;
 }
 .lswitch-panel a.active {
   cursor: pointer;
@@ -172,7 +172,7 @@
     background-image: none !important;
     text-shadow: none !important;
     background-color: #fff;
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255,255,255,0.8);
     color: #000;
     color: #000;
     font-weight: bold;
@@ -225,13 +225,13 @@
   }
   .lswitch-panel a {
     border-color: #fff;
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255,255,255,0.8);
   }
   .lswitch-panel a:hover,
   .lswitch-panel a:active,
   .lswitch-panel a.active:hover,
   .lswitch-panel a.active:active {
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(245,245,245,0.9);
   }
   .lswitch-panel .panel-default {
     border: none;
