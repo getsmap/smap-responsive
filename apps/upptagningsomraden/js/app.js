@@ -2,7 +2,7 @@
 
 var app = {
 		options: {
-			proxy: "http://localhost/cgi-bin/proxy.py?url="
+			proxy: null //http://localhost/cgi-bin/proxy.py?url="
 		},
 
 		init: function() {
@@ -113,8 +113,9 @@ var app = {
 
 		_geoLocate: function(address) {
 			this.loading(true);
+			var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt_v.ashx?q="+encodeURIComponent(address);
 			$.ajax({
-				url: this.options.proxy + encodeURIComponent("http://kartor.malmo.se/WS/search-1.0/sokexakt_v.ashx?q="+encodeURIComponent(address)),
+				url: this.options.proxy ? this.options.proxy + encodeURIComponent(url) : url,
 				type: "GET",
 				dataType: "json",
 				context: this,
@@ -173,9 +174,10 @@ var app = {
 						if (self._ajax) {
 							self._ajax.abort();
 						}
+						var url = options.url.replace("{q}", q);
 						self._ajax = $.ajax({
 							type: "GET",
-							url: self.options.proxy + encodeURIComponent(options.url.replace("{q}", q)),
+							url: self.options.proxy ? self.options.proxy + encodeURIComponent(url) : url,
 							dataType: "text",
 							success: function(resp) {
 								var arr = resp.split("\n");
