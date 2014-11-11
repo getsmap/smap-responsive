@@ -38,7 +38,7 @@
     "add-to-homescreen": "~3.0.7",
     "screenfull": "~1.2.1",
     "esri-leaflet": "~0.0.1-beta.4-patch-1",
-    "leaflet.draw": "https://github.com/getsmap/smap-responsive/tree/master/dist/lib/leaflet.draw/dist",
+    "leaflet.draw": "./lib/leaflet.draw/",
     "leaflet-plugins": "~1.2.0",
     "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
     "leaflet-polyline-distance": "./lib/leaflet-polyline-distance/",
