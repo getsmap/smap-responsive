@@ -84,7 +84,10 @@ smap.core.Select = L.Class.extend({
 		});
 		
 		map.on("unselected", function(e) {
-			
+			if (self._rasterFeature) {
+				self.map.removeLayer(self._rasterFeature);
+				self._rasterFeature = null;
+			}
 			if (e.feature) {
 				// Remove the feature from the selected features array.
 				$.each(self._selectedFeaturesVector, function(i, val) {
@@ -184,15 +187,10 @@ smap.core.Select = L.Class.extend({
 					var html = utils.extractToHtml(layer.options.popup, props);
 					html = self._processHtml(html);
 					var lay = utils.getLayerFromFeature(selectedFeature, layer);
-					// if (!lay) {
-					// 	lay = layer;
-					// }
 					if (lay._popup) {
 						lay.unbindPopup();
 					}
 					lay.bindPopup(html, {autoPan: true, keepInView: false, autoPanPadding: L.point(0, 70)});
-//					lay.off("click", lay.togglePopup); // Unbind the default listener that comes with bindPopup
-//					lay._popup.options.autoPanPaddingTopLeft = [0, 50];
 					lay.openPopup(latLng);
 				}
 			}
@@ -207,8 +205,8 @@ smap.core.Select = L.Class.extend({
 					props = f.properties;
 					// props._displayName = t.options.displayName;
 					if (f.options.popup) {
-						html += '<h5>'+f.options.displayName+'</h5>';
-						html += utils.extractToHtml(f.options.popup, props);
+						html += '<div class="leaflet-popup-option leaflet-popup-option-short"><h5 class="popup-layertitle">'+f.options.displayName+'</h5>';
+						html += utils.extractToHtml(f.options.popup, props) + '</div>';
 						html += '<div class="popup-divider"></div>';
 					}
 					// html = html.replace("${_displayName}", t.options.displayName);
@@ -217,6 +215,56 @@ smap.core.Select = L.Class.extend({
 				
 				html = self._processHtml(html);
 				map.closePopup();
+
+				function addWmsFeature(theFeature) {
+					if (self._rasterFeature) {
+						self.map.removeLayer(self._rasterFeature);
+						self._rasterFeature = null;
+					}
+					self._rasterFeature = L.geoJson(theFeature.geometry);
+					self.map.addLayer(self._rasterFeature);
+					return self._rasterFeature;
+				}
+
+				var popup = L.popup();
+
+				var $html = $("<div />").append(html);
+				// popup.update();
+
+				// var $popupContent = $(popup._contentNode);
+
+				if (self._selectedFeaturesWms.length === 1) {
+					addWmsFeature(f);
+					$(".leaflet-popup-option").removeClass("leaflet-popup-option");
+				}
+				else if (f.geometry && f.geometry.type) {
+					// popup._updatePosition();
+					function onClick() {
+						var theIndex = $(this).data("index");
+						var sf = self._selectedFeaturesWms[ theIndex ];
+						// self._rasterFeature = L.geoJson(f.geometry);
+						addWmsFeature(sf);
+						// $(".leaflet-popup-content").children().not(".popup-layertitle, .popup-divider").hide();
+						// $(this).nextUntil(".popup-layertitle").show();
+						// self.map.fitBounds(sff.getBounds());
+						$(this).siblings().addClass("leaflet-popup-option-short");
+						$(this).removeClass("leaflet-popup-option-short");
+						// popup.update();
+						return false;
+					}
+					self._onPopupOpen = self._onPopupOpen || function() {
+						$(".leaflet-popup-content-wrapper").addClass("leaflet-popup-content-wrapper-multichoice");
+						$(".leaflet-popup-content .leaflet-popup-option").each(function(i) {
+							var $this = $(this);
+							$this.data("index", i);
+						});
+						$(".leaflet-popup-content .leaflet-popup-option").addClass("leaflet-popup-option-short").on("click", onClick);
+						$(".leaflet-popup-content .leaflet-popup-option:first").click();
+					}
+					map.off("popupopen", self._onPopupOpen).on("popupopen", self._onPopupOpen);
+				}
+				popup.setLatLng(f.latLng);
+				popup.setContent($html.html());
 
 				// Wait for possible dblclick to be detected. If that happens,
 				// SelectWMS will set _dblclickWasRegistered to true.
@@ -228,10 +276,8 @@ smap.core.Select = L.Class.extend({
 						return false;
 					}
 					else {
-						var popup = L.popup()
-							.setLatLng(f.latLng)
-							.setContent(html)
-							.openOn(map);
+						popup.openOn(map);
+						// self._onPopupOpen();
 					}
 				}, 100);
 			}

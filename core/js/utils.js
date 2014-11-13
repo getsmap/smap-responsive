@@ -21,10 +21,6 @@ var utils = {
 			};
 		},
 
-		projectPoint: function(east, north, srsSrc, srsDest) {
-			return window.proj4(srsSrc, srsDest, [east, north]);
-		},
-
 		isInIframe: function() {
 			return top.location != self.location;
 		},
@@ -237,6 +233,97 @@ var utils = {
 				 }
 			}
 			return out;
+		},
+
+		projectPoint: function(east, north, srsSrc, srsDest) {
+			return window.proj4(srsSrc, srsDest, [east, north]);
+		},
+
+		projectLatLng: function(latLng, srsSrc, srsDest, reverseAxisSrc, reverseAxisDest) {
+			var coords = reverseAxisSrc ? [latLng.lat, latLng.lng] : [latLng.lng, latLng.lat];
+			var arr = window.proj4(srsSrc, srsDest, coords);
+			var outLatLng = reverseAxisDest ? L.latLng(arr[0], arr[1]) : L.latLng(arr[1], arr[0]);
+			return outLatLng;
+		},
+
+
+		projectFeature: function(feature, inputCrs, options) {
+			options = options || {};
+
+			var _projectPoint = this.projectPoint;
+			function projectPoint(coordinates, inputCrs) {
+				return _projectPoint(coordinates[0], coordinates[1], inputCrs, "EPSG:4326");
+			};
+
+			function swapCoords(coords) {
+				coords = [coords[1], coords[0]];
+				return coords;
+			};
+			
+			var coords, coordsArr, projectedCoords, i, p, geom;
+			
+			geom = feature.geometry;
+			switch (geom.type) {
+				case "Point":
+					coords = geom.coordinates;
+					if (options.reverseAxis) {
+						coords = swapCoords(coords);
+					}
+					projectedCoords = projectPoint(coords, inputCrs);
+					geom.coordinates = projectedCoords;
+					break;
+				case "MultiPoint":
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coords = geom.coordinates[p];
+						if (options.reverseAxis) {
+							coords = swapCoords(coords);
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						feature.geometry.coordinates[p] = projectedCoords;
+					}
+					break;
+				case "MultiLineString":
+					coordsArr = [];
+					var pp, ii,
+						newCoords = [];
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coordsArr = geom.coordinates[p];
+						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
+							coords = coordsArr[pp];
+							if (options.reverseAxis) {
+								coords = swapCoords( coords );								
+							}
+							projectedCoords = projectPoint(coords, inputCrs);
+							coordsArr[pp] = projectedCoords;
+						}
+						geom.coordinates[p] = coordsArr; // needed?
+					}
+					break;
+				case "Polygon":
+					coordsArr = geom.coordinates[0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (options.reverseAxis) {
+							coords = swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+					
+					break;
+				case "MultiPolygon":
+					coordsArr = geom.coordinates[0][0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (options.reverseAxis) {
+							coords = swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+//					geom.coordinates[0][0] = coordsArr; // needed?
+					break;
+			}
 		}
 		
 		

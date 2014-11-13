@@ -38,7 +38,16 @@ L.Control.SelectVector = L.Control.extend({
 		// Func with proxy to be bound to individual features.
 		var self = this;
 		this._onFeatureClick = function(e) {
+			var dblClickIntervalMs = 200;
 			self.onFeatureClick(e);
+			console.log("click");
+			if (self._clickWasRegistered) {
+				e.target.fire("dblclick", e);
+			}
+			self._clickWasRegistered = true;
+			setTimeout(function() {
+				self._clickWasRegistered = false;
+			}, dblClickIntervalMs);
 		};
 		
 	},
@@ -72,7 +81,6 @@ L.Control.SelectVector = L.Control.extend({
 		this.map.on("layeradd", this._onLayerAdded);
 		this.map.on("layerremove", this._onLayerRemoved);
 		this.map.on("click", this._onMapClick);
-		
 	},
 	
 	/*
@@ -96,7 +104,8 @@ L.Control.SelectVector = L.Control.extend({
 				lay.options = lay.options || {};
 				lay.options.layerId = layer.options.layerId;
 				lay.off("click", self._onFeatureClick).on("click", self._onFeatureClick);
-			});			
+			});
+			this.off("dblclick", self._onFeatureClick).on("dblclick", self._onFeatureClick);
 		});
 		this._vectorLayers.push(layer);
 	},
@@ -179,7 +188,6 @@ L.Control.SelectVector = L.Control.extend({
 				}
 			}
 		}
-		
 		
 		var indexOfFeature = $.inArray(f, this._selectedFeatures);
 		if (shiftKeyWasPressed === true && indexOfFeature > -1) {

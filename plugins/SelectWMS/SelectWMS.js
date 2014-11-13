@@ -1,59 +1,11 @@
 L.Control.SelectWMS = L.Control.extend({
 	options: {
-		wmsVersion: "1.3",
+		wmsVersion: "1.3.0",
 		outputFormat: "GML2",
-		srs: "EPSG:4326",
 		info_format: "text/plain",
-		featureCount: 10,
+		maxFeatures: 20,
 		buffer: 5,
-		useProxy: false,
-		onSuccess: function(props, other) {
-			var self = other.context;
-			
-			var latLng = other.latLng;
-
-			var ps, p;
-			for (var typishName in props) {
-				ps = props[typishName];
-				var valArr = typishName.split(":");
-				var val = valArr[valArr.length-1];
-				var t = smap.cmd.getLayerConfigBy("layers", val, {inText: true});
-				if (!t || !t.options || !t.options.layerId) {
-					continue;
-				}
-				var layerId = t.options.layerId;
-				for (var i=0,len=ps.length; i<len; i++) {
-					p = ps[i];
-					
-					// Create a pseudo feature based on properties and latLng
-					var f = {
-						geometry: {coordinates: [latLng.lng, latLng.lat]},
-						latLng: latLng,
-						properties: p,
-						layerId: layerId,
-						options: t.options
-					};
-					
-					if (p && $.isEmptyObject(p) === false) {
-						self._selectedFeatures.push(f);
-						// self._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
-					}
-					
-				}
-
-			}
-			if (self._selectedFeatures.length) {
-				other.map.fire("selected", {
-					layer: self,
-					feature: self._selectedFeatures.length ? self._selectedFeatures[0] : null,
-					// latLng: latLng,
-					selectedFeatures: self._selectedFeatures
-				});
-			}
-		},
-		onError: function() {
-			
-		}
+		useProxy: false
 	},
 	
 	_layers: [],
@@ -80,6 +32,97 @@ L.Control.SelectWMS = L.Control.extend({
 		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
 		
 		this._unbindEvents();
+	},
+
+	onSuccess: function(geodata, other) {
+
+		var params = other.params;
+
+		if (geodata && geodata.features) {
+			// This is vector data
+			var fs = geodata.features,
+				f, t, o;
+			if (!fs.length) {
+				return false;
+			}
+			for (var i=0,len=fs.length; i<len; i++) {
+				f = fs[i];
+				f.latLng = other.latLng;
+				t = smap.cmd.getLayerConfigBy("options.layers", params.layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", params.layers);
+				if (!t) {
+					// Find out which layer this feature belongs to by using the id
+					if (f.id) {
+						var lName = f.id.split(".")[0];
+						if (params.layers.search(lName) > -1) {
+							var arr = params.layers.split(",");
+							for (var j=0,lenj=arr.length; j<lenj; j++) {
+								if (arr[j].search(lName) > -1) {
+									var layers = arr[j];
+									t = smap.cmd.getLayerConfigBy("options.layers", layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", layers);
+								}
+							}
+						}
+
+					}
+				}
+				o = t.options;
+				if (o.selectOptions && o.selectOptions.srs && o.selectOptions.srs !== "EPSG:4326") {
+					// Project into wgs84 coords
+					utils.projectFeature(f, o.selectOptions.srs, {
+						// reverseAxis: true
+					});
+				}
+				f.options = $.extend({}, o);
+			}
+			this._selectedFeatures = this._selectedFeatures.concat(fs);
+			this.map.fire("selected", {
+				layer: this,
+				feature: fs[0],
+				selectedFeatures: this._selectedFeatures
+			});
+		}
+		else if (geodata) {
+			var latLng = other.latLng;
+			var ps, p;
+			for (var typishName in geodata) {
+				ps = geodata[typishName];
+				var valArr = typishName.split(":");
+				var val = valArr[valArr.length-1];
+				var t = smap.cmd.getLayerConfigBy("layers", val, {inText: true});
+				if (!t || !t.options || !t.options.layerId) {
+					continue;
+				}
+				var layerId = t.options.layerId;
+				for (var i=0,len=ps.length; i<len; i++) {
+					p = ps[i];
+					
+					// Create a pseudo feature based on properties and latLng
+					var f = {
+						geometry: {coordinates: [latLng.lng, latLng.lat]},
+						latLng: latLng,
+						properties: p,
+						layerId: layerId,
+						options: t.options
+					};
+					
+					if (p && $.isEmptyObject(p) === false) {
+						this._selectedFeatures.push(f);
+						// this._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
+					}
+					
+				}
+
+			}
+			if (this._selectedFeatures.length) {
+				other.map.fire("selected", {
+					layer: this,
+					feature: this._selectedFeatures.length ? this._selectedFeatures[0] : null,
+					selectedFeatures: this._selectedFeatures
+				});
+			}
+		}
+
+
 	},
 	
 	_applyParam: function(sel) {
@@ -172,8 +215,6 @@ L.Control.SelectWMS = L.Control.extend({
 		// Reset properties
 		this._selectedFeatures = [];
 		var latLng = e.latlng;
-
-		
 		
 		if (this.xhr) {
 			this.xhr.abort();
@@ -194,13 +235,12 @@ L.Control.SelectWMS = L.Control.extend({
 					layerNames: [],
 					url: url,
 					wmsVersion: layer._wmsVersion,
-					layerId: layer.options.layerId
+					layerId: layer.options.layerId,
+					selectOptions: layer.options.selectOptions || {}
 				};
 			}
-			//ts[URL].layerNames.push(layer.options.layers);
-			if (layer.options.selectLayers) {
-				//ts[URL].selectLayerNames.push(layer.options.selectLayers);
-				ts[URL].layerNames.push(layer.options.selectLayers);
+			if (layer.options.selectOptions && layer.options.selectOptions.layers) {
+				ts[URL].layerNames.push(layer.options.selectOptions.layers);
 			}
 			else {
 				ts[URL].layerNames.push(layer.options.layers);
@@ -210,24 +250,31 @@ L.Control.SelectWMS = L.Control.extend({
 		var params;
 		for (var URL in ts) {
 			t = ts[URL];
+			// t.selectOptions = t.selectOptions || {};
 			params = this._makeParams({
 				layers: t.layerNames.join(","),
 				version: t._wmsVersion || this.options.wmsVersion, 
-				info_format: this.options.info_format,
-				latLng: latLng
-			});
+				info_format: t.selectOptions.info_format || this.options.info_format,
+				latLng: latLng,
+				srs: t.selectOptions.srs || "EPSG:4326"
+			}, t.selectOptions);
+			if (params.info_format === "text/plain") {
+				params.version = "1.1.1";
+			}
 			setTimeout($.proxy(function() {
 				if (this._dblclickWasRegistered === true) {
 					console.log("NOT requesting");
 				}
 				else {
+					var onSuccess;
 					console.log("requesting");
-					this.request(t.url, params, {
-						onSuccess: this.options.onSuccess,
-						onError: function() {},
-						layerId: t.layerId,
-						latLng: latLng
-					});		
+					this.request(
+						t.selectOptions.url || t.url, params, {
+							onSuccess: onSuccess,
+							onError: function() {},
+							layerId: t.layerId,
+							latLng: latLng
+					});
 					
 				}
 				
@@ -255,32 +302,49 @@ L.Control.SelectWMS = L.Control.extend({
 		return false;
 	},
 	
-	_makeParams: function(options) {
+	_makeParams: function(overrideParams, options) {
 		options = options || {};
 		
-		
-		var px = this.map.latLngToContainerPoint(options.latLng);
-		
+		var px = this.map.latLngToContainerPoint(overrideParams.latLng);
 		var b = this.map.getBounds();
-		var params = {
+		var bboxString = b.toBBoxString();
+		if (options.srs && overrideParams.srs !== "EPSG:4326") {
+			// Project bounds to new projection (seems like the WMS GetFeatureInfo 
+			// cannot handle WGS84 when native projection is something else.
+			var sw = b.getSouthWest(),
+				ne = b.getNorthEast();
+			sw = utils.projectLatLng(sw, "EPSG:4326", overrideParams.srs, false, false);
+			ne = utils.projectLatLng(ne, "EPSG:4326", overrideParams.srs, false, false);
+			b = L.latLngBounds(sw, ne);
+			bboxString = b.toBBoxString();
+		}
+		if (options.reverseAxisBbox) {
+			var bboxArr = bboxString.split(",");
+			bboxString = [bboxArr[1], bboxArr[0], bboxArr[3], bboxArr[2]].join(",");
+		}
+
+		
+
+		var params = $.extend({}, {
 				service: "WMS",
 				request: "GetFeatureInfo",
-				version: "1.1.1", //options.version,
-				bbox: b.toBBoxString(), //b.getSouth() +","+ b.getWest() +","+ b.getNorth() +","+ b.getEast(),
-				layers: options.layers,
-//				typename: options.layers,
-				query_layers: options.layers,
-				info_format: options.info_format,
-				format: "image/png",
-				feature_count: this.options.featureCount,
+				version: this.options.version,
+				bbox: bboxString,
+				layers: null,
+				styles: "",
+				typename: overrideParams.layers,
+				query_layers: overrideParams.layers,
+				info_format: overrideParams.info_format,
+				feature_count: this.options.maxFeatures,
 				x: utils.round(px.x),
 				y: utils.round(px.y),
 				buffer: this.options.buffer,
 				width: utils.round(this.map.getSize().x),
 				height: utils.round(this.map.getSize().y),
-				srs: this.options.srs || "EPSG:4326",
+				srs: "EPSG:4326",
 				exceptions: "application%2Fvnd.ogc.se_xml"
-		};
+		}, overrideParams);
+		delete params.latLng;
 		return params;
 	},
 	
@@ -293,6 +357,10 @@ L.Control.SelectWMS = L.Control.extend({
 		
 		for (var i=0,len=rows.length; i<len; i++) {
 			row = rows[i];
+			if ( $.trim(row).length === 0 ) {
+				// If empty row - continue to next row. Solves bug: https://github.com/getsmap/smap-responsive/issues/123 
+				continue;
+			}
 			if (row.search("=") === -1) {
 				var index = row.search(/'/);
 				if (index > -1) {
@@ -314,7 +382,7 @@ L.Control.SelectWMS = L.Control.extend({
 						out[featureType].push($.extend({}, dict));
 						dict = {};
 					}
-					continue;						
+					continue;
 				}
 			}
 			t = row.split("=");
@@ -324,7 +392,7 @@ L.Control.SelectWMS = L.Control.extend({
 				val = tempArr.join("=");
 			}
 			else {
-				val = t[1];			
+				val = t[1];
 			}
 			val = $.trim(val);
 			
@@ -366,12 +434,24 @@ L.Control.SelectWMS = L.Control.extend({
 		this.xhr = $.ajax({
 			url: url,
 			data: params,
-			type: "POST",
+			type: "GET",
 			dataType: "text",
 			context: this,
 			success: function(resp, textStatus, jqXHR) {
-				var out = this._parseText(resp);
-				options.onSuccess(out, {
+				var out;
+				var info_format = params.info_format;
+				if (info_format === "text/plain") {
+					out = this._parseText(resp);
+				}
+				else if (info_format === "application/json") {
+					out = JSON.parse(resp);
+				}
+				else {
+					console.log("Info format: "+info_format+" not yet supported.");
+					return false;
+				}
+				var onSuccess = options.onSuccess || this.onSuccess;
+				onSuccess.call(this, out, {
 					latLng: options.latLng,
 					map: this.map,
 					context: this,

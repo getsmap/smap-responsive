@@ -91,6 +91,9 @@
         "dist/images/marker-shadow.png"
       ]
     },
+    "Leaflet.favorDoubleClick": {
+      "main": "src/*.js"
+    },
     "leaflet.draw": {
       "main": [
         "dist/leaflet.draw.css",
@@ -143,8 +146,8 @@
     },
     "Leaflet.NonTiledLayer": {
       "main": [
-          "NonTiledLayer.js",
-          "NonTiledLayer.WMS.js"
+        "NonTiledLayer.js",
+        "NonTiledLayer.WMS.js"
       ]
     }
   }

@@ -56,6 +56,7 @@ smap.core.Layer = L.Class.extend({
 	initialize: function(map) {
 		this.map = map;
 		this._bindEvents();
+		// Allow double-click to be registered before click on vector features
 	},
 	
 	addOverlays: function(arr) {
@@ -87,9 +88,24 @@ smap.core.Layer = L.Class.extend({
 	
 	onLayerAdd: function(e) {
 		var layer = e.layer;
+
+		// if (layer._layers && layer.on) {
+		// 	this._zoomIn = this._zoomIn || $.proxy(function(e) {
+		// 		// e.target._map._onDoubleClick(e);
+		// 		e.target._map.fire("dblclick", e);
+		// 	}, this);
+
+		// }
 		if (!layer.options || !layer.options.layerId || layer.feature || !(layer instanceof L.NonTiledLayer) && !(layer._tileContainer || layer._layers)) {
 			return;
 		}
+		layer.options.clickable = false;
+		this._onDblClick = this._onDblClick || $.proxy(function(e) {
+			alert("click");
+		}, this);
+		
+		layer.off("click").on("click", this._onDblClick);
+		layer.off("dblclick").on("dblclick", this._onDblClick);
 		var layerId = layer.options.layerId;
 		this._layers[layerId] = layer; // Store in object so we can fetch it when needed.
 		if (layer._layers) {
