@@ -13,7 +13,8 @@ L.Control.RedirectClick = L.Control.extend({
 		buttonId: "redirect-snedbild",
 		buttonCss: "ui-icon-arrowstop-1-s",
 		mouseMoveText: {
-			subtext: "Klicka i kartan för att redirect till snedbild",
+			text: "Klicka i kartan för att redirect till snedbild",
+			subtext: "",
 		},
 		mouseMoveSubtext: "",
 		addToMenu: false
