@@ -5,14 +5,17 @@ L.Control.RedirectClick = L.Control.extend({
 		btnID: "redirect-click-btn", //plugin ID which can be used with jquery e.g.
 		displayName : 'Snedbild',
 		toolbarIndex: 4,
-		//url: "//xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
-		url: "//kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}",
+		//url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
+		url: "http://kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}",
 		overrideName: "snedbild",
 		btnLabel: "Snedbild",
 		btnHover: "Verktyg för att se snedbilder",
 		buttonId: "redirect-snedbild",
 		buttonCss: "ui-icon-arrowstop-1-s",
-		mouseMoveText: "Klicka i kartan för att redirect till snedbild",
+		mouseMoveText: {
+			text: "Klicka i kartan för att redirect till snedbild",
+			subtext: "",
+		},
 		mouseMoveSubtext: "",
 		addToMenu: false
 		
@@ -62,12 +65,12 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 
 	addHooks: function () {
-		var map = this._map;
+		
 
-		if (map) {
-			map.getContainer().focus();
+		if (this.map) {
+			this.map.getContainer().focus();
 			this._tooltip = new L.Tooltip({
-				map: this._map,
+				map: this.map,
 				trackMouse: true,
 				target: $("body"),
 				showDelay: 1,
@@ -75,7 +78,7 @@ L.Control.RedirectClick = L.Control.extend({
 				fadeAnimation: false,
 				mouseOffset: L.point(0, 10)
 			});
-			this._tooltip.setHtml(""+this.options.mouseMoveText+"");
+			this._tooltip.updateContent(this.options.mouseMoveText);
 			this._map.on('mousemove mouseup', this._onMouseMove, this);
 		}
 	},
@@ -84,9 +87,11 @@ L.Control.RedirectClick = L.Control.extend({
 		if (this._map) {
 			if(this._tooltip){					
 				this._tooltip = null;
-				this._map.off('mousemove', this._onMouseMove, this);
-				this._map.off( "click" );
 				$("#mapdiv").find(".leaflet-tooltip-container").children().remove();
+				$("#mapdiv").find(".leaflet-draw-tooltip").children().remove();
+				$("#mapdiv").find(".leaflet-popup-pane").children().remove();
+				this._map.off( "click" );
+				this._map.off('mousemove mouseup', this._onMouseMove, this);
 			}
 		}
 	},
@@ -121,8 +126,7 @@ L.Control.RedirectClick = L.Control.extend({
 		if(e.layerPoint){
 			e.layerPoint.x = e.originalEvent.clientX;
 			e.layerPoint.y = e.originalEvent.clientY;
-			this._tooltip.setPosition(e.layerPoint);
-			this._tooltip.show(e.layerPoint,""+this.options.mouseMoveText+"");
+			this._tooltip.updatePosition(e.latlng);
 		}else {
 			var xypos = {x:e.originalEvent.clientX, y:e.originalEvent.clientY}
 			this._tooltip.setPosition(xypos);
