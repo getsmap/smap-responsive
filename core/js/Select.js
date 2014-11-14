@@ -228,6 +228,7 @@ smap.core.Select = L.Class.extend({
 
 				var popup = L.popup();
 
+
 				var $html = $("<div />").append(html);
 				// popup.update();
 
@@ -239,6 +240,10 @@ smap.core.Select = L.Class.extend({
 				}
 				else if (f.geometry && f.geometry.type) {
 					// popup._updatePosition();
+					
+					if (self._selectedFeaturesWms.length > 3) {
+						popup.options.autoPan = false;
+					}
 					function onClick() {
 						var theIndex = $(this).data("index");
 						var sf = self._selectedFeaturesWms[ theIndex ];
