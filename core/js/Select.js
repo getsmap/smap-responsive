@@ -205,7 +205,7 @@ smap.core.Select = L.Class.extend({
 					props = f.properties;
 					// props._displayName = t.options.displayName;
 					if (f.options.popup) {
-						html += '<div class="leaflet-popup-option leaflet-popup-option-short"><h5 class="popup-layertitle">'+f.options.displayName+'</h5>';
+						html += '<div class="leaflet-popup-option leaflet-popup-option-short"><h4 class="popup-layertitle">'+f.options.displayName+'</h4>';
 						html += utils.extractToHtml(f.options.popup, props) + '</div>';
 						html += '<div class="popup-divider"></div>';
 					}
