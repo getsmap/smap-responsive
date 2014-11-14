@@ -221,8 +221,10 @@ smap.core.Select = L.Class.extend({
 						self.map.removeLayer(self._rasterFeature);
 						self._rasterFeature = null;
 					}
-					self._rasterFeature = L.geoJson(theFeature.geometry);
-					self.map.addLayer(self._rasterFeature);
+					if (theFeature.geometry.type) {
+						self._rasterFeature = L.geoJson(theFeature.geometry);
+						self.map.addLayer(self._rasterFeature);
+					}
 					return self._rasterFeature;
 				}
 
@@ -236,7 +238,8 @@ smap.core.Select = L.Class.extend({
 
 				if (self._selectedFeaturesWms.length === 1) {
 					addWmsFeature(f);
-					$(".leaflet-popup-option").removeClass("leaflet-popup-option");
+					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
+
 				}
 				else if (f.geometry && f.geometry.type) {
 					// popup._updatePosition();
@@ -265,8 +268,9 @@ smap.core.Select = L.Class.extend({
 						});
 						$(".leaflet-popup-content .leaflet-popup-option").addClass("leaflet-popup-option-short").on("click", onClick);
 						$(".leaflet-popup-content .leaflet-popup-option:first").click();
+						map.off("popupopen", self._onPopupOpen);
 					}
-					map.off("popupopen", self._onPopupOpen).on("popupopen", self._onPopupOpen);
+					map.on("popupopen", self._onPopupOpen);
 				}
 				popup.setLatLng(f.latLng);
 				popup.setContent($html.html());
