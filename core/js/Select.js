@@ -229,7 +229,7 @@ smap.core.Select = L.Class.extend({
 						self.map.removeLayer(self._rasterFeature);
 						self._rasterFeature = null;
 					}
-					if (theFeature.geometry.type) {
+					if (theFeature.geometry.type && theFeature.geometry.type !== "Point" && theFeature.geometry.type !== "MultiPoint") {
 						self._rasterFeature = L.geoJson(theFeature.geometry);
 						self._rasterFeature.setStyle({
 							color: "#0FF",

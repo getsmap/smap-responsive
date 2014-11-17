@@ -73,6 +73,9 @@ L.Control.SelectWMS = L.Control.extend({
 
 							}
 						}
+						if (!t) {
+							return false;
+						}
 						o = t.options;
 						if (o.selectOptions && o.selectOptions.srs && o.selectOptions.srs !== "EPSG:4326") {
 							// Project into wgs84 coords
