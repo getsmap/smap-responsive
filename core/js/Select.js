@@ -232,32 +232,20 @@ smap.core.Select = L.Class.extend({
 
 
 				var $html = $("<div />").append(html);
-				// popup.update();
-
-				// var $popupContent = $(popup._contentNode);
-
+				
 				if (self._selectedFeaturesWms.length === 1) {
 					addWmsFeature(f);
 					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
-
 				}
-				else if (f.geometry && f.geometry.type) {
-					// popup._updatePosition();
-					
-					if (self._selectedFeaturesWms.length > 3) {
-						popup.options.autoPan = false;
-					}
+				else {
 					function onClick() {
 						var theIndex = $(this).data("index");
-						var sf = self._selectedFeaturesWms[ theIndex ];
-						// self._rasterFeature = L.geoJson(f.geometry);
-						addWmsFeature(sf);
-						// $(".leaflet-popup-content").children().not(".popup-layertitle, .popup-divider").hide();
-						// $(this).nextUntil(".popup-layertitle").show();
-						// self.map.fitBounds(sff.getBounds());
+						if (theIndex || theIndex === 0) {
+							var sf = self._selectedFeaturesWms[ theIndex ];
+							addWmsFeature(sf);
+						}
 						$(this).siblings().addClass("leaflet-popup-option-short");
 						$(this).removeClass("leaflet-popup-option-short");
-						// popup.update();
 						return false;
 					}
 					self._onPopupOpen = self._onPopupOpen || function() {
@@ -271,9 +259,13 @@ smap.core.Select = L.Class.extend({
 						map.off("popupopen", self._onPopupOpen);
 					}
 					map.on("popupopen", self._onPopupOpen);
+						
+					if (self._selectedFeaturesWms.length > 3) {
+						popup.options.autoPan = false;
+					}
 				}
-				popup.setLatLng(f.latLng);
 				popup.setContent($html.html());
+				popup.setLatLng(f.latLng);
 
 				// Wait for possible dblclick to be detected. If that happens,
 				// SelectWMS will set _dblclickWasRegistered to true.
@@ -310,6 +302,9 @@ smap.core.Select = L.Class.extend({
 			 * (either xy or vals (for key-val)).
 			 */
 			function addToObject(layerId, vk, theItem) {
+				if (layerId) {
+					return;
+				}
 				if (!selObj[layerId]) {
 					selObj[layerId] = {};
 				}

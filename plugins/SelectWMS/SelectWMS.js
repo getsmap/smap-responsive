@@ -34,94 +34,97 @@ L.Control.SelectWMS = L.Control.extend({
 		this._unbindEvents();
 	},
 
-	onSuccess: function(geodata, other) {
+	onSuccess: function(responses) {
+		responses = responses || [];
 
-		var params = other.params;
-
-		if (geodata && geodata.features) {
-			// This is vector data
-			var fs = geodata.features,
-				f, t, o;
-			if (!fs.length) {
-				return false;
-			}
-			for (var i=0,len=fs.length; i<len; i++) {
-				f = fs[i];
-				f.latLng = other.latLng;
-				t = smap.cmd.getLayerConfigBy("options.layers", params.layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", params.layers);
-				if (!t) {
-					// Find out which layer this feature belongs to by using the id
-					if (f.id) {
-						var lName = f.id.split(".")[0];
-						if (params.layers.search(lName) > -1) {
-							var arr = params.layers.split(",");
-							for (var j=0,lenj=arr.length; j<lenj; j++) {
-								if (arr[j].search(lName) > -1) {
-									var layers = arr[j];
-									t = smap.cmd.getLayerConfigBy("options.layers", layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", layers);
+		var resp;
+		var fs, f, t, o, geodata, other, params;
+		for (var ii=0,lenii=responses.length; ii<lenii; ii++) {
+			resp = responses[ii];
+			geodata = resp[0];
+			other = resp[1];
+			params = other.params;
+			fs = geodata.features;
+			if (geodata) {
+				if (geodata.features) {
+					// This is vector data
+					var fs = geodata.features,
+						f, t, o;
+					if (!fs.length) {
+						return false;
+					}
+					for (var i=0,len=fs.length; i<len; i++) {
+						f = fs[i];
+						f.latLng = other.latLng;
+						t = smap.cmd.getLayerConfigBy("options.layers", params.layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", params.layers);
+						if (!t) {
+							// Find out which layer this feature belongs to by using the id
+							if (f.id) {
+								var lName = f.id.split(".")[0];
+								if (params.layers.search(lName) > -1) {
+									var arr = params.layers.split(",");
+									for (var j=0,lenj=arr.length; j<lenj; j++) {
+										if (arr[j].search(lName) > -1) {
+											var layers = arr[j];
+											t = smap.cmd.getLayerConfigBy("options.layers", layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", layers);
+										}
+									}
 								}
+
 							}
 						}
-
+						o = t.options;
+						if (o.selectOptions && o.selectOptions.srs && o.selectOptions.srs !== "EPSG:4326") {
+							// Project into wgs84 coords
+							utils.projectFeature(f, o.selectOptions.srs, {
+								// reverseAxis: true
+							});
+						}
+						f.options = $.extend({}, o);
+					}
+					this._selectedFeatures = this._selectedFeatures.concat(fs);
+				}
+				else {
+					var latLng = other.latLng;
+					var ps, p;
+					for (var typishName in geodata) {
+						ps = geodata[typishName];
+						var valArr = typishName.split(":");
+						var val = valArr[valArr.length-1];
+						var t = smap.cmd.getLayerConfigBy("layers", val, {inText: true});
+						if (!t || !t.options || !t.options.layerId) {
+							continue;
+						}
+						var layerId = t.options.layerId;
+						for (var i=0,len=ps.length; i<len; i++) {
+							p = ps[i];
+							
+							// Create a pseudo feature based on properties and latLng
+							var f = {
+								geometry: {coordinates: [latLng.lng, latLng.lat]},
+								latLng: latLng,
+								properties: p,
+								layerId: layerId,
+								options: t.options
+							};
+							
+							if (p && $.isEmptyObject(p) === false) {
+								this._selectedFeatures.push(f);
+							}
+						}
 					}
 				}
-				o = t.options;
-				if (o.selectOptions && o.selectOptions.srs && o.selectOptions.srs !== "EPSG:4326") {
-					// Project into wgs84 coords
-					utils.projectFeature(f, o.selectOptions.srs, {
-						// reverseAxis: true
-					});
-				}
-				f.options = $.extend({}, o);
 			}
-			this._selectedFeatures = this._selectedFeatures.concat(fs);
+		}
+
+		// Finally! Trigger select – if we have anything to select that means...
+		if (this._selectedFeatures.length) {
 			this.map.fire("selected", {
 				layer: this,
-				feature: fs[0],
+				feature: this._selectedFeatures.length ? this._selectedFeatures[0] : null, // TODO Need this parameter?
 				selectedFeatures: this._selectedFeatures
 			});
 		}
-		else if (geodata) {
-			var latLng = other.latLng;
-			var ps, p;
-			for (var typishName in geodata) {
-				ps = geodata[typishName];
-				var valArr = typishName.split(":");
-				var val = valArr[valArr.length-1];
-				var t = smap.cmd.getLayerConfigBy("layers", val, {inText: true});
-				if (!t || !t.options || !t.options.layerId) {
-					continue;
-				}
-				var layerId = t.options.layerId;
-				for (var i=0,len=ps.length; i<len; i++) {
-					p = ps[i];
-					
-					// Create a pseudo feature based on properties and latLng
-					var f = {
-						geometry: {coordinates: [latLng.lng, latLng.lat]},
-						latLng: latLng,
-						properties: p,
-						layerId: layerId,
-						options: t.options
-					};
-					
-					if (p && $.isEmptyObject(p) === false) {
-						this._selectedFeatures.push(f);
-						// this._selectedFeatures.push([layerId, other.latLng.lng, other.latLng.lat]);
-					}
-					
-				}
-
-			}
-			if (this._selectedFeatures.length) {
-				other.map.fire("selected", {
-					layer: this,
-					feature: this._selectedFeatures.length ? this._selectedFeatures[0] : null,
-					selectedFeatures: this._selectedFeatures
-				});
-			}
-		}
-
 
 	},
 	
@@ -224,62 +227,84 @@ L.Control.SelectWMS = L.Control.extend({
 			return;
 		}
 		var layerNames = [];
-		
+		var self = this;
 		var t, url, URL,
-			ts = {};
+			ts = {},
+			needsOwnRequest,
+			o,
+			layersToRequest = 0;
 		$.each(layers, function(i, layer) {
+			o = layer.options || {};
 			url = layer._url || layer._wmsUrl;  // _wmsUrl for L.NonTiledLayer.WMS
 			URL = url.toUpperCase();
+			if (ts[URL]) {
+				var exSel = ts[URL].selectOptions || {};
+				var sel = o.selectOptions || {};
+				var exInfoFormat = exSel.info_format || self.options.info_format;
+				needsOwnRequest = (exInfoFormat && sel.info_format && exInfoFormat !== sel.info_format);
+				if (needsOwnRequest) {
+					URL += "_1"; // Make key unique
+				}
+			}
+
+			// Evaluate again (the URL might have been modified to allow for unique request)
 			if (!ts[URL]) {
 				ts[URL] = {
 					layerNames: [],
 					url: url,
 					wmsVersion: layer._wmsVersion,
-					layerId: layer.options.layerId,
-					selectOptions: layer.options.selectOptions || {}
+					layerId: o.layerId,
+					selectOptions: o.selectOptions || {}
 				};
+				layersToRequest += 1;
 			}
-			if (layer.options.selectOptions && layer.options.selectOptions.layers) {
-				ts[URL].layerNames.push(layer.options.selectOptions.layers);
+			if (o.selectOptions && o.selectOptions.layers) {
+				ts[URL].layerNames.push(o.selectOptions.layers);
 			}
 			else {
-				ts[URL].layerNames.push(layer.options.layers);
+				ts[URL].layerNames.push(o.layers);
 			}
 		});
 
 		var params;
-		for (var URL in ts) {
-			t = ts[URL];
-			// t.selectOptions = t.selectOptions || {};
-			params = this._makeParams({
-				layers: t.layerNames.join(","),
-				version: t._wmsVersion || this.options.wmsVersion, 
-				info_format: t.selectOptions.info_format || this.options.info_format,
-				latLng: latLng,
-				srs: t.selectOptions.srs || "EPSG:4326"
-			}, t.selectOptions);
-			if (params.info_format === "text/plain") {
-				params.version = "1.1.1";
+		setTimeout($.proxy(function() {
+			if (this._dblclickWasRegistered === true) {
+				console.log("NOT requesting");
 			}
-			setTimeout($.proxy(function() {
-				if (this._dblclickWasRegistered === true) {
-					console.log("NOT requesting");
-				}
-				else {
-					var onSuccess;
+			else {
+				var responses = [];
+				for (var URL in ts) {
+					t = ts[URL];
+					// t.selectOptions = t.selectOptions || {};
+					params = this._makeParams({
+						layers: t.layerNames.join(","),
+						version: t._wmsVersion || this.options.wmsVersion, 
+						info_format: t.selectOptions.info_format || this.options.info_format,
+						latLng: latLng,
+						srs: t.selectOptions.srs || "EPSG:4326"
+					}, t.selectOptions);
+					if (params.info_format === "text/plain") {
+						params.version = "1.1.1";
+					}			
+					var onSuccess = this.onSuccess;
 					console.log("requesting");
 					this.request(
 						t.selectOptions.url || t.url, params, {
-							onSuccess: onSuccess,
+							onSuccess: function(geodata, other) {
+								layersToRequest -= 1;
+								responses.push([geodata, other]);
+								if (layersToRequest <= 0) {
+									onSuccess.call(this, responses);
+								}
+							},
 							onError: function() {},
 							layerId: t.layerId,
 							latLng: latLng
 					});
-					
 				}
-				
-			}, this), 100);
-		}
+			}
+		}, this), 100);
+
 	},
 	
 	_layerShouldBeAdded: function(layer) {
@@ -450,8 +475,7 @@ L.Control.SelectWMS = L.Control.extend({
 					console.log("Info format: "+info_format+" not yet supported.");
 					return false;
 				}
-				var onSuccess = options.onSuccess || this.onSuccess;
-				onSuccess.call(this, out, {
+				options.onSuccess.call(this, out, {
 					latLng: options.latLng,
 					map: this.map,
 					context: this,
