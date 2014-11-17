@@ -73,7 +73,15 @@ smap.core.Select = L.Class.extend({
 	
 	_bindEvents: function(map) {
 		var self = this;
-		
+
+		map.on("layerremove", function() {
+			if (self._rasterFeature) {
+				map.removeLayer(self._rasterFeature);
+				self._rasterFeature = null;
+			}
+			
+		});
+
 		map.on("click", function() {
 			// On "click out" – unselect all features (applies to WFS-layers).
 			var arr = self._wfsLayers;
