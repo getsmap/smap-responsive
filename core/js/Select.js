@@ -231,6 +231,12 @@ smap.core.Select = L.Class.extend({
 					}
 					if (theFeature.geometry.type) {
 						self._rasterFeature = L.geoJson(theFeature.geometry);
+						self._rasterFeature.setStyle({
+							color: "#0FF",
+							fillColor: "#0FF",
+							opacity: 0.9,
+							fillOpacity: 0.3
+						});
 						self.map.addLayer(self._rasterFeature);
 					}
 					return self._rasterFeature;

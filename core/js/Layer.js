@@ -99,13 +99,6 @@ smap.core.Layer = L.Class.extend({
 		if (!layer.options || !layer.options.layerId || layer.feature || !(layer instanceof L.NonTiledLayer) && !(layer._tileContainer || layer._layers)) {
 			return;
 		}
-		layer.options.clickable = false;
-		this._onDblClick = this._onDblClick || $.proxy(function(e) {
-			alert("click");
-		}, this);
-		
-		layer.off("click").on("click", this._onDblClick);
-		layer.off("dblclick").on("dblclick", this._onDblClick);
 		var layerId = layer.options.layerId;
 		this._layers[layerId] = layer; // Store in object so we can fetch it when needed.
 		if (layer._layers) {

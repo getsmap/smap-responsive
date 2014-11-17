@@ -17,7 +17,6 @@ smap.core.Init = L.Class.extend({
 		
 		var self = this;
 		this.drawMap();
-		// L.favorDoubleClick.enable();
 
 		// if (utils.isInIframe()) {
 		// 	var w = window.frameElement.offsetWidth;
