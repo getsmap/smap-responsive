@@ -144,12 +144,12 @@ L.Control.Search = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			search: "Sök Adress",
+			search: "Sök adress",
 			addressNotFound: "Den sökta adressen hittades inte",
 			remove: "Ta bort"
 		},
 		"en": {
-			search: "Search adress",
+			search: "Search address",
 			addressNotFound: "The searched address was not found",
 			remove: "Remove"
 		}
@@ -164,6 +164,10 @@ L.Control.Search = L.Control.extend({
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		if (this.options._lang) {
+			// Allow setting lang in options
+			$.extend(true, this._lang, this.options._lang);
+		}
 		this._setLang(options.langCode);
 	},
 
