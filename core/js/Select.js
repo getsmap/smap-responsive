@@ -70,6 +70,22 @@ smap.core.Select = L.Class.extend({
 		});
 		return $html.html();
 	},
+
+	_extractAllAttributes: function(popupText, props) {
+		props = props || {};
+
+		// Options for extracting all keys and attributes in a table-like manner.
+		var allProps = "";
+		var template = '<div><strong>_key_:</strong>&nbsp;<span>_val_</span></div>';
+		for (var key in props) {
+			allProps += template.replace(/_key_/g, key).replace(/_val_/g, "${"+key+"}");
+		}
+		var repl = "*";
+		if (popupText.search(/\$\{\*\}/) > -1) {
+			repl = /\$\{\*\}/g;
+		}
+		return popupText.replace(repl, allProps);
+	},
 	
 	_bindEvents: function(map) {
 		var self = this;
@@ -178,21 +194,12 @@ smap.core.Select = L.Class.extend({
 							lay._selectedFeatures = [];
 						}
 					}
-					
+
+					var popupText = layer.options.popup;
 					if (layer.options.popup && layer.options.popup === "*" || layer.options.popup.search(/\$\{\*\}/) > -1) {
-						// Options for extracting all keys and attributes in a table-like manner.
-						var popup = "";
-						var template = '<div><strong>_key_:</strong>&nbsp;<span>_val_</span></div>';
-						for (var key in props) {
-							popup += template.replace(/_key_/g, key).replace(/_val_/g, "${"+key+"}");
-						}
-						var repl = "*";
-						if (layer.options.popup.search(/\$\{\*\}/) > -1) {
-							repl = /\$\{\*\}/g;
-						}
-						layer.options.popup = layer.options.popup.replace(repl, popup);
+						popupText = self._extractAllAttributes(popupText, props);
 					}
-					var html = utils.extractToHtml(layer.options.popup, props);
+					var html = utils.extractToHtml(popupText, props);
 					html = self._processHtml(html);
 					var lay = utils.getLayerFromFeature(selectedFeature, layer);
 					if (lay._popup) {
@@ -208,18 +215,20 @@ smap.core.Select = L.Class.extend({
 			 */
 			if (!isVector) {
 				var html = "", f, props;
+
 				for (var i=0,len=selectedFeatures.length; i<len; i++) {
 					f = selectedFeatures[i];
 					props = f.properties;
-					// props._displayName = t.options.displayName;
+					var popupText = f.options.popup;
+					if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
+						popupText = self._extractAllAttributes(popupText, props);
+					}
 					if (f.options.popup) {
 						html += '<div class="leaflet-popup-option leaflet-popup-option-short"><h4 class="popup-layertitle">'+f.options.displayName+'</h4>';
-						html += utils.extractToHtml(f.options.popup, props) + '</div>';
+						html += utils.extractToHtml(popupText, props) + '</div>';
 						html += '<div class="popup-divider"></div>';
 					}
-					// html = html.replace("${_displayName}", t.options.displayName);
-					
-				} // because of the way typename is stored
+				}
 				
 				html = self._processHtml(html);
 				map.closePopup();

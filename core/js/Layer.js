@@ -155,10 +155,10 @@ smap.core.Layer = L.Class.extend({
 		}
 		else {
 			if (!t.url) {
-				if(t.options.key) {
+				if (t.key) {
 				//then it is for ex a Bing layer we assume
-					layer = new init(t.options.key);
-					layer.options.layerid=t.options.layerId;
+					layer = new init(t.key, t.options);
+					layer.options.layerid = t.options.layerId;
 					//layer.options.isBaseLayer=true;
 					this._layers[t.options.layerId] = layer;
 				}

@@ -459,11 +459,17 @@ L.Control.SelectWMS = L.Control.extend({
 		params = params || {};
 		options = options || {};
 		
-		url = this.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url) : url;
+		var data = null;
+		if (this.options.useProxy) {
+			url = smap.config.ws.proxy + encodeURIComponent(url + "?" + $.param(params));
+		}
+		else {
+			data = params;
+		}
 		
 		this.xhr = $.ajax({
 			url: url,
-			data: params,
+			data: data,
 			type: "GET",
 			dataType: "text",
 			context: this,
