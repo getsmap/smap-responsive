@@ -310,7 +310,7 @@ smap.core.Select = L.Class.extend({
 			 * (either xy or vals (for key-val)).
 			 */
 			function addToObject(layerId, vk, theItem) {
-				if (layerId) {
+				if (!layerId) {
 					return;
 				}
 				if (!selObj[layerId]) {
@@ -342,7 +342,7 @@ smap.core.Select = L.Class.extend({
 //					for (var typeName in f.properties) {}
 //					theItem = [f.uniqueKey, f.properties[typeName][0][f.uniqueKey]];
 					theItem = [f.latLng.lng, f.latLng.lat];
-					addToObject(f.layerId, "xy", theItem);
+					addToObject(f.options.layerId, "xy", theItem);
 				}
 			}
 			if ($.isEmptyObject(selObj) === false) {

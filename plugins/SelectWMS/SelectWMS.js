@@ -130,22 +130,22 @@ L.Control.SelectWMS = L.Control.extend({
 	
 	_applyParam: function(sel) {
 		var layer, layerId, theItem, xyArr, latLng,
-			obj = JSON.parse(decodeURIComponent( sel ));
-		
+			obj = JSON.parse(decodeURIComponent( sel )),
+			layers = [];
 		for (layerId in obj) {
 			theItem = obj[layerId];
 			if (theItem["xy"]) {
 				layer = smap.core.layerInst.showLayer(layerId);
-				
-				xyArr = theItem["xy"][0]; 
-				latLng = L.latLng(xyArr[1], xyArr[0]); // val is lat, key is lon
-				
-				this.onMapClick({
-					latlng: latLng,
-					_layers: [layer]
-				});
+				layers.push(layer);
 			}
 		}
+		xyArr = theItem["xy"][0];
+		latLng = L.latLng(xyArr[1], xyArr[0]);
+		
+		this.onMapClick({
+			latlng: latLng,
+			_layers: layers
+		});
 		
 	},
 	
