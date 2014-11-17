@@ -51,7 +51,7 @@ L.Control.SelectWMS = L.Control.extend({
 					var fs = geodata.features,
 						f, t, o;
 					if (!fs.length) {
-						return false;
+						continue;
 					}
 					for (var i=0,len=fs.length; i<len; i++) {
 						f = fs[i];
@@ -74,7 +74,7 @@ L.Control.SelectWMS = L.Control.extend({
 							}
 						}
 						if (!t) {
-							return false;
+							break;
 						}
 						o = t.options;
 						if (o.selectOptions && o.selectOptions.srs && o.selectOptions.srs !== "EPSG:4326") {
