@@ -297,7 +297,9 @@ L.Control.SelectWMS = L.Control.extend({
 									onSuccess.call(this, responses);
 								}
 							},
-							onError: function() {},
+							onError: function() {
+								layersToRequest -= 1;
+							},
 							layerId: t.layerId,
 							latLng: latLng
 					});
@@ -483,12 +485,8 @@ L.Control.SelectWMS = L.Control.extend({
 				});
 				
 			},
-			error: function() {
-				options.onError();
-			},
-			complete: function() {
-//				this.xhr = null;
-			}
+			error: options.onError
+			// complete: function() {}
 		});
 		
 	},
