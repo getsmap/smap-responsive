@@ -4,3 +4,4 @@ bower_components/
 plugins/GuidePopup/qgis_calc_cat.txt
 dist/configs/*.js
 !dist/configs/config.js
+!dist/configs/wshop.js
