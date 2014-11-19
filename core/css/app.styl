@@ -2,9 +2,9 @@
 
 
 // @-ms-viewport
-//     user-zoom fixed
-//     max-zoom 1
-//     min-zoom 1
+//	user-zoom fixed
+//	max-zoom 1
+//	min-zoom 1
 // 
 
 // Fix for Bootstrap for WP8. Enables scrolling in modals.
@@ -70,26 +70,36 @@ body
 .unselectable
 	user-select none
 
-@keyframes rotate {
-  from {
-	transform rotate(0deg)
-  }
-  to { 
-    transform rotate(360deg)
-  }
+@keyframes spin {
+	0% {
+		transform rotate(0deg)
+		
+	}
+	100% { 
+		transform rotate(360deg)
+	}
 }
 
 .loader
 	position relative
 	z-index 2000
-	top 50%
-	left 50%
-	animation-name             rotate 
-    animation-duration         0.5s 
-    animation-iteration-count  infinite
-    transition-timing-function linear
-    font-size 4em
+	color #2A446E
+	display table
+	text-align center
+	left calc(50% - 154px)
+	top calc(50% - 154px)
 	
+	span
+		display table-cell
+		vertical-align middle
+		font-size 10em
+		animation spin 1s infinite linear
+	label
+		display table-cell
+		vertical-align middle
+		padding-left 0.2em
+		font-size 5em
+		font-weight normal
 
 #loadingText
 	background-color #FFF

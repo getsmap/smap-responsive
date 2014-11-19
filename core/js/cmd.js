@@ -167,10 +167,10 @@ smap.cmd = {
 		loading: function(show) {
 			var _lang = {
 				"sv": {
-						loading: 'laddar'
+						loading: 'Laddar…'
 				},
 				"en": {
-						loading: 'loading'
+						loading: 'Loading…'
 				}
 			}
 
@@ -180,7 +180,7 @@ smap.cmd = {
 			if (show && show === true) {
 
 				if (!this.loader) {
-					this.loader = $('<div><span class="loader fa fa-globe"></span></div>');
+					this.loader = $('<div class="loader"><span class="fa fa-globe"></span><label>'+lang.loading+'</label></div>');
 				}
 				$("#mapdiv").append(this.loader);
 
@@ -202,7 +202,7 @@ smap.cmd = {
 				// $(this.spinner.el).append('<div id="loadingText">'+lang.loading+'</div>');
 			}
 			else {
-				// this.loader.detach();
+				this.loader.detach();
 				// this.spinner.stop();
 			}
 		}

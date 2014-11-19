@@ -67,15 +67,26 @@ body {
 .loader {
   position: relative;
   z-index: 2000;
-  top: 50%;
-  left: 50%;
-  -webkit-animation-name: rotate;
-  animation-name: rotate;
+  color: #2a446e;
+  display: table;
+  text-align: center;
+  left: calc(50% - 154px);
+  top: calc(50% - 154px);
 }
-animation-duration 0.5s,
-animation-iteration-count infinite,
-transition-timing-function linear,
-font-size 4em,
+.loader span {
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 10em;
+  -webkit-animation: spin 1s infinite linear;
+  animation: spin 1s infinite linear;
+}
+.loader label {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 0.2em;
+  font-size: 5em;
+  font-weight: normal;
+}
 #loadingText {
   background-color: #fff;
   background-color: rgba(255,255,255,0.25);
@@ -146,22 +157,22 @@ font-size 4em,
 .leaflet-container a.leaflet-popup-close-button {
   z-index: 100;
 }
-@-webkit-keyframes rotate {
-  from {
+@-webkit-keyframes spin {
+  0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-  to {
+  100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
-@keyframes rotate {
-  from {
+@keyframes spin {
+  0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-  to {
+  100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
