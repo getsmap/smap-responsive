@@ -178,25 +178,32 @@ smap.cmd = {
 			var lang = _lang.hasOwnProperty(langCode) ? _lang[langCode] : _lang["en"];
 
 			if (show && show === true) {
-				if (!this.spinner) {
-					var opts = {
-							lines: 12,
-							length: 4,
-							width: 6,
-							radius: 25
-					};
-					this.spinner = new Spinner(opts).spin();
+
+				if (!this.loader) {
+					this.loader = $('<div><span class="loader fa fa-globe"></span></div>');
 				}
-				this.spinner.spin();
-				$("#mapdiv").append(this.spinner.el);
-				$('div .spinner').css({
-					"top": "50%",
-					"left": "50%"
-				});
-				$(this.spinner.el).append('<div id="loadingText">'+lang.loading+'</div>');
+				$("#mapdiv").append(this.loader);
+
+				// if (!this.spinner) {
+				// 	var opts = {
+				// 			lines: 12,
+				// 			length: 4,
+				// 			width: 6,
+				// 			radius: 25
+				// 	};
+				// 	this.spinner = new Spinner(opts).spin();
+				// }
+				// this.spinner.spin();
+				// $("#mapdiv").append(this.spinner.el);
+				// $('div .spinner').css({
+				// 	"top": "50%",
+				// 	"left": "50%"
+				// });
+				// $(this.spinner.el).append('<div id="loadingText">'+lang.loading+'</div>');
 			}
 			else {
-				this.spinner.stop();
+				// this.loader.detach();
+				// this.spinner.stop();
 			}
 		}
 		

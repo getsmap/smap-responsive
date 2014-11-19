@@ -70,6 +70,27 @@ body
 .unselectable
 	user-select none
 
+@keyframes rotate {
+  from {
+	transform rotate(0deg)
+  }
+  to { 
+    transform rotate(360deg)
+  }
+}
+
+.loader
+	position relative
+	z-index 2000
+	top 50%
+	left 50%
+	animation-name             rotate 
+    animation-duration         0.5s 
+    animation-iteration-count  infinite
+    transition-timing-function linear
+    font-size 4em
+	
+
 #loadingText
 	background-color #FFF
 	background-color rgba(255 255 255 0.25)
