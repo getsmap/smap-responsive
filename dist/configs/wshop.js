@@ -1,6 +1,6 @@
 var ws = {
 		"localhost": {
-			proxy: "http://localhost/cgi-bin/proxy.py?url="
+			proxy: "http://localhost:8080/proxy.py?url="
 		},
 		"kartor.malmo.se": {
 			proxy: "http://localhost/cgi-bin/proxy.py?url="
@@ -26,60 +26,60 @@ var config = {
 			zoom: 12
 		},
 
-		// Override L.Map options
+		//Override L.Map options
 		// mapConfig: {
-		// 	maxBounds: [[55.71628170645908, 12.6507568359375], [55.42589636057864, 13.34564208984375]],
-		// 	minZoom: 12,
-		// 	maxZoom: 14
+			// maxBounds: [[55.71628170645908, 12.6507568359375], [55.42589636057864, 13.34564208984375]],
+			// minZoom: 12,
+			// maxZoom: 14
 		// },
 
 		// These are the overlays in the map
 		ol: [
 
-			// Ett WMS-lager från SMHI
-			// {
-			// 	init: "L.TileLayer.WMS",
-			// 	url: "http://opendata-view.smhi.se/klim-stat_moln/wms",
-			// 	options: {
-			// 		legend: false,
-			// 		layers: "klim-stat_moln:klara_dagar_yta",
-			// 		layerId: "smhi_klaradagar",
-			// 		displayName: "Klara dagar (år)",
-			// 		format: 'image/png',
-			// 		transparent: true,
-			// 		opacity: 1,
-			// 		attribution: "© SMHI",
-			// 		zIndex: 100
-			// 		// selectable: true,
-			// 		// popup: "*",
-			// 		// category: ["Min kategori", "WMS:er"]
-			// 	}
-			// }
-			// ,
-			// // Ett WFS-lager
-			// {
-			// 	init: "L.GeoJSON.WFS",
-			// 	url: "http://localhost/geoserver/wfs",
-			// 	options: {
-			// 		params: {
-			// 			typeName: "skane:POI_VHAMN_PT"
-			// 		},
-			// 		// isEditable: false,
-			// 		// geomType: "point",
-			// 		xhrType: "GET",
-			// 		layerId: "vhamnen_pt",
-			// 		displayName: "Punkter av intresse",
-			// 		useProxy: false,
-			// 		attribution: "Malmö stads WFS",
-			// 		inputCrs: "EPSG:4326",
-			// 		uniqueKey: "gid",
-			// 		reverseAxis: false,
-			// 		reverseAxisBbox: true
-			// 		// popup: "*",
-			// 		// category: ["Min kategori", "WFS:er"],
-			// 		// selectable: true
-			// 	}
-			// }
+			//Ett WMS-lager från SMHI
+			{
+				init: "L.TileLayer.WMS",
+				url: "http://opendata-view.smhi.se/klim-stat_moln/wms",
+				options: {
+					legend: false,
+					layers: "klim-stat_moln:klara_dagar_yta",
+					layerId: "smhi_klaradagar",
+					displayName: "Klara dagar (år)",
+					format: 'image/png',
+					transparent: true,
+					opacity: 1,
+					attribution: "© SMHI",
+					zIndex: 100,
+					selectable: true,
+					popup: "*",
+					category: ["Min kategori", "WMS:er"]
+				}
+			}
+			,
+			// Ett WFS-lager
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://kartor.malmo.se/geoserver/wfs",
+				options: {
+					params: {
+						typeName: "skane:POI_VHAMN_PT"
+					},
+					// isEditable: false,
+					// geomType: "point",
+					xhrType: "GET",
+					layerId: "vhamnen_pt",
+					displayName: "Punkter av intresse",
+					useProxy: true,
+									inputCrs: "EPSG:4326",
+					uniqueKey: "gid",
+					reverseAxis: false,
+					reverseAxisBbox: true,
+					popup: "*",
+					category: ["Min kategori", "WFS:er"],
+					selectable: true
+				}
+			}	// attribution: "Malmö stads WFS",
+
 			// ,
 			// {
 			// 	init: "L.TileLayer.WMS",
