@@ -172,7 +172,7 @@ smap.cmd = {
 				"en": {
 						loading: 'Loading…'
 				}
-			}
+			};
 
 			var langCode = this.getLang();
 			var lang = _lang.hasOwnProperty(langCode) ? _lang[langCode] : _lang["en"];

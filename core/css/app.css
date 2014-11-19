@@ -64,6 +64,39 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
+.core-select-modal .modal-header {
+  background-color: #fff;
+}
+.core-select-modal .modal-content {
+  background-color: rgba(255,255,255,0.8);
+}
+.core-select-modal .modal-body {
+  padding: 0;
+}
+.core-select-modal .modal-body .list-group {
+  margin: 0;
+}
+.core-select-modal .modal-body .list-group .list-group-item {
+  border-radius: 0;
+  background: none;
+}
+.core-select-modal .modal-body .list-group .list-group-item span {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.core-select-modal .modal-body .list-group .list-group-item:hover {
+  background: rgba(255,255,255,0.3);
+}
+.core-select-modal .modal-body .list-group-item:first-child {
+  border-top: none;
+}
+.core-select-modal .modal-body .list-group-item:last-child {
+  border-bottom: none;
+}
+.core-select-modal .modal-footer {
+  margin: 0;
+}
 .loader {
   position: relative;
   z-index: 2000;

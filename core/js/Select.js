@@ -233,11 +233,16 @@ smap.core.Select = L.Class.extend({
 				html = self._processHtml(html);
 				map.closePopup();
 
-				function addWmsFeature(theFeature) {
+
+				function removeWmsFeature() {
 					if (self._rasterFeature) {
 						self.map.removeLayer(self._rasterFeature);
 						self._rasterFeature = null;
 					}
+				}
+
+				function addWmsFeature(theFeature) {
+					removeWmsFeature();
 					if (theFeature.geometry.type && theFeature.geometry.type !== "Point" && theFeature.geometry.type !== "MultiPoint") {
 						self._rasterFeature = L.geoJson(theFeature.geometry);
 						self._rasterFeature.setStyle({
@@ -261,31 +266,78 @@ smap.core.Select = L.Class.extend({
 					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
 				}
 				else {
-					function onClick() {
-						var theIndex = $(this).data("index");
-						if (theIndex || theIndex === 0) {
-							var sf = self._selectedFeaturesWms[ theIndex ];
-							addWmsFeature(sf);
+
+					if ( $(window).width() <= 1900) {
+						if (!self._selectManyModal) {
+							var footerContent = $('<button type="button" class="btn btn-default"">Stäng</button>'),
+								bodyContent = $('<div class="list-group" />');
+							var sf, props, row;
+							for (var i=0,len=selectedFeatures.length; i<len; i++) {
+								sf = selectedFeatures[i];
+								props = f.properties;
+								popupText = utils.extractToHtml(popupText, props);
+								if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
+									popupText = self._extractAllAttributes(popupText, props);
+								}
+								row = '<a href="#" class="list-group-item"><strong>'+sf.options.displayName+'</strong><span>'+popupText+'</span></a>';
+								bodyContent.append(row);
+							}
+							bodyContent.find(".list-group-item").on("mouseenter", function() {
+								var theIndex = $(this).index();
+								var sf = self._selectedFeaturesWms[ theIndex ];
+								addWmsFeature(sf);
+							});
+							bodyContent.find(".list-group-item").on("click", function() {
+								self._selectManyModal.modal("hide");
+								return false;
+							});
+							footerContent.on("click", function() {
+								removeWmsFeature();
+								self._selectManyModal.modal("hide");
+								return false;
+							});
+
+							self._selectManyModal = utils.drawDialog('Flera träffar: Välj ett objekt', bodyContent, footerContent, {
+								size: "sm"
+							});
+							self._selectManyModal.find(".modal-header").addClass("panel-heading");
+							self._selectManyModal.on("hidden.bs.modal", function() {
+								// $(this).find("body").empty();
+							});
+							self._selectManyModal.addClass("core-select-modal");
 						}
-						$(this).siblings().addClass("leaflet-popup-option-short");
-						$(this).removeClass("leaflet-popup-option-short");
-						return false;
+						self._selectManyModal.modal("show");
+						return true;
 					}
-					self._onPopupOpen = self._onPopupOpen || function() {
-						$(".leaflet-popup-content-wrapper").addClass("leaflet-popup-content-wrapper-multichoice");
-						$(".leaflet-popup-content .leaflet-popup-option").each(function(i) {
-							var $this = $(this);
-							$this.data("index", i);
-						});
-						$(".leaflet-popup-content .leaflet-popup-option").addClass("leaflet-popup-option-short").on("click", onClick);
-						$(".leaflet-popup-content .leaflet-popup-option:first").click();
-						map.off("popupopen", self._onPopupOpen);
+					else {
+						function onClick() {
+							var theIndex = $(this).data("index");
+							if (theIndex || theIndex === 0) {
+								var sf = self._selectedFeaturesWms[ theIndex ];
+								addWmsFeature(sf);
+							}
+							$(this).siblings().addClass("leaflet-popup-option-short");
+							$(this).removeClass("leaflet-popup-option-short");
+							return false;
+						}
+						self._onPopupOpen = self._onPopupOpen || function() {
+							$(".leaflet-popup-content-wrapper").addClass("leaflet-popup-content-wrapper-multichoice");
+							$(".leaflet-popup-content .leaflet-popup-option").each(function(i) {
+								var $this = $(this);
+								$this.data("index", i);
+							});
+							$(".leaflet-popup-content .leaflet-popup-option").addClass("leaflet-popup-option-short").on("click", onClick);
+							$(".leaflet-popup-content .leaflet-popup-option:first").click();
+							map.off("popupopen", self._onPopupOpen);
+						}
+						map.on("popupopen", self._onPopupOpen);
+							
+						if (self._selectedFeaturesWms.length > 3) {
+							popup.options.autoPan = false;
+						}
 					}
-					map.on("popupopen", self._onPopupOpen);
-						
-					if (self._selectedFeaturesWms.length > 3) {
-						popup.options.autoPan = false;
-					}
+
+
 				}
 				popup.setContent($html.html());
 				popup.setLatLng(f.latLng);
