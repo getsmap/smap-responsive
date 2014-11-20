@@ -2,7 +2,7 @@
 
 var app = {
 		options: {
-			proxy: "http://localhost/cgi-bin/proxy.py?url="
+			proxy: null //"http://localhost/cgi-bin/proxy.py?url="
 		},
 
 		init: function() {
@@ -144,16 +144,8 @@ var app = {
 
 			var latLngArr = [55.59852, 13.00232];
 
-			var map = this.map;
-			if (map) {
-				map.eachLayer(function(lay) {
-					map.removeLayer(lay);
-				});
-			}
-			else {
-				map = L.map('mapdiv').setView(latLngArr, 11);
-				this.map = map;
-			}
+			var map = L.map('mapdiv').setView(latLngArr, 11);
+			this.map = map;
 			var bg = new L.TileLayer.EsriRest("http://kartor.malmo.se/arcgis/rest/services/malmokarta_3857/MapServer", {
 					minZoom: 10,
 					maxZoom: 18,
@@ -190,6 +182,8 @@ var app = {
 		},
 
 		hideMap: function() {
+			this.map.remove();
+			this.map = null;
 			$("#mapdiv").addClass("hidden");
 		},
 
