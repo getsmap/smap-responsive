@@ -209,6 +209,23 @@ smap.core.Select = L.Class.extend({
 					lay.openPopup(latLng);
 				}
 			}
+
+
+			function drawPopupHtml(f, options) {
+				options = options || {};
+
+				var className = "leaflet-popup-option";
+				if (options.short) {
+					className += " leaflet-popup-option-short";
+				}
+				var html = "";
+				if (f.options.popup) {
+					html += '<div class="'+className+'"><h4 class="popup-layertitle">'+f.options.displayName+'</h4>';
+					html += utils.extractToHtml(popupText, props) + '</div>';
+					html += '<div class="popup-divider"></div>';
+				}
+				return html;
+			}
 			
 			/**
 			 * If WMS GetFeatureInfo – create a popup with the response.
@@ -223,11 +240,7 @@ smap.core.Select = L.Class.extend({
 					if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
 						popupText = self._extractAllAttributes(popupText, props);
 					}
-					if (f.options.popup) {
-						html += '<div class="leaflet-popup-option leaflet-popup-option-short"><h4 class="popup-layertitle">'+f.options.displayName+'</h4>';
-						html += utils.extractToHtml(popupText, props) + '</div>';
-						html += '<div class="popup-divider"></div>';
-					}
+					html = drawPopupHtml(f, {short: true});
 				}
 				
 				html = self._processHtml(html);
@@ -245,6 +258,9 @@ smap.core.Select = L.Class.extend({
 					removeWmsFeature();
 					if (theFeature.geometry.type && theFeature.geometry.type !== "Point" && theFeature.geometry.type !== "MultiPoint") {
 						self._rasterFeature = L.geoJson(theFeature.geometry);
+						self._rasterFeature.options = $.extend({}, theFeature.options);
+						self._rasterFeature.options._silent = true; // Don't trigger onLayerAdd event in core
+						self._rasterFeature.latLng = theFeature.latLng;
 						self._rasterFeature.setStyle({
 							color: "#0FF",
 							fillColor: "#0FF",
@@ -269,43 +285,56 @@ smap.core.Select = L.Class.extend({
 
 					if ( $(window).width() <= 1900) {
 						if (!self._selectManyModal) {
-							var footerContent = $('<button type="button" class="btn btn-default"">Stäng</button>'),
-								bodyContent = $('<div class="list-group" />');
+							// var footerContent = $('<button type="button" class="btn btn-default"">Stäng</button>');
+							var bodyContent = $('<div class="list-group"></div>');
 							var sf, props, row;
-							for (var i=0,len=selectedFeatures.length; i<len; i++) {
-								sf = selectedFeatures[i];
-								props = f.properties;
-								popupText = utils.extractToHtml(popupText, props);
-								if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
-									popupText = self._extractAllAttributes(popupText, props);
-								}
-								row = '<a href="#" class="list-group-item"><strong>'+sf.options.displayName+'</strong><span>'+popupText+'</span></a>';
-								bodyContent.append(row);
-							}
-							bodyContent.find(".list-group-item").on("mouseenter", function() {
-								var theIndex = $(this).index();
-								var sf = self._selectedFeaturesWms[ theIndex ];
-								addWmsFeature(sf);
-							});
-							bodyContent.find(".list-group-item").on("click", function() {
-								self._selectManyModal.modal("hide");
-								return false;
-							});
-							footerContent.on("click", function() {
-								removeWmsFeature();
-								self._selectManyModal.modal("hide");
-								return false;
-							});
+							// footerContent.on("click", function() {
+							// 	removeWmsFeature();
+							// 	self._selectManyModal.modal("hide");
+							// 	return false;
+							// });
 
-							self._selectManyModal = utils.drawDialog('Flera träffar: Välj ett objekt', bodyContent, footerContent, {
+							self._selectManyModal = utils.drawDialog('Flera träffar: Välj ett objekt', bodyContent, null, {
 								size: "sm"
 							});
 							self._selectManyModal.find(".modal-header").addClass("panel-heading");
 							self._selectManyModal.on("hidden.bs.modal", function() {
-								// $(this).find("body").empty();
+								$(this).find(".list-group").empty();
+							});
+							self._selectManyModal.on("shown.bs.modal", function() {
+								$(this).scrollTop(0); // Make sure the modal has scrolled to top
 							});
 							self._selectManyModal.addClass("core-select-modal");
 						}
+						var bContent = self._selectManyModal.find(".list-group");
+
+						// Add rows
+						for (var i=0,len=selectedFeatures.length; i<len; i++) {
+							sf = selectedFeatures[i];
+							props = f.properties;
+							popupText = utils.extractToHtml(popupText, props);
+							if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
+								popupText = self._extractAllAttributes(popupText, props);
+							}
+							row = $('<a href="" class="list-group-item"><strong>'+sf.options.displayName+'</strong><span>'+popupText+'</span></a>');
+							row.data("index", i);
+							bContent.append(row);
+						}
+						bContent.find(".list-group-item").on("mouseenter", function() {
+							var theIndex = $(this).data("index");
+							var sf = self._selectedFeaturesWms[ theIndex ];
+							addWmsFeature(sf);
+						});
+						bContent.find(".list-group-item").on("click", function() {
+							self._selectManyModal.modal("hide");
+							var popup = L.popup();
+							html = drawPopupHtml(self._rasterFeature);
+							html = self._processHtml(html);
+							popup.setContent(html);
+							popup.setLatLng(self._rasterFeature.latLng);
+							popup.openOn(self.map);
+							return false;
+						});
 						self._selectManyModal.modal("show");
 						return true;
 					}

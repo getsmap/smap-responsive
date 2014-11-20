@@ -172,10 +172,11 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}
 		
 		this.map.on("layeradd layerremove", function(e) {
-			if (!e.layer.options || !e.layer.options.layerId || e.layer.feature) {
+			var layer = e.layer || {};
+			if (!layer.options || layer.options._silent || !layer.options.layerId || layer.feature) {
 				return;
 			}
-			var layerId = e.layer.options.layerId;
+			var layerId = layer.options.layerId;
 			var rowId = self._makeId(layerId);
 			var row = $("#"+rowId);
 			var isActive = row.hasClass("active");

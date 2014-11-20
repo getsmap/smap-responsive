@@ -96,7 +96,8 @@ smap.core.Layer = L.Class.extend({
 		// 	}, this);
 
 		// }
-		if (!layer.options || !layer.options.layerId || layer.feature || !(layer instanceof L.NonTiledLayer) && !(layer._tileContainer || layer._layers)) {
+		// Note! layer.options._silent allows to add layer without triggering this event
+		if (!layer.options || layer.options._silent || !layer.options.layerId || layer.feature || !(layer instanceof L.NonTiledLayer) && !(layer._tileContainer || layer._layers)) {
 			return;
 		}
 		var layerId = layer.options.layerId;

@@ -76,16 +76,16 @@ body {
 .core-select-modal .modal-body .list-group {
   margin: 0;
 }
-.core-select-modal .modal-body .list-group .list-group-item {
+.core-select-modal .modal-body .list-group-item {
   border-radius: 0;
   background: none;
 }
-.core-select-modal .modal-body .list-group .list-group-item span {
+.core-select-modal .modal-body .list-group-item span {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
-.core-select-modal .modal-body .list-group .list-group-item:hover {
+.core-select-modal .modal-body .list-group-item:hover {
   background: rgba(255,255,255,0.3);
 }
 .core-select-modal .modal-body .list-group-item:first-child {
