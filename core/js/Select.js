@@ -213,9 +213,9 @@ smap.core.Select = L.Class.extend({
 			function drawPopupHtml(popup, props, displayName, classShort) {
 				classShort = classShort || false;
 
-				var className = "leaflet-popup-option";
+				var className = "";
 				if (classShort) {
-					className += " leaflet-popup-option-short";
+					className += "leaflet-popup-option leaflet-popup-option-short";
 				}
 				var html = "";
 				html += '<div class="'+className+'"><h4 class="popup-layertitle">'+displayName+'</h4>';
@@ -268,18 +268,13 @@ smap.core.Select = L.Class.extend({
 					}
 					return self._rasterFeature;
 				}
-
 				var popup = L.popup();
-
-
 				var $html = $("<div />").append(html);
-				
 				if (self._selectedFeaturesWms.length === 1) {
 					addWmsFeature(f);
 					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
 				}
 				else {
-
 					if ( $(window).width() <= 1900) {
 						if (!self._selectManyModal) {
 							// var footerContent = $('<button type="button" class="btn btn-default"">Stäng</button>');
@@ -365,8 +360,6 @@ smap.core.Select = L.Class.extend({
 							popup.options.autoPan = false;
 						}
 					}
-
-
 				}
 				popup.setContent($html.html());
 				popup.setLatLng(f.latLng);
