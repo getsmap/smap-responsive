@@ -54,7 +54,7 @@ smap.core.Select = L.Class.extend({
 			var $this = $(this);
 			var href = $this.attr("href"),
 				text = $this.text();
-			if (href && href.length >= 4 && $.inArray(href, ["null", "undefined"]) === 1) {
+			if (href && href.length >= 4 && $.inArray(href, ["null", "undefined"]) === -1) {
 				if (href.substring(0, 4).toUpperCase() !== "HTTP") {
 					// Add http
 					href = "http://" + href;
@@ -275,7 +275,7 @@ smap.core.Select = L.Class.extend({
 					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
 				}
 				else {
-					if ( $(window).width() <= 1900) {
+					if ( $(window).width() <= 5900) {
 						if (!self._selectManyModal) {
 							// var footerContent = $('<button type="button" class="btn btn-default"">Stäng</button>');
 							var bodyContent = $('<div class="list-group"></div>');
