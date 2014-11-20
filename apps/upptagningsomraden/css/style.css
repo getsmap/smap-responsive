@@ -18,14 +18,18 @@ body {
 
 #mapdiv {
 	width: 100%;
-	height: 22em;
-	max-width: 31.5em;
+	height: 35em;
+	max-width: 50em;
 	margin-top: 1em;
 	border: 1px solid #ccc;
 }
 
 .btn-togglemap {
 	margin-top: 1em;
+}
+
+.controls button[type=submit] {
+	display: none;
 }
 
 /*@media (max-width: 42em) {

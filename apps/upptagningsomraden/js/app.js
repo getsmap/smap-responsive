@@ -2,7 +2,7 @@
 
 var app = {
 		options: {
-			proxy: null //"http://localhost/cgi-bin/proxy.py?url="
+			proxy: "http://localhost/cgi-bin/proxy.py?url="
 		},
 
 		init: function() {
@@ -24,6 +24,7 @@ var app = {
 					// which toggles the map
 				});
 				self._addBtnToggleMap();
+				self._formData = formData;
 				return false;
 			});
 			// $('button[type="submit"]').on("click", function(e) {
@@ -143,24 +144,45 @@ var app = {
 
 			var latLngArr = [55.59852, 13.00232];
 
-			if (this.map) {
-
+			var map = this.map;
+			if (map) {
+				map.eachLayer(function(lay) {
+					map.removeLayer(lay);
+				});
 			}
 			else {
-				this.map = L.map('mapdiv').setView(latLngArr, 11);
-				var layer = new L.TileLayer.EsriRest("http://kartor.malmo.se/arcgis/rest/services/malmokarta_3857/MapServer", {
-						minZoom: 10,
-						maxZoom: 18,
-						attribution: '© Malmö Stadsbyggnadskontor'
-				});
-				this.map.addLayer(layer);
+				map = L.map('mapdiv').setView(latLngArr, 11);
+				this.map = map;
 			}
+			var bg = new L.TileLayer.EsriRest("http://kartor.malmo.se/arcgis/rest/services/malmokarta_3857/MapServer", {
+					minZoom: 10,
+					maxZoom: 18,
+					attribution: '© Malmö Stadsbyggnadskontor'
+			});
+			var batch = this._formData.batch;
+			var schools = L.tileLayer.wms("http://kartor.malmo.se/geoserver/wms", {
+					layers: 'malmows:UTBILDNING_SKOLA_ARSK_{batch}_PT'.replace(/\{batch\}/g, batch),
+					format: 'image/png',
+					transparent: true,
+					attribution: "Malmö stad"
+			});
+			var upptagningsArea = L.tileLayer.wms("http://kartor.malmo.se/geoserver/wms", {
+					layers: 'malmows:UTBILDNING_GRUNDSKOLA_UPPTAGNINGSOMR_ARSK_{batch}_P'.replace(/\{batch\}/g, batch),
+					format: 'image/png',
+					transparent: true,
+					attribution: "Malmö stad"
+			});
+			map.addLayer(bg);
+			map.addLayer(schools);
+			map.addLayer(upptagningsArea);
+
+
 			if (this._marker) {
-				this.map.removeLayer(this._marker);
+				map.removeLayer(this._marker);
 			}
 			if (params.latLng) {
-				this.map.setView(params.latLng || latLngArr, params.zoom || 11);
-				this._marker = L.marker(params.latLng).addTo(this.map);
+				map.setView(params.latLng || latLngArr, params.zoom || 14);
+				this._marker = L.marker(params.latLng).addTo(map);
 			}
 
 			$("#mapdiv").removeClass("hidden");
@@ -199,7 +221,7 @@ var app = {
 
 		okToSubmit: function() {
 			if ( $("input:checked").length === 2 && this.latLng) {
-				$('button[type="submit"]').removeClass("disabled");
+				$('button[type="submit"]').removeClass("disabled").click();
 				return true;
 			}
 			else {
