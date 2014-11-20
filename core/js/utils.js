@@ -74,8 +74,8 @@ var utils = {
 			}
 			
 			if (options.size) {
-				d.addClass("bs-modal-"+options.size);
-				d.find(".modal-dialog").addClass("modal-"+options.size);	
+				// d.addClass("modal-"+options.size);
+				d.find(".modal-dialog").addClass("modal-"+options.size);
 			}
 			
 			return d;

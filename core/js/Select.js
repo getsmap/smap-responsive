@@ -264,6 +264,17 @@ smap.core.Select = L.Class.extend({
 							opacity: 0.9,
 							fillOpacity: 0.3
 						});
+						self._rasterFeature.options.selectable = false;
+						self._rasterFeature.eachLayer(function(lay) {
+							if (lay.eachLayer) {
+								lay.eachLayer(function(lay2) {
+									lay2.options.clickable = false;
+								});
+							}
+							if (lay.options) {
+								lay.options.clickable = false;
+							}
+						});
 						self.map.addLayer(self._rasterFeature);
 					}
 					return self._rasterFeature;
@@ -277,16 +288,16 @@ smap.core.Select = L.Class.extend({
 				else {
 					if ( $(window).width() <= 5900) {
 						if (!self._selectManyModal) {
-							// var footerContent = $('<button type="button" class="btn btn-default"">Stäng</button>');
+							var footerContent = $('<button type="button" class="btn btn-default">Stäng</button>');
 							var bodyContent = $('<div class="list-group"></div>');
 							var sf, props, row;
-							// footerContent.on("click", function() {
-							// 	removeWmsFeature();
-							// 	self._selectManyModal.modal("hide");
-							// 	return false;
-							// });
+							footerContent.on("tap click", function() {
+								removeWmsFeature();
+								self._selectManyModal.modal("hide");
+								return false;
+							});
 
-							self._selectManyModal = utils.drawDialog('Flera träffar: Välj ett objekt', bodyContent, null, {
+							self._selectManyModal = utils.drawDialog('Flera träffar: Välj ett objekt', bodyContent, footerContent, {
 								size: "sm"
 							});
 							self._selectManyModal.find(".modal-header").addClass("panel-heading");
@@ -316,13 +327,13 @@ smap.core.Select = L.Class.extend({
 						function onRowClick() {
 							var theIndex = $(this).data("index");
 							var sf = self._selectedFeaturesWms[ theIndex ];
-							self._selectManyModal.modal("hide");
 							var popup = L.popup();
 							var html = drawPopupHtml(sf.options.popup, sf.properties, sf.options.displayName);
 							html = self._processHtml(html);
 							popup.setContent(html);
 							popup.setLatLng(sf.latLng);
 							popup.openOn(self.map);
+							self._selectManyModal.modal("hide");
 							return false;
 						}
 						var listItems = bContent.find(".list-group-item");
@@ -330,10 +341,9 @@ smap.core.Select = L.Class.extend({
 							listItems.on("tap", function() {
 								var theIndex = $(this).data("index");
 								var sf = self._selectedFeaturesWms[ theIndex ];
-								if (sf) {
-									addWmsFeature(sf);
-								}
-								return onRowClick();
+								addWmsFeature(sf);
+								onRowClick.call(this);
+								return false;
 							});
 						}
 						else {
