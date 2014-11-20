@@ -309,16 +309,11 @@ smap.core.Select = L.Class.extend({
 								popupText = self._extractAllAttributes(popupText, props);
 							}
 							popupText = self._processHtml(popupText);
-							row = $('<a href="" class="list-group-item"><strong>'+sf.options.displayName+'</strong><span>'+popupText+'</span></a>');
+							row = $('<a href="#" class="list-group-item"><strong>'+sf.options.displayName+'</strong><span>'+popupText+'</span></a>');
 							row.data("index", i);
 							bContent.append(row);
 						}
-						bContent.find(".list-group-item").on("mouseenter", function() {
-							var theIndex = $(this).data("index");
-							var sf = self._selectedFeaturesWms[ theIndex ];
-							addWmsFeature(sf);
-						});
-						bContent.find(".list-group-item").on("click", function() {
+						function onRowClick() {
 							var theIndex = $(this).data("index");
 							var sf = self._selectedFeaturesWms[ theIndex ];
 							self._selectManyModal.modal("hide");
@@ -329,7 +324,26 @@ smap.core.Select = L.Class.extend({
 							popup.setLatLng(sf.latLng);
 							popup.openOn(self.map);
 							return false;
-						});
+						}
+						var listItems = bContent.find(".list-group-item");
+						if (L.Browser.touch) {
+							listItems.on("tap", function() {
+								var theIndex = $(this).data("index");
+								var sf = self._selectedFeaturesWms[ theIndex ];
+								if (sf) {
+									addWmsFeature(sf);
+								}
+								return onRowClick();
+							});
+						}
+						else {
+							listItems.on("mouseenter", function() {
+								var theIndex = $(this).data("index");
+								var sf = self._selectedFeaturesWms[ theIndex ];
+								addWmsFeature(sf);
+							}).on("click", onRowClick);
+						}
+						
 						self._selectManyModal.modal("show");
 						return true;
 					}
