@@ -312,15 +312,17 @@ smap.core.Select = L.Class.extend({
 						var bContent = self._selectManyModal.find(".list-group");
 
 						// Add rows
+						var theSf, pText;
 						for (var i=0,len=selectedFeatures.length; i<len; i++) {
-							sf = selectedFeatures[i];
-							props = f.properties;
-							popupText = utils.extractToHtml(popupText, props);
-							if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
-								popupText = self._extractAllAttributes(popupText, props);
+							theSf = selectedFeatures[i];
+							props = theSf.properties;
+							pText = utils.extractToHtml(theSf.options.popup, props);
+							if (pText && pText === "*" || pText.search(/\$\{\*\}/) > -1) {
+								pText = self._extractAllAttributes(pText, props);
 							}
-							popupText = self._processHtml(popupText);
-							row = $('<a href="#" class="list-group-item"><strong>'+sf.options.displayName+'</strong><span>'+popupText+'</span></a>');
+							console.log(props);
+							pText = self._processHtml(pText);
+							row = $('<a href="#" class="list-group-item"><strong>'+theSf.options.displayName+'</strong><span>'+pText+'</span></a>');
 							row.data("index", i);
 							bContent.append(row);
 						}
