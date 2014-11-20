@@ -96,7 +96,7 @@ L.NonTiledLayer = L.Class.extend({
     },
 
 
-    _initImage: function (_image) {
+    _initImage: function () {
         var _image = L.DomUtil.create('img', 'leaflet-image-layer');
 
         if (this.options.zIndex !== undefined)
@@ -148,8 +148,8 @@ L.NonTiledLayer = L.Class.extend({
 
         image.style[L.DomUtil.TRANSFORM] =
 		        L.DomUtil.getTranslateString(origin) + ' scale(' + scale + ') ';
-		
-		image._scale = scale;
+				
+		image._lastScale = scale;
     },
 
     _resetImage: function (image) {
@@ -183,23 +183,21 @@ L.NonTiledLayer = L.Class.extend({
         return new L.LatLngBounds(world1, world2);
     },
 
-    _update: function () {
-        if (this.options.minZoom && this._map.getZoom() < this.options.minZoom) {
+    _update: function () {	
+        if ((this.options.minZoom && this._map.getZoom() < this.options.minZoom) ||
+		(this.options.maxZoom && this._map.getZoom() > this.options.maxZoom)) {
             this._currentImage.src = L.Util.emptyImageUrl;
             this._bufferImage.src = L.Util.emptyImageUrl;
 			this._div.style.visibility = 'hidden';
+			
+			if (this._addInteraction) 
+               this._addInteraction(null);			 
+			   
             return;
-        }
-        else if (this.options.maxZoom && this._map.getZoom() > this.options.maxZoom) {
-            this._currentImage.src = L.Util.emptyImageUrl;
-            this._bufferImage.src = L.Util.emptyImageUrl;
-            this._div.style.visibility = 'hidden';
-            return;
-        }
-        else {
-            this._div.style.visibility = 'visible';
         }
 
+        this._div.style.visibility = 'visible';
+    
         var bounds = this._getClippedBounds();
 
         // re-project to corresponding pixel bounds
@@ -214,8 +212,12 @@ L.NonTiledLayer = L.Class.extend({
         if (width < 32 || height < 32)
             return;
 
-        this._currentImage._bounds = bounds;
+		// set scales for zoom animation
+		this._bufferImage._scale = this._bufferImage._lastScale;
 		this._currentImage._scale = 1;
+		this._currentImage._lastScale = 1;
+
+        this._currentImage._bounds = bounds;
         this._resetImage(this._currentImage);
 
         var oiua = this._onImageUrlAsync;
@@ -251,7 +253,7 @@ L.NonTiledLayer = L.Class.extend({
             return;
 						
         if (this._addInteraction)
-            this._addInteraction(this._currentImage.tag)
+            this._addInteraction(this._currentImage.tag);
 
         L.DomUtil.setOpacity(this._currentImage, this.options.opacity);
         L.DomUtil.setOpacity(this._bufferImage, 0);
