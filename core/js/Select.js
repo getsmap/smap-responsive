@@ -54,8 +54,7 @@ smap.core.Select = L.Class.extend({
 			var $this = $(this);
 			var href = $this.attr("href"),
 				text = $this.text();
-
-			if (href && href.length >= 4) {
+			if (href && href.length >= 4 && $.inArray(href, ["null", "undefined"]) === 1) {
 				if (href.substring(0, 4).toUpperCase() !== "HTTP") {
 					// Add http
 					href = "http://" + href;
