@@ -210,19 +210,17 @@ smap.core.Select = L.Class.extend({
 			}
 
 
-			function drawPopupHtml(f, options) {
-				options = options || {};
+			function drawPopupHtml(popup, props, displayName, classShort) {
+				classShort = classShort || false;
 
 				var className = "leaflet-popup-option";
-				if (options.short) {
+				if (classShort) {
 					className += " leaflet-popup-option-short";
 				}
 				var html = "";
-				if (f.options.popup) {
-					html += '<div class="'+className+'"><h4 class="popup-layertitle">'+f.options.displayName+'</h4>';
-					html += utils.extractToHtml(popupText, props) + '</div>';
-					html += '<div class="popup-divider"></div>';
-				}
+				html += '<div class="'+className+'"><h4 class="popup-layertitle">'+displayName+'</h4>';
+				html += utils.extractToHtml(popup, props) + '</div>';
+				html += '<div class="popup-divider"></div>';
 				return html;
 			}
 			
@@ -239,7 +237,7 @@ smap.core.Select = L.Class.extend({
 					if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
 						popupText = self._extractAllAttributes(popupText, props);
 					}
-					html = drawPopupHtml(f, {short: true});
+					html = drawPopupHtml(f.options.popup, f.properties, f.options.displayName, true);
 				}
 				
 				html = self._processHtml(html);
@@ -315,6 +313,7 @@ smap.core.Select = L.Class.extend({
 							if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
 								popupText = self._extractAllAttributes(popupText, props);
 							}
+							popupText = self._processHtml(popupText);
 							row = $('<a href="" class="list-group-item"><strong>'+sf.options.displayName+'</strong><span>'+popupText+'</span></a>');
 							row.data("index", i);
 							bContent.append(row);
@@ -325,12 +324,14 @@ smap.core.Select = L.Class.extend({
 							addWmsFeature(sf);
 						});
 						bContent.find(".list-group-item").on("click", function() {
+							var theIndex = $(this).data("index");
+							var sf = self._selectedFeaturesWms[ theIndex ];
 							self._selectManyModal.modal("hide");
 							var popup = L.popup();
-							html = drawPopupHtml(self._rasterFeature);
+							var html = drawPopupHtml(sf.options.popup, sf.properties, sf.options.displayName);
 							html = self._processHtml(html);
 							popup.setContent(html);
-							popup.setLatLng(self._rasterFeature.latLng);
+							popup.setLatLng(sf.latLng);
 							popup.openOn(self.map);
 							return false;
 						});

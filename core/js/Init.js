@@ -141,7 +141,14 @@ smap.core.Init = L.Class.extend({
 	loadConfig: function(configName) {
 		configName = configName || "config.js";
 		if (configName.search(/\//g) === -1) {
-			configName = "configs/" + configName;
+			if (document.URL.split("?")[0].search("dev.html") > -1) {
+				// dev.html (dev/test)
+				configName = "dist/configs/" + configName;
+			}
+			else {
+				// index.html (production)
+				configName = "configs/" + configName;
+			}
 		}
 		return $.ajax({
 			url: configName,
