@@ -242,12 +242,12 @@ var config = {
 							position: "topright"
 						}
 					},
-					// {
-					// 	init: "L.Control.Editor",
-					// 	options: {
-					// 		useProxy: false
-					// 	}
-					// },
+					{
+						init: "L.Control.Editor",
+						options: {
+							useProxy: false
+						}
+					},
 					// {
 					//	init: "L.Control.Mapillary",
 					//	options: {}
