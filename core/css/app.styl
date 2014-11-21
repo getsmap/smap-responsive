@@ -86,24 +86,37 @@ body
 		.list-group-item 
 			border-radius 0
 			background none
+			display table-row
 			span
-				text-overflow ellipsis
-				white-space nowrap
+				// text-overflow ellipsis
+				// white-space nowrap
 				overflow hidden
-			button
-				border-color #444
-				background-color #fff
-				background-color rgba(255,255,255,0)
-			.select-btn-zoom-to-feature
-				position absolute
-				right 1em
-				top 1em
-				// display inline
+				display table-cell
+				width 72%
+				vertical-align middle
+				padding 4%
+			div
+				display table-cell
+				vertical-align middle
+				width 16%
+				button
+					margin-left -8%
+					border-color #444
+					background-color #fff
+					background-color rgba(255,255,255,0)
+					
+			.select-btn-zoom-to-feature:hover
+				background-color #eee
+				background-color rgba(255,255,255,0.3)
+			// .select-btn-zoom-to-feature
+				// position absolute
+				// right 1em
+				// top 1em
 				// float right
 				// margin-top -5px
 
 		.list-group-item:hover
-			background rgba(255,255,255,0.3)
+			background rgba(200,200,200,0.3)
 		.list-group-item:first-child
 			border-top none
 		.list-group-item:last-child

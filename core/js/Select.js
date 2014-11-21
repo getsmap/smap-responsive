@@ -321,8 +321,9 @@ smap.core.Select = L.Class.extend({
 								pText = self._extractAllAttributes(pText, props);
 							}
 							pText = self._processHtml(pText);
-							row = $('<a href="#" class="list-group-item"><strong>'+theSf.options.displayName+'</strong><span>'+pText+'</span>'+
-								'<button class="btn btn-default btn-sm select-btn-zoom-to-feature">Zooma till objekt</button></a>');
+							// <strong>'+theSf.options.displayName+'</strong>
+							row = $('<a href="#" class="list-group-item"><span><strong>'+theSf.options.displayName+'</strong>'+pText+'</span>'+
+								'<div><button class="btn btn-default btn-sm select-btn-zoom-to-feature">Zooma till objekt</button></div></a>');
 							row.data("index", i);
 							bContent.append(row);
 						}
@@ -356,10 +357,9 @@ smap.core.Select = L.Class.extend({
 							}
 							else {
 								var i = $(this).parent().data("index");
-								var sf = self._selectedFeaturesWms[ i ];
 								var zoom = 15;
 								zoom = self.map.getZoom() < zoom ? zoom : self.map.getZoom() + 1;
-								self.map.setZoomAround(sf.latLng, self.map.options.maxZoom);
+								self.map.setZoomAround(f.latLng, zoom);
 							}
 							// return false;
 

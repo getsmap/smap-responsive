@@ -266,8 +266,8 @@ var utils = {
 			switch (geom.type) {
 				case "Point":
 					coords = geom.coordinates;
-					if (options.reverseAxis) {
-						coords = swapCoords(coords);
+					if (this.options.reverseAxis) {
+						coords = this.swapCoords(coords);
 					}
 					projectedCoords = projectPoint(coords, inputCrs);
 					geom.coordinates = projectedCoords;
@@ -275,23 +275,34 @@ var utils = {
 				case "MultiPoint":
 					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
 						coords = geom.coordinates[p];
-						if (options.reverseAxis) {
-							coords = swapCoords(coords);
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords(coords);
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
-						feature.geometry.coordinates[p] = projectedCoords;
+						features[i].geometry.coordinates[p] = projectedCoords;
+					}
+					break;
+				case "LineString":
+					// TODO Not yet tested
+					coordsArr = geom.coordinates[0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
 					}
 					break;
 				case "MultiLineString":
 					coordsArr = [];
-					var pp, ii,
-						newCoords = [];
+					var pp, len2, len3;
 					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
 						coordsArr = geom.coordinates[p];
 						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
 							coords = coordsArr[pp];
 							if (options.reverseAxis) {
-								coords = swapCoords( coords );								
+								coords = swapCoords( coords );
 							}
 							projectedCoords = projectPoint(coords, inputCrs);
 							coordsArr[pp] = projectedCoords;
@@ -303,25 +314,30 @@ var utils = {
 					coordsArr = geom.coordinates[0];
 					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
 						coords = coordsArr[p];
-						if (options.reverseAxis) {
-							coords = swapCoords( coords );								
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
 						coordsArr[p] = projectedCoords;
 					}
-					
 					break;
 				case "MultiPolygon":
-					coordsArr = geom.coordinates[0][0];
-					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
-						coords = coordsArr[p];
-						if (options.reverseAxis) {
-							coords = swapCoords( coords );								
+					coordsArr = [];
+					var pp, ppp, len2, len3, len4, coordsArr2;
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coordsArr = geom.coordinates[p];
+						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
+							coordsArr2 = coordsArr[pp];
+							for (ppp=0, len4=coordsArr2.length; ppp<len4; ppp++) {
+								coords = coordsArr2[ppp];
+								if (options.reverseAxis) {
+									coords = swapCoords( coords );
+								}
+								projectedCoords = projectPoint(coords, inputCrs);
+								coordsArr2[ppp] = projectedCoords;
+							}
 						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						coordsArr[p] = projectedCoords;
 					}
-//					geom.coordinates[0][0] = coordsArr; // needed?
 					break;
 			}
 		}

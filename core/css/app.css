@@ -82,32 +82,40 @@ body {
 .core-select-modal .modal-body .list-group-item {
   border-radius: 0;
   background: none;
+  display: table-row;
 }
 .core-select-modal .modal-body .list-group-item span {
-  text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
+  display: table-cell;
+  width: 72%;
+  vertical-align: middle;
+  padding: 4%;
 }
-.core-select-modal .modal-body .list-group-item button {
+.core-select-modal .modal-body .list-group-item div {
+  display: table-cell;
+  vertical-align: middle;
+  width: 16%;
+}
+.core-select-modal .modal-body .list-group-item div button {
+  margin-left: -8%;
   border-color: #444;
   background-color: #fff;
   background-color: rgba(255,255,255,0);
 }
-.core-select-modal .modal-body .list-group-item .select-btn-zoom-to-feature {
-  position: absolute;
-  right: 1em;
-  top: 1em;
+.core-select-modal .modal-body .list-group-item .select-btn-zoom-to-feature:hover {
+  background-color: #eee;
+  background-color: rgba(255,255,255,0.3);
 }
-.core-select-modal .modal-body .list-group-item:hover {
-  background: rgba(255,255,255,0.3);
+.core-select-modal .list-group-item:hover {
+  background: rgba(200,200,200,0.3);
 }
-.core-select-modal .modal-body .list-group-item:first-child {
+.core-select-modal .list-group-item:first-child {
   border-top: none;
 }
-.core-select-modal .modal-body .list-group-item:last-child {
+.core-select-modal .list-group-item:last-child {
   border-bottom: none;
 }
-.core-select-modal .modal-footer {
+.modal-footer {
   margin: 0;
 }
 .loader {
