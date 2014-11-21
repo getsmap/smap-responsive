@@ -266,7 +266,7 @@ var utils = {
 			switch (geom.type) {
 				case "Point":
 					coords = geom.coordinates;
-					if (this.options.reverseAxis) {
+					if (options.reverseAxis) {
 						coords = this.swapCoords(coords);
 					}
 					projectedCoords = projectPoint(coords, inputCrs);
@@ -275,7 +275,7 @@ var utils = {
 				case "MultiPoint":
 					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
 						coords = geom.coordinates[p];
-						if (this.options.reverseAxis) {
+						if (options.reverseAxis) {
 							coords = this.swapCoords(coords);
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
@@ -287,7 +287,7 @@ var utils = {
 					coordsArr = geom.coordinates[0];
 					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
 						coords = coordsArr[p];
-						if (this.options.reverseAxis) {
+						if (options.reverseAxis) {
 							coords = this.swapCoords( coords );
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
@@ -314,7 +314,7 @@ var utils = {
 					coordsArr = geom.coordinates[0];
 					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
 						coords = coordsArr[p];
-						if (this.options.reverseAxis) {
+						if (options.reverseAxis) {
 							coords = this.swapCoords( coords );
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
