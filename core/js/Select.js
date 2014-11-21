@@ -357,7 +357,9 @@ smap.core.Select = L.Class.extend({
 							else {
 								var i = $(this).parent().data("index");
 								var sf = self._selectedFeaturesWms[ i ];
-								self.map.setZoomAround(sf.latLng, 14);
+								var zoom = 15;
+								zoom = self.map.getZoom() < zoom ? zoom : self.map.getZoom() + 1;
+								self.map.setZoomAround(sf.latLng, self.map.options.maxZoom);
 							}
 							// return false;
 
