@@ -25,6 +25,7 @@ var todo = require('gulp-todo');
 var uglify = require('gulp-uglify');
 var using = require('gulp-using');
 var gutil = require('gulp-util');
+var connect = require('gulp-connect');
 
 var es = require('event-stream');
 var pngcrush = require('imagemin-pngcrush');
@@ -98,6 +99,7 @@ var p = {
 		"core/js/*.js",
 		"plugins/**/*.js",
 		"!plugins/**/_*.js",
+		"!plugins/Test/**/*.js",
 		"!plugins/Edit/**/*.js",
 		"!plugins/MyPlugin/**/*.js",
 		"!plugins/SideBars/**/*.js",
@@ -172,7 +174,8 @@ gulp.task('ourcss', ['ourcsscompile'], function() {
 		.pipe(concat('smap.css'))
 		.pipe(mincss())
 		// .pipe(rename("smap.css"))
-		.pipe(gulp.dest("dist"));
+		.pipe(gulp.dest("dist"))
+		.pipe(connect.reload());
 });
 
 
@@ -187,7 +190,8 @@ gulp.task('ourjs', function() {
   		.pipe(ngAnnotate())
 		.pipe(uglify())  // {mangle: false}
   		.pipe(concat("smap.js"))
-		.pipe(gulp.dest("dist"));
+		.pipe(gulp.dest("dist"))
+		.pipe(connect.reload());
 });
 
 
@@ -280,7 +284,7 @@ gulp.task('html', ["htmlcompress"]);
 
 
 // Build our code (during dev)
-gulp.task('ourcode', ["ourcss", "ourjs", "moveresources"]); //["cleancss", "cleanjs", "ourcss", "ourjs"]);
+gulp.task('ourcode', ["ourcss", "ourjs"]);  // "moveresources"
 
 gulp.task('_full', ["images", "html", "moveresources"]);
 
@@ -301,15 +305,24 @@ gulp.task('fullmalmo', ["cleancode"], function() {
 gulp.task('reset', ["cleantotal", "full"]);
 
 
+gulp.task('webserver', function() {
+	connect.server({
+		port: 8090,
+		livereload: true
+	});
+});
+
 gulp.task('watch', function() {
 	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
-	var js = p.ourJs;
+	var js = p.ourJs.concat("dist/configs/*.js");
 	var tasks = ["ourcode"];
 	gulp.start(tasks); // Start by running once
 	return gulp.watch(js.concat(css), tasks);
 });
 
-gulp.task('default', ["watch"]); // Note! <gulp> is same as <gulp default>
+
+
+gulp.task('default', ["webserver", "watch"]); // Note! <gulp> is same as <gulp default>
 
 
 

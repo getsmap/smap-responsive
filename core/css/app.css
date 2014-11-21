@@ -64,6 +64,9 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
+.core-select-modal .modal-dialog {
+  max-width: 400px;
+}
 .core-select-modal .modal-header {
   background-color: #fff;
 }
@@ -84,6 +87,16 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+.core-select-modal .modal-body .list-group-item button {
+  border-color: #444;
+  background-color: #fff;
+  background-color: rgba(255,255,255,0);
+}
+.core-select-modal .modal-body .list-group-item .select-btn-zoom-to-feature {
+  position: absolute;
+  right: 1em;
+  top: 1em;
 }
 .core-select-modal .modal-body .list-group-item:hover {
   background: rgba(255,255,255,0.3);

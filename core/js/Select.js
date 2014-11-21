@@ -320,9 +320,9 @@ smap.core.Select = L.Class.extend({
 							if (pText && pText === "*" || pText.search(/\$\{\*\}/) > -1) {
 								pText = self._extractAllAttributes(pText, props);
 							}
-							console.log(props);
 							pText = self._processHtml(pText);
-							row = $('<a href="#" class="list-group-item"><strong>'+theSf.options.displayName+'</strong><span>'+pText+'</span></a>');
+							row = $('<a href="#" class="list-group-item"><strong>'+theSf.options.displayName+'</strong><span>'+pText+'</span>'+
+								'<button class="btn btn-default btn-sm select-btn-zoom-to-feature">Zooma till objekt</button></a>');
 							row.data("index", i);
 							bContent.append(row);
 						}
@@ -333,12 +333,35 @@ smap.core.Select = L.Class.extend({
 							var html = drawPopupHtml(sf.options.popup, sf.properties, sf.options.displayName);
 							html = self._processHtml(html);
 							popup.setContent(html);
-							popup.setLatLng(sf.latLng);
+
+							if (self._rasterFeature && self._rasterFeature.getBounds) {
+								var bounds = self._rasterFeature.getBounds();
+								var latLng = bounds.getCenter();
+								popup.setLatLng(latLng);
+							}
+							else {
+								popup.setLatLng(sf.latLng);
+							}
 							popup.openOn(self.map);
+							$(this).trigger("mouseenter");
+
 							self._selectManyModal.modal("hide");
 							return false;
 						}
 						var listItems = bContent.find(".list-group-item");
+						listItems.find(".select-btn-zoom-to-feature").on("click", function() {
+							if (self._rasterFeature) {
+								var bounds = self._rasterFeature.getBounds();
+								self.map.fitBounds(bounds);
+							}
+							else {
+								var i = $(this).parent().data("index");
+								var sf = self._selectedFeaturesWms[ i ];
+								self.map.setZoomAround(sf.latLng, 14);
+							}
+							// return false;
+
+						});
 						if (L.Browser.touch) {
 							listItems.on("tap", function() {
 								var theIndex = $(this).data("index");
@@ -355,7 +378,7 @@ smap.core.Select = L.Class.extend({
 								addWmsFeature(sf);
 							}).on("click", onRowClick);
 						}
-						
+
 						self._selectManyModal.modal("show");
 						return true;
 					}
