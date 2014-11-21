@@ -143,7 +143,7 @@ var onError = function(err) {
 };
 
 
-gulp.task('moveresources', function() {
+gulp.task('move', function() {
 	gulp.src("plugins/**/resources/**/*") //, {base: "./"})
 		.pipe(flatten())
 		// .pipe(using())
@@ -284,9 +284,9 @@ gulp.task('html', ["htmlcompress"]);
 
 
 // Build our code (during dev)
-gulp.task('ourcode', ["ourcss", "ourjs"]);  // "moveresources"
+gulp.task('ourcode', ["ourcss", "ourjs"]);  // "move"
 
-gulp.task('_full', ["images", "html", "moveresources"]);
+gulp.task('_full', ["images", "html", "move"]);
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).
@@ -314,15 +314,15 @@ gulp.task('webserver', function() {
 
 gulp.task('watch', function() {
 	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
-	var js = p.ourJs.concat("dist/configs/*.js");
+	// var js = p.ourJs.concat("dist/configs/*.js");
 	var tasks = ["ourcode"];
 	gulp.start(tasks); // Start by running once
-	return gulp.watch(js.concat(css), tasks);
+	return gulp.watch(css, tasks);
 });
 
+gulp.task('watchweb', ["webserver", "watch"]); // Allow auto-publishing whenever something changes
 
-
-gulp.task('default', ["webserver", "watch"]); // Note! <gulp> is same as <gulp default>
+gulp.task('default', ["watch"]); // Note! <gulp> is same as <gulp default>
 
 
 
