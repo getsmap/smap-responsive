@@ -286,7 +286,7 @@ smap.core.Select = L.Class.extend({
 					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
 				}
 				else {
-					if ( $(window).width() <= 5900) {
+					if ( this.options.manyUseDialog) {
 						if (!self._selectManyModal) {
 							var footerContent = $('<button type="button" class="btn btn-default">Stäng</button>');
 							var bodyContent = $('<div class="list-group"></div>');
@@ -385,6 +385,7 @@ smap.core.Select = L.Class.extend({
 						return true;
 					}
 					else {
+						// -- Create the select options inside the popup --
 						function onClick() {
 							var theIndex = $(this).data("index");
 							if (theIndex || theIndex === 0) {

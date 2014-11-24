@@ -186,9 +186,6 @@ smap.core.Layer = L.Class.extend({
 			else {
 				layer.options.style = layer.options.style || $.extend({}, self.options.defaultStyle);
 			}
-			layer.on("load", function(e) {
-				smap.cmd.loading(false);
-			});
 			// Listen to these "home-made" events added to our own L.GeoJSON.WFS layer class.
 			layer.on("loadcancel loaderror", function(e) {
 				smap.cmd.loading(false);
@@ -199,9 +196,15 @@ smap.core.Layer = L.Class.extend({
 				smap.cmd.loading(false);
 			});
 		}
-		layer.on("loading", function(e) {
-			smap.cmd.loading(true);
-		});
+
+		if (layer.on) {
+			layer.on("load", function(e) {
+				smap.cmd.loading(false);
+			});
+			layer.on("loading", function(e) {
+				smap.cmd.loading(true);
+			});
+		}
 		
 		return layer;
 	},
