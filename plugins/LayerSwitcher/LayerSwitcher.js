@@ -341,22 +341,25 @@ L.Control.LayerSwitcher = L.Control.extend({
 			return false;
 		}
 		tag.toggleClass("active");
-		if (this.options.toggleSubLayersOnClick) {
-			var isActive = tag.hasClass("active");
-			var parentConts = tag.parents(".lswitch-catcont");
-			parentConts.each(function() {
-				if (isActive) {
-					$(this).prev().addClass("active");
+		
+		// Toggle active class of all parent headers (just as an indication that the headers have active children)
+		
+		// if (this.options.toggleSubLayersOnClick) {
+		var isActive = tag.hasClass("active");
+		var parentConts = tag.parents(".lswitch-catcont");
+		parentConts.each(function() {
+			if (isActive) {
+				$(this).prev().addClass("active");
+			}
+			else {
+				if ( $(this).find("a.list-group-item.active").length > 0 ) {
+					// Don't deactivate if there are other active layers
+					return false;
 				}
-				else {
-					if ( $(this).find("a.list-group-item.active").length > 0 ) {
-						// Don't deactivate if there are other active layers
-						return false;
-					}
-					$(this).prev().removeClass("active");
-				}
-			});
-		}
+				$(this).prev().removeClass("active");
+			}
+		});
+		// }
 		var isActive = tag.hasClass("active");
 		
 		if ( isActive ) {

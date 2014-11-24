@@ -104,6 +104,9 @@
 .lswitch-cat {
   margin-top: 1px;
 }
+.lswitch-cat.active {
+  font-weight: bold;
+}
 .lswitch-panel a.active {
   cursor: pointer;
 }
