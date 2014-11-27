@@ -174,7 +174,7 @@ smap.core.Init = L.Class.extend({
 			t;
 		for (var i=0,len=cLayers.length; i<len; i++) {
 			t = cLayers[i];
-			if (!t.options.legend && t.options.layers && t.init === "L.TileLayer.WMS") {
+			if (t.options.legend === undefined && t.options.layers && t.init === "L.TileLayer.WMS") {
 				t.options.legend = createLegendUrl(t.url, t.options.layers);
 			}
 		}
