@@ -91,6 +91,9 @@ body {
   vertical-align: middle;
   padding: 4%;
 }
+.core-select-modal .modal-body .list-group-item span button {
+  display: none;
+}
 .core-select-modal .modal-body .list-group-item div {
   display: table-cell;
   vertical-align: middle;
