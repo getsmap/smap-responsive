@@ -97,17 +97,26 @@ body {
   width: 16%;
 }
 .core-select-modal .modal-body .list-group-item div button {
-  margin-left: -8%;
-  border-color: #444;
-  background-color: #fff;
-  background-color: rgba(255,255,255,0);
+  visibility: hidden;
+  border: none;
+  border-left: 1px solid #c3c3c3;
+  height: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 0;
+  background-color: rgba(92,184,92,0.7);
 }
 .core-select-modal .modal-body .list-group-item .select-btn-zoom-to-feature:hover {
-  background-color: #eee;
-  background-color: rgba(255,255,255,0.3);
+  color: #fff;
+  background-color: #5cb85c;
 }
 .core-select-modal .list-group-item:hover {
-  background: rgba(200,200,200,0.3);
+  background-color: rgba(255,255,255,0.2);
+}
+.core-select-modal .list-group-item:hover button {
+  visibility: visible !important;
 }
 .core-select-modal .list-group-item:first-child {
   border-top: none;

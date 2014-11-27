@@ -100,14 +100,28 @@ body
 				vertical-align middle
 				width 16%
 				button
-					margin-left -8%
-					border-color #444
-					background-color #fff
-					background-color rgba(255,255,255,0)
+					visibility hidden
+					// margin-left -4%
+					border none
+					border-left 1px solid #C3C3C3
+					// background none
+					height 100%
+					padding-top 0
+					padding-bottom 0
+					padding-left 20px
+					padding-right 20px
+					border-radius 0
+					background-color rgba(92, 184, 92, 0.7)
+					
+					// background-color #fff
+					// background-color rgba(105, 105, 105, 0)
 					
 			.select-btn-zoom-to-feature:hover
-				background-color #eee
-				background-color rgba(255,255,255,0.3)
+				// border-color #bbb
+				// border-color #ddd
+				color #fff
+				background-color rgba(92, 184, 92, 1)
+				// background-color rgba(105, 105, 105, 0.8)
 			// .select-btn-zoom-to-feature
 				// position absolute
 				// right 1em
@@ -116,7 +130,10 @@ body
 				// margin-top -5px
 
 		.list-group-item:hover
-			background rgba(200,200,200,0.3)
+			background-color rgba(255,255,255,0.2)
+			button
+				visibility visible !important
+				
 		.list-group-item:first-child
 			border-top none
 		.list-group-item:last-child
