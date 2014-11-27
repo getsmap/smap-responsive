@@ -1,5 +1,9 @@
 smap.core.Select = L.Class.extend({
 
+	options: {
+		manyUseDialog: true
+	},
+
 	/**
 	 * Containers for selected features (Vector and WMS).
 	 */
@@ -286,7 +290,7 @@ smap.core.Select = L.Class.extend({
 					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
 				}
 				else {
-					if ( this.options.manyUseDialog) {
+					if ( self.options.manyUseDialog) {
 						if (!self._selectManyModal) {
 							var footerContent = $('<button type="button" class="btn btn-default">Stäng</button>');
 							var bodyContent = $('<div class="list-group"></div>');

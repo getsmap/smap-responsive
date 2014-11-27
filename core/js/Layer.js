@@ -164,12 +164,27 @@ smap.core.Layer = L.Class.extend({
 					this._layers[t.options.layerId] = layer;
 				}
 				else {
-				// Some layers only use options.
+					// Some layers only use options.
 					layer = new init(t.options);
 				}					
 			}
 			else {
-				layer = new init(t.url, t.options);
+				var opts = t.options;
+				if (init === L.TileLayer.WMS) {
+					// WMS layers will use all options as parameters for image requests (=bad)
+					var newOpts = $.extend(true, {}, opts);
+
+					// Remove all key-objects not in the WMS-API
+					// newOpts = _.omit(newOpts, ["legend", "category", "selectable", "popup", "zIndex", "attribution", "displayName", "layerId"]);
+					newOpts = _.pick(newOpts, ["service", "request", "version", "layers", "styles", "format", "transparent", "width", "height", "bbox",
+											"angle", "buffer", "cql_filter", "env", "featureid", "filter", "format_options", "maxfeatures", "namespace",
+											"palette", "propertyname", "tiled", "tilesorigin", "scalemethod"]);
+					layer = new init(t.url, newOpts);
+					$.extend(layer.options, opts);
+				}
+				else {
+					layer = new init(t.url, opts);
+				}
 			}
 			// For ESRI bug
 			if (layer instanceof L.esri.DynamicMapLayer) {

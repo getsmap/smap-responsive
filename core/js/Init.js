@@ -168,9 +168,24 @@ smap.core.Init = L.Class.extend({
 			bls[i].options.isBaseLayer = true;
 		}
 
+
+		var cLayers = config.bl.concat(config.ol || []);
+		var createLegendUrl = this._createLegendUrl,
+			t;
+		for (var i=0,len=cLayers.length; i<len; i++) {
+			t = cLayers[i];
+			if (!t.options.legend && t.options.layers && t.init === "L.TileLayer.WMS") {
+				t.options.legend = createLegendUrl(t.url, t.options.layers);
+			}
+		}
+
 		// Set default theme if not set
 		// config.theme = config.theme || smap.core.mainConfig.defaultTheme;
+	},
 
+	_createLegendUrl: function(url, wmsLayers) {
+		var paramsString = "request=GetLegendGraphic&format=image/png&width=20&height=20&layer=" + wmsLayers;
+		return utils.urlAppend(url, paramsString);
 	},
 	
 	defineProjs: function() {

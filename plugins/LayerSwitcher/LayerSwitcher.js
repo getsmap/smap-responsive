@@ -47,6 +47,21 @@ L.Control.LayerSwitcher = L.Control.extend({
 		
 		this.$container = $(this._container);
 		
+		// Define functions for row and header tap/click
+		this.__onRowTap = this.__onRowTap || $.proxy(this._onRowTap, this);
+		this.__onHeaderClick = this.__onHeaderClick || $.proxy(this._onHeaderClick, this);
+		this.__onHeaderIconClick = this.__onHeaderIconClick || $.proxy(this._onHeaderIconClick, this);
+
+		this.__onLegendEnter = this.__onLegendEnter || $.proxy(this._onLegendEnter, this);
+		this.__onLegendLeave = this.__onLegendLeave || $.proxy(this._onLegendLeave, this);
+		this._moveWithCursor = function(e) {
+			console.log(e.pageX);
+			$(".lswitch-legend-big").css({
+				left:  e.pageX+10+"px",
+				top:   e.pageY-30+"px"
+			});
+		};
+
 		this._addPanel();
 		this._addLayers(smap.config.bl, smap.config.ol);
 
@@ -324,6 +339,11 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}
 		this.showLayer(layerId);
 	},
+
+	_onLegendClick: function(e) {
+		$(this).parent().trigger("tap");
+		return false;
+	},
 	
 	_onRowTap: function(e) {
 		
@@ -461,12 +481,32 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this._toggleHeader(icon.parent());
 		return false;
 	},
+
+	_addLegend: function(row, src) {
+		var img = $('<img class="lswitch-legend" src="'+src+'" />');
+		img
+			.on("tap", this._onLegendClick)
+			.on("mouseenter", this.__onLegendEnter)
+			.on("mouseleave", this.__onLegendLeave);
+		row.prepend(img);
+	},
+
+	_onLegendLeave: function() {
+		$(".lswitch-legend-big").remove();
+		$(document).off("mousemove", this._moveWithCursor);
+	},
+
+	_onLegendEnter: function(e) {
+		var $this = $(e.target);
+		var t = $this.parent().data("t");
+		var src = t.options.legendBig || t.options.legend;
+		$(".lswitch-legend-big").remove();
+		var img = $('<img class="lswitch-legend-big" src="'+src+'" />');
+		$(document).on("mousemove", this._moveWithCursor);
+		$("body").append(img);
+	},
 	
 	_addRow: function(t) {
-
-		this.__onRowTap = this.__onRowTap || $.proxy(this._onRowTap, this);
-		this.__onHeaderClick = this.__onHeaderClick || $.proxy(this._onHeaderClick, this);
-		this.__onHeaderIconClick = this.__onHeaderIconClick || $.proxy(this._onHeaderIconClick, this);
 
 		var catIconClass = this.options.catIconClass;
 
@@ -477,6 +517,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		row.on("tap", this.__onRowTap);
 		row.data("t", t); // Faster to fetch than fetching from config on click
 		
+		if (o.legend && !L.Browser.touch) {
+			this._addLegend(row, o.legend);
+		}
+
 		var parentTag;
 		if (o.isBaseLayer) {
 			parentTag = $("#lswitch-blcont");

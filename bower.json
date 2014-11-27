@@ -50,7 +50,8 @@
     "leaflet.print-smap": "./lib/leaflet.print-smap/",
     "leaflet.wfs-t": "https://github.com/flatrockgeo/leaflet.wfs-t.git",
     "malmo_shared_assets": "malmostad/shared_assets",
-    "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git"
+    "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
+    "lodash": "~2.4.1"
   },
   "overrides": {
     "leaflet-polyline-distance": {

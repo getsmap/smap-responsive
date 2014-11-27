@@ -21,6 +21,24 @@ var utils = {
 			};
 		},
 
+		urlAppend: function(baseUrl, params, separator) {
+			separator = separator || "?";
+
+			var sepReg = separator === "?" ? /\?/g : /#/g;
+
+			var lastChar = params.charAt(params.length-1);
+			// Remove any trailing "&"
+			if (lastChar === "&") {
+				baseUrl = lastChar.substring(0, params.length-1);
+			}
+
+			// Add separator
+			if (baseUrl.search(sepReg) === -1) {
+				baseUrl += separator;
+			}
+			return baseUrl + params;
+		},
+
 		isInIframe: function() {
 			return top.location != self.location;
 		},
