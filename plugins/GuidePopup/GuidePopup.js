@@ -88,7 +88,7 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	
 	_onPopupOpen: function(e) {
-		if (e.popup._source.feature) {
+		if (e.popup._source && e.popup._source.feature) {
 			var layerId = e.popup._source.feature.layerId;
 			if (layerId !== this.options.layerId) {
 				return;

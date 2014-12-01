@@ -55,7 +55,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this.__onLegendEnter = this.__onLegendEnter || $.proxy(this._onLegendEnter, this);
 		this.__onLegendLeave = this.__onLegendLeave || $.proxy(this._onLegendLeave, this);
 		this._moveWithCursor = function(e) {
-			console.log(e.pageX);
 			$(".lswitch-legend-big").css({
 				left:  e.pageX+10+"px",
 				top:   e.pageY-30+"px"

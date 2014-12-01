@@ -1,7 +1,15 @@
 #malmo-masthead .dropdown-menu {
   overflow-y: auto !important;
 }
-.malmoheader-offset-top {
-  top: 55px !important;
-  margin-top: 0 !important;
+#smap-search-div.malmoheader-offset-top,
+.thandler-container.malmoheader-offset-top,
+.thandler-btn.malmoheader-offset-top {
+  top: 48px;
+  margin-top: 0;
+}
+.map-with-header .lswitch-panel {
+  padding-top: 49px;
+}
+#smap-search-div .dropdown-menu li {
+  font-size: 14px;
 }

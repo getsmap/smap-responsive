@@ -1,7 +1,51 @@
+
+@import "../../core/css/global"
+
 #malmo-masthead .dropdown-menu
 	overflow-y auto !important
 
 
-.malmoheader-offset-top
-	top 55px !important
-	margin-top 0 !important
+#smap-search-div.malmoheader-offset-top, .thandler-container.malmoheader-offset-top, .thandler-btn.malmoheader-offset-top
+	top generalMargins + 43px
+	margin-top 0
+
+.map-with-header .lswitch-panel
+	padding-top 44px + generalMargins
+
+
+// -- Fixes due to malmos styles messing up with bootstrap's
+#smap-search-div .dropdown-menu
+	li
+		font-size 14px
+		// background-attachment scroll
+		// background-clip border-box
+		// background-color rgb(66, 139, 202)
+		// background-image none
+		// background-origin padding-box
+		// background-size auto
+		// box-sizing border-box
+		// clear both
+		// color rgb(255, 255, 255)
+		// cursor pointer
+		// display block
+		// font-family 'Helvetica Neue', Arial, Helvetica, sans-serif
+		// font-size 14px !importan
+		// font-style normal
+		// font-variant normal
+		// font-weight normal
+		// height 41px
+		// line-height 35px
+		// list-style-image none
+		// list-style-position outside
+		// list-style-type none
+		// outline-color rgb(255, 255, 255)
+		// outline-style none
+		// outline-width 0px
+		// padding-bottom 3px
+		// padding-left 7px
+		// padding-right 7px
+		// padding-top 3px
+		// text-align left
+		// text-decoration none
+		// white-space nowrap
+		// width 158px

@@ -2,13 +2,13 @@
   z-index: 1001;
   position: absolute;
   left: auto;
-  right: 10px;
-  top: 9px;
+  right: 5px;
+  top: 5px;
 }
 .thandler-btn button {
   width: 52px;
   height: 47px;
-  border-radius: 0;
+  border-radius: 0 !important;
 }
 .thandler-container.thandler-visible {
   display: block;

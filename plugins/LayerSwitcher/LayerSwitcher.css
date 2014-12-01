@@ -11,7 +11,7 @@
   background-color: #fff;
   background-color: rgba(255,255,255,0.8);
   cursor: pointer;
-  border-radius: 0 0.4em 0.4em 0;
+  border-radius: 0;
 }
 .mapdiv-slidetransition {
   -webkit-transition: all 0.3s ease !important;
@@ -30,23 +30,24 @@
   box-shadow: inset #000 -3px 0px 17px;
   z-index: -1;
   position: absolute;
-  left: 0px;
-  top: 0px;
+  left: 0;
+  top: 0;
   width: 70%;
   background-color: #38454e;
   height: 100%;
   max-width: 300px;
-  padding: 0 0.6em;
-  padding-top: 10px;
+  padding: 0;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar !important;
-  font-size: 1.4em;
+  font-size: 0.9em;
 }
 .lswitch-panel .panel-heading {
   margin-bottom: 2px;
-}
-.map-with-header .lswitch-panel {
-  padding-top: 4em;
+  padding: 13px 15px;
+  border-radius: 0;
 }
 .lswitch-cat {
   text-shadow: none !important;
@@ -266,7 +267,6 @@
   #lswitch-olcont,
   #lswitch-blcont {
     background-color: none;
-    border-radius: 0 0 0.4em 0.4em;
     margin-top: -1px;
   }
   #lswitch-olcont a:last-child,

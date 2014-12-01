@@ -56,12 +56,13 @@ L.Control.ToolHandler = L.Control.extend({
 
 		$("#mapdiv").append($thBtn);
 		
-		function hidePopover() {
+		function hidePopover(e) {
 			var isVisible = $(".thandler-popover").length && parseInt($(".thandler-popover").css("opacity") || 0) > 0;
 			var $popCont = $(".popover-content");
 			if ( $thBtn.data('bs.popover') && isVisible && $popCont.children().length) {
 				$thBtn.popover("hide");
 			}
+			smap.event.trigger("smap.toolhandler.hide", e);
 		}
 
 		function togglePopover() {
@@ -106,7 +107,7 @@ L.Control.ToolHandler = L.Control.extend({
 					$popover.addClass("thandler-popover");
 
 					// Move control divs into the popover - but only those which contains a button tag
-					var btns = $(".thandler-container").children(":has('button')");
+					var btns = $(".thandler-container").children(".leaflet-control:has('button')");
 					$popCont.empty();
 					$popCont.append( btns );
 					

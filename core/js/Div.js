@@ -10,8 +10,8 @@ smap.core.Div = L.Class.extend({
 		
 		if ( !mapDiv.length ) {
 			// It is is possbile to run smap with custom divs
-			var mapDiv = $('<div id="mapdiv" />');
-			var mainDiv = $('<div id="maindiv" />');
+			var mapDiv = $('<div id="mapdiv" class="mapdiv" />');
+			var mainDiv = $('<div id="maindiv" class="maindiv" />');
 			mainDiv.append(mapDiv);
 			this.parentTag.append(mainDiv);
 		}

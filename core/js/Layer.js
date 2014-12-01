@@ -189,6 +189,7 @@ smap.core.Layer = L.Class.extend({
 			// For ESRI bug
 			if (layer instanceof L.esri.DynamicMapLayer) {
 				this._layers[t.options.layerId] = layer;
+				// layer.setZIndex(layer.options.zIndex);
 			}
 		}
 		

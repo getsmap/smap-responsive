@@ -1,16 +1,3 @@
-#smap-search-div {
-  position: relative;
-  left: 10px;
-  top: 9px;
-  z-index: 1001;
-  width: 79%;
-  max-width: 380px;
-  -webkit-transition: left 0.3s, max-width 0.3s;
-  transition: left 0.3s, max-width 0.3s;
-  overflow-y: hidden;
-  border: 1px solid #ccc;
-}
-border 1px solid #ccc,
 .smap-search-div-in-toolbar {
   top: 0.2em !important;
   z-index: 1002 !important;
@@ -22,17 +9,24 @@ border 1px solid #ccc,
 #smap-search-div .input-group-addon {
   border: none;
 }
-#smap-search-div .input-group-addon {
-  background-color: #fff !important;
-  padding-right: 0 !important;
-  border-radius: 0 !important;
+#smap-search-div {
+  position: relative;
+  left: 5px;
+  top: 5px;
+  z-index: 1001;
+  width: 79%;
+  max-width: 380px;
+  -webkit-transition: left 0.3s, max-width 0.3s;
+  transition: left 0.3s, max-width 0.3s;
+  overflow-y: hidden;
+  border: 1px solid #ccc;
 }
 #smap-search-div input {
   width: 100%;
   border-left: none;
 /*border none
-	border 1px solid #ccc
-	border-width 1px 1px 1px 0*/
+		border 1px solid #ccc
+		border-width 1px 1px 1px 0*/
   -webkit-box-shadow: none;
   box-shadow: none;
   -webkit-appearance: none;
@@ -41,9 +35,14 @@ border 1px solid #ccc,
 #smap-search-div input:focus {
   border-color: #ccc;
 }
+#smap-search-div .dropdown-menu {
 /* Autocomplete Typehead overrides */
-.dropdown-menu {
   left: 0px !important;
+}
+#smap-search-div .input-group-addon {
+  background-color: #fff !important;
+  padding-right: 0 !important;
+  border-radius: 0 !important;
 }
 .dropdown-menu>li>a {
   line-height: 2.5;
@@ -85,6 +84,6 @@ border 1px solid #ccc,
 }
 @media (min-width: 992px) {
   #smap-search-div {
-    left: 310px;
+    left: 304px;
   }
 }

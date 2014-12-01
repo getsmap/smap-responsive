@@ -72,6 +72,7 @@ var p = {
 	],
 	ourStylus: [
 		// first
+		"core/css/global.styl",
 		"core/css/**/*.styl",
 
 		// last
@@ -139,7 +140,7 @@ gulp.task('cleantotal', function() {
 
 var onError = function(err) {
 	console.log(err.toString());
-  	this.emit('end');
+  	// this.emit('end');
 };
 
 
@@ -154,13 +155,13 @@ gulp.task('move', function() {
 
 gulp.task('ourcsscompile', function() {
 	var streamStylus = gulp.src(p.ourStylus, {base: "./"})
-			.pipe(stylus());
+			.pipe(stylus()).on("error", onError);
 	var streamSass = gulp.src(p.ourSass, {base: "./"})
 			.pipe(sass());
 
 	return es.merge(streamStylus, streamSass)
-		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9")) //.on('error', onError)
-		.pipe(gulp.dest("."));
+			.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9")) //.on('error', onError)
+			.pipe(gulp.dest("."));
 });
 
 

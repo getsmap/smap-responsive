@@ -1,0 +1,62 @@
+.leaflet-control-measuredraw .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+.leaflet-control-measuredraw .dropdown-menu li {
+  min-width: 14em;
+}
+.leaflet-control-measuredraw .dropdown-menu li a {
+  line-height: 2.5;
+  cursor: pointer;
+}
+.leaflet-control-measuredraw .dropdown-menu li a span {
+  display: table-cell;
+  vertical-align: middle;
+}
+.leaflet-control-measuredraw .dropdown-menu li a span:first-child {
+  top: 3px;
+}
+.leaflet-control-measuredraw .dropdown-menu li a .drawicons {
+  width: 30px;
+  height: 20px;
+  margin-right: 0.2em;
+}
+.thandler-popover .measuredraw-btntoggle-image {
+  width: 30px;
+  height: 20px;
+  margin-right: 0.2em;
+  left: -7px;
+  top: -4px;
+}
+.drawicons {
+  background-image: url("../../dist/lib/leaflet.draw/dist/images/spritesheet-2x.png");
+  -webkit-background-size: 270px 30px;
+  background-size: 270px 30px;
+  display: block;
+  text-align: center;
+  position: relative;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+}
+.drawicons.leaflet-draw-draw-polyline {
+  background-position: -2px -2px;
+}
+.drawicons.leaflet-draw-draw-polygon {
+  background-position: -31px -2px;
+}
+.drawicons.leaflet-draw-draw-rectangle {
+  background-position: -62px -2px;
+}
+.drawicons.leaflet-draw-draw-circle {
+  background-position: -92px -2px;
+}
+.drawicons.leaflet-draw-draw-marker {
+  background-position: -122px -2px;
+}
+.drawicons.leaflet-draw-edit-edit {
+  background-position: -152px -2px;
+}
+.drawicons.leaflet-draw-edit-remove {
+  background-position: -182px -2px;
+}

@@ -48,10 +48,6 @@ L.Control.Template = L.Control.extend({
 	}
 });
 
-/*
- * This code lets us skip "new" before the
- * Class name when instantiating it.
- */
 //L.control.template = function (options) {
 //	return new L.Control.Template(options);
 //};

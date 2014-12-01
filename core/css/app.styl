@@ -1,4 +1,5 @@
 
+@import "global"
 
 
 // @-ms-viewport
@@ -11,7 +12,7 @@
 .modal
 	-ms-overflow-style -ms-autohiding-scrollbar
 
-body
+html, body
 	margin 0
 	padding 0
 	font-size 100% !important
@@ -41,7 +42,7 @@ body
 	right 100px
 
 .modal-dialog
-	font-size 1.4em
+	font-size 1em
 
 .leaflet-control-container .btn
 	padding 9px 15px
@@ -49,14 +50,17 @@ body
 	min-width 3.1em
 
 .leaflet-top.leaflet-right
-	margin-right 10px
-	margin-top 8px
+	// margin-right 10px
+	// margin-top 8px
+	margin-right generalMargins
+	margin-top generalMargins
 	border 1px solid #ccc
 	.leaflet-control
 		clear none !important
 		// margin 8px 0 0 .5em
 		margin 0
-		button
+		.btn-group, button
+			display block
 			border none
 			border-radius 0
 			max-width none
@@ -64,8 +68,13 @@ body
 			width 54px
 			height 45px
 
-.leaflet-bottom .leaflet-control
-	margin-bottom 1em
+.leaflet-right .leaflet-control
+	margin-right generalMargins
+	button
+		border-radius 0 !important
+
+// .leaflet-bottom .leaflet-control
+// 	margin-bottom 0
 
 .unselectable
 	user-select none
@@ -170,13 +179,13 @@ body
 	span
 		display table-cell
 		vertical-align middle
-		font-size 10em
+		font-size 4em
 		animation spin 1s infinite linear
 	label
 		display table-cell
 		vertical-align middle
 		padding-left 0.2em
-		font-size 5em
+		font-size 2em
 		font-weight normal
 
 #loadingText
@@ -211,10 +220,11 @@ body
 	// color #fff
 	// outline 1px solid rgba(66 139 202 0.6)
 
-.panel-default > .panel-heading
-	outline 1px solid #ccc
-	border none
-	background-color #fff
+.maindiv
+	.panel-default > .panel-heading
+		outline 1px solid #ccc
+		border none
+		background-color #fff
 
 
 .leaflet-popup-option
@@ -253,7 +263,9 @@ body
 		width 100%
 		margin 0
 		left 0
-.leaflet-container a.leaflet-popup-close-button
-	z-index 100
+.leaflet-container
+	font 1em fontFamily // Override Leaflets font
+	a.leaflet-popup-close-button
+		z-index 100
 
 

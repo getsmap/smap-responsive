@@ -265,6 +265,7 @@ smap.core.Select = L.Class.extend({
 						self._rasterFeature.setStyle({
 							color: "#0FF",
 							fillColor: "#0FF",
+							weight: 10,
 							opacity: 0.9,
 							fillOpacity: 0.3
 						});
@@ -280,6 +281,7 @@ smap.core.Select = L.Class.extend({
 							}
 						});
 						self.map.addLayer(self._rasterFeature);
+						// self._rasterFeature.setZIndex(900);
 					}
 					return self._rasterFeature;
 				}

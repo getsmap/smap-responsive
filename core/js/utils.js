@@ -9,6 +9,10 @@ var utils = {
 			}
 		},
 
+		capitalize: function(theString) {
+			return theString.charAt(0).toUpperCase() + theString.slice(1);
+		},
+
 		getBrowser: function() {
 			var match = navigator.userAgent.match(/(?:MSIE |Trident\/.*; rv:)(\d+)/);
     		var ieVersion = match ? parseInt(match[1]) : undefined;

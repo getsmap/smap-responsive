@@ -151,7 +151,7 @@ smap.core.Init = L.Class.extend({
 			}
 		}
 		return $.ajax({
-			url: configName,
+			url: configName,	
 			context: this,
 			dataType: "script"
 		});
@@ -174,7 +174,7 @@ smap.core.Init = L.Class.extend({
 			t;
 		for (var i=0,len=cLayers.length; i<len; i++) {
 			t = cLayers[i];
-			if (t.options.legend === undefined && t.options.layers && t.init === "L.TileLayer.WMS") {
+			if (t.options.legend === undefined && t.options.layers && _.indexOf(["L.TileLayer.WMS", "L.NonTiledLayer.WMS"], t.init) > -1) {
 				t.options.legend = createLegendUrl(t.url, t.options.layers);
 			}
 		}
