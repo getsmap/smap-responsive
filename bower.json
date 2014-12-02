@@ -51,7 +51,8 @@
     "leaflet.wfs-t": "https://github.com/flatrockgeo/leaflet.wfs-t.git",
     "malmo_shared_assets": "malmostad/shared_assets",
     "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "Leaflet.tooltip": "https://github.com/aratcliffe/Leaflet.tooltip.git"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -152,6 +153,12 @@
       "main": [
         "NonTiledLayer.js",
         "NonTiledLayer.WMS.js"
+      ]
+    },
+    "Leaflet.tooltip": {
+      "main": [
+        "dist/leaflet.tooltip.css",
+        "dist/leaflet.tooltip.js"
       ]
     }
   }
