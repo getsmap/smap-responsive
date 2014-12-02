@@ -35,7 +35,7 @@
   width: 70%;
   background-color: #38454e;
   height: 100%;
-  max-width: 300px;
+  max-width: 310px;
   padding: 0;
   padding-left: 5px;
   padding-right: 5px;
@@ -54,9 +54,11 @@
   background-image: none !important;
   text-shadow: none;
   background-image: none;
+  white-space: nowrap;
 }
 .lswitch-cat span {
   margin-left: 0.7em;
+  white-space: nowrap;
 }
 .lswitch-cat.open i {
   -webkit-transform: rotate(90deg);
@@ -95,6 +97,8 @@
 }
 .lswitch-catcont a {
   border-radius: 0 !important;
+  letter-spacing: -1px;
+  white-space: inherit;
 }
 .lswitch-catcont.lswitch-catcont-visible a {
   padding-left: 2.5em;
