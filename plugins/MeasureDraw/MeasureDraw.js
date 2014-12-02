@@ -12,7 +12,18 @@ L.Control.MeasureDraw = L.Control.extend({
 			drawLine: "Linje",
 			drawPolygon: "Yta",
 			drawCircle: "Cirkel",
-			drawRectangle: "Rektangel"
+			drawRectangle: "Rektangel",
+			circumference: "Omkrets",
+			radius: "Radie",
+			area: "Area",
+			len: "Längd",
+			lenPart: "Sidlängd",
+			easting: "Easting (x/longitud)",
+			northing: "Northing (y/latitud)",
+			clickToAddText: "Klicka för att lägga till text",
+			showMeasures: "Visa mätresultat"
+
+			// coordinates: "Koordinater"
 		},
 		"en": {
 			drawTools: "Draw tools",
@@ -21,7 +32,16 @@ L.Control.MeasureDraw = L.Control.extend({
 			drawLine: "Line",
 			drawPolygon: "Area",
 			drawCircle: "Circle",
-			drawRectangle: "Rectangle"
+			drawRectangle: "Rectangle",
+			circumference: "Circumference",
+			radius: "Radius",
+			area: "Area",
+			len: "Length",
+			easting: "Easting (x/longitude)",
+			northing: "Northing (y/latitude)",
+			clickToAddText: "Click to add text",
+			showMeasures: "Show measure results"
+			// coordinates: "Koordinater"
 		}
 	},
 	
@@ -60,28 +80,186 @@ L.Control.MeasureDraw = L.Control.extend({
 
 	onRemove: function(map) {},
 
+	/**
+	 * Convert input meter value into km if higher than 1000 m
+	 * and round to even m
+	 * @param  {Number} val [in meters]
+	 * @param {Integer} dim Number of dimensions (optional) Default 1
+	 * @return {String}     [Value in m or km and rounded]
+	 */
+	readableDistance: function(val, dim) {
+		dim = dim || 1; // Defaults to line measurement
+		var unit = "m";
+		var decimals = 0;
+		if (val >= 1000) {
+			// convert to km
+			var dividor = Math.pow(1000, dim-1);
+			val /= dividor; // m -> km, or m2 -> km2 (adapt for dimensions)
+			
+			val /= 1000; // m -> km
+			decimals = 3;
+			unit = "km";
+		}
+		unit = dim === 1 ? unit : unit+dim;
+		return utils.round(val, decimals) + " " + unit;
+	},
+
+	onNodeClick: function(e) {
+		var latLng = e.latlng;
+		var nds = this._nodes;
+		nds.push(latLng);
+
+		if (nds.length > 1) {
+			var latLngs = nds.slice(nds.length-2);
+			var len = utils.getLength(latLngs);
+			if (len <= 0) {
+				return false;
+			}
+			var center = L.latLng( (latLngs[0].lat+latLngs[1].lat)/2, (latLngs[0].lng+latLngs[1].lng)/2 );
+			var label = utils.createLabel(center, this.readableDistance(len, 1), "leaflet-maplabel leaflet-maplabel-small");
+			this._layer.addLayer(label);
+
+			// Center the tag
+			var labelTag = $(".leaflet-maplabel.leaflet-maplabel-small:last");
+			labelTag.css({
+				"margin-left": (-labelTag.width()/2)+"px"
+			});
+		}
+
+		console.log("node click");
+	},
+
 	onCreated: function(e) {
+
+		this._deactivateAll();
+
 		var type = e.layerType,
 			layer = e.layer;
-		var centerLabel, circumLabel;
+		this._layer.addLayer(layer);
+
+		var center, circum, area;
+		var html = "";
 		switch (type) {
 			case "marker":
 				// Set label to coords in selected coordinate system (TODO)
+				var wgs = center = layer.getLatLng();
+				var espg3006 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3006");
+				var espg3008 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3008");
+				var espg3021 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3021");
+
+				html =	'<div style="font-size:70%;">'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
+						"Lat/y: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
+						"Long/x: &nbsp;"+utils.round(wgs.lat, 5)+"<br><br>"+
+						"<strong>Sweref99 TM (EPSG:3006)</strong><br>"+
+						"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
+						"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
+						"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
+						"East: &nbsp;"+utils.round(espg3008.lng)+"<br>"+
+						"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
+						"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+
+						"East: &nbsp;"+utils.round(espg3021.lng)+"<br>"+
+						"North: &nbsp;"+utils.round(espg3021.lat)+"</div>";
+
+				layer.bindPopup(html);
+				layer.openPopup();
+
+
+				// var label = utils.createLabel(center, html, "leaflet-maplabel leaflet-maplabel-small");
+				// this._layer.addLayer(label);
+				
+				// // Center the tag
+				// var labelTag = $(".leaflet-maplabel:last");
+				// labelTag.css({
+				// 	"margin-left": (-labelTag.width()/2)+"px"
+				// 	// "margin-top": (-labelTag.height()/2)+"px"
+				// });
 				break;
 			case "polyline":
+				var latLngs = layer.getLatLngs();
+				center = latLngs[parseInt(latLngs.length/2)];
+				circum = utils.getLength( latLngs );
+				html =	this.lang.len + ": &nbsp;"+this.readableDistance(circum, 1) + "<br>";
 				break;
 			case "polygon":
+				center = layer.getBounds().getCenter();
+				var latLngs = layer.getLatLngs();
+				latLngs.push(latLngs[0]); // Complete polygon
+				var area = L.GeometryUtil.geodesicArea( latLngs );
+				circum = utils.getLength( latLngs );
+				html =	this.lang.circumference + ": &nbsp;"+this.readableDistance(circum, 1) + "<br>"+
+						this.lang.area+": &nbsp;"+this.readableDistance(area, 2);
 				break;
 			case "circle":
+				center = layer.getBounds().getCenter();
+				var r = layer.getRadius();
+				area = r*r*Math.PI;
+				circum = 2 * r * Math.PI;
+				html =	this.lang.circumference + ": &nbsp;"+this.readableDistance(circum, 1) + "<br>"+
+						this.lang.radius+": &nbsp;"+this.readableDistance(r, 1)+"<br>"+
+						this.lang.area+": &nbsp;"+this.readableDistance(area, 2);
 				break;
 			case "rectangle":
+				center = layer.getBounds().getCenter();
+				var latLngs = layer.getLatLngs();
+				latLngs.push(latLngs[0]); // Complete polygon
+				var area = L.GeometryUtil.geodesicArea( latLngs );
+				circum = utils.getLength( latLngs );
+				html =	this.lang.circumference + ": &nbsp;"+this.readableDistance(circum, 1)+"<br>"+
+						this.lang.area+": &nbsp;"+this.readableDistance(area, 2);
 				break;
+		}
+
+		if (type !== "marker") {
+			var fid = layer._leaflet_id;
+			var fidClass = "measuredrawlabel--"+fid+"--";
+			var label = utils.createLabel(center, html, "leaflet-maplabel "+fidClass);
+			this._layer.addLayer(label);
+			// Center the tag
+			var labelTag = $(".leaflet-maplabel:last");
+			// labelTag.hide();
+			labelTag.css({
+				"margin-left": (-labelTag.width()/2)+"px"
+				// "margin-top": (-labelTag.height()/2)+"px"
+			});
+
+			var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea resizeable="false" class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea>'+
+								// '<div class="checkbox"><label><input type="checkbox"> '+this.lang.showMeasures+'</label></div>'+
+							'</div>';
+						// '<div><button class="btn btn-default measuredraw-popup-btn-save">OK</button></div></div>';
+			layer.bindPopup(popupHtml);
+			layer.openPopup();
+			$(".measuredraw-popup-div-save textarea").focus();
+			// $(".measuredraw-popup-div-save input[type=checkbox]").on("change", function() {
+			// 	var cNames = $(this).parents(".measuredraw-popup-div-save").attr("class").split("--");
+			// 	var fid = parseInt(cNames[1]);
+			// 	var cName = "measuredrawlabel--"+fid+"--";
+			// 	var labelTag = $(".leaflet-maplabel."+cName);
+			// 	if ( $(this).is(":checked") ) {
+			// 		labelTag.show();
+			// 	}
+			// 	else {
+			// 		labelTag.hide();
+			// 	}
+
+			// });
+
+			$(".measuredraw-popup-div-save textarea").on("blur", function() {
+				var val = $(this).val();
+				if (val === "") {
+					layer.closePopup();
+				}
+				else {
+					layer.bindPopup( val );
+					layer._popupHtml = val;
+					// layer.closePopup();
+				}
+			});
 		}
 	},
 
 	_initDraw: function() {
-		// this._layer = L.featureGroup();
-		// this.map.addLayer(this._layer);
+		this._layer = L.featureGroup();
+		this.map.addLayer(this._layer);
 		this._drawControl = new L.Control.Draw({
 			draw: {
 				marker: false,
@@ -92,7 +270,24 @@ L.Control.MeasureDraw = L.Control.extend({
 			},
 			edit: null
 		});
-		this.map.on("draw:created", this.onCreated);
+
+		this._onCreated = this._onCreated || $.proxy(this.onCreated, this);
+		this._onNodeClick = this._onNodeClick || $.proxy(this.onNodeClick, this);
+		this.map.on("draw:created", this._onCreated);
+		var self = this;
+
+		this.map.on("draw:drawstart", function() {
+			self._nodes = [];
+			self.map.on("click", self._onNodeClick);
+		});
+
+		this.map.on("draw:drawstop", function(e) {
+			self.map.off("click", this._onNodeClick);
+			if (self._nodes && _.indexOf(["polygon", "rectangle"], e.layerType) > -1) {
+				self._onNodeClick({latlng: self._nodes[0]});
+			}
+			// self._nodes = [];
+		});
 	},
 
 	_getDrawToolbar: function(geomType) {
@@ -106,18 +301,31 @@ L.Control.MeasureDraw = L.Control.extend({
 		return null;
 	},
 
+	_deactivateAll: function() {
+		var ts = this._tools;
+		for (var key in ts) {
+			ts[key].disable();
+			this.$container.find(".dropdown-menu li.active").removeClass("active");
+		}
+	},
+
 	_onRowClick: function(e) {
 		var $this = e.target.tagName === "li" ? $(e.target) : $(e.target).parents("li");
 		var geomType = $this.data("geomType");
-		$this.toggleClass("active");
+		
 		// var tbar = this._getDrawToolbar( $this.data("geomType") );
-		if ( $this.hasClass("active") ) {
-			// tbar.handler.enable();
+		if ( !$this.hasClass("active") ) {
+			this._deactivateAll();
+			$this.toggleClass("active");
 			this._tools[geomType].enable();
+			setTimeout(function() {
+				$(".leaflet-control-measuredraw .dropdown-menu").dropdown("toggle");
+			}, 200);
+
 		}
 		else {
+			$this.removeClass("active");
 			this._tools[geomType].disable();
-			// tbar.handler.disable();
 		}
 		return false;
 	},

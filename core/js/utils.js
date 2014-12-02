@@ -206,6 +206,27 @@ var utils = {
 		},
 
 		/**
+		 * Create a label that can be added to the map.
+		 * @param  {Array|L.LatLng} center
+		 * @param  {String|HTML} html
+		 * @return {L.Marker]}
+		 */
+		createLabel: function(center, html, className) {
+			className = className || "leaflet-maplabel";
+			var label = L.marker(center, {
+					icon: new L.DivIcon({
+						iconSize: null,
+						className: className,
+						// iconAnchor: L.point(100, 50),
+						html: '<div>'+html+'</div>'
+					})
+			});
+			label.options.clickable = false;
+			label.options.selectable = false;
+			return label;
+		},
+
+		/**
 		 * Get real-world distance from an array of latLng.
 		 * @param  {Array({LatLng})} arrLatLng Array containing latLngs
 		 * @return {Integer} Length of polyline in meters.
