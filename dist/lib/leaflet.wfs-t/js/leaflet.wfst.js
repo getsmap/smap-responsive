@@ -5,7 +5,7 @@
 * Many thanks to georepublic.info for enough info to get up and running: http://blog.georepublic.info/2012/leaflet-example-with-wfs-t/
 */
 
-L.WFST = L.GeoJSON.extend({
+L.WFST = L.GeoJSON.WFS.extend({
 
     // These functions overload the parent (GeoJSON) functions with some WFS-T
     // operations and then call the parent functions to do the Leaflet stuff
@@ -13,15 +13,15 @@ L.WFST = L.GeoJSON.extend({
     initialize: function(geojson,options){
         // These come from OL demo: http://openlayers.org/dev/examples/wfs-protocol-transactions.js
         var initOptions = L.extend({
-            showExisting: true,         // Show existing features in WFST layer on map?
-            version: "1.1.0",           // WFS version 
-            failure: function(msg){},    // Function for handling initialization failures
+            showExisting: true,     // Show existing features in WFST layer on map?
+            version: "1.1.0",         // WFS version 
+            error: function(msg){}, // Function for handling initialization errors
             xsdNs: 'xsd'
             // geomField : <field_name> // The geometry field to use. Auto-detected if only one geom field 
             // url: <WFS service URL> 
             // featureNS: <Feature NameSpace>
             // featureType: <Feature Type>
-            // primaryKeyField: <The Primary Key field for using when doing deletes and updates>
+            // uniqueKey: <The Primary Key field for using when doing deletes and updates>
             // xsdNs: Namespace used in XSD schemas, XSD returned by TinyOWS uses 'xs:' while GeoServer uses 'xsd:'
         },options);
 
@@ -32,27 +32,35 @@ L.WFST = L.GeoJSON.extend({
 
         initOptions.typename = initOptions.featureNS + ':' + initOptions.featureType;
 
+        initOptions.params = {
+            typeName: initOptions.typename,
+            srsName: initOptions.srs
+        };
+
         // Call to parent initialize
-        L.GeoJSON.prototype.initialize.call(this,geojson,initOptions);
+
+        L.GeoJSON.WFS.prototype.initialize.call(this, geojson, initOptions);
 
         // Now probably an ajax call to get existing features
-        if(this.options.showExisting){
-            this._loadExistingFeatures();
-        }
-        this._loadFeatureDescription();
+        // if(this.options.showExisting){
+        //  this._loadExistingFeatures();
+        // }
+        // this._loadFeatureDescription();
     },
     // Additional functionality for these functions
-    addLayer: function(layer,options) {
-        this.wfstAdd(layer,options);
+    addLayer: function(layer, options) {
+        // this.wfstAdd(layer,options);
         // Call to parent addLayer
-        L.GeoJSON.prototype.addLayer.call(this,layer);
-    },
-    removeLayer: function(layer,options) {
-        this.wfstRemove(layer,options);
+        L.GeoJSON.WFS.prototype.addLayer.call(this,layer);
+        this._loadFeatureDescription();
 
-        // Call to parent removeLayer
-        L.GeoJSON.prototype.removeLayer.call(this,layer);
     },
+    // removeLayer: function(layer,options) {
+    //  // this.wfstRemove(layer,options);
+
+    //  // Call to parent removeLayer
+    //  L.GeoJSON.WFS.prototype.removeLayer.call(this,layer);
+    // },
 
 
     // These functions are unique to WFST
@@ -71,7 +79,7 @@ L.WFST = L.GeoJSON.extend({
             this._wfstAdd(layers[i],options);
         }
     },
-    wfstRemove: function(layers,options){
+    wfstRemove: function(layers,options) {
         options = options || {};
         if(layers === null){
             this._wfstRemove(null,options);
@@ -79,10 +87,13 @@ L.WFST = L.GeoJSON.extend({
 
         layers = layers ? (L.Util.isArray(layers) ? layers : [layers]) : [];
 
+        var defs = [];
         for (var i = 0, len = layers.length; i < len; i++) {
-            this._wfstRemove(layers[i],options);
+            defs.push( this._wfstRemove(layers[i],options) );
         }
+        return $.when.apply($, defs);
     },
+
     wfstSave: function(layers,options){
         options = options || {};
         realsuccess = options.success;
@@ -95,7 +106,7 @@ L.WFST = L.GeoJSON.extend({
                     this._wfstSave(layers[i]._layers[v],options);
                 }
             }else{
-                this._wfstSave(layers[i],options);
+                this._wfstSave(layers[i], options);
             }
         }
     },
@@ -109,11 +120,11 @@ L.WFST = L.GeoJSON.extend({
         }
     },
     wfstSaveDirty: function(options){
-        for(var i in self._layers){
-            if(typeof self._layers[i].feature._wfstSaved == 'undefined'){
-                this._wfstAdd(self._layers[i],options);
-            }else if(self._layers[i].feature._wfstSaved === false){
-                this._wfstSave(self._layers[i],options);
+        for(var i in this._layers){
+            if(typeof this._layers[i].feature._wfstSaved == 'undefined'){
+                this._wfstAdd(this._layers[i],options);
+            }else if(this._layers[i].feature._wfstSaved === false){
+                this._wfstSave(this._layers[i],options);
             }
         }
     },
@@ -123,7 +134,8 @@ L.WFST = L.GeoJSON.extend({
 
     // Interesting / real functions
     // Add a single layer with WFS-T
-    _wfstAdd: function(layer,options){
+    _wfstAdd: function(layer, options){
+        options = options || {};
 
         if(typeof layer.feature != 'undefined' && 
             typeof layer.feature._wfstSaved == 'boolean' && 
@@ -135,28 +147,34 @@ L.WFST = L.GeoJSON.extend({
         if(typeof options.success == 'function'){
             realsuccess = options.success;
         }
-
+        var self = this;
         options = L.extend(options,{
             success: function(res){
-                var xml = self._wfstSuccess(res);
+                var xml = this._wfstSuccess(res);
+                self.fire("wfst:savesuccess");
                 if(typeof realsuccess == 'function' && xml !== false){
                     layer.feature = layer.feature || {};
                     layer.feature._wfstSaved = true;
 
                     // Populate the IDs of the object we just inserted. 
                     // Since we do one insert at a time, it should always be object 0
-                    var fid = self._getElementsByTagName(xml,'ogc:FeatureId')[0].getAttribute('fid');
+                    var fid = this._getElementsByTagName(xml,'ogc:FeatureId')[0].getAttribute('fid');
                     layer.feature.id = fid;
-                    layer.feature.properties[self.options.primaryKeyField] = fid.replace(self.options.featureType + '.','');
+                    layer.feature.properties[this.options.uniqueKey] = fid.replace(this.options.featureType + '.','');
 
                     realsuccess(res);
-                }else if(typeof options.failure == 'function'){ 
-                    options.failure(res);
+                }else if(typeof options.error == 'function'){
+                    self.fire("wfst:saveerror");
+                    options.error(res);
                 }
             }
         });
 
-        var xml = this.options._xmlpre;
+        var xmlPre = this.options._xmlpre;
+        if (this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOLYGON") {
+            xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
+        }
+        var xml = xmlPre;
 
         xml += "<wfs:Insert>";
         xml += "<" + this.options.typename + ">";
@@ -165,15 +183,15 @@ L.WFST = L.GeoJSON.extend({
         xml += "</wfs:Insert>";
         xml += "</wfs:Transaction>";
 
-        this._ajax( L.extend({method:'POST', data:xml},options));
+        return this._ajax( L.extend({type:'POST', data:xml},options));
     },
 
     // Remove a layers with WFS-T
-    _wfstRemove: function(layer,options){
-        if(typeof this.options.primaryKeyField == 'undefined' && typeof options.where == 'undefined'){
-            console.log("I can't do deletes without a primaryKeyField!");
-            if(typeof options.failure == 'function'){
-                options.failure();
+    _wfstRemove: function(layer,options) {
+        if(typeof this.options.uniqueKey == 'undefined' && typeof options.where == 'undefined'){
+            console.log("I can't do deletes without a uniqueKey!");
+            if(typeof options.error == 'function'){
+                options.error();
             }
             return false;
         }
@@ -182,17 +200,19 @@ L.WFST = L.GeoJSON.extend({
         if(typeof options.success == 'function'){
             realsuccess = options.success;
         }
-
+        var self = this;
         options = L.extend(options,{
             success: function(res){
-                if(typeof realsuccess == 'function' && self._wfstSuccess(res)){
+                self.fire("wfst:savesuccess");
+                if(typeof realsuccess == 'function' && this._wfstSuccess(res)){
                     if(layer !== null){
                         layer.feature = layer.feature || {};
                         layer.feature._wfstSaved = true;
                     }
                     realsuccess(res);
-                }else if(typeof options.failure == 'function'){ 
-                    options.failure(res);
+                }else if(typeof options.error == 'function'){
+                    self.fire("wfst:saveerror");
+                    options.error(res);
                 }
             }
         });
@@ -200,27 +220,31 @@ L.WFST = L.GeoJSON.extend({
         var where; 
         if(typeof options.where == 'undefined'){
             where = {};
-            where[this.options.primaryKeyField] = layer.feature.properties[this.options.primaryKeyField];
+            where[this.options.uniqueKey] = layer.feature.properties[this.options.uniqueKey];
         }else{
             where = options.where;
         }
 
-        var xml = this.options._xmlpre;
-        xml += "<wfs:Delete typeName='"+this.options.typename+"'>";
+        var xmlPre = this.options._xmlpre;
+        // if (layer.options.geomType.toUpperCase() === "MULTIPOLYGON") {
+        //     xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
+        // }
+        var xml = xmlPre;
+        xml += '<wfs:Delete typeName="'+this.options.typename+'">';
         xml += this._whereFilter(where);
         xml += "</wfs:Delete>";
         xml += "</wfs:Transaction>";
 
-        this._ajax( L.extend({method:'POST', data:xml},options));
+        return this._ajax( L.extend({type:'POST', data:xml},options));
     },
 
 
     //  Save changes to a single layer with WFS-T
     _wfstSave: function(layer,options){
-        if(typeof this.options.primaryKeyField == 'undefined'){
-            console.log("I can't do saves without a primaryKeyField!");
-            if(typeof options.failure == 'function'){
-                options.failure();
+        if(typeof this.options.uniqueKey == 'undefined'){
+            console.log("I can't do saves without a uniqueKey!");
+            if(typeof options.error == 'function'){
+                options.error();
             }
             return false;
         }
@@ -228,32 +252,38 @@ L.WFST = L.GeoJSON.extend({
         options = options || {};
 
         var realsuccess;
-        if(typeof options.success == 'function'){
+        if (typeof options.success == 'function'){
             realsuccess = options.success;
         }
-
-        options = L.extend(options,{
-            success: function(res){
-                if(typeof realsuccess == 'function' && self._wfstSuccess(res)){
+        var self = this;
+        options = L.extend(options, {
+            success: function(res) {
+                self.fire("wfst:savesuccess");
+                if(typeof realsuccess == 'function' && this._wfstSuccess(res)){
                     layer.feature._wfstSaved = true;
                     realsuccess(res);
-                }else if(typeof options.failure == 'function'){ 
-                    options.failure(res);
+                }else if(typeof options.error == 'function'){
+                    self.fire("wfst:saveerror");
+                    options.error(res);
                 }
             }
         });
 
         var where = {};
-        where[this.options.primaryKeyField] = layer.feature.properties[this.options.primaryKeyField];
+        where[this.options.uniqueKey] = layer.feature.properties[this.options.uniqueKey];
 
-        var xml = this.options._xmlpre;
-        xml += "<wfs:Update typeName='"+this.options.typename+"'>";
-        xml += this._wfstUpdateValues(layer);
+        var xmlPre = this.options._xmlpre;
+        if (layer.options.geomType && layer.options.geomType && layer.options.geomType.toUpperCase() === "MULTIPOLYGON") {
+            xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
+        }
+        var xml = xmlPre;
+        xml += '<wfs:Update typeName="'+this.options.typename+'">';
+        xml += this._wfstUpdateValues(layer, options.newProps);
         xml += this._whereFilter(where);
         xml += "</wfs:Update>";
         xml += "</wfs:Transaction>";
 
-        this._ajax( L.extend({method:'POST', data:xml},options));
+        return this._ajax( L.extend({type:'POST', data:xml},options));
     },
 
 
@@ -267,7 +297,6 @@ L.WFST = L.GeoJSON.extend({
         if(!field){
             return false;
         }
-
         for(var f in field){
             xml += "<" + this.options.featureNS + ":" + f +">";
             xml += field[f];
@@ -276,12 +305,18 @@ L.WFST = L.GeoJSON.extend({
 
         return xml;
     },
-    _wfstUpdateValues: function(layer){
+    _wfstUpdateValues: function(layer, newProps){
+        newProps = newProps || {};
+
         var xml = '';
         var field = this._wfstValueKeyPairs(layer);
 
         if(!field){
             return false;
+        }
+
+        if (newProps) {
+            $.extend(field, newProps);
         }
 
         for(var f in field){
@@ -320,8 +355,13 @@ L.WFST = L.GeoJSON.extend({
             }else if(
                 elems[p].getAttribute('type') === 'gml:GeometryPropertyType' || 
                 elems[p].getAttribute('type') === 'gml:PointPropertyType' || 
+                elems[p].getAttribute('type') === 'gml:MultiPointPropertyType' ||
                 elems[p].getAttribute('type') === 'gml:MultiSurfacePropertyType' || 
-                elems[p].getAttribute('type') === 'gml:SurfacePropertyType' 
+                elems[p].getAttribute('type') === 'gml:SurfacePropertyType'  ||
+                // Johan was here
+                elems[p].getAttribute('type') === 'gml:MultiLineStringPropertyType' ||
+                elems[p].getAttribute('type') === 'gml:LineStringPropertyType'
+                
             ){
                 geomFields.push(elems[p]);
             }else if(elems[p].getAttribute('nillable') == 'false'){
@@ -334,7 +374,7 @@ L.WFST = L.GeoJSON.extend({
 
         // Only require a geometry field if it looks like we have geometry but we aren't trying to save it
         if(
-            (layer.hasOwnProperty('x') && layer.hasOwnProperty('y') && typeof layer.x != 'undefined' && typeof layer.y != 'undefined') ||
+            (geomFields.length || layer.hasOwnProperty('x') && layer.hasOwnProperty('y') && typeof layer.x != 'undefined' && typeof layer.y != 'undefined') ||
             (layer.hasOwnProperty('_latlng') && Object.keys(layer._latlng).length > 0)
         ){
             if(this.options.geomField || geomFields.length === 1){
@@ -361,53 +401,79 @@ L.WFST = L.GeoJSON.extend({
         return xml;
     },
 
+
+
     /* Make an ajax request
     options: {
     url: url to fetch (required),
     method : GET, POST (optional, default is GET),
     success : function (optional), must accept a string if present
-    failure: function (optional), must accept a string if present
+    error: function (optional), must accept a string if present
     }
     */
     _ajax: function(options){
+        var self = this;
+        var url = options.url || this.options.url;
+        options.url = this.options.proxy ? this.options.proxy + encodeURIComponent(url) : url;
         options = L.extend({
-            method: 'GET',
+            type: "GET",
+            context: this,
+            dataType: "text",
             success: function(r){console.log(r);},
-            failure: function(r){console.log("AJAX Failure!");console.log(r);},
-            self: this,
-            url: this.options.url
-        },options);
-
-        self = this;
-        var xmlhttpreq = (window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
-        xmlhttpreq.onreadystatechange=function() {
-            if(xmlhttpreq.readyState==4){
-                if(xmlhttpreq.status==200){
-                    options.success(xmlhttpreq.responseText);
-                }else{
-                    options.failure(xmlhttpreq.responseText);
-                }
+            error: function(r){
+                self.fire("wfst:ajaxerror");
+                console.log(r);
             }
-        };
-        xmlhttpreq.open(options.method,options.url,true);
-        xmlhttpreq.send(options.data);
+        }, options);
+
+        // var xmlhttpreq = (window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
+        // xmlhttpreq.onreadystatechange=function() {
+        //     if(xmlhttpreq.readyState==4){
+        //         if(xmlhttpreq.status==200){
+        //             options.success.call(options.context, xmlhttpreq.responseText);
+        //         }else{
+        //             options.failure.call(options.context, xmlhttpreq.responseText);
+        //         }
+        //     }
+        // };
+        options.contentType = "application/xml";
+        return $.ajax(options);
+
+        // JL: I'm using jquery instead of this
+        // xmlhttpreq.open(options.type,options.url,true);
+        // xmlhttpreq.send(options.data);
+
     },
+
+    // _swapCoords: function(coords) {
+    //  coords = [coords[1], coords[0]];
+    //  return coords;
+    // },
+
     /*
     Get all existing objects from the WFS service and draw them
     */
-    _loadExistingFeatures: function(){
-        var geoJsonUrl = this.options.url + '?service=WFS&version=' + this.options.version + '&request=GetFeature&typeName=' + this.options.featureNS + ':' + this.options.featureType + '&outputFormat=application/json';
-        this._ajax({
-            url: geoJsonUrl,
-            success: function(res){
-                res = JSON.parse(res);
-                for(var i = 0,len = res.features.length;i<len;i++){
-                    res.features[i]._wfstSaved = true;
-                }
-                this.self.addData(res.features);
-            }
-        });
-    },
+    // _loadExistingFeatures: function(){
+    //  var geoJsonUrl = this.options.url + '?service=WFS&version=' + this.options.version + '&request=GetFeature&typeName=' + this.options.featureNS + ':' + this.options.featureType + '&outputFormat=application/json';
+    //  this._ajax({
+    //      url: geoJsonUrl,
+    //      success: function(res) {
+    //          res = JSON.parse(res);
+    //          var features = res.features,
+    //              reverseAxis = this.options.reverseAxis,
+    //              i, f;
+    //          for (i=0,len=features.length; i<len; i++) {
+    //              f = features[i];
+    //              if (reverseAxis && f.geometry && f.geometry.coordinates) {
+    //                  // Swap coords
+    //                  f.geometry.coordinates = swapCoords(f.geometry.coordinates);
+    //              }
+    //              f._wfstSaved = true;
+    //          }
+    //          this.addData(res.features);
+    //      }
+    //  });
+    // },
     /*
     Get the feature description
     */
@@ -416,17 +482,18 @@ L.WFST = L.GeoJSON.extend({
         this._ajax({
             url: describeFeatureUrl,
             success: function(res){
-                xml = this.self._wfstSuccess(res);
+                xml = this._wfstSuccess(res);
                 if(xml !== false){
-                    this.self.options.featureinfo = xml;
-                    this.self._xmlPreamble();
-                    this.self.ready = true;
+                    this.options.featureinfo = xml;
+                    this._xmlPreamble();
+                    this.ready = true;
                 }else{
-                    this.self.options.failure("There was an exception fetching DescribeFeatueType");
+                    this.options.error("There was an exception fetching DescribeFeatueType");
                 }
             }
         });
     },
+
     // Deal with XML -- should probably put this into gml and do reading and writing there
     _parseXml: function(rawxml){
         if (window.DOMParser)
@@ -496,14 +563,14 @@ L.WFST = L.GeoJSON.extend({
         return found;
     },
 
-    // Because with WFS-T even success can be failure
+    // Because with WFS-T even success can be error
     _wfstSuccess: function(xml){
         if(typeof xml == 'string'){
-            xml = self._parseXml(xml);
+            xml = this._parseXml(xml);
         }
-        var exception = self._getElementsByTagName(xml,'ows:ExceptionReport');
+        var exception = this._getElementsByTagName(xml,'ows:ExceptionReport');
         if(exception.length > 0){ 
-            console.log(self._getElementsByTagName(xml,'ows:ExceptionText')[0].firstChild.nodeValue);
+            console.log(this._getElementsByTagName(xml,'ows:ExceptionText')[0].firstChild.nodeValue);
             return false;
         }
         return xml;
