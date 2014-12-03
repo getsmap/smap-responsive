@@ -66,6 +66,7 @@
   border: none;
   -webkit-box-shadow: none;
   box-shadow: none;
+  resize: none;
 }
 .measuredraw-popup-div-save textarea:focus {
   border: inherit;

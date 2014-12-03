@@ -20,8 +20,47 @@ L.Control.MeasureDraw = L.Control.extend({
 			lenPart: "Sidlängd",
 			easting: "Easting (x/longitud)",
 			northing: "Northing (y/latitud)",
-			clickToAddText: "Klicka för att lägga till text",
-			showMeasures: "Visa mätresultat"
+			clickToAddText: "Klicka för att lägga till text (eller HTML)",
+			showMeasures: "Visa mätresultat",
+			remove: "Ta bort",
+			
+			handlers: {
+				circle: {
+					tooltip: {
+						start: 'Klicka och dra för att rita cirkel.'
+					}
+				},
+				marker: {
+					tooltip: {
+						start: 'Klicka i kartan för att placera markör.'
+					}
+				},
+				polygon: {
+					tooltip: {
+						start: 'Klicka för att påbörja yta',
+						cont: 'Klicka igen för att fortsätta rita ytan.',
+						end: 'Dubbelklicka eller klicka första punkten för att avsluta ytan.'
+					}
+				},
+				polyline: {
+					error: '<strong>Error:</strong> linjers kanter kan inte korsa varandra!',
+					tooltip: {
+						start: 'Klicka för att påbörja linje.',
+						cont: 'Klicka för att fortsätta linje.',
+						end: 'Dubbelklicka eller klicka på sista punkten för att avsluta.'
+					}
+				},
+				rectangle: {
+					tooltip: {
+						start: 'Klicka och dra för att rita rektangel.'
+					}
+				},
+				simpleshape: {
+					tooltip: {
+						end: 'Släpp musknappen för att avsluta.'
+					}
+				}
+			}
 
 			// coordinates: "Koordinater"
 		},
@@ -40,7 +79,8 @@ L.Control.MeasureDraw = L.Control.extend({
 			easting: "Easting (x/longitude)",
 			northing: "Northing (y/latitude)",
 			clickToAddText: "Click to add text",
-			showMeasures: "Show measure results"
+			showMeasures: "Show measure results",
+			remove: "Remove"
 			// coordinates: "Koordinater"
 		}
 	},
@@ -56,6 +96,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		L.setOptions(this, options);
 		this._setLang(options.langCode);
 		this._tools = {};
+		this._setLabels();
 	},
 
 	onAdd: function(map) {
@@ -107,6 +148,9 @@ L.Control.MeasureDraw = L.Control.extend({
 	onNodeClick: function(e) {
 		var latLng = e.latlng;
 		var nds = this._nodes;
+
+		this._labels = this._labels || [];
+		
 		nds.push(latLng);
 
 		if (nds.length > 1) {
@@ -118,6 +162,8 @@ L.Control.MeasureDraw = L.Control.extend({
 			var center = L.latLng( (latLngs[0].lat+latLngs[1].lat)/2, (latLngs[0].lng+latLngs[1].lng)/2 );
 			var label = utils.createLabel(center, this.readableDistance(len, 1), "leaflet-maplabel leaflet-maplabel-small");
 			this._layer.addLayer(label);
+
+			this._labels.push(label);
 
 			// Center the tag
 			var labelTag = $(".leaflet-maplabel.leaflet-maplabel-small:last");
@@ -147,21 +193,25 @@ L.Control.MeasureDraw = L.Control.extend({
 				var espg3008 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3008");
 				var espg3021 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3021");
 
-				html =	'<div style="font-size:70%;">'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
-						"Lat/y: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
-						"Long/x: &nbsp;"+utils.round(wgs.lat, 5)+"<br><br>"+
-						"<strong>Sweref99 TM (EPSG:3006)</strong><br>"+
-						"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
-						"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
-						"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
-						"East: &nbsp;"+utils.round(espg3008.lng)+"<br>"+
-						"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
-						"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+
-						"East: &nbsp;"+utils.round(espg3021.lng)+"<br>"+
-						"North: &nbsp;"+utils.round(espg3021.lat)+"</div>";
+				html =	'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
+						"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
+						"Lon: &nbsp;"+utils.round(wgs.lat, 5);
 
-				layer.bindPopup(html);
-				layer.openPopup();
+				// html =	'<div style="font-size:70%;">'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
+				// 		"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
+				// 		"Lon: &nbsp;"+utils.round(wgs.lat, 5)+"<br><br>"+
+				// 		"<strong>Sweref99 TM (EPSG:3006)</strong><br>"+
+				// 		"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
+				// 		"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
+				// 		"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
+				// 		"East: &nbsp;"+utils.round(espg3008.lng)+"<br>"+
+				// 		"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
+				// 		"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+
+				// 		"East: &nbsp;"+utils.round(espg3021.lng)+"<br>"+
+				// 		"North: &nbsp;"+utils.round(espg3021.lat)+"</div>";
+
+				// layer.bindPopup(html);
+				// layer.openPopup();
 
 
 				// var label = utils.createLabel(center, html, "leaflet-maplabel leaflet-maplabel-small");
@@ -209,52 +259,40 @@ L.Control.MeasureDraw = L.Control.extend({
 				break;
 		}
 
-		if (type !== "marker") {
-			var fid = layer._leaflet_id;
-			var fidClass = "measuredrawlabel--"+fid+"--";
-			var label = utils.createLabel(center, html, "leaflet-maplabel "+fidClass);
-			this._layer.addLayer(label);
-			// Center the tag
-			var labelTag = $(".leaflet-maplabel:last");
-			// labelTag.hide();
-			labelTag.css({
-				"margin-left": (-labelTag.width()/2)+"px"
-				// "margin-top": (-labelTag.height()/2)+"px"
-			});
+		var fid = layer._leaflet_id;
+		var fidClass = "measuredrawlabel--"+fid+"--";
+		var className = "leaflet-maplabel "+fidClass;
+		// if (type === "marker") {
+		// 	className = "leaflet-maplabel-small "+className;
+		// }
+		var label = utils.createLabel(center, html, className);
+		this._layer.addLayer(label);
 
-			var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea resizeable="false" class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea>'+
-								// '<div class="checkbox"><label><input type="checkbox"> '+this.lang.showMeasures+'</label></div>'+
-							'</div>';
-						// '<div><button class="btn btn-default measuredraw-popup-btn-save">OK</button></div></div>';
-			layer.bindPopup(popupHtml);
-			layer.openPopup();
-			$(".measuredraw-popup-div-save textarea").focus();
-			// $(".measuredraw-popup-div-save input[type=checkbox]").on("change", function() {
-			// 	var cNames = $(this).parents(".measuredraw-popup-div-save").attr("class").split("--");
-			// 	var fid = parseInt(cNames[1]);
-			// 	var cName = "measuredrawlabel--"+fid+"--";
-			// 	var labelTag = $(".leaflet-maplabel."+cName);
-			// 	if ( $(this).is(":checked") ) {
-			// 		labelTag.show();
-			// 	}
-			// 	else {
-			// 		labelTag.hide();
-			// 	}
-
-			// });
-
-			$(".measuredraw-popup-div-save textarea").on("blur", function() {
-				var val = $(this).val();
-				if (val === "") {
-					layer.closePopup();
-				}
-				else {
-					layer.bindPopup( val );
-					layer._popupHtml = val;
-					// layer.closePopup();
-				}
-			});
+		// Set this layer as "parent feature" of all labels so 
+		// we know where they belong (when removing the feature we 
+		// want to remove labels also)
+		this._labels = this._labels || [];
+		this._labels.push(label);
+		var labels = this._labels || [];
+		for (var i=0,len=labels.length; i<len; i++) {
+			labels[i]._parentFeature = layer;
 		}
+		this._labels = []; // Reset for next time
+		
+		// Center the tag horisontally
+		var labelTag = $(".leaflet-maplabel:last");
+		labelTag.css({
+			"margin-left": (-labelTag.width()/2)+"px"
+		});
+		var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
+		layer.bindPopup(popupHtml);
+		layer.openPopup();
+
+	},
+
+	_setLabels: function() {
+		var d = L.drawLocal.draw;
+		$.extend(true, d.handlers, this.lang.handlers || {});
 	},
 
 	_initDraw: function() {
@@ -273,6 +311,8 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		this._onCreated = this._onCreated || $.proxy(this.onCreated, this);
 		this._onNodeClick = this._onNodeClick || $.proxy(this.onNodeClick, this);
+		this._onPopupOpen = this._onPopupOpen || $.proxy(this.onPopupOpen, this);
+
 		this.map.on("draw:created", this._onCreated);
 		var self = this;
 
@@ -288,6 +328,62 @@ L.Control.MeasureDraw = L.Control.extend({
 			}
 			// self._nodes = [];
 		});
+
+		this.map.on("popupopen", this._onPopupOpen);
+	},
+
+	onPopupOpen: function(e) {
+		var layer = e.popup._source;
+		var ta = $(".measuredraw-popup-div-save textarea");
+
+		if (ta.length || layer._popupHtml) {
+			// Add a remove button
+			var btn = '<br><br><button class="btn btn-default btn-sm measuredraw-btn-popupremove">'+this.lang.remove+'</button>';
+			var popup = e.popup;
+			var content = popup.getContent();
+			if (content.search("measuredraw-btn-popupremove") === -1) {
+				content += btn;
+				popup.setContent(content);
+				popup.update();
+				ta = $(".measuredraw-popup-div-save textarea"); // this must be done because we are dealing with a new textarea now
+			}
+			
+			var self = this;
+			$(".leaflet-popup-content").find(".measuredraw-btn-popupremove").on("click", function() {
+				// var fid = layer._leaflet_id; //measuredrawlabel--35--;
+				// var label = $(".measuredrawlabel--"+fid+"--");
+				var labels = self._labels;
+				self._layer.eachLayer(function(label) {
+					if (label._parentFeature && label._parentFeature === layer) {
+						self.map.removeLayer(label);
+					}
+				});
+				self.map.removeLayer(layer);
+				return false;
+			});
+		}
+
+		if (ta.length) {
+			// ta.focus();
+			ta.on("focus", function() {
+				// $(this).attr("rows", 5);
+				$(".measuredraw-btn-popupremove").prop("disabled", true);
+			});
+			ta.on("blur", function() {
+				// $(this).attr("rows", 3);
+				$(".measuredraw-btn-popupremove").prop("disabled", false);
+				var layer = e.popup._source;
+				var val = $(this).val();
+				if (val === "") {
+					// layer.closePopup();
+				}
+				else {
+					layer.bindPopup( val );
+					layer._popupHtml = val;
+					layer.closePopup();
+				}
+			});
+		}
 	},
 
 	_getDrawToolbar: function(geomType) {

@@ -40,9 +40,9 @@ body {
   min-width: 3.1em;
 }
 .leaflet-maplabel {
-  color: #fff;
+  color: #000;
   background-color: #fff;
-  background-color: #000;
+  background-color: rgba(255,255,255,0.75);
   white-space: nowrap;
   font-size: 0.9em;
   padding: 0.2em 0.4em;
@@ -51,13 +51,13 @@ body {
   letter-spacing: -1px;
   line-height: 1;
   z-index: 900 !important;
+  text-shadow: 1px 1px 0px #fff;
 }
 .leaflet-maplabel-small {
   font-size: 0.8em;
   color: #000;
   background: none;
   background-color: rgba(0,0,0,0.2);
-  text-shadow: 1px 1px 0px #fff;
   z-index: 800 !important;
 }
 .leaflet-top.leaflet-right {
