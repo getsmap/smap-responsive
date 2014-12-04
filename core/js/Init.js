@@ -184,6 +184,9 @@ smap.core.Init = L.Class.extend({
 	},
 
 	_createLegendUrl: function(url, wmsLayers) {
+		if (wmsLayers.split(",").length > 1) {
+			wmsLayers = wmsLayers.split(",")[0]; // Use first if many layers
+		}
 		var paramsString = "request=GetLegendGraphic&format=image/png&width=20&height=20&layer=" + wmsLayers;
 		return utils.urlAppend(url, paramsString);
 	},

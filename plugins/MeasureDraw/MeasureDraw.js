@@ -109,6 +109,14 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		this._initDraw();
 		this._createBtn();
+
+		var self = this;
+		this.map.on("layeradd", function(e) {
+			self._layer.eachLayer(function(lay) {
+				lay.options.selectable = true;
+				lay.options.clickable = true;
+			});
+		});
 		smap.event.on("smap.core.pluginsadded", function() {
 			$('.leaflet-control-measuredraw .dropdown-toggle').dropdown();
 		});
@@ -181,7 +189,22 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		var type = e.layerType,
 			layer = e.layer;
+		layer.options.selectable = true;
+		layer.options.clickable = true;
+		layer.options.popup = "Hej Hej ${id}";
+		layer.options.layerId = L.stamp(layer); // Create unique id
+		layer.properties = {
+			id: layer.options.layerId
+		};
 		this._layer.addLayer(layer);
+
+		// JL: Testing
+		// this._layer.eachLayer(function(lay) {
+		// 	lay.options.selectable = true;
+		// 	lay.options.clickable = true;
+		// });
+
+		layer.fire("load");
 
 		var center, circum, area;
 		var html = "";
@@ -285,8 +308,9 @@ L.Control.MeasureDraw = L.Control.extend({
 			"margin-left": (-labelTag.width()/2)+"px"
 		});
 		var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
-		layer.bindPopup(popupHtml);
-		layer.openPopup();
+		layer.options.popup = popupHtml;
+		// layer.bindPopup(popupHtml);
+		// layer.openPopup();
 
 	},
 
@@ -297,7 +321,9 @@ L.Control.MeasureDraw = L.Control.extend({
 
 	_initDraw: function() {
 		this._layer = L.featureGroup();
+
 		this.map.addLayer(this._layer);
+		// this._layer.bringToFront();
 		this._drawControl = new L.Control.Draw({
 			draw: {
 				marker: false,
@@ -322,18 +348,29 @@ L.Control.MeasureDraw = L.Control.extend({
 		});
 
 		this.map.on("draw:drawstop", function(e) {
-			self.map.off("click", this._onNodeClick);
+			self.map.off("click", self._onNodeClick);
 			if (self._nodes && _.indexOf(["polygon", "rectangle"], e.layerType) > -1) {
 				self._onNodeClick({latlng: self._nodes[0]});
 			}
 			// self._nodes = [];
 		});
 
+		// this.map.on("layeradd", function() {
+		// 	self._layer.eachLayer(function(lay) {
+		// 		lay.options.selectable = true;
+		// 		lay.options.clickable = true;
+		// 	});
+		// 	self._layer.bringToFront();
+		// });
+
 		this.map.on("popupopen", this._onPopupOpen);
 	},
 
 	onPopupOpen: function(e) {
-		var layer = e.popup._source;
+		var layer = e.popup && e.popup._source ? e.popup._source : null;
+		if (!layer) {
+			return;
+		}
 		var ta = $(".measuredraw-popup-div-save textarea");
 
 		if (ta.length || layer._popupHtml) {
@@ -378,9 +415,10 @@ L.Control.MeasureDraw = L.Control.extend({
 					// layer.closePopup();
 				}
 				else {
+					layer.closePopup();
 					layer.bindPopup( val );
 					layer._popupHtml = val;
-					layer.closePopup();
+					// layer.openPopup();
 				}
 			});
 		}
@@ -433,6 +471,8 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		var init = L.Draw[utils.capitalize(t.geomType)];
 		var tool = new init(this.map, this._drawControl.options.draw[t.geomType]);
+		tool.options.shapeOptions = tool.options.shapeOptions || {};
+		// tool.options.shapeOptions.clickable = false;
 		this._tools[t.geomType] = tool;
 		return b;
 	},

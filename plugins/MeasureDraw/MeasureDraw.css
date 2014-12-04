@@ -63,9 +63,9 @@
 .measuredraw-popup-div-save textarea {
   min-width: 15em;
   min-height: 8em;
-  border: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+  border: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
   resize: none;
 }
 .measuredraw-popup-div-save textarea:focus {

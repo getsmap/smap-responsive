@@ -137,7 +137,7 @@ smap.core.Select = L.Class.extend({
 //			}
 //			var isGeoJsonLayer = !layer.addData ? false : true;			
 			var layer = e.layer;
-			var isVector = layer.hasOwnProperty("_layers"),
+			var isVector = layer.hasOwnProperty("_layers") || (layer.options && layer.options.clickable),
 				layerId = layer.options.layerId,
 				selectedFeature = e.feature,
 				selectedFeatures = e.selectedFeatures || [],
@@ -204,7 +204,7 @@ smap.core.Select = L.Class.extend({
 					}
 					var html = utils.extractToHtml(popupText, props);
 					html = self._processHtml(html);
-					var lay = utils.getLayerFromFeature(selectedFeature, layer);
+					var lay = utils.getLayerFromFeature(selectedFeature, layer) || layer;
 					if (lay._popup) {
 						lay.unbindPopup();
 					}

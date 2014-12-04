@@ -95,16 +95,23 @@ L.Control.SelectVector = L.Control.extend({
 	onLayerAdded: function(e) {
 		var self = this;
 		var layer = e.layer;
-		var isVector = layer.hasOwnProperty("_layers") && layer.resetStyle;
+		var isVector = layer.hasOwnProperty("_layers") && layer.resetStyle || (layer.options && layer.options.clickable);
 		if (!isVector)
 			return;
 		
 		layer.on("load", function() {
-			this.eachLayer(function(lay) {
+			var func = function(lay) {
 				lay.options = lay.options || {};
 				lay.options.layerId = layer.options.layerId;
-				lay.off("click", self._onFeatureClick).on("click", self._onFeatureClick);
-			});
+				// lay.off("click", self._onFeatureClick);
+				lay.on("click", self._onFeatureClick);
+			};
+			if (this.eachLayer) {
+				this.eachLayer(func);
+			}
+			else {
+				func(layer);
+			}
 			this.off("dblclick", self._onFeatureClick).on("dblclick", self._onFeatureClick);
 		});
 		this._vectorLayers.push(layer);
@@ -165,28 +172,30 @@ L.Control.SelectVector = L.Control.extend({
 	},
 	
 	onFeatureClick: function(e) {
-		var f = e.layer && e.layer.feature ? e.layer.feature : e.target.feature,
+		var f = e.layer && e.layer.feature ? e.layer.feature : e.target.feature || e.target,
 			shiftKeyWasPressed = e.originalEvent ? e.originalEvent.shiftKey || false : false, 
 			target = e.target,
 			paramVal = null;
 		var layerId = target.options.layerId || e.layer.options.layerId;
 		var parentLayer = smap.core.layerInst._getLayer(layerId);
 		
-		if (parentLayer && shiftKeyWasPressed === false) {
+		if (shiftKeyWasPressed === false) {
 			this._selectedFeatures = [];
-			var resetStyle = parentLayer.resetStyle;
-			parentLayer.eachLayer(function(lay) {
-				resetStyle.call(parentLayer, lay);
-			});
-			
-			// Reset other vector layer's selection.
-			var arr = this._vectorLayers;
-			for (var i=0,len=arr.length; i<len; i++) {
-				lay = arr[i];
-				if (lay !== parentLayer) {
-					lay.resetStyle(lay);
+			if (parentLayer) {
+				var resetStyle = parentLayer.resetStyle;
+				parentLayer.eachLayer(function(lay) {
+					resetStyle.call(parentLayer, lay);
+				});
+				// Reset other vector layer's selection.
+				var arr = this._vectorLayers;
+				for (var i=0,len=arr.length; i<len; i++) {
+					lay = arr[i];
+					if (lay.resetStyle && lay !== parentLayer) {
+						lay.resetStyle(lay);
+					}
 				}
 			}
+			
 		}
 		
 		var indexOfFeature = $.inArray(f, this._selectedFeatures);
@@ -201,20 +210,24 @@ L.Control.SelectVector = L.Control.extend({
 		}
 		else {
 			f.layerId = layerId;
-			f.uniqueKey = parentLayer.options.uniqueKey;
+			f.uniqueKey = parentLayer && parentLayer.options ? parentLayer.options.uniqueKey : f.layerId;
 			this._selectedFeatures.push(f);
-			var _lay = this._layerFromFeature(f, parentLayer);
-			if (_lay && _lay.setStyle) {
-				_lay.setStyle(parentLayer.options.selectStyle || this.options.selectStyle);
+			
+			console.log("selected features: "+this._selectedFeatures.length);
+
+			if (parentLayer) {
+				var _lay = this._layerFromFeature(f, parentLayer);
+				if (_lay && _lay.setStyle) {
+					_lay.setStyle(parentLayer.options.selectStyle || this.options.selectStyle);
+				}
 			}
 			this._map.fire("selected", {
 				feature: f,
 				selectedFeatures: this._selectedFeatures,
-				layer: parentLayer,
+				layer: parentLayer || f,
 				latLng: e.latlng,
 				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
 			});
-			utils.log("selected a feature");
 		}
 	},
 	
