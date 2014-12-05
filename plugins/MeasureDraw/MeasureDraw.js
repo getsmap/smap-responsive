@@ -1,7 +1,10 @@
 
 L.Control.MeasureDraw = L.Control.extend({
 	options: {
-		position: "topright"
+		position: "topright",
+		saveMode: "url", // url | wfs  (if "wfs" you also need additional parameters)
+		saveWfsUrl: "",
+		saveWfsTypeName: ""
 	},
 	
 	_lang: {
@@ -120,7 +123,90 @@ L.Control.MeasureDraw = L.Control.extend({
 		smap.event.on("smap.core.pluginsadded", function() {
 			$('.leaflet-control-measuredraw .dropdown-toggle').dropdown();
 		});
+
+		smap.event.on("smap.core.createparams", $.proxy(this._onCreateParams, this));
+		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
+
+
 		return this._container;
+	},
+
+	_onCreateParams: function(e, p) {
+		if (this.options.saveMode === "url") {
+
+			// Properties must be set on a feature attribute for geojson to include properties
+			
+			var props = [];
+			this._layer.eachLayer(function(lay) {
+				props.push(lay.properties);
+			});
+			// 	lay.feature = {
+			// 		properties: $.extend(true, {}, lay.properties)
+			// 	};
+			// 	if (lay._latlng) {
+			// 		lay.feature._latlng = $.extend(true, {}, lay._latlng);
+			// 	}
+			// 	else if (lay.geometry) {
+			// 		lay.feature.geometry = $.extend(true, {}, lay.geometry);
+			// 	}
+			// });
+			
+			var md = this._layer.toGeoJSON();
+			var fs = md.features,
+				f;
+			var newFs = [];
+			for (var i=0,len=fs.length; i<len; i++) {
+				f = fs[i];
+				if (props[i]) {
+					// Only keep real features (not labels)
+					f.properties = props[i];
+					newFs.push(f);
+				}
+			}
+			md.features = newFs;
+			var json = JSON.stringify(md);
+			json = encodeURIComponent(json);
+			p.md = json;
+		}
+	},
+
+	_onApplyParams: function(e, p) {
+		if (p.MD) {
+			var json = JSON.parse(decodeURIComponent(p.MD));
+			var md = L.geoJson(json);
+
+			var self = this,
+				feature;
+			md.eachLayer(function(lay) {
+				var layersTypes = {
+					"Point": "marker",
+					"LineString": "polyline",
+					"Polygon": "polygon"
+				};
+				if (lay.feature.geometry.type === "Point") {
+					var cs = lay.feature.geometry.coordinates;
+					feature = L.marker([cs[1], cs[0]]);
+					feature.properties = $.extend(true, {}, lay.feature.properties);
+				}
+				else {
+					feature = lay;
+				}
+				self.onCreated({
+					_silent: true,
+					layerType: layersTypes[lay.feature.geometry.type],
+					layer: feature
+				});
+			});
+
+			// var json, feature;
+			// this._tempLayer = L.featureGroup();
+			// for (var i=0,len=arr.length; i<len; i++) {
+			// 	json = arr[i];
+			// 	feature = L.geoJson(json);
+			// 	this._layer.addLayer(feature);
+			// }
+		}
+		
 	},
 
 	_proxyListeners: function() {
@@ -195,11 +281,21 @@ L.Control.MeasureDraw = L.Control.extend({
 		// layer.options.clickable = false;
 		// layer.options.popup = "Hej Hej ${id}";
 		layer.options.layerId = L.stamp(layer); // Create unique id
-		layer.properties = {
-			id: layer.options.layerId,
-			measure_form: '<div class="measuredraw-popup-div-save"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>',
-			measure_text: ""
-		};
+
+		// if (e._silent) {
+		// 	layer.properties = $.extend(true, {}, layer.feature.properties);
+		// 	layer.uniqueKey = "id";
+		// 	// delete layer.feature;
+		// 	// delete layer._leaflet_events;
+		// 	// delete layer.defaultOptions;
+		// }
+		if (!layer.properties) {
+			layer.properties = {
+				id: layer.options.layerId,
+				measure_form: '<div class="measuredraw-popup-div-save"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>',
+				measure_text: ""
+			};
+		}
 		this._layer.addLayer(layer);
 
 		// JL: Testing
@@ -207,7 +303,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		// 	lay.options.selectable = true;
 		// 	lay.options.clickable = true;
 		// });
-
+		
 		this._layer.fire("load");
 		layer.unbindPopup();
 
@@ -315,7 +411,9 @@ L.Control.MeasureDraw = L.Control.extend({
 			"margin-left": (-labelTag.width()/2)+"px"
 		});
 
-		// layer.fire("click");
+		if (!e._silent) {
+			layer.fire("click");
+		}
 		// var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
 		// layer.options.popup = popupHtml;
 		// layer.bindPopup(popupHtml);
