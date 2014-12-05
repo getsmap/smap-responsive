@@ -20,7 +20,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			lenPart: "Sidlängd",
 			easting: "Easting (x/longitud)",
 			northing: "Northing (y/latitud)",
-			clickToAddText: "Klicka för att lägga till text (eller HTML)",
+			clickToAddText: "Klicka för att lägga till text (stäng pratbubblan för att spara)",
 			showMeasures: "Visa mätresultat",
 			remove: "Ta bort",
 			
@@ -221,22 +221,20 @@ L.Control.MeasureDraw = L.Control.extend({
 				var espg3008 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3008");
 				var espg3021 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3021");
 
-				html =	'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
+				html =	'<div class="hidden-labelinfo">'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
 						"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
-						"Lon: &nbsp;"+utils.round(wgs.lat, 5);
+						"Lon: &nbsp;"+utils.round(wgs.lat, 5)+"<br>";
 
-				// html =	'<div style="font-size:70%;">'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
-				// 		"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
-				// 		"Lon: &nbsp;"+utils.round(wgs.lat, 5)+"<br><br>"+
-				// 		"<strong>Sweref99 TM (EPSG:3006)</strong><br>"+
-				// 		"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
-				// 		"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
-				// 		"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
-				// 		"East: &nbsp;"+utils.round(espg3008.lng)+"<br>"+
-				// 		"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
-				// 		"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+
-				// 		"East: &nbsp;"+utils.round(espg3021.lng)+"<br>"+
-				// 		"North: &nbsp;"+utils.round(espg3021.lat)+"</div>";
+				html +=		"<strong>Sweref99 TM (EPSG:3006)</strong><br>"+
+							"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
+							"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
+							"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
+							"East: &nbsp;"+utils.round(espg3008.lng)+"<br>"+
+							"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
+							"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+
+							"East: &nbsp;"+utils.round(espg3021.lng)+"<br>"+
+							"North: &nbsp;"+utils.round(espg3021.lat)+"</div>"+
+						'</div>';
 
 				// layer.bindPopup(html);
 				// layer.openPopup();
@@ -295,6 +293,8 @@ L.Control.MeasureDraw = L.Control.extend({
 		// }
 		var label = utils.createLabel(center, html, className);
 		this._layer.addLayer(label);
+		layer.on("mouseover", this.onMouseOver);
+		layer.on("mouseout", this.onMouseOut);
 
 		// Set this layer as "parent feature" of all labels so 
 		// we know where they belong (when removing the feature we 
@@ -309,6 +309,8 @@ L.Control.MeasureDraw = L.Control.extend({
 		
 		// Center the tag horisontally
 		var labelTag = $(".leaflet-maplabel:last");
+		// labelTag.find("div:first").addClass("hidden-labelinfo");
+		// labelTag
 		labelTag.css({
 			"margin-left": (-labelTag.width()/2)+"px"
 		});
@@ -318,7 +320,14 @@ L.Control.MeasureDraw = L.Control.extend({
 		// layer.options.popup = popupHtml;
 		// layer.bindPopup(popupHtml);
 		// layer.openPopup();
+	},
 
+	onMouseOver: function(e) {
+		$(".measuredrawlabel--"+e.target.properties.id+"--").addClass("leaflet-maplabel-hover");
+	},
+
+	onMouseOut: function(e) {
+		$(".measuredrawlabel--"+e.target.properties.id+"--").removeClass("leaflet-maplabel-hover");
 	},
 
 	_setLabels: function() {
@@ -484,6 +493,11 @@ L.Control.MeasureDraw = L.Control.extend({
 		var tool = new init(this.map, this._drawControl.options.draw[t.geomType]);
 		tool.options.shapeOptions = tool.options.shapeOptions || {};
 		// tool.options.shapeOptions.clickable = false;
+		$.extend(tool.options.shapeOptions, {
+			color: '#0077e2',
+			weight: 10
+		});
+		
 		this._tools[t.geomType] = tool;
 		return b;
 	},

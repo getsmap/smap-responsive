@@ -59,23 +59,27 @@ html, body
 	letter-spacing -1px
 	line-height 1
 	z-index 900 !important
-	transition margin 0.5s ease, background-color 0.3s ease
+	transition all 0.4s ease
 	text-shadow 1px 1px 0px #fff
 	// border 1px solid transparent
-	padding 5px 10px
+	padding 10px 15px
 	// text-shadow 2px 2px 0px #444
-.leaflet-maplabel:hover
+	.hidden-labelinfo
+		display none
+.leaflet-maplabel-hover, .leaflet-maplabel:hover
 	// text-shadow none
 	background-color #fff
 	background-color rgba(255,255,255, 0.7)
 	// border 1px solid #000
+	.hidden-labelinfo
+		display block
 	
 
 .leaflet-maplabel-small
 	font-size 0.8em
 	color #000
 	background none
-	// padding 0
+	padding 3px 5px
 	border none
 	// background-color rgba(0, 0, 0, 0.2)
 	// text-shadow 1px 1px 0px #fff

@@ -49,19 +49,28 @@ body {
   letter-spacing: -1px;
   line-height: 1;
   z-index: 900 !important;
-  -webkit-transition: margin 0.5s ease, background-color 0.3s ease;
-  transition: margin 0.5s ease, background-color 0.3s ease;
+  -webkit-transition: all 0.4s ease;
+  transition: all 0.4s ease;
   text-shadow: 1px 1px 0px #fff;
-  padding: 5px 10px;
+  padding: 10px 15px;
 }
+.leaflet-maplabel .hidden-labelinfo {
+  display: none;
+}
+.leaflet-maplabel-hover,
 .leaflet-maplabel:hover {
   background-color: #fff;
   background-color: rgba(255,255,255,0.7);
+}
+.leaflet-maplabel-hover .hidden-labelinfo,
+.leaflet-maplabel:hover .hidden-labelinfo {
+  display: block;
 }
 .leaflet-maplabel-small {
   font-size: 0.8em;
   color: #000;
   background: none;
+  padding: 3px 5px;
   border: none;
   z-index: 800 !important;
 }
