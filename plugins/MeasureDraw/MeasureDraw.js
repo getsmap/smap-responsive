@@ -223,7 +223,7 @@ L.Control.MeasureDraw = L.Control.extend({
 
 				html =	'<div class="hidden-labelinfo">'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
 						"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
-						"Lon: &nbsp;"+utils.round(wgs.lat, 5)+"<br>";
+						"Lon: &nbsp;"+utils.round(wgs.lat, 5)+"<br><br>";
 
 				html +=		"<strong>Sweref99 TM (EPSG:3006)</strong><br>"+
 							"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
