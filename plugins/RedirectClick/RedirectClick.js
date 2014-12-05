@@ -2,33 +2,43 @@ L.Control.RedirectClick = L.Control.extend({
 	
 	options: {
 		position: 'topright', // just an example
-		btnID: "redirect-click-btn", //plugin ID which can be used with jquery e.g.
-		displayName : 'Snedbild',
-		toolbarIndex: 4,
-		//url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
-		url: "http://kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}",
-		overrideName: "snedbild",
-		btnLabel: "Snedbild",
-		btnHover: "Verktyg för att se snedbilder",
-		buttonId: "redirect-snedbild",
-		buttonCss: "ui-icon-arrowstop-1-s",
-		mouseMoveText: {
-			text: "Klicka i kartan för att redirect till snedbild",
-			subtext: "",
-		},
-		mouseMoveSubtext: "",
-		addToMenu: false
 		
+		snedbild: {
+					name: "snedbild",
+					url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}", // Malmö URL
+					//url: "http://kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}", //Helsingborg URL
+					btnID: "smap-snedbild-btn",
+					btnClass: "fa fa-plane",
+					cursor: "crosshair"
+		},
+		gatuvy: {
+					name: "gatuvy",
+					url: "http://sbkvmgeoserver.malmo.se/cyclomedia/index.html?posx=${x}&posy=${y}",
+					btnID: "smap-gatuvy-btn",
+					btnClass: "fa fa-car",
+					cursor: "crosshair"
+		}
 	},
 	
 	_lang: {
 		"sv": {
-			modalTitle: "Lager i kartan",
-			btntitle: "Klicka i kartan för att redirect till snedbild"
+			tooltipPrefix: "Klicka i kartan för att se ",
+
+			snedbild: {
+						name: "Snedbild"
+			},
+			gatuvy: {
+						name: "Gatuvy"
+			}
 		},
 		"en": {
-			modalTitle: "Layers in the map",
-			btntitle: "Click on the map to redirect to snedbild"
+			tooltipPrefix: "Click on the map to show ",
+			snedbild: {
+						name: "Perspective image"
+			},
+			gatuvy: {
+						name: "Street view"
+			}
 		}
 	},
 	
@@ -42,7 +52,6 @@ L.Control.RedirectClick = L.Control.extend({
 	initialize: function(options) {
 		L.setOptions(this, options);
 		this._setLang(options.langCode);
-		this._setURL(this.options.url);
 	},
 	
 	_setURL: function(url){
@@ -59,51 +68,37 @@ L.Control.RedirectClick = L.Control.extend({
 		
 		this.$container = $(this._container);
 		
-		self._createButton();
+		if (this.options.snedbild.url) {
+			self._createButton(this.options.snedbild);
+		}
+		if (this.options.gatuvy.url) {
+			self._createButton(this.options.gatuvy);
+		}
 		
+
 		return this._container;
 	},
 
-	addHooks: function () {
-		
+	addHooks: function (target) {
+		var targetName = this.lang[target.name].name.toLowerCase();
+		target.text = this.lang.tooltipPrefix + targetName;
 
-		if (this.map) {
-			this.map.getContainer().focus();
-			this._tooltip = new L.Tooltip({
-				map: this.map,
-				trackMouse: true,
-				target: $("body"),
-				showDelay: 1,
-				hideDelay: 1,
-				fadeAnimation: false,
-				mouseOffset: L.point(0, 10)
-			});
-			this._tooltip.updateContent(this.options.mouseMoveText);
-			this._map.on('mousemove mouseup', this._onMouseMove, this);
-		}
+		this.tooltip = new L.Tooltip(this.map).updateContent(target);
+
+		this.map.on('mousemove mouseup', this._onMouseMove, this);
+
 	},
 	
 	removeHooks: function () {
 		if (this._map) {
-			if(this._tooltip){					
-				this._tooltip = null;
-				$("#mapdiv").find(".leaflet-tooltip-container").children().remove();
-				$("#mapdiv").find(".leaflet-draw-tooltip").children().remove();
-				$("#mapdiv").find(".leaflet-popup-pane").children().remove();
+			if(this.tooltip){					
+				this.tooltip.dispose();
 				this._map.off( "click" );
 				this._map.off('mousemove mouseup', this._onMouseMove, this);
 			}
 		}
 	},
 	
-	removeBtnClass: function(){
-		$("#"+this.options.btnID+"").removeClass("redirect-click-btn-on");
-	},
-	
-	addBtnClass: function(){
-		$("#"+this.options.btnID+"").addClass("redirect-click-btn-on");
-	},
-		
 	_projectEPSG: function (evt) {
 		//creating source and destination Proj4js objects
 		//once initialized, these may be re-used as often as needed
@@ -122,86 +117,67 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 	
 	_onMouseMove: function (e) {
+		
+		this.tooltip.updatePosition(e.latlng);
+	},
 
-		if(e.layerPoint){
-			e.layerPoint.x = e.originalEvent.clientX;
-			e.layerPoint.y = e.originalEvent.clientY;
-			this._tooltip.updatePosition(e.latlng);
-		}else {
-			var xypos = {x:e.originalEvent.clientX, y:e.originalEvent.clientY}
-			this._tooltip.setPosition(xypos);
-			this._tooltip.show(xypos,""+this.options.mouseMoveText+"");
-		}
+	onMapClick: function(e) {
 		
+		this.onDone(e, this.target);
+		this._deactivate(this.target);	
 	},
 		
-	_addEvents: function(){
-		this.addHooks();
-		return false;
-	},
 	
-	_createButton: function() {
+	_createButton: function(target) {
 		var self = this;
-		if(self.options.addToMenu) {
-	        smap.cmd.addToolButton( "", "fa fa-external-link", function () {
-	            var snedbildBtn = L.control.menu({});
-	            				
-	    		snedbildBtn.addButton(this.options.btnID, this.options.btnLabel, this.options.buttonCss, function(){return false;});
-	    		
-	    		$("#"+this.options.btnID+"").on('click',function(){
-	    					
-	    			if(self._tooltip){
-	    				self.removeHooks();
-	    				self.removeBtnClass();
-	    				
-	    			}else {
-	    				self.addHooks();
-	    				self.addBtnClass();
-	    				self._map.on("click", function(e){
-	    					self.removeBtnClass();						
-	    					self.onDone(evt);
-	    					self.removeHooks();
-	    				});
-	    			}
-				});
-			
-				self.$container = $(this._container);
-	        	return false;
-	        },null);
-        }
 
-        else {
-            var $btn = $('<button id="'+ self.options.btnID +'" title="' + self.options.btnLabel + '" class="btn btn-default"><span class="fa fa-external-link"></span></button>');
-            $btn.on("click", function () {
-				if(self._tooltip){
-					self.removeHooks();
-					self.removeBtnClass();
-				}else {
-					self.addHooks();
-					self.addBtnClass();
-					self._map.on("click", function(e){
-						self.removeBtnClass();						
-						self.onDone(e);
-						self.removeHooks();
-					});
-				}
-                return false;
-            });
-            self.$container.append($btn);
-        }
+		var $btn = $('<button id="'+ target.btnID +'" title="' + this.lang[target.name].name + '" class="btn btn-default"><span class="'+target.btnClass+'"></span></button>');
+		$btn.on("click", function() {
+			self._deactivate(target);
+			self._activate(target);
+			return false;
+		});
+		self.$container.append($btn);
 	},
-	
+
+	_activate: function(target) {
+		var self = this;
+
+		if (target.url) {
+			this.target = target;
+			if (this.map) {
+				self.addHooks(target);
+				$("#mapdiv").css({'cursor': target.cursor});
+
+				self._map.on("click", this.onMapClick, this);
+			}
+		}
+
+		else {
+			self._deactivate()
+			utils.log('Redirect URL missing.')
+		}
+	},
+
+	_deactivate: function(target) {
+		$("#mapdiv").css({'cursor': ''});
+		this.removeHooks();
+		this._map.off( "click", this.onMapClick, this );
+		this._map.off('mousemove mouseup', this._onMouseMove, this);
+	},
+
 	onRemove: function(map) {
 		this.$container.empty();
 	},
 	
-	onDone : function(e) {
-		var url = this.options.url;
-		if (url) {
-			
+	onDone : function(e, target) {
+		var self = this;
+
+		if (target.name == 'snedbild'){
+			var url = self.options.snedbild.url;
 			var source = new proj4.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
 			var dest = new proj4.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
-			
+		
 			var point = {
 				x:e.latlng.lng,
 				y:e.latlng.lat
@@ -209,9 +185,23 @@ L.Control.RedirectClick = L.Control.extend({
 
 			proj4.transform(source, dest,point);
 			url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y); 
-
 		}
-		window.open(url, this.options.btnLabel);
+
+		if (target.name == 'gatuvy'){
+			var url = self.options.gatuvy.url;
+			var source = new proj4.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
+			var dest = new proj4.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
+		
+			var point = {
+				x:e.latlng.lng,
+				y:e.latlng.lat
+			};
+
+			proj4.transform(source, dest,point);
+			url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y); 
+		}
+
+		window.open(url, target.name);
 	},
 });
 
