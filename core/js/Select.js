@@ -35,7 +35,7 @@ smap.core.Select = L.Class.extend({
 		var layer = e.target;
 
 		if (layer.setStyle) {
-			layer.setStyle(this.options.selectStyle);			
+			layer.setStyle(this.options.selectStyle);
 		}
 
 	    if (layer.bringToFront && !L.Browser.ie && !L.Browser.opera) {
@@ -44,6 +44,8 @@ smap.core.Select = L.Class.extend({
 	},
 	
 	_resetStyle: function(layer) {
+		if (!layer.resetStyle)
+			return;
 		layer.eachLayer(function(lay) {
 			layer.resetStyle(lay);
 		});
@@ -193,7 +195,9 @@ smap.core.Select = L.Class.extend({
 					for (var i=0,len=arr.length; i<len; i++) {
 						lay = arr[i];
 						if (lay !== layer) {
-							lay.resetStyle(lay);
+							if (lay.resetStyle) {
+								lay.resetStyle(lay);
+							}
 							lay._selectedFeatures = [];
 						}
 					}
@@ -204,7 +208,7 @@ smap.core.Select = L.Class.extend({
 					}
 					var html = utils.extractToHtml(popupText, props);
 					html = self._processHtml(html);
-					var lay = utils.getLayerFromFeature(selectedFeature, layer) || layer;
+					var lay = utils.getLayerFromFeature(selectedFeature, layer) || selectedFeature;
 					if (lay._popup) {
 						lay.unbindPopup();
 					}
@@ -475,9 +479,11 @@ smap.core.Select = L.Class.extend({
 				fs = self._selectedFeaturesVector;
 				for (var i=0,len=fs.length; i<len; i++) {
 					f = fs[i];
-					theItem = self._getVectorVal(f.properties, f.uniqueKey);
-					addToObject(f.layerId, "vals", theItem);
-					selObj[f.layerId]["key"] = f.uniqueKey;
+					if (f.properties && f.uniqueKey) {
+						theItem = self._getVectorVal(f.properties, f.uniqueKey);
+						addToObject(f.layerId, "vals", theItem);
+						selObj[f.layerId]["key"] = f.uniqueKey;
+					}
 				}
 			}
 			

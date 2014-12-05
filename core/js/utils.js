@@ -116,7 +116,7 @@ var utils = {
 			var layersObj = parentLayer._layers;
 			for (var nbr in layersObj) {
 				var _lay = layersObj[nbr];
-				if (_lay.feature.id === feature.id) {
+				if (_lay.feature && _lay.feature.id === feature.id) {
 					return _lay;
 				}
 			}
@@ -133,6 +133,9 @@ var utils = {
 		},
 		
 		extractToHtml: function(html, props) {
+			if (!props) {
+				return "";
+			}
 			function getFunctionEnd(text) {
 				var p = 1,
 					found = false,

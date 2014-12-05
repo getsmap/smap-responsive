@@ -95,23 +95,23 @@ L.Control.SelectVector = L.Control.extend({
 	onLayerAdded: function(e) {
 		var self = this;
 		var layer = e.layer;
-		var isVector = layer.hasOwnProperty("_layers") && layer.resetStyle || (layer.options && layer.options.clickable);
-		if (!isVector)
+		var isVector = layer.hasOwnProperty("_layers"); // && layer.resetStyle; // || layer._isVector;
+		if (!isVector || !layer.on)
 			return;
 		
 		layer.on("load", function() {
 			var func = function(lay) {
 				lay.options = lay.options || {};
 				lay.options.layerId = layer.options.layerId;
-				// lay.off("click", self._onFeatureClick);
+				lay.off("click", self._onFeatureClick);
 				lay.on("click", self._onFeatureClick);
 			};
 			if (this.eachLayer) {
 				this.eachLayer(func);
 			}
-			else {
-				func(layer);
-			}
+			// else {
+			// 	func(layer);
+			// }
 			this.off("dblclick", self._onFeatureClick).on("dblclick", self._onFeatureClick);
 		});
 		this._vectorLayers.push(layer);
@@ -145,7 +145,7 @@ L.Control.SelectVector = L.Control.extend({
 		var layersObj = theLay._layers;
 		for (var nbr in layersObj) {
 			var _lay = layersObj[nbr];
-			if (_lay.feature.id === _f.id) {
+			if (_lay.feature && _lay.feature.id === _f.id) {
 				return _lay;					
 			}
 		}
@@ -181,7 +181,7 @@ L.Control.SelectVector = L.Control.extend({
 		
 		if (shiftKeyWasPressed === false) {
 			this._selectedFeatures = [];
-			if (parentLayer) {
+			if (parentLayer && parentLayer.resetStyle) {
 				var resetStyle = parentLayer.resetStyle;
 				parentLayer.eachLayer(function(lay) {
 					resetStyle.call(parentLayer, lay);
@@ -229,10 +229,7 @@ L.Control.SelectVector = L.Control.extend({
 				shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
 			});
 		}
-	},
-	
-	
-	A: 1
+	}
 	
 });
 

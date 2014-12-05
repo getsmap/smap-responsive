@@ -191,6 +191,9 @@ smap.core.Layer = L.Class.extend({
 				this._layers[t.options.layerId] = layer;
 				// layer.setZIndex(layer.options.zIndex);
 			}
+			else if (layer instanceof L.NonTiledLayer.WMS) {
+				layer.options.zIndex = -1; // Solves issue where layer goes on top of vector features
+			}
 		}
 		
 		var self = this;

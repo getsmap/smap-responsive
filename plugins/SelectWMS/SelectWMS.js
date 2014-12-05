@@ -142,7 +142,10 @@ L.Control.SelectWMS = L.Control.extend({
 				layers.push(layer);
 			}
 		}
-		xyArr = theItem["xy"][0];
+		xyArr = theItem["xy"] && theItem["xy"].length ? theItem["xy"][0] : null;
+		if (!xyArr) {
+			return;
+		}
 		latLng = L.latLng(xyArr[1], xyArr[0]);
 		
 		this.onMapClick({

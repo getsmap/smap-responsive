@@ -47,7 +47,7 @@ L.Control.MeasureDraw = L.Control.extend({
 					tooltip: {
 						start: 'Klicka för att påbörja linje.',
 						cont: 'Klicka för att fortsätta linje.',
-						end: 'Dubbelklicka eller klicka på sista punkten för att avsluta.'
+						end: 'Dubbelklicka för att avsluta linje.'
 					}
 				},
 				rectangle: {
@@ -189,12 +189,16 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		var type = e.layerType,
 			layer = e.layer;
-		layer.options.selectable = true;
-		layer.options.clickable = true;
-		layer.options.popup = "Hej Hej ${id}";
+
+		layer._measureDrawFeature = true;
+		// layer.options.selectable = false;
+		// layer.options.clickable = false;
+		// layer.options.popup = "Hej Hej ${id}";
 		layer.options.layerId = L.stamp(layer); // Create unique id
 		layer.properties = {
-			id: layer.options.layerId
+			id: layer.options.layerId,
+			measure_form: '<div class="measuredraw-popup-div-save"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>',
+			measure_text: ""
 		};
 		this._layer.addLayer(layer);
 
@@ -204,7 +208,8 @@ L.Control.MeasureDraw = L.Control.extend({
 		// 	lay.options.clickable = true;
 		// });
 
-		layer.fire("load");
+		this._layer.fire("load");
+		layer.unbindPopup();
 
 		var center, circum, area;
 		var html = "";
@@ -307,8 +312,10 @@ L.Control.MeasureDraw = L.Control.extend({
 		labelTag.css({
 			"margin-left": (-labelTag.width()/2)+"px"
 		});
-		var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
-		layer.options.popup = popupHtml;
+
+		// layer.fire("click");
+		// var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
+		// layer.options.popup = popupHtml;
 		// layer.bindPopup(popupHtml);
 		// layer.openPopup();
 
@@ -321,6 +328,11 @@ L.Control.MeasureDraw = L.Control.extend({
 
 	_initDraw: function() {
 		this._layer = L.featureGroup();
+		this._layer.options = {
+			layerId: "measurelayer",
+			popup: '${measure_text}${measure_form}',
+			uniqueKey: "id"
+		};
 
 		this.map.addLayer(this._layer);
 		// this._layer.bringToFront();
@@ -367,38 +379,38 @@ L.Control.MeasureDraw = L.Control.extend({
 	},
 
 	onPopupOpen: function(e) {
+		var self = this;
+
 		var layer = e.popup && e.popup._source ? e.popup._source : null;
-		if (!layer) {
+		if (!layer || !layer._measureDrawFeature) {
 			return;
 		}
 		var ta = $(".measuredraw-popup-div-save textarea");
 
-		if (ta.length || layer._popupHtml) {
-			// Add a remove button
-			var btn = '<br><br><button class="btn btn-default btn-sm measuredraw-btn-popupremove">'+this.lang.remove+'</button>';
-			var popup = e.popup;
-			var content = popup.getContent();
-			if (content.search("measuredraw-btn-popupremove") === -1) {
-				content += btn;
-				popup.setContent(content);
-				popup.update();
-				ta = $(".measuredraw-popup-div-save textarea"); // this must be done because we are dealing with a new textarea now
-			}
-			
-			var self = this;
-			$(".leaflet-popup-content").find(".measuredraw-btn-popupremove").on("click", function() {
-				// var fid = layer._leaflet_id; //measuredrawlabel--35--;
-				// var label = $(".measuredrawlabel--"+fid+"--");
-				var labels = self._labels;
-				self._layer.eachLayer(function(label) {
-					if (label._parentFeature && label._parentFeature === layer) {
-						self.map.removeLayer(label);
-					}
-				});
-				self.map.removeLayer(layer);
-				return false;
-			});
+		var btnRemove = '<br><br><button class="btn btn-default btn-sm measuredraw-btn-popupremove">'+this.lang.remove+'</button>';
+		
+		// Add a remove button
+		var popup = e.popup;
+		var content = popup.getContent();
+		if (content.search("measuredraw-btn-popupremove") === -1) {
+			content += btnRemove;
+			popup.setContent(content);
+			popup.update();
+			ta = $(".measuredraw-popup-div-save textarea"); // this must be done because we are dealing with a new textarea now
 		}
+		
+		$(".leaflet-popup-content").find(".measuredraw-btn-popupremove").on("click", function() {
+			// var fid = layer._leaflet_id; //measuredrawlabel--35--;
+			// var label = $(".measuredrawlabel--"+fid+"--");
+			var labels = self._labels;
+			self._layer.eachLayer(function(label) {
+				if (label._parentFeature && label._parentFeature === layer) {
+					self.map.removeLayer(label);
+				}
+			});
+			self.map.removeLayer(layer);
+			return false;
+		});
 
 		if (ta.length) {
 			// ta.focus();
@@ -415,10 +427,9 @@ L.Control.MeasureDraw = L.Control.extend({
 					// layer.closePopup();
 				}
 				else {
+					layer.properties.measure_text = val;
+					layer.properties.measure_form = ""; // erase
 					layer.closePopup();
-					layer.bindPopup( val );
-					layer._popupHtml = val;
-					// layer.openPopup();
 				}
 			});
 		}
