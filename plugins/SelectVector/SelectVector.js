@@ -27,7 +27,7 @@ L.Control.SelectVector = L.Control.extend({
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode;
 		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;			
+			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
 

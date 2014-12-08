@@ -152,10 +152,10 @@ L.Control.MeasureDraw = L.Control.extend({
 					// Circles are not represented in JSON
 					lay.properties.radius = lay.getRadius();
 				}
-				// if (lay._popup && lay._popup._isOpen) {
-				// 	delete p.SEL;
-				// 	lay.properties.popupIsOpen = true;
-				// }
+				if (lay._popup && lay._popup._isOpen) {
+					delete p.SEL;
+					lay.properties.popupIsOpen = true;
+				}
 				props.push(lay.properties);
 			});
 			// 	lay.feature = {
@@ -253,7 +253,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		dim = dim || 1; // Defaults to line measurement
 		var unit = "m";
 		var decimals = 0;
-		if (val >= 1000) {
+		if (dim === 1 && val >= 1000 || dim === 2 && val >= 100000) {
 			// convert to km
 			var dividor = Math.pow(1000, dim-1);
 			val /= dividor; // m -> km, or m2 -> km2 (adapt for dimensions)
@@ -439,7 +439,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		var className = "leaflet-maplabel "+fidClass;
 		
 
-		if (e._silent && layer.getLatLngs) {
+		if ( (e._silent || type === "rectangle") && layer.getLatLngs) {
 			// Add labels at the edges
 			this._nodes = [];
 			$.each(layer.getLatLngs(), function(i, latLng) {
@@ -472,6 +472,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		labelTag.css({
 			"margin-left": (-labelTag.width()/2-15)+"px"
 		});
+		labelTag.on("click", this.returnFalse);
 
 		if (!e._silent) {
 			labelTag.addClass("leaflet-maplabel-hover");
@@ -480,16 +481,28 @@ L.Control.MeasureDraw = L.Control.extend({
 			}, 2000)
 			layer.fire("click");
 		}
-		// else {
-		// 	if (layer.properties && layer.properties.popupIsOpen) {
-		// 		layer.fire("click");
-		// 	}
-		// }
+		else {
+			if (layer.properties && layer.properties.popupIsOpen) {
+				delete layer.properties.popupIsOpen;
+				// layer.fire("click");
+				this.map.fire("selected", {
+					feature: layer,
+					selectedFeatures: [],
+					layer: this._layer
+					// latLng: e.latlng,
+					// shiftKeyWasPressed: e.originalEvent ? e.originalEvent.shiftKey || false : false
+				});
+			}
+		}
 
 		// var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
 		// layer.options.popup = popupHtml;
 		// layer.bindPopup(popupHtml);
 		// layer.openPopup();
+	},
+
+	returnFalse: function() {
+		return false;
 	},
 
 	onMouseOver: function(e) {
