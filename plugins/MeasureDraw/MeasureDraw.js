@@ -4,7 +4,15 @@ L.Control.MeasureDraw = L.Control.extend({
 		position: "topright",
 		saveMode: "url", // url | wfs  (if "wfs" you also need additional parameters)
 		saveWfsUrl: "",
-		saveWfsTypeName: ""
+		saveWfsTypeName: "",
+		stylePolygon: {
+			color: '#0077e2',
+			weight: 1
+		},
+		stylePolyline: {
+			color: '#0077e2',
+			weight: 9
+		}
 	},
 	
 	_lang: {
@@ -138,6 +146,10 @@ L.Control.MeasureDraw = L.Control.extend({
 			
 			var props = [];
 			this._layer.eachLayer(function(lay) {
+				if (lay._radius) {
+					// Circles are not represented in JSON
+					lay.properties.radius = lay.getRadius();
+				}
 				props.push(lay.properties);
 			});
 			// 	lay.feature = {
@@ -165,38 +177,47 @@ L.Control.MeasureDraw = L.Control.extend({
 			}
 			md.features = newFs;
 			var json = JSON.stringify(md);
-			json = encodeURIComponent(json);
+			json = encodeURIComponent(this.options.saveMode + "," + json);
 			p.md = json;
 		}
 	},
 
 	_onApplyParams: function(e, p) {
 		if (p.MD) {
-			var json = JSON.parse(decodeURIComponent(p.MD));
-			var md = L.geoJson(json);
+			var d = decodeURIComponent(p.MD);
+			var firstComma = d.search(",");
+			var saveMode = d.substring(0, firstComma);
+			var data = d.substring(firstComma+1);
+			if (saveMode === "url") {
+				var json = JSON.parse(data);
+				var md = L.geoJson(json);
 
-			var self = this,
-				feature;
-			md.eachLayer(function(lay) {
-				var layersTypes = {
-					"Point": "marker",
-					"LineString": "polyline",
-					"Polygon": "polygon"
-				};
-				if (lay.feature.geometry.type === "Point") {
-					var cs = lay.feature.geometry.coordinates;
-					feature = L.marker([cs[1], cs[0]]);
-					feature.properties = $.extend(true, {}, lay.feature.properties);
-				}
-				else {
-					feature = lay;
-				}
-				self.onCreated({
-					_silent: true,
-					layerType: layersTypes[lay.feature.geometry.type],
-					layer: feature
+				var self = this,
+					feature;
+				md.eachLayer(function(lay) {
+					var layersTypes = {
+						"Point": "marker",
+						"LineString": "polyline",
+						"Polygon": "polygon"
+					};
+					if (lay.feature.geometry.type === "Point") {
+						var cs = lay.feature.geometry.coordinates;
+						feature = L.marker([cs[1], cs[0]]);
+						feature.properties = $.extend(true, {}, lay.feature.properties);
+					}
+					else {
+						feature = lay;
+					}
+					self.onCreated({
+						_silent: true,
+						layerType: layersTypes[lay.feature.geometry.type],
+						layer: feature
+					});
 				});
-			});
+			}
+			else if (saveMode === "wfs") {
+				// TODO
+			}
 
 			// var json, feature;
 			// this._tempLayer = L.featureGroup();
@@ -276,27 +297,51 @@ L.Control.MeasureDraw = L.Control.extend({
 		var type = e.layerType,
 			layer = e.layer;
 
-		layer._measureDrawFeature = true;
 		// layer.options.selectable = false;
 		// layer.options.clickable = false;
 		// layer.options.popup = "Hej Hej ${id}";
-		layer.options.layerId = L.stamp(layer); // Create unique id
 
-		// if (e._silent) {
-		// 	layer.properties = $.extend(true, {}, layer.feature.properties);
-		// 	layer.uniqueKey = "id";
-		// 	// delete layer.feature;
-		// 	// delete layer._leaflet_events;
-		// 	// delete layer.defaultOptions;
+		// if (layer._latlng) {
+		// 	var props = layer.properties;
+		// 	layer = L.marker(layer._latlng, layer.options);
+		// 	layer.properties = props;
+
 		// }
+		layer.options._silent = true;
+
+
+		if (layer.properties && layer.properties.radius) {
+			var props = layer.properties;
+			type = "circle";
+			layer = L.circle(layer._latlng, layer.properties.radius); //, this.options.stylePolygon);
+			layer.properties = props;
+		}
+		if (layer.setStyle) {
+			switch(type) {
+				case "polyline":
+					layer.setStyle(this.options.stylePolyline);
+					break;
+				default:
+					layer.setStyle(this.options.stylePolygon);
+					break;
+			}
+		}
+		this._layer.addLayer(layer);
+		layer.options.layerId = layer._leaflet_id; //L.stamp(layer); // Create unique id
+		if (layer.feature) {
+			layer.properties = layer.feature.properties || layer.properties;
+			delete layer.feature;
+		}
+
 		if (!layer.properties) {
 			layer.properties = {
-				id: layer.options.layerId,
+				id: layer._leaflet_id,
 				measure_form: '<div class="measuredraw-popup-div-save"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>',
 				measure_text: ""
 			};
 		}
-		this._layer.addLayer(layer);
+		layer.properties.id = layer._leaflet_id;
+		layer._measureDrawFeature = true;
 
 		// JL: Testing
 		// this._layer.eachLayer(function(lay) {
@@ -404,16 +449,27 @@ L.Control.MeasureDraw = L.Control.extend({
 		this._labels = []; // Reset for next time
 		
 		// Center the tag horisontally
-		var labelTag = $(".leaflet-maplabel:last");
+		var labelTag = $(".leaflet-maplabel:last");  //$("."+className);
 		// labelTag.find("div:first").addClass("hidden-labelinfo");
 		// labelTag
 		labelTag.css({
-			"margin-left": (-labelTag.width()/2)+"px"
+			"margin-left": (-labelTag.width()/2-15)+"px"
 		});
 
 		if (!e._silent) {
+			labelTag.addClass("leaflet-maplabel-hover");
+			setTimeout(function() {
+				labelTag.removeClass("leaflet-maplabel-hover");
+			}, 2000)
 			layer.fire("click");
 		}
+		// else {
+		// 	if (layer.eachLayer) {
+		// 		layer.eachLayer(function(lay) {
+		// 			self.onNodeClick({latlng: lay._latLng});
+		// 		});
+		// 	}
+		// }
 		// var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
 		// layer.options.popup = popupHtml;
 		// layer.bindPopup(popupHtml);
@@ -421,11 +477,11 @@ L.Control.MeasureDraw = L.Control.extend({
 	},
 
 	onMouseOver: function(e) {
-		$(".measuredrawlabel--"+e.target.properties.id+"--").addClass("leaflet-maplabel-hover");
+		$(".measuredrawlabel--"+e.target._leaflet_id+"--").addClass("leaflet-maplabel-hover");
 	},
 
 	onMouseOut: function(e) {
-		$(".measuredrawlabel--"+e.target.properties.id+"--").removeClass("leaflet-maplabel-hover");
+		$(".measuredrawlabel--"+e.target._leaflet_id+"--").removeClass("leaflet-maplabel-hover");
 	},
 
 	_setLabels: function() {
@@ -515,7 +571,7 @@ L.Control.MeasureDraw = L.Control.extend({
 					self.map.removeLayer(label);
 				}
 			});
-			self.map.removeLayer(layer);
+			self._layer.removeLayer(layer);
 			return false;
 		});
 
@@ -591,10 +647,16 @@ L.Control.MeasureDraw = L.Control.extend({
 		var tool = new init(this.map, this._drawControl.options.draw[t.geomType]);
 		tool.options.shapeOptions = tool.options.shapeOptions || {};
 		// tool.options.shapeOptions.clickable = false;
-		$.extend(tool.options.shapeOptions, {
-			color: '#0077e2',
-			weight: 10
-		});
+		var style = {};
+		switch(t.geomType) {
+			case "polyline":
+				style = this.options.stylePolyline;
+				break;
+			default:
+				style = this.options.stylePolygon;
+				break
+		}
+		$.extend(tool.options.shapeOptions, style);
 		
 		this._tools[t.geomType] = tool;
 		return b;

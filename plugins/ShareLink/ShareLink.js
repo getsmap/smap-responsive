@@ -1,17 +1,20 @@
 L.Control.ShareLink = L.Control.extend({
 	options: {
 		position: 'bottomright', // just an example
-		addToMenu: false
+		addToMenu: false,
+		maxLen: 2083
 	},
 
 	_lang: {
 		"sv": {
 			caption: "Länk till kartan",
-			close: "Stäng"
+			close: "Stäng",
+			tooLongUrl: "Notera! URL:en är för lång för att fungera i gamla webbläsaren Internet Exporer 8 och äldre."
 		},
 		"en": {
 			caption: "Share link",
-			close: "Close"
+			close: "Close",
+			tooLongUrl: "Note! The URL will not work in the old browser Internet Exporer 8 (and older)."
 		}
 	},
 
@@ -78,6 +81,10 @@ L.Control.ShareLink = L.Control.extend({
 				self._$dialog = null;
 			});
 			
+		}
+		if (url.length > this.options.maxLen) {
+			var note = smap.cmd.notify(this.lang.tooLongUrl, "warning", {parent: inputDiv.parent()});
+			note.removeClass("map-alert");
 		}
 		this._$dialog.modal("show");
 

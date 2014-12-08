@@ -76,11 +76,14 @@ smap.cmd = {
 			case "success":
 				msgType = "alert-success";
 				break;
+			case "warning":
+				msgType = "alert-danger";
+				break;
 			case "error":
 				msgType = "alert-danger";
 				break;
 			}
-			var msg = $('<div class="alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
+			var msg = $('<div class="alert map-alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
 			options.parent.find(".alert").remove();
 			options.parent.append(msg);
 			return msg;
