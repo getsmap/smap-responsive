@@ -34,6 +34,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			clickToAddText: "Klicka för att lägga till text (stäng pratbubblan för att spara)",
 			showMeasures: "Visa mätresultat",
 			remove: "Ta bort",
+			moreCoords: "Fler koordinatsystem",
 			
 			handlers: {
 				circle: {
@@ -91,7 +92,8 @@ L.Control.MeasureDraw = L.Control.extend({
 			northing: "Northing (y/latitude)",
 			clickToAddText: "Click to add text",
 			showMeasures: "Show measure results",
-			remove: "Remove"
+			remove: "Remove",
+			moreCoords: "More projections"
 			// coordinates: "Koordinater"
 		}
 	},
@@ -150,6 +152,10 @@ L.Control.MeasureDraw = L.Control.extend({
 					// Circles are not represented in JSON
 					lay.properties.radius = lay.getRadius();
 				}
+				// if (lay._popup && lay._popup._isOpen) {
+				// 	delete p.SEL;
+				// 	lay.properties.popupIsOpen = true;
+				// }
 				props.push(lay.properties);
 			});
 			// 	lay.feature = {
@@ -261,12 +267,14 @@ L.Control.MeasureDraw = L.Control.extend({
 	},
 
 	onNodeClick: function(e) {
-		var latLng = e.latlng;
+		var latLng = e.latlng || null;
 		var nds = this._nodes;
 
 		this._labels = this._labels || [];
-		
-		nds.push(latLng);
+	
+		if (latLng) {
+			nds.push(latLng);
+		}
 
 		if (nds.length > 1) {
 			var latLngs = nds.slice(nds.length-2);
@@ -291,7 +299,7 @@ L.Control.MeasureDraw = L.Control.extend({
 	},
 
 	onCreated: function(e) {
-
+		var self = this;
 		this._deactivateAll();
 
 		var type = e.layerType,
@@ -362,11 +370,11 @@ L.Control.MeasureDraw = L.Control.extend({
 				var espg3008 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3008");
 				var espg3021 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3021");
 
-				html =	'<div class="hidden-labelinfo">'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
+				html =	'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
 						"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
-						"Lon: &nbsp;"+utils.round(wgs.lat, 5)+"<br><br>";
+						"Lon: &nbsp;"+utils.round(wgs.lat, 5)+'<div><br><button onclick="var tag=jQuery(this).parent().parent().parent().find(\'.measuredraw-morecoords\');tag.toggleClass(\'hidden\');jQuery(this).parent().remove();return false;" class="btn btn-primary btn-sm">'+this.lang.moreCoords+'</button></div></div>';
 
-				html +=		"<strong>Sweref99 TM (EPSG:3006)</strong><br>"+
+				html +=		"<br><div class='measuredraw-morecoords hidden'><strong>Sweref99 TM (EPSG:3006)</strong><br>"+
 							"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
 							"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
 							"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
@@ -374,8 +382,8 @@ L.Control.MeasureDraw = L.Control.extend({
 							"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
 							"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+
 							"East: &nbsp;"+utils.round(espg3021.lng)+"<br>"+
-							"North: &nbsp;"+utils.round(espg3021.lat)+"</div>"+
-						'</div>';
+							"North: &nbsp;"+utils.round(espg3021.lat)+
+						"</div>";
 
 				// layer.bindPopup(html);
 				// layer.openPopup();
@@ -429,9 +437,16 @@ L.Control.MeasureDraw = L.Control.extend({
 		var fid = layer._leaflet_id;
 		var fidClass = "measuredrawlabel--"+fid+"--";
 		var className = "leaflet-maplabel "+fidClass;
-		// if (type === "marker") {
-		// 	className = "leaflet-maplabel-small "+className;
-		// }
+		
+
+		if (e._silent && layer.getLatLngs) {
+			// Add labels at the edges
+			this._nodes = [];
+			$.each(layer.getLatLngs(), function(i, latLng) {
+				self.onNodeClick({latlng: latLng});
+			});
+		}
+
 		var label = utils.createLabel(center, html, className);
 		this._layer.addLayer(label);
 		layer.on("mouseover", this.onMouseOver);
@@ -450,8 +465,10 @@ L.Control.MeasureDraw = L.Control.extend({
 		
 		// Center the tag horisontally
 		var labelTag = $(".leaflet-maplabel:last");  //$("."+className);
-		// labelTag.find("div:first").addClass("hidden-labelinfo");
-		// labelTag
+		
+		if (type === "marker") {
+			labelTag.css("transition", "none");
+		}
 		labelTag.css({
 			"margin-left": (-labelTag.width()/2-15)+"px"
 		});
@@ -464,12 +481,11 @@ L.Control.MeasureDraw = L.Control.extend({
 			layer.fire("click");
 		}
 		// else {
-		// 	if (layer.eachLayer) {
-		// 		layer.eachLayer(function(lay) {
-		// 			self.onNodeClick({latlng: lay._latLng});
-		// 		});
+		// 	if (layer.properties && layer.properties.popupIsOpen) {
+		// 		layer.fire("click");
 		// 	}
 		// }
+
 		// var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
 		// layer.options.popup = popupHtml;
 		// layer.bindPopup(popupHtml);

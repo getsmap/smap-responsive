@@ -60,6 +60,9 @@ body {
   padding: 10px 15px;
   margin-top: 5px;
 }
+.leaflet-maplabel .hidden-labelinfo {
+  display: none;
+}
 .leaflet-maplabel-hover,
 .leaflet-maplabel:hover {
   text-shadow: none;
@@ -77,11 +80,17 @@ body {
   padding: 3px 5px;
   border: none;
   opacity: 1;
+  margin-top: 0;
   visibility: visible;
+  text-shadow: 1px 1px 0px #fff;
   z-index: 800 !important;
 }
 .leaflet-maplabel-small:hover {
   background: none;
+  -webkit-transition: none;
+  transition: none;
+  color: #000;
+  text-shadow: 1px 1px 0px #fff;
 }
 .leaflet-top.leaflet-right {
   margin-right: 5px;
