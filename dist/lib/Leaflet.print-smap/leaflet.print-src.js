@@ -240,20 +240,11 @@ L.print.Provider = L.Class.extend({
 			return a._icon.style.zIndex - b._icon.style.zIndex;
 		});
 
-		function getZIndexFromMarker(marker) {
-			// Don't know which style is correct. Seems like the 
-			// latter works but in original was zIndex.
-			return parseInt( marker._icon.style.zIndex || marker._icon.style["z-index"] );
-		}
-
 		var i;
 		// Layers with equal zIndexes can cause problems with mapfish print
 		for(i = 1;i<markers.length;i++){
-			var z0 = getZIndexFromMarker(markers[i]);
-			var z1 = getZIndexFromMarker(markers[i - 1]) + 1;
-			if(z0 <= z1) {
-				markers[i]._icon.style.zIndex = z1;
-				markers[i]._icon.style["z-index"] = z1;
+			if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
+				markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
 			}
 		}
 
@@ -544,14 +535,8 @@ L.print.Provider = L.Class.extend({
 					feature = features[i];
 
 					if (feature instanceof L.Marker) {
-						var icon = feature.options.icon;
-						if (!icon.options.iconSize) {
-							icon.options.iconSize = [0, 0];
-						}
-						if (!icon.options.iconAnchor) {
-							icon.options.iconAnchor = [0, 0];
-						}
-						var iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
+						var icon = feature.options.icon,
+							iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
 							iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
 							iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
 							scaleFactor = (this.options.dpi / L.print.Provider.DPI);
