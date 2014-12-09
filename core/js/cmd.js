@@ -183,7 +183,7 @@ smap.cmd = {
 			if (show && show === true) {
 
 				if (!this.loader) {
-					this.loader = $('<div class="loader"><span class="fa fa-globe"></span><label>'+lang.loading+'</label></div>');
+					this.loader = $('<div class="loader"><span class="fa fa-spinner"></span><label>'+lang.loading+'</label></div>');
 				}
 				$("#mapdiv").append(this.loader);
 

@@ -167,12 +167,10 @@ html, body
 				padding 4%
 				button
 					display none
-			div
-				display table-cell
-				vertical-align middle
-				width 16%
-				button
-					visibility hidden
+			.select-btn-zoom-to-feature
+					width 16%
+					display table-cell
+					border-radius 0
 					// margin-left -4%
 					border none
 					border-left 1px solid #C3C3C3
@@ -185,7 +183,7 @@ html, body
 					border-radius 0
 					background none
 					background-color rgba(92, 184, 92, 0.7) !important
-					
+					visibility hidden
 					// background-color #fff
 					// background-color rgba(105, 105, 105, 0)
 					
@@ -208,7 +206,7 @@ html, body
 
 		.list-group-item:hover
 			background-color rgba(255,255,255,0.2)
-			button
+			.select-btn-zoom-to-feature
 				visibility visible !important
 				
 		.list-group-item:first-child
@@ -231,17 +229,18 @@ html, body
 .loader
 	position relative
 	z-index 2000
-	color #2A446E
+	color #444
 	display table
 	text-align center
 	left calc(50% - 154px)
 	top calc(50% - 154px)
+	font-size 110%
 	
 	span
 		display table-cell
 		vertical-align middle
 		font-size 4em
-		animation spin 1s infinite linear
+		animation spin 3s infinite linear
 	label
 		display table-cell
 		vertical-align middle

@@ -153,13 +153,10 @@ body {
 .core-select-modal .modal-body .list-group-item span button {
   display: none;
 }
-.core-select-modal .modal-body .list-group-item div {
-  display: table-cell;
-  vertical-align: middle;
+.core-select-modal .modal-body .list-group-item .select-btn-zoom-to-feature {
   width: 16%;
-}
-.core-select-modal .modal-body .list-group-item div button {
-  visibility: hidden;
+  display: table-cell;
+  border-radius: 0;
   border: none;
   border-left: 1px solid #c3c3c3;
   height: 100%;
@@ -170,6 +167,7 @@ body {
   border-radius: 0;
   background: none;
   background-color: rgba(92,184,92,0.7) !important;
+  visibility: hidden;
 }
 .core-select-modal .modal-body .list-group-item .select-btn-zoom-to-feature:hover {
   color: #fff;
@@ -182,7 +180,7 @@ body {
 .core-select-modal .list-group-item:hover {
   background-color: rgba(255,255,255,0.2);
 }
-.core-select-modal .list-group-item:hover button {
+.core-select-modal .list-group-item:hover .select-btn-zoom-to-feature {
   visibility: visible !important;
 }
 .core-select-modal .list-group-item:first-child {
@@ -197,18 +195,19 @@ body {
 .loader {
   position: relative;
   z-index: 2000;
-  color: #2a446e;
+  color: #444;
   display: table;
   text-align: center;
   left: calc(50% - 154px);
   top: calc(50% - 154px);
+  font-size: 110%;
 }
 .loader span {
   display: table-cell;
   vertical-align: middle;
   font-size: 4em;
-  -webkit-animation: spin 1s infinite linear;
-  animation: spin 1s infinite linear;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
 }
 .loader label {
   display: table-cell;

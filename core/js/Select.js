@@ -333,7 +333,7 @@ smap.core.Select = L.Class.extend({
 							pText = self._processHtml(pText);
 							// <strong>'+theSf.options.displayName+'</strong>
 							row = $('<a href="#" class="list-group-item"><span><strong>'+theSf.options.displayName+'</strong>'+pText+'</span>'+
-								'<div><button class="btn btn-success select-btn-zoom-to-feature">Zooma hit</button></div></a>');
+								'<div class="btn btn-success select-btn-zoom-to-feature">Zooma hit</div></a>');
 							row.data("index", i);
 							bContent.append(row);
 						}
