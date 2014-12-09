@@ -680,6 +680,7 @@ L.Control.MeasureDraw = L.Control.extend({
 				else {
 					layer.properties.measure_text = val;
 					layer.properties.measure_form = ""; // erase
+					layer.options.label = val; // For mapfish print
 					layer.closePopup();
 				}
 			});

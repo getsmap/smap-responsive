@@ -543,7 +543,7 @@ L.print.Provider = L.Class.extend({
 				for (i = 0, l = features.length; i < l; i++) {
 					feature = features[i];
 
-					if (feature instanceof L.Marker) {
+					if (feature instanceof L.Marker && !feature.options.label) {
 						var icon = feature.options.icon;
 						if (!icon.options.iconSize) {
 							icon.options.iconSize = [0, 0];
