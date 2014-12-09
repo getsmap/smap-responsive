@@ -4,7 +4,7 @@ L.Control.SelectWMS = L.Control.extend({
 		outputFormat: "GML2",
 		info_format: "text/plain",
 		maxFeatures: 20,
-		buffer: 5,
+		buffer: 10,
 		useProxy: false
 	},
 	

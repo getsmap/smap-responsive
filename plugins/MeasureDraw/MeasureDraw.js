@@ -121,7 +121,12 @@ L.Control.MeasureDraw = L.Control.extend({
 		this._proxyListeners();
 
 		this._initDraw();
-		this._createBtn();
+		if (!L.Browser.touch) {
+			this._createBtn();
+			smap.event.on("smap.core.pluginsadded", function() {
+				$('.leaflet-control-measuredraw .dropdown-toggle').dropdown();
+			});
+		}
 
 		var self = this;
 		this.map.on("layeradd", function(e) {
@@ -130,10 +135,6 @@ L.Control.MeasureDraw = L.Control.extend({
 				lay.options.clickable = true;
 			});
 		});
-		smap.event.on("smap.core.pluginsadded", function() {
-			$('.leaflet-control-measuredraw .dropdown-toggle').dropdown();
-		});
-
 		smap.event.on("smap.core.createparams", $.proxy(this._onCreateParams, this));
 		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
 
@@ -298,6 +299,38 @@ L.Control.MeasureDraw = L.Control.extend({
 		console.log("node click");
 	},
 
+	_createCoordsHtml: function(wgs) {
+		var espg3006 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3006");
+		var espg3008 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3008");
+		var espg3021 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3021");
+
+		html =	'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
+				"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
+				"Lon: &nbsp;"+utils.round(wgs.lat, 5)+'<div><br><button onclick="var tag=jQuery(this).parent().parent().parent().find(\'.measuredraw-morecoords\');tag.toggleClass(\'hidden\');jQuery(this).parent().remove();return false;" class="btn btn-primary btn-sm">'+this.lang.moreCoords+'</button></div></div>';
+
+		html +=		"<br><div class='measuredraw-morecoords hidden'><strong>Sweref99 TM (EPSG:3006)</strong><br>"+
+					"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
+					"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
+					"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
+					"East: &nbsp;"+utils.round(espg3008.lng)+"<br>"+
+					"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
+					"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+
+					"East: &nbsp;"+utils.round(espg3021.lng)+"<br>"+
+					"North: &nbsp;"+utils.round(espg3021.lat)+
+				"</div>";
+		return html;
+	},
+
+	_getLabel: function(layer) {
+		var theLabel;
+		this._layer.eachLayer(function(label) {
+			if (label._parentFeature && label._parentFeature === layer) {
+				theLabel = label;
+			}
+		});
+		return theLabel;
+	},
+
 	onCreated: function(e) {
 		var self = this;
 		this._deactivateAll();
@@ -315,7 +348,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		// 	layer.properties = props;
 
 		// }
-		layer.options._silent = true;
+		// layer.options._silent = true;
 
 
 		if (layer.properties && layer.properties.radius) {
@@ -334,6 +367,38 @@ L.Control.MeasureDraw = L.Control.extend({
 					break;
 			}
 		}
+
+		if (type === "marker") {
+			layer.options.draggable = true;
+			layer.on("dragstart", function(e) {
+				var lay = e.target;
+				lay.closePopup();
+				// self._layer.eachLayer(function(label) {
+				// 	if (label._parentFeature && label._parentFeature === lay) {
+				// 		self.map.removeLayer(label);
+				// 	}
+				// });
+			});
+			layer.on("drag", function(e) {
+				var lay = e.target;
+				var label = self._getLabel(lay);
+				label.setLatLng(lay.getLatLng());
+				var html = self._createCoordsHtml(lay.getLatLng());
+				$(label._icon).html(html);
+				// var labelTag = $(".leaflet-maplabel:last");
+
+				// self._layer.addLayer(label);
+				// var fid = lay._leaflet_id;
+				// var fidClass = "measuredrawlabel_"+fid+"_";
+				// var className = "leaflet-maplabel "+fidClass;
+				// labelTag.empty().append(html);
+
+			});
+			// layer.on("dragend", function(e) {
+			// 	var lay = e.target;
+			// });
+		}
+
 		this._layer.addLayer(layer);
 		layer.options.layerId = layer._leaflet_id; //L.stamp(layer); // Create unique id
 		if (layer.feature) {
@@ -366,24 +431,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			case "marker":
 				// Set label to coords in selected coordinate system (TODO)
 				var wgs = center = layer.getLatLng();
-				var espg3006 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3006");
-				var espg3008 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3008");
-				var espg3021 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3021");
-
-				html =	'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
-						"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
-						"Lon: &nbsp;"+utils.round(wgs.lat, 5)+'<div><br><button onclick="var tag=jQuery(this).parent().parent().parent().find(\'.measuredraw-morecoords\');tag.toggleClass(\'hidden\');jQuery(this).parent().remove();return false;" class="btn btn-primary btn-sm">'+this.lang.moreCoords+'</button></div></div>';
-
-				html +=		"<br><div class='measuredraw-morecoords hidden'><strong>Sweref99 TM (EPSG:3006)</strong><br>"+
-							"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
-							"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
-							"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
-							"East: &nbsp;"+utils.round(espg3008.lng)+"<br>"+
-							"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
-							"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+
-							"East: &nbsp;"+utils.round(espg3021.lng)+"<br>"+
-							"North: &nbsp;"+utils.round(espg3021.lat)+
-						"</div>";
+				html = this._createCoordsHtml(wgs);
 
 				// layer.bindPopup(html);
 				// layer.openPopup();
@@ -398,6 +446,7 @@ L.Control.MeasureDraw = L.Control.extend({
 				// 	"margin-left": (-labelTag.width()/2)+"px"
 				// 	// "margin-top": (-labelTag.height()/2)+"px"
 				// });
+
 				break;
 			case "polyline":
 				var latLngs = layer.getLatLngs();
@@ -435,9 +484,8 @@ L.Control.MeasureDraw = L.Control.extend({
 		}
 
 		var fid = layer._leaflet_id;
-		var fidClass = "measuredrawlabel--"+fid+"--";
+		var fidClass = "measuredrawlabel_"+fid+"_";
 		var className = "leaflet-maplabel "+fidClass;
-		
 
 		if ( (e._silent || type === "rectangle") && layer.getLatLngs) {
 			// Add labels at the edges
@@ -451,6 +499,10 @@ L.Control.MeasureDraw = L.Control.extend({
 		this._layer.addLayer(label);
 		layer.on("mouseover", this.onMouseOver);
 		layer.on("mouseout", this.onMouseOut);
+		label.options.clickable = true;
+		// label.on("click", function(e) {
+		// 	var a;
+		// });
 
 		// Set this layer as "parent feature" of all labels so 
 		// we know where they belong (when removing the feature we 
@@ -468,6 +520,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		
 		if (type === "marker") {
 			labelTag.css("transition", "none");
+			// labelTag.css("margin-top", -labelTag.outerHeight() - 50+"px");
 		}
 		labelTag.css({
 			"margin-left": (-labelTag.width()/2-15)+"px"
@@ -480,6 +533,7 @@ L.Control.MeasureDraw = L.Control.extend({
 				labelTag.removeClass("leaflet-maplabel-hover");
 			}, 2000)
 			layer.fire("click");
+
 		}
 		else {
 			if (layer.properties && layer.properties.popupIsOpen) {
@@ -506,11 +560,11 @@ L.Control.MeasureDraw = L.Control.extend({
 	},
 
 	onMouseOver: function(e) {
-		$(".measuredrawlabel--"+e.target._leaflet_id+"--").addClass("leaflet-maplabel-hover");
+		$(".measuredrawlabel_"+e.target._leaflet_id+"_").addClass("leaflet-maplabel-hover");
 	},
 
 	onMouseOut: function(e) {
-		$(".measuredrawlabel--"+e.target._leaflet_id+"--").removeClass("leaflet-maplabel-hover");
+		$(".measuredrawlabel_"+e.target._leaflet_id+"_").removeClass("leaflet-maplabel-hover");
 	},
 
 	_setLabels: function() {
@@ -570,6 +624,17 @@ L.Control.MeasureDraw = L.Control.extend({
 		this.map.on("popupopen", this._onPopupOpen);
 	},
 
+	_removeFeature: function(layer) {
+		var self = this;
+		var labels = this._labels;
+		this._layer.eachLayer(function(label) {
+			if (label._parentFeature && label._parentFeature === layer) {
+				self.map.removeLayer(label);
+			}
+		});
+		this._layer.removeLayer(layer);
+	},
+
 	onPopupOpen: function(e) {
 		var self = this;
 
@@ -592,15 +657,9 @@ L.Control.MeasureDraw = L.Control.extend({
 		}
 		
 		$(".leaflet-popup-content").find(".measuredraw-btn-popupremove").on("click", function() {
-			// var fid = layer._leaflet_id; //measuredrawlabel--35--;
-			// var label = $(".measuredrawlabel--"+fid+"--");
-			var labels = self._labels;
-			self._layer.eachLayer(function(label) {
-				if (label._parentFeature && label._parentFeature === layer) {
-					self.map.removeLayer(label);
-				}
-			});
-			self._layer.removeLayer(layer);
+			// var fid = layer._leaflet_id; //measuredrawlabel_35_;
+			// var label = $(".measuredrawlabel_"+fid+"_");
+			self._removeFeature(layer);
 			return false;
 		});
 
