@@ -26209,6 +26209,187 @@ L.GeoJSON.Custom = L.GeoJSON.extend({
 		}
 	}
 });
+/*
+ * L.NonTiledLayer.WMS is used for putting WMS non tiled layers on the map.
+ */
+L.NonTiledLayer.WMS = L.NonTiledLayer.extend({
+
+    defaultWmsParams: {
+        service: 'WMS',
+        request: 'GetMap',
+        version: '1.1.1',
+        layers: '',
+        styles: '',
+        format: 'image/jpeg',
+        transparent: false
+    },
+
+    initialize: function (url, options) { // (String, Object)
+        this._wmsUrl = url;
+
+        var wmsParams = L.extend({}, this.defaultWmsParams);
+		
+		// all keys that are not NonTiledLayer options go to WMS params
+		for (var i in options) {
+			if (!L.NonTiledLayer.prototype.options.hasOwnProperty(i)) {
+				wmsParams[i] = options[i];
+			}
+		}
+
+        this.wmsParams = wmsParams;
+
+        L.setOptions(this, options);
+    },
+
+    onAdd: function (map) {
+        var projectionKey = parseFloat(this.wmsParams.version) >= 1.3 ? 'crs' : 'srs';
+        this.wmsParams[projectionKey] = map.options.crs.code;
+
+        L.NonTiledLayer.prototype.onAdd.call(this, map);
+    },
+
+    getImageUrl: function (world1, world2, width, height) {
+        var wmsParams = this.wmsParams;
+        wmsParams.width = width;
+        wmsParams.height = height;
+
+        var crs = this._map.options.crs;
+
+        var p1 = crs.project(world1);
+        var p2 = crs.project(world2);
+
+        var url = this._wmsUrl + L.Util.getParamString(wmsParams, this._wmsUrl) + '&bbox=' + p1.x + ',' + p2.y + ',' + p2.x + ',' + p1.y;
+        return url;
+    },
+
+    setParams: function (params, noRedraw) {
+
+        L.extend(this.wmsParams, params);
+
+        if (!noRedraw) {
+            this.redraw();
+        }
+
+        return this;
+    }
+});
+
+L.nonTiledLayer.wms = function (url, options) {
+    return new L.NonTiledLayer.WMS(url, options);
+};
+/*
+ * L.TileLayer.EsriRest is used for putting ESRI REST tile layers on the map.
+ */
+
+L.TileLayer.EsriRest = L.TileLayer.extend({
+
+	defaultEsriParams: {
+		layers: '',
+		format: 'png',
+		transparent: false,
+        dpi: '92',
+        f: 'image'
+	},
+
+	initialize: function (url, options) { // (String, Object)
+
+		this._url = url;
+
+		var esriParams = L.extend({}, this.defaultEsriParams),
+		    tileSize = options.tileSize || this.options.tileSize;
+
+		if (options.detectRetina && L.Browser.retina) {
+            esriParams.size = [tileSize * 2, tileSize * 2].join(',');
+		} else {
+            esriParams.size = [tileSize, tileSize].join(',');
+        }
+
+		for (var i in options) {
+			// all keys that are not TileLayer options go to ESRI params
+			if (!this.options.hasOwnProperty(i)) {
+				esriParams[i] = options[i];
+			}
+		}
+
+		this.esriParams = esriParams;
+
+		L.setOptions(this, options);
+	},
+
+	onAdd: function (map) {
+
+		this.esriParams['bboxSR'] = map.options.crs.code.substring(5);
+        this.esriParams['imageSR'] = map.options.crs.code.substring(5);
+        this.esriParams['layers'] = "show:" + this.esriParams['layers'];
+
+		L.TileLayer.prototype.onAdd.call(this, map);
+	},
+
+	getTileUrl: function (tilePoint, zoom) { // (Point, Number) -> String
+
+		var map = this._map,
+		    crs = map.options.crs,
+		    tileSize = this.options.tileSize,
+
+		    nwPoint = tilePoint.multiplyBy(tileSize),
+		    sePoint = nwPoint.add([tileSize, tileSize]),
+
+		    nw = crs.project(map.unproject(nwPoint, zoom)),
+		    se = crs.project(map.unproject(sePoint, zoom)),
+
+		    bbox = [nw.x, se.y, se.x, nw.y].join(','),
+
+		    url = L.Util.template(this._url, {s: this._getSubdomain(tilePoint)});
+
+		return url + '/export' + L.Util.getParamString(this.esriParams, url, true) + '&bbox=' + bbox;
+	},
+
+    getIdentifyUrl: function(point, params) {
+
+        params = params ? params : {};
+
+        var defaultIdentifyParams = {
+            geometryType: 'esriGeometryPoint',
+            sr: '4326',
+            layers: this.esriParams['layers'].substring(5),
+            tolerance: 0,
+            imageDisplay: this.esriParams.size + ',' + this.esriParams.dpi,
+            returnGeometry: false,
+            f: 'pjson',
+            geometry: [point.x, point.y].join(','),
+            mapExtent: [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat, map.getBounds()._southWest.lng, map.getBounds()._southWest.lat].join(','),
+            showLayers: 'visible'
+        };
+
+        for (var i in defaultIdentifyParams) {
+            // all keys that are not TileLayer options go to ESRI params
+            if (!params.hasOwnProperty(i)) {
+                params[i] = defaultIdentifyParams[i];
+            }
+        }
+
+        params['layers'] = params['showLayers'] + ":" + params['layers'];
+
+        url = L.Util.template(this._url, {s: this._getSubdomain(point)});
+        return url + '/identify' + L.Util.getParamString(params, url, true);
+    },
+
+	setParams: function (params, noRedraw) {
+
+		L.extend(this.esriParams, params);
+
+		if (!noRedraw) {
+			this.redraw();
+		}
+
+		return this;
+	}
+});
+
+L.tileLayer.esri = function (url, options) {
+	return new L.TileLayer.ESRI(url, options);
+};
+
 L.GeoJSON.WFS = L.GeoJSON.extend({
 	
 	CLASS_NAME: "L.GeoJSON.WFS",
@@ -26562,187 +26743,6 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		}
 	}
 });
-
-/*
- * L.NonTiledLayer.WMS is used for putting WMS non tiled layers on the map.
- */
-L.NonTiledLayer.WMS = L.NonTiledLayer.extend({
-
-    defaultWmsParams: {
-        service: 'WMS',
-        request: 'GetMap',
-        version: '1.1.1',
-        layers: '',
-        styles: '',
-        format: 'image/jpeg',
-        transparent: false
-    },
-
-    initialize: function (url, options) { // (String, Object)
-        this._wmsUrl = url;
-
-        var wmsParams = L.extend({}, this.defaultWmsParams);
-		
-		// all keys that are not NonTiledLayer options go to WMS params
-		for (var i in options) {
-			if (!L.NonTiledLayer.prototype.options.hasOwnProperty(i)) {
-				wmsParams[i] = options[i];
-			}
-		}
-
-        this.wmsParams = wmsParams;
-
-        L.setOptions(this, options);
-    },
-
-    onAdd: function (map) {
-        var projectionKey = parseFloat(this.wmsParams.version) >= 1.3 ? 'crs' : 'srs';
-        this.wmsParams[projectionKey] = map.options.crs.code;
-
-        L.NonTiledLayer.prototype.onAdd.call(this, map);
-    },
-
-    getImageUrl: function (world1, world2, width, height) {
-        var wmsParams = this.wmsParams;
-        wmsParams.width = width;
-        wmsParams.height = height;
-
-        var crs = this._map.options.crs;
-
-        var p1 = crs.project(world1);
-        var p2 = crs.project(world2);
-
-        var url = this._wmsUrl + L.Util.getParamString(wmsParams, this._wmsUrl) + '&bbox=' + p1.x + ',' + p2.y + ',' + p2.x + ',' + p1.y;
-        return url;
-    },
-
-    setParams: function (params, noRedraw) {
-
-        L.extend(this.wmsParams, params);
-
-        if (!noRedraw) {
-            this.redraw();
-        }
-
-        return this;
-    }
-});
-
-L.nonTiledLayer.wms = function (url, options) {
-    return new L.NonTiledLayer.WMS(url, options);
-};
-/*
- * L.TileLayer.EsriRest is used for putting ESRI REST tile layers on the map.
- */
-
-L.TileLayer.EsriRest = L.TileLayer.extend({
-
-	defaultEsriParams: {
-		layers: '',
-		format: 'png',
-		transparent: false,
-        dpi: '92',
-        f: 'image'
-	},
-
-	initialize: function (url, options) { // (String, Object)
-
-		this._url = url;
-
-		var esriParams = L.extend({}, this.defaultEsriParams),
-		    tileSize = options.tileSize || this.options.tileSize;
-
-		if (options.detectRetina && L.Browser.retina) {
-            esriParams.size = [tileSize * 2, tileSize * 2].join(',');
-		} else {
-            esriParams.size = [tileSize, tileSize].join(',');
-        }
-
-		for (var i in options) {
-			// all keys that are not TileLayer options go to ESRI params
-			if (!this.options.hasOwnProperty(i)) {
-				esriParams[i] = options[i];
-			}
-		}
-
-		this.esriParams = esriParams;
-
-		L.setOptions(this, options);
-	},
-
-	onAdd: function (map) {
-
-		this.esriParams['bboxSR'] = map.options.crs.code.substring(5);
-        this.esriParams['imageSR'] = map.options.crs.code.substring(5);
-        this.esriParams['layers'] = "show:" + this.esriParams['layers'];
-
-		L.TileLayer.prototype.onAdd.call(this, map);
-	},
-
-	getTileUrl: function (tilePoint, zoom) { // (Point, Number) -> String
-
-		var map = this._map,
-		    crs = map.options.crs,
-		    tileSize = this.options.tileSize,
-
-		    nwPoint = tilePoint.multiplyBy(tileSize),
-		    sePoint = nwPoint.add([tileSize, tileSize]),
-
-		    nw = crs.project(map.unproject(nwPoint, zoom)),
-		    se = crs.project(map.unproject(sePoint, zoom)),
-
-		    bbox = [nw.x, se.y, se.x, nw.y].join(','),
-
-		    url = L.Util.template(this._url, {s: this._getSubdomain(tilePoint)});
-
-		return url + '/export' + L.Util.getParamString(this.esriParams, url, true) + '&bbox=' + bbox;
-	},
-
-    getIdentifyUrl: function(point, params) {
-
-        params = params ? params : {};
-
-        var defaultIdentifyParams = {
-            geometryType: 'esriGeometryPoint',
-            sr: '4326',
-            layers: this.esriParams['layers'].substring(5),
-            tolerance: 0,
-            imageDisplay: this.esriParams.size + ',' + this.esriParams.dpi,
-            returnGeometry: false,
-            f: 'pjson',
-            geometry: [point.x, point.y].join(','),
-            mapExtent: [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat, map.getBounds()._southWest.lng, map.getBounds()._southWest.lat].join(','),
-            showLayers: 'visible'
-        };
-
-        for (var i in defaultIdentifyParams) {
-            // all keys that are not TileLayer options go to ESRI params
-            if (!params.hasOwnProperty(i)) {
-                params[i] = defaultIdentifyParams[i];
-            }
-        }
-
-        params['layers'] = params['showLayers'] + ":" + params['layers'];
-
-        url = L.Util.template(this._url, {s: this._getSubdomain(point)});
-        return url + '/identify' + L.Util.getParamString(params, url, true);
-    },
-
-	setParams: function (params, noRedraw) {
-
-		L.extend(this.esriParams, params);
-
-		if (!noRedraw) {
-			this.redraw();
-		}
-
-		return this;
-	}
-});
-
-L.tileLayer.esri = function (url, options) {
-	return new L.TileLayer.ESRI(url, options);
-};
 
 (function(root,factory){"use strict";if(typeof module!=="undefined"&&module.exports){module.exports=factory(require("jquery")(root))}else if(typeof define==="function"&&define.amd){define("bootstrap3-typeahead",["jquery"],function($){return factory($)})}else{factory(root.jQuery)}})(this,function($){"use strict";var Typeahead=function(element,options){this.$element=$(element);this.options=$.extend({},$.fn.typeahead.defaults,options);this.matcher=this.options.matcher||this.matcher;this.sorter=this.options.sorter||this.sorter;this.select=this.options.select||this.select;this.autoSelect=typeof this.options.autoSelect=="boolean"?this.options.autoSelect:true;this.highlighter=this.options.highlighter||this.highlighter;this.render=this.options.render||this.render;this.updater=this.options.updater||this.updater;this.source=this.options.source;this.delay=typeof this.options.delay=="number"?this.options.delay:250;this.$menu=$(this.options.menu);this.shown=false;this.listen();this.showHintOnFocus=typeof this.options.showHintOnFocus=="boolean"?this.options.showHintOnFocus:false};Typeahead.prototype={constructor:Typeahead,select:function(){var val=this.$menu.find(".active").data("value");if(this.autoSelect||val){this.$element.val(this.updater(val)).change()}return this.hide()},updater:function(item){return item},setSource:function(source){this.source=source},show:function(){var pos=$.extend({},this.$element.position(),{height:this.$element[0].offsetHeight}),scrollHeight;scrollHeight=typeof this.options.scrollHeight=="function"?this.options.scrollHeight.call():this.options.scrollHeight;this.$menu.insertAfter(this.$element).css({top:pos.top+pos.height+scrollHeight,left:pos.left}).show();this.shown=true;return this},hide:function(){this.$menu.hide();this.shown=false;return this},lookup:function(query){var items;if(typeof query!="undefined"&&query!==null){this.query=query}else{this.query=this.$element.val()||""}if(this.query.length<this.options.minLength&&!this.showHintOnFocus){return this.shown?this.hide():this}var worker=$.proxy(function(){items=$.isFunction(this.source)?this.source(this.query,$.proxy(this.process,this)):this.source;if(items){this.process(items)}},this);clearTimeout(this.lookupWorker);this.lookupWorker=setTimeout(worker,this.delay)},process:function(items){var that=this;items=$.grep(items,function(item){return that.matcher(item)});items=this.sorter(items);if(!items.length){return this.shown?this.hide():this}if(this.options.items=="all"){return this.render(items).show()}else{return this.render(items.slice(0,this.options.items)).show()}},matcher:function(item){return~item.toLowerCase().indexOf(this.query.toLowerCase())},sorter:function(items){var beginswith=[],caseSensitive=[],caseInsensitive=[],item;while(item=items.shift()){if(!item.toLowerCase().indexOf(this.query.toLowerCase()))beginswith.push(item);else if(~item.indexOf(this.query))caseSensitive.push(item);else caseInsensitive.push(item)}return beginswith.concat(caseSensitive,caseInsensitive)},highlighter:function(item){var html=$("<div></div>");var query=this.query;var i=item.indexOf(query);var len,leftPart,middlePart,rightPart,strong;len=query.length;if(len==0){return html.text(item).html()}while(i>-1){leftPart=item.substr(0,i);middlePart=item.substr(i,len);rightPart=item.substr(i+len);strong=$("<strong></strong>").text(middlePart);html.append(document.createTextNode(leftPart)).append(strong);item=rightPart;i=item.indexOf(query)}return html.append(document.createTextNode(item)).html()},render:function(items){var that=this;items=$(items).map(function(i,item){i=$(that.options.item).data("value",item);i.find("a").html(that.highlighter(item));return i[0]});if(this.autoSelect){items.first().addClass("active")}this.$menu.html(items);return this},next:function(event){var active=this.$menu.find(".active").removeClass("active"),next=active.next();if(!next.length){next=$(this.$menu.find("li")[0])}next.addClass("active")},prev:function(event){var active=this.$menu.find(".active").removeClass("active"),prev=active.prev();if(!prev.length){prev=this.$menu.find("li").last()}prev.addClass("active")},listen:function(){this.$element.on("focus",$.proxy(this.focus,this)).on("blur",$.proxy(this.blur,this)).on("keypress",$.proxy(this.keypress,this)).on("keyup",$.proxy(this.keyup,this));if(this.eventSupported("keydown")){this.$element.on("keydown",$.proxy(this.keydown,this))}this.$menu.on("click",$.proxy(this.click,this)).on("mouseenter","li",$.proxy(this.mouseenter,this)).on("mouseleave","li",$.proxy(this.mouseleave,this))},destroy:function(){this.$element.data("typeahead",null);this.$element.off("focus").off("blur").off("keypress").off("keyup");if(this.eventSupported("keydown")){this.$element.off("keydown")}this.$menu.remove()},eventSupported:function(eventName){var isSupported=eventName in this.$element;if(!isSupported){this.$element.setAttribute(eventName,"return;");isSupported=typeof this.$element[eventName]==="function"}return isSupported},move:function(e){if(!this.shown)return;switch(e.keyCode){case 9:case 13:case 27:e.preventDefault();break;case 38:e.preventDefault();this.prev();break;case 40:e.preventDefault();this.next();break}e.stopPropagation()},keydown:function(e){this.suppressKeyPressRepeat=~$.inArray(e.keyCode,[40,38,9,13,27]);if(!this.shown&&e.keyCode==40){this.lookup("")}else{this.move(e)}},keypress:function(e){if(this.suppressKeyPressRepeat)return;this.move(e)},keyup:function(e){switch(e.keyCode){case 40:case 38:case 16:case 17:case 18:break;case 9:case 13:if(!this.shown)return;this.select();break;case 27:if(!this.shown)return;this.hide();break;default:this.lookup()}e.stopPropagation();e.preventDefault()},focus:function(e){if(!this.focused){this.focused=true;if(this.options.minLength===0&&!this.$element.val()||this.options.showHintOnFocus){this.lookup()}}},blur:function(e){this.focused=false;if(!this.mousedover&&this.shown)this.hide()},click:function(e){e.stopPropagation();e.preventDefault();this.select();this.$element.focus()},mouseenter:function(e){this.mousedover=true;this.$menu.find(".active").removeClass("active");$(e.currentTarget).addClass("active")},mouseleave:function(e){this.mousedover=false;if(!this.focused&&this.shown)this.hide()}};var old=$.fn.typeahead;$.fn.typeahead=function(option){var arg=arguments;return this.each(function(){var $this=$(this),data=$this.data("typeahead"),options=typeof option=="object"&&option;if(!data)$this.data("typeahead",data=new Typeahead(this,options));if(typeof option=="string"){if(arg.length>1){data[option].apply(data,Array.prototype.slice.call(arg,1))}else{data[option]()}}})};$.fn.typeahead.defaults={source:[],items:8,menu:'<ul class="typeahead dropdown-menu"></ul>',item:'<li><a href="#"></a></li>',minLength:1,scrollHeight:0,autoSelect:true};$.fn.typeahead.Constructor=Typeahead;$.fn.typeahead.noConflict=function(){$.fn.typeahead=old;return this};$(document).on("focus.typeahead.data-api",'[data-provide="typeahead"]',function(e){var $this=$(this);if($this.data("typeahead"))return;$this.typeahead($this.data())})});
 /*!
@@ -27458,11 +27458,20 @@ L.print.Provider = L.Class.extend({
 			return a._icon.style.zIndex - b._icon.style.zIndex;
 		});
 
+		function getZIndexFromMarker(marker) {
+			// Don't know which style is correct. Seems like the 
+			// latter works but in original was zIndex.
+			return parseInt( marker._icon.style.zIndex || marker._icon.style["z-index"] );
+		}
+
 		var i;
 		// Layers with equal zIndexes can cause problems with mapfish print
 		for(i = 1;i<markers.length;i++){
-			if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
-				markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
+			var z0 = getZIndexFromMarker(markers[i]);
+			var z1 = getZIndexFromMarker(markers[i - 1]) + 1;
+			if(z0 <= z1) {
+				markers[i]._icon.style.zIndex = z1;
+				markers[i]._icon.style["z-index"] = z1;
 			}
 		}
 
@@ -27753,8 +27762,14 @@ L.print.Provider = L.Class.extend({
 					feature = features[i];
 
 					if (feature instanceof L.Marker) {
-						var icon = feature.options.icon,
-							iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
+						var icon = feature.options.icon;
+						if (!icon.options.iconSize) {
+							icon.options.iconSize = [0, 0];
+						}
+						if (!icon.options.iconAnchor) {
+							icon.options.iconAnchor = [0, 0];
+						}
+						var iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
 							iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
 							iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
 							scaleFactor = (this.options.dpi / L.print.Provider.DPI);
