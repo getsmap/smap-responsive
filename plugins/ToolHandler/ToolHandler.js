@@ -34,11 +34,17 @@ L.Control.ToolHandler = L.Control.extend({
 		self.$container.css("display", "none");
 
 		this._makeToolHandler();
-		// smap.event.on("smap.core.pluginsadded", function() {
-		// 	$('.leaflet-control').children("button").each(function(){
-		// 	   self._addButton( $(this) );
-		// 	});
-		// });
+		smap.event.on("smap.core.pluginsadded", function() {
+			$(".thandler-container .leaflet-control button").each(function() {
+				$(this).tooltip({
+					placement: "bottom",
+					container: "#maindiv"
+				});
+			});
+			// $('.leaflet-control').children("button").each(function(){
+			// 	self._addButton( $(this) );
+			// });
+		});
 		return self._container;
 	},
 
