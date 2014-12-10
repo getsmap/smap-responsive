@@ -1,55 +1,23 @@
 L.Control.RedirectClick = L.Control.extend({
 	
 	options: {
-		position: 'topright', // just an example
-		
-		snedbild: {
-					name: "snedbild",
-					url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}", // Malmö URL
-					//url: "http://kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}", //Helsingborg URL
-					btnID: "smap-snedbild-btn",
-					btnClass: "fa fa-plane",
-					cursor: "crosshair"
-		},
-		gatuvy: {
-					name: "gatuvy",
-					url: "http://sbkvmgeoserver.malmo.se/cyclomedia/index.html?posx=${x}&posy=${y}",
-					btnID: "smap-gatuvy-btn",
-					btnClass: "fa fa-car",
-					cursor: "crosshair"
-		}
-	},
-	
-	_lang: {
-		"sv": {
-			tooltipPrefix: "Klicka i kartan för att se ",
-
-			snedbild: {
-						name: "Snedbild"
-			},
-			gatuvy: {
-						name: "Gatuvy"
-			}
-		},
-		"en": {
-			tooltipPrefix: "Click on the map to show ",
-			snedbild: {
-						name: "Perspective image"
-			},
-			gatuvy: {
-						name: "Street view"
-			}
-		}
+		position: 'topright',
+		btnID: "smap-redirect-btn",
 	},
 	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
-			this.lang = this._lang ? this._lang[langCode] : null;			
+			this._lang = $.extend( true, this._lang, this.options._lang);
+			this.lang = this._lang ? this._lang[langCode] : null;
 		}
 	},
 
 	initialize: function(options) {
+		this._lang = {
+			"sv": {},
+			"en": {}
+		};
 		L.setOptions(this, options);
 		this._setLang(options.langCode);
 	},
@@ -60,41 +28,32 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 	
 	onAdd: function(map) {
-		var self = this;
-		this.map = map;
 		
+		this.map = map;
+
 		this._container = L.DomUtil.create('div', 'leaflet-control-RedirectClick');
 		L.DomEvent.disableClickPropagation(this._container);
-		
 		this.$container = $(this._container);
-		
-		if (this.options.snedbild.url) {
-			self._createButton(this.options.snedbild);
-		}
-		if (this.options.gatuvy.url) {
-			self._createButton(this.options.gatuvy);
-		}
-		
+
+		this._createButton();
 
 		return this._container;
 	},
 
-	addHooks: function (target) {
-		var targetName = this.lang[target.name].name.toLowerCase();
-		target.text = this.lang.tooltipPrefix + targetName;
-
-		this.tooltip = new L.Tooltip(this.map).updateContent(target);
-
+	addHooks: function () {
+		this._tooltip = {};
+		this._tooltip.text = this.lang.hoverText; // L.Tooltip expects an object with key "text"
+		this.tooltip = new L.Tooltip(this.map).updateContent(this._tooltip);
+		this.map.on("click", this.onMapClick, this);
 		this.map.on('mousemove mouseup', this._onMouseMove, this);
-
 	},
 	
 	removeHooks: function () {
-		if (this._map) {
+		if (this.map) {
 			if(this.tooltip){					
 				this.tooltip.dispose();
-				this._map.off( "click" );
-				this._map.off('mousemove mouseup', this._onMouseMove, this);
+				this.map.off('click', this.onMapClick, this);
+				this.map.off('mousemove mouseup', this._onMouseMove, this);
 			}
 		}
 	},
@@ -106,7 +65,7 @@ L.Control.RedirectClick = L.Control.extend({
 		var dest = new Proj4js.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
 		
 		var lfproj = L.Proj;
-				
+
 		//transforming point coordinates
 		var p = new Proj4js.Point(evt.latlng.lng, evt.latlng.lat);   //any object will do as long as it has 'x' and 'y' properties
 		Proj4js.transform(source, dest, p);     		//do the transformation.  x and y are modified in place	
@@ -117,107 +76,102 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 	
 	_onMouseMove: function (e) {
-		
 		this.tooltip.updatePosition(e.latlng);
 	},
 
 	onMapClick: function(e) {
-		
-		this.onDone(e, this.target);
-		this._deactivate(this.target);	
+		this.onDone(e);
+		this._deactivate();
 	},
-		
-	
-	_createButton: function(target) {
+
+	_createButton: function() {
 		var self = this;
 
-		var $btn = $('<button id="'+ target.btnID +'" title="' + this.lang[target.name].name + '" class="btn btn-default"><span class="'+target.btnClass+'"></span></button>');
+		var $btn = $('<button id="'+ this.options.btnID +'" title="' + this.lang.name + '" class="btn btn-default"><span class="'+this.options.btnClass+'"></span></button>');
 		$btn.on("click", function() {
-			self._deactivate(target);
-			self._activate(target);
+			if (!self.active || self.active === false) {
+				self._deactivate();
+				self._activate();
+				self.active = true;
+			}
+
+			else{
+				self._deactivate();
+				$("#mapdiv").focus(); //takes focus from button
+				self.active = false;
+			}
+
 			return false;
 		});
+
 		self.$container.append($btn);
 	},
 
-	_activate: function(target) {
+	_activate: function() {
 		var self = this;
+		if (self.active) {
+			return false; 
+		}
 
-		if (target.url) {
-			this.target = target;
+		this._deactivateAll();
+
+		if (this.options.url) {
 			if (this.map) {
-				self.addHooks(target);
-				$("#mapdiv").css({'cursor': target.cursor});
-
-				self._map.on("click", this.onMapClick, this);
+				self.removeHooks();
+				self.addHooks();
+				$("#mapdiv").css({'cursor': self.options.cursor});
 			}
 		}
 
 		else {
 			self._deactivate()
-			utils.log('Redirect URL missing.')
+			$("#mapdiv").focus(); //takes focus from button
+			utils.log('RedirectClick error: Redirect URL missing. Check config-file.')
 		}
 	},
 
-	_deactivate: function(target) {
-		$("#mapdiv").css({'cursor': ''});
+	_deactivate: function() {
+		this.active = false;
 		this.removeHooks();
-		this._map.off( "click", this.onMapClick, this );
-		this._map.off('mousemove mouseup', this._onMouseMove, this);
+		$("#mapdiv").css({'cursor': ''}); //reset cursor CSS
+		
+	},
+
+	_deactivateAll: function() {
+		var controls = smap.cmd.getControls('RedirectClick');
+		for (var i = 0; i < controls.length; i++) {
+			controls[i]._deactivate();
+		}
 	},
 
 	onRemove: function(map) {
 		this.$container.empty();
 	},
 	
-	onDone : function(e, target) {
+	onDone : function(e) {
 		var self = this;
 
-		if (target.name == 'snedbild'){
-			var url = self.options.snedbild.url;
-			var source = new proj4.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
-			var dest = new proj4.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
+		var url = self.options.url;
+		var source = new proj4.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
+		var dest = new proj4.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
+
+		var point = {
+			x:e.latlng.lng,
+			y:e.latlng.lat
+		};
+
+		proj4.transform(source, dest,point);
+		url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y); 
 		
-			var point = {
-				x:e.latlng.lng,
-				y:e.latlng.lat
-			};
-
-			proj4.transform(source, dest,point);
-			url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y); 
-		}
-
-		if (target.name == 'gatuvy'){
-			var url = self.options.gatuvy.url;
-			var source = new proj4.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
-			var dest = new proj4.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
-		
-			var point = {
-				x:e.latlng.lng,
-				y:e.latlng.lat
-			};
-
-			proj4.transform(source, dest,point);
-			url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y); 
-		}
-
-		window.open(url, target.name);
+		window.open(url, this.lang.name);
 	},
 });
-
-// Do something when the map initializes
-//L.Map.addInitHook(function () {
-//	if (this.options.attributionControl) {
-//		this.attributionControl = (new L.Control.MyPlugin()).addTo(this);
-//	}
-//});
-
 
 /*
  * This code just makes removes the need for
  * using "new" when instantiating the class. It
  * is a Leaflet convention and should be there.
  */
-L.control.redirectclick = function(options) {
-	return new L.Control.RedirectClick(options);
-};
+ L.control.redirectclick = function(options) {
+ 	return new L.Control.RedirectClick(options);
+ };

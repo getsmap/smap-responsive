@@ -408,10 +408,46 @@ var config = {
 						}
 					},
 					{
-						init : "L.Control.RedirectClick",		
-						option: {
-							url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}",
-							position: "topright"
+						init : "L.Control.RedirectClick", // Street view		
+						options: {
+							position: "topright",
+							url: "http://sbkvmgeoserver.malmo.se/cyclomedia/index.html?posx=${x}&posy=${y}",
+							btnClass: "fa fa-car",
+							cursor: "crosshair",
+
+							_lang: {
+								"sv": {
+									name: "Gatuvy",
+									hoverText: "Klicka i kartan för att se gatuvy",
+								},
+								
+								"en": {
+									name: "Street view",
+									hoverText: "Click on the map to show street view"									
+								}
+							}
+						}
+					},
+					{
+						init : "L.Control.RedirectClick", // Pictometry
+						options: {
+							position: "topright",
+							url: "http://xyz.malmo.se/urbex/index.htm?p=true&xy=${x};${y}", // Malmö pictometry
+							//url: "http://kartor.helsingborg.se/urbex/sned_2011.html?p=true&xy=${x};${y}", //Helsingborg pictometry
+							btnClass: "fa fa-plane",
+							cursor: "crosshair",
+
+							_lang: {
+								"sv": {
+									name: "Snedbild",
+									hoverText: "Klicka i kartan för att se snedbild",
+								},
+								
+								"en": {
+									name: "Pictometry",
+									hoverText: "Click on the map to show pictometry"									
+								}
+							}
 						}
 					}
 					// {
