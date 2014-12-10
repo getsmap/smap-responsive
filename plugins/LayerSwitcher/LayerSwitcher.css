@@ -82,8 +82,8 @@
   opacity: 1;
   background-color: none;
   overflow: visible;
-  -webkit-box-shadow: #000 2px 2px 6px inset;
-  box-shadow: #000 2px 2px 6px inset;
+  -webkit-box-shadow: #000 0px 2px 6px inset;
+  box-shadow: #000 0px 2px 6px inset;
 }
 .lswitch-catcont.lswitch-catcont-visible .lswitch-cat {
   padding-left: 2.3em;

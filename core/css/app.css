@@ -138,22 +138,23 @@ body {
 .core-select-modal .modal-body .list-group {
   margin: 0;
 }
-.core-select-modal .modal-body .list-group-item {
+.core-select-modal .modal-body .list-group .list-group-item {
   border-radius: 0;
   background: none;
-  display: table-row;
+  display: table;
+  padding: 0;
 }
-.core-select-modal .modal-body .list-group-item span {
+.core-select-modal .modal-body .list-group .list-group-item span {
   overflow: hidden;
   display: table-cell;
   width: 72%;
   vertical-align: middle;
   padding: 4%;
 }
-.core-select-modal .modal-body .list-group-item span button {
+.core-select-modal .modal-body .list-group .list-group-item span button {
   display: none;
 }
-.core-select-modal .modal-body .list-group-item .select-btn-zoom-to-feature {
+.core-select-modal .modal-body .list-group .list-group-item .select-btn-zoom-to-feature {
   width: 16%;
   display: table-cell;
   border-radius: 0;
@@ -165,11 +166,10 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   border-radius: 0;
-  background: none;
   background-color: rgba(92,184,92,0.7) !important;
   visibility: hidden;
 }
-.core-select-modal .modal-body .list-group-item .select-btn-zoom-to-feature:hover {
+.core-select-modal .modal-body .list-group .list-group-item .select-btn-zoom-to-feature:hover {
   color: #fff;
   background: none;
   background-color: #5cb85c !important;
@@ -177,17 +177,20 @@ body {
   padding-top: 0;
   padding-bottom: 0;
 }
-.core-select-modal .list-group-item:hover {
+.core-select-modal .modal-body .list-group-item:hover {
   background-color: rgba(255,255,255,0.2);
 }
-.core-select-modal .list-group-item:hover .select-btn-zoom-to-feature {
+.core-select-modal .modal-body .list-group-item:hover .select-btn-zoom-to-feature {
   visibility: visible !important;
 }
-.core-select-modal .list-group-item:first-child {
+.core-select-modal .modal-body .list-group-item:first-child {
   border-top: none;
 }
-.core-select-modal .list-group-item:last-child {
+.core-select-modal .modal-body .list-group-item:last-child {
   border-bottom: none;
+}
+.core-select-modal .modal-body .select-row-touch .select-btn-zoom-to-feature {
+  visibility: visible !important;
 }
 .modal-footer {
   margin: 0;

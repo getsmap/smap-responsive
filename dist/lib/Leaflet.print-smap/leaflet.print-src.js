@@ -641,7 +641,8 @@ L.print.Provider = L.Class.extend({
 			options.strokeColor = options.fillColor;
 		}
 
-		return {
+
+		var out = {
 			stroke: options.stroke,
 			strokeColor: options.color,
 			strokeWidth: options.weight,
@@ -657,6 +658,15 @@ L.print.Provider = L.Class.extend({
 			label: options.label,
 			name: "The layer name"
 		};
+
+		// Convert all null values to undefined (otherwise Mapfish Print error)
+		var key, val;
+		for (key in out) {
+			val = out[key];
+			if (val === null) {
+				out[key] = undefined;
+			}
+		}
 
 
 		// cursor: "pointer"

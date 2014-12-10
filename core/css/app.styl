@@ -153,66 +153,70 @@ html, body
 		padding 0
 		.list-group
 			margin 0
-		.list-group-item 
-			border-radius 0
-			background none
-			display table-row
-			span
-				// text-overflow ellipsis
-				// white-space nowrap
-				overflow hidden
-				display table-cell
-				width 72%
-				vertical-align middle
-				padding 4%
-				button
-					display none
-			.select-btn-zoom-to-feature
-					width 16%
+			.list-group-item 
+				border-radius 0
+				background none
+				display table
+				padding 0
+				span
+					// text-overflow ellipsis
+					// white-space nowrap
+					overflow hidden
 					display table-cell
-					border-radius 0
-					// margin-left -4%
-					border none
-					border-left 1px solid #C3C3C3
-					// background none
-					height 100%
+					width 72%
+					vertical-align middle
+					padding 4%
+					button
+						display none
+				.select-btn-zoom-to-feature
+						width 16%
+						display table-cell
+						border-radius 0
+						// margin-left -4%
+						border none
+						border-left 1px solid #C3C3C3
+						// background none
+						height 100%
+						padding-top 0
+						padding-bottom 0
+						padding-left 20px
+						padding-right 20px
+						border-radius 0
+						// background none
+						background-color rgba(92, 184, 92, 0.7) !important
+						visibility hidden
+						// background-color #fff
+						// background-color rgba(105, 105, 105, 0)
+						
+				.select-btn-zoom-to-feature:hover
+					// border-color #bbb
+					// border-color #ddd
+					color #fff
+					background none
+					background-color rgba(92, 184, 92, 1) !important
+					height 100% !important
 					padding-top 0
 					padding-bottom 0
-					padding-left 20px
-					padding-right 20px
-					border-radius 0
-					background none
-					background-color rgba(92, 184, 92, 0.7) !important
-					visibility hidden
-					// background-color #fff
-					// background-color rgba(105, 105, 105, 0)
-					
-			.select-btn-zoom-to-feature:hover
-				// border-color #bbb
-				// border-color #ddd
-				color #fff
-				background none
-				background-color rgba(92, 184, 92, 1) !important
-				height 100% !important
-				padding-top 0
-				padding-bottom 0
-				// background-color rgba(105, 105, 105, 0.8)
-			// .select-btn-zoom-to-feature
-				// position absolute
-				// right 1em
-				// top 1em
-				// float right
-				// margin-top -5px
+					// background-color rgba(105, 105, 105, 0.8)
+				// .select-btn-zoom-to-feature
+					// position absolute
+					// right 1em
+					// top 1em
+					// float right
+					// margin-top -5px
 
-		.list-group-item:hover
-			background-color rgba(255,255,255,0.2)
-			.select-btn-zoom-to-feature
-				visibility visible !important
+			.list-group-item:hover
+				background-color rgba(255,255,255,0.2)
+				.select-btn-zoom-to-feature
+					visibility visible !important
+			.list-group-item:first-child
+				border-top none
+			.list-group-item:last-child
+				border-bottom none
+			.select-row-touch
+				.select-btn-zoom-to-feature
+					visibility visible !important
 				
-		.list-group-item:first-child
-			border-top none
-		.list-group-item:last-child
-			border-bottom none
 	.modal-footer
 		margin 0
 
