@@ -106,8 +106,6 @@
   padding-left: 2.5em;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
-  border: 1px solid #ccc;
-  border-width: 0 1px !important;
 }
 .lswitch-legend {
   width: 20px;
@@ -161,6 +159,9 @@
     position: absolute !important;
     background-color: #38454e;
   }
+  .lswitch-catcont a {
+    border: none !important;
+  }
   .lswitch-panel a {
     color: #fff;
     background: none;
@@ -170,6 +171,7 @@
   .lswitch-panel a.active:active {
     background: #000 !important;
     color: #fff;
+    border: none;
   }
   a.list-group-item.active,
   a.list-group-item.active:hover,
@@ -199,6 +201,7 @@
     background-color: #fff;
     color: #000;
     font-weight: bold;
+    border-color: #ccc !important;
   }
   .lswitch-panel a.active,
   .lswitch-panel a.active:hover,
@@ -211,6 +214,10 @@
     color: #000;
     color: #000;
     font-weight: bold;
+  }
+  .lswitch-catcont.lswitch-catcont-visible a {
+    border: 1px solid #ccc;
+    border-width: 0 1px !important;
   }
   .lswitch-cat:hover {
     background-color: #fafafa;

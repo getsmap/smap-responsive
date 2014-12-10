@@ -140,8 +140,6 @@ indentDist = 1.3em
 .lswitch-catcont.lswitch-catcont-visible a
 	padding-left 2.5em
 	transition all 0.2s
-	border 1px solid #ccc
-	border-width 0 1px !important
 
 // .lswitch-catcont.lswitch-catcont-visible .lswitch-cat
 // 	border-right 1px solid #ccc
@@ -225,6 +223,9 @@ indentDist = 1.3em
 	.lswitch-panel
 		position absolute !important
 		background-color mobPanelBg
+	
+	.lswitch-catcont a
+		border none !important
 
 	// Zoom-in-effect when showing and hiding the panel
 	// .lswitch-panel .panel
@@ -242,6 +243,7 @@ indentDist = 1.3em
 		// background none !important
 		background #000 !important
 		color #fff
+		border none
 
 	a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.active:focus
 		background #000 !important
@@ -274,6 +276,7 @@ indentDist = 1.3em
 		background-color #fff
 		color #000
 		font-weight bold
+		border-color #ccc !important
 
 	.lswitch-panel a.active, .lswitch-panel a.active:hover, .lswitch-panel a.active:active
 		background none
@@ -284,6 +287,10 @@ indentDist = 1.3em
 		color #000
 		color rgba(0,0,0,1)
 		font-weight bold
+	
+	.lswitch-catcont.lswitch-catcont-visible a
+		border 1px solid #ccc
+		border-width 0 1px !important
 
 	.lswitch-cat:hover
 		background-color catHoverColor

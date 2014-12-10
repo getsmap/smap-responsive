@@ -7,7 +7,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		saveWfsTypeName: "",
 		stylePolygon: {
 			color: '#0077e2',
-			weight: 1
+			weight: 3
 		},
 		stylePolyline: {
 			color: '#0077e2',
