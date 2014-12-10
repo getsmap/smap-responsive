@@ -3,3 +3,6 @@
 	background-color: #fff;
 }
 
+.leaflet-draw-tooltip {
+	z-index: 1001;
+}

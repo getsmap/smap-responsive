@@ -35,6 +35,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			showMeasures: "Visa mätresultat",
 			remove: "Ta bort",
 			moreCoords: "Fler koordinatsystem",
+			helpTextSavePopup: "Stäng pratbubblan för att spara",
 			
 			handlers: {
 				circle: {
@@ -93,7 +94,8 @@ L.Control.MeasureDraw = L.Control.extend({
 			clickToAddText: "Click to add text",
 			showMeasures: "Show measure results",
 			remove: "Remove",
-			moreCoords: "More projections"
+			moreCoords: "More projections",
+			helpTextSavePopup: "Close the popup to save"
 			// coordinates: "Koordinater"
 		}
 	},
@@ -665,6 +667,17 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		if (ta.length) {
 			// ta.focus();
+			ta.tooltip({
+				placement: "top",
+				title: this.lang.helpTextSavePopup,
+				container: ".leaflet-popup",
+				trigger: "manual"
+			});
+			ta.on("keypress", function() {
+				if ( !$(".tooltip:visible").length ) {
+					$(this).tooltip("show");
+				}
+			});
 			ta.on("focus", function() {
 				// $(this).attr("rows", 5);
 				$(".measuredraw-btn-popupremove").prop("disabled", true);
@@ -672,6 +685,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			ta.on("blur", function() {
 				// $(this).attr("rows", 3);
 				$(".measuredraw-btn-popupremove").prop("disabled", false);
+				$(this).tooltip("hide");
 				var layer = e.popup._source;
 				var val = $(this).val();
 				if (val === "") {
