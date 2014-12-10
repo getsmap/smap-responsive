@@ -1,50 +1,49 @@
-#smap-opensearch-div
+
+@import "../../core/css/global"
+// generalMargins = 5px
+
+.smap-searchlund-div-in-toolbar
+	top .2em !important
+	z-index 1002 !important
+
+
+.smap-searchlund-div-focused
+	max-width 450px !important
+
+
+#smap-searchlund-div .form-control, #smap-searchlund-div .input-group-addon
+	border none
+
+#smap-searchlund-div
 	position relative
-	left 10px
-	top 8px
+	left generalMargins
+	top generalMargins
 	z-index 1001
 	width 79%
 	max-width 380px
 	-webkit-transition left .3s, max-width .3s
 	transition left .3s, max-width .3s
 	overflow-y hidden
-
-
-.smap-opensearch-div-in-toolbar
-	top .2em !important
-	z-index 1002 !important
-
-
-.smap-opensearch-div-focused
-	max-width 450px !important
-
-
-
-#smap-opensearch-div .input-group-addon
-	background-color #fff !important
-	padding-right 0 !important
-	border-radius 0 !important
-
-
-#smap-opensearch-div input
-	width 100%
-	border-left none
-	/*border none
 	border 1px solid #ccc
-	border-width 1px 1px 1px 0*/
-	-webkit-box-shadow none
-	box-shadow none
-	-webkit-appearance none
-	border-radius 0 !important
-
-
-#smap-opensearch-div input:focus
-	border-color #ccc
-
-
-/* Autocomplete Typehead overrides */
-.dropdown-menu
-	left 0px !important
+	input
+		width 100%
+		border-left none
+		/*border none
+		border 1px solid #ccc
+		border-width 1px 1px 1px 0*/
+		-webkit-box-shadow none
+		box-shadow none
+		-webkit-appearance none
+		border-radius 0 !important
+	input:focus
+		border-color #ccc
+	.dropdown-menu
+		/* Autocomplete Typehead overrides */
+		left 0px !important
+	.input-group-addon
+		background-color #fff !important
+		padding-right 0 !important
+		border-radius 0 !important
 
 
 .dropdown-menu>li>a
@@ -53,7 +52,7 @@
 /* Typehead overrides END */
 
 
-#smap-opensearch-bg
+#smap-searchlund-bg
 	background-color rgba(255,255,255,0)
 	width 100%
 	height 100%
@@ -64,33 +63,34 @@
 	-webkit-transition background-color .3s
 	transition background-color .3s
 
-.opensearch-bg-visible
+.searchlund-bg-visible
 	background-color #fff !important
 	background-color rgba(255,255,255,0.8) !important
 
 
-.opensearch-active
+.searchlund-active
 	left 2% !important
 	max-width 600px !important
 
-.opensearch-active ul
+.searchlund-active ul
 	width 95% !important
 	max-width 635px
 
 
 @media (max-width: 767px)
-	.smap-opensearch-div-in-toolbar
+	.smap-searchlund-div-in-toolbar
 		max-width 80% !important
 	
-	.smap-opensearch-div-focused
-		max-width 94% !important
-		width auto !important
 	
+@media (max-width: 467px)
+	.smap-searchlund-div-focused
+		max-width calc(100% - 20px) !important
+		width auto !important
 
 
 
 @media (min-width: 992px)
-	#smap-opensearch-div
-		left 310px
+	#smap-searchlund-div
+		left generalMargins + 309
 		
 

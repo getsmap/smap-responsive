@@ -10,7 +10,7 @@ L.Control.SearchLund = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			search: "Sök fastighet",
+			search: "Sök",
 			addressNotFound: "Den sökta adressen hittades inte",
 			remove: "Ta bort"
 		},
@@ -55,7 +55,7 @@ L.Control.SearchLund = L.Control.extend({
 	},
 	
 	_blurSearch: function() {
-		$("#smap-opensearch-div input").blur();
+		$("#smap-searchlund-div input").blur();
 	},
 	
 	onRemove: function(map) {
@@ -96,7 +96,7 @@ L.Control.SearchLund = L.Control.extend({
 	_makeSearchField: function() {
 		var self = this;
 		
-		var $searchDiv = $('<div id="smap-opensearch-div" class="input-group input-group-lg"><span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>'+
+		var $searchDiv = $('<div id="smap-searchlund-div" class="input-group input-group-lg"><span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>'+
 				'<input autocorrect="off" autocomplete="off" data-provide="typeahead" type="text" class="form-control" placeholder="'+this.lang.search+'"></input></div>');
 		var $entry = $searchDiv.find("input");
 		
@@ -116,13 +116,13 @@ L.Control.SearchLund = L.Control.extend({
 			}
 
 			// Add a bg only for small touch devices
-			var $bg = $("#smap-opensearch-bg");
+			var $bg = $("#smap-searchlund-bg");
 			if ( !$bg.length ) {
-				$bg = $('<div id="smap-opensearch-bg" />');
-				$searchDiv.addClass("opensearch-active");
+				$bg = $('<div id="smap-searchlund-bg" />');
+				$searchDiv.addClass("searchlund-active");
 				$("#mapdiv").append($bg);
 				setTimeout(function() {
-					$bg.addClass("opensearch-bg-visible");					
+					$bg.addClass("searchlund-bg-visible");					
 				}, 1);
 			}
 		};
@@ -131,10 +131,10 @@ L.Control.SearchLund = L.Control.extend({
 			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
 				return;
 			}
-			$searchDiv.removeClass("opensearch-active");
-			$("#smap-opensearch-bg").removeClass("opensearch-bg-visible");
+			$searchDiv.removeClass("searchlund-active");
+			$("#smap-searchlund-bg").removeClass("searchlund-bg-visible");
 			setTimeout(function() {
-				$("#smap-opensearch-bg").remove();			
+				$("#smap-searchlund-bg").remove();			
 			}, 300);
 		};
 		
@@ -147,10 +147,10 @@ L.Control.SearchLund = L.Control.extend({
 			.on("dblclick", prevDefault)
 			.on("mousedown", prevDefault)
 			.on("focus", function() {
-				$(this).parent().addClass("smap-opensearch-div-focused");
+				$(this).parent().addClass("smap-searchlund-div-focused");
 			})
 			.on("blur", function() {
-				$(this).parent().removeClass("smap-opensearch-div-focused");
+				$(this).parent().removeClass("smap-searchlund-div-focused");
 			})
 			.on("touchstart", function() {
 				$(this).focus();
@@ -165,7 +165,7 @@ L.Control.SearchLund = L.Control.extend({
 		smap.event.on("smap.core.pluginsadded", function() {
 			var toolbar = $("#smap-menu-div nav");
 			if (toolbar.length) {
-				$searchDiv.addClass("smap-opensearch-div-in-toolbar");
+				$searchDiv.addClass("smap-searchlund-div-in-toolbar");
 			}
 		});
 		
@@ -173,7 +173,7 @@ L.Control.SearchLund = L.Control.extend({
 
 		var geoLocate = this.options._geoLocate || this._geoLocate;
 		var typeheadOptions = {
-				items: 5,
+				items: 10,
 				minLength: 2,
 				highlight: true,
 				hint: true,
@@ -189,7 +189,7 @@ L.Control.SearchLund = L.Control.extend({
 
 		if (this.options.wsAcUrl) {
 			typeheadOptions.source = function(q, process) {
-				var url = encodeURIComponent( self.options.wsAcUrl + "&where=FASTIGHET+LIKE+'"+q+"'");
+				var url = encodeURIComponent( self.options.wsAcUrl + "?format=json&prefix="+q);
 				if (whitespace) {
 					url = url.replace(/%20/g, whitespace);					
 				}
@@ -203,11 +203,11 @@ L.Control.SearchLund = L.Control.extend({
 					success: function(resp) {
 						//var arr = resp.split("\n");
 						var arr = $.parseJSON(resp);
-						//alert (arr.completions[0].name);
+						//alert (arr.items[0].name);
 						var arr2 = [];
-						for (i=0, len=arr.completions.length; i<len; i++) {
+						for (i=0, len=arr.items.length; i<len; i++) {
 							//alert("in");
-							arr2[i]= arr.completions[i].name.split(",")[0];
+							arr2[i]= arr.items[i].name.split(",")[0];
 							//alert("ut");
 						}
 						//alert(arr2[0]);
@@ -242,7 +242,7 @@ L.Control.SearchLund = L.Control.extend({
 			q = utils.extractToHtml(this.options.qPattern, {q: q});
 		}
 
-		var url = encodeURIComponent( this.options.wsLocateUrl + "&where=FASTIGHET+LIKE+'"+q+"'");
+		var url = encodeURIComponent( this.options.wsLocateUrl + "?format=json&prefix="+q);
 		var whitespace = this.options.whitespace;
 		if (whitespace) {
 			url = url.replace(/%20/g, whitespace);					
@@ -256,12 +256,13 @@ L.Control.SearchLund = L.Control.extend({
 						this.map.removeLayer(this.marker);
 						this.marker = null;
 					}
-					if (!json.completions.length) {
+					if (!json.items.length) {
 						// This means the searched place does not exist – inform user
 						smap.cmd.notify(this.lang.addressNotFound, "error");
 						return;
 					}
-					var coords = json.completions[0].latLng;
+					var coords = json.items[0].geometry.coordinates;
+					//alert(json.items[0].geometry./coordinates/);
 					var latLng = L.latLng( coords[0], coords[1] );
 					
 					var wgs84 = "EPSG:4326";
@@ -283,7 +284,7 @@ L.Control.SearchLund = L.Control.extend({
 					this.marker = L.marker(latLng).addTo(this.map);
 					this.marker.options.q = q; // Store for creating link to map
 					
-					this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-opensearch-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
+					this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-searchlund-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 					
 					if (options.setView) {
 						this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					

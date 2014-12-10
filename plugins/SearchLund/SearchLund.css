@@ -1,49 +1,54 @@
-#smap-opensearch-div {
+.smap-searchlund-div-in-toolbar {
+  top: 0.2em !important;
+  z-index: 1002 !important;
+}
+.smap-searchlund-div-focused {
+  max-width: 450px !important;
+}
+#smap-searchlund-div .form-control,
+#smap-searchlund-div .input-group-addon {
+  border: none;
+}
+#smap-searchlund-div {
   position: relative;
-  left: 10px;
-  top: 8px;
+  left: 5px;
+  top: 5px;
   z-index: 1001;
   width: 79%;
   max-width: 380px;
   -webkit-transition: left 0.3s, max-width 0.3s;
   transition: left 0.3s, max-width 0.3s;
   overflow-y: hidden;
+  border: 1px solid #ccc;
 }
-.smap-opensearch-div-in-toolbar {
-  top: 0.2em !important;
-  z-index: 1002 !important;
-}
-.smap-opensearch-div-focused {
-  max-width: 450px !important;
-}
-#smap-opensearch-div .input-group-addon {
-  background-color: #fff !important;
-  padding-right: 0 !important;
-  border-radius: 0 !important;
-}
-#smap-opensearch-div input {
+#smap-searchlund-div input {
   width: 100%;
   border-left: none;
 /*border none
-	border 1px solid #ccc
-	border-width 1px 1px 1px 0*/
+		border 1px solid #ccc
+		border-width 1px 1px 1px 0*/
   -webkit-box-shadow: none;
   box-shadow: none;
   -webkit-appearance: none;
   border-radius: 0 !important;
 }
-#smap-opensearch-div input:focus {
+#smap-searchlund-div input:focus {
   border-color: #ccc;
 }
+#smap-searchlund-div .dropdown-menu {
 /* Autocomplete Typehead overrides */
-.dropdown-menu {
   left: 0px !important;
+}
+#smap-searchlund-div .input-group-addon {
+  background-color: #fff !important;
+  padding-right: 0 !important;
+  border-radius: 0 !important;
 }
 .dropdown-menu>li>a {
   line-height: 2.5;
 }
 /* Typehead overrides END */
-#smap-opensearch-bg {
+#smap-searchlund-bg {
   background-color: rgba(255,255,255,0);
   width: 100%;
   height: 100%;
@@ -54,29 +59,31 @@
   -webkit-transition: background-color 0.3s;
   transition: background-color 0.3s;
 }
-.opensearch-bg-visible {
+.searchlund-bg-visible {
   background-color: #fff !important;
   background-color: rgba(255,255,255,0.8) !important;
 }
-.opensearch-active {
+.searchlund-active {
   left: 2% !important;
   max-width: 600px !important;
 }
-.opensearch-active ul {
+.searchlund-active ul {
   width: 95% !important;
   max-width: 635px;
 }
 @media (max-width: 767px) {
-  .smap-opensearch-div-in-toolbar {
+  .smap-searchlund-div-in-toolbar {
     max-width: 80% !important;
   }
-  .smap-opensearch-div-focused {
-    max-width: 94% !important;
+}
+@media (max-width: 467px) {
+  .smap-searchlund-div-focused {
+    max-width: calc(100% - 20px) !important;
     width: auto !important;
   }
 }
 @media (min-width: 992px) {
-  #smap-opensearch-div {
-    left: 310px;
+  #smap-searchlund-div {
+    left: 314px;
   }
 }
