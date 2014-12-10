@@ -642,7 +642,7 @@ L.print.Provider = L.Class.extend({
 		}
 
 
-		var out = {
+		var style = {
 			stroke: options.stroke,
 			strokeColor: options.color,
 			strokeWidth: options.weight,
@@ -660,13 +660,16 @@ L.print.Provider = L.Class.extend({
 		};
 
 		// Convert all null values to undefined (otherwise Mapfish Print error)
-		var key, val;
-		for (key in out) {
-			val = out[key];
+		var key, val,
+			out = {};
+		for (key in style) {
+			val = style[key];
 			if (val === null) {
-				out[key] = undefined;
+				val = undefined;
 			}
+			out[key] = val;
 		}
+		return out;
 
 
 		// cursor: "pointer"
