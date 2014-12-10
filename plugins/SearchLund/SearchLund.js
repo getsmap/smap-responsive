@@ -1,4 +1,4 @@
-L.Control.OpenSearch = L.Control.extend({
+L.Control.SearchLund = L.Control.extend({
 	options: {
 
 		whitespace: "%2B", //%20
@@ -36,7 +36,7 @@ L.Control.OpenSearch = L.Control.extend({
 	onAdd: function(map) {
 		var self = this;
 		this.map = map;
-		this._container = L.DomUtil.create('div', 'leaflet-control-opensearch'); // second parameter is class name
+		this._container = L.DomUtil.create('div', 'leaflet-control-searchlund'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
 		this.$container.css("display", "none");
@@ -271,7 +271,7 @@ L.Control.OpenSearch = L.Control.extend({
 						latLng = L.latLng(arr[1], arr[0]);
 					}
 					function onPopupOpen(e) {
-						$("#smap-opensearch-popupbtn").off("click").on("click", function() {
+						$("#smap-searchlund-popupbtn").off("click").on("click", function() {
 							self.map.removeLayer(self.marker);
 							self.marker = null;
 							return false;
@@ -291,10 +291,10 @@ L.Control.OpenSearch = L.Control.extend({
 					if (options.showPopup) {
 						this.marker.openPopup();
 					}
-					$("#smap-opensearch-div input").val(null);
-					$("#smap-opensearch-div input").blur();
+					$("#smap-searchlund-div input").val(null);
+					$("#smap-searchlund-div input").blur();
 					setTimeout(function() {
-						$("#smap-opensearch-div input").blur();
+						$("#smap-searchlund-div input").blur();
 					}, 100);
 				},
 				complete: function() {
@@ -315,9 +315,9 @@ L.Control.OpenSearch = L.Control.extend({
 				
 	},
 	
-	CLASS_NAME: "L.Control.OpenSearch"
+	CLASS_NAME: "L.Control.SearchLund"
 });
 
-L.control.openSearch = function (options) {
-	return new L.Control.OpenSearch(options);
+L.control.searchLund = function (options) {
+	return new L.Control.SearchLund(options);
 };
