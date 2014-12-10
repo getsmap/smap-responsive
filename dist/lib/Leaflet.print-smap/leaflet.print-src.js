@@ -351,7 +351,10 @@ L.print.Provider = L.Class.extend({
 			} else if (layer instanceof L.ImageOverlay) {
 				enc.push(this._encoders.layers.image.call(this, layer));
 			} else if (layer instanceof L.Marker || (layer instanceof L.Path && layer.toGeoJSON)) {
-				vectors.push(layer);
+				if (!layer.options._noprint) {
+					// Don't include features with noprint
+					vectors.push(layer);
+				}
 			}
 		}
 		if (vectors.length) {

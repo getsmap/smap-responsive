@@ -224,6 +224,7 @@ var utils = {
 						html: '<div>'+html+'</div>'
 					})
 			});
+			label.options._noprint = true;
 			label.options.clickable = false;
 			label.options.selectable = false;
 			return label;
