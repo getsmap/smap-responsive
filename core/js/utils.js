@@ -25,19 +25,6 @@ var utils = {
 			};
 		},
 
-		isTouchDevice: function() {
-			// Check if user is using touch controls. Listener removed once fired, thereafter only returns status.
-			// If no touching has been going on, returns undefined.
-			var self = this;
-			if (!this.hasTouch){
-				window.addEventListener('touchstart', function setHasTouch () {
-				    self.hasTouch = true;
-				    window.removeEventListener('touchstart', setHasTouch);
-				}, false);
-			}
-			return this.hasTouch;
-		},
-
 		urlAppend: function(baseUrl, params, separator) {
 			separator = separator || "?";
 
