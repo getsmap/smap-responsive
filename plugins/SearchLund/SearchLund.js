@@ -261,15 +261,32 @@ L.Control.SearchLund = L.Control.extend({
 						smap.cmd.notify(this.lang.addressNotFound, "error");
 						return;
 					}
-					var coords = json.items[0].geometry.coordinates;
-					//alert(json.items[0].geometry./coordinates/);
-					var latLng = L.latLng( coords[0], coords[1] );
+					var coords = $.parseJSON(json.items[0].geometry);
+					if(coords.type=="MultiPoint") {
+						var latLng = L.latLng( coords.coordinates[0][1],coords.coordinates[0][0]);
 					
-					var wgs84 = "EPSG:4326";
-					if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
-						// project the response
-						var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
-						latLng = L.latLng(arr[1], arr[0]);
+						var wgs84 = "EPSG:4326";
+						if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
+							// project the response
+							var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
+							latLng = L.latLng(arr[1], arr[0]);
+						}
+					}
+					if(coords.type=="Polygon") {
+						var polyLatLng = []
+						for (var j=0,len1=coords.coordinates.length; j<len1; j++) {
+							for (var i=0,len2=coords.coordinates[j].length; i<len2; i++) {
+								var latLng = L.latLng( coords.coordinates[j][i][1],coords.coordinates[j][i][0])
+								var wgs84 = "EPSG:4326";
+								if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
+									// project the response
+									var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
+									latLng = L.latLng(arr[1], arr[0]);
+								}
+								polyLatLng.push(latLng);
+							}
+						
+						}
 					}
 					function onPopupOpen(e) {
 						$("#smap-searchlund-popupbtn").off("click").on("click", function() {
@@ -281,14 +298,32 @@ L.Control.SearchLund = L.Control.extend({
 					this.map.off("popupopen", onPopupOpen);
 					this.map.on("popupopen", onPopupOpen);
 					
-					this.marker = L.marker(latLng).addTo(this.map);
-					this.marker.options.q = q; // Store for creating link to map
+					if(coords.type=="MultiPoint") {
+						this.marker = L.marker(latLng).addTo(this.map);
+						this.marker.options.q = q; // Store for creating link to map
+						
+						this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-searchlund-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 					
-					this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-searchlund-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
-					
-					if (options.setView) {
-						this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+						if (options.setView) {
+							this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+						}
 					}
+					
+					if(coords.type=="Polygon") {
+						var mapPolygon = L.polygon(polyLatLng);
+						var polCenter = mapPolygon.getBounds().getCenter();
+						this.marker = L.marker(polCenter).addTo(this.map);
+						this.marker.options.q = q; // Store for creating link to map
+						
+						this.map.addLayer(mapPolygon);
+						
+						this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-searchlund-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
+					
+						if (options.setView) {
+							this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+						}
+					}
+					
 					if (options.showPopup) {
 						this.marker.openPopup();
 					}
