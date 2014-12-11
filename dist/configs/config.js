@@ -412,7 +412,10 @@ var config = {
 						options: {
 							position: "topright",
 							url: "http://sbkvmgeoserver.malmo.se/cyclomedia/index.html?posx=${x}&posy=${y}",
-							btnClass: "fa fa-car",
+							btnClass: "fa fa-female",
+							//btnClass: "fa fa-child",
+							//btnClass: "fa fa-car",
+							//btnClass: "fa fa-road",
 							cursor: "crosshair",
 
 							_lang: {
