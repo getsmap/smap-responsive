@@ -327,7 +327,7 @@ L.Control.SearchLund = L.Control.extend({
 						this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-searchlund-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 					
 						if (options.setView) {
-							this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+							this.map.setView(latLng, 17, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
 						}
 					}
 					
@@ -349,7 +349,7 @@ L.Control.SearchLund = L.Control.extend({
 						this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-searchlund-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 					
 						if (options.setView) {
-							this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+							this.map.setView(latLng, 17, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
 						}
 					}
 					
