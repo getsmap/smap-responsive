@@ -277,19 +277,34 @@ L.Control.SearchLund = L.Control.extend({
 						}
 					}
 					if(coords[0].type=="Polygon") {
-						var polyLatLng = []
-						alert(coords.length);
+						var polyLatLng = [];
+						var latLng;
+						for (var i=0;i<coords.length;i++) {
+							polyLatLng[i] = [];
+						}
 						for (var j=0,len1=coords.length; j<len1; j++) {
-							for (var i=0,len2=coords[0].coordinates[j].length; i<len2; i++) {
-								var latLng = L.latLng( coords[0].coordinates[j][i][1],coords[0].coordinates[j][i][0])
+							for (var i=0,len2=coords[j].coordinates[0]	.length; i<len2; i++) {
+								var latLng = L.latLng( coords[j].coordinates[0][i][1],coords[j].coordinates[0][i][0])
 								var wgs84 = "EPSG:4326";
 								if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
 									// project the response
 									var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
 									latLng = L.latLng(arr[1], arr[0]);
 								}
-								polyLatLng.push(latLng);
+								polyLatLng[j].push(latLng);
 							}
+							//alert(polyLatLng[j]);
+							// for (var i=0,len2=coords[j].coordinates[].length; i<len2; i++) {
+								// var latLng = L.latLng( coords[0].coordinates[j][i][1],coords[0].coordinates[j][i][0])
+								// var wgs84 = "EPSG:4326";
+								// if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
+									// // project the response
+									// var arr = window.proj4(this.options.wsOrgProj, wgs84, [latLng.lng, latLng.lat]);
+									// latLng = L.latLng(arr[1], arr[0]);
+								// }
+								// polyLatLng.push(latLng);
+							// }
+						
 						
 						}
 					}
@@ -297,6 +312,8 @@ L.Control.SearchLund = L.Control.extend({
 						$("#smap-searchlund-popupbtn").off("click").on("click", function() {
 							self.map.removeLayer(self.marker);
 							self.marker = null;
+							polyLayerGroup.clearLayers();
+							self.map.removeLayer(polyLayerGroup);
 							return false;
 						});
 					};
@@ -315,12 +332,19 @@ L.Control.SearchLund = L.Control.extend({
 					}
 					
 					if(coords[0].type=="Polygon") {
-						var mapPolygon = L.polygon(polyLatLng);
+					var polyLayerGroup = new L.LayerGroup();
+						for (var i=0;i<coords.length;i++) {
+							var mapPolygon = L.polygon(polyLatLng[i]);
+							polyLayerGroup.addLayer(mapPolygon);
+							
+						}
+						this.map.addLayer(polyLayerGroup);
+						
 						var polCenter = mapPolygon.getBounds().getCenter();
 						this.marker = L.marker(polCenter).addTo(this.map);
 						this.marker.options.q = q; // Store for creating link to map
 						
-						this.map.addLayer(mapPolygon);
+						
 						
 						this.marker.bindPopup('<p class="lead">'+q+'</p><div><button id="smap-searchlund-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 					
