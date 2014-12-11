@@ -443,7 +443,7 @@ var config = {
 							_lang: {
 								"sv": {
 									name: "Snedbild",
-									hoverText: "Klicka i kartan för att se snedbild",
+									hoverText: "Klicka i kartan för att se snedbild"
 								},
 								
 								"en": {

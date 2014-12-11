@@ -13,15 +13,16 @@
   position: relative;
   left: 5px;
   top: 5px;
-  z-index: 1001;
+  z-index: 1010;
   width: 79%;
   max-width: 380px;
   -webkit-transition: left 0.3s, max-width 0.3s;
-  transition: left 0.3s, max-width 0.3s;
+  transition: left 0.3s, max-width 0.3s ease;
   overflow-y: hidden;
   border: 1px solid #ccc;
 }
 #smap-search-div input {
+  letter-spacing: -1px;
   width: 100%;
   border-left: none;
 /*border none
@@ -78,7 +79,7 @@
 }
 @media (max-width: 467px) {
   .smap-search-div-focused {
-    max-width: calc(100% - 20px) !important;
+    max-width: calc(100% - 10px) !important;
     width: auto !important;
   }
 }

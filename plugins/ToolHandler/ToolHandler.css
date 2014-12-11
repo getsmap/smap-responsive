@@ -29,8 +29,8 @@
     width: 2.75em;
   }
   .thandler-popover .popover-content {
-    padding: 0.5em;
-    padding-bottom: 3.7em;
+    padding: 0;
+    padding-bottom: 1em;
   }
   .thandler-popover .arrow {
     left: auto !important;
