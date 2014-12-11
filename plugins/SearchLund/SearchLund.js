@@ -261,9 +261,13 @@ L.Control.SearchLund = L.Control.extend({
 						smap.cmd.notify(this.lang.addressNotFound, "error");
 						return;
 					}
-					var coords = $.parseJSON(json.items[0].geometry);
-					if(coords.type=="MultiPoint") {
-						var latLng = L.latLng( coords.coordinates[0][1],coords.coordinates[0][0]);
+					var coords=[];
+					for (var m=0,len=json.items.length; m<len; m++) {
+						coords[m] = $.parseJSON(json.items[m].geometry);
+					}
+					
+					if(coords[0].type=="MultiPoint") {
+						var latLng = L.latLng( coords[0].coordinates[0][1],coords[0].coordinates[0][0]);
 					
 						var wgs84 = "EPSG:4326";
 						if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
@@ -272,11 +276,12 @@ L.Control.SearchLund = L.Control.extend({
 							latLng = L.latLng(arr[1], arr[0]);
 						}
 					}
-					if(coords.type=="Polygon") {
+					if(coords[0].type=="Polygon") {
 						var polyLatLng = []
-						for (var j=0,len1=coords.coordinates.length; j<len1; j++) {
-							for (var i=0,len2=coords.coordinates[j].length; i<len2; i++) {
-								var latLng = L.latLng( coords.coordinates[j][i][1],coords.coordinates[j][i][0])
+						alert(coords.length);
+						for (var j=0,len1=coords.length; j<len1; j++) {
+							for (var i=0,len2=coords[0].coordinates[j].length; i<len2; i++) {
+								var latLng = L.latLng( coords[0].coordinates[j][i][1],coords[0].coordinates[j][i][0])
 								var wgs84 = "EPSG:4326";
 								if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
 									// project the response
@@ -298,7 +303,7 @@ L.Control.SearchLund = L.Control.extend({
 					this.map.off("popupopen", onPopupOpen);
 					this.map.on("popupopen", onPopupOpen);
 					
-					if(coords.type=="MultiPoint") {
+					if(coords[0].type=="MultiPoint") {
 						this.marker = L.marker(latLng).addTo(this.map);
 						this.marker.options.q = q; // Store for creating link to map
 						
@@ -309,7 +314,7 @@ L.Control.SearchLund = L.Control.extend({
 						}
 					}
 					
-					if(coords.type=="Polygon") {
+					if(coords[0].type=="Polygon") {
 						var mapPolygon = L.polygon(polyLatLng);
 						var polCenter = mapPolygon.getBounds().getCenter();
 						this.marker = L.marker(polCenter).addTo(this.map);
