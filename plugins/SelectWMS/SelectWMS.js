@@ -18,7 +18,7 @@ L.Control.SelectWMS = L.Control.extend({
 	onAdd: function(map) {
 		this.map = map;
 		
-		this._bindEvents();
+		this.activate();
 		
 		this._container = L.DomUtil.create('div', 'leaflet-control-selectwms'); // second parameter is class name
 		$(this._container).css("display", "none");
@@ -31,7 +31,7 @@ L.Control.SelectWMS = L.Control.extend({
 		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
 		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
 		
-		this._unbindEvents();
+		this.deactivate();
 	},
 
 	onSuccess: function(responses) {
@@ -154,6 +154,26 @@ L.Control.SelectWMS = L.Control.extend({
 		});
 		
 	},
+
+	onApplyParams: function(e, p) {
+		if (p.SEL) {
+			this._applyParam( decodeURIComponent(p.SEL) );
+		}
+	},
+
+	activate: function() {
+		if (this._active) {
+			return false;
+		}
+		this._active = true;
+		this._bindEvents();
+
+	},
+
+	deactivate: function() {
+		this._active = false;
+		this._unbindEvents();
+	},
 	
 	_bindEvents: function() {
 		var self = this;
@@ -162,11 +182,10 @@ L.Control.SelectWMS = L.Control.extend({
 //				p.SEL = self._selectedFeatures[0].join(":");				
 //			}
 //		});
-		smap.event.on("smap.core.applyparams", function(e, p) {
-			if (p.SEL) {
-				self._applyParam( decodeURIComponent(p.SEL) );				
-			}
-		});
+		
+		this._onApplyParams = this._onApplyParams || $.proxy(this.onApplyParams, this);
+
+		smap.event.on("smap.core.applyparams", this._onApplyParams);
 		
 		this.map
 			.on("layeradd", this.onLayerAdd, this)
@@ -174,7 +193,10 @@ L.Control.SelectWMS = L.Control.extend({
 			.on("click", this.onMapClick, this)
 			.on("dblclick", this.onMapDblClick, this);
 	},
+
 	_unbindEvents: function() {
+		smap.event.off("smap.core.applyparams", this._onApplyParams);
+		
 		this.map
 			.off("layeradd", this.onLayerAdd, this)
 			.off("layerremove", this.onLayerRemove, this)

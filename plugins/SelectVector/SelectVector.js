@@ -52,6 +52,22 @@ L.Control.SelectVector = L.Control.extend({
 		
 	},
 
+	/**
+	 * Start listening to clicks on vector features
+	 * @type {[type]}
+	 */
+	activate: function() {
+		this._active = true;	
+	},
+
+	/**
+	 * Stop listening to clicks on vector features
+	 * @type {[type]}
+	 */
+	deactivate: function() {
+		this._active = false;
+	},
+
 	onAdd: function(map) {
 		this.map = map;
 		
@@ -60,6 +76,7 @@ L.Control.SelectVector = L.Control.extend({
 		this.$container = $(this._container);
 		this.$container.css("display", "none");
 		this._bindEvents();
+		this.activate();
 
 		return this._container;
 	},
@@ -68,6 +85,7 @@ L.Control.SelectVector = L.Control.extend({
 		// Unbind them all!
 		this.map.off("layeradd", this._onLayerAdded);
 		this.map.off("click", this._onMapClick);
+		this.deactivate();
 	},
 	
 	_bindEvents: function() {
@@ -172,6 +190,9 @@ L.Control.SelectVector = L.Control.extend({
 	},
 	
 	onFeatureClick: function(e) {
+		if (!this._active) {
+			return false;
+		}
 		var f = e.layer && e.layer.feature ? e.layer.feature : e.target.feature || e.target,
 			shiftKeyWasPressed = e.originalEvent ? e.originalEvent.shiftKey || false : false, 
 			target = e.target,

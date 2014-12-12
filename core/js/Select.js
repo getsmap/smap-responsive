@@ -254,10 +254,16 @@ smap.core.Select = L.Class.extend({
 
 				function removeWmsFeature() {
 					if (self._rasterFeature) {
+						self._rasterFeature.resetStyle();
 						self.map.removeLayer(self._rasterFeature);
 						self._rasterFeature = null;
 					}
 				}
+
+				// function fixGhostPolygons() {
+				// 	removeWmsFeature();
+				// 	self.map.off("zoomend", fixGhostPolygons);
+				// }
 
 				function addWmsFeature(theFeature) {
 					removeWmsFeature();
@@ -343,6 +349,7 @@ smap.core.Select = L.Class.extend({
 						function onRowClick() {
 							var theIndex = $(this).data("index");
 							var sf = self._selectedFeaturesWms[ theIndex ];
+							addWmsFeature(sf);
 							var popup = L.popup();
 							var html = drawPopupHtml(sf.options.popup, sf.properties, sf.options.displayName);
 							html = self._processHtml(html);
@@ -362,11 +369,16 @@ smap.core.Select = L.Class.extend({
 							self._selectManyModal.modal("hide");
 							return false;
 						}
+
 						var listItems = bContent.find(".list-group-item");
-						listItems.find(".select-btn-zoom-to-feature").on("click", function() {
+						listItems.find(".select-btn-zoom-to-feature").on("touchend click", function() {
+							onRowClick.call( $(this).parent()[0] );
 							if (self._rasterFeature) {
 								var bounds = self._rasterFeature.getBounds();
-								self.map.fitBounds(bounds);
+								self.map.fitBounds(bounds, {
+									paddingTopLeft: [200, 150],
+									paddingBottomRight: [100, 100]
+								});
 							}
 							else {
 								var i = $(this).parent().data("index");
@@ -374,8 +386,9 @@ smap.core.Select = L.Class.extend({
 								zoom = self.map.getZoom() < zoom ? zoom : self.map.getZoom() + 1;
 								self.map.setZoomAround(f.latLng, zoom);
 							}
-							// return false;
-
+							self._selectManyModal.modal("hide");
+							// self.map.off("zoomend", fixGhostPolygons).on("zoomend", fixGhostPolygons);
+							return false;
 						});
 						if (L.Browser.touch) {
 							listItems.on("tap", function() {
@@ -387,11 +400,13 @@ smap.core.Select = L.Class.extend({
 							});
 						}
 						else {
-							listItems.on("mouseenter", function() {
-								var theIndex = $(this).data("index");
-								var sf = self._selectedFeaturesWms[ theIndex ];
-								addWmsFeature(sf);
-							}).on("click", onRowClick);
+							listItems
+								.on("click", onRowClick);
+							// .on("mouseenter", function() {
+							// 	var theIndex = $(this).data("index");
+							// 	var sf = self._selectedFeaturesWms[ theIndex ];
+							// 	addWmsFeature(sf);
+							// })
 						}
 
 						self._selectManyModal.modal("show");

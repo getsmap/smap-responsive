@@ -574,6 +574,25 @@ L.Control.MeasureDraw = L.Control.extend({
 		$.extend(true, d.handlers, this.lang.handlers || {});
 	},
 
+	_selection: function(activate) {
+		var arr = [
+				smap.cmd.getControl("L.Control.SelectWMS"),
+				smap.cmd.getControl("L.Control.SelectVector")
+		];
+		var c, i;
+		for (i=0; i<arr.length; i++) {
+			c = arr[i];
+			if (c) {
+				if (activate === true) {
+					c.activate();
+				}
+				else {
+					c.deactivate();
+				}
+			}
+		}
+	},
+
 	_initDraw: function() {
 		this._layer = L.featureGroup();
 		this._layer.options = {
@@ -604,15 +623,18 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		this.map.on("draw:drawstart", function() {
 			self._nodes = [];
+			self._selection(false); // Deactivate select
 			self.map.on("click", self._onNodeClick);
 		});
 
 		this.map.on("draw:drawstop", function(e) {
 			self.map.off("click", self._onNodeClick);
+			// Reactivate select
+			
 			if (self._nodes && _.indexOf(["polygon", "rectangle"], e.layerType) > -1) {
 				self._onNodeClick({latlng: self._nodes[0]});
 			}
-			// self._nodes = [];
+			self._selection(true); // Activate select
 		});
 
 		// this.map.on("layeradd", function() {
