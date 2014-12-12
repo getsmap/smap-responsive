@@ -295,6 +295,11 @@ body {
 .leaflet-container a.leaflet-popup-close-button {
   z-index: 100;
 }
+@media (max-width: 991px) {
+  .leaflet-right .leaflet-control {
+    margin-right: 5px;
+  }
+}
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
