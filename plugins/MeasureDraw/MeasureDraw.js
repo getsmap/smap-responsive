@@ -132,10 +132,15 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		var self = this;
 		this.map.on("layeradd", function(e) {
+			self._layer.bringToFront();
+			self._layer.setZIndex(10000);
 			self._layer.eachLayer(function(lay) {
 				lay.options.selectable = true;
-				lay.options.clickable = true;
-				lay.bringToFront(); // Otherwise clicks will go through to other layers, making it impossible to select this feature
+				lay.options.clickable = false;
+				if (lay.bringToFront)
+					lay.bringToFront(); // Otherwise clicks will go through to other layers, making it impossible to select this feature
+				if (lay.setZIndex)
+					lay.setZIndex(10000);
 			});
 		});
 		smap.event.on("smap.core.createparams", $.proxy(this._onCreateParams, this));
@@ -671,8 +676,18 @@ L.Control.MeasureDraw = L.Control.extend({
 		if (!layer || !layer._measureDrawFeature) {
 			return;
 		}
-		var ta = $(".measuredraw-popup-div-save textarea");
 
+		// Prevent clicks to go through the drawn features, selecting underlying WMS-layer
+		var c = smap.cmd.getControl("L.Control.SelectWMS");
+		c._dblclickWasRegistered = true;
+		if (c) {
+			setTimeout(function() {
+				c._dblclickWasRegistered = false;
+			}, 400);
+		}
+
+		
+		var ta = $(".measuredraw-popup-div-save textarea");
 		var btnRemove = '<br><br><button class="btn btn-default btn-sm measuredraw-btn-popupremove">'+this.lang.remove+'</button>';
 		
 		// Add a remove button

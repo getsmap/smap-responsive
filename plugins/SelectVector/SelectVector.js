@@ -39,17 +39,16 @@ L.Control.SelectVector = L.Control.extend({
 		var self = this;
 		this._onFeatureClick = function(e) {
 			var dblClickIntervalMs = 200;
+			if (self._clickWasRegistered) {
+				// Allow to zoom with doubleclick over polygon
+				return;
+			}
 			self.onFeatureClick(e);
 			console.log("click");
-			if (self._clickWasRegistered) {
-				self.map.zoomIn();
-			}
 			self._clickWasRegistered = true;
 			setTimeout(function() {
 				self._clickWasRegistered = false;
 			}, dblClickIntervalMs);
-			// e.originalEvent.preventDefault();
-			// e.originalEvent.stopPropagation();
 		};
 		
 	},
