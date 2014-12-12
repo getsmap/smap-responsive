@@ -88,7 +88,7 @@ L.Control.RedirectClick = L.Control.extend({
 		var self = this;
 
 		var $btn = $('<button id="'+ this.options.btnID +'" title="' + this.lang.name + '" class="btn btn-default"><span class="'+this.options.btnClass+'"></span></button>');
-		$btn.on("click", function() {
+		$btn.on("click touchstart", function() {
 			if (!self.active || self.active === false) {
 				self._deactivate();
 				self._activate();

@@ -93,7 +93,7 @@ L.Control.ShareLink = L.Control.extend({
 	_createBtn: function() {
 		var self = this;
 		var $btn = $('<button id="smap-sharelink-btn" title="'+this.lang.caption+'" class="btn btn-default"><span class="fa fa-link"></span></button>');
-		$btn.on("click touchend", function () {
+		$btn.on("click touchstart", function () {
 			self.activate();
 			return false;
 		});
