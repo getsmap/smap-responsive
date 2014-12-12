@@ -7,9 +7,6 @@ fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera
 	z-index 1002 !important
 
 
-.smap-search-div-focused
-	max-width 450px !important
-
 
 #smap-search-div .form-control, #smap-search-div .input-group-addon
 	border none
@@ -21,23 +18,20 @@ fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera
 	z-index 1010
 	width 79%
 	max-width 380px
-	-webkit-transition left .3s, max-width .3s
-	transition left .3s, max-width .3s ease
+	transition left .3s, width 0.4s
 	overflow-y hidden
 	border 1px solid #ccc
+	.smap-search-div-focused
+		max-width 450px
 	input
 		letter-spacing -1px
 		width 100%
 		border-left none
-		/*border none
-		border 1px solid #ccc
-		border-width 1px 1px 1px 0*/
-		-webkit-box-shadow none
 		box-shadow none
-		-webkit-appearance none
+		appearance none
 		border-radius 0 !important
-	input:focus
-		border-color #ccc
+	// input:focus
+	// 	border-color #ccc
 	.dropdown-menu
 		/* Autocomplete Typehead overrides */
 		left 0px !important
@@ -85,8 +79,8 @@ fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera
 	
 @media (max-width: 467px)
 	.smap-search-div-focused
-		max-width calc(100% - 10px) !important
-		width auto !important
+		// max-width au
+		width calc(100% - 10px) !important
 
 
 

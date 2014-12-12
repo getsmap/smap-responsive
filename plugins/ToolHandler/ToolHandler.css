@@ -34,7 +34,7 @@
   }
   .thandler-popover .arrow {
     left: auto !important;
-    right: 1.7em;
+    right: 17px;
   }
 }
 @media (min-width: 992px) {

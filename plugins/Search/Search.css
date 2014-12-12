@@ -2,9 +2,6 @@
   top: 0.2em !important;
   z-index: 1002 !important;
 }
-.smap-search-div-focused {
-  max-width: 450px !important;
-}
 #smap-search-div .form-control,
 #smap-search-div .input-group-addon {
   border: none;
@@ -16,25 +13,22 @@
   z-index: 1010;
   width: 79%;
   max-width: 380px;
-  -webkit-transition: left 0.3s, max-width 0.3s;
-  transition: left 0.3s, max-width 0.3s ease;
+  -webkit-transition: left 0.3s, width 0.4s ease;
+  transition: left 0.3s, width 0.4s ease;
   overflow-y: hidden;
   border: 1px solid #ccc;
+}
+#smap-search-div .smap-search-div-focused {
+  max-width: 450px;
 }
 #smap-search-div input {
   letter-spacing: -1px;
   width: 100%;
   border-left: none;
-/*border none
-		border 1px solid #ccc
-		border-width 1px 1px 1px 0*/
   -webkit-box-shadow: none;
   box-shadow: none;
-  -webkit-appearance: none;
+  appearance: none;
   border-radius: 0 !important;
-}
-#smap-search-div input:focus {
-  border-color: #ccc;
 }
 #smap-search-div .dropdown-menu {
 /* Autocomplete Typehead overrides */
@@ -79,8 +73,7 @@
 }
 @media (max-width: 467px) {
   .smap-search-div-focused {
-    max-width: calc(100% - 10px) !important;
-    width: auto !important;
+    width: calc(100% - 10px) !important;
   }
 }
 @media (min-width: 992px) {

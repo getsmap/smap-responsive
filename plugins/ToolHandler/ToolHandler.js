@@ -1,7 +1,7 @@
 L.Control.ToolHandler = L.Control.extend({
 	options: {
 		position: 'bottomright',
-		showPopoverTitle: true
+		showPopoverTitle: false
 	},
 
 	_lang: {
