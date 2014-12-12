@@ -48,7 +48,7 @@
     "bootstrap-3": "./lib/bootstrap-3/",
     "notify-custom": "./lib/notify-custom/",
     "leaflet.print-smap": "./lib/leaflet.print-smap/",
-    "leaflet.wfs-t": "https://github.com/flatrockgeo/leaflet.wfs-t.git",
+    "leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/",
     "malmo_shared_assets": "malmostad/shared_assets",
     "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
     "lodash": "~2.4.1",

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, target-densitydpi=medium-dpi; minimal-ui">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, target-densitydpi=medium-dpi, minimal-ui">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="default">
 		<meta name="apple-mobile-web-app-title" content="sMap responsive">
@@ -44,13 +44,12 @@
 		<!-- endinject -->
 	</head>
 	<body>
-
+		<script>L_PREFER_CANVAS = true;</script><!-- For Leaflet -->
 		<!-- inject:js -->
 		<script src="dist/lib/es5-shim/es5-shim.js"></script>
 		<script src="dist/lib/proj4/dist/proj4.js"></script>
 		<script src="dist/lib/jquery/dist/jquery.js"></script>
 		<script src="dist/lib/sass-bootstrap/dist/js/bootstrap.js"></script>
-		<script>L_PREFER_CANVAS = true;</script>
 		<script src="dist/lib/leaflet/dist/leaflet-src.js"></script>
 		<script src="dist/lib/Leaflet.NonTiledLayer/NonTiledLayer.js"></script>
 		<script src="dist/lib/leaflet.draw/dist/leaflet.draw-src.js"></script>
