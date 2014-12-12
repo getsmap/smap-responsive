@@ -13,8 +13,8 @@
   z-index: 1010;
   width: 79%;
   max-width: 380px;
-  -webkit-transition: left 0.3s, width 0.4s;
-  transition: left 0.3s, width 0.4s;
+  -webkit-transition: left 0.3s, width 0.4s, max-width 0.4s;
+  transition: left 0.3s, width 0.4s, max-width 0.4s;
   overflow-y: hidden;
   border: 1px solid #ccc;
 }
