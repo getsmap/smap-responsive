@@ -135,6 +135,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			self._layer.eachLayer(function(lay) {
 				lay.options.selectable = true;
 				lay.options.clickable = true;
+				lay.bringToFront(); // Otherwise clicks will go through to other layers, making it impossible to select this feature
 			});
 		});
 		smap.event.on("smap.core.createparams", $.proxy(this._onCreateParams, this));
@@ -489,53 +490,56 @@ L.Control.MeasureDraw = L.Control.extend({
 		var fidClass = "measuredrawlabel_"+fid+"_";
 		var className = "leaflet-maplabel "+fidClass;
 
-		if ( (e._silent || type === "rectangle") && layer.getLatLngs) {
-			// Add labels at the edges
-			this._nodes = [];
-			$.each(layer.getLatLngs(), function(i, latLng) {
-				self.onNodeClick({latlng: latLng});
+
+		if (L.Browser.touch) {
+			
+		}
+		else {
+			if ( (e._silent || type === "rectangle") && layer.getLatLngs) {
+				// Add labels at the edges
+				this._nodes = [];
+				$.each(layer.getLatLngs(), function(i, latLng) {
+					self.onNodeClick({latlng: latLng});
+				});
+			}
+			var label = utils.createLabel(center, html, className);
+			this._layer.addLayer(label);
+			layer.on("mouseover", this.onMouseOver);
+			layer.on("mouseout", this.onMouseOut);
+			label.options.clickable = true;
+			
+			// Set this layer as "parent feature" of all labels so 
+			// we know where they belong (when removing the feature we 
+			// want to remove labels also)
+			this._labels = this._labels || [];
+			this._labels.push(label);
+			var labels = this._labels || [];
+			for (var i=0,len=labels.length; i<len; i++) {
+				labels[i]._parentFeature = layer;
+			}
+			this._labels = []; // Reset for next time
+			
+			// Center the tag horisontally
+			var labelTag = $(".leaflet-maplabel:last");  //$("."+className);
+			
+			if (type === "marker") {
+				labelTag.css("transition", "none");
+				// labelTag.css("margin-top", -labelTag.outerHeight() - 50+"px");
+			}
+			labelTag.css({
+				"margin-left": (-labelTag.width()/2-15)+"px"
 			});
+			// labelTag.on("click", this.returnFalse);
+			
 		}
-
-		var label = utils.createLabel(center, html, className);
-		this._layer.addLayer(label);
-		layer.on("mouseover", this.onMouseOver);
-		layer.on("mouseout", this.onMouseOut);
-		label.options.clickable = true;
-		// label.on("click", function(e) {
-		// 	var a;
-		// });
-
-		// Set this layer as "parent feature" of all labels so 
-		// we know where they belong (when removing the feature we 
-		// want to remove labels also)
-		this._labels = this._labels || [];
-		this._labels.push(label);
-		var labels = this._labels || [];
-		for (var i=0,len=labels.length; i<len; i++) {
-			labels[i]._parentFeature = layer;
-		}
-		this._labels = []; // Reset for next time
-		
-		// Center the tag horisontally
-		var labelTag = $(".leaflet-maplabel:last");  //$("."+className);
-		
-		if (type === "marker") {
-			labelTag.css("transition", "none");
-			// labelTag.css("margin-top", -labelTag.outerHeight() - 50+"px");
-		}
-		labelTag.css({
-			"margin-left": (-labelTag.width()/2-15)+"px"
-		});
-		labelTag.on("click", this.returnFalse);
-
 		if (!e._silent) {
-			labelTag.addClass("leaflet-maplabel-hover");
-			setTimeout(function() {
-				labelTag.removeClass("leaflet-maplabel-hover");
-			}, 2000)
-			layer.fire("click");
-
+			if (labelTag) {
+				labelTag.addClass("leaflet-maplabel-hover");
+				setTimeout(function() {
+					labelTag.removeClass("leaflet-maplabel-hover");
+				}, 2000);
+			}
+			// layer.fire("click");
 		}
 		else {
 			if (layer.properties && layer.properties.popupIsOpen) {
@@ -550,6 +554,8 @@ L.Control.MeasureDraw = L.Control.extend({
 				});
 			}
 		}
+
+
 
 		// var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
 		// layer.options.popup = popupHtml;
@@ -602,7 +608,6 @@ L.Control.MeasureDraw = L.Control.extend({
 		};
 
 		this.map.addLayer(this._layer);
-		// this._layer.bringToFront();
 		this._drawControl = new L.Control.Draw({
 			draw: {
 				marker: false,

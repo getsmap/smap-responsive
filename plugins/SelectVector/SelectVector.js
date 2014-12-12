@@ -42,12 +42,14 @@ L.Control.SelectVector = L.Control.extend({
 			self.onFeatureClick(e);
 			console.log("click");
 			if (self._clickWasRegistered) {
-				e.target.fire("dblclick", e);
+				self.map.zoomIn();
 			}
 			self._clickWasRegistered = true;
 			setTimeout(function() {
 				self._clickWasRegistered = false;
 			}, dblClickIntervalMs);
+			// e.originalEvent.preventDefault();
+			// e.originalEvent.stopPropagation();
 		};
 		
 	},
