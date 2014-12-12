@@ -375,8 +375,9 @@ smap.core.Select = L.Class.extend({
 							onRowClick.call( $(this).parent()[0] );
 							if (self._rasterFeature) {
 								var bounds = self._rasterFeature.getBounds();
+								var paddingTopLeft = L.Browser.touch ? [100, 100] : [200, 150]; // On mobile, no need to think about layer switcher
 								self.map.fitBounds(bounds, {
-									paddingTopLeft: [200, 150],
+									paddingTopLeft: paddingTopLeft,
 									paddingBottomRight: [100, 100]
 								});
 							}
