@@ -70,10 +70,15 @@
   .smap-search-div-in-toolbar {
     max-width: 80% !important;
   }
+  .smap-search-div-focused {
+    width: 83%;
+    max-width: 83%;
+  }
 }
 @media (max-width: 467px) {
   .smap-search-div-focused {
     width: calc(100% - 10px) !important;
+    max-width: calc(100% - 10px) !important;
   }
 }
 @media (min-width: 992px) {
