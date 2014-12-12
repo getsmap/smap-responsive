@@ -1,5 +1,6 @@
 
 generalMargins = 5px
+generalMarginsRight = 10px
 fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera Sans", sans-serif
 
 
@@ -46,12 +47,15 @@ html, body
 	bottom 0
 	right 100px
 
+.modal
+	z-index 3000 // make sure on top of malmo header
+
 .modal-dialog
 	font-size 1em
 
 .leaflet-control-container .btn
-	padding 9px 15px
-	max-width 3.1em
+	padding 12px 18px  //9px 15px
+	max-width 4.1em
 	min-width 3.1em
 
 .leaflet-maplabel
@@ -115,7 +119,7 @@ html, body
 .leaflet-top.leaflet-right
 	// margin-right 10px
 	// margin-top 8px
-	margin-right generalMargins
+	margin-right generalMarginsRight
 	margin-top generalMargins
 	border 1px solid #ccc
 	.leaflet-control
@@ -132,7 +136,7 @@ html, body
 			height 45px
 
 .leaflet-right .leaflet-control
-	margin-right generalMargins
+	margin-right generalMarginsRight
 	button
 		border-radius 0 !important
 

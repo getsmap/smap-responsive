@@ -92,7 +92,7 @@ L.Control.ToolHandler = L.Control.extend({
 				var isVisible = $(".thandler-popover").length && parseInt($(".thandler-popover").css("opacity") || 0) > 0;
 				if (isVisible) {
 					$this.popover("hide");
-					return;
+					return false;
 				}
 			}
 			else {

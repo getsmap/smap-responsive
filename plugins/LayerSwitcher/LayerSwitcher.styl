@@ -1,5 +1,6 @@
 
 generalMargins = 5px
+generalMarginsLeft = 10px
 fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera Sans", sans-serif
 
 
@@ -55,9 +56,9 @@ indentDist = 1.3em
 	width 70%
 	background-color mobPanelBg
 	height 100%
-	max-width 310px
+	max-width 310px + generalMarginsLeft
 	padding 0
-	padding-left generalMargins
+	padding-left generalMarginsLeft
 	padding-right 1px
 	padding-top generalMargins
 	overflow-y auto
@@ -232,7 +233,7 @@ indentDist = 1.3em
 	// Zoom-in-effect when showing and hiding the panel
 	// .lswitch-panel .panel
 	// 	transition all 400ms
-	// 	transform translate(-20%,0) scale(0.95)
+	// 	transform translate(-20%,0) scale(0.9)
 	
 	// .lswitch-panel.panel-visible .panel
 	// 	transform translate(0,0) scale(1)
@@ -285,7 +286,7 @@ indentDist = 1.3em
 		background-image none !important
 		text-shadow none !important
 		background-color #fff
-		background-color rgba(255,255,255,0.8)
+		background-color rgba(255,255,255,0.9)
 		color #000
 		color rgba(0,0,0,1)
 		font-weight bold
@@ -350,7 +351,7 @@ indentDist = 1.3em
 		// background none
 		// transition all 100ms
 		border-color #fff
-		background-color rgba(255,255,255, 0.8)
+		background-color rgba(255,255,255, 0.9)
 	
 	.lswitch-panel a:hover, .lswitch-panel a:active, .lswitch-panel a.active:hover, .lswitch-panel a.active:active
 		background-color hoverColor

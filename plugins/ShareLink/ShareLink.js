@@ -9,12 +9,12 @@ L.Control.ShareLink = L.Control.extend({
 		"sv": {
 			caption: "Länk till kartan",
 			close: "Stäng",
-			tooLongUrl: "Notera! URL:en är för lång för att fungera i gamla webbläsaren Internet Exporer 8 och äldre."
+			tooLongUrl: "Notera! URL:en är för lång för att fungera i en del äldre webbläsare"
 		},
 		"en": {
 			caption: "Share link",
 			close: "Close",
-			tooLongUrl: "Note! The URL will not work in the old browser Internet Exporer 8 (and older)."
+			tooLongUrl: "Note! The URL may not work in very old browsers"
 		}
 	},
 

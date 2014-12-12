@@ -34,12 +34,15 @@ body {
   bottom: 0;
   right: 100px;
 }
+.modal {
+  z-index: 3000;
+}
 .modal-dialog {
   font-size: 1em;
 }
 .leaflet-control-container .btn {
-  padding: 9px 15px;
-  max-width: 3.1em;
+  padding: 12px 18px;
+  max-width: 4.1em;
   min-width: 3.1em;
 }
 .leaflet-maplabel {
@@ -93,7 +96,7 @@ body {
   text-shadow: 1px 1px 0px #fff;
 }
 .leaflet-top.leaflet-right {
-  margin-right: 5px;
+  margin-right: 10px;
   margin-top: 5px;
   border: 1px solid #ccc;
 }
@@ -112,7 +115,7 @@ body {
   height: 45px;
 }
 .leaflet-right .leaflet-control {
-  margin-right: 5px;
+  margin-right: 10px;
 }
 .leaflet-right .leaflet-control button {
   border-radius: 0 !important;

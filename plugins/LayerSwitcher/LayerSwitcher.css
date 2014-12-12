@@ -34,9 +34,9 @@
   width: 70%;
   background-color: #38454e;
   height: 100%;
-  max-width: 310px;
+  max-width: 320px;
   padding: 0;
-  padding-left: 5px;
+  padding-left: 10px;
   padding-right: 1px;
   padding-top: 5px;
   overflow-y: auto;
@@ -208,7 +208,7 @@
     background-image: none !important;
     text-shadow: none !important;
     background-color: #fff;
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(255,255,255,0.9);
     color: #000;
     color: #000;
     font-weight: bold;
@@ -266,7 +266,7 @@
   }
   .lswitch-panel a {
     border-color: #fff;
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(255,255,255,0.9);
   }
   .lswitch-panel a:hover,
   .lswitch-panel a:active,
