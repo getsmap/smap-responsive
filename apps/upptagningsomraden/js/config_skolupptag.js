@@ -94,12 +94,12 @@ var config = {
 							buffer: 5
 						}
 					},
-					// {
-					// 	init: "L.Control.MeasureDraw",
-					// 	options: {
-					// 		position: "topright"
-					// 	}
-					// },
+					{
+						init: "L.Control.MeasureDraw",
+						options: {
+							position: "topright"
+						}
+					},
 					// {
 					// 	init: "L.Control.SharePosition",
 					// 	options: {}

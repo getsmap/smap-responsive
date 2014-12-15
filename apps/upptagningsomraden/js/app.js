@@ -2,7 +2,7 @@
 
 var app = {
 		options: {
-			proxy: "http://localhost/cgi-bin/proxy.py?url="
+			proxy: null //"http://localhost/cgi-bin/proxy.py?url="
 		},
 
 		init: function() {
@@ -60,9 +60,9 @@ var app = {
 			}
 
 			// Get address's lat/lng
-			var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx?";
+			var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx?q="+formData.q;
 			$.ajax({
-				url: proxy + encodeURIComponent(url+"q="+formData.q).replace(/%20/g, "%2B"),
+				url: proxy ? proxy + encodeURIComponent(url).replace(/%20/g, "%2B") : url,
 				type: "GET",
 				// data: {
 				// 	q: formData.q
@@ -72,8 +72,9 @@ var app = {
 			}).done(function(resp) {
 				// Result from "get coordinates script"
 				var coords = resp.features[0].geometry.coordinates;
+				var url = "http://kartor.malmo.se/api/v1/schoolname/?e="+coords[0]+"&n="+coords[1]+"&arsk="+formData.batch;
 				$.ajax({
-					url: proxy + encodeURIComponent("http://kartor.malmo.se/api/v1/schoolname/?e="+coords[0]+"&n="+coords[1]+"&arsk="+formData.batch).replace(/%20/g, "%2B"),
+					url: proxy ? proxy + encodeURIComponent(url).replace(/%20/g, "%2B") : url,
 					dataType: "json",
 					type: "GET",
 					error: onError
@@ -85,6 +86,7 @@ var app = {
 				}).done(function(resp) {
 					// Result from "get school script"
 					def.resolve(resp.schoolname[0].schoolname);
+					// TODO: Might need to get and store coordinates here also so we can select the school when the map is showing
 				});
 			});
 
@@ -221,7 +223,7 @@ var app = {
 			var batch = this._formData.batch;
 			var poi = encodeURIComponent(this._formData.q).replace(/%20/g, "%2B");
 			var ols = [batch, "AREA_"+batch].join(",");
-			var src = "http://localhost/smap-responsive/dev.html?config=http://localhost/smap-responsive/apps/upptagningsomraden/js/config_skolupptag.js&ol="+ols+"&poi="+poi+"&zoom=5";
+			var src = "http://localhost/smap-responsive/dev.html?config=http://localhost/smap-responsive/apps/upptagningsomraden/js/config_skolupptag.js&ol="+ols+"&poi="+poi;
 			// window.open(src);
 			$("#map-iframe").attr("src", src);
 			$("#map-iframe").removeClass("hidden");
