@@ -16,7 +16,9 @@ body {
 	max-width: 27em;
 }
 
-#mapdiv {
+#map-iframe {
+	display: block;
+	border: none;
 	width: 100%;
 	height: 35em;
 	max-width: 50em;

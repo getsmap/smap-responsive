@@ -2,7 +2,7 @@
 
 var app = {
 		options: {
-			proxy: null //"http://localhost/cgi-bin/proxy.py?url="
+			proxy: "http://localhost/cgi-bin/proxy.py?url="
 		},
 
 		init: function() {
@@ -17,9 +17,9 @@ var app = {
 					t = arr[i];
 					formData[t.name] = t.value;
 				}
-				self._calcResult(formData).done(function(e) {
+				self._calcResult(formData).done(function(schoolName) {
 					// e.text;
-					$("#result").html("Om man är folkbokförd på <strong>"+formData.q+"</strong> ska man gå på <strong>"+e.schoolName+"</strong> i <strong>årskurs "+formData.batch+"</strong>");
+					$("#result").html("Om man är folkbokförd på <strong>"+formData.q+"</strong> ska man gå på <strong>"+schoolName+"</strong> i <strong>årskurs "+formData.batch+"</strong>");
 					// TODO: Call script to fetch result. On fetch done – show a button
 					// which toggles the map
 				});
@@ -27,13 +27,8 @@ var app = {
 				self._formData = formData;
 				return false;
 			});
-			// $('button[type="submit"]').on("click", function(e) {
-				
-			// 	return false;
-			// });
 
 			this._appendTerms();
-
 			var geoLocate = this._geoLocate;
 			$(".schoolform").find(".addresssearch input").on("change", function() {
 				self.latLng = null;
@@ -47,11 +42,55 @@ var app = {
 			});
 		},
 
-		_calcResult: function() {
+		_projectCoords: function(latLng) {
+			
+			// Project coords to web mercator
+			var projArr = window.proj4("EPSG:3008", "EPSG:4326", [latLng.lng, latLng.lat]);
+			this.latLng = L.latLng(projArr[1], projArr[0]);
+		},
+
+		_calcResult: function(formData) {
+			var self = this;
 			var def = $.Deferred();
-			def.resolve({
-				schoolName: "Kallebergsskolan"
+			var proxy = this.options.proxy;
+
+			var onError = function(obj, text, c) {
+				// def.reject(text);
+				alert(text);
+			}
+
+			// Get address's lat/lng
+			var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx?";
+			$.ajax({
+				url: proxy + encodeURIComponent(url+"q="+formData.q).replace(/%20/g, "%2B"),
+				type: "GET",
+				// data: {
+				// 	q: formData.q
+				// },
+				error: onError,
+				dataType: "json"
+			}).done(function(resp) {
+				// Result from "get coordinates script"
+				var coords = resp.features[0].geometry.coordinates;
+				$.ajax({
+					url: proxy + encodeURIComponent("http://kartor.malmo.se/api/v1/schoolname/?e="+coords[0]+"&n="+coords[1]+"&arsk="+formData.batch).replace(/%20/g, "%2B"),
+					dataType: "json",
+					type: "GET",
+					error: onError
+					// data: {
+					// 	e: coords[0],
+					// 	n: coords[1],
+					// 	arsk: formData.batch
+					// }
+				}).done(function(resp) {
+					// Result from "get school script"
+					def.resolve(resp.schoolname[0].schoolname);
+				});
 			});
+
+			// TODO: Ask this script: http://kartor.malmo.se/api/v1/schoolname/?e=118663&n=06165708&arsk=1
+			// to get schoolname
+
 			return def.promise();
 		},
 
@@ -114,25 +153,25 @@ var app = {
 			if (!btn.length) {
 				btn = $('<button id="btn-togglemap" class="btn btn-default btn-togglemap">Visa karta</button>');
 				$(".controls").after(btn);
+				btn.on("click", function() {
+					var $this = $(this);
+					if ( $this.hasClass("active")) {
+						$this.text("Visa karta");
+						self.hideMap();
+						$this.removeClass("active");
+
+					}
+					else {
+						$this.text("Göm karta");
+						self.showMap({
+							latLng: self.latLng
+						});
+						$this.addClass("active");
+					}
+					return false;
+				});
 			}
 
-			btn.on("click", function() {
-				var $this = $(this);
-				if ( $this.hasClass("active")) {
-					$this.text("Visa karta");
-					self.hideMap();
-					$this.removeClass("active");
-
-				}
-				else {
-					$this.text("Göm karta");
-					self.showMap({
-						latLng: self.latLng
-					});
-					$this.addClass("active");
-				}
-				return false;
-			});
 		},
 
 		showMap: function(params) {
@@ -144,49 +183,52 @@ var app = {
 
 			var latLngArr = [55.59852, 13.00232];
 
-			var map = L.map('mapdiv').setView(latLngArr, 11);
-			this.map = map;
-			var bg = new L.TileLayer.EsriRest("http://kartor.malmo.se/arcgis/rest/services/malmokarta_3857/MapServer", {
-					minZoom: 10,
-					maxZoom: 18,
-					attribution: '© Malmö Stadsbyggnadskontor'
-			});
+			// var map = L.map('map-iframe').setView(latLngArr, 11);
+			// this.map = map;
+			// var bg = new L.TileLayer.EsriRest("http://kartor.malmo.se/arcgis/rest/services/malmokarta_3857/MapServer", {
+			// 		minZoom: 10,
+			// 		maxZoom: 18,
+			// 		attribution: '© Malmö Stadsbyggnadskontor'
+			// });
+			// var batch = this._formData.batch;
+			// var schools = L.tileLayer.wms("http://kartor.malmo.se/geoserver/wms", {
+			// 		layers: 'malmows:UTBILDNING_SKOLA_ARSK_{batch}_PT'.replace(/\{batch\}/g, batch),
+			// 		format: 'image/png',
+			// 		transparent: true,
+			// 		zIndex: 350,
+			// 		attribution: "Malmö stad"
+			// });
+			// var upptagningsArea = L.tileLayer.wms("http://kartor.malmo.se/geoserver/wms", {
+			// 		layers: 'malmows:UTBILDNING_GRUNDSKOLA_UPPTAGNINGSOMR_ARSK_{batch}_P'.replace(/\{batch\}/g, batch),
+			// 		format: 'image/png',
+			// 		transparent: true,
+			// 		zIndex: 250,
+			// 		attribution: "Malmö stad"
+			// });
+			// map.addLayer(bg);
+			// map.addLayer(schools);
+			// map.addLayer(upptagningsArea);
+
+
+			// if (this._marker) {
+			// 	map.removeLayer(this._marker);
+			// }
+			// if (params.latLng) {
+			// 	map.setView(params.latLng || latLngArr, params.zoom || 14);
+			// 	this._marker = L.marker(params.latLng).addTo(map);
+			// }
+			
 			var batch = this._formData.batch;
-			var schools = L.tileLayer.wms("http://kartor.malmo.se/geoserver/wms", {
-					layers: 'malmows:UTBILDNING_SKOLA_ARSK_{batch}_PT'.replace(/\{batch\}/g, batch),
-					format: 'image/png',
-					transparent: true,
-					zIndex: 350,
-					attribution: "Malmö stad"
-			});
-			var upptagningsArea = L.tileLayer.wms("http://kartor.malmo.se/geoserver/wms", {
-					layers: 'malmows:UTBILDNING_GRUNDSKOLA_UPPTAGNINGSOMR_ARSK_{batch}_P'.replace(/\{batch\}/g, batch),
-					format: 'image/png',
-					transparent: true,
-					zIndex: 250,
-					attribution: "Malmö stad"
-			});
-			map.addLayer(bg);
-			map.addLayer(schools);
-			map.addLayer(upptagningsArea);
-
-
-			if (this._marker) {
-				map.removeLayer(this._marker);
-			}
-			if (params.latLng) {
-				map.setView(params.latLng || latLngArr, params.zoom || 14);
-				this._marker = L.marker(params.latLng).addTo(map);
-			}
-
-			$("#mapdiv").removeClass("hidden");
-			this.map.invalidateSize();
+			var poi = encodeURIComponent(this._formData.q).replace(/%20/g, "%2B");
+			var ols = [batch, "AREA_"+batch].join(",");
+			var src = "http://localhost/smap-responsive/dev.html?config=http://localhost/smap-responsive/apps/upptagningsomraden/js/config_skolupptag.js&ol="+ols+"&poi="+poi+"&zoom=5";
+			// window.open(src);
+			$("#map-iframe").attr("src", src);
+			$("#map-iframe").removeClass("hidden");
 		},
 
 		hideMap: function() {
-			this.map.remove();
-			this.map = null;
-			$("#mapdiv").addClass("hidden");
+			$("#map-iframe").addClass("hidden");
 		},
 
 		_geoLocate: function(address) {
@@ -218,6 +260,9 @@ var app = {
 		okToSubmit: function() {
 			if ( $("input:checked").length === 2 && this.latLng) {
 				$('button[type="submit"]').removeClass("disabled").click();
+				if ( $("#btn-togglemap").text() === "Göm karta") {
+					$("#btn-togglemap").click();
+				}
 				return true;
 			}
 			else {
