@@ -156,12 +156,14 @@ var app = {
 					layers: 'malmows:UTBILDNING_SKOLA_ARSK_{batch}_PT'.replace(/\{batch\}/g, batch),
 					format: 'image/png',
 					transparent: true,
+					zIndex: 350,
 					attribution: "Malmö stad"
 			});
 			var upptagningsArea = L.tileLayer.wms("http://kartor.malmo.se/geoserver/wms", {
 					layers: 'malmows:UTBILDNING_GRUNDSKOLA_UPPTAGNINGSOMR_ARSK_{batch}_P'.replace(/\{batch\}/g, batch),
 					format: 'image/png',
 					transparent: true,
+					zIndex: 250,
 					attribution: "Malmö stad"
 			});
 			map.addLayer(bg);
@@ -230,7 +232,7 @@ var app = {
 			var self = this;
 
 			var defaultOptions = {
-					url: "http://kartor.malmo.se/WS/search-1.0/autocomplete_v.ashx?q={q}"
+					url: "http://kartor.malmo.se/WS/search-1.0/autocomplete_adr.ashx?q={q}"
 			};
 			options = $.extend(defaultOptions, options);
 
