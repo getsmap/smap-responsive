@@ -237,15 +237,15 @@ smap.core.Select = L.Class.extend({
 			 */
 			if (!isVector) {
 				var html = "", f, props;
-
+				var popupText;
 				for (var i=0,len=selectedFeatures.length; i<len; i++) {
 					f = selectedFeatures[i];
 					props = f.properties;
-					var popupText = f.options.popup;
+					popupText = f.options.popup;
 					if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
 						popupText = self._extractAllAttributes(popupText, props);
 					}
-					html = drawPopupHtml(f.options.popup, f.properties, f.options.displayName, true);
+					html = drawPopupHtml(popupText, f.properties, f.options.displayName, true);
 				}
 				
 				html = self._processHtml(html);
