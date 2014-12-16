@@ -17,7 +17,7 @@ var config = {
 
 		params:{
 			center: [13.0, 55.58],
-			zoom: 11
+			zoom: 10
 		},
 
 		mapConfig: {
@@ -67,12 +67,12 @@ var config = {
 					// 	init: "L.Control.MalmoHeader",
 					// 	options: {}
 					// },
-					{
-						init: "L.Control.LayerSwitcher",
-						options: {
-						toggleSubLayersOnClick: false,
-						}
-					},
+					//{
+					//	init: "L.Control.LayerSwitcher",
+					//	options: {
+					//	toggleSubLayersOnClick: false,
+					//	}
+					//},
 					{
 						init: "L.Control.Zoombar",
 						options: {}
@@ -94,12 +94,12 @@ var config = {
 							buffer: 5
 						}
 					},
-					{
-						init: "L.Control.MeasureDraw",
-						options: {
-							position: "topright"
-						}
-					},
+					//{
+					//	init: "L.Control.MeasureDraw",
+					//	options: {
+					//		position: "topright"
+					//	}
+					//},
 					// {
 					// 	init: "L.Control.SharePosition",
 					// 	options: {}
@@ -113,17 +113,17 @@ var config = {
 							gui: false,
 							whitespace: "%20",
 							wsOrgProj: "EPSG:3008",
-							useProxy: true,
+							useProxy: false,
 							wsAcUrl: "http://kartor.malmo.se/WS/search-1.0/autocomplete.ashx", // autocomplete
 							wsLocateUrl: "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx" // locate
 						}
-					},
-					{
-						init: "L.Control.ShareLink",
-						options: {
-							position: "topright"
-						}
-					},
+					}// ,
+					//{
+					//	init: "L.Control.ShareLink",
+					//	options: {
+					//		position: "topright"
+					//	}
+					//},
 					// {
 					// 	init : "L.Control.RedirectClick", // Street view		
 					// 	options: {
@@ -174,10 +174,10 @@ var config = {
  				// 			position: "topright"
  				// 		}
  				//  	},
-					{
-						init: "L.Control.ToolHandler",
-						options: {}
-					}
+				// 	{
+				// 		init: "L.Control.ToolHandler",
+				// 		options: {}
+				// 	}
 					//{
 					//	 init: "L.Control.FullScreen",
 					//		options: {position: 'topright'}
@@ -203,7 +203,7 @@ var ol = config.ol,
 	batches = "F,1,2,3,4,5,6,7,8,9".split(","),
 	template = {
 		init: "L.NonTiledLayer.WMS",
-		url: "http://localhost/geoserver/wms", //"http://kartor.malmo.se/geoserver/wms",
+		url: "http://kartor.malmo.se/geoserver/wms", //"http://kartor.malmo.se/geoserver/wms",
 		options: {
 			displayName: null,
 			layerId: null,
@@ -232,6 +232,7 @@ for (var i=0,len=batches.length; i<len; i++) {
 	o.category = ["Skolor"],
 	o.displayName = batch;
 	o.selectable = false;
+	o.zIndex = 1100 + i;
 	ol.push(tPoint);
 
 	// Upptagningsomraden area
@@ -241,6 +242,7 @@ for (var i=0,len=batches.length; i<len; i++) {
 	o.layerId = "AREA_"+batch;
 	o.category = ["Upptagningsområden"],
 	o.displayName = "AREA_"+batch;
+	o.zIndex = 100 + i;
 	o.popup = '<div>Skola:&nbsp;${skola}</div>\
 				<div>Adress:&nbsp;${adress}</div>\
 				<div>Årskurs:&nbsp;${arskurs}</div>\

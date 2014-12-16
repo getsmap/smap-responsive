@@ -221,9 +221,9 @@ var app = {
 			// }
 			
 			var batch = this._formData.batch;
-			var poi = encodeURIComponent(this._formData.q).replace(/%20/g, "%2B");
+			var poi = encodeURIComponent(this._formData.q); //.replace(/%20/g, "%2B");
 			var ols = [batch, "AREA_"+batch].join(",");
-			var src = "http://localhost/smap-responsive/dev.html?config=http://localhost/smap-responsive/apps/upptagningsomraden/js/config_skolupptag.js&ol="+ols+"&poi="+poi;
+			var src = "http://kartor.malmo.se/rest/leaf/1.0-dev/?config=http://kartor.malmo.se/test/upptagning/js/config_skolupptag.js&ol="+ols+"&poi="+poi;
 			// window.open(src);
 			$("#map-iframe").attr("src", src);
 			$("#map-iframe").removeClass("hidden");
