@@ -241,12 +241,15 @@ L.Control.SearchLund = L.Control.extend({
 			// Modify the question value according to the pattern, e.g. 'qPattern: {"txt_cat": ${q}}'
 			q = utils.extractToHtml(this.options.qPattern, {q: q});
 		}
-
+		//alert(q);
 		var url = encodeURIComponent( this.options.wsLocateUrl + "?format=json&prefix="+q);
+		//alert(url);
 		var whitespace = this.options.whitespace;
 		if (whitespace) {
-			url = url.replace(/%20/g, whitespace);					
+			url = url.replace(/%20/g, whitespace);	
+			//alert(url);
 		}
+		
 
 
 		var callbacks = {
@@ -283,7 +286,7 @@ L.Control.SearchLund = L.Control.extend({
 							polyLatLng[i] = [];
 						}
 						for (var j=0,len1=coords.length; j<len1; j++) {
-							for (var i=0,len2=coords[j].coordinates[0]	.length; i<len2; i++) {
+							for (var i=0,len2=coords[j].coordinates[0].length; i<len2; i++) {
 								var latLng = L.latLng( coords[j].coordinates[0][i][1],coords[j].coordinates[0][i][0])
 								var wgs84 = "EPSG:4326";
 								if (this.options.wsOrgProj && this.options.wsOrgProj !== wgs84) {
