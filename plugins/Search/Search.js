@@ -9,7 +9,8 @@ L.Control.Search = L.Control.extend({
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
 		gui: false,
-		addToMenu: false
+		addToMenu: false,
+		zoom: 15
 		// _geoLocate: function(q) {
 			// // TODO: When this function is completed, move to config file cultmap.js
 			// function cleanUp() {
@@ -431,7 +432,7 @@ L.Control.Search = L.Control.extend({
 					this.marker.bindPopup('<p class="lead">'+decodeURIComponent(q)+'</p><div><button id="smap-search-popupbtn" class="btn btn-default">'+this.lang.remove+'</button></div>');
 					
 					if (options.setView) {
-						this.map.setView(latLng, 15, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+						this.map.setView(latLng, this.options.zoom, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
 					}
 					if (options.showPopup) {
 						this.marker.openPopup();
