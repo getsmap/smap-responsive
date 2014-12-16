@@ -258,6 +258,8 @@ L.Control.SearchLund = L.Control.extend({
 					if (this.marker) {
 						this.map.removeLayer(this.marker);
 						this.marker = null;
+						this.polyLayerGroup.clearLayers();
+						self.map.removeLayer(this.polyLayerGroup);
 					}
 					if (!json.items.length) {
 						// This means the searched place does not exist – inform user
@@ -315,8 +317,8 @@ L.Control.SearchLund = L.Control.extend({
 						$("#smap-searchlund-popupbtn").off("click").on("click", function() {
 							self.map.removeLayer(self.marker);
 							self.marker = null;
-							polyLayerGroup.clearLayers();
-							self.map.removeLayer(polyLayerGroup);
+							self.polyLayerGroup.clearLayers();
+							self.map.removeLayer(self.polyLayerGroup);
 							return false;
 						});
 					};
@@ -335,15 +337,15 @@ L.Control.SearchLund = L.Control.extend({
 					}
 					
 					if(coords[0].type=="Polygon") {
-					var polyLayerGroup = new L.LayerGroup();
+					this.polyLayerGroup = new L.LayerGroup();
 						for (var i=0;i<coords.length;i++) {
-							var mapPolygon = L.polygon(polyLatLng[i]);
-							polyLayerGroup.addLayer(mapPolygon);
+							this.mapPolygon = L.polygon(polyLatLng[i]);
+							this.polyLayerGroup.addLayer(this.mapPolygon);
 							
 						}
-						this.map.addLayer(polyLayerGroup);
+						this.map.addLayer(this.polyLayerGroup);
 						
-						var polCenter = mapPolygon.getBounds().getCenter();
+						var polCenter = this.mapPolygon.getBounds().getCenter();
 						this.marker = L.marker(polCenter).addTo(this.map);
 						this.marker.options.q = q; // Store for creating link to map
 						
