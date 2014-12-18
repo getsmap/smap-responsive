@@ -26049,6 +26049,132 @@ L.EditToolbar.Delete = L.Handler.extend({
 /*! jQuery Mobile v1.4.0 | Copyright 2010, 2013 jQuery Foundation, Inc. | jquery.org/license */
 
 (function(e,t,n){typeof define=="function"&&define.amd?define(["jquery"],function(r){return n(r,e,t),r.mobile}):n(e.jQuery,e,t)})(this,document,function(e,t,n,r){(function(e,n){e.extend(e.support,{orientation:"orientation"in t&&"onorientationchange"in t})})(e),function(e){e.event.special.throttledresize={setup:function(){e(this).bind("resize",n)},teardown:function(){e(this).unbind("resize",n)}};var t=250,n=function(){s=(new Date).getTime(),o=s-r,o>=t?(r=s,e(this).trigger("throttledresize")):(i&&clearTimeout(i),i=setTimeout(n,t-o))},r=0,i,s,o}(e),function(e,t){function p(){var e=s();e!==o&&(o=e,r.trigger(i))}var r=e(t),i="orientationchange",s,o,u,a,f={0:!0,180:!0},l,c,h;if(e.support.orientation){l=t.innerWidth||r.width(),c=t.innerHeight||r.height(),h=50,u=l>c&&l-c>h,a=f[t.orientation];if(u&&a||!u&&!a)f={"-90":!0,90:!0}}e.event.special.orientationchange=e.extend({},e.event.special.orientationchange,{setup:function(){if(e.support.orientation&&!e.event.special.orientationchange.disabled)return!1;o=s(),r.bind("throttledresize",p)},teardown:function(){if(e.support.orientation&&!e.event.special.orientationchange.disabled)return!1;r.unbind("throttledresize",p)},add:function(e){var t=e.handler;e.handler=function(e){return e.orientation=s(),t.apply(this,arguments)}}}),e.event.special.orientationchange.orientation=s=function(){var r=!0,i=n.documentElement;return e.support.orientation?r=f[t.orientation]:r=i&&i.clientWidth/i.clientHeight<1.1,r?"portrait":"landscape"},e.fn[i]=function(e){return e?this.bind(i,e):this.trigger(i)},e.attrFn&&(e.attrFn[i]=!0)}(e,this),function(e,t,n,r){function T(e){while(e&&typeof e.originalEvent!="undefined")e=e.originalEvent;return e}function N(t,n){var i=t.type,s,o,a,l,c,h,p,d,v;t=e.Event(t),t.type=n,s=t.originalEvent,o=e.event.props,i.search(/^(mouse|click)/)>-1&&(o=f);if(s)for(p=o.length,l;p;)l=o[--p],t[l]=s[l];i.search(/mouse(down|up)|click/)>-1&&!t.which&&(t.which=1);if(i.search(/^touch/)!==-1){a=T(s),i=a.touches,c=a.changedTouches,h=i&&i.length?i[0]:c&&c.length?c[0]:r;if(h)for(d=0,v=u.length;d<v;d++)l=u[d],t[l]=h[l]}return t}function C(t){var n={},r,s;while(t){r=e.data(t,i);for(s in r)r[s]&&(n[s]=n.hasVirtualBinding=!0);t=t.parentNode}return n}function k(t,n){var r;while(t){r=e.data(t,i);if(r&&(!n||r[n]))return t;t=t.parentNode}return null}function L(){g=!1}function A(){g=!0}function O(){E=0,v.length=0,m=!1,A()}function M(){L()}function _(){D(),c=setTimeout(function(){c=0,O()},e.vmouse.resetTimerDuration)}function D(){c&&(clearTimeout(c),c=0)}function P(t,n,r){var i;if(r&&r[t]||!r&&k(n.target,t))i=N(n,t),e(n.target).trigger(i);return i}function H(t){var n=e.data(t.target,s),r;!m&&(!E||E!==n)&&(r=P("v"+t.type,t),r&&(r.isDefaultPrevented()&&t.preventDefault(),r.isPropagationStopped()&&t.stopPropagation(),r.isImmediatePropagationStopped()&&t.stopImmediatePropagation()))}function B(t){var n=T(t).touches,r,i,o;n&&n.length===1&&(r=t.target,i=C(r),i.hasVirtualBinding&&(E=w++,e.data(r,s,E),D(),M(),d=!1,o=T(t).touches[0],h=o.pageX,p=o.pageY,P("vmouseover",t,i),P("vmousedown",t,i)))}function j(e){if(g)return;d||P("vmousecancel",e,C(e.target)),d=!0,_()}function F(t){if(g)return;var n=T(t).touches[0],r=d,i=e.vmouse.moveDistanceThreshold,s=C(t.target);d=d||Math.abs(n.pageX-h)>i||Math.abs(n.pageY-p)>i,d&&!r&&P("vmousecancel",t,s),P("vmousemove",t,s),_()}function I(e){if(g)return;A();var t=C(e.target),n,r;P("vmouseup",e,t),d||(n=P("vclick",e,t),n&&n.isDefaultPrevented()&&(r=T(e).changedTouches[0],v.push({touchID:E,x:r.clientX,y:r.clientY}),m=!0)),P("vmouseout",e,t),d=!1,_()}function q(t){var n=e.data(t,i),r;if(n)for(r in n)if(n[r])return!0;return!1}function R(){}function U(t){var n=t.substr(1);return{setup:function(){q(this)||e.data(this,i,{});var r=e.data(this,i);r[t]=!0,l[t]=(l[t]||0)+1,l[t]===1&&b.bind(n,H),e(this).bind(n,R),y&&(l.touchstart=(l.touchstart||0)+1,l.touchstart===1&&b.bind("touchstart",B).bind("touchend",I).bind("touchmove",F).bind("scroll",j))},teardown:function(){--l[t],l[t]||b.unbind(n,H),y&&(--l.touchstart,l.touchstart||b.unbind("touchstart",B).unbind("touchmove",F).unbind("touchend",I).unbind("scroll",j));var r=e(this),s=e.data(this,i);s&&(s[t]=!1),r.unbind(n,R),q(this)||r.removeData(i)}}}var i="virtualMouseBindings",s="virtualTouchID",o="vmouseover vmousedown vmousemove vmouseup vclick vmouseout vmousecancel".split(" "),u="clientX clientY pageX pageY screenX screenY".split(" "),a=e.event.mouseHooks?e.event.mouseHooks.props:[],f=e.event.props.concat(a),l={},c=0,h=0,p=0,d=!1,v=[],m=!1,g=!1,y="addEventListener"in n,b=e(n),w=1,E=0,S,x;e.vmouse={moveDistanceThreshold:10,clickDistanceThreshold:10,resetTimerDuration:1500};for(x=0;x<o.length;x++)e.event.special[o[x]]=U(o[x]);y&&n.addEventListener("click",function(t){var n=v.length,r=t.target,i,o,u,a,f,l;if(n){i=t.clientX,o=t.clientY,S=e.vmouse.clickDistanceThreshold,u=r;while(u){for(a=0;a<n;a++){f=v[a],l=0;if(u===r&&Math.abs(f.x-i)<S&&Math.abs(f.y-o)<S||e.data(u,s)===f.touchID){t.preventDefault(),t.stopPropagation();return}}u=u.parentNode}}},!0)}(e,t,n),function(e){e.mobile={}}(e),function(e,t){var r={touch:"ontouchend"in n};e.mobile.support=e.mobile.support||{},e.extend(e.support,r),e.extend(e.mobile.support,r)}(e),function(e,t,r){function l(t,n,r){var i=r.type;r.type=n,e.event.dispatch.call(t,r),r.type=i}var i=e(n),s=e.mobile.support.touch,o="touchmove scroll",u=s?"touchstart":"mousedown",a=s?"touchend":"mouseup",f=s?"touchmove":"mousemove";e.each("touchstart touchmove touchend tap taphold swipe swipeleft swiperight scrollstart scrollstop".split(" "),function(t,n){e.fn[n]=function(e){return e?this.bind(n,e):this.trigger(n)},e.attrFn&&(e.attrFn[n]=!0)}),e.event.special.scrollstart={enabled:!0,setup:function(){function s(e,n){r=n,l(t,r?"scrollstart":"scrollstop",e)}var t=this,n=e(t),r,i;n.bind(o,function(t){if(!e.event.special.scrollstart.enabled)return;r||s(t,!0),clearTimeout(i),i=setTimeout(function(){s(t,!1)},50)})},teardown:function(){e(this).unbind(o)}},e.event.special.tap={tapholdThreshold:750,emitTapOnTaphold:!0,setup:function(){var t=this,n=e(t),r=!1;n.bind("vmousedown",function(s){function a(){clearTimeout(u)}function f(){a(),n.unbind("vclick",c).unbind("vmouseup",a),i.unbind("vmousecancel",f)}function c(e){f(),!r&&o===e.target?l(t,"tap",e):r&&e.stopPropagation()}r=!1;if(s.which&&s.which!==1)return!1;var o=s.target,u;n.bind("vmouseup",a).bind("vclick",c),i.bind("vmousecancel",f),u=setTimeout(function(){e.event.special.tap.emitTapOnTaphold||(r=!0),l(t,"taphold",e.Event("taphold",{target:o}))},e.event.special.tap.tapholdThreshold)})},teardown:function(){e(this).unbind("vmousedown").unbind("vclick").unbind("vmouseup"),i.unbind("vmousecancel")}},e.event.special.swipe={scrollSupressionThreshold:30,durationThreshold:1e3,horizontalDistanceThreshold:30,verticalDistanceThreshold:75,start:function(t){var n=t.originalEvent.touches?t.originalEvent.touches[0]:t;return{time:(new Date).getTime(),coords:[n.pageX,n.pageY],origin:e(t.target)}},stop:function(e){var t=e.originalEvent.touches?e.originalEvent.touches[0]:e;return{time:(new Date).getTime(),coords:[t.pageX,t.pageY]}},handleSwipe:function(t,n,r,i){if(n.time-t.time<e.event.special.swipe.durationThreshold&&Math.abs(t.coords[0]-n.coords[0])>e.event.special.swipe.horizontalDistanceThreshold&&Math.abs(t.coords[1]-n.coords[1])<e.event.special.swipe.verticalDistanceThreshold){var s=t.coords[0]>n.coords[0]?"swipeleft":"swiperight";return l(r,"swipe",e.Event("swipe",{target:i,swipestart:t,swipestop:n})),l(r,s,e.Event(s,{target:i,swipestart:t,swipestop:n})),!0}return!1},setup:function(){var t=this,n=e(t);n.bind(u,function(r){function l(n){if(!s)return;i=e.event.special.swipe.stop(n),u||(u=e.event.special.swipe.handleSwipe(s,i,t,o)),Math.abs(s.coords[0]-i.coords[0])>e.event.special.swipe.scrollSupressionThreshold&&n.preventDefault()}var i,s=e.event.special.swipe.start(r),o=r.target,u=!1;n.bind(f,l).one(a,function(){u=!0,n.unbind(f,l)})})},teardown:function(){e(this).unbind(u).unbind(f).unbind(a)}},e.each({scrollstop:"scrollstart",taphold:"tap",swipeleft:"swipe",swiperight:"swipe"},function(t,n){e.event.special[t]={setup:function(){e(this).bind(n,e.noop)},teardown:function(){e(this).unbind(n)}}})}(e,this),function(e,t,n){e.extend(e.mobile,{version:"1.4.0",subPageUrlKey:"ui-page",hideUrlBar:!0,keepNative:":jqmData(role='none'), :jqmData(role='nojs')",activePageClass:"ui-page-active",activeBtnClass:"ui-btn-active",focusClass:"ui-focus",ajaxEnabled:!0,hashListeningEnabled:!0,linkBindingEnabled:!0,defaultPageTransition:"fade",maxTransitionWidth:!1,minScrollBack:0,defaultDialogTransition:"pop",pageLoadErrorMessage:"Error Loading Page",pageLoadErrorMessageTheme:"a",phonegapNavigationEnabled:!1,autoInitializePage:!0,pushStateEnabled:!0,ignoreContentEnabled:!1,buttonMarkup:{hoverDelay:200},dynamicBaseEnabled:!0,pageContainer:e(),allowCrossDomainPages:!1,dialogHashKey:"&ui-state=dialog"})}(e,this),function(e,t,n){var r={},i=e.find,s=/(?:\{[\s\S]*\}|\[[\s\S]*\])$/,o=/:jqmData\(([^)]*)\)/g;e.extend(e.mobile,{ns:"",getAttribute:function(t,n){var r;t=t.jquery?t[0]:t,t&&t.getAttribute&&(r=t.getAttribute("data-"+e.mobile.ns+n));try{r=r==="true"?!0:r==="false"?!1:r==="null"?null:+r+""===r?+r:s.test(r)?JSON.parse(r):r}catch(i){}return r},nsNormalizeDict:r,nsNormalize:function(t){return r[t]||(r[t]=e.camelCase(e.mobile.ns+t))},closestPageData:function(e){return e.closest(":jqmData(role='page'), :jqmData(role='dialog')").data("mobile-page")}}),e.fn.jqmData=function(t,r){var i;return typeof t!="undefined"&&(t&&(t=e.mobile.nsNormalize(t)),arguments.length<2||r===n?i=this.data(t):i=this.data(t,r)),i},e.jqmData=function(t,n,r){var i;return typeof n!="undefined"&&(i=e.data(t,n?e.mobile.nsNormalize(n):n,r)),i},e.fn.jqmRemoveData=function(t){return this.removeData(e.mobile.nsNormalize(t))},e.jqmRemoveData=function(t,n){return e.removeData(t,e.mobile.nsNormalize(n))},e.find=function(t,n,r,s){return t.indexOf(":jqmData")>-1&&(t=t.replace(o,"[data-"+(e.mobile.ns||"")+"$1]")),i.call(this,t,n,r,s)},e.extend(e.find,i)}(e,this),function(e,t){function s(t,n){var r,i,s,u=t.nodeName.toLowerCase();return"area"===u?(r=t.parentNode,i=r.name,!t.href||!i||r.nodeName.toLowerCase()!=="map"?!1:(s=e("img[usemap=#"+i+"]")[0],!!s&&o(s))):(/input|select|textarea|button|object/.test(u)?!t.disabled:"a"===u?t.href||n:n)&&o(t)}function o(t){return e.expr.filters.visible(t)&&!e(t).parents().addBack().filter(function(){return e.css(this,"visibility")==="hidden"}).length}var r=0,i=/^ui-id-\d+$/;e.ui=e.ui||{},e.extend(e.ui,{version:"c0ab71056b936627e8a7821f03c044aec6280a40",keyCode:{BACKSPACE:8,COMMA:188,DELETE:46,DOWN:40,END:35,ENTER:13,ESCAPE:27,HOME:36,LEFT:37,PAGE_DOWN:34,PAGE_UP:33,PERIOD:190,RIGHT:39,SPACE:32,TAB:9,UP:38}}),e.fn.extend({focus:function(t){return function(n,r){return typeof n=="number"?this.each(function(){var t=this;setTimeout(function(){e(t).focus(),r&&r.call(t)},n)}):t.apply(this,arguments)}}(e.fn.focus),scrollParent:function(){var t;return e.ui.ie&&/(static|relative)/.test(this.css("position"))||/absolute/.test(this.css("position"))?t=this.parents().filter(function(){return/(relative|absolute|fixed)/.test(e.css(this,"position"))&&/(auto|scroll)/.test(e.css(this,"overflow")+e.css(this,"overflow-y")+e.css(this,"overflow-x"))}).eq(0):t=this.parents().filter(function(){return/(auto|scroll)/.test(e.css(this,"overflow")+e.css(this,"overflow-y")+e.css(this,"overflow-x"))}).eq(0),/fixed/.test(this.css("position"))||!t.length?e(this[0].ownerDocument||n):t},uniqueId:function(){return this.each(function(){this.id||(this.id="ui-id-"+ ++r)})},removeUniqueId:function(){return this.each(function(){i.test(this.id)&&e(this).removeAttr("id")})}}),e.extend(e.expr[":"],{data:e.expr.createPseudo?e.expr.createPseudo(function(t){return function(n){return!!e.data(n,t)}}):function(t,n,r){return!!e.data(t,r[3])},focusable:function(t){return s(t,!isNaN(e.attr(t,"tabindex")))},tabbable:function(t){var n=e.attr(t,"tabindex"),r=isNaN(n);return(r||n>=0)&&s(t,!r)}}),e("<a>").outerWidth(1).jquery||e.each(["Width","Height"],function(n,r){function u(t,n,r,s){return e.each(i,function(){n-=parseFloat(e.css(t,"padding"+this))||0,r&&(n-=parseFloat(e.css(t,"border"+this+"Width"))||0),s&&(n-=parseFloat(e.css(t,"margin"+this))||0)}),n}var i=r==="Width"?["Left","Right"]:["Top","Bottom"],s=r.toLowerCase(),o={innerWidth:e.fn.innerWidth,innerHeight:e.fn.innerHeight,outerWidth:e.fn.outerWidth,outerHeight:e.fn.outerHeight};e.fn["inner"+r]=function(n){return n===t?o["inner"+r].call(this):this.each(function(){e(this).css(s,u(this,n)+"px")})},e.fn["outer"+r]=function(t,n){return typeof t!="number"?o["outer"+r].call(this,t):this.each(function(){e(this).css(s,u(this,t,!0,n)+"px")})}}),e.fn.addBack||(e.fn.addBack=function(e){return this.add(e==null?this.prevObject:this.prevObject.filter(e))}),e("<a>").data("a-b","a").removeData("a-b").data("a-b")&&(e.fn.removeData=function(t){return function(n){return arguments.length?t.call(this,e.camelCase(n)):t.call(this)}}(e.fn.removeData)),e.ui.ie=!!/msie [\w.]+/.exec(navigator.userAgent.toLowerCase()),e.support.selectstart="onselectstart"in n.createElement("div"),e.fn.extend({disableSelection:function(){return this.bind((e.support.selectstart?"selectstart":"mousedown")+".ui-disableSelection",function(e){e.preventDefault()})},enableSelection:function(){return this.unbind(".ui-disableSelection")},zIndex:function(r){if(r!==t)return this.css("zIndex",r);if(this.length){var i=e(this[0]),s,o;while(i.length&&i[0]!==n){s=i.css("position");if(s==="absolute"||s==="relative"||s==="fixed"){o=parseInt(i.css("zIndex"),10);if(!isNaN(o)&&o!==0)return o}i=i.parent()}}return 0}}),e.ui.plugin={add:function(t,n,r){var i,s=e.ui[t].prototype;for(i in r)s.plugins[i]=s.plugins[i]||[],s.plugins[i].push([n,r[i]])},call:function(e,t,n,r){var i,s=e.plugins[t];if(!s)return;if(!r&&(!e.element[0].parentNode||e.element[0].parentNode.nodeType===11))return;for(i=0;i<s.length;i++)e.options[s[i][0]]&&s[i][1].apply(e.element,n)}}}(e),function(e,t,r){e.extend(e.mobile,{window:e(t),document:e(n),keyCode:e.ui.keyCode,behaviors:{},silentScroll:function(n){e.type(n)!=="number"&&(n=e.mobile.defaultHomeScroll),e.event.special.scrollstart.enabled=!1,setTimeout(function(){t.scrollTo(0,n),e.mobile.document.trigger("silentscroll",{x:0,y:n})},20),setTimeout(function(){e.event.special.scrollstart.enabled=!0},150)},getClosestBaseUrl:function(t){var n=e(t).closest(".ui-page").jqmData("url"),r=e.mobile.path.documentBase.hrefNoHash;if(!e.mobile.dynamicBaseEnabled||!n||!e.mobile.path.isPath(n))n=r;return e.mobile.path.makeUrlAbsolute(n,r)},removeActiveLinkClass:function(t){!!e.mobile.activeClickedLink&&(!e.mobile.activeClickedLink.closest("."+e.mobile.activePageClass).length||t)&&e.mobile.activeClickedLink.removeClass(e.mobile.activeBtnClass),e.mobile.activeClickedLink=null},getInheritedTheme:function(e,t){var n=e[0],r="",i=/ui-(bar|body|overlay)-([a-z])\b/,s,o;while(n){s=n.className||"";if(s&&(o=i.exec(s))&&(r=o[2]))break;n=n.parentNode}return r||t||"a"},enhanceable:function(e){return this.haveParents(e,"enhance")},hijackable:function(e){return this.haveParents(e,"ajax")},haveParents:function(t,n){if(!e.mobile.ignoreContentEnabled)return t;var r=t.length,i=e(),s,o,u,a,f;for(a=0;a<r;a++){o=t.eq(a),u=!1,s=t[a];while(s){f=s.getAttribute?s.getAttribute("data-"+e.mobile.ns+n):"";if(f==="false"){u=!0;break}s=s.parentNode}u||(i=i.add(o))}return i},getScreenHeight:function(){return t.innerHeight||e.mobile.window.height()},resetActivePageHeight:function(t){var n=e("."+e.mobile.activePageClass),r=n.height(),i=n.outerHeight(!0);t=typeof t=="number"?t:e.mobile.getScreenHeight(),n.css("min-height",t-(i-r))},loading:function(){var t=this.loading._widget||e(e.mobile.loader.prototype.defaultHtml).loader(),n=t.loader.apply(t,arguments);return this.loading._widget=t,n}}),e.addDependents=function(t,n){var r=e(t),i=r.jqmData("dependents")||e();r.jqmData("dependents",e(i).add(n))},e.fn.extend({removeWithDependents:function(){e.removeWithDependents(this)},enhanceWithin:function(){var t,n={},r=e.mobile.page.prototype.keepNativeSelector(),i=this;e.mobile.nojs&&e.mobile.nojs(this),e.mobile.links&&e.mobile.links(this),e.mobile.degradeInputsWithin&&e.mobile.degradeInputsWithin(this),e.fn.buttonMarkup&&this.find(e.fn.buttonMarkup.initSelector).not(r).jqmEnhanceable().buttonMarkup(),e.fn.fieldcontain&&this.find(":jqmData(role='fieldcontain')").not(r).jqmEnhanceable().fieldcontain(),e.each(e.mobile.widgets,function(t,s){if(s.initSelector){var o=e.mobile.enhanceable(i.find(s.initSelector));o.length>0&&(o=o.not(r)),o.length>0&&(n[s.prototype.widgetName]=o)}});for(t in n)n[t][t]();return this},addDependents:function(t){e.addDependents(this,t)},getEncodedText:function(){return e("<a>").text(this.text()).html()},jqmEnhanceable:function(){return e.mobile.enhanceable(this)},jqmHijackable:function(){return e.mobile.hijackable(this)}}),e.removeWithDependents=function(t){var n=e(t);(n.jqmData("dependents")||e()).remove(),n.remove()},e.addDependents=function(t,n){var r=e(t),i=r.jqmData("dependents")||e();r.jqmData("dependents",e(i).add(n))},e.find.matches=function(t,n){return e.find(t,null,null,n)},e.find.matchesSelector=function(t,n){return e.find(n,null,null,[t]).length>0}}(e,this),function(e,r){t.matchMedia=t.matchMedia||function(e,t){var n,r=e.documentElement,i=r.firstElementChild||r.firstChild,s=e.createElement("body"),o=e.createElement("div");return o.id="mq-test-1",o.style.cssText="position:absolute;top:-100em",s.style.background="none",s.appendChild(o),function(e){return o.innerHTML='&shy;<style media="'+e+'"> #mq-test-1 { width: 42px; }</style>',r.insertBefore(s,i),n=o.offsetWidth===42,r.removeChild(s),{matches:n,media:e}}}(n),e.mobile.media=function(e){return t.matchMedia(e).matches}}(e)});
+/* global console: true */
+L.BingLayer = L.TileLayer.extend({
+	options: {
+		subdomains: [0, 1, 2, 3],
+		type: 'Aerial',
+		attribution: 'Bing',
+		culture: ''
+	},
+
+	initialize: function(key, options) {
+		L.Util.setOptions(this, options);
+
+		this._key = key;
+		this._url = null;
+		this.meta = {};
+		this.loadMetadata();
+	},
+
+	tile2quad: function(x, y, z) {
+		var quad = '';
+		for (var i = z; i > 0; i--) {
+			var digit = 0;
+			var mask = 1 << (i - 1);
+			if ((x & mask) !== 0) digit += 1;
+			if ((y & mask) !== 0) digit += 2;
+			quad = quad + digit;
+		}
+		return quad;
+	},
+
+	getTileUrl: function(p, z) {
+		var zoom = this._getZoomForUrl();
+		var subdomains = this.options.subdomains,
+			s = this.options.subdomains[Math.abs((p.x + p.y) % subdomains.length)];
+		return this._url.replace('{subdomain}', s)
+				.replace('{quadkey}', this.tile2quad(p.x, p.y, zoom))
+				.replace('{culture}', this.options.culture);
+	},
+
+	loadMetadata: function() {
+		var _this = this;
+		var cbid = '_bing_metadata_' + L.Util.stamp(this);
+		window[cbid] = function (meta) {
+			_this.meta = meta;
+			window[cbid] = undefined;
+			var e = document.getElementById(cbid);
+			e.parentNode.removeChild(e);
+			if (meta.errorDetails) {
+				if (window.console) console.log('Leaflet Bing Plugin Error - Got metadata: ' + meta.errorDetails);
+				return;
+			}
+			_this.initMetadata();
+		};
+		var url = document.location.protocol + '//dev.virtualearth.net/REST/v1/Imagery/Metadata/' + this.options.type + '?include=ImageryProviders&jsonp=' + cbid +
+		          '&key=' + this._key + '&UriScheme=' + document.location.protocol.slice(0, -1);
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = url;
+		script.id = cbid;
+		document.getElementsByTagName('head')[0].appendChild(script);
+	},
+
+	initMetadata: function() {
+		var r = this.meta.resourceSets[0].resources[0];
+		this.options.subdomains = r.imageUrlSubdomains;
+		this._url = r.imageUrl;
+		this._providers = [];
+		if (r.imageryProviders) {
+			for (var i = 0; i < r.imageryProviders.length; i++) {
+				var p = r.imageryProviders[i];
+				for (var j = 0; j < p.coverageAreas.length; j++) {
+					var c = p.coverageAreas[j];
+					var coverage = {zoomMin: c.zoomMin, zoomMax: c.zoomMax, active: false};
+					var bounds = new L.LatLngBounds(
+							new L.LatLng(c.bbox[0]+0.01, c.bbox[1]+0.01),
+							new L.LatLng(c.bbox[2]-0.01, c.bbox[3]-0.01)
+					);
+					coverage.bounds = bounds;
+					coverage.attrib = p.attribution;
+					this._providers.push(coverage);
+				}
+			}
+		}
+		this._update();
+	},
+
+	_update: function() {
+		if (this._url === null || !this._map) return;
+		this._update_attribution();
+		L.TileLayer.prototype._update.apply(this, []);
+	},
+
+	_update_attribution: function() {
+		var bounds = this._map.getBounds();
+		var zoom = this._map.getZoom();
+		for (var i = 0; i < this._providers.length; i++) {
+			var p = this._providers[i];
+			if ((zoom <= p.zoomMax && zoom >= p.zoomMin) &&
+					bounds.intersects(p.bounds)) {
+				if (!p.active && this._map.attributionControl)
+					this._map.attributionControl.addAttribution(p.attrib);
+				p.active = true;
+			} else {
+				if (p.active && this._map.attributionControl)
+					this._map.attributionControl.removeAttribution(p.attrib);
+				p.active = false;
+			}
+		}
+	},
+
+	onRemove: function(map) {
+		for (var i = 0; i < this._providers.length; i++) {
+			var p = this._providers[i];
+			if (p.active && this._map.attributionControl) {
+				this._map.attributionControl.removeAttribution(p.attrib);
+				p.active = false;
+			}
+		}
+        	L.TileLayer.prototype.onRemove.apply(this, [map]);
+	}
+});
+
+L.bingLayer = function (key, options) {
+    return new L.BingLayer(key, options);
+};
+
 L.GeoJSON.Custom = L.GeoJSON.extend({
 	
 	CLASS_NAME: "L.GeoJSON.Custom",
@@ -26248,9 +26374,9 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		
 		L.GeoJSON.prototype.initialize.call(this, null, options);
 		
-		if (options.proxy || L.GeoJSON.WFS.proxy) {
-			this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
-		}
+		// if (options.proxy || L.GeoJSON.WFS.proxy) {
+		// 	this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
+		// }
 		this._featureIndexes = [];
 		this.getFeatureUrl = serviceUrl;
 	},
@@ -26432,12 +26558,15 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
     },
 	
 	getFeature: function(bounds, callback) {
+		var proxy = this.options.proxy || null;
 		if (bounds && !this.options.params.filter) {
 			// Make a filter so that we only fetch features within current viewport.
 			// Don't use bbox if filter is specified (wfs does not support a combination)
 			var reverseBbox = this.options.hasOwnProperty("reverseAxisBbox") ? this.options.reverseAxisBbox : this.options.reverseAxis;
 			if (this.options.inputCrs) {
-				bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
+				if (this.options.inputCrs.toUpperCase() !== "EPSG:4326") {
+					bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
+				}
 				this.options.params.srsName = this.options.inputCrs;
 			}
 			this.options.params.bbox = this._boundsToBbox(bounds, reverseBbox);
@@ -26445,12 +26574,12 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 		var url,
 			params = null;
 		if (this.options.xhrType === "GET") {
-			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
+			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
 			params = null;
 		}
 		else {
 			// POST
-			url = this.proxy ? this.proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
+			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
 			params = this.options.params;
 		}
 		
@@ -26465,19 +26594,29 @@ L.GeoJSON.WFS = L.GeoJSON.extend({
 			data: params,
 			context: this,
 			success: function(response) {
-				if (response.type && response.type == "FeatureCollection") {
-					this.jsonData = response;
-					this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
-					
-					callback();
-					this.fire("load", {layer: this});
-				}
+				this.onGetFeatureSuccess(response, callback);
 			},
-			error: function() {
-				this.fire("loaderror", {layer: this});
-			},
+			error: this.onGetFeatureError,
 			dataType: "json"
 		});
+	},
+
+	/**
+	 * The function must be called with context <this> (this class instance).
+	 * @param  {[type]} response [description]
+	 * @return {[type]}          [description]
+	 */
+	onGetFeatureSuccess: function(response, callback) {
+		if (response.type && response.type == "FeatureCollection") {
+			this.jsonData = response;
+			this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
+			callback();
+			this.fire("load", {layer: this});
+		}
+	},
+
+	onGetFeatureError: function(e) {
+		this.fire("loaderror", {layer: this});
 	},
 	
 	swapCoords: function(coords) {
@@ -26632,6 +26771,773 @@ L.nonTiledLayer.wms = function (url, options) {
     return new L.NonTiledLayer.WMS(url, options);
 };
 /*
+	Leaflet.print, implements the Mapfish print protocol allowing a Leaflet map to be printed using either the Mapfish or GeoServer print module.
+	(c) 2013, Adam Ratcliffe, GeoSmart Maps Limited
+*/
+
+L.print = L.print || {};
+
+L.print.Provider = L.Class.extend({
+
+	includes: L.Mixin.Events,
+
+	statics: {
+		MAX_RESOLUTION: 156543.03390625,
+		MAX_EXTENT: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+		SRS: 'EPSG:3857',
+		INCHES_PER_METER: 39.3701, //*1.77,
+		DPI: 170, //72,
+		UNITS: 'm'
+	},
+
+	options: {
+		autoLoad: false,
+		autoOpen: true,
+		// outputFormat: 'pdf',
+		// outputFilename: 'leaflet-map',
+		method: 'POST',
+		rotation: 0,
+		customParams: {},
+		legends: false
+	},
+
+	initialize: function (options) {
+		if (L.version <= '0.5.1') {
+			throw 'Leaflet.print requires Leaflet 0.6.0+. Download latest from https://github.com/Leaflet/Leaflet/';
+		}
+
+		var context;
+
+		options = L.setOptions(this, options);
+
+		if (options.map) {
+			this.setMap(options.map);
+		}
+
+		if (options.capabilities) {
+			this._capabilities = options.capabilities;
+		} else if (this.options.autoLoad) {
+			this.loadCapabilities();
+		}
+
+		if (options.listeners) {
+			if (options.listeners.context) {
+				context = options.listeners.context;
+				delete options.listeners.context;
+			}
+			this.addEventListener(options.listeners, context);
+		}
+	},
+
+	loadCapabilities: function () {
+		if (!this.options.url) {
+			return;
+		}
+
+		var url;
+
+		url = this.options.url + '/info.json';
+		if (this.options.proxy) {
+			url = this.options.proxy + url;
+		}
+
+		return $.ajax({
+			type: 'GET',
+			dataType: 'json',
+			url: url,
+			success: L.Util.bind(this.onCapabilitiesLoad, this)
+		});
+	},
+
+	/**
+	 * Web Mercator's scale is only valid for distance calculation
+	 * at the equator. Therefore, we need to correct based on our
+	 * latitude.
+	 * @return {Integer} The corrected scale – i.e. where you can measure 
+	 * on the print-out and multiply by the scale to get the real-world 
+	 * distance value – well, that's what I thought a scale was for...)
+	 */
+	_getMercatorScaleForLat: function() {
+		var lat = this._map.getCenter().lat;
+		var scale = this._getScale()
+		var coeff = 1 / Math.cos(lat*Math.PI/180);
+		scale = parseInt(Math.round(scale / coeff)); // modify scale for our latitude
+		return scale;
+	},
+
+	print: function (options) {
+		options = L.extend(L.extend({}, this.options), options);
+
+		if (!options.layout || !options.dpi) {
+			throw 'Must provide a layout name and dpi value to print';
+		}
+
+		this.fire('beforeprint', {
+			provider: this,
+			map: this._map
+		});
+
+		var jsonData = JSON.stringify(L.extend({
+			units: L.print.Provider.UNITS,
+			srs: L.print.Provider.SRS,
+			layout: options.layout,
+			dpi: options.dpi,
+			// outputFormat: options.outputFormat,
+			comment: options.comment,
+			mapTitle: options.mapTitle,
+			displayscale: options.displayscale ? options.displayscale + this._getMercatorScaleForLat() : this._getMercatorScaleForLat(),
+			// outputFilename: options.outputFilename,
+			layers: this._encodeLayers(this._map),
+			pages: [{
+				center: this._projectCoords(L.print.Provider.SRS, this._map.getCenter()),
+				scale: this._getScale(),
+				rotation: options.rotation,
+				copy: options.copy
+			}],
+			legends: options.legends
+		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
+			url;
+
+		if (options.method === 'GET') {
+			url = this._capabilities.printURL + '?spec=' + encodeURIComponent(jsonData);
+
+			if (options.proxy) {
+				url = options.proxy + encodeURIComponent(url);
+			}
+
+			window.open(url);
+
+			this.fire('print', {
+				provider: this,
+				map: this._map
+			});
+		} else {
+			url = this._capabilities.createURL;
+
+			if (options.proxy) {
+				url = options.proxy + url;
+			}
+
+			if (this._xhr) {
+				this._xhr.abort();
+			}
+			this.fire('print', {
+				provider: this,
+				map: this._map
+			});
+			this._xhr = $.ajax({
+				type: 'POST',
+				contentType: 'application/json; charset=UTF-8',
+				processData: false,
+				dataType: 'json',
+				url: url,
+				data: jsonData,
+				success: L.Util.bind(this.onPrintSuccess, this),
+				error: L.Util.bind(this.onPrintError, this)
+			});
+		}
+
+	},
+
+	getCapabilities: function () {
+		return this._capabilities;
+	},
+
+	setMap: function (map) {
+		this._map = map;
+	},
+
+	setDpi: function (dpi) {
+		var oldDpi = this.options.dpi;
+
+		if (oldDpi !== dpi) {
+			this.options.dpi = dpi;
+			this.fire('dpichange', {
+				provider: this,
+				dpi: dpi
+			});
+		}
+	},
+
+	setLayout: function (name) {
+		var oldName = this.options.layout;
+
+		if (oldName !== name) {
+			this.options.layout = name;
+			this.fire('layoutchange', {
+				provider: this,
+				layout: name
+			});
+		}
+	},
+
+	setRotation: function (rotation) {
+		var oldRotation = this.options.rotation;
+
+		if (oldRotation !== this.options.rotation) {
+			this.options.rotation = rotation;
+			this.fire('rotationchange', {
+				provider: this,
+				rotation: rotation
+			});
+		}
+	},
+
+	_getLayers: function (map) {
+		var markers = [],
+			vectors = [],
+			tiles = [],
+			imageOverlays = [],
+			imageNodes,
+			pathNodes,
+			id;
+
+		for (id in map._layers) {
+			if (map._layers.hasOwnProperty(id)) {
+				if (!map._layers.hasOwnProperty(id)) { continue; }
+				var lyr = map._layers[id];
+
+				if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
+					tiles.push(lyr);
+				} else if (lyr instanceof L.ImageOverlay) {
+					imageOverlays.push(lyr);
+				} else if (lyr instanceof L.Marker) {
+					markers.push(lyr);
+				} else if (lyr instanceof L.Path && lyr.toGeoJSON) {
+					vectors.push(lyr);
+				}
+			}
+		}
+		markers.sort(function (a, b) {
+			return a._icon.style.zIndex - b._icon.style.zIndex;
+		});
+
+		var i;
+		// Layers with equal zIndexes can cause problems with mapfish print
+		for(i = 1;i<markers.length;i++){
+			if(markers[i]._icon.style.zIndex <= markers[i - 1]._icon.style.zIndex){
+				markers[i]._icon.style.zIndex = markers[i - 1].icons.style.zIndex + 1;
+			}
+		}
+
+		tiles.sort(function (a, b) {
+			return a._container.style.zIndex - b._container.style.zIndex;
+		});
+
+		// Layers with equal zIndexes can cause problems with mapfish print
+		for(i = 1;i<tiles.length;i++){
+			if(tiles[i]._container.style.zIndex <= tiles[i - 1]._container.style.zIndex){
+				tiles[i]._container.style.zIndex = tiles[i - 1]._container.style.zIndex + 1;
+			}
+		}
+
+		imageNodes = [].slice.call(this, map._panes.overlayPane.childNodes);
+		imageOverlays.sort(function (a, b) {
+			return $.inArray(a._image, imageNodes) - $.inArray(b._image, imageNodes);
+		});
+
+		if (map._pathRoot) {
+			pathNodes = [].slice.call(this, map._pathRoot.childNodes);
+			vectors.sort(function (a, b) {
+				return $.inArray(a._container, pathNodes) - $.inArray(b._container, pathNodes);
+			});
+		}
+
+		return tiles.concat(vectors).concat(imageOverlays).concat(markers);
+	},
+
+	_getScale: function () {
+		var map = this._map,
+			bounds = map.getBounds(),
+			inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
+			scales = this._capabilities.scales,
+			sw = bounds.getSouthWest(),
+			ne = bounds.getNorthEast(),
+			halfLat = (sw.lat + ne.lat) / 2,
+			midLeft = L.latLng(halfLat, sw.lng),
+			midRight = L.latLng(halfLat, ne.lng),
+			mwidth = midLeft.distanceTo(midRight),
+			pxwidth = map.getSize().x,
+			kmPx = mwidth / pxwidth / 1000,
+			mscale = (kmPx || 0.000001) * inchesKm * L.print.Provider.DPI,
+			closest = Number.POSITIVE_INFINITY,
+			i = scales.length,
+			diff,
+			scale;
+		while (i--) {
+			diff = Math.abs(mscale - scales[i].value);
+			if (diff < closest) {
+				closest = diff;
+				scale = parseInt(scales[i].value, 10);
+			}
+		}
+		return scale;
+	},
+
+	_getLayoutByName: function (name) {
+		var layout, i, l;
+
+		for (i = 0, l = this._capabilities.layouts.length; i < l; i++) {
+			if (this._capabilities.layouts[i].name === name) {
+				layout = this._capabilities.layouts[i];
+				break;
+			}
+		}
+		return layout;
+	},
+
+	_encodeLayers: function (map) {
+		var enc = [],
+			vectors = [],
+			layer,
+			i;
+
+		var layers = this._getLayers(map);
+		for (i = 0; i < layers.length; i++) {
+			layer = layers[i];
+			if (layer.options.printLayer) {
+				var t = layer.options.printLayer;
+				var layerClass = eval(t.init);
+				layer = new layerClass(t.url, t.options);
+			}
+			if (layer instanceof L.TileLayer.WMS) {
+				enc.push(this._encoders.layers.tilelayerwms.call(this, layer));
+			} else if (layer instanceof L.mapbox.TileLayer){
+				enc.push(this._encoders.layers.tilelayermapbox.call(this,layer));
+			} else if (layer instanceof L.TileLayer) {
+				if (layer.options.tms) {
+					enc.push(this._encoders.layers.TMS.call(this, layer));
+				}
+				else {
+					enc.push(this._encoders.layers.tilelayer.call(this, layer));
+				}
+			} else if (layer instanceof L.ImageOverlay) {
+				enc.push(this._encoders.layers.image.call(this, layer));
+			} else if (layer instanceof L.Marker || (layer instanceof L.Path && layer.toGeoJSON)) {
+				vectors.push(layer);
+			}
+		}
+		if (vectors.length) {
+			enc.push(this._encoders.layers.vector.call(this, vectors));
+		}
+		return enc;
+	},
+
+	_makeLegends: function(map,options){
+		if(!this.options.legends){
+			return [];
+		}
+
+		var legends = [],legendReq,singlelayers,url,i;
+
+		var layers = this._getLayers(map);
+		var layer,oneLegend;
+		for (i = 0; i < layers.length; i++) {
+			layer = layers[i];
+			if (layer instanceof L.TileLayer.WMS) {
+
+				oneLegend = {
+					name: layer.options.title || layer.wmsParams.layers,
+					classes: []
+				};
+
+				// defaults
+				legendReq = {
+					'SERVICE'	 : 'WMS',
+					'LAYER'	   : layer.wmsParams.layers,
+					'REQUEST'	 : 'GetLegendGraphic',
+					'VERSION'	 : layer.wmsParams.version,
+					'FORMAT'	  : layer.wmsParams.format,
+					'STYLE'	   : layer.wmsParams.styles,
+					'WIDTH'	   : 15,
+					'HEIGHT'	  : 15
+				};
+
+				legendReq = L.extend(legendReq,options);
+				url = L.Util.template(layer._url);
+
+				singlelayers = layer.wmsParams.layers.split(',');
+
+				// If a WMS layer doesn't have multiple server layers, only show one graphic
+				if(singlelayers.length === 1){
+					oneLegend.icons = [this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))];
+				}else{
+					for(i = 0;i<singlelayers.length;i++){
+						legendReq.LAYER = singlelayers[i];
+						oneLegend.classes.push({
+							name:singlelayers[i],
+							icons:[this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))]
+						});
+					}
+				}
+
+				legends.push(oneLegend);
+			}
+		}
+
+		return {legends:legends};
+	},
+
+	_encoders: {
+		layers: {
+			httprequest: function (layer) {
+				var baseUrl = layer._url;
+
+				if (baseUrl.indexOf('{s}') !== -1) {
+					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
+				}
+				baseUrl = this._getAbsoluteUrl(baseUrl);
+
+				return {
+					baseURL: baseUrl,
+					opacity: layer.options.opacity
+				};
+			},
+			TMS: function(layer) {
+				var enc = this._encoders.layers.tilelayer.call(this, layer);
+				return $.extend(enc, {
+					type : 'TMS',
+					format : enc.extension,
+					layer: layer.options.layer
+				});
+			},
+			tilelayer: function (layer) {
+				var enc = this._encoders.layers.httprequest.call(this, layer),
+					baseUrl = layer.options.baseUrl || layer._url.substring(0, layer._url.indexOf('{z}') > 0 ? layer._url.indexOf('{z}') : layer._url.length),
+					resolutions = [],
+					zoom;
+
+				// If using multiple subdomains, replace the subdomain placeholder
+				if (baseUrl.indexOf('{s}') !== -1) {
+					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
+				}
+
+				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
+					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
+				}
+
+				var ext = layer._url.split(".");
+				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
+				if (ext.search(/[^a-zA-Z0-9]/) > -1) {
+					// No extension provided
+					ext = "";
+				}
+
+				return L.extend(enc, {
+					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
+					// See https://github.com/mapfish/mapfish-print/pull/38
+					type: 'OSM',
+					baseURL: baseUrl,
+					extension: ext || 'png',
+					tileSize: [layer.options.tileSize, layer.options.tileSize],
+					maxExtent: L.print.Provider.MAX_EXTENT,
+					resolutions: resolutions,
+					singleTile: false
+				});
+			},
+			tilelayerwms: function (layer) {
+				var enc = this._encoders.layers.httprequest.call(this, layer),
+					layerOpts = layer.options,
+					p;
+
+				L.extend(enc, {
+					type: 'WMS',
+					layers: [layerOpts.layers].join(',').split(',').filter(function(x){return x !== "";}), //filter out empty strings from the array
+					format: layerOpts.format,
+					styles: [layerOpts.styles].join(',').split(',').filter(function(x){return x !== "";}),
+					singleTile: true
+				});
+
+				for (p in layer.wmsParams) {
+					if (layer.wmsParams.hasOwnProperty(p)) {
+						if ('detectretina,format,height,layers,request,service,srs,styles,version,width'.indexOf(p.toLowerCase()) === -1) {
+							if (!enc.customParams) {
+								enc.customParams = {};
+							}
+							enc.customParams[p] = layer.wmsParams[p];
+						}
+					}
+				}
+				return enc;
+			},
+			tilelayermapbox: function(layer) {
+				var resolutions = [], zoom;
+
+				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
+					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
+				}
+
+				return {
+					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
+					// See https://github.com/mapfish/mapfish-print/pull/38
+					type: 'OSM',
+					baseURL: layer.options.tiles[0].substring(0,layer.options.tiles[0].indexOf('{z}')),
+					opacity:layer.options.opacity,
+					extension: 'png',
+					tileSize: [layer.options.tileSize, layer.options.tileSize],
+					maxExtent: L.print.Provider.MAX_EXTENT,
+					resolutions: resolutions,
+					singleTile: false
+				};
+			},
+			image: function (layer) {
+				return {
+					type: 'Image',
+					opacity: layer.options.opacity,
+					name: 'image',
+					baseURL: this._getAbsoluteUrl(layer._url),
+					extent: this._projectBounds(L.print.Provider.SRS, layer._bounds)
+				};
+			},
+			vector: function (features) {
+				var encFeatures = [],
+					encStyles = {},
+					opacity,
+					feature,
+					style,
+					dictKey,
+					dictItem = {},
+					styleDict = {},
+					styleName,
+					nextId = 1,
+					featureGeoJson,
+					i, l;
+
+				for (i = 0, l = features.length; i < l; i++) {
+					feature = features[i];
+
+					if (feature instanceof L.Marker) {
+						var icon = feature.options.icon,
+							iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
+							iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
+							iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
+							scaleFactor = (this.options.dpi / L.print.Provider.DPI);
+
+						style = {
+							externalGraphic: this._getAbsoluteUrl(iconUrl),
+							graphicWidth: (iconSize.x / scaleFactor),
+							graphicHeight: (iconSize.y / scaleFactor),
+							graphicXOffset: (-iconAnchor.x / scaleFactor),
+							graphicYOffset: (-iconAnchor.y / scaleFactor)
+						};
+					} else {
+						style = this._extractFeatureStyle(feature);
+					}
+
+					dictKey = JSON.stringify(style);
+					dictItem = styleDict[dictKey];
+					if (dictItem) {
+						styleName = dictItem;
+					} else {
+						styleDict[dictKey] = styleName = nextId++;
+						encStyles[styleName] = style;
+					}
+
+					featureGeoJson = (feature instanceof L.Circle) ? this._circleGeoJSON(feature) : feature.toGeoJSON();
+					featureGeoJson.geometry.coordinates = this._projectCoords(L.print.Provider.SRS, featureGeoJson.geometry.coordinates);
+					featureGeoJson.properties._leaflet_style = styleName;
+
+					// All markers will use the same opacity as the first marker found
+					if (opacity === null) {
+						opacity = feature.options.opacity || 1.0;
+					}
+
+					encFeatures.push(featureGeoJson);
+				}
+
+				return {
+					type: 'Vector',
+					styles: encStyles,
+					opacity: opacity,
+					styleProperty: '_leaflet_style',
+					geoJson: {
+						type: 'FeatureCollection',
+						features: encFeatures
+					}
+				};
+			}
+		}
+	},
+
+	_circleGeoJSON: function (circle) {
+		var projection = circle._map.options.crs.projection;
+		var earthRadius = 1, i;
+
+		if (projection === L.Projection.SphericalMercator) {
+			earthRadius = 6378137;
+		} else if (projection === L.Projection.Mercator) {
+			earthRadius = projection.R_MAJOR;
+		}
+		var cnt = projection.project(circle.getLatLng());
+		var scale = 1.0 / Math.cos(circle.getLatLng().lat * Math.PI / 180.0);
+		var points = [];
+		for (i = 0; i < 64; i++) {
+			var radian = i * 2.0 * Math.PI / 64.0;
+			var shift = L.point(Math.cos(radian), Math.sin(radian));
+			points.push(projection.unproject(cnt.add(shift.multiplyBy(circle.getRadius() * scale / earthRadius))));
+		}
+		return L.polygon(points).toGeoJSON();
+	},
+
+	_extractFeatureStyle: function (feature) {
+		var options = feature.options;
+
+		// From smap4 (working)
+		// cursor: "pointer"
+		// fillColor: "#ff5b00"
+		// fillOpacity: 0.3
+		// graphicName: "square"
+		// pointRadius: 6
+		// strokeColor: "#ff5b00"
+		// strokeOpacity: 1
+		// strokeWidth: 4
+
+
+		if (options.radius) {
+			options.strokeWidth = options.radius;
+			options.strokeColor = options.fillColor;
+		}
+
+		return {
+			stroke: options.stroke,
+			strokeColor: options.color,
+			strokeWidth: options.weight,
+			strokeOpacity: options.opacity,
+			strokeLinecap: 'round',
+			pointRadius: options.radius,
+			fill: options.fill,
+			fillColor: options.fillColor,
+			fillOpacity: options.fillOpacity,
+			graphicZIndex: options.zIndex,
+			graphicWidth: options.graphicWidth,
+			graphicHeight: options.graphicHeight,
+			label: options.label,
+			name: "The layer name"
+		};
+
+
+		// cursor: "pointer"
+		// fillColor: "#00FFFF"
+		// fillOpacity: 0.3
+		// graphicName: "circle"
+		// graphicZIndex: 499
+		// pointRadius: 6
+		// strokeColor: "#00FFFF"
+		// strokeOpacity: 1
+		// strokeWidth: 4
+	},
+
+	_getAbsoluteUrl: function (url) {
+		var a;
+
+		if (L.Browser.ie) {
+			a = document.createElement('a');
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.href = url;
+			document.body.removeChild(a);
+		} else {
+			a = document.createElement('a');
+			a.href = url;
+		}
+		return a.href;
+	},
+
+	_projectBounds: function (crs, bounds) {
+		var sw = bounds.getSouthWest(),
+			ne = bounds.getNorthEast();
+
+		return this._projectCoords(crs, sw).concat(this._projectCoords(crs, ne));
+	},
+
+	_projectCoords: function (crs, coords) {
+		var crsKey = crs.toUpperCase().replace(':', ''),
+			crsClass = L.CRS[crsKey];
+
+		if (!crsClass) {
+			throw 'Unsupported coordinate reference system: ' + crs;
+		}
+
+		return this._project(crsClass, coords);
+	},
+
+	_project: function (crsClass, coords) {
+		var projected,
+			pt,
+			i, l;
+
+		if (typeof coords[0] === 'number') {
+			coords = new L.LatLng(coords[1], coords[0]);
+		}
+
+		if (coords instanceof L.LatLng) {
+			pt = crsClass.project(coords);
+			return [pt.x, pt.y];
+		} else {
+			projected = [];
+			for (i = 0, l = coords.length; i < l; i++) {
+				projected.push(this._project(crsClass, coords[i]));
+			}
+			return projected;
+		}
+	},
+
+	// --------------------------------------------------
+	// Event handlers
+	// --------------------------------------------------
+
+	onCapabilitiesLoad: function (response) {
+		this._capabilities = response;
+
+		if (!this.options.layout) {
+			this.options.layout = this._capabilities.layouts[0].name;
+		}
+
+		if (!this.options.dpi) {
+			this.options.dpi = this._capabilities.dpis[0].value;
+		}
+
+		this.fire('capabilitiesload', {
+			provider: this,
+			capabilities: this._capabilities
+		});
+	},
+
+	onPrintSuccess: function (response) {
+		var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
+
+		if (this.options.autoOpen) {
+			if (L.Browser.ie) {
+				window.open(url);
+			} else {
+				window.location.href = url;
+			}
+		}
+
+		this._xhr = null;
+
+		this.fire('printsuccess', {
+			provider: this,
+			response: response
+		});
+	},
+
+	onPrintError: function (jqXHR) {
+		this._xhr = null;
+
+		this.fire('printexception', {
+			provider: this,
+			response: jqXHR
+		});
+	}
+});
+
+L.print.provider = function (options) {
+	return new L.print.Provider(options);
+};
+
+
+/*
  * L.TileLayer.EsriRest is used for putting ESRI REST tile layers on the map.
  */
 
@@ -26744,7 +27650,7 @@ L.tileLayer.esri = function (url, options) {
 	return new L.TileLayer.ESRI(url, options);
 };
 
-(function(root,factory){"use strict";if(typeof module!=="undefined"&&module.exports){module.exports=factory(require("jquery")(root))}else if(typeof define==="function"&&define.amd){define("bootstrap3-typeahead",["jquery"],function($){return factory($)})}else{factory(root.jQuery)}})(this,function($){"use strict";var Typeahead=function(element,options){this.$element=$(element);this.options=$.extend({},$.fn.typeahead.defaults,options);this.matcher=this.options.matcher||this.matcher;this.sorter=this.options.sorter||this.sorter;this.select=this.options.select||this.select;this.autoSelect=typeof this.options.autoSelect=="boolean"?this.options.autoSelect:true;this.highlighter=this.options.highlighter||this.highlighter;this.render=this.options.render||this.render;this.updater=this.options.updater||this.updater;this.source=this.options.source;this.delay=typeof this.options.delay=="number"?this.options.delay:250;this.$menu=$(this.options.menu);this.shown=false;this.listen();this.showHintOnFocus=typeof this.options.showHintOnFocus=="boolean"?this.options.showHintOnFocus:false};Typeahead.prototype={constructor:Typeahead,select:function(){var val=this.$menu.find(".active").data("value");if(this.autoSelect||val){this.$element.val(this.updater(val)).change()}return this.hide()},updater:function(item){return item},setSource:function(source){this.source=source},show:function(){var pos=$.extend({},this.$element.position(),{height:this.$element[0].offsetHeight}),scrollHeight;scrollHeight=typeof this.options.scrollHeight=="function"?this.options.scrollHeight.call():this.options.scrollHeight;this.$menu.insertAfter(this.$element).css({top:pos.top+pos.height+scrollHeight,left:pos.left}).show();this.shown=true;return this},hide:function(){this.$menu.hide();this.shown=false;return this},lookup:function(query){var items;if(typeof query!="undefined"&&query!==null){this.query=query}else{this.query=this.$element.val()||""}if(this.query.length<this.options.minLength&&!this.showHintOnFocus){return this.shown?this.hide():this}var worker=$.proxy(function(){items=$.isFunction(this.source)?this.source(this.query,$.proxy(this.process,this)):this.source;if(items){this.process(items)}},this);clearTimeout(this.lookupWorker);this.lookupWorker=setTimeout(worker,this.delay)},process:function(items){var that=this;items=$.grep(items,function(item){return that.matcher(item)});items=this.sorter(items);if(!items.length){return this.shown?this.hide():this}if(this.options.items=="all"){return this.render(items).show()}else{return this.render(items.slice(0,this.options.items)).show()}},matcher:function(item){return~item.toLowerCase().indexOf(this.query.toLowerCase())},sorter:function(items){var beginswith=[],caseSensitive=[],caseInsensitive=[],item;while(item=items.shift()){if(!item.toLowerCase().indexOf(this.query.toLowerCase()))beginswith.push(item);else if(~item.indexOf(this.query))caseSensitive.push(item);else caseInsensitive.push(item)}return beginswith.concat(caseSensitive,caseInsensitive)},highlighter:function(item){var html=$("<div></div>");var query=this.query;var i=item.indexOf(query);var len,leftPart,middlePart,rightPart,strong;len=query.length;if(len==0){return html.text(item).html()}while(i>-1){leftPart=item.substr(0,i);middlePart=item.substr(i,len);rightPart=item.substr(i+len);strong=$("<strong></strong>").text(middlePart);html.append(document.createTextNode(leftPart)).append(strong);item=rightPart;i=item.indexOf(query)}return html.append(document.createTextNode(item)).html()},render:function(items){var that=this;items=$(items).map(function(i,item){i=$(that.options.item).data("value",item);i.find("a").html(that.highlighter(item));return i[0]});if(this.autoSelect){items.first().addClass("active")}this.$menu.html(items);return this},next:function(event){var active=this.$menu.find(".active").removeClass("active"),next=active.next();if(!next.length){next=$(this.$menu.find("li")[0])}next.addClass("active")},prev:function(event){var active=this.$menu.find(".active").removeClass("active"),prev=active.prev();if(!prev.length){prev=this.$menu.find("li").last()}prev.addClass("active")},listen:function(){this.$element.on("focus",$.proxy(this.focus,this)).on("blur",$.proxy(this.blur,this)).on("keypress",$.proxy(this.keypress,this)).on("keyup",$.proxy(this.keyup,this));if(this.eventSupported("keydown")){this.$element.on("keydown",$.proxy(this.keydown,this))}this.$menu.on("click",$.proxy(this.click,this)).on("mouseenter","li",$.proxy(this.mouseenter,this)).on("mouseleave","li",$.proxy(this.mouseleave,this))},destroy:function(){this.$element.data("typeahead",null);this.$element.off("focus").off("blur").off("keypress").off("keyup");if(this.eventSupported("keydown")){this.$element.off("keydown")}this.$menu.remove()},eventSupported:function(eventName){var isSupported=eventName in this.$element;if(!isSupported){this.$element.setAttribute(eventName,"return;");isSupported=typeof this.$element[eventName]==="function"}return isSupported},move:function(e){if(!this.shown)return;switch(e.keyCode){case 9:case 13:case 27:e.preventDefault();break;case 38:e.preventDefault();this.prev();break;case 40:e.preventDefault();this.next();break}e.stopPropagation()},keydown:function(e){this.suppressKeyPressRepeat=~$.inArray(e.keyCode,[40,38,9,13,27]);if(!this.shown&&e.keyCode==40){this.lookup("")}else{this.move(e)}},keypress:function(e){if(this.suppressKeyPressRepeat)return;this.move(e)},keyup:function(e){switch(e.keyCode){case 40:case 38:case 16:case 17:case 18:break;case 9:case 13:if(!this.shown)return;this.select();break;case 27:if(!this.shown)return;this.hide();break;default:this.lookup()}e.stopPropagation();e.preventDefault()},focus:function(e){if(!this.focused){this.focused=true;if(this.options.minLength===0&&!this.$element.val()||this.options.showHintOnFocus){this.lookup()}}},blur:function(e){this.focused=false;if(!this.mousedover&&this.shown)this.hide()},click:function(e){e.stopPropagation();e.preventDefault();this.select();this.$element.focus()},mouseenter:function(e){this.mousedover=true;this.$menu.find(".active").removeClass("active");$(e.currentTarget).addClass("active")},mouseleave:function(e){this.mousedover=false;if(!this.focused&&this.shown)this.hide()}};var old=$.fn.typeahead;$.fn.typeahead=function(option){var arg=arguments;return this.each(function(){var $this=$(this),data=$this.data("typeahead"),options=typeof option=="object"&&option;if(!data)$this.data("typeahead",data=new Typeahead(this,options));if(typeof option=="string"){if(arg.length>1){data[option].apply(data,Array.prototype.slice.call(arg,1))}else{data[option]()}}})};$.fn.typeahead.defaults={source:[],items:8,menu:'<ul class="typeahead dropdown-menu"></ul>',item:'<li><a href="#"></a></li>',minLength:1,scrollHeight:0,autoSelect:true};$.fn.typeahead.Constructor=Typeahead;$.fn.typeahead.noConflict=function(){$.fn.typeahead=old;return this};$(document).on("focus.typeahead.data-api",'[data-provide="typeahead"]',function(e){var $this=$(this);if($this.data("typeahead"))return;$this.typeahead($this.data())})});
+!function($){"use strict";var Typeahead=function(element,options){this.$element=$(element),this.options=$.extend({},$.fn.typeahead.defaults,options),this.matcher=this.options.matcher||this.matcher,this.sorter=this.options.sorter||this.sorter,this.select=this.options.select||this.select,this.autoSelect="boolean"==typeof this.options.autoSelect?this.options.autoSelect:!0,this.highlighter=this.options.highlighter||this.highlighter,this.updater=this.options.updater||this.updater,this.source=this.options.source,this.$menu=$(this.options.menu),this.shown=!1,this.listen(),this.showHintOnFocus="boolean"==typeof this.options.showHintOnFocus?this.options.showHintOnFocus:!1};Typeahead.prototype={constructor:Typeahead,select:function(){var val=this.$menu.find(".active").attr("data-value");return(this.autoSelect||val)&&this.$element.val(this.updater(val)).change(),this.hide()},updater:function(item){return item},setSource:function(source){this.source=source},show:function(){var scrollHeight,pos=$.extend({},this.$element.position(),{height:this.$element[0].offsetHeight});return scrollHeight="function"==typeof this.options.scrollHeight?this.options.scrollHeight.call():this.options.scrollHeight,this.$menu.insertAfter(this.$element).css({top:pos.top+pos.height+scrollHeight,left:pos.left}).show(),this.shown=!0,this},hide:function(){return this.$menu.hide(),this.shown=!1,this},lookup:function(query){var items;return this.query="undefined"!=typeof query&&null!=query?query:this.$element.val()||"",this.query.length<this.options.minLength?this.shown?this.hide():this:(items=$.isFunction(this.source)?this.source(this.query,$.proxy(this.process,this)):this.source,items?this.process(items):this)},process:function(items){var that=this;return items=$.grep(items,function(item){return that.matcher(item)}),items=this.sorter(items),items.length?"all"==this.options.items||0==this.options.minLength&&!this.$element.val()?this.render(items).show():this.render(items.slice(0,this.options.items)).show():this.shown?this.hide():this},matcher:function(item){return~item.toLowerCase().indexOf(this.query.toLowerCase())},sorter:function(items){for(var item,beginswith=[],caseSensitive=[],caseInsensitive=[];item=items.shift();)item.toLowerCase().indexOf(this.query.toLowerCase())?~item.indexOf(this.query)?caseSensitive.push(item):caseInsensitive.push(item):beginswith.push(item);return beginswith.concat(caseSensitive,caseInsensitive)},highlighter:function(item){var query=this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g,"\\$&");return item.replace(new RegExp("("+query+")","ig"),function($1,match){return"<strong>"+match+"</strong>"})},render:function(items){var that=this;return items=$(items).map(function(i,item){return i=$(that.options.item).attr("data-value",item),i.find("a").html(that.highlighter(item)),i[0]}),this.autoSelect&&items.first().addClass("active"),this.$menu.html(items),this},next:function(){var active=this.$menu.find(".active").removeClass("active"),next=active.next();next.length||(next=$(this.$menu.find("li")[0])),next.addClass("active")},prev:function(){var active=this.$menu.find(".active").removeClass("active"),prev=active.prev();prev.length||(prev=this.$menu.find("li").last()),prev.addClass("active")},listen:function(){this.$element.on("focus",$.proxy(this.focus,this)).on("blur",$.proxy(this.blur,this)).on("keypress",$.proxy(this.keypress,this)).on("keyup",$.proxy(this.keyup,this)),this.eventSupported("keydown")&&this.$element.on("keydown",$.proxy(this.keydown,this)),this.$menu.on("click",$.proxy(this.click,this)).on("mouseenter","li",$.proxy(this.mouseenter,this)).on("mouseleave","li",$.proxy(this.mouseleave,this))},destroy:function(){this.$element.data("typeahead",null),this.$element.off("focus").off("blur").off("keypress").off("keyup"),this.eventSupported("keydown")&&this.$element.off("keydown"),this.$menu.remove()},eventSupported:function(eventName){var isSupported=eventName in this.$element;return isSupported||(this.$element.setAttribute(eventName,"return;"),isSupported="function"==typeof this.$element[eventName]),isSupported},move:function(e){if(this.shown){switch(e.keyCode){case 9:case 13:case 27:e.preventDefault();break;case 38:e.preventDefault(),this.prev();break;case 40:e.preventDefault(),this.next()}e.stopPropagation()}},keydown:function(e){this.suppressKeyPressRepeat=~$.inArray(e.keyCode,[40,38,9,13,27]),this.shown||40!=e.keyCode?this.move(e):this.lookup("")},keypress:function(e){this.suppressKeyPressRepeat||this.move(e)},keyup:function(e){switch(e.keyCode){case 40:case 38:case 16:case 17:case 18:break;case 9:case 13:if(!this.shown)return;this.select();break;case 27:if(!this.shown)return;this.hide();break;default:this.lookup()}e.stopPropagation(),e.preventDefault()},focus:function(){console.log("focus"),this.focused||(this.focused=!0,(0==this.options.minLength&&!this.$element.val()||this.options.showHintOnFocus)&&this.lookup())},blur:function(){this.focused=!1,!this.mousedover&&this.shown&&this.hide()},click:function(e){e.stopPropagation(),e.preventDefault(),this.select(),this.$element.focus()},mouseenter:function(e){this.mousedover=!0,this.$menu.find(".active").removeClass("active"),$(e.currentTarget).addClass("active")},mouseleave:function(){this.mousedover=!1,!this.focused&&this.shown&&this.hide()}};var old=$.fn.typeahead;$.fn.typeahead=function(option){var arg=arguments;return this.each(function(){var $this=$(this),data=$this.data("typeahead"),options="object"==typeof option&&option;data||$this.data("typeahead",data=new Typeahead(this,options)),"string"==typeof option&&(arg.length>1?data[option].apply(data,Array.prototype.slice.call(arg,1)):data[option]())})},$.fn.typeahead.defaults={source:[],items:8,menu:'<ul class="typeahead dropdown-menu"></ul>',item:'<li><a href="#"></a></li>',minLength:1,scrollHeight:0,autoSelect:!0},$.fn.typeahead.Constructor=Typeahead,$.fn.typeahead.noConflict=function(){return $.fn.typeahead=old,this},$(document).on("focus.typeahead.data-api",'[data-provide="typeahead"]',function(){var $this=$(this);$this.data("typeahead")||$this.typeahead($this.data())})}(window.jQuery);
 /*!
  * https://github.com/es-shims/es5-shim
  * @license es5-shim Copyright 2009-2014 by contributors, MIT License
@@ -27214,804 +28120,6 @@ if (!Object.isExtensible) {
 }
 
 }));
-
-
-/*
-	Leaflet.print, implements the Mapfish print protocol allowing a Leaflet map to be printed using either the Mapfish or GeoServer print module.
-	(c) 2013, Adam Ratcliffe, GeoSmart Maps Limited
-*/
-
-L.print = L.print || {};
-
-L.print.Provider = L.Class.extend({
-
-	includes: L.Mixin.Events,
-
-	statics: {
-		MAX_RESOLUTION: 156543.03390625,
-		MAX_EXTENT: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-		SRS: 'EPSG:3857',
-		INCHES_PER_METER: 39.3701, //*1.77,
-		DPI: 170, //72,
-		UNITS: 'm'
-	},
-
-	options: {
-		autoLoad: false,
-		autoOpen: true,
-		// outputFormat: 'pdf',
-		// outputFilename: 'leaflet-map',
-		method: 'POST',
-		rotation: 0,
-		customParams: {},
-		legends: false
-	},
-
-	initialize: function (options) {
-		if (L.version <= '0.5.1') {
-			throw 'Leaflet.print requires Leaflet 0.6.0+. Download latest from https://github.com/Leaflet/Leaflet/';
-		}
-
-		var context;
-
-		options = L.setOptions(this, options);
-
-		if (options.map) {
-			this.setMap(options.map);
-		}
-
-		if (options.capabilities) {
-			this._capabilities = options.capabilities;
-		} else if (this.options.autoLoad) {
-			this.loadCapabilities();
-		}
-
-		if (options.listeners) {
-			if (options.listeners.context) {
-				context = options.listeners.context;
-				delete options.listeners.context;
-			}
-			this.addEventListener(options.listeners, context);
-		}
-	},
-
-	loadCapabilities: function () {
-		if (!this.options.url) {
-			return;
-		}
-
-		var url;
-
-		url = this.options.url + '/info.json';
-		if (this.options.proxy) {
-			url = this.options.proxy + url;
-		}
-
-		return $.ajax({
-			type: 'GET',
-			dataType: 'json',
-			url: url,
-			success: L.Util.bind(this.onCapabilitiesLoad, this)
-		});
-	},
-
-	/**
-	 * Web Mercator's scale is only valid for distance calculation
-	 * at the equator. Therefore, we need to correct based on our
-	 * latitude.
-	 * @return {Integer} The corrected scale – i.e. where you can measure 
-	 * on the print-out and multiply by the scale to get the real-world 
-	 * distance value – well, that's what I thought a scale was for...)
-	 */
-	_getMercatorScaleForLat: function() {
-		var lat = this._map.getCenter().lat;
-		var scale = this._getScale()
-		var coeff = 1 / Math.cos(lat*Math.PI/180);
-		scale = parseInt(Math.round(scale / coeff)); // modify scale for our latitude
-		return scale;
-	},
-
-	print: function (options) {
-		options = L.extend(L.extend({}, this.options), options);
-
-		if (!options.layout || !options.dpi) {
-			throw 'Must provide a layout name and dpi value to print';
-		}
-
-		this.fire('beforeprint', {
-			provider: this,
-			map: this._map
-		});
-
-		var jsonData = JSON.stringify(L.extend({
-			units: L.print.Provider.UNITS,
-			srs: L.print.Provider.SRS,
-			layout: options.layout,
-			dpi: options.dpi,
-			// outputFormat: options.outputFormat,
-			comment: options.comment,
-			mapTitle: options.mapTitle,
-			displayscale: options.displayscale ? options.displayscale + this._getMercatorScaleForLat() : this._getMercatorScaleForLat(),
-			// outputFilename: options.outputFilename,
-			layers: this._encodeLayers(this._map),
-			pages: [{
-				center: this._projectCoords(L.print.Provider.SRS, this._map.getCenter()),
-				scale: this._getScale(),
-				rotation: options.rotation,
-				copy: options.copy
-			}],
-			legends: options.legends
-		}, this.options.customParams,options.customParams,this._makeLegends(this._map))),
-			url;
-
-		if (options.method === 'GET') {
-			url = this._capabilities.printURL + '?spec=' + encodeURIComponent(jsonData);
-
-			if (options.proxy) {
-				url = options.proxy + encodeURIComponent(url);
-			}
-
-			window.open(url);
-
-			this.fire('print', {
-				provider: this,
-				map: this._map
-			});
-		} else {
-			url = this._capabilities.createURL;
-
-			if (options.proxy) {
-				url = options.proxy + url;
-			}
-
-			if (this._xhr) {
-				this._xhr.abort();
-			}
-			this.fire('print', {
-				provider: this,
-				map: this._map
-			});
-			this._xhr = $.ajax({
-				type: 'POST',
-				contentType: 'application/json; charset=UTF-8',
-				processData: false,
-				dataType: 'json',
-				url: url,
-				data: jsonData,
-				success: L.Util.bind(this.onPrintSuccess, this),
-				error: L.Util.bind(this.onPrintError, this)
-			});
-		}
-
-	},
-
-	getCapabilities: function () {
-		return this._capabilities;
-	},
-
-	setMap: function (map) {
-		this._map = map;
-	},
-
-	setDpi: function (dpi) {
-		var oldDpi = this.options.dpi;
-
-		if (oldDpi !== dpi) {
-			this.options.dpi = dpi;
-			this.fire('dpichange', {
-				provider: this,
-				dpi: dpi
-			});
-		}
-	},
-
-	setLayout: function (name) {
-		var oldName = this.options.layout;
-
-		if (oldName !== name) {
-			this.options.layout = name;
-			this.fire('layoutchange', {
-				provider: this,
-				layout: name
-			});
-		}
-	},
-
-	setRotation: function (rotation) {
-		var oldRotation = this.options.rotation;
-
-		if (oldRotation !== this.options.rotation) {
-			this.options.rotation = rotation;
-			this.fire('rotationchange', {
-				provider: this,
-				rotation: rotation
-			});
-		}
-	},
-
-	_getLayers: function (map) {
-		var markers = [],
-			vectors = [],
-			tiles = [],
-			imageOverlays = [],
-			imageNodes,
-			pathNodes,
-			id;
-
-		for (id in map._layers) {
-			if (map._layers.hasOwnProperty(id)) {
-				if (!map._layers.hasOwnProperty(id)) { continue; }
-				var lyr = map._layers[id];
-
-				if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
-					tiles.push(lyr);
-				} else if (lyr instanceof L.ImageOverlay) {
-					imageOverlays.push(lyr);
-				} else if (lyr instanceof L.Marker) {
-					markers.push(lyr);
-				} else if (lyr instanceof L.Path && lyr.toGeoJSON) {
-					vectors.push(lyr);
-				}
-			}
-		}
-		markers.sort(function (a, b) {
-			return a._icon.style.zIndex - b._icon.style.zIndex;
-		});
-
-		function getZIndexFromMarker(marker) {
-			// Don't know which style is correct. Seems like the 
-			// latter works but in original was zIndex.
-			return parseInt( marker._icon.style.zIndex || marker._icon.style["z-index"] );
-		}
-
-		var i;
-		// Layers with equal zIndexes can cause problems with mapfish print
-		for(i = 1;i<markers.length;i++){
-			var z0 = getZIndexFromMarker(markers[i]);
-			var z1 = getZIndexFromMarker(markers[i - 1]) + 1;
-			if(z0 <= z1) {
-				markers[i]._icon.style.zIndex = z1;
-				markers[i]._icon.style["z-index"] = z1;
-			}
-		}
-
-		tiles.sort(function (a, b) {
-			return a._container.style.zIndex - b._container.style.zIndex;
-		});
-
-		// Layers with equal zIndexes can cause problems with mapfish print
-		for(i = 1;i<tiles.length;i++){
-			if(tiles[i]._container.style.zIndex <= tiles[i - 1]._container.style.zIndex){
-				tiles[i]._container.style.zIndex = tiles[i - 1]._container.style.zIndex + 1;
-			}
-		}
-
-		imageNodes = [].slice.call(this, map._panes.overlayPane.childNodes);
-		imageOverlays.sort(function (a, b) {
-			return $.inArray(a._image, imageNodes) - $.inArray(b._image, imageNodes);
-		});
-
-		if (map._pathRoot) {
-			pathNodes = [].slice.call(this, map._pathRoot.childNodes);
-			vectors.sort(function (a, b) {
-				return $.inArray(a._container, pathNodes) - $.inArray(b._container, pathNodes);
-			});
-		}
-
-		return tiles.concat(vectors).concat(imageOverlays).concat(markers);
-	},
-
-	_getScale: function () {
-		var map = this._map,
-			bounds = map.getBounds(),
-			inchesKm = L.print.Provider.INCHES_PER_METER * 1000,
-			scales = this._capabilities.scales,
-			sw = bounds.getSouthWest(),
-			ne = bounds.getNorthEast(),
-			halfLat = (sw.lat + ne.lat) / 2,
-			midLeft = L.latLng(halfLat, sw.lng),
-			midRight = L.latLng(halfLat, ne.lng),
-			mwidth = midLeft.distanceTo(midRight),
-			pxwidth = map.getSize().x,
-			kmPx = mwidth / pxwidth / 1000,
-			mscale = (kmPx || 0.000001) * inchesKm * L.print.Provider.DPI,
-			closest = Number.POSITIVE_INFINITY,
-			i = scales.length,
-			diff,
-			scale;
-		while (i--) {
-			diff = Math.abs(mscale - scales[i].value);
-			if (diff < closest) {
-				closest = diff;
-				scale = parseInt(scales[i].value, 10);
-			}
-		}
-		return scale;
-	},
-
-	_getLayoutByName: function (name) {
-		var layout, i, l;
-
-		for (i = 0, l = this._capabilities.layouts.length; i < l; i++) {
-			if (this._capabilities.layouts[i].name === name) {
-				layout = this._capabilities.layouts[i];
-				break;
-			}
-		}
-		return layout;
-	},
-
-	_encodeLayers: function (map) {
-		var enc = [],
-			vectors = [],
-			layer,
-			i;
-
-		var layers = this._getLayers(map);
-		for (i = 0; i < layers.length; i++) {
-			layer = layers[i];
-			if (layer.options.printLayer) {
-				var t = layer.options.printLayer;
-				var layerClass = eval(t.init);
-				layer = new layerClass(t.url, t.options);
-			}
-			if (layer instanceof L.TileLayer.WMS) {
-				enc.push(this._encoders.layers.tilelayerwms.call(this, layer));
-			} else if (layer instanceof L.mapbox.TileLayer){
-				enc.push(this._encoders.layers.tilelayermapbox.call(this,layer));
-			} else if (layer instanceof L.TileLayer) {
-				if (layer.options.tms) {
-					enc.push(this._encoders.layers.TMS.call(this, layer));
-				}
-				else {
-					enc.push(this._encoders.layers.tilelayer.call(this, layer));
-				}
-			} else if (layer instanceof L.ImageOverlay) {
-				enc.push(this._encoders.layers.image.call(this, layer));
-			} else if (layer instanceof L.Marker || (layer instanceof L.Path && layer.toGeoJSON)) {
-				if (!layer.options._noprint) {
-					// Don't include features with noprint
-					vectors.push(layer);
-				}
-			}
-		}
-		if (vectors.length) {
-			enc.push(this._encoders.layers.vector.call(this, vectors));
-		}
-		return enc;
-	},
-
-	_makeLegends: function(map,options){
-		if(!this.options.legends){
-			return [];
-		}
-
-		var legends = [],legendReq,singlelayers,url,i;
-
-		var layers = this._getLayers(map);
-		var layer,oneLegend;
-		for (i = 0; i < layers.length; i++) {
-			layer = layers[i];
-			if (layer instanceof L.TileLayer.WMS) {
-
-				oneLegend = {
-					name: layer.options.title || layer.wmsParams.layers,
-					classes: []
-				};
-
-				// defaults
-				legendReq = {
-					'SERVICE'	 : 'WMS',
-					'LAYER'	   : layer.wmsParams.layers,
-					'REQUEST'	 : 'GetLegendGraphic',
-					'VERSION'	 : layer.wmsParams.version,
-					'FORMAT'	  : layer.wmsParams.format,
-					'STYLE'	   : layer.wmsParams.styles,
-					'WIDTH'	   : 15,
-					'HEIGHT'	  : 15
-				};
-
-				legendReq = L.extend(legendReq,options);
-				url = L.Util.template(layer._url);
-
-				singlelayers = layer.wmsParams.layers.split(',');
-
-				// If a WMS layer doesn't have multiple server layers, only show one graphic
-				if(singlelayers.length === 1){
-					oneLegend.icons = [this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))];
-				}else{
-					for(i = 0;i<singlelayers.length;i++){
-						legendReq.LAYER = singlelayers[i];
-						oneLegend.classes.push({
-							name:singlelayers[i],
-							icons:[this._getAbsoluteUrl(url + L.Util.getParamString(legendReq, url, true))]
-						});
-					}
-				}
-
-				legends.push(oneLegend);
-			}
-		}
-
-		return {legends:legends};
-	},
-
-	_encoders: {
-		layers: {
-			httprequest: function (layer) {
-				var baseUrl = layer._url;
-
-				if (baseUrl.indexOf('{s}') !== -1) {
-					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
-				}
-				baseUrl = this._getAbsoluteUrl(baseUrl);
-
-				return {
-					baseURL: baseUrl,
-					opacity: layer.options.opacity
-				};
-			},
-			TMS: function(layer) {
-				var enc = this._encoders.layers.tilelayer.call(this, layer);
-				return $.extend(enc, {
-					type : 'TMS',
-					format : enc.extension,
-					layer: layer.options.layer
-				});
-			},
-			tilelayer: function (layer) {
-				var enc = this._encoders.layers.httprequest.call(this, layer),
-					baseUrl = layer.options.baseUrl || layer._url.substring(0, layer._url.indexOf('{z}') > 0 ? layer._url.indexOf('{z}') : layer._url.length),
-					resolutions = [],
-					zoom;
-
-				// If using multiple subdomains, replace the subdomain placeholder
-				if (baseUrl.indexOf('{s}') !== -1) {
-					baseUrl = baseUrl.replace('{s}', layer.options.subdomains[0]);
-				}
-
-				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
-					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
-				}
-
-				var ext = layer._url.split(".");
-				ext = ext.length > 1 ? ext[ext.length-1].toLowerCase() : null;
-				if (ext.search(/[^a-zA-Z0-9]/) > -1) {
-					// No extension provided
-					ext = "";
-				}
-
-				return L.extend(enc, {
-					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
-					// See https://github.com/mapfish/mapfish-print/pull/38
-					type: 'OSM',
-					baseURL: baseUrl,
-					extension: ext || 'png',
-					tileSize: [layer.options.tileSize, layer.options.tileSize],
-					maxExtent: L.print.Provider.MAX_EXTENT,
-					resolutions: resolutions,
-					singleTile: false
-				});
-			},
-			tilelayerwms: function (layer) {
-				var enc = this._encoders.layers.httprequest.call(this, layer),
-					layerOpts = layer.options,
-					p;
-
-				L.extend(enc, {
-					type: 'WMS',
-					layers: [layerOpts.layers].join(',').split(',').filter(function(x){return x !== "";}), //filter out empty strings from the array
-					format: layerOpts.format,
-					styles: [layerOpts.styles].join(',').split(',').filter(function(x){return x !== "";}),
-					singleTile: true
-				});
-
-				for (p in layer.wmsParams) {
-					if (layer.wmsParams.hasOwnProperty(p)) {
-						if ('detectretina,format,height,layers,request,service,srs,styles,version,width'.indexOf(p.toLowerCase()) === -1) {
-							if (!enc.customParams) {
-								enc.customParams = {};
-							}
-							enc.customParams[p] = layer.wmsParams[p];
-						}
-					}
-				}
-				return enc;
-			},
-			tilelayermapbox: function(layer) {
-				var resolutions = [], zoom;
-
-				for (zoom = 0; zoom <= layer.options.maxZoom; ++zoom) {
-					resolutions.push(L.print.Provider.MAX_RESOLUTION / Math.pow(2, zoom));
-				}
-
-				return {
-					// XYZ layer type would be a better fit but is not supported in mapfish plugin for GeoServer
-					// See https://github.com/mapfish/mapfish-print/pull/38
-					type: 'OSM',
-					baseURL: layer.options.tiles[0].substring(0,layer.options.tiles[0].indexOf('{z}')),
-					opacity:layer.options.opacity,
-					extension: 'png',
-					tileSize: [layer.options.tileSize, layer.options.tileSize],
-					maxExtent: L.print.Provider.MAX_EXTENT,
-					resolutions: resolutions,
-					singleTile: false
-				};
-			},
-			image: function (layer) {
-				return {
-					type: 'Image',
-					opacity: layer.options.opacity,
-					name: 'image',
-					baseURL: this._getAbsoluteUrl(layer._url),
-					extent: this._projectBounds(L.print.Provider.SRS, layer._bounds)
-				};
-			},
-			vector: function (features) {
-				var encFeatures = [],
-					encStyles = {},
-					opacity,
-					feature,
-					style,
-					dictKey,
-					dictItem = {},
-					styleDict = {},
-					styleName,
-					nextId = 1,
-					featureGeoJson,
-					i, l;
-
-				for (i = 0, l = features.length; i < l; i++) {
-					feature = features[i];
-
-					if (feature instanceof L.Marker && !feature.options.label) {
-						var icon = feature.options.icon;
-						if (!icon.options.iconSize) {
-							icon.options.iconSize = [0, 0];
-						}
-						if (!icon.options.iconAnchor) {
-							icon.options.iconAnchor = [0, 0];
-						}
-						var iconUrl = icon.options.iconUrl || L.Icon.Default.imagePath + '/marker-icon.png',
-							iconSize = L.Util.isArray(icon.options.iconSize) ? new L.Point(icon.options.iconSize[0], icon.options.iconSize[1]) : icon.options.iconSize,
-							iconAnchor = L.Util.isArray(icon.options.iconAnchor) ? new L.Point(icon.options.iconAnchor[0], icon.options.iconAnchor[1]) : icon.options.iconAnchor,
-							scaleFactor = (this.options.dpi / L.print.Provider.DPI);
-
-						style = {
-							externalGraphic: this._getAbsoluteUrl(iconUrl),
-							graphicWidth: (iconSize.x / scaleFactor),
-							graphicHeight: (iconSize.y / scaleFactor),
-							graphicXOffset: (-iconAnchor.x / scaleFactor),
-							graphicYOffset: (-iconAnchor.y / scaleFactor)
-						};
-					} else {
-						style = this._extractFeatureStyle(feature);
-					}
-
-					dictKey = JSON.stringify(style);
-					dictItem = styleDict[dictKey];
-					if (dictItem) {
-						styleName = dictItem;
-					} else {
-						styleDict[dictKey] = styleName = nextId++;
-						encStyles[styleName] = style;
-					}
-
-					featureGeoJson = (feature instanceof L.Circle) ? this._circleGeoJSON(feature) : feature.toGeoJSON();
-					featureGeoJson.geometry.coordinates = this._projectCoords(L.print.Provider.SRS, featureGeoJson.geometry.coordinates);
-					featureGeoJson.properties._leaflet_style = styleName;
-
-					// All markers will use the same opacity as the first marker found
-					if (opacity === null) {
-						opacity = feature.options.opacity || 1.0;
-					}
-
-					encFeatures.push(featureGeoJson);
-				}
-
-				return {
-					type: 'Vector',
-					styles: encStyles,
-					opacity: opacity,
-					styleProperty: '_leaflet_style',
-					geoJson: {
-						type: 'FeatureCollection',
-						features: encFeatures
-					}
-				};
-			}
-		}
-	},
-
-	_circleGeoJSON: function (circle) {
-		var projection = circle._map.options.crs.projection;
-		var earthRadius = 1, i;
-
-		if (projection === L.Projection.SphericalMercator) {
-			earthRadius = 6378137;
-		} else if (projection === L.Projection.Mercator) {
-			earthRadius = projection.R_MAJOR;
-		}
-		var cnt = projection.project(circle.getLatLng());
-		var scale = 1.0 / Math.cos(circle.getLatLng().lat * Math.PI / 180.0);
-		var points = [];
-		for (i = 0; i < 64; i++) {
-			var radian = i * 2.0 * Math.PI / 64.0;
-			var shift = L.point(Math.cos(radian), Math.sin(radian));
-			points.push(projection.unproject(cnt.add(shift.multiplyBy(circle.getRadius() * scale / earthRadius))));
-		}
-		return L.polygon(points).toGeoJSON();
-	},
-
-	_extractFeatureStyle: function (feature) {
-		var options = feature.options;
-
-		// From smap4 (working)
-		// cursor: "pointer"
-		// fillColor: "#ff5b00"
-		// fillOpacity: 0.3
-		// graphicName: "square"
-		// pointRadius: 6
-		// strokeColor: "#ff5b00"
-		// strokeOpacity: 1
-		// strokeWidth: 4
-
-
-		if (options.radius) {
-			options.strokeWidth = options.radius;
-			options.strokeColor = options.fillColor;
-		}
-
-
-		var style = {
-			stroke: options.stroke,
-			strokeColor: options.color,
-			strokeWidth: options.weight,
-			strokeOpacity: options.opacity,
-			strokeLinecap: 'round',
-			pointRadius: options.radius,
-			fill: options.fill,
-			fillColor: options.fillColor,
-			fillOpacity: options.fillOpacity,
-			graphicZIndex: options.zIndex,
-			graphicWidth: options.graphicWidth,
-			graphicHeight: options.graphicHeight,
-			label: options.label,
-			name: "The layer name"
-		};
-
-		// Convert all null values to undefined (otherwise Mapfish Print error)
-		var key, val,
-			out = {};
-		for (key in style) {
-			val = style[key];
-			if (val === null) {
-				val = undefined;
-			}
-			out[key] = val;
-		}
-		return out;
-
-
-		// cursor: "pointer"
-		// fillColor: "#00FFFF"
-		// fillOpacity: 0.3
-		// graphicName: "circle"
-		// graphicZIndex: 499
-		// pointRadius: 6
-		// strokeColor: "#00FFFF"
-		// strokeOpacity: 1
-		// strokeWidth: 4
-	},
-
-	_getAbsoluteUrl: function (url) {
-		var a;
-
-		if (L.Browser.ie) {
-			a = document.createElement('a');
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.href = url;
-			document.body.removeChild(a);
-		} else {
-			a = document.createElement('a');
-			a.href = url;
-		}
-		return a.href;
-	},
-
-	_projectBounds: function (crs, bounds) {
-		var sw = bounds.getSouthWest(),
-			ne = bounds.getNorthEast();
-
-		return this._projectCoords(crs, sw).concat(this._projectCoords(crs, ne));
-	},
-
-	_projectCoords: function (crs, coords) {
-		var crsKey = crs.toUpperCase().replace(':', ''),
-			crsClass = L.CRS[crsKey];
-
-		if (!crsClass) {
-			throw 'Unsupported coordinate reference system: ' + crs;
-		}
-
-		return this._project(crsClass, coords);
-	},
-
-	_project: function (crsClass, coords) {
-		var projected,
-			pt,
-			i, l;
-
-		if (typeof coords[0] === 'number') {
-			coords = new L.LatLng(coords[1], coords[0]);
-		}
-
-		if (coords instanceof L.LatLng) {
-			pt = crsClass.project(coords);
-			return [pt.x, pt.y];
-		} else {
-			projected = [];
-			for (i = 0, l = coords.length; i < l; i++) {
-				projected.push(this._project(crsClass, coords[i]));
-			}
-			return projected;
-		}
-	},
-
-	// --------------------------------------------------
-	// Event handlers
-	// --------------------------------------------------
-
-	onCapabilitiesLoad: function (response) {
-		this._capabilities = response;
-
-		if (!this.options.layout) {
-			this.options.layout = this._capabilities.layouts[0].name;
-		}
-
-		if (!this.options.dpi) {
-			this.options.dpi = this._capabilities.dpis[0].value;
-		}
-
-		this.fire('capabilitiesload', {
-			provider: this,
-			capabilities: this._capabilities
-		});
-	},
-
-	onPrintSuccess: function (response) {
-		var url = response.getURL + (L.Browser.ie ? '?inline=true' : '');
-
-		if (this.options.autoOpen) {
-			if (L.Browser.ie) {
-				window.open(url);
-			} else {
-				window.location.href = url;
-			}
-		}
-
-		this._xhr = null;
-
-		this.fire('printsuccess', {
-			provider: this,
-			response: response
-		});
-	},
-
-	onPrintError: function (jqXHR) {
-		this._xhr = null;
-
-		this.fire('printexception', {
-			provider: this,
-			response: jqXHR
-		});
-	}
-});
-
-L.print.provider = function (options) {
-	return new L.print.Provider(options);
-};
 
 
 /** Notify.js - v0.3.1 - 2014/06/29
@@ -29093,7 +29201,7 @@ $.notify.addStyle("bootstrap", {
 	https://github.com/jacobtoye
 */
 (function(){L.labelVersion="0.2.1",L.Label=L.Class.extend({includes:L.Mixin.Events,options:{className:"",clickable:!1,direction:"right",noHide:!1,offset:[12,-15],opacity:1,zoomAnimation:!0},initialize:function(t,e){L.setOptions(this,t),this._source=e,this._animated=L.Browser.any3d&&this.options.zoomAnimation,this._isOpen=!1},onAdd:function(t){this._map=t,this._pane=this._source instanceof L.Marker?t._panes.markerPane:t._panes.popupPane,this._container||this._initLayout(),this._pane.appendChild(this._container),this._initInteraction(),this._update(),this.setOpacity(this.options.opacity),t.on("moveend",this._onMoveEnd,this).on("viewreset",this._onViewReset,this),this._animated&&t.on("zoomanim",this._zoomAnimation,this),L.Browser.touch&&!this.options.noHide&&L.DomEvent.on(this._container,"click",this.close,this)},onRemove:function(t){this._pane.removeChild(this._container),t.off({zoomanim:this._zoomAnimation,moveend:this._onMoveEnd,viewreset:this._onViewReset},this),this._removeInteraction(),this._map=null},setLatLng:function(t){return this._latlng=L.latLng(t),this._map&&this._updatePosition(),this},setContent:function(t){return this._previousContent=this._content,this._content=t,this._updateContent(),this},close:function(){var t=this._map;t&&(L.Browser.touch&&!this.options.noHide&&L.DomEvent.off(this._container,"click",this.close),t.removeLayer(this))},updateZIndex:function(t){this._zIndex=t,this._container&&this._zIndex&&(this._container.style.zIndex=t)},setOpacity:function(t){this.options.opacity=t,this._container&&L.DomUtil.setOpacity(this._container,t)},_initLayout:function(){this._container=L.DomUtil.create("div","leaflet-label "+this.options.className+" leaflet-zoom-animated"),this.updateZIndex(this._zIndex)},_update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updatePosition(),this._container.style.visibility="")},_updateContent:function(){this._content&&this._map&&this._prevContent!==this._content&&"string"==typeof this._content&&(this._container.innerHTML=this._content,this._prevContent=this._content,this._labelWidth=this._container.offsetWidth)},_updatePosition:function(){var t=this._map.latLngToLayerPoint(this._latlng);this._setPosition(t)},_setPosition:function(t){var e=this._map,i=this._container,n=e.latLngToContainerPoint(e.getCenter()),o=e.layerPointToContainerPoint(t),s=this.options.direction,a=this._labelWidth,l=L.point(this.options.offset);"right"===s||"auto"===s&&o.x<n.x?(L.DomUtil.addClass(i,"leaflet-label-right"),L.DomUtil.removeClass(i,"leaflet-label-left"),t=t.add(l)):(L.DomUtil.addClass(i,"leaflet-label-left"),L.DomUtil.removeClass(i,"leaflet-label-right"),t=t.add(L.point(-l.x-a,l.y))),L.DomUtil.setPosition(i,t)},_zoomAnimation:function(t){var e=this._map._latLngToNewLayerPoint(this._latlng,t.zoom,t.center).round();this._setPosition(e)},_onMoveEnd:function(){this._animated&&"auto"!==this.options.direction||this._updatePosition()},_onViewReset:function(t){t&&t.hard&&this._update()},_initInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.addClass(t,"leaflet-clickable"),L.DomEvent.on(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.on(t,e[i],this._fireMouseEvent,this)}},_removeInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.removeClass(t,"leaflet-clickable"),L.DomEvent.off(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.off(t,e[i],this._fireMouseEvent,this)}},_onMouseClick:function(t){this.hasEventListeners(t.type)&&L.DomEvent.stopPropagation(t),this.fire(t.type,{originalEvent:t})},_fireMouseEvent:function(t){this.fire(t.type,{originalEvent:t}),"contextmenu"===t.type&&this.hasEventListeners(t.type)&&L.DomEvent.preventDefault(t),"mousedown"!==t.type?L.DomEvent.stopPropagation(t):L.DomEvent.preventDefault(t)}}),L.BaseMarkerMethods={showLabel:function(){return this.label&&this._map&&(this.label.setLatLng(this._latlng),this._map.showLabel(this.label)),this},hideLabel:function(){return this.label&&this.label.close(),this},setLabelNoHide:function(t){this._labelNoHide!==t&&(this._labelNoHide=t,t?(this._removeLabelRevealHandlers(),this.showLabel()):(this._addLabelRevealHandlers(),this.hideLabel()))},bindLabel:function(t,e){var i=this.options.icon?this.options.icon.options.labelAnchor:this.options.labelAnchor,n=L.point(i)||L.point(0,0);return n=n.add(L.Label.prototype.options.offset),e&&e.offset&&(n=n.add(e.offset)),e=L.Util.extend({offset:n},e),this._labelNoHide=e.noHide,this.label||(this._labelNoHide||this._addLabelRevealHandlers(),this.on("remove",this.hideLabel,this).on("move",this._moveLabel,this).on("add",this._onMarkerAdd,this),this._hasLabelHandlers=!0),this.label=new L.Label(e,this).setContent(t),this},unbindLabel:function(){return this.label&&(this.hideLabel(),this.label=null,this._hasLabelHandlers&&(this._labelNoHide||this._removeLabelRevealHandlers(),this.off("remove",this.hideLabel,this).off("move",this._moveLabel,this).off("add",this._onMarkerAdd,this)),this._hasLabelHandlers=!1),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},getLabel:function(){return this.label},_onMarkerAdd:function(){this._labelNoHide&&this.showLabel()},_addLabelRevealHandlers:function(){this.on("mouseover",this.showLabel,this).on("mouseout",this.hideLabel,this),L.Browser.touch&&this.on("click",this.showLabel,this)},_removeLabelRevealHandlers:function(){this.off("mouseover",this.showLabel,this).off("mouseout",this.hideLabel,this),L.Browser.touch&&this.off("click",this.showLabel,this)},_moveLabel:function(t){this.label.setLatLng(t.latlng)}},L.Icon.Default.mergeOptions({labelAnchor:new L.Point(9,-20)}),L.Marker.mergeOptions({icon:new L.Icon.Default}),L.Marker.include(L.BaseMarkerMethods),L.Marker.include({_originalUpdateZIndex:L.Marker.prototype._updateZIndex,_updateZIndex:function(t){var e=this._zIndex+t;this._originalUpdateZIndex(t),this.label&&this.label.updateZIndex(e)},_originalSetOpacity:L.Marker.prototype.setOpacity,setOpacity:function(t,e){this.options.labelHasSemiTransparency=e,this._originalSetOpacity(t)},_originalUpdateOpacity:L.Marker.prototype._updateOpacity,_updateOpacity:function(){var t=0===this.options.opacity?0:1;this._originalUpdateOpacity(),this.label&&this.label.setOpacity(this.options.labelHasSemiTransparency?this.options.opacity:t)},_originalSetLatLng:L.Marker.prototype.setLatLng,setLatLng:function(t){return this.label&&!this._labelNoHide&&this.hideLabel(),this._originalSetLatLng(t)}}),L.CircleMarker.mergeOptions({labelAnchor:new L.Point(0,0)}),L.CircleMarker.include(L.BaseMarkerMethods),L.Path.include({bindLabel:function(t,e){return this.label&&this.label.options===e||(this.label=new L.Label(e,this)),this.label.setContent(t),this._showLabelAdded||(this.on("mouseover",this._showLabel,this).on("mousemove",this._moveLabel,this).on("mouseout remove",this._hideLabel,this),L.Browser.touch&&this.on("click",this._showLabel,this),this._showLabelAdded=!0),this},unbindLabel:function(){return this.label&&(this._hideLabel(),this.label=null,this._showLabelAdded=!1,this.off("mouseover",this._showLabel,this).off("mousemove",this._moveLabel,this).off("mouseout remove",this._hideLabel,this)),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},_showLabel:function(t){this.label.setLatLng(t.latlng),this._map.showLabel(this.label)},_moveLabel:function(t){this.label.setLatLng(t.latlng)},_hideLabel:function(){this.label.close()}}),L.Map.include({showLabel:function(t){return this.addLayer(t)}}),L.FeatureGroup.include({clearLayers:function(){return this.unbindLabel(),this.eachLayer(this.removeLayer,this),this},bindLabel:function(t,e){return this.invoke("bindLabel",t,e)},unbindLabel:function(){return this.invoke("unbindLabel")},updateLabelContent:function(t){this.invoke("updateLabelContent",t)}})})(this,document);
-/*! esri-leaflet - v1.0.0-rc.3 - 2014-11-04
+/*! esri-leaflet - v1.0.0-rc.3 - 2014-10-25
 *   Copyright (c) 2014 Environmental Systems Research Institute, Inc.
 *   Apache License*/
 (function (factory) {
@@ -30827,7 +30935,6 @@ EsriLeaflet.Layers.RasterLayer =  L.Class.extend({
   },
 
   onRemove: function (map) {
-
     if (this._currentImage) {
       this._map.removeLayer(this._currentImage);
     }
@@ -30911,6 +31018,7 @@ EsriLeaflet.Layers.RasterLayer =  L.Class.extend({
       image.once('load', function(e){
         var newImage = e.target;
         var oldImage = this._currentImage;
+
         if(newImage._bounds.equals(bounds)){
           this._currentImage = newImage;
 
@@ -30920,16 +31028,11 @@ EsriLeaflet.Layers.RasterLayer =  L.Class.extend({
             this.bringToBack();
           }
 
-          if(this._map && this._currentImage._map){
-            this._currentImage.setOpacity(this.options.opacity);
-          } else {
-            this._currentImage._map.removeLayer(this._currentImage);
-          }
+          this._currentImage.setOpacity(this.options.opacity);
 
           if(oldImage){
             this._map.removeLayer(oldImage);
           }
-
         } else {
           this._map.removeLayer(newImage);
         }
@@ -32710,38 +32813,13 @@ L.PolylineUtil = {
     };
 })(window);
 
-
 L.Path.include(
     {
         toGML: function(){
             var coords,xml = '';
 
-            if (this instanceof L.MultiPolygon || (this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOLYGON" )) {
-
-                var latLngs = this.getLatLngs(),
-                    latLng;
-
-                var P = OpenLayers.Geometry.Point,
-                    points = [];
-
-                for (var i=0,len=latLngs.length; i<len; i++) {
-                    latLng = latLngs[i];
-                    points.push(new P(latLng.lng, latLng.lat) );
-                }
-                var ring = new OpenLayers.Geometry.LinearRing(points);
-                var polygon = new OpenLayers.Geometry.Polygon(ring);
-
-                var geom = new OpenLayers.Geometry.MultiPolygon([polygon]);
-
-                var f = new OpenLayers.Feature.Vector(geom);
-                var format = new OpenLayers.Format.GML();
-                xml = format.write([f]);
-                var splitWord = "gml:MultiPolygon";
-                var xmlArr = xml.split(splitWord);
-                xml = '<'+splitWord+' srsName="EPSG:4326"'+xmlArr[1]+splitWord+'>'; // 
-                return xml;
-
-
+            if (this instanceof L.MultiPolygon || this instanceof L.MultiPolyline) {
+                console.log("GML TODO: L.MultiPolygon and L.MultiPolyline"); //MultiPolygon and MultiLineString
             } else if (this instanceof L.Polygon) {
                 //Polygon
                 xml += '<gml:Polygon srsName="EPSG:4326">';
@@ -32763,53 +32841,7 @@ L.Path.include(
                 xml += "</gml:Polygon>";
                 return xml;
             } else if (this instanceof L.Polyline) {
-
-                var latLngs = this.getLatLngs();
-
-                var p = OpenLayers.Geometry.Point,
-                    // geomCoords1 = [].concat(this.feature.geometry.coordinates),
-                    components, coords,
-                    level = 0,
-                    latLng,
-                    arrLineStrings = [],
-                    arrCoords = [],
-                    splitWord,
-                    geom;
-
-                var isMulti = this.options.geomType && this.options.geomType.toUpperCase() === "MULTILINESTRING"; //geomCoords1[0][0].length;
-                if (isMulti) {
-                    // -- MultiLineString --
-                    for (var i=0,len=latLngs.length; i<len; i++) {
-                        latLng = latLngs[i];
-                        arrCoords.push( new p(latLng.lng, latLng.lat) );
-                        // for (var j=0,lenj=geomCoords2.length; j<lenj; j++) {
-                        //  coords = geomCoords2[j];
-                        //  // coords = utils.projectPoint(coords[0], coords[1], "EPSG:4326", "EPSG:3008");
-                        // }
-                    }
-                    if (arrCoords.length) {
-                        arrLineStrings.push( new OpenLayers.Geometry.LineString(arrCoords) );
-                    }
-                    geom = new OpenLayers.Geometry.MultiLineString(arrLineStrings);
-                    splitWord = 'gml:MultiLineString';
-                }
-                else {
-
-                    // -- LineString --
-                    for (var i=0,len=latLngs.length; i<len; i++) {
-                        latLng = latLngs[i];
-                        arrCoords.push( new p(latLng.lng, latLng.lat) );
-                    }
-                    geom = new OpenLayers.Geometry.LineString(arrCoords);
-                    splitWord = 'gml:LineString';
-                }
-                
-                var f = new OpenLayers.Feature.Vector(geom);
-                var format = new OpenLayers.Format.GML();
-                xml = format.write([f]);
-                var xmlArr = xml.split(splitWord);
-                xml = '<'+splitWord+' srsName="EPSG:4326"'+xmlArr[1]+splitWord+'>'; // 
-                return xml;
+                console.log("GML TODO: L.Polyline"); 
 
             } else if (this instanceof L.Circle){
                 console.log("GML TODO: L.Circle"); 
@@ -32836,23 +32868,10 @@ L.Path.include(
 
 L.Marker.include({
     toGML: function(){
-        var xml = "",
-            splitWord = "gml:Point";
-        var isMulti = this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOINT" || 
-                (this.feature && this.feature.geometry && this.feature.geometry.type && this.feature.geometry.type.toUpperCase() === "MULTIPOINT");
-        if (isMulti) {
-            xml += '<gml:MultiPoint><gml:pointMember>';
-            splitWord = "gml:MultiPoint";
-        }
-        xml += '<gml:Point><gml:coordinates cs="," decimal="." ts=" ">'; // srsName="EPSG:4326"
+        var xml;
+        xml = '<gml:Point srsName="EPSG:4326"><gml:coordinates cs="," decimal="." ts=" ">';
         xml += this.getLatLng().lng + ',' + this.getLatLng().lat;
         xml += '</gml:coordinates></gml:Point>';
-        if (isMulti) {
-            xml += '</gml:pointMember></gml:MultiPoint>';
-        }
-        // Add projection declaration
-        var xmlArr = xml.split(splitWord);
-        xml = '<'+splitWord+' srsName="EPSG:4326"'+xmlArr[1]+splitWord+'>';
         return xml;
     }
 });
@@ -32864,7 +32883,7 @@ L.Marker.include({
 * Many thanks to georepublic.info for enough info to get up and running: http://blog.georepublic.info/2012/leaflet-example-with-wfs-t/
 */
 
-L.WFST = L.GeoJSON.WFS.extend({
+L.WFST = L.GeoJSON.extend({
 
     // These functions overload the parent (GeoJSON) functions with some WFS-T
     // operations and then call the parent functions to do the Leaflet stuff
@@ -32872,15 +32891,15 @@ L.WFST = L.GeoJSON.WFS.extend({
     initialize: function(geojson,options){
         // These come from OL demo: http://openlayers.org/dev/examples/wfs-protocol-transactions.js
         var initOptions = L.extend({
-            showExisting: true,     // Show existing features in WFST layer on map?
-            version: "1.1.0",         // WFS version 
-            error: function(msg){}, // Function for handling initialization errors
+            showExisting: true,         // Show existing features in WFST layer on map?
+            version: "1.1.0",           // WFS version 
+            failure: function(msg){},    // Function for handling initialization failures
             xsdNs: 'xsd'
             // geomField : <field_name> // The geometry field to use. Auto-detected if only one geom field 
             // url: <WFS service URL> 
             // featureNS: <Feature NameSpace>
             // featureType: <Feature Type>
-            // uniqueKey: <The Primary Key field for using when doing deletes and updates>
+            // primaryKeyField: <The Primary Key field for using when doing deletes and updates>
             // xsdNs: Namespace used in XSD schemas, XSD returned by TinyOWS uses 'xs:' while GeoServer uses 'xsd:'
         },options);
 
@@ -32891,35 +32910,27 @@ L.WFST = L.GeoJSON.WFS.extend({
 
         initOptions.typename = initOptions.featureNS + ':' + initOptions.featureType;
 
-        initOptions.params = {
-            typeName: initOptions.typename,
-            srsName: initOptions.srs
-        };
-
         // Call to parent initialize
-
-        L.GeoJSON.WFS.prototype.initialize.call(this, geojson, initOptions);
+        L.GeoJSON.prototype.initialize.call(this,geojson,initOptions);
 
         // Now probably an ajax call to get existing features
-        // if(this.options.showExisting){
-        //  this._loadExistingFeatures();
-        // }
-        // this._loadFeatureDescription();
+        if(this.options.showExisting){
+            this._loadExistingFeatures();
+        }
+        this._loadFeatureDescription();
     },
     // Additional functionality for these functions
-    addLayer: function(layer, options) {
-        // this.wfstAdd(layer,options);
+    addLayer: function(layer,options) {
+        this.wfstAdd(layer,options);
         // Call to parent addLayer
-        L.GeoJSON.WFS.prototype.addLayer.call(this,layer);
-        this._loadFeatureDescription();
-
+        L.GeoJSON.prototype.addLayer.call(this,layer);
     },
-    // removeLayer: function(layer,options) {
-    //  // this.wfstRemove(layer,options);
+    removeLayer: function(layer,options) {
+        this.wfstRemove(layer,options);
 
-    //  // Call to parent removeLayer
-    //  L.GeoJSON.WFS.prototype.removeLayer.call(this,layer);
-    // },
+        // Call to parent removeLayer
+        L.GeoJSON.prototype.removeLayer.call(this,layer);
+    },
 
 
     // These functions are unique to WFST
@@ -32938,7 +32949,7 @@ L.WFST = L.GeoJSON.WFS.extend({
             this._wfstAdd(layers[i],options);
         }
     },
-    wfstRemove: function(layers,options) {
+    wfstRemove: function(layers,options){
         options = options || {};
         if(layers === null){
             this._wfstRemove(null,options);
@@ -32946,13 +32957,10 @@ L.WFST = L.GeoJSON.WFS.extend({
 
         layers = layers ? (L.Util.isArray(layers) ? layers : [layers]) : [];
 
-        var defs = [];
         for (var i = 0, len = layers.length; i < len; i++) {
-            defs.push( this._wfstRemove(layers[i],options) );
+            this._wfstRemove(layers[i],options);
         }
-        return $.when.apply($, defs);
     },
-
     wfstSave: function(layers,options){
         options = options || {};
         realsuccess = options.success;
@@ -32965,7 +32973,7 @@ L.WFST = L.GeoJSON.WFS.extend({
                     this._wfstSave(layers[i]._layers[v],options);
                 }
             }else{
-                this._wfstSave(layers[i], options);
+                this._wfstSave(layers[i],options);
             }
         }
     },
@@ -32979,11 +32987,11 @@ L.WFST = L.GeoJSON.WFS.extend({
         }
     },
     wfstSaveDirty: function(options){
-        for(var i in this._layers){
-            if(typeof this._layers[i].feature._wfstSaved == 'undefined'){
-                this._wfstAdd(this._layers[i],options);
-            }else if(this._layers[i].feature._wfstSaved === false){
-                this._wfstSave(this._layers[i],options);
+        for(var i in self._layers){
+            if(typeof self._layers[i].feature._wfstSaved == 'undefined'){
+                this._wfstAdd(self._layers[i],options);
+            }else if(self._layers[i].feature._wfstSaved === false){
+                this._wfstSave(self._layers[i],options);
             }
         }
     },
@@ -32993,8 +33001,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 
     // Interesting / real functions
     // Add a single layer with WFS-T
-    _wfstAdd: function(layer, options){
-        options = options || {};
+    _wfstAdd: function(layer,options){
 
         if(typeof layer.feature != 'undefined' && 
             typeof layer.feature._wfstSaved == 'boolean' && 
@@ -33006,34 +33013,28 @@ L.WFST = L.GeoJSON.WFS.extend({
         if(typeof options.success == 'function'){
             realsuccess = options.success;
         }
-        var self = this;
+
         options = L.extend(options,{
             success: function(res){
-                var xml = this._wfstSuccess(res);
-                self.fire("wfst:savesuccess");
+                var xml = self._wfstSuccess(res);
                 if(typeof realsuccess == 'function' && xml !== false){
                     layer.feature = layer.feature || {};
                     layer.feature._wfstSaved = true;
 
                     // Populate the IDs of the object we just inserted. 
                     // Since we do one insert at a time, it should always be object 0
-                    var fid = this._getElementsByTagName(xml,'ogc:FeatureId')[0].getAttribute('fid');
+                    var fid = self._getElementsByTagName(xml,'ogc:FeatureId')[0].getAttribute('fid');
                     layer.feature.id = fid;
-                    layer.feature.properties[this.options.uniqueKey] = fid.replace(this.options.featureType + '.','');
+                    layer.feature.properties[self.options.primaryKeyField] = fid.replace(self.options.featureType + '.','');
 
                     realsuccess(res);
-                }else if(typeof options.error == 'function'){
-                    self.fire("wfst:saveerror");
-                    options.error(res);
+                }else if(typeof options.failure == 'function'){ 
+                    options.failure(res);
                 }
             }
         });
 
-        var xmlPre = this.options._xmlpre;
-        if (this.options.geomType && this.options.geomType.toUpperCase() === "MULTIPOLYGON") {
-            xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
-        }
-        var xml = xmlPre;
+        var xml = this.options._xmlpre;
 
         xml += "<wfs:Insert>";
         xml += "<" + this.options.typename + ">";
@@ -33042,15 +33043,15 @@ L.WFST = L.GeoJSON.WFS.extend({
         xml += "</wfs:Insert>";
         xml += "</wfs:Transaction>";
 
-        return this._ajax( L.extend({type:'POST', data:xml},options));
+        this._ajax( L.extend({method:'POST', data:xml},options));
     },
 
     // Remove a layers with WFS-T
-    _wfstRemove: function(layer,options) {
-        if(typeof this.options.uniqueKey == 'undefined' && typeof options.where == 'undefined'){
-            console.log("I can't do deletes without a uniqueKey!");
-            if(typeof options.error == 'function'){
-                options.error();
+    _wfstRemove: function(layer,options){
+        if(typeof this.options.primaryKeyField == 'undefined' && typeof options.where == 'undefined'){
+            console.log("I can't do deletes without a primaryKeyField!");
+            if(typeof options.failure == 'function'){
+                options.failure();
             }
             return false;
         }
@@ -33059,19 +33060,17 @@ L.WFST = L.GeoJSON.WFS.extend({
         if(typeof options.success == 'function'){
             realsuccess = options.success;
         }
-        var self = this;
+
         options = L.extend(options,{
             success: function(res){
-                self.fire("wfst:savesuccess");
-                if(typeof realsuccess == 'function' && this._wfstSuccess(res)){
+                if(typeof realsuccess == 'function' && self._wfstSuccess(res)){
                     if(layer !== null){
                         layer.feature = layer.feature || {};
                         layer.feature._wfstSaved = true;
                     }
                     realsuccess(res);
-                }else if(typeof options.error == 'function'){
-                    self.fire("wfst:saveerror");
-                    options.error(res);
+                }else if(typeof options.failure == 'function'){ 
+                    options.failure(res);
                 }
             }
         });
@@ -33079,31 +33078,27 @@ L.WFST = L.GeoJSON.WFS.extend({
         var where; 
         if(typeof options.where == 'undefined'){
             where = {};
-            where[this.options.uniqueKey] = layer.feature.properties[this.options.uniqueKey];
+            where[this.options.primaryKeyField] = layer.feature.properties[this.options.primaryKeyField];
         }else{
             where = options.where;
         }
 
-        var xmlPre = this.options._xmlpre;
-        // if (layer.options.geomType.toUpperCase() === "MULTIPOLYGON") {
-        //     xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
-        // }
-        var xml = xmlPre;
-        xml += '<wfs:Delete typeName="'+this.options.typename+'">';
+        var xml = this.options._xmlpre;
+        xml += "<wfs:Delete typeName='"+this.options.typename+"'>";
         xml += this._whereFilter(where);
         xml += "</wfs:Delete>";
         xml += "</wfs:Transaction>";
 
-        return this._ajax( L.extend({type:'POST', data:xml},options));
+        this._ajax( L.extend({method:'POST', data:xml},options));
     },
 
 
     //  Save changes to a single layer with WFS-T
     _wfstSave: function(layer,options){
-        if(typeof this.options.uniqueKey == 'undefined'){
-            console.log("I can't do saves without a uniqueKey!");
-            if(typeof options.error == 'function'){
-                options.error();
+        if(typeof this.options.primaryKeyField == 'undefined'){
+            console.log("I can't do saves without a primaryKeyField!");
+            if(typeof options.failure == 'function'){
+                options.failure();
             }
             return false;
         }
@@ -33111,38 +33106,32 @@ L.WFST = L.GeoJSON.WFS.extend({
         options = options || {};
 
         var realsuccess;
-        if (typeof options.success == 'function'){
+        if(typeof options.success == 'function'){
             realsuccess = options.success;
         }
-        var self = this;
-        options = L.extend(options, {
-            success: function(res) {
-                self.fire("wfst:savesuccess");
-                if(typeof realsuccess == 'function' && this._wfstSuccess(res)){
+
+        options = L.extend(options,{
+            success: function(res){
+                if(typeof realsuccess == 'function' && self._wfstSuccess(res)){
                     layer.feature._wfstSaved = true;
                     realsuccess(res);
-                }else if(typeof options.error == 'function'){
-                    self.fire("wfst:saveerror");
-                    options.error(res);
+                }else if(typeof options.failure == 'function'){ 
+                    options.failure(res);
                 }
             }
         });
 
         var where = {};
-        where[this.options.uniqueKey] = layer.feature.properties[this.options.uniqueKey];
+        where[this.options.primaryKeyField] = layer.feature.properties[this.options.primaryKeyField];
 
-        var xmlPre = this.options._xmlpre;
-        if (layer.options.geomType && layer.options.geomType && layer.options.geomType.toUpperCase() === "MULTIPOLYGON") {
-            xmlPre = xmlPre.replace(/version="1.1.0"/, 'version="1.0.0"');
-        }
-        var xml = xmlPre;
-        xml += '<wfs:Update typeName="'+this.options.typename+'">';
-        xml += this._wfstUpdateValues(layer, options.newProps);
+        var xml = this.options._xmlpre;
+        xml += "<wfs:Update typeName='"+this.options.typename+"'>";
+        xml += this._wfstUpdateValues(layer);
         xml += this._whereFilter(where);
         xml += "</wfs:Update>";
         xml += "</wfs:Transaction>";
 
-        return this._ajax( L.extend({type:'POST', data:xml},options));
+        this._ajax( L.extend({method:'POST', data:xml},options));
     },
 
 
@@ -33156,6 +33145,7 @@ L.WFST = L.GeoJSON.WFS.extend({
         if(!field){
             return false;
         }
+
         for(var f in field){
             xml += "<" + this.options.featureNS + ":" + f +">";
             xml += field[f];
@@ -33164,18 +33154,12 @@ L.WFST = L.GeoJSON.WFS.extend({
 
         return xml;
     },
-    _wfstUpdateValues: function(layer, newProps){
-        newProps = newProps || {};
-
+    _wfstUpdateValues: function(layer){
         var xml = '';
         var field = this._wfstValueKeyPairs(layer);
 
         if(!field){
             return false;
-        }
-
-        if (newProps) {
-            $.extend(field, newProps);
         }
 
         for(var f in field){
@@ -33214,14 +33198,8 @@ L.WFST = L.GeoJSON.WFS.extend({
             }else if(
                 elems[p].getAttribute('type') === 'gml:GeometryPropertyType' || 
                 elems[p].getAttribute('type') === 'gml:PointPropertyType' || 
-                elems[p].getAttribute('type') === 'gml:MultiPointPropertyType' ||
                 elems[p].getAttribute('type') === 'gml:MultiSurfacePropertyType' || 
-                elems[p].getAttribute('type') === 'gml:SurfacePropertyType'  ||
-                // Johan was here
-                elems[p].getAttribute('type') === 'gml:MultiLineStringPropertyType' ||
-                elems[p].getAttribute('type') === 'gml:LineStringPropertyType' ||
-                elems[p].getAttribute('type') === 'gml:MultiCurvePropertyType'
-                
+                elems[p].getAttribute('type') === 'gml:SurfacePropertyType' 
             ){
                 geomFields.push(elems[p]);
             }else if(elems[p].getAttribute('nillable') == 'false'){
@@ -33234,7 +33212,7 @@ L.WFST = L.GeoJSON.WFS.extend({
 
         // Only require a geometry field if it looks like we have geometry but we aren't trying to save it
         if(
-            (geomFields.length || layer.hasOwnProperty('x') && layer.hasOwnProperty('y') && typeof layer.x != 'undefined' && typeof layer.y != 'undefined') ||
+            (layer.hasOwnProperty('x') && layer.hasOwnProperty('y') && typeof layer.x != 'undefined' && typeof layer.y != 'undefined') ||
             (layer.hasOwnProperty('_latlng') && Object.keys(layer._latlng).length > 0)
         ){
             if(this.options.geomField || geomFields.length === 1){
@@ -33261,79 +33239,53 @@ L.WFST = L.GeoJSON.WFS.extend({
         return xml;
     },
 
-
-
     /* Make an ajax request
     options: {
     url: url to fetch (required),
     method : GET, POST (optional, default is GET),
     success : function (optional), must accept a string if present
-    error: function (optional), must accept a string if present
+    failure: function (optional), must accept a string if present
     }
     */
     _ajax: function(options){
-        var self = this;
-        var url = options.url || this.options.url;
-        options.url = this.options.proxy ? this.options.proxy + encodeURIComponent(url) : url;
         options = L.extend({
-            type: "GET",
-            context: this,
-            dataType: "text",
+            method: 'GET',
             success: function(r){console.log(r);},
-            error: function(r){
-                self.fire("wfst:ajaxerror");
-                console.log(r);
+            failure: function(r){console.log("AJAX Failure!");console.log(r);},
+            self: this,
+            url: this.options.url
+        },options);
+
+        self = this;
+        var xmlhttpreq = (window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
+        xmlhttpreq.onreadystatechange=function() {
+            if(xmlhttpreq.readyState==4){
+                if(xmlhttpreq.status==200){
+                    options.success(xmlhttpreq.responseText);
+                }else{
+                    options.failure(xmlhttpreq.responseText);
+                }
             }
-        }, options);
-
-        // var xmlhttpreq = (window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP'));
-        // xmlhttpreq.onreadystatechange=function() {
-        //     if(xmlhttpreq.readyState==4){
-        //         if(xmlhttpreq.status==200){
-        //             options.success.call(options.context, xmlhttpreq.responseText);
-        //         }else{
-        //             options.failure.call(options.context, xmlhttpreq.responseText);
-        //         }
-        //     }
-        // };
-        options.contentType = "application/xml";
-        return $.ajax(options);
-
-        // JL: I'm using jquery instead of this
-        // xmlhttpreq.open(options.type,options.url,true);
-        // xmlhttpreq.send(options.data);
-
+        };
+        xmlhttpreq.open(options.method,options.url,true);
+        xmlhttpreq.send(options.data);
     },
-
-    // _swapCoords: function(coords) {
-    //  coords = [coords[1], coords[0]];
-    //  return coords;
-    // },
-
     /*
     Get all existing objects from the WFS service and draw them
     */
-    // _loadExistingFeatures: function(){
-    //  var geoJsonUrl = this.options.url + '?service=WFS&version=' + this.options.version + '&request=GetFeature&typeName=' + this.options.featureNS + ':' + this.options.featureType + '&outputFormat=application/json';
-    //  this._ajax({
-    //      url: geoJsonUrl,
-    //      success: function(res) {
-    //          res = JSON.parse(res);
-    //          var features = res.features,
-    //              reverseAxis = this.options.reverseAxis,
-    //              i, f;
-    //          for (i=0,len=features.length; i<len; i++) {
-    //              f = features[i];
-    //              if (reverseAxis && f.geometry && f.geometry.coordinates) {
-    //                  // Swap coords
-    //                  f.geometry.coordinates = swapCoords(f.geometry.coordinates);
-    //              }
-    //              f._wfstSaved = true;
-    //          }
-    //          this.addData(res.features);
-    //      }
-    //  });
-    // },
+    _loadExistingFeatures: function(){
+        var geoJsonUrl = this.options.url + '?service=WFS&version=' + this.options.version + '&request=GetFeature&typeName=' + this.options.featureNS + ':' + this.options.featureType + '&outputFormat=application/json';
+        this._ajax({
+            url: geoJsonUrl,
+            success: function(res){
+                res = JSON.parse(res);
+                for(var i = 0,len = res.features.length;i<len;i++){
+                    res.features[i]._wfstSaved = true;
+                }
+                this.self.addData(res.features);
+            }
+        });
+    },
     /*
     Get the feature description
     */
@@ -33342,18 +33294,17 @@ L.WFST = L.GeoJSON.WFS.extend({
         this._ajax({
             url: describeFeatureUrl,
             success: function(res){
-                xml = this._wfstSuccess(res);
+                xml = this.self._wfstSuccess(res);
                 if(xml !== false){
-                    this.options.featureinfo = xml;
-                    this._xmlPreamble();
-                    this.ready = true;
+                    this.self.options.featureinfo = xml;
+                    this.self._xmlPreamble();
+                    this.self.ready = true;
                 }else{
-                    this.options.error("There was an exception fetching DescribeFeatueType");
+                    this.self.options.failure("There was an exception fetching DescribeFeatueType");
                 }
             }
         });
     },
-
     // Deal with XML -- should probably put this into gml and do reading and writing there
     _parseXml: function(rawxml){
         if (window.DOMParser)
@@ -33423,14 +33374,14 @@ L.WFST = L.GeoJSON.WFS.extend({
         return found;
     },
 
-    // Because with WFS-T even success can be error
+    // Because with WFS-T even success can be failure
     _wfstSuccess: function(xml){
         if(typeof xml == 'string'){
-            xml = this._parseXml(xml);
+            xml = self._parseXml(xml);
         }
-        var exception = this._getElementsByTagName(xml,'ows:ExceptionReport');
+        var exception = self._getElementsByTagName(xml,'ows:ExceptionReport');
         if(exception.length > 0){ 
-            console.log(this._getElementsByTagName(xml,'ows:ExceptionText')[0].firstChild.nodeValue);
+            console.log(self._getElementsByTagName(xml,'ows:ExceptionText')[0].firstChild.nodeValue);
             return false;
         }
         return xml;
@@ -33444,6 +33395,613 @@ L.wfst = function(geojson,options){
     return new L.WFST(geojson,options);
 };
 
+/*!
+* screenfull
+* v1.2.0 - 2014-04-29
+* (c) Sindre Sorhus; MIT License
+*/
+(function () {
+	'use strict';
+
+	var isCommonjs = typeof module !== 'undefined' && module.exports;
+	var keyboardAllowed = typeof Element !== 'undefined' && 'ALLOW_KEYBOARD_INPUT' in Element;
+
+	var fn = (function () {
+		var val;
+		var valLength;
+
+		var fnMap = [
+			[
+				'requestFullscreen',
+				'exitFullscreen',
+				'fullscreenElement',
+				'fullscreenEnabled',
+				'fullscreenchange',
+				'fullscreenerror'
+			],
+			// new WebKit
+			[
+				'webkitRequestFullscreen',
+				'webkitExitFullscreen',
+				'webkitFullscreenElement',
+				'webkitFullscreenEnabled',
+				'webkitfullscreenchange',
+				'webkitfullscreenerror'
+
+			],
+			// old WebKit (Safari 5.1)
+			[
+				'webkitRequestFullScreen',
+				'webkitCancelFullScreen',
+				'webkitCurrentFullScreenElement',
+				'webkitCancelFullScreen',
+				'webkitfullscreenchange',
+				'webkitfullscreenerror'
+
+			],
+			[
+				'mozRequestFullScreen',
+				'mozCancelFullScreen',
+				'mozFullScreenElement',
+				'mozFullScreenEnabled',
+				'mozfullscreenchange',
+				'mozfullscreenerror'
+			],
+			[
+				'msRequestFullscreen',
+				'msExitFullscreen',
+				'msFullscreenElement',
+				'msFullscreenEnabled',
+				'MSFullscreenChange',
+				'MSFullscreenError'
+			]
+		];
+
+		var i = 0;
+		var l = fnMap.length;
+		var ret = {};
+
+		for (; i < l; i++) {
+			val = fnMap[i];
+			if (val && val[1] in document) {
+				for (i = 0, valLength = val.length; i < valLength; i++) {
+					ret[fnMap[0][i]] = val[i];
+				}
+				return ret;
+			}
+		}
+
+		return false;
+	})();
+
+	var screenfull = {
+		request: function (elem) {
+			var request = fn.requestFullscreen;
+
+			elem = elem || document.documentElement;
+
+			// Work around Safari 5.1 bug: reports support for
+			// keyboard in fullscreen even though it doesn't.
+			// Browser sniffing, since the alternative with
+			// setTimeout is even worse.
+			if (/5\.1[\.\d]* Safari/.test(navigator.userAgent)) {
+				elem[request]();
+			} else {
+				elem[request](keyboardAllowed && Element.ALLOW_KEYBOARD_INPUT);
+			}
+		},
+		exit: function () {
+			document[fn.exitFullscreen]();
+		},
+		toggle: function (elem) {
+			if (this.isFullscreen) {
+				this.exit();
+			} else {
+				this.request(elem);
+			}
+		},
+		onchange: function () {},
+		onerror: function () {},
+		raw: fn
+	};
+
+	if (!fn) {
+		if (isCommonjs) {
+			module.exports = false;
+		} else {
+			window.screenfull = false;
+		}
+
+		return;
+	}
+
+	Object.defineProperties(screenfull, {
+		isFullscreen: {
+			get: function () {
+				return !!document[fn.fullscreenElement];
+			}
+		},
+		element: {
+			enumerable: true,
+			get: function () {
+				return document[fn.fullscreenElement];
+			}
+		},
+		enabled: {
+			enumerable: true,
+			get: function () {
+				// Coerce to boolean in case of old WebKit
+				return !!document[fn.fullscreenEnabled];
+			}
+		}
+	});
+
+	document.addEventListener(fn.fullscreenchange, function (e) {
+		screenfull.onchange.call(screenfull, e);
+	});
+
+	document.addEventListener(fn.fullscreenerror, function (e) {
+		screenfull.onerror.call(screenfull, e);
+	});
+
+	if (isCommonjs) {
+		module.exports = screenfull;
+	} else {
+		window.screenfull = screenfull;
+	}
+})();
+
+/*
+
+  OpenLayers.js -- OpenLayers Map Viewer Library
+
+  Copyright (c) 2006-2013 by OpenLayers Contributors
+  Published under the 2-clause BSD license.
+  See http://openlayers.org/dev/license.txt for the full text of the license, and http://openlayers.org/dev/authors.txt for full list of contributors.
+
+  Includes compressed code under the following licenses:
+
+  (For uncompressed versions of the code used, please see the
+  OpenLayers Github repository: <https://github.com/openlayers/openlayers>)
+
+*/
+
+/**
+ * Contains XMLHttpRequest.js <http://code.google.com/p/xmlhttprequest/>
+ * Copyright 2007 Sergey Ilinsky (http://www.ilinsky.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+/**
+ * OpenLayers.Util.pagePosition is based on Yahoo's getXY method, which is
+ * Copyright (c) 2006, Yahoo! Inc.
+ * All rights reserved.
+ * 
+ * Redistribution and use of this software in source and binary forms, with or
+ * without modification, are permitted provided that the following conditions
+ * are met:
+ * 
+ * * Redistributions of source code must retain the above copyright notice,
+ *   this list of conditions and the following disclaimer.
+ * 
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ * 
+ * * Neither the name of Yahoo! Inc. nor the names of its contributors may be
+ *   used to endorse or promote products derived from this software without
+ *   specific prior written permission of Yahoo! Inc.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+var OpenLayers={VERSION_NUMBER:"Release 2.14 dev",singleFile:true,_getScriptLocation:(function(){var r=new RegExp("(^|(.*?\\/))(OpenLayers[^\\/]*?\\.js)(\\?|$)"),s=document.getElementsByTagName('script'),src,m,l="";for(var i=0,len=s.length;i<len;i++){src=s[i].getAttribute('src');if(src){m=src.match(r);if(m){l=m[1];break;}}}
+return(function(){return l;});})(),ImgPath:''};OpenLayers.Class=function(){var len=arguments.length;var P=arguments[0];var F=arguments[len-1];var C=typeof F.initialize=="function"?F.initialize:function(){P.prototype.initialize.apply(this,arguments);};if(len>1){var newArgs=[C,P].concat(Array.prototype.slice.call(arguments).slice(1,len-1),F);OpenLayers.inherit.apply(null,newArgs);}else{C.prototype=F;}
+return C;};OpenLayers.inherit=function(C,P){var F=function(){};F.prototype=P.prototype;C.prototype=new F;var i,l,o;for(i=2,l=arguments.length;i<l;i++){o=arguments[i];if(typeof o==="function"){o=o.prototype;}
+OpenLayers.Util.extend(C.prototype,o);}};OpenLayers.Util=OpenLayers.Util||{};OpenLayers.Util.extend=function(destination,source){destination=destination||{};if(source){for(var property in source){var value=source[property];if(value!==undefined){destination[property]=value;}}
+var sourceIsEvt=typeof window.Event=="function"&&source instanceof window.Event;if(!sourceIsEvt&&source.hasOwnProperty&&source.hasOwnProperty("toString")){destination.toString=source.toString;}}
+return destination;};OpenLayers.Geometry=OpenLayers.Class({id:null,parent:null,bounds:null,initialize:function(){this.id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_");},destroy:function(){this.id=null;this.bounds=null;},clone:function(){return new OpenLayers.Geometry();},setBounds:function(bounds){if(bounds){this.bounds=bounds.clone();}},clearBounds:function(){this.bounds=null;if(this.parent){this.parent.clearBounds();}},extendBounds:function(newBounds){var bounds=this.getBounds();if(!bounds){this.setBounds(newBounds);}else{this.bounds.extend(newBounds);}},getBounds:function(){if(this.bounds==null){this.calculateBounds();}
+return this.bounds;},calculateBounds:function(){},distanceTo:function(geometry,options){},getVertices:function(nodes){},atPoint:function(lonlat,toleranceLon,toleranceLat){var atPoint=false;var bounds=this.getBounds();if((bounds!=null)&&(lonlat!=null)){var dX=(toleranceLon!=null)?toleranceLon:0;var dY=(toleranceLat!=null)?toleranceLat:0;var toleranceBounds=new OpenLayers.Bounds(this.bounds.left-dX,this.bounds.bottom-dY,this.bounds.right+dX,this.bounds.top+dY);atPoint=toleranceBounds.containsLonLat(lonlat);}
+return atPoint;},getLength:function(){return 0.0;},getArea:function(){return 0.0;},getCentroid:function(){return null;},toString:function(){var string;if(OpenLayers.Format&&OpenLayers.Format.WKT){string=OpenLayers.Format.WKT.prototype.write(new OpenLayers.Feature.Vector(this));}else{string=Object.prototype.toString.call(this);}
+return string;},CLASS_NAME:"OpenLayers.Geometry"});OpenLayers.Geometry.fromWKT=function(wkt){var geom;if(OpenLayers.Format&&OpenLayers.Format.WKT){var format=OpenLayers.Geometry.fromWKT.format;if(!format){format=new OpenLayers.Format.WKT();OpenLayers.Geometry.fromWKT.format=format;}
+var result=format.read(wkt);if(result instanceof OpenLayers.Feature.Vector){geom=result.geometry;}else if(OpenLayers.Util.isArray(result)){var len=result.length;var components=new Array(len);for(var i=0;i<len;++i){components[i]=result[i].geometry;}
+geom=new OpenLayers.Geometry.Collection(components);}}
+return geom;};OpenLayers.Geometry.segmentsIntersect=function(seg1,seg2,options){var point=options&&options.point;var tolerance=options&&options.tolerance;var intersection=false;var x11_21=seg1.x1-seg2.x1;var y11_21=seg1.y1-seg2.y1;var x12_11=seg1.x2-seg1.x1;var y12_11=seg1.y2-seg1.y1;var y22_21=seg2.y2-seg2.y1;var x22_21=seg2.x2-seg2.x1;var d=(y22_21*x12_11)-(x22_21*y12_11);var n1=(x22_21*y11_21)-(y22_21*x11_21);var n2=(x12_11*y11_21)-(y12_11*x11_21);if(d==0){if(n1==0&&n2==0){intersection=true;}}else{var along1=n1/d;var along2=n2/d;if(along1>=0&&along1<=1&&along2>=0&&along2<=1){if(!point){intersection=true;}else{var x=seg1.x1+(along1*x12_11);var y=seg1.y1+(along1*y12_11);intersection=new OpenLayers.Geometry.Point(x,y);}}}
+if(tolerance){var dist;if(intersection){if(point){var segs=[seg1,seg2];var seg,x,y;outer:for(var i=0;i<2;++i){seg=segs[i];for(var j=1;j<3;++j){x=seg["x"+j];y=seg["y"+j];dist=Math.sqrt(Math.pow(x-intersection.x,2)+
+Math.pow(y-intersection.y,2));if(dist<tolerance){intersection.x=x;intersection.y=y;break outer;}}}}}else{var segs=[seg1,seg2];var source,target,x,y,p,result;outer:for(var i=0;i<2;++i){source=segs[i];target=segs[(i+1)%2];for(var j=1;j<3;++j){p={x:source["x"+j],y:source["y"+j]};result=OpenLayers.Geometry.distanceToSegment(p,target);if(result.distance<tolerance){if(point){intersection=new OpenLayers.Geometry.Point(p.x,p.y);}else{intersection=true;}
+break outer;}}}}}
+return intersection;};OpenLayers.Geometry.distanceToSegment=function(point,segment){var result=OpenLayers.Geometry.distanceSquaredToSegment(point,segment);result.distance=Math.sqrt(result.distance);return result;};OpenLayers.Geometry.distanceSquaredToSegment=function(point,segment){var x0=point.x;var y0=point.y;var x1=segment.x1;var y1=segment.y1;var x2=segment.x2;var y2=segment.y2;var dx=x2-x1;var dy=y2-y1;var along=(dx==0&&dy==0)?0:((dx*(x0-x1))+(dy*(y0-y1)))/(Math.pow(dx,2)+Math.pow(dy,2));var x,y;if(along<=0.0){x=x1;y=y1;}else if(along>=1.0){x=x2;y=y2;}else{x=x1+along*dx;y=y1+along*dy;}
+return{distance:Math.pow(x-x0,2)+Math.pow(y-y0,2),x:x,y:y,along:along};};OpenLayers.Geometry.Collection=OpenLayers.Class(OpenLayers.Geometry,{components:null,componentTypes:null,initialize:function(components){OpenLayers.Geometry.prototype.initialize.apply(this,arguments);this.components=[];if(components!=null){this.addComponents(components);}},destroy:function(){this.components.length=0;this.components=null;OpenLayers.Geometry.prototype.destroy.apply(this,arguments);},clone:function(){var Constructor=OpenLayers.Util.getConstructor(this.CLASS_NAME);var geometry=new Constructor();for(var i=0,len=this.components.length;i<len;i++){geometry.addComponent(this.components[i].clone());}
+OpenLayers.Util.applyDefaults(geometry,this);return geometry;},getComponentsString:function(){var strings=[];for(var i=0,len=this.components.length;i<len;i++){strings.push(this.components[i].toShortString());}
+return strings.join(",");},calculateBounds:function(){this.bounds=null;var bounds=new OpenLayers.Bounds();var components=this.components;if(components){for(var i=0,len=components.length;i<len;i++){bounds.extend(components[i].getBounds());}}
+if(bounds.left!=null&&bounds.bottom!=null&&bounds.right!=null&&bounds.top!=null){this.setBounds(bounds);}},addComponents:function(components){if(!(OpenLayers.Util.isArray(components))){components=[components];}
+for(var i=0,len=components.length;i<len;i++){this.addComponent(components[i]);}},addComponent:function(component,index){var added=false;if(component){if(this.componentTypes==null||(OpenLayers.Util.indexOf(this.componentTypes,component.CLASS_NAME)>-1)){if(index!=null&&(index<this.components.length)){var components1=this.components.slice(0,index);var components2=this.components.slice(index,this.components.length);components1.push(component);this.components=components1.concat(components2);}else{this.components.push(component);}
+component.parent=this;this.clearBounds();added=true;}}
+return added;},removeComponents:function(components){var removed=false;if(!(OpenLayers.Util.isArray(components))){components=[components];}
+for(var i=components.length-1;i>=0;--i){removed=this.removeComponent(components[i])||removed;}
+return removed;},removeComponent:function(component){OpenLayers.Util.removeItem(this.components,component);this.clearBounds();return true;},getLength:function(){var length=0.0;for(var i=0,len=this.components.length;i<len;i++){length+=this.components[i].getLength();}
+return length;},getArea:function(){var area=0.0;for(var i=0,len=this.components.length;i<len;i++){area+=this.components[i].getArea();}
+return area;},getGeodesicArea:function(projection){var area=0.0;for(var i=0,len=this.components.length;i<len;i++){area+=this.components[i].getGeodesicArea(projection);}
+return area;},getCentroid:function(weighted){if(!weighted){return this.components.length&&this.components[0].getCentroid();}
+var len=this.components.length;if(!len){return false;}
+var areas=[];var centroids=[];var areaSum=0;var minArea=Number.MAX_VALUE;var component;for(var i=0;i<len;++i){component=this.components[i];var area=component.getArea();var centroid=component.getCentroid(true);if(isNaN(area)||isNaN(centroid.x)||isNaN(centroid.y)){continue;}
+areas.push(area);areaSum+=area;minArea=(area<minArea&&area>0)?area:minArea;centroids.push(centroid);}
+len=areas.length;if(areaSum===0){for(var i=0;i<len;++i){areas[i]=1;}
+areaSum=areas.length;}else{for(var i=0;i<len;++i){areas[i]/=minArea;}
+areaSum/=minArea;}
+var xSum=0,ySum=0,centroid,area;for(var i=0;i<len;++i){centroid=centroids[i];area=areas[i];xSum+=centroid.x*area;ySum+=centroid.y*area;}
+return new OpenLayers.Geometry.Point(xSum/areaSum,ySum/areaSum);},getGeodesicLength:function(projection){var length=0.0;for(var i=0,len=this.components.length;i<len;i++){length+=this.components[i].getGeodesicLength(projection);}
+return length;},move:function(x,y){for(var i=0,len=this.components.length;i<len;i++){this.components[i].move(x,y);}},rotate:function(angle,origin){for(var i=0,len=this.components.length;i<len;++i){this.components[i].rotate(angle,origin);}},resize:function(scale,origin,ratio){for(var i=0;i<this.components.length;++i){this.components[i].resize(scale,origin,ratio);}
+return this;},distanceTo:function(geometry,options){var edge=!(options&&options.edge===false);var details=edge&&options&&options.details;var result,best,distance;var min=Number.POSITIVE_INFINITY;for(var i=0,len=this.components.length;i<len;++i){result=this.components[i].distanceTo(geometry,options);distance=details?result.distance:result;if(distance<min){min=distance;best=result;if(min==0){break;}}}
+return best;},equals:function(geometry){var equivalent=true;if(!geometry||!geometry.CLASS_NAME||(this.CLASS_NAME!=geometry.CLASS_NAME)){equivalent=false;}else if(!(OpenLayers.Util.isArray(geometry.components))||(geometry.components.length!=this.components.length)){equivalent=false;}else{for(var i=0,len=this.components.length;i<len;++i){if(!this.components[i].equals(geometry.components[i])){equivalent=false;break;}}}
+return equivalent;},transform:function(source,dest){if(source&&dest){for(var i=0,len=this.components.length;i<len;i++){var component=this.components[i];component.transform(source,dest);}
+this.bounds=null;}
+return this;},intersects:function(geometry){var intersect=false;for(var i=0,len=this.components.length;i<len;++i){intersect=geometry.intersects(this.components[i]);if(intersect){break;}}
+return intersect;},getVertices:function(nodes){var vertices=[];for(var i=0,len=this.components.length;i<len;++i){Array.prototype.push.apply(vertices,this.components[i].getVertices(nodes));}
+return vertices;},CLASS_NAME:"OpenLayers.Geometry.Collection"});OpenLayers.Geometry.Point=OpenLayers.Class(OpenLayers.Geometry,{x:null,y:null,initialize:function(x,y){OpenLayers.Geometry.prototype.initialize.apply(this,arguments);this.x=parseFloat(x);this.y=parseFloat(y);},clone:function(obj){if(obj==null){obj=new OpenLayers.Geometry.Point(this.x,this.y);}
+OpenLayers.Util.applyDefaults(obj,this);return obj;},calculateBounds:function(){this.bounds=new OpenLayers.Bounds(this.x,this.y,this.x,this.y);},distanceTo:function(geometry,options){var edge=!(options&&options.edge===false);var details=edge&&options&&options.details;var distance,x0,y0,x1,y1,result;if(geometry instanceof OpenLayers.Geometry.Point){x0=this.x;y0=this.y;x1=geometry.x;y1=geometry.y;distance=Math.sqrt(Math.pow(x0-x1,2)+Math.pow(y0-y1,2));result=!details?distance:{x0:x0,y0:y0,x1:x1,y1:y1,distance:distance};}else{result=geometry.distanceTo(this,options);if(details){result={x0:result.x1,y0:result.y1,x1:result.x0,y1:result.y0,distance:result.distance};}}
+return result;},equals:function(geom){var equals=false;if(geom!=null){equals=((this.x==geom.x&&this.y==geom.y)||(isNaN(this.x)&&isNaN(this.y)&&isNaN(geom.x)&&isNaN(geom.y)));}
+return equals;},toShortString:function(){return(this.x+", "+this.y);},move:function(x,y){this.x=this.x+x;this.y=this.y+y;this.clearBounds();},rotate:function(angle,origin){angle*=Math.PI/180;var radius=this.distanceTo(origin);var theta=angle+Math.atan2(this.y-origin.y,this.x-origin.x);this.x=origin.x+(radius*Math.cos(theta));this.y=origin.y+(radius*Math.sin(theta));this.clearBounds();},getCentroid:function(){return new OpenLayers.Geometry.Point(this.x,this.y);},resize:function(scale,origin,ratio){ratio=(ratio==undefined)?1:ratio;this.x=origin.x+(scale*ratio*(this.x-origin.x));this.y=origin.y+(scale*(this.y-origin.y));this.clearBounds();return this;},intersects:function(geometry){var intersect=false;if(geometry.CLASS_NAME=="OpenLayers.Geometry.Point"){intersect=this.equals(geometry);}else{intersect=geometry.intersects(this);}
+return intersect;},transform:function(source,dest){if((source&&dest)){OpenLayers.Projection.transform(this,source,dest);this.bounds=null;}
+return this;},getVertices:function(nodes){return[this];},CLASS_NAME:"OpenLayers.Geometry.Point"});OpenLayers.Geometry.MultiPoint=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.Point"],addPoint:function(point,index){this.addComponent(point,index);},removePoint:function(point){this.removeComponent(point);},CLASS_NAME:"OpenLayers.Geometry.MultiPoint"});OpenLayers.Geometry.Curve=OpenLayers.Class(OpenLayers.Geometry.MultiPoint,{componentTypes:["OpenLayers.Geometry.Point"],getLength:function(){var length=0.0;if(this.components&&(this.components.length>1)){for(var i=1,len=this.components.length;i<len;i++){length+=this.components[i-1].distanceTo(this.components[i]);}}
+return length;},getGeodesicLength:function(projection){var geom=this;if(projection){var gg=new OpenLayers.Projection("EPSG:4326");if(!gg.equals(projection)){geom=this.clone().transform(projection,gg);}}
+var length=0.0;if(geom.components&&(geom.components.length>1)){var p1,p2;for(var i=1,len=geom.components.length;i<len;i++){p1=geom.components[i-1];p2=geom.components[i];length+=OpenLayers.Util.distVincenty({lon:p1.x,lat:p1.y},{lon:p2.x,lat:p2.y});}}
+return length*1000;},CLASS_NAME:"OpenLayers.Geometry.Curve"});OpenLayers.Geometry.LineString=OpenLayers.Class(OpenLayers.Geometry.Curve,{removeComponent:function(point){var removed=this.components&&(this.components.length>2);if(removed){OpenLayers.Geometry.Collection.prototype.removeComponent.apply(this,arguments);}
+return removed;},intersects:function(geometry){var intersect=false;var type=geometry.CLASS_NAME;if(type=="OpenLayers.Geometry.LineString"||type=="OpenLayers.Geometry.LinearRing"||type=="OpenLayers.Geometry.Point"){var segs1=this.getSortedSegments();var segs2;if(type=="OpenLayers.Geometry.Point"){segs2=[{x1:geometry.x,y1:geometry.y,x2:geometry.x,y2:geometry.y}];}else{segs2=geometry.getSortedSegments();}
+var seg1,seg1x1,seg1x2,seg1y1,seg1y2,seg2,seg2y1,seg2y2;outer:for(var i=0,len=segs1.length;i<len;++i){seg1=segs1[i];seg1x1=seg1.x1;seg1x2=seg1.x2;seg1y1=seg1.y1;seg1y2=seg1.y2;inner:for(var j=0,jlen=segs2.length;j<jlen;++j){seg2=segs2[j];if(seg2.x1>seg1x2){break;}
+if(seg2.x2<seg1x1){continue;}
+seg2y1=seg2.y1;seg2y2=seg2.y2;if(Math.min(seg2y1,seg2y2)>Math.max(seg1y1,seg1y2)){continue;}
+if(Math.max(seg2y1,seg2y2)<Math.min(seg1y1,seg1y2)){continue;}
+if(OpenLayers.Geometry.segmentsIntersect(seg1,seg2)){intersect=true;break outer;}}}}else{intersect=geometry.intersects(this);}
+return intersect;},getSortedSegments:function(){var numSeg=this.components.length-1;var segments=new Array(numSeg),point1,point2;for(var i=0;i<numSeg;++i){point1=this.components[i];point2=this.components[i+1];if(point1.x<point2.x){segments[i]={x1:point1.x,y1:point1.y,x2:point2.x,y2:point2.y};}else{segments[i]={x1:point2.x,y1:point2.y,x2:point1.x,y2:point1.y};}}
+function byX1(seg1,seg2){return seg1.x1-seg2.x1;}
+return segments.sort(byX1);},splitWithSegment:function(seg,options){var edge=!(options&&options.edge===false);var tolerance=options&&options.tolerance;var lines=[];var verts=this.getVertices();var points=[];var intersections=[];var split=false;var vert1,vert2,point;var node,vertex,target;var interOptions={point:true,tolerance:tolerance};var result=null;for(var i=0,stop=verts.length-2;i<=stop;++i){vert1=verts[i];points.push(vert1.clone());vert2=verts[i+1];target={x1:vert1.x,y1:vert1.y,x2:vert2.x,y2:vert2.y};point=OpenLayers.Geometry.segmentsIntersect(seg,target,interOptions);if(point instanceof OpenLayers.Geometry.Point){if((point.x===seg.x1&&point.y===seg.y1)||(point.x===seg.x2&&point.y===seg.y2)||point.equals(vert1)||point.equals(vert2)){vertex=true;}else{vertex=false;}
+if(vertex||edge){if(!point.equals(intersections[intersections.length-1])){intersections.push(point.clone());}
+if(i===0){if(point.equals(vert1)){continue;}}
+if(point.equals(vert2)){continue;}
+split=true;if(!point.equals(vert1)){points.push(point);}
+lines.push(new OpenLayers.Geometry.LineString(points));points=[point.clone()];}}}
+if(split){points.push(vert2.clone());lines.push(new OpenLayers.Geometry.LineString(points));}
+if(intersections.length>0){var xDir=seg.x1<seg.x2?1:-1;var yDir=seg.y1<seg.y2?1:-1;result={lines:lines,points:intersections.sort(function(p1,p2){return(xDir*p1.x-xDir*p2.x)||(yDir*p1.y-yDir*p2.y);})};}
+return result;},split:function(target,options){var results=null;var mutual=options&&options.mutual;var sourceSplit,targetSplit,sourceParts,targetParts;if(target instanceof OpenLayers.Geometry.LineString){var verts=this.getVertices();var vert1,vert2,seg,splits,lines,point;var points=[];sourceParts=[];for(var i=0,stop=verts.length-2;i<=stop;++i){vert1=verts[i];vert2=verts[i+1];seg={x1:vert1.x,y1:vert1.y,x2:vert2.x,y2:vert2.y};targetParts=targetParts||[target];if(mutual){points.push(vert1.clone());}
+for(var j=0;j<targetParts.length;++j){splits=targetParts[j].splitWithSegment(seg,options);if(splits){lines=splits.lines;if(lines.length>0){lines.unshift(j,1);Array.prototype.splice.apply(targetParts,lines);j+=lines.length-2;}
+if(mutual){for(var k=0,len=splits.points.length;k<len;++k){point=splits.points[k];if(!point.equals(vert1)){points.push(point);sourceParts.push(new OpenLayers.Geometry.LineString(points));if(point.equals(vert2)){points=[];}else{points=[point.clone()];}}}}}}}
+if(mutual&&sourceParts.length>0&&points.length>0){points.push(vert2.clone());sourceParts.push(new OpenLayers.Geometry.LineString(points));}}else{results=target.splitWith(this,options);}
+if(targetParts&&targetParts.length>1){targetSplit=true;}else{targetParts=[];}
+if(sourceParts&&sourceParts.length>1){sourceSplit=true;}else{sourceParts=[];}
+if(targetSplit||sourceSplit){if(mutual){results=[sourceParts,targetParts];}else{results=targetParts;}}
+return results;},splitWith:function(geometry,options){return geometry.split(this,options);},getVertices:function(nodes){var vertices;if(nodes===true){vertices=[this.components[0],this.components[this.components.length-1]];}else if(nodes===false){vertices=this.components.slice(1,this.components.length-1);}else{vertices=this.components.slice();}
+return vertices;},distanceTo:function(geometry,options){var edge=!(options&&options.edge===false);var details=edge&&options&&options.details;var result,best={};var min=Number.POSITIVE_INFINITY;if(geometry instanceof OpenLayers.Geometry.Point){var segs=this.getSortedSegments();var x=geometry.x;var y=geometry.y;var seg;for(var i=0,len=segs.length;i<len;++i){seg=segs[i];result=OpenLayers.Geometry.distanceToSegment(geometry,seg);if(result.distance<min){min=result.distance;if(details){best={distance:min,x0:result.x,y0:result.y,x1:x,y1:y,index:i,indexDistance:new OpenLayers.Geometry.Point(seg.x1,seg.y1).distanceTo(geometry)};}else{best=min;}
+if(min===0){break;}}}}else if(geometry instanceof OpenLayers.Geometry.LineString){var segs0=this.getSortedSegments();var segs1=geometry.getSortedSegments();var seg0,seg1,intersection,x0,y0;var len1=segs1.length;var interOptions={point:true};outer:for(var i=0,len=segs0.length;i<len;++i){seg0=segs0[i];x0=seg0.x1;y0=seg0.y1;for(var j=0;j<len1;++j){seg1=segs1[j];intersection=OpenLayers.Geometry.segmentsIntersect(seg0,seg1,interOptions);if(intersection){min=0;best={distance:0,x0:intersection.x,y0:intersection.y,x1:intersection.x,y1:intersection.y};break outer;}else{result=OpenLayers.Geometry.distanceToSegment({x:x0,y:y0},seg1);if(result.distance<min){min=result.distance;best={distance:min,x0:x0,y0:y0,x1:result.x,y1:result.y};}}}}
+if(!details){best=best.distance;}
+if(min!==0){if(seg0){result=geometry.distanceTo(new OpenLayers.Geometry.Point(seg0.x2,seg0.y2),options);var dist=details?result.distance:result;if(dist<min){if(details){best={distance:min,x0:result.x1,y0:result.y1,x1:result.x0,y1:result.y0};}else{best=dist;}}}}}else{best=geometry.distanceTo(this,options);if(details){best={distance:best.distance,x0:best.x1,y0:best.y1,x1:best.x0,y1:best.y0};}}
+return best;},simplify:function(tolerance){if(this&&this!==null){var points=this.getVertices();if(points.length<3){return this;}
+var compareNumbers=function(a,b){return(a-b);};var douglasPeuckerReduction=function(points,firstPoint,lastPoint,tolerance){var maxDistance=0;var indexFarthest=0;for(var index=firstPoint,distance;index<lastPoint;index++){distance=perpendicularDistance(points[firstPoint],points[lastPoint],points[index]);if(distance>maxDistance){maxDistance=distance;indexFarthest=index;}}
+if(maxDistance>tolerance&&indexFarthest!=firstPoint){pointIndexsToKeep.push(indexFarthest);douglasPeuckerReduction(points,firstPoint,indexFarthest,tolerance);douglasPeuckerReduction(points,indexFarthest,lastPoint,tolerance);}};var perpendicularDistance=function(point1,point2,point){var area=Math.abs(0.5*(point1.x*point2.y+point2.x*point.y+point.x*point1.y-point2.x*point1.y-point.x*point2.y-point1.x*point.y));var bottom=Math.sqrt(Math.pow(point1.x-point2.x,2)+Math.pow(point1.y-point2.y,2));var height=area/bottom*2;return height;};var firstPoint=0;var lastPoint=points.length-1;var pointIndexsToKeep=[];pointIndexsToKeep.push(firstPoint);pointIndexsToKeep.push(lastPoint);while(points[firstPoint].equals(points[lastPoint])){lastPoint--;pointIndexsToKeep.push(lastPoint);}
+douglasPeuckerReduction(points,firstPoint,lastPoint,tolerance);var returnPoints=[];pointIndexsToKeep.sort(compareNumbers);for(var index=0;index<pointIndexsToKeep.length;index++){returnPoints.push(points[pointIndexsToKeep[index]]);}
+return new OpenLayers.Geometry.LineString(returnPoints);}
+else{return this;}},CLASS_NAME:"OpenLayers.Geometry.LineString"});OpenLayers.Geometry.LineString.geodesic=function(interpolate,transform,squaredTolerance){var components=[];var geoA=interpolate(0);var geoB=interpolate(1);var a=transform(geoA);var b=transform(geoB);var geoStack=[geoB,geoA];var stack=[b,a];var fractionStack=[1,0];var fractions={};var maxIterations=1e5;var geoM,m,fracA,fracB,fracM,key;while(--maxIterations>0&&fractionStack.length>0){fracA=fractionStack.pop();geoA=geoStack.pop();a=stack.pop();key=fracA.toString();if(!(key in fractions)){components.push(a);fractions[key]=true;}
+fracB=fractionStack.pop();geoB=geoStack.pop();b=stack.pop();fracM=(fracA+fracB)/2;geoM=interpolate(fracM);m=transform(geoM);if(OpenLayers.Geometry.distanceSquaredToSegment(m,{x1:a.x,y1:a.y,x2:b.x,y2:b.y}).distance<squaredTolerance){components.push(b);key=fracB.toString();fractions[key]=true;}else{fractionStack.push(fracB,fracM,fracM,fracA);stack.push(b,m,m,a);geoStack.push(geoB,geoM,geoM,geoA);}}
+return new OpenLayers.Geometry.LineString(components);};OpenLayers.Geometry.LineString.geodesicMeridian=function(lon,lat1,lat2,projection,squaredTolerance){var epsg4326Projection=new OpenLayers.Projection('EPSG:4326');return OpenLayers.Geometry.LineString.geodesic(function(frac){return new OpenLayers.Geometry.Point(lon,lat1+((lat2-lat1)*frac));},function(point){return point.transform(epsg4326Projection,projection);},squaredTolerance);};OpenLayers.Geometry.LineString.geodesicParallel=function(lat,lon1,lon2,projection,squaredTolerance){var epsg4326Projection=new OpenLayers.Projection('EPSG:4326');return OpenLayers.Geometry.LineString.geodesic(function(frac){return new OpenLayers.Geometry.Point(lon1+((lon2-lon1)*frac),lat);},function(point){return point.transform(epsg4326Projection,projection);},squaredTolerance);};OpenLayers.Geometry.LinearRing=OpenLayers.Class(OpenLayers.Geometry.LineString,{componentTypes:["OpenLayers.Geometry.Point"],addComponent:function(point,index){var added=false;var lastPoint=this.components.pop();if(index!=null||!point.equals(lastPoint)){added=OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,arguments);}
+var firstPoint=this.components[0];OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,[firstPoint]);return added;},removeComponent:function(point){var removed=this.components&&(this.components.length>3);if(removed){this.components.pop();OpenLayers.Geometry.Collection.prototype.removeComponent.apply(this,arguments);var firstPoint=this.components[0];OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,[firstPoint]);}
+return removed;},move:function(x,y){for(var i=0,len=this.components.length;i<len-1;i++){this.components[i].move(x,y);}},rotate:function(angle,origin){for(var i=0,len=this.components.length;i<len-1;++i){this.components[i].rotate(angle,origin);}},resize:function(scale,origin,ratio){for(var i=0,len=this.components.length;i<len-1;++i){this.components[i].resize(scale,origin,ratio);}
+return this;},transform:function(source,dest){if(source&&dest){for(var i=0,len=this.components.length;i<len-1;i++){var component=this.components[i];component.transform(source,dest);}
+this.bounds=null;}
+return this;},getCentroid:function(){if(this.components){var len=this.components.length;if(len>0&&len<=2){return this.components[0].clone();}else if(len>2){var sumX=0.0;var sumY=0.0;var x0=this.components[0].x;var y0=this.components[0].y;var area=-1*this.getArea();if(area!=0){for(var i=0;i<len-1;i++){var b=this.components[i];var c=this.components[i+1];sumX+=(b.x+c.x-2*x0)*((b.x-x0)*(c.y-y0)-(c.x-x0)*(b.y-y0));sumY+=(b.y+c.y-2*y0)*((b.x-x0)*(c.y-y0)-(c.x-x0)*(b.y-y0));}
+var x=x0+sumX/(6*area);var y=y0+sumY/(6*area);}else{for(var i=0;i<len-1;i++){sumX+=this.components[i].x;sumY+=this.components[i].y;}
+var x=sumX/(len-1);var y=sumY/(len-1);}
+return new OpenLayers.Geometry.Point(x,y);}else{return null;}}},getArea:function(){var area=0.0;if(this.components&&(this.components.length>2)){var sum=0.0;for(var i=0,len=this.components.length;i<len-1;i++){var b=this.components[i];var c=this.components[i+1];sum+=(b.x+c.x)*(c.y-b.y);}
+area=-sum/2.0;}
+return area;},getGeodesicArea:function(projection){var ring=this;if(projection){var gg=new OpenLayers.Projection("EPSG:4326");if(!gg.equals(projection)){ring=this.clone().transform(projection,gg);}}
+var area=0.0;var len=ring.components&&ring.components.length;if(len>2){var p1,p2;for(var i=0;i<len-1;i++){p1=ring.components[i];p2=ring.components[i+1];area+=OpenLayers.Util.rad(p2.x-p1.x)*(2+Math.sin(OpenLayers.Util.rad(p1.y))+
+Math.sin(OpenLayers.Util.rad(p2.y)));}
+area=area*OpenLayers.Util.VincentyConstants.a*OpenLayers.Util.VincentyConstants.a/2.0;}
+return area;},containsPoint:function(point){var approx=OpenLayers.Number.limitSigDigs;var digs=14;var px=approx(point.x,digs);var py=approx(point.y,digs);function getX(y,x1,y1,x2,y2){return(y-y2)*((x2-x1)/(y2-y1))+x2;}
+var numSeg=this.components.length-1;var start,end,x1,y1,x2,y2,cx,cy;var crosses=0;for(var i=0;i<numSeg;++i){start=this.components[i];x1=approx(start.x,digs);y1=approx(start.y,digs);end=this.components[i+1];x2=approx(end.x,digs);y2=approx(end.y,digs);if(y1==y2){if(py==y1){if(x1<=x2&&(px>=x1&&px<=x2)||x1>=x2&&(px<=x1&&px>=x2)){crosses=-1;break;}}
+continue;}
+cx=approx(getX(py,x1,y1,x2,y2),digs);if(cx==px){if(y1<y2&&(py>=y1&&py<=y2)||y1>y2&&(py<=y1&&py>=y2)){crosses=-1;break;}}
+if(cx<=px){continue;}
+if(x1!=x2&&(cx<Math.min(x1,x2)||cx>Math.max(x1,x2))){continue;}
+if(y1<y2&&(py>=y1&&py<y2)||y1>y2&&(py<y1&&py>=y2)){++crosses;}}
+var contained=(crosses==-1)?1:!!(crosses&1);return contained;},intersects:function(geometry){var intersect=false;if(geometry.CLASS_NAME=="OpenLayers.Geometry.Point"){intersect=this.containsPoint(geometry);}else if(geometry.CLASS_NAME=="OpenLayers.Geometry.LineString"){intersect=geometry.intersects(this);}else if(geometry.CLASS_NAME=="OpenLayers.Geometry.LinearRing"){intersect=OpenLayers.Geometry.LineString.prototype.intersects.apply(this,[geometry]);}else{for(var i=0,len=geometry.components.length;i<len;++i){intersect=geometry.components[i].intersects(this);if(intersect){break;}}}
+return intersect;},getVertices:function(nodes){return(nodes===true)?[]:this.components.slice(0,this.components.length-1);},CLASS_NAME:"OpenLayers.Geometry.LinearRing"});OpenLayers.Geometry.Polygon=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.LinearRing"],getArea:function(){var area=0.0;if(this.components&&(this.components.length>0)){area+=Math.abs(this.components[0].getArea());for(var i=1,len=this.components.length;i<len;i++){area-=Math.abs(this.components[i].getArea());}}
+return area;},getGeodesicArea:function(projection){var area=0.0;if(this.components&&(this.components.length>0)){area+=Math.abs(this.components[0].getGeodesicArea(projection));for(var i=1,len=this.components.length;i<len;i++){area-=Math.abs(this.components[i].getGeodesicArea(projection));}}
+return area;},containsPoint:function(point){var numRings=this.components.length;var contained=false;if(numRings>0){contained=this.components[0].containsPoint(point);if(contained!==1){if(contained&&numRings>1){var hole;for(var i=1;i<numRings;++i){hole=this.components[i].containsPoint(point);if(hole){if(hole===1){contained=1;}else{contained=false;}
+break;}}}}}
+return contained;},intersects:function(geometry){var intersect=false;var i,len;if(geometry.CLASS_NAME=="OpenLayers.Geometry.Point"){intersect=this.containsPoint(geometry);}else if(geometry.CLASS_NAME=="OpenLayers.Geometry.LineString"||geometry.CLASS_NAME=="OpenLayers.Geometry.LinearRing"){for(i=0,len=this.components.length;i<len;++i){intersect=geometry.intersects(this.components[i]);if(intersect){break;}}
+if(!intersect){for(i=0,len=geometry.components.length;i<len;++i){intersect=this.containsPoint(geometry.components[i]);if(intersect){break;}}}}else{for(i=0,len=geometry.components.length;i<len;++i){intersect=this.intersects(geometry.components[i]);if(intersect){break;}}}
+if(!intersect&&geometry.CLASS_NAME=="OpenLayers.Geometry.Polygon"){var ring=this.components[0];for(i=0,len=ring.components.length;i<len;++i){intersect=geometry.containsPoint(ring.components[i]);if(intersect){break;}}}
+return intersect;},distanceTo:function(geometry,options){var edge=!(options&&options.edge===false);var result;if(!edge&&this.intersects(geometry)){result=0;}else{result=OpenLayers.Geometry.Collection.prototype.distanceTo.apply(this,[geometry,options]);}
+return result;},CLASS_NAME:"OpenLayers.Geometry.Polygon"});OpenLayers.Geometry.Polygon.createRegularPolygon=function(origin,radius,sides,rotation){var angle=Math.PI*((1/sides)-(1/2));if(rotation){angle+=(rotation/180)*Math.PI;}
+var rotatedAngle,x,y;var points=[];for(var i=0;i<sides;++i){rotatedAngle=angle+(i*2*Math.PI/sides);x=origin.x+(radius*Math.cos(rotatedAngle));y=origin.y+(radius*Math.sin(rotatedAngle));points.push(new OpenLayers.Geometry.Point(x,y));}
+var ring=new OpenLayers.Geometry.LinearRing(points);return new OpenLayers.Geometry.Polygon([ring]);};OpenLayers.Bounds=OpenLayers.Class({left:null,bottom:null,right:null,top:null,centerLonLat:null,initialize:function(left,bottom,right,top){if(OpenLayers.Util.isArray(left)){top=left[3];right=left[2];bottom=left[1];left=left[0];}
+if(left!=null){this.left=OpenLayers.Util.toFloat(left);}
+if(bottom!=null){this.bottom=OpenLayers.Util.toFloat(bottom);}
+if(right!=null){this.right=OpenLayers.Util.toFloat(right);}
+if(top!=null){this.top=OpenLayers.Util.toFloat(top);}},clone:function(){return new OpenLayers.Bounds(this.left,this.bottom,this.right,this.top);},equals:function(bounds){var equals=false;if(bounds!=null){equals=((this.left==bounds.left)&&(this.right==bounds.right)&&(this.top==bounds.top)&&(this.bottom==bounds.bottom));}
+return equals;},toString:function(){return[this.left,this.bottom,this.right,this.top].join(",");},toArray:function(reverseAxisOrder){if(reverseAxisOrder===true){return[this.bottom,this.left,this.top,this.right];}else{return[this.left,this.bottom,this.right,this.top];}},toBBOX:function(decimal,reverseAxisOrder){if(decimal==null){decimal=6;}
+var mult=Math.pow(10,decimal);var xmin=Math.round(this.left*mult)/mult;var ymin=Math.round(this.bottom*mult)/mult;var xmax=Math.round(this.right*mult)/mult;var ymax=Math.round(this.top*mult)/mult;if(reverseAxisOrder===true){return ymin+","+xmin+","+ymax+","+xmax;}else{return xmin+","+ymin+","+xmax+","+ymax;}},toGeometry:function(){return new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing([new OpenLayers.Geometry.Point(this.left,this.bottom),new OpenLayers.Geometry.Point(this.right,this.bottom),new OpenLayers.Geometry.Point(this.right,this.top),new OpenLayers.Geometry.Point(this.left,this.top)])]);},getWidth:function(){return(this.right-this.left);},getHeight:function(){return(this.top-this.bottom);},getSize:function(){return new OpenLayers.Size(this.getWidth(),this.getHeight());},getCenterPixel:function(){return new OpenLayers.Pixel((this.left+this.right)/2,(this.bottom+this.top)/2);},getCenterLonLat:function(){if(!this.centerLonLat){this.centerLonLat=new OpenLayers.LonLat((this.left+this.right)/2,(this.bottom+this.top)/2);}
+return this.centerLonLat;},scale:function(ratio,origin){if(origin==null){origin=this.getCenterLonLat();}
+var origx,origy;if(origin.CLASS_NAME=="OpenLayers.LonLat"){origx=origin.lon;origy=origin.lat;}else{origx=origin.x;origy=origin.y;}
+var left=(this.left-origx)*ratio+origx;var bottom=(this.bottom-origy)*ratio+origy;var right=(this.right-origx)*ratio+origx;var top=(this.top-origy)*ratio+origy;return new OpenLayers.Bounds(left,bottom,right,top);},add:function(x,y){if((x==null)||(y==null)){throw new TypeError('Bounds.add cannot receive null values');}
+return new OpenLayers.Bounds(this.left+x,this.bottom+y,this.right+x,this.top+y);},extend:function(object){if(object){switch(object.CLASS_NAME){case"OpenLayers.LonLat":this.extendXY(object.lon,object.lat);break;case"OpenLayers.Geometry.Point":this.extendXY(object.x,object.y);break;case"OpenLayers.Bounds":this.centerLonLat=null;if((this.left==null)||(object.left<this.left)){this.left=object.left;}
+if((this.bottom==null)||(object.bottom<this.bottom)){this.bottom=object.bottom;}
+if((this.right==null)||(object.right>this.right)){this.right=object.right;}
+if((this.top==null)||(object.top>this.top)){this.top=object.top;}
+break;}}},extendXY:function(x,y){this.centerLonLat=null;if((this.left==null)||(x<this.left)){this.left=x;}
+if((this.bottom==null)||(y<this.bottom)){this.bottom=y;}
+if((this.right==null)||(x>this.right)){this.right=x;}
+if((this.top==null)||(y>this.top)){this.top=y;}},containsLonLat:function(ll,options){if(typeof options==="boolean"){options={inclusive:options};}
+options=options||{};var contains=this.contains(ll.lon,ll.lat,options.inclusive),worldBounds=options.worldBounds;if(worldBounds&&!contains){var worldWidth=worldBounds.getWidth();var worldCenterX=(worldBounds.left+worldBounds.right)/2;var worldsAway=Math.round((ll.lon-worldCenterX)/worldWidth);contains=this.containsLonLat({lon:ll.lon-worldsAway*worldWidth,lat:ll.lat},{inclusive:options.inclusive});}
+return contains;},containsPixel:function(px,inclusive){return this.contains(px.x,px.y,inclusive);},contains:function(x,y,inclusive){if(inclusive==null){inclusive=true;}
+if(x==null||y==null){return false;}
+x=OpenLayers.Util.toFloat(x);y=OpenLayers.Util.toFloat(y);var contains=false;if(inclusive){contains=((x>=this.left)&&(x<=this.right)&&(y>=this.bottom)&&(y<=this.top));}else{contains=((x>this.left)&&(x<this.right)&&(y>this.bottom)&&(y<this.top));}
+return contains;},intersectsBounds:function(bounds,options){if(typeof options==="boolean"){options={inclusive:options};}
+options=options||{};if(options.worldBounds){var self=this.wrapDateLine(options.worldBounds);bounds=bounds.wrapDateLine(options.worldBounds);}else{self=this;}
+if(options.inclusive==null){options.inclusive=true;}
+var intersects=false;var mightTouch=(self.left==bounds.right||self.right==bounds.left||self.top==bounds.bottom||self.bottom==bounds.top);if(options.inclusive||!mightTouch){var inBottom=(((bounds.bottom>=self.bottom)&&(bounds.bottom<=self.top))||((self.bottom>=bounds.bottom)&&(self.bottom<=bounds.top)));var inTop=(((bounds.top>=self.bottom)&&(bounds.top<=self.top))||((self.top>bounds.bottom)&&(self.top<bounds.top)));var inLeft=(((bounds.left>=self.left)&&(bounds.left<=self.right))||((self.left>=bounds.left)&&(self.left<=bounds.right)));var inRight=(((bounds.right>=self.left)&&(bounds.right<=self.right))||((self.right>=bounds.left)&&(self.right<=bounds.right)));intersects=((inBottom||inTop)&&(inLeft||inRight));}
+if(options.worldBounds&&!intersects){var world=options.worldBounds;var width=world.getWidth();var selfCrosses=!world.containsBounds(self);var boundsCrosses=!world.containsBounds(bounds);if(selfCrosses&&!boundsCrosses){bounds=bounds.add(-width,0);intersects=self.intersectsBounds(bounds,{inclusive:options.inclusive});}else if(boundsCrosses&&!selfCrosses){self=self.add(-width,0);intersects=bounds.intersectsBounds(self,{inclusive:options.inclusive});}}
+return intersects;},containsBounds:function(bounds,partial,inclusive){if(partial==null){partial=false;}
+if(inclusive==null){inclusive=true;}
+var bottomLeft=this.contains(bounds.left,bounds.bottom,inclusive);var bottomRight=this.contains(bounds.right,bounds.bottom,inclusive);var topLeft=this.contains(bounds.left,bounds.top,inclusive);var topRight=this.contains(bounds.right,bounds.top,inclusive);return(partial)?(bottomLeft||bottomRight||topLeft||topRight):(bottomLeft&&bottomRight&&topLeft&&topRight);},determineQuadrant:function(lonlat){var quadrant="";var center=this.getCenterLonLat();quadrant+=(lonlat.lat<center.lat)?"b":"t";quadrant+=(lonlat.lon<center.lon)?"l":"r";return quadrant;},transform:function(source,dest){this.centerLonLat=null;var ll=OpenLayers.Projection.transform({'x':this.left,'y':this.bottom},source,dest);var lr=OpenLayers.Projection.transform({'x':this.right,'y':this.bottom},source,dest);var ul=OpenLayers.Projection.transform({'x':this.left,'y':this.top},source,dest);var ur=OpenLayers.Projection.transform({'x':this.right,'y':this.top},source,dest);this.left=Math.min(ll.x,ul.x);this.bottom=Math.min(ll.y,lr.y);this.right=Math.max(lr.x,ur.x);this.top=Math.max(ul.y,ur.y);return this;},wrapDateLine:function(maxExtent,options){options=options||{};var leftTolerance=options.leftTolerance||0;var rightTolerance=options.rightTolerance||0;var newBounds=this.clone();if(maxExtent){var width=maxExtent.getWidth();while(newBounds.left<maxExtent.left&&newBounds.right-rightTolerance<=maxExtent.left){newBounds=newBounds.add(width,0);}
+while(newBounds.left+leftTolerance>=maxExtent.right&&newBounds.right>maxExtent.right){newBounds=newBounds.add(-width,0);}
+var newLeft=newBounds.left+leftTolerance;if(newLeft<maxExtent.right&&newLeft>maxExtent.left&&newBounds.right-rightTolerance>maxExtent.right){newBounds=newBounds.add(-width,0);}}
+return newBounds;},CLASS_NAME:"OpenLayers.Bounds"});OpenLayers.Bounds.fromString=function(str,reverseAxisOrder){var bounds=str.split(",");return OpenLayers.Bounds.fromArray(bounds,reverseAxisOrder);};OpenLayers.Bounds.fromArray=function(bbox,reverseAxisOrder){return reverseAxisOrder===true?new OpenLayers.Bounds(bbox[1],bbox[0],bbox[3],bbox[2]):new OpenLayers.Bounds(bbox[0],bbox[1],bbox[2],bbox[3]);};OpenLayers.Bounds.fromSize=function(size){return new OpenLayers.Bounds(0,size.h,size.w,0);};OpenLayers.Bounds.oppositeQuadrant=function(quadrant){var opp="";opp+=(quadrant.charAt(0)=='t')?'b':'t';opp+=(quadrant.charAt(1)=='l')?'r':'l';return opp;};OpenLayers.String={startsWith:function(str,sub){return(str.indexOf(sub)==0);},contains:function(str,sub){return(str.indexOf(sub)!=-1);},trim:function(str){return str.replace(/^\s\s*/,'').replace(/\s\s*$/,'');},camelize:function(str){var oStringList=str.split('-');var camelizedString=oStringList[0];for(var i=1,len=oStringList.length;i<len;i++){var s=oStringList[i];camelizedString+=s.charAt(0).toUpperCase()+s.substring(1);}
+return camelizedString;},format:function(template,context,args){if(!context){context=window;}
+var replacer=function(str,match){var replacement;var subs=match.split(/\.+/);for(var i=0;i<subs.length;i++){if(i==0){replacement=context;}
+if(replacement===undefined){break;}
+replacement=replacement[subs[i]];}
+if(typeof replacement=="function"){replacement=args?replacement.apply(null,args):replacement();}
+if(typeof replacement=='undefined'){return'undefined';}else{return replacement;}};return template.replace(OpenLayers.String.tokenRegEx,replacer);},tokenRegEx:/\$\{([\w.]+?)\}/g,numberRegEx:/^([+-]?)(?=\d|\.\d)\d*(\.\d*)?([Ee]([+-]?\d+))?$/,isNumeric:function(value){return OpenLayers.String.numberRegEx.test(value);},numericIf:function(value,trimWhitespace){var originalValue=value;if(trimWhitespace===true&&value!=null&&value.replace){value=value.replace(/^\s*|\s*$/g,"");}
+return OpenLayers.String.isNumeric(value)?parseFloat(value):originalValue;}};OpenLayers.Number={decimalSeparator:".",thousandsSeparator:",",limitSigDigs:function(num,sig){var fig=0;if(sig>0){fig=parseFloat(num.toPrecision(sig));}
+return fig;},format:function(num,dec,tsep,dsep){dec=(typeof dec!="undefined")?dec:0;tsep=(typeof tsep!="undefined")?tsep:OpenLayers.Number.thousandsSeparator;dsep=(typeof dsep!="undefined")?dsep:OpenLayers.Number.decimalSeparator;if(dec!=null){num=parseFloat(num.toFixed(dec));}
+var parts=num.toString().split(".");if(parts.length==1&&dec==null){dec=0;}
+var integer=parts[0];if(tsep){var thousands=/(-?[0-9]+)([0-9]{3})/;while(thousands.test(integer)){integer=integer.replace(thousands,"$1"+tsep+"$2");}}
+var str;if(dec==0){str=integer;}else{var rem=parts.length>1?parts[1]:"0";if(dec!=null){rem=rem+new Array(dec-rem.length+1).join("0");}
+str=integer+dsep+rem;}
+return str;},zeroPad:function(num,len,radix){var str=num.toString(radix||10);while(str.length<len){str="0"+str;}
+return str;}};OpenLayers.Function={bind:function(func,object){var args=Array.prototype.slice.call(arguments,2);return function(){var newArgs=args.concat(Array.prototype.slice.call(arguments,0));return func.apply(object,newArgs);};},bindAsEventListener:function(func,object){return function(event){return func.call(object,event||window.event);};},False:function(){return false;},True:function(){return true;},Void:function(){}};OpenLayers.Array={filter:function(array,callback,caller){var selected=[];if(Array.prototype.filter){selected=array.filter(callback,caller);}else{var len=array.length;if(typeof callback!="function"){throw new TypeError();}
+for(var i=0;i<len;i++){if(i in array){var val=array[i];if(callback.call(caller,val,i,array)){selected.push(val);}}}}
+return selected;}};OpenLayers.Size=OpenLayers.Class({w:0.0,h:0.0,initialize:function(w,h){this.w=parseFloat(w);this.h=parseFloat(h);},toString:function(){return("w="+this.w+",h="+this.h);},clone:function(){return new OpenLayers.Size(this.w,this.h);},equals:function(sz){var equals=false;if(sz!=null){equals=((this.w==sz.w&&this.h==sz.h)||(isNaN(this.w)&&isNaN(this.h)&&isNaN(sz.w)&&isNaN(sz.h)));}
+return equals;},CLASS_NAME:"OpenLayers.Size"});OpenLayers.Element={visible:function(element){return OpenLayers.Util.getElement(element).style.display!='none';},toggle:function(){for(var i=0,len=arguments.length;i<len;i++){var element=OpenLayers.Util.getElement(arguments[i]);var display=OpenLayers.Element.visible(element)?'none':'';element.style.display=display;}},remove:function(element){element=OpenLayers.Util.getElement(element);element.parentNode.removeChild(element);},getHeight:function(element){element=OpenLayers.Util.getElement(element);return element.offsetHeight;},hasClass:function(element,name){var names=element.className;return(!!names&&new RegExp("(^|\\s)"+name+"(\\s|$)").test(names));},addClass:function(element,name){if(!OpenLayers.Element.hasClass(element,name)){element.className+=(element.className?" ":"")+name;}
+return element;},removeClass:function(element,name){var names=element.className;if(names){element.className=OpenLayers.String.trim(names.replace(new RegExp("(^|\\s+)"+name+"(\\s+|$)")," "));}
+return element;},toggleClass:function(element,name){if(OpenLayers.Element.hasClass(element,name)){OpenLayers.Element.removeClass(element,name);}else{OpenLayers.Element.addClass(element,name);}
+return element;},getStyle:function(element,style){element=OpenLayers.Util.getElement(element);var value=null;if(element&&element.style){value=element.style[OpenLayers.String.camelize(style)];if(!value){if(document.defaultView&&document.defaultView.getComputedStyle){var css=document.defaultView.getComputedStyle(element,null);value=css?css.getPropertyValue(style):null;}else if(element.currentStyle){value=element.currentStyle[OpenLayers.String.camelize(style)];}}
+var positions=['left','top','right','bottom'];if(window.opera&&(OpenLayers.Util.indexOf(positions,style)!=-1)&&(OpenLayers.Element.getStyle(element,'position')=='static')){value='auto';}}
+return value=='auto'?null:value;}};OpenLayers.LonLat=OpenLayers.Class({lon:0.0,lat:0.0,initialize:function(lon,lat){if(OpenLayers.Util.isArray(lon)){lat=lon[1];lon=lon[0];}
+this.lon=OpenLayers.Util.toFloat(lon);this.lat=OpenLayers.Util.toFloat(lat);},toString:function(){return("lon="+this.lon+",lat="+this.lat);},toShortString:function(){return(this.lon+", "+this.lat);},clone:function(){return new OpenLayers.LonLat(this.lon,this.lat);},add:function(lon,lat){if((lon==null)||(lat==null)){throw new TypeError('LonLat.add cannot receive null values');}
+return new OpenLayers.LonLat(this.lon+OpenLayers.Util.toFloat(lon),this.lat+OpenLayers.Util.toFloat(lat));},equals:function(ll){var equals=false;if(ll!=null){equals=((this.lon==ll.lon&&this.lat==ll.lat)||(isNaN(this.lon)&&isNaN(this.lat)&&isNaN(ll.lon)&&isNaN(ll.lat)));}
+return equals;},transform:function(source,dest){var point=OpenLayers.Projection.transform({'x':this.lon,'y':this.lat},source,dest);this.lon=point.x;this.lat=point.y;return this;},wrapDateLine:function(maxExtent){var newLonLat=this.clone();if(maxExtent){while(newLonLat.lon<maxExtent.left){newLonLat.lon+=maxExtent.getWidth();}
+while(newLonLat.lon>maxExtent.right){newLonLat.lon-=maxExtent.getWidth();}}
+return newLonLat;},CLASS_NAME:"OpenLayers.LonLat"});OpenLayers.LonLat.fromString=function(str){var pair=str.split(",");return new OpenLayers.LonLat(pair[0],pair[1]);};OpenLayers.LonLat.fromArray=function(arr){var gotArr=OpenLayers.Util.isArray(arr),lon=gotArr&&arr[0],lat=gotArr&&arr[1];return new OpenLayers.LonLat(lon,lat);};OpenLayers.Pixel=OpenLayers.Class({x:0.0,y:0.0,initialize:function(x,y){this.x=parseFloat(x);this.y=parseFloat(y);},toString:function(){return("x="+this.x+",y="+this.y);},clone:function(){return new OpenLayers.Pixel(this.x,this.y);},equals:function(px){var equals=false;if(px!=null){equals=((this.x==px.x&&this.y==px.y)||(isNaN(this.x)&&isNaN(this.y)&&isNaN(px.x)&&isNaN(px.y)));}
+return equals;},distanceTo:function(px){return Math.sqrt(Math.pow(this.x-px.x,2)+
+Math.pow(this.y-px.y,2));},add:function(x,y){if((x==null)||(y==null)){throw new TypeError('Pixel.add cannot receive null values');}
+return new OpenLayers.Pixel(this.x+x,this.y+y);},offset:function(px){var newPx=this.clone();if(px){newPx=this.add(px.x,px.y);}
+return newPx;},CLASS_NAME:"OpenLayers.Pixel"});OpenLayers.Console={log:function(){},debug:function(){},info:function(){},warn:function(){},error:function(){},userError:function(error){alert(error);},assert:function(){},dir:function(){},dirxml:function(){},trace:function(){},group:function(){},groupEnd:function(){},time:function(){},timeEnd:function(){},profile:function(){},profileEnd:function(){},count:function(){},CLASS_NAME:"OpenLayers.Console"};(function(){var scripts=document.getElementsByTagName("script");for(var i=0,len=scripts.length;i<len;++i){if(scripts[i].src.indexOf("firebug.js")!=-1){if(console){OpenLayers.Util.extend(OpenLayers.Console,console);break;}}}})();OpenLayers.Lang={code:null,defaultCode:"en",getCode:function(){if(!OpenLayers.Lang.code){OpenLayers.Lang.setCode();}
+return OpenLayers.Lang.code;},setCode:function(code){var lang;if(!code){code=(OpenLayers.BROWSER_NAME=="msie")?navigator.userLanguage:navigator.language;}
+var parts=code.split('-');parts[0]=parts[0].toLowerCase();if(typeof OpenLayers.Lang[parts[0]]=="object"){lang=parts[0];}
+if(parts[1]){var testLang=parts[0]+'-'+parts[1].toUpperCase();if(typeof OpenLayers.Lang[testLang]=="object"){lang=testLang;}}
+if(!lang){OpenLayers.Console.warn('Failed to find OpenLayers.Lang.'+parts.join("-")+' dictionary, falling back to default language');lang=OpenLayers.Lang.defaultCode;}
+OpenLayers.Lang.code=lang;},translate:function(key,context){var dictionary=OpenLayers.Lang[OpenLayers.Lang.getCode()];var message=dictionary&&dictionary[key];if(!message){message=key;}
+if(context){message=OpenLayers.String.format(message,context);}
+return message;}};OpenLayers.i18n=OpenLayers.Lang.translate;OpenLayers.Util=OpenLayers.Util||{};OpenLayers.Util.getElement=function(){var elements=[];for(var i=0,len=arguments.length;i<len;i++){var element=arguments[i];if(typeof element=='string'){element=document.getElementById(element);}
+if(arguments.length==1){return element;}
+elements.push(element);}
+return elements;};OpenLayers.Util.isElement=function(o){return!!(o&&o.nodeType===1);};OpenLayers.Util.isArray=function(a){return(Object.prototype.toString.call(a)==='[object Array]');};OpenLayers.Util.removeItem=function(array,item){for(var i=array.length-1;i>=0;i--){if(array[i]==item){array.splice(i,1);}}
+return array;};OpenLayers.Util.indexOf=function(array,obj){if(typeof array.indexOf=="function"){return array.indexOf(obj);}else{for(var i=0,len=array.length;i<len;i++){if(array[i]==obj){return i;}}
+return-1;}};OpenLayers.Util.dotless=/\./g;OpenLayers.Util.modifyDOMElement=function(element,id,px,sz,position,border,overflow,opacity){if(id){element.id=id.replace(OpenLayers.Util.dotless,"_");}
+if(px){element.style.left=px.x+"px";element.style.top=px.y+"px";}
+if(sz){element.style.width=sz.w+"px";element.style.height=sz.h+"px";}
+if(position){element.style.position=position;}
+if(border){element.style.border=border;}
+if(overflow){element.style.overflow=overflow;}
+if(parseFloat(opacity)>=0.0&&parseFloat(opacity)<1.0){element.style.filter='alpha(opacity='+(opacity*100)+')';element.style.opacity=opacity;}else if(parseFloat(opacity)==1.0){element.style.filter='';element.style.opacity='';}};OpenLayers.Util.createDiv=function(id,px,sz,imgURL,position,border,overflow,opacity){var dom=document.createElement('div');if(imgURL){dom.style.backgroundImage='url('+imgURL+')';}
+if(!id){id=OpenLayers.Util.createUniqueID("OpenLayersDiv");}
+if(!position){position="absolute";}
+OpenLayers.Util.modifyDOMElement(dom,id,px,sz,position,border,overflow,opacity);return dom;};OpenLayers.Util.createImage=function(id,px,sz,imgURL,position,border,opacity,delayDisplay){var image=document.createElement("img");if(!id){id=OpenLayers.Util.createUniqueID("OpenLayersDiv");}
+if(!position){position="relative";}
+OpenLayers.Util.modifyDOMElement(image,id,px,sz,position,border,null,opacity);if(delayDisplay){image.style.display="none";function display(){image.style.display="";OpenLayers.Event.stopObservingElement(image);}
+OpenLayers.Event.observe(image,"load",display);OpenLayers.Event.observe(image,"error",display);}
+image.style.alt=id;image.galleryImg="no";if(imgURL){image.src=imgURL;}
+return image;};OpenLayers.IMAGE_RELOAD_ATTEMPTS=0;OpenLayers.Util.alphaHackNeeded=null;OpenLayers.Util.alphaHack=function(){if(OpenLayers.Util.alphaHackNeeded==null){var arVersion=navigator.appVersion.split("MSIE");var version=parseFloat(arVersion[1]);var filter=false;try{filter=!!(document.body.filters);}catch(e){}
+OpenLayers.Util.alphaHackNeeded=(filter&&(version>=5.5)&&(version<7));}
+return OpenLayers.Util.alphaHackNeeded;};OpenLayers.Util.modifyAlphaImageDiv=function(div,id,px,sz,imgURL,position,border,sizing,opacity){OpenLayers.Util.modifyDOMElement(div,id,px,sz,position,null,null,opacity);var img=div.childNodes[0];if(imgURL){img.src=imgURL;}
+OpenLayers.Util.modifyDOMElement(img,div.id+"_innerImage",null,sz,"relative",border);if(OpenLayers.Util.alphaHack()){if(div.style.display!="none"){div.style.display="inline-block";}
+if(sizing==null){sizing="scale";}
+div.style.filter="progid:DXImageTransform.Microsoft"+".AlphaImageLoader(src='"+img.src+"', "+"sizingMethod='"+sizing+"')";if(parseFloat(div.style.opacity)>=0.0&&parseFloat(div.style.opacity)<1.0){div.style.filter+=" alpha(opacity="+div.style.opacity*100+")";}
+img.style.filter="alpha(opacity=0)";}};OpenLayers.Util.createAlphaImageDiv=function(id,px,sz,imgURL,position,border,sizing,opacity,delayDisplay){var div=OpenLayers.Util.createDiv();var img=OpenLayers.Util.createImage(null,null,null,null,null,null,null,delayDisplay);img.className="olAlphaImg";div.appendChild(img);OpenLayers.Util.modifyAlphaImageDiv(div,id,px,sz,imgURL,position,border,sizing,opacity);return div;};OpenLayers.Util.upperCaseObject=function(object){var uObject={};for(var key in object){uObject[key.toUpperCase()]=object[key];}
+return uObject;};OpenLayers.Util.applyDefaults=function(to,from){to=to||{};var fromIsEvt=typeof window.Event=="function"&&from instanceof window.Event;for(var key in from){if(to[key]===undefined||(!fromIsEvt&&from.hasOwnProperty&&from.hasOwnProperty(key)&&!to.hasOwnProperty(key))){to[key]=from[key];}}
+if(!fromIsEvt&&from&&from.hasOwnProperty&&from.hasOwnProperty('toString')&&!to.hasOwnProperty('toString')){to.toString=from.toString;}
+return to;};OpenLayers.Util.getParameterString=function(params){var paramsArray=[];for(var key in params){var value=params[key];if((value!=null)&&(typeof value!='function')){var encodedValue;if(typeof value=='object'&&value.constructor==Array){var encodedItemArray=[];var item;for(var itemIndex=0,len=value.length;itemIndex<len;itemIndex++){item=value[itemIndex];encodedItemArray.push(encodeURIComponent((item===null||item===undefined)?"":item));}
+encodedValue=encodedItemArray.join(",");}
+else{encodedValue=encodeURIComponent(value);}
+paramsArray.push(encodeURIComponent(key)+"="+encodedValue);}}
+return paramsArray.join("&");};OpenLayers.Util.urlAppend=function(url,paramStr){var newUrl=url;if(paramStr){var parts=(url+" ").split(/[?&]/);newUrl+=(parts.pop()===" "?paramStr:parts.length?"&"+paramStr:"?"+paramStr);}
+return newUrl;};OpenLayers.Util.getImagesLocation=function(){return OpenLayers.ImgPath||(OpenLayers._getScriptLocation()+"img/");};OpenLayers.Util.getImageLocation=function(image){return OpenLayers.Util.getImagesLocation()+image;};OpenLayers.Util.Try=function(){var returnValue=null;for(var i=0,len=arguments.length;i<len;i++){var lambda=arguments[i];try{returnValue=lambda();break;}catch(e){}}
+return returnValue;};OpenLayers.Util.getXmlNodeValue=function(node){var val=null;OpenLayers.Util.Try(function(){val=node.text;if(!val){val=node.textContent;}
+if(!val){val=node.firstChild.nodeValue;}},function(){val=node.textContent;});return val;};OpenLayers.Util.mouseLeft=function(evt,div){var target=(evt.relatedTarget)?evt.relatedTarget:evt.toElement;while(target!=div&&target!=null){target=target.parentNode;}
+return(target!=div);};OpenLayers.Util.DEFAULT_PRECISION=14;OpenLayers.Util.toFloat=function(number,precision){if(precision==null){precision=OpenLayers.Util.DEFAULT_PRECISION;}
+if(typeof number!=="number"){number=parseFloat(number);}
+return precision===0?number:parseFloat(number.toPrecision(precision));};OpenLayers.Util.rad=function(x){return x*Math.PI/180;};OpenLayers.Util.deg=function(x){return x*180/Math.PI;};OpenLayers.Util.VincentyConstants={a:6378137,b:6356752.3142,f:1/298.257223563};OpenLayers.Util.distVincenty=function(p1,p2){var ct=OpenLayers.Util.VincentyConstants;var a=ct.a,b=ct.b,f=ct.f;var L=OpenLayers.Util.rad(p2.lon-p1.lon);var U1=Math.atan((1-f)*Math.tan(OpenLayers.Util.rad(p1.lat)));var U2=Math.atan((1-f)*Math.tan(OpenLayers.Util.rad(p2.lat)));var sinU1=Math.sin(U1),cosU1=Math.cos(U1);var sinU2=Math.sin(U2),cosU2=Math.cos(U2);var lambda=L,lambdaP=2*Math.PI;var iterLimit=20;while(Math.abs(lambda-lambdaP)>1e-12&&--iterLimit>0){var sinLambda=Math.sin(lambda),cosLambda=Math.cos(lambda);var sinSigma=Math.sqrt((cosU2*sinLambda)*(cosU2*sinLambda)+
+(cosU1*sinU2-sinU1*cosU2*cosLambda)*(cosU1*sinU2-sinU1*cosU2*cosLambda));if(sinSigma==0){return 0;}
+var cosSigma=sinU1*sinU2+cosU1*cosU2*cosLambda;var sigma=Math.atan2(sinSigma,cosSigma);var alpha=Math.asin(cosU1*cosU2*sinLambda/sinSigma);var cosSqAlpha=Math.cos(alpha)*Math.cos(alpha);var cos2SigmaM=cosSigma-2*sinU1*sinU2/cosSqAlpha;var C=f/16*cosSqAlpha*(4+f*(4-3*cosSqAlpha));lambdaP=lambda;lambda=L+(1-C)*f*Math.sin(alpha)*(sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)));}
+if(iterLimit==0){return NaN;}
+var uSq=cosSqAlpha*(a*a-b*b)/(b*b);var A=1+uSq/16384*(4096+uSq*(-768+uSq*(320-175*uSq)));var B=uSq/1024*(256+uSq*(-128+uSq*(74-47*uSq)));var deltaSigma=B*sinSigma*(cos2SigmaM+B/4*(cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)-
+B/6*cos2SigmaM*(-3+4*sinSigma*sinSigma)*(-3+4*cos2SigmaM*cos2SigmaM)));var s=b*A*(sigma-deltaSigma);var d=s.toFixed(3)/1000;return d;};OpenLayers.Util.destinationVincenty=function(lonlat,brng,dist){var u=OpenLayers.Util;var ct=u.VincentyConstants;var a=ct.a,b=ct.b,f=ct.f;var lon1=lonlat.lon;var lat1=lonlat.lat;var s=dist;var alpha1=u.rad(brng);var sinAlpha1=Math.sin(alpha1);var cosAlpha1=Math.cos(alpha1);var tanU1=(1-f)*Math.tan(u.rad(lat1));var cosU1=1/Math.sqrt((1+tanU1*tanU1)),sinU1=tanU1*cosU1;var sigma1=Math.atan2(tanU1,cosAlpha1);var sinAlpha=cosU1*sinAlpha1;var cosSqAlpha=1-sinAlpha*sinAlpha;var uSq=cosSqAlpha*(a*a-b*b)/(b*b);var A=1+uSq/16384*(4096+uSq*(-768+uSq*(320-175*uSq)));var B=uSq/1024*(256+uSq*(-128+uSq*(74-47*uSq)));var sigma=s/(b*A),sigmaP=2*Math.PI;while(Math.abs(sigma-sigmaP)>1e-12){var cos2SigmaM=Math.cos(2*sigma1+sigma);var sinSigma=Math.sin(sigma);var cosSigma=Math.cos(sigma);var deltaSigma=B*sinSigma*(cos2SigmaM+B/4*(cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)-
+B/6*cos2SigmaM*(-3+4*sinSigma*sinSigma)*(-3+4*cos2SigmaM*cos2SigmaM)));sigmaP=sigma;sigma=s/(b*A)+deltaSigma;}
+var tmp=sinU1*sinSigma-cosU1*cosSigma*cosAlpha1;var lat2=Math.atan2(sinU1*cosSigma+cosU1*sinSigma*cosAlpha1,(1-f)*Math.sqrt(sinAlpha*sinAlpha+tmp*tmp));var lambda=Math.atan2(sinSigma*sinAlpha1,cosU1*cosSigma-sinU1*sinSigma*cosAlpha1);var C=f/16*cosSqAlpha*(4+f*(4-3*cosSqAlpha));var L=lambda-(1-C)*f*sinAlpha*(sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)));var revAz=Math.atan2(sinAlpha,-tmp);return new OpenLayers.LonLat(lon1+u.deg(L),u.deg(lat2));};OpenLayers.Util.getParameters=function(url,options){options=options||{};url=(url===null||url===undefined)?window.location.href:url;var paramsString="";if(OpenLayers.String.contains(url,'?')){var start=url.indexOf('?')+1;var end=OpenLayers.String.contains(url,"#")?url.indexOf('#'):url.length;paramsString=url.substring(start,end);}
+var parameters={};var pairs=paramsString.split(/[&;]/);for(var i=0,len=pairs.length;i<len;++i){var keyValue=pairs[i].split('=');if(keyValue[0]){var key=keyValue[0];try{key=decodeURIComponent(key);}catch(err){key=unescape(key);}
+var value=(keyValue[1]||'').replace(/\+/g," ");try{value=decodeURIComponent(value);}catch(err){value=unescape(value);}
+if(options.splitArgs!==false){value=value.split(",");}
+if(value.length==1){value=value[0];}
+parameters[key]=value;}}
+return parameters;};OpenLayers.Util.lastSeqID=0;OpenLayers.Util.createUniqueID=function(prefix){if(prefix==null){prefix="id_";}else{prefix=prefix.replace(OpenLayers.Util.dotless,"_");}
+OpenLayers.Util.lastSeqID+=1;return prefix+OpenLayers.Util.lastSeqID;};OpenLayers.INCHES_PER_UNIT={'inches':1.0,'ft':12.0,'mi':63360.0,'m':39.37,'km':39370,'dd':4374754,'yd':36};OpenLayers.INCHES_PER_UNIT["in"]=OpenLayers.INCHES_PER_UNIT.inches;OpenLayers.INCHES_PER_UNIT["degrees"]=OpenLayers.INCHES_PER_UNIT.dd;OpenLayers.INCHES_PER_UNIT["nmi"]=1852*OpenLayers.INCHES_PER_UNIT.m;OpenLayers.METERS_PER_INCH=0.02540005080010160020;OpenLayers.Util.extend(OpenLayers.INCHES_PER_UNIT,{"Inch":OpenLayers.INCHES_PER_UNIT.inches,"Meter":1.0/OpenLayers.METERS_PER_INCH,"Foot":0.30480060960121920243/OpenLayers.METERS_PER_INCH,"IFoot":0.30480000000000000000/OpenLayers.METERS_PER_INCH,"ClarkeFoot":0.3047972651151/OpenLayers.METERS_PER_INCH,"SearsFoot":0.30479947153867624624/OpenLayers.METERS_PER_INCH,"GoldCoastFoot":0.30479971018150881758/OpenLayers.METERS_PER_INCH,"IInch":0.02540000000000000000/OpenLayers.METERS_PER_INCH,"MicroInch":0.00002540000000000000/OpenLayers.METERS_PER_INCH,"Mil":0.00000002540000000000/OpenLayers.METERS_PER_INCH,"Centimeter":0.01000000000000000000/OpenLayers.METERS_PER_INCH,"Kilometer":1000.00000000000000000000/OpenLayers.METERS_PER_INCH,"Yard":0.91440182880365760731/OpenLayers.METERS_PER_INCH,"SearsYard":0.914398414616029/OpenLayers.METERS_PER_INCH,"IndianYard":0.91439853074444079983/OpenLayers.METERS_PER_INCH,"IndianYd37":0.91439523/OpenLayers.METERS_PER_INCH,"IndianYd62":0.9143988/OpenLayers.METERS_PER_INCH,"IndianYd75":0.9143985/OpenLayers.METERS_PER_INCH,"IndianFoot":0.30479951/OpenLayers.METERS_PER_INCH,"IndianFt37":0.30479841/OpenLayers.METERS_PER_INCH,"IndianFt62":0.3047996/OpenLayers.METERS_PER_INCH,"IndianFt75":0.3047995/OpenLayers.METERS_PER_INCH,"Mile":1609.34721869443738887477/OpenLayers.METERS_PER_INCH,"IYard":0.91440000000000000000/OpenLayers.METERS_PER_INCH,"IMile":1609.34400000000000000000/OpenLayers.METERS_PER_INCH,"NautM":1852.00000000000000000000/OpenLayers.METERS_PER_INCH,"Lat-66":110943.316488932731/OpenLayers.METERS_PER_INCH,"Lat-83":110946.25736872234125/OpenLayers.METERS_PER_INCH,"Decimeter":0.10000000000000000000/OpenLayers.METERS_PER_INCH,"Millimeter":0.00100000000000000000/OpenLayers.METERS_PER_INCH,"Dekameter":10.00000000000000000000/OpenLayers.METERS_PER_INCH,"Decameter":10.00000000000000000000/OpenLayers.METERS_PER_INCH,"Hectometer":100.00000000000000000000/OpenLayers.METERS_PER_INCH,"GermanMeter":1.0000135965/OpenLayers.METERS_PER_INCH,"CaGrid":0.999738/OpenLayers.METERS_PER_INCH,"ClarkeChain":20.1166194976/OpenLayers.METERS_PER_INCH,"GunterChain":20.11684023368047/OpenLayers.METERS_PER_INCH,"BenoitChain":20.116782494375872/OpenLayers.METERS_PER_INCH,"SearsChain":20.11676512155/OpenLayers.METERS_PER_INCH,"ClarkeLink":0.201166194976/OpenLayers.METERS_PER_INCH,"GunterLink":0.2011684023368047/OpenLayers.METERS_PER_INCH,"BenoitLink":0.20116782494375872/OpenLayers.METERS_PER_INCH,"SearsLink":0.2011676512155/OpenLayers.METERS_PER_INCH,"Rod":5.02921005842012/OpenLayers.METERS_PER_INCH,"IntnlChain":20.1168/OpenLayers.METERS_PER_INCH,"IntnlLink":0.201168/OpenLayers.METERS_PER_INCH,"Perch":5.02921005842012/OpenLayers.METERS_PER_INCH,"Pole":5.02921005842012/OpenLayers.METERS_PER_INCH,"Furlong":201.1684023368046/OpenLayers.METERS_PER_INCH,"Rood":3.778266898/OpenLayers.METERS_PER_INCH,"CapeFoot":0.3047972615/OpenLayers.METERS_PER_INCH,"Brealey":375.00000000000000000000/OpenLayers.METERS_PER_INCH,"ModAmFt":0.304812252984505969011938/OpenLayers.METERS_PER_INCH,"Fathom":1.8288/OpenLayers.METERS_PER_INCH,"NautM-UK":1853.184/OpenLayers.METERS_PER_INCH,"50kilometers":50000.0/OpenLayers.METERS_PER_INCH,"150kilometers":150000.0/OpenLayers.METERS_PER_INCH});OpenLayers.Util.extend(OpenLayers.INCHES_PER_UNIT,{"mm":OpenLayers.INCHES_PER_UNIT["Meter"]/1000.0,"cm":OpenLayers.INCHES_PER_UNIT["Meter"]/100.0,"dm":OpenLayers.INCHES_PER_UNIT["Meter"]*100.0,"km":OpenLayers.INCHES_PER_UNIT["Meter"]*1000.0,"kmi":OpenLayers.INCHES_PER_UNIT["nmi"],"fath":OpenLayers.INCHES_PER_UNIT["Fathom"],"ch":OpenLayers.INCHES_PER_UNIT["IntnlChain"],"link":OpenLayers.INCHES_PER_UNIT["IntnlLink"],"us-in":OpenLayers.INCHES_PER_UNIT["inches"],"us-ft":OpenLayers.INCHES_PER_UNIT["Foot"],"us-yd":OpenLayers.INCHES_PER_UNIT["Yard"],"us-ch":OpenLayers.INCHES_PER_UNIT["GunterChain"],"us-mi":OpenLayers.INCHES_PER_UNIT["Mile"],"ind-yd":OpenLayers.INCHES_PER_UNIT["IndianYd37"],"ind-ft":OpenLayers.INCHES_PER_UNIT["IndianFt37"],"ind-ch":20.11669506/OpenLayers.METERS_PER_INCH});OpenLayers.DOTS_PER_INCH=72;OpenLayers.Util.normalizeScale=function(scale){var normScale=(scale>1.0)?(1.0/scale):scale;return normScale;};OpenLayers.Util.getResolutionFromScale=function(scale,units){var resolution;if(scale){if(units==null){units="degrees";}
+var normScale=OpenLayers.Util.normalizeScale(scale);resolution=1/(normScale*OpenLayers.INCHES_PER_UNIT[units]*OpenLayers.DOTS_PER_INCH);}
+return resolution;};OpenLayers.Util.getScaleFromResolution=function(resolution,units){if(units==null){units="degrees";}
+var scale=resolution*OpenLayers.INCHES_PER_UNIT[units]*OpenLayers.DOTS_PER_INCH;return scale;};OpenLayers.Util.pagePosition=function(forElement){var pos=[0,0];var viewportElement=OpenLayers.Util.getViewportElement();if(!forElement||forElement==window||forElement==viewportElement){return pos;}
+var BUGGY_GECKO_BOX_OBJECT=OpenLayers.IS_GECKO&&document.getBoxObjectFor&&OpenLayers.Element.getStyle(forElement,'position')=='absolute'&&(forElement.style.top==''||forElement.style.left=='');var parent=null;var box;if(forElement.getBoundingClientRect){box=forElement.getBoundingClientRect();var scrollTop=window.pageYOffset||viewportElement.scrollTop;var scrollLeft=window.pageXOffset||viewportElement.scrollLeft;pos[0]=box.left+scrollLeft;pos[1]=box.top+scrollTop;}else if(document.getBoxObjectFor&&!BUGGY_GECKO_BOX_OBJECT){box=document.getBoxObjectFor(forElement);var vpBox=document.getBoxObjectFor(viewportElement);pos[0]=box.screenX-vpBox.screenX;pos[1]=box.screenY-vpBox.screenY;}else{pos[0]=forElement.offsetLeft;pos[1]=forElement.offsetTop;parent=forElement.offsetParent;if(parent!=forElement){while(parent){pos[0]+=parent.offsetLeft;pos[1]+=parent.offsetTop;parent=parent.offsetParent;}}
+var browser=OpenLayers.BROWSER_NAME;if(browser=="opera"||(browser=="safari"&&OpenLayers.Element.getStyle(forElement,'position')=='absolute')){pos[1]-=document.body.offsetTop;}
+parent=forElement.offsetParent;while(parent&&parent!=document.body){pos[0]-=parent.scrollLeft;if(browser!="opera"||parent.tagName!='TR'){pos[1]-=parent.scrollTop;}
+parent=parent.offsetParent;}}
+return pos;};OpenLayers.Util.getViewportElement=function(){var viewportElement=arguments.callee.viewportElement;if(viewportElement==undefined){viewportElement=(OpenLayers.BROWSER_NAME=="msie"&&document.compatMode!='CSS1Compat')?document.body:document.documentElement;arguments.callee.viewportElement=viewportElement;}
+return viewportElement;};OpenLayers.Util.isEquivalentUrl=function(url1,url2,options){options=options||{};OpenLayers.Util.applyDefaults(options,{ignoreCase:true,ignorePort80:true,ignoreHash:true,splitArgs:false});var urlObj1=OpenLayers.Util.createUrlObject(url1,options);var urlObj2=OpenLayers.Util.createUrlObject(url2,options);for(var key in urlObj1){if(key!=="args"){if(urlObj1[key]!=urlObj2[key]){return false;}}}
+for(var key in urlObj1.args){if(urlObj1.args[key]!=urlObj2.args[key]){return false;}
+delete urlObj2.args[key];}
+for(var key in urlObj2.args){return false;}
+return true;};OpenLayers.Util.createUrlObject=function(url,options){options=options||{};if(!(/^\w+:\/\//).test(url)){var loc=window.location;var port=loc.port?":"+loc.port:"";var fullUrl=loc.protocol+"//"+loc.host.split(":").shift()+port;if(url.indexOf("/")===0){url=fullUrl+url;}else{var parts=loc.pathname.split("/");parts.pop();url=fullUrl+parts.join("/")+"/"+url;}}
+if(options.ignoreCase){url=url.toLowerCase();}
+var a=document.createElement('a');a.href=url;var urlObject={};urlObject.host=a.host.split(":").shift();urlObject.protocol=a.protocol;if(options.ignorePort80){urlObject.port=(a.port=="80"||a.port=="0")?"":a.port;}else{urlObject.port=(a.port==""||a.port=="0")?"80":a.port;}
+urlObject.hash=(options.ignoreHash||a.hash==="#")?"":a.hash;var queryString=a.search;if(!queryString){var qMark=url.indexOf("?");queryString=(qMark!=-1)?url.substr(qMark):"";}
+urlObject.args=OpenLayers.Util.getParameters(queryString,{splitArgs:options.splitArgs});urlObject.pathname=(a.pathname.charAt(0)=="/")?a.pathname:"/"+a.pathname;return urlObject;};OpenLayers.Util.removeTail=function(url){var head=null;var qMark=url.indexOf("?");var hashMark=url.indexOf("#");if(qMark==-1){head=(hashMark!=-1)?url.substr(0,hashMark):url;}else{head=(hashMark!=-1)?url.substr(0,Math.min(qMark,hashMark)):url.substr(0,qMark);}
+return head;};OpenLayers.IS_GECKO=(function(){var ua=navigator.userAgent.toLowerCase();return ua.indexOf("webkit")==-1&&ua.indexOf("gecko")!=-1;})();OpenLayers.CANVAS_SUPPORTED=(function(){var elem=document.createElement('canvas');return!!(elem.getContext&&elem.getContext('2d'));})();OpenLayers.BROWSER_NAME=(function(){var name="";var ua=navigator.userAgent.toLowerCase();if(ua.indexOf("opera")!=-1){name="opera";}else if(ua.indexOf("msie")!=-1){name="msie";}else if(ua.indexOf("safari")!=-1){name="safari";}else if(ua.indexOf("mozilla")!=-1){if(ua.indexOf("firefox")!=-1){name="firefox";}else{name="mozilla";}}
+return name;})();OpenLayers.Util.getBrowserName=function(){return OpenLayers.BROWSER_NAME;};OpenLayers.Util.getRenderedDimensions=function(contentHTML,size,options){var w,h;var container=document.createElement("div");container.style.visibility="hidden";var containerElement=(options&&options.containerElement)?options.containerElement:document.body;var parentHasPositionAbsolute=false;var superContainer=null;var parent=containerElement;while(parent&&parent.tagName.toLowerCase()!="body"){var parentPosition=OpenLayers.Element.getStyle(parent,"position");if(parentPosition=="absolute"){parentHasPositionAbsolute=true;break;}else if(parentPosition&&parentPosition!="static"){break;}
+parent=parent.parentNode;}
+if(parentHasPositionAbsolute&&(containerElement.clientHeight===0||containerElement.clientWidth===0)){superContainer=document.createElement("div");superContainer.style.visibility="hidden";superContainer.style.position="absolute";superContainer.style.overflow="visible";superContainer.style.width=document.body.clientWidth+"px";superContainer.style.height=document.body.clientHeight+"px";superContainer.appendChild(container);}
+container.style.position="absolute";if(size){if(size.w){w=size.w;container.style.width=w+"px";}else if(size.h){h=size.h;container.style.height=h+"px";}}
+if(options&&options.displayClass){container.className=options.displayClass;}
+var content=document.createElement("div");content.innerHTML=contentHTML;content.style.overflow="visible";if(content.childNodes){for(var i=0,l=content.childNodes.length;i<l;i++){if(!content.childNodes[i].style)continue;content.childNodes[i].style.overflow="visible";}}
+container.appendChild(content);if(superContainer){containerElement.appendChild(superContainer);}else{containerElement.appendChild(container);}
+if(!w){w=parseInt(content.scrollWidth);container.style.width=w+"px";}
+if(!h){h=parseInt(content.scrollHeight);}
+container.removeChild(content);if(superContainer){superContainer.removeChild(container);containerElement.removeChild(superContainer);}else{containerElement.removeChild(container);}
+return new OpenLayers.Size(w,h);};OpenLayers.Util.getScrollbarWidth=function(){var scrollbarWidth=OpenLayers.Util._scrollbarWidth;if(scrollbarWidth==null){var scr=null;var inn=null;var wNoScroll=0;var wScroll=0;scr=document.createElement('div');scr.style.position='absolute';scr.style.top='-1000px';scr.style.left='-1000px';scr.style.width='100px';scr.style.height='50px';scr.style.overflow='hidden';inn=document.createElement('div');inn.style.width='100%';inn.style.height='200px';scr.appendChild(inn);document.body.appendChild(scr);wNoScroll=inn.offsetWidth;scr.style.overflow='scroll';wScroll=inn.offsetWidth;document.body.removeChild(document.body.lastChild);OpenLayers.Util._scrollbarWidth=(wNoScroll-wScroll);scrollbarWidth=OpenLayers.Util._scrollbarWidth;}
+return scrollbarWidth;};OpenLayers.Util.getFormattedLonLat=function(coordinate,axis,dmsOption){if(!dmsOption){dmsOption='dms';}
+coordinate=(coordinate+540)%360-180;var abscoordinate=Math.abs(coordinate);var coordinatedegrees=Math.floor(abscoordinate);var coordinateminutes=(abscoordinate-coordinatedegrees)/(1/60);var tempcoordinateminutes=coordinateminutes;coordinateminutes=Math.floor(coordinateminutes);var coordinateseconds=(tempcoordinateminutes-coordinateminutes)/(1/60);coordinateseconds=Math.round(coordinateseconds*10);coordinateseconds/=10;if(coordinateseconds>=60){coordinateseconds-=60;coordinateminutes+=1;if(coordinateminutes>=60){coordinateminutes-=60;coordinatedegrees+=1;}}
+if(coordinatedegrees<10){coordinatedegrees="0"+coordinatedegrees;}
+var str=coordinatedegrees+"\u00B0";if(dmsOption.indexOf('dm')>=0){if(coordinateminutes<10){coordinateminutes="0"+coordinateminutes;}
+str+=coordinateminutes+"'";if(dmsOption.indexOf('dms')>=0){if(coordinateseconds<10){coordinateseconds="0"+coordinateseconds;}
+str+=coordinateseconds+'"';}}
+if(axis=="lon"){str+=coordinate<0?OpenLayers.i18n("W"):OpenLayers.i18n("E");}else{str+=coordinate<0?OpenLayers.i18n("S"):OpenLayers.i18n("N");}
+return str;};OpenLayers.Util.getConstructor=function(className){var Constructor;var parts=className.split('.');if(parts[0]==="OpenLayers"){Constructor=OpenLayers;}else{Constructor=window[parts[0]];}
+for(var i=1,ii=parts.length;i<ii;++i){Constructor=Constructor[parts[i]];}
+return Constructor;};OpenLayers.Feature=OpenLayers.Class({layer:null,id:null,lonlat:null,data:null,marker:null,popupClass:null,popup:null,initialize:function(layer,lonlat,data){this.layer=layer;this.lonlat=lonlat;this.data=(data!=null)?data:{};this.id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_");},destroy:function(){if((this.layer!=null)&&(this.layer.map!=null)){if(this.popup!=null){this.layer.map.removePopup(this.popup);}}
+if(this.layer!=null&&this.marker!=null){this.layer.removeMarker(this.marker);}
+this.layer=null;this.id=null;this.lonlat=null;this.data=null;if(this.marker!=null){this.destroyMarker(this.marker);this.marker=null;}
+if(this.popup!=null){this.destroyPopup(this.popup);this.popup=null;}},onScreen:function(){var onScreen=false;if((this.layer!=null)&&(this.layer.map!=null)){var screenBounds=this.layer.map.getExtent();onScreen=screenBounds.containsLonLat(this.lonlat);}
+return onScreen;},createMarker:function(){if(this.lonlat!=null){this.marker=new OpenLayers.Marker(this.lonlat,this.data.icon);}
+return this.marker;},destroyMarker:function(){this.marker.destroy();},createPopup:function(closeBox){if(this.lonlat!=null){if(!this.popup){var anchor=(this.marker)?this.marker.icon:null;var popupClass=this.popupClass?this.popupClass:OpenLayers.Popup.Anchored;this.popup=new popupClass(this.id+"_popup",this.lonlat,this.data.popupSize,this.data.popupContentHTML,anchor,closeBox);}
+if(this.data.overflow!=null){this.popup.contentDiv.style.overflow=this.data.overflow;}
+this.popup.feature=this;}
+return this.popup;},destroyPopup:function(){if(this.popup){this.popup.feature=null;this.popup.destroy();this.popup=null;}},CLASS_NAME:"OpenLayers.Feature"});OpenLayers.State={UNKNOWN:'Unknown',INSERT:'Insert',UPDATE:'Update',DELETE:'Delete'};OpenLayers.Feature.Vector=OpenLayers.Class(OpenLayers.Feature,{fid:null,geometry:null,attributes:null,bounds:null,state:null,style:null,url:null,renderIntent:"default",modified:null,initialize:function(geometry,attributes,style){OpenLayers.Feature.prototype.initialize.apply(this,[null,null,attributes]);this.lonlat=null;this.geometry=geometry?geometry:null;this.state=null;this.attributes={};if(attributes){this.attributes=OpenLayers.Util.extend(this.attributes,attributes);}
+this.style=style?style:null;},destroy:function(){if(this.layer){this.layer.removeFeatures(this);this.layer=null;}
+this.geometry=null;this.modified=null;OpenLayers.Feature.prototype.destroy.apply(this,arguments);},clone:function(){return new OpenLayers.Feature.Vector(this.geometry?this.geometry.clone():null,this.attributes,this.style);},onScreen:function(boundsOnly){var onScreen=false;if(this.layer&&this.layer.map){var screenBounds=this.layer.map.getExtent();if(boundsOnly){var featureBounds=this.geometry.getBounds();onScreen=screenBounds.intersectsBounds(featureBounds);}else{var screenPoly=screenBounds.toGeometry();onScreen=screenPoly.intersects(this.geometry);}}
+return onScreen;},getVisibility:function(){return!(this.style&&this.style.display=='none'||!this.layer||this.layer&&this.layer.styleMap&&this.layer.styleMap.createSymbolizer(this,this.renderIntent).display=='none'||this.layer&&!this.layer.getVisibility());},createMarker:function(){return null;},destroyMarker:function(){},createPopup:function(){return null;},atPoint:function(lonlat,toleranceLon,toleranceLat){var atPoint=false;if(this.geometry){atPoint=this.geometry.atPoint(lonlat,toleranceLon,toleranceLat);}
+return atPoint;},destroyPopup:function(){},move:function(location){if(!this.layer||!this.geometry.move){return undefined;}
+var pixel;if(location.CLASS_NAME=="OpenLayers.LonLat"){pixel=this.layer.getViewPortPxFromLonLat(location);}else{pixel=location;}
+var lastPixel=this.layer.getViewPortPxFromLonLat(this.geometry.getBounds().getCenterLonLat());var res=this.layer.map.getResolution();this.geometry.move(res*(pixel.x-lastPixel.x),res*(lastPixel.y-pixel.y));this.layer.drawFeature(this);return lastPixel;},toState:function(state){if(state==OpenLayers.State.UPDATE){switch(this.state){case OpenLayers.State.UNKNOWN:case OpenLayers.State.DELETE:this.state=state;break;case OpenLayers.State.UPDATE:case OpenLayers.State.INSERT:break;}}else if(state==OpenLayers.State.INSERT){switch(this.state){case OpenLayers.State.UNKNOWN:break;default:this.state=state;break;}}else if(state==OpenLayers.State.DELETE){switch(this.state){case OpenLayers.State.INSERT:break;case OpenLayers.State.DELETE:break;case OpenLayers.State.UNKNOWN:case OpenLayers.State.UPDATE:this.state=state;break;}}else if(state==OpenLayers.State.UNKNOWN){this.state=state;}},CLASS_NAME:"OpenLayers.Feature.Vector"});OpenLayers.Feature.Vector.style={'default':{fillColor:"#ee9900",fillOpacity:0.4,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"#ee9900",strokeOpacity:1,strokeWidth:1,strokeLinecap:"round",strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"inherit",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},'select':{fillColor:"blue",fillOpacity:0.4,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"blue",strokeOpacity:1,strokeWidth:2,strokeLinecap:"round",strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"pointer",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},'temporary':{fillColor:"#66cccc",fillOpacity:0.2,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"#66cccc",strokeOpacity:1,strokeLinecap:"round",strokeWidth:2,strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"inherit",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},'delete':{display:"none"}};OpenLayers.Geometry.MultiLineString=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.LineString"],split:function(geometry,options){var results=null;var mutual=options&&options.mutual;var splits,sourceLine,sourceLines,sourceSplit,targetSplit;var sourceParts=[];var targetParts=[geometry];for(var i=0,len=this.components.length;i<len;++i){sourceLine=this.components[i];sourceSplit=false;for(var j=0;j<targetParts.length;++j){splits=sourceLine.split(targetParts[j],options);if(splits){if(mutual){sourceLines=splits[0];for(var k=0,klen=sourceLines.length;k<klen;++k){if(k===0&&sourceParts.length){sourceParts[sourceParts.length-1].addComponent(sourceLines[k]);}else{sourceParts.push(new OpenLayers.Geometry.MultiLineString([sourceLines[k]]));}}
+sourceSplit=true;splits=splits[1];}
+if(splits.length){splits.unshift(j,1);Array.prototype.splice.apply(targetParts,splits);break;}}}
+if(!sourceSplit){if(sourceParts.length){sourceParts[sourceParts.length-1].addComponent(sourceLine.clone());}else{sourceParts=[new OpenLayers.Geometry.MultiLineString(sourceLine.clone())];}}}
+if(sourceParts&&sourceParts.length>1){sourceSplit=true;}else{sourceParts=[];}
+if(targetParts&&targetParts.length>1){targetSplit=true;}else{targetParts=[];}
+if(sourceSplit||targetSplit){if(mutual){results=[sourceParts,targetParts];}else{results=targetParts;}}
+return results;},splitWith:function(geometry,options){var results=null;var mutual=options&&options.mutual;var splits,targetLine,sourceLines,sourceSplit,targetSplit,sourceParts,targetParts;if(geometry instanceof OpenLayers.Geometry.LineString){targetParts=[];sourceParts=[geometry];for(var i=0,len=this.components.length;i<len;++i){targetSplit=false;targetLine=this.components[i];for(var j=0;j<sourceParts.length;++j){splits=sourceParts[j].split(targetLine,options);if(splits){if(mutual){sourceLines=splits[0];if(sourceLines.length){sourceLines.unshift(j,1);Array.prototype.splice.apply(sourceParts,sourceLines);j+=sourceLines.length-2;}
+splits=splits[1];if(splits.length===0){splits=[targetLine.clone()];}}
+for(var k=0,klen=splits.length;k<klen;++k){if(k===0&&targetParts.length){targetParts[targetParts.length-1].addComponent(splits[k]);}else{targetParts.push(new OpenLayers.Geometry.MultiLineString([splits[k]]));}}
+targetSplit=true;}}
+if(!targetSplit){if(targetParts.length){targetParts[targetParts.length-1].addComponent(targetLine.clone());}else{targetParts=[new OpenLayers.Geometry.MultiLineString([targetLine.clone()])];}}}}else{results=geometry.split(this);}
+if(sourceParts&&sourceParts.length>1){sourceSplit=true;}else{sourceParts=[];}
+if(targetParts&&targetParts.length>1){targetSplit=true;}else{targetParts=[];}
+if(sourceSplit||targetSplit){if(mutual){results=[sourceParts,targetParts];}else{results=targetParts;}}
+return results;},CLASS_NAME:"OpenLayers.Geometry.MultiLineString"});OpenLayers.Format=OpenLayers.Class({options:null,externalProjection:null,internalProjection:null,data:null,keepData:false,initialize:function(options){OpenLayers.Util.extend(this,options);this.options=options;},destroy:function(){},read:function(data){throw new Error('Read not implemented.');},write:function(object){throw new Error('Write not implemented.');},CLASS_NAME:"OpenLayers.Format"});OpenLayers.Format.XML=OpenLayers.Class(OpenLayers.Format,{namespaces:null,namespaceAlias:null,defaultPrefix:null,readers:{},writers:{},xmldom:null,initialize:function(options){if(window.ActiveXObject){this.xmldom=new ActiveXObject("Microsoft.XMLDOM");}
+OpenLayers.Format.prototype.initialize.apply(this,[options]);this.namespaces=OpenLayers.Util.extend({},this.namespaces);this.namespaceAlias={};for(var alias in this.namespaces){this.namespaceAlias[this.namespaces[alias]]=alias;}},destroy:function(){this.xmldom=null;OpenLayers.Format.prototype.destroy.apply(this,arguments);},setNamespace:function(alias,uri){this.namespaces[alias]=uri;this.namespaceAlias[uri]=alias;},read:function(text){var index=text.indexOf('<');if(index>0){text=text.substring(index);}
+var node=OpenLayers.Util.Try(OpenLayers.Function.bind((function(){var xmldom;if(window.ActiveXObject&&!this.xmldom){xmldom=new ActiveXObject("Microsoft.XMLDOM");}else{xmldom=this.xmldom;}
+xmldom.loadXML(text);return xmldom;}),this),function(){return new DOMParser().parseFromString(text,'text/xml');},function(){var req=new XMLHttpRequest();req.open("GET","data:"+"text/xml"+";charset=utf-8,"+encodeURIComponent(text),false);if(req.overrideMimeType){req.overrideMimeType("text/xml");}
+req.send(null);return req.responseXML;});if(this.keepData){this.data=node;}
+return node;},write:function(node){var data;if(this.xmldom){data=node.xml;}else{var serializer=new XMLSerializer();if(node.nodeType==1){var doc=document.implementation.createDocument("","",null);if(doc.importNode){node=doc.importNode(node,true);}
+doc.appendChild(node);data=serializer.serializeToString(doc);}else{data=serializer.serializeToString(node);}}
+return data;},createElementNS:function(uri,name){var element;if(this.xmldom){if(typeof uri=="string"){element=this.xmldom.createNode(1,name,uri);}else{element=this.xmldom.createNode(1,name,"");}}else{element=document.createElementNS(uri,name);}
+return element;},createDocumentFragment:function(){var element;if(this.xmldom){element=this.xmldom.createDocumentFragment();}else{element=document.createDocumentFragment();}
+return element;},createTextNode:function(text){var node;if(typeof text!=="string"){text=String(text);}
+if(this.xmldom){node=this.xmldom.createTextNode(text);}else{node=document.createTextNode(text);}
+return node;},getElementsByTagNameNS:function(node,uri,name){var elements=[];if(node.getElementsByTagNameNS){elements=node.getElementsByTagNameNS(uri,name);}else{var allNodes=node.getElementsByTagName("*");var potentialNode,fullName;for(var i=0,len=allNodes.length;i<len;++i){potentialNode=allNodes[i];fullName=(potentialNode.prefix)?(potentialNode.prefix+":"+name):name;if((name=="*")||(fullName==potentialNode.nodeName)){if((uri=="*")||(uri==potentialNode.namespaceURI)){elements.push(potentialNode);}}}}
+return elements;},getAttributeNodeNS:function(node,uri,name){var attributeNode=null;if(node.getAttributeNodeNS){attributeNode=node.getAttributeNodeNS(uri,name);}else{var attributes=node.attributes;var potentialNode,fullName;for(var i=0,len=attributes.length;i<len;++i){potentialNode=attributes[i];if(potentialNode.namespaceURI==uri){fullName=(potentialNode.prefix)?(potentialNode.prefix+":"+name):name;if(fullName==potentialNode.nodeName){attributeNode=potentialNode;break;}}}}
+return attributeNode;},getAttributeNS:function(node,uri,name){var attributeValue="";if(node.getAttributeNS){attributeValue=node.getAttributeNS(uri,name)||"";}else{var attributeNode=this.getAttributeNodeNS(node,uri,name);if(attributeNode){attributeValue=attributeNode.nodeValue;}}
+return attributeValue;},getChildValue:function(node,def){var value=def||"";if(node){for(var child=node.firstChild;child;child=child.nextSibling){switch(child.nodeType){case 3:case 4:value+=child.nodeValue;}}}
+return value;},isSimpleContent:function(node){var simple=true;for(var child=node.firstChild;child;child=child.nextSibling){if(child.nodeType===1){simple=false;break;}}
+return simple;},contentType:function(node){var simple=false,complex=false;var type=OpenLayers.Format.XML.CONTENT_TYPE.EMPTY;for(var child=node.firstChild;child;child=child.nextSibling){switch(child.nodeType){case 1:complex=true;break;case 8:break;default:simple=true;}
+if(complex&&simple){break;}}
+if(complex&&simple){type=OpenLayers.Format.XML.CONTENT_TYPE.MIXED;}else if(complex){return OpenLayers.Format.XML.CONTENT_TYPE.COMPLEX;}else if(simple){return OpenLayers.Format.XML.CONTENT_TYPE.SIMPLE;}
+return type;},hasAttributeNS:function(node,uri,name){var found=false;if(node.hasAttributeNS){found=node.hasAttributeNS(uri,name);}else{found=!!this.getAttributeNodeNS(node,uri,name);}
+return found;},setAttributeNS:function(node,uri,name,value){if(node.setAttributeNS){node.setAttributeNS(uri,name,value);}else{if(this.xmldom){if(uri){var attribute=node.ownerDocument.createNode(2,name,uri);attribute.nodeValue=value;node.setAttributeNode(attribute);}else{node.setAttribute(name,value);}}else{throw"setAttributeNS not implemented";}}},createElementNSPlus:function(name,options){options=options||{};var uri=options.uri||this.namespaces[options.prefix];if(!uri){var loc=name.indexOf(":");uri=this.namespaces[name.substring(0,loc)];}
+if(!uri){uri=this.namespaces[this.defaultPrefix];}
+var node=this.createElementNS(uri,name);if(options.attributes){this.setAttributes(node,options.attributes);}
+var value=options.value;if(value!=null){node.appendChild(this.createTextNode(value));}
+return node;},setAttributes:function(node,obj){var value,uri;for(var name in obj){if(obj[name]!=null&&obj[name].toString){value=obj[name].toString();uri=this.namespaces[name.substring(0,name.indexOf(":"))]||null;this.setAttributeNS(node,uri,name,value);}}},getFirstElementChild:function(node){if(node.firstElementChild){return node.firstElementChild;}
+else{var child=node.firstChild;while(child.nodeType!=1&&(child=child.nextSibling)){}
+return child;}},readNode:function(node,obj){if(!obj){obj={};}
+var group=this.readers[node.namespaceURI?this.namespaceAlias[node.namespaceURI]:this.defaultPrefix];if(group){var local=node.localName||node.nodeName.split(":").pop();var reader=group[local]||group["*"];if(reader){reader.apply(this,[node,obj]);}}
+return obj;},readChildNodes:function(node,obj){if(!obj){obj={};}
+var children=node.childNodes;var child;for(var i=0,len=children.length;i<len;++i){child=children[i];if(child.nodeType==1){this.readNode(child,obj);}}
+return obj;},writeNode:function(name,obj,parent){var prefix,local;var split=name.indexOf(":");if(split>0){prefix=name.substring(0,split);local=name.substring(split+1);}else{if(parent){prefix=this.namespaceAlias[parent.namespaceURI];}else{prefix=this.defaultPrefix;}
+local=name;}
+var child=this.writers[prefix][local].apply(this,[obj]);if(parent){parent.appendChild(child);}
+return child;},getChildEl:function(node,name,uri){return node&&this.getThisOrNextEl(node.firstChild,name,uri);},getNextEl:function(node,name,uri){return node&&this.getThisOrNextEl(node.nextSibling,name,uri);},getThisOrNextEl:function(node,name,uri){outer:for(var sibling=node;sibling;sibling=sibling.nextSibling){switch(sibling.nodeType){case 1:if((!name||name===(sibling.localName||sibling.nodeName.split(":").pop()))&&(!uri||uri===sibling.namespaceURI)){break outer;}
+sibling=null;break outer;case 3:if(/^\s*$/.test(sibling.nodeValue)){break;}
+case 4:case 6:case 12:case 10:case 11:sibling=null;break outer;}}
+return sibling||null;},lookupNamespaceURI:function(node,prefix){var uri=null;if(node){if(node.lookupNamespaceURI){uri=node.lookupNamespaceURI(prefix);}else{outer:switch(node.nodeType){case 1:if(node.namespaceURI!==null&&node.prefix===prefix){uri=node.namespaceURI;break outer;}
+var len=node.attributes.length;if(len){var attr;for(var i=0;i<len;++i){attr=node.attributes[i];if(attr.prefix==="xmlns"&&attr.name==="xmlns:"+prefix){uri=attr.value||null;break outer;}else if(attr.name==="xmlns"&&prefix===null){uri=attr.value||null;break outer;}}}
+uri=this.lookupNamespaceURI(node.parentNode,prefix);break outer;case 2:uri=this.lookupNamespaceURI(node.ownerElement,prefix);break outer;case 9:uri=this.lookupNamespaceURI(node.documentElement,prefix);break outer;case 6:case 12:case 10:case 11:break outer;default:uri=this.lookupNamespaceURI(node.parentNode,prefix);break outer;}}}
+return uri;},getXMLDoc:function(){if(!OpenLayers.Format.XML.document&&!this.xmldom){if(document.implementation&&document.implementation.createDocument){OpenLayers.Format.XML.document=document.implementation.createDocument("","",null);}else if(!this.xmldom&&window.ActiveXObject){this.xmldom=new ActiveXObject("Microsoft.XMLDOM");}}
+return OpenLayers.Format.XML.document||this.xmldom;},CLASS_NAME:"OpenLayers.Format.XML"});OpenLayers.Format.XML.CONTENT_TYPE={EMPTY:0,SIMPLE:1,COMPLEX:2,MIXED:3};OpenLayers.Format.XML.lookupNamespaceURI=OpenLayers.Function.bind(OpenLayers.Format.XML.prototype.lookupNamespaceURI,OpenLayers.Format.XML.prototype);OpenLayers.Format.XML.document=null;OpenLayers.Geometry.MultiPolygon=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.Polygon"],CLASS_NAME:"OpenLayers.Geometry.MultiPolygon"});OpenLayers.Format.GML=OpenLayers.Class(OpenLayers.Format.XML,{featureNS:"http://mapserver.gis.umn.edu/mapserver",featurePrefix:"feature",featureName:"featureMember",layerName:"features",geometryName:"geometry",collectionName:"FeatureCollection",gmlns:"http://www.opengis.net/gml",extractAttributes:true,xy:true,initialize:function(options){this.regExes={trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)};OpenLayers.Format.XML.prototype.initialize.apply(this,[options]);},read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data]);}
+var featureNodes=this.getElementsByTagNameNS(data.documentElement,this.gmlns,this.featureName);var features=[];for(var i=0;i<featureNodes.length;i++){var feature=this.parseFeature(featureNodes[i]);if(feature){features.push(feature);}}
+return features;},parseFeature:function(node){var order=["MultiPolygon","Polygon","MultiLineString","LineString","MultiPoint","Point","Envelope"];var type,nodeList,geometry,parser;for(var i=0;i<order.length;++i){type=order[i];nodeList=this.getElementsByTagNameNS(node,this.gmlns,type);if(nodeList.length>0){parser=this.parseGeometry[type.toLowerCase()];if(parser){geometry=parser.apply(this,[nodeList[0]]);if(this.internalProjection&&this.externalProjection){geometry.transform(this.externalProjection,this.internalProjection);}}else{throw new TypeError("Unsupported geometry type: "+type);}
+break;}}
+var bounds;var boxNodes=this.getElementsByTagNameNS(node,this.gmlns,"Box");for(i=0;i<boxNodes.length;++i){var boxNode=boxNodes[i];var box=this.parseGeometry["box"].apply(this,[boxNode]);var parentNode=boxNode.parentNode;var parentName=parentNode.localName||parentNode.nodeName.split(":").pop();if(parentName==="boundedBy"){bounds=box;}else{geometry=box.toGeometry();}}
+var attributes;if(this.extractAttributes){attributes=this.parseAttributes(node);}
+var feature=new OpenLayers.Feature.Vector(geometry,attributes);feature.bounds=bounds;var firstChild=this.getFirstElementChild(node);feature.gml={featureType:firstChild.nodeName.split(":")[1],featureNS:firstChild.namespaceURI,featureNSPrefix:firstChild.prefix};feature.type=feature.gml.featureType;var childNode=node.firstChild;var fid;while(childNode){if(childNode.nodeType==1){fid=childNode.getAttribute("fid")||childNode.getAttribute("id");if(fid){break;}}
+childNode=childNode.nextSibling;}
+feature.fid=fid;return feature;},parseGeometry:{point:function(node){var nodeList,coordString;var coords=[];var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"pos");if(nodeList.length>0){coordString=nodeList[0].firstChild.nodeValue;coordString=coordString.replace(this.regExes.trimSpace,"");coords=coordString.split(this.regExes.splitSpace);}
+if(coords.length==0){nodeList=this.getElementsByTagNameNS(node,this.gmlns,"coordinates");if(nodeList.length>0){coordString=nodeList[0].firstChild.nodeValue;coordString=coordString.replace(this.regExes.removeSpace,"");coords=coordString.split(",");}}
+if(coords.length==0){nodeList=this.getElementsByTagNameNS(node,this.gmlns,"coord");if(nodeList.length>0){var xList=this.getElementsByTagNameNS(nodeList[0],this.gmlns,"X");var yList=this.getElementsByTagNameNS(nodeList[0],this.gmlns,"Y");if(xList.length>0&&yList.length>0){coords=[xList[0].firstChild.nodeValue,yList[0].firstChild.nodeValue];}}}
+if(coords.length==2){coords[2]=null;}
+if(this.xy){return new OpenLayers.Geometry.Point(coords[0],coords[1],coords[2]);}
+else{return new OpenLayers.Geometry.Point(coords[1],coords[0],coords[2]);}},multipoint:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"Point");var components=[];if(nodeList.length>0){var point;for(var i=0;i<nodeList.length;++i){point=this.parseGeometry.point.apply(this,[nodeList[i]]);if(point){components.push(point);}}}
+return new OpenLayers.Geometry.MultiPoint(components);},linestring:function(node,ring){var nodeList,coordString;var coords=[];var points=[];nodeList=this.getElementsByTagNameNS(node,this.gmlns,"posList");if(nodeList.length>0){coordString=this.getChildValue(nodeList[0]);coordString=coordString.replace(this.regExes.trimSpace,"");coords=coordString.split(this.regExes.splitSpace);var dim=parseInt(nodeList[0].getAttribute("dimension"));var j,x,y,z;for(var i=0;i<coords.length/dim;++i){j=i*dim;x=coords[j];y=coords[j+1];z=(dim==2)?null:coords[j+2];if(this.xy){points.push(new OpenLayers.Geometry.Point(x,y,z));}else{points.push(new OpenLayers.Geometry.Point(y,x,z));}}}
+if(coords.length==0){nodeList=this.getElementsByTagNameNS(node,this.gmlns,"coordinates");if(nodeList.length>0){coordString=this.getChildValue(nodeList[0]);coordString=coordString.replace(this.regExes.trimSpace,"");coordString=coordString.replace(this.regExes.trimComma,",");var pointList=coordString.split(this.regExes.splitSpace);for(var i=0;i<pointList.length;++i){coords=pointList[i].split(",");if(coords.length==2){coords[2]=null;}
+if(this.xy){points.push(new OpenLayers.Geometry.Point(coords[0],coords[1],coords[2]));}else{points.push(new OpenLayers.Geometry.Point(coords[1],coords[0],coords[2]));}}}}
+var line=null;if(points.length!=0){if(ring){line=new OpenLayers.Geometry.LinearRing(points);}else{line=new OpenLayers.Geometry.LineString(points);}}
+return line;},multilinestring:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"LineString");var components=[];if(nodeList.length>0){var line;for(var i=0;i<nodeList.length;++i){line=this.parseGeometry.linestring.apply(this,[nodeList[i]]);if(line){components.push(line);}}}
+return new OpenLayers.Geometry.MultiLineString(components);},polygon:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"LinearRing");var components=[];if(nodeList.length>0){var ring;for(var i=0;i<nodeList.length;++i){ring=this.parseGeometry.linestring.apply(this,[nodeList[i],true]);if(ring){components.push(ring);}}}
+return new OpenLayers.Geometry.Polygon(components);},multipolygon:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"Polygon");var components=[];if(nodeList.length>0){var polygon;for(var i=0;i<nodeList.length;++i){polygon=this.parseGeometry.polygon.apply(this,[nodeList[i]]);if(polygon){components.push(polygon);}}}
+return new OpenLayers.Geometry.MultiPolygon(components);},envelope:function(node){var components=[];var coordString;var envelope;var lpoint=this.getElementsByTagNameNS(node,this.gmlns,"lowerCorner");if(lpoint.length>0){var coords=[];if(lpoint.length>0){coordString=lpoint[0].firstChild.nodeValue;coordString=coordString.replace(this.regExes.trimSpace,"");coords=coordString.split(this.regExes.splitSpace);}
+if(coords.length==2){coords[2]=null;}
+if(this.xy){var lowerPoint=new OpenLayers.Geometry.Point(coords[0],coords[1],coords[2]);}else{var lowerPoint=new OpenLayers.Geometry.Point(coords[1],coords[0],coords[2]);}}
+var upoint=this.getElementsByTagNameNS(node,this.gmlns,"upperCorner");if(upoint.length>0){var coords=[];if(upoint.length>0){coordString=upoint[0].firstChild.nodeValue;coordString=coordString.replace(this.regExes.trimSpace,"");coords=coordString.split(this.regExes.splitSpace);}
+if(coords.length==2){coords[2]=null;}
+if(this.xy){var upperPoint=new OpenLayers.Geometry.Point(coords[0],coords[1],coords[2]);}else{var upperPoint=new OpenLayers.Geometry.Point(coords[1],coords[0],coords[2]);}}
+if(lowerPoint&&upperPoint){components.push(new OpenLayers.Geometry.Point(lowerPoint.x,lowerPoint.y));components.push(new OpenLayers.Geometry.Point(upperPoint.x,lowerPoint.y));components.push(new OpenLayers.Geometry.Point(upperPoint.x,upperPoint.y));components.push(new OpenLayers.Geometry.Point(lowerPoint.x,upperPoint.y));components.push(new OpenLayers.Geometry.Point(lowerPoint.x,lowerPoint.y));var ring=new OpenLayers.Geometry.LinearRing(components);envelope=new OpenLayers.Geometry.Polygon([ring]);}
+return envelope;},box:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"coordinates");var coordString;var coords,beginPoint=null,endPoint=null;if(nodeList.length>0){coordString=nodeList[0].firstChild.nodeValue;coords=coordString.split(" ");if(coords.length==2){beginPoint=coords[0].split(",");endPoint=coords[1].split(",");}}
+if(beginPoint!==null&&endPoint!==null){return new OpenLayers.Bounds(parseFloat(beginPoint[0]),parseFloat(beginPoint[1]),parseFloat(endPoint[0]),parseFloat(endPoint[1]));}}},parseAttributes:function(node){var attributes={};var childNode=node.firstChild;var children,i,child,grandchildren,grandchild,name,value;while(childNode){if(childNode.nodeType==1){children=childNode.childNodes;for(i=0;i<children.length;++i){child=children[i];if(child.nodeType==1){grandchildren=child.childNodes;if(grandchildren.length==1){grandchild=grandchildren[0];if(grandchild.nodeType==3||grandchild.nodeType==4){name=(child.prefix)?child.nodeName.split(":")[1]:child.nodeName;value=grandchild.nodeValue.replace(this.regExes.trimSpace,"");attributes[name]=value;}}else{attributes[child.nodeName.split(":").pop()]=null;}}}
+break;}
+childNode=childNode.nextSibling;}
+return attributes;},write:function(features){if(!(OpenLayers.Util.isArray(features))){features=[features];}
+var gml=this.createElementNS("http://www.opengis.net/wfs","wfs:"+this.collectionName);for(var i=0;i<features.length;i++){gml.appendChild(this.createFeatureXML(features[i]));}
+return OpenLayers.Format.XML.prototype.write.apply(this,[gml]);},createFeatureXML:function(feature){var geometry=feature.geometry;var geometryNode=this.buildGeometryNode(geometry);var geomContainer=this.createElementNS(this.featureNS,this.featurePrefix+":"+
+this.geometryName);geomContainer.appendChild(geometryNode);var featureNode=this.createElementNS(this.gmlns,"gml:"+this.featureName);var featureContainer=this.createElementNS(this.featureNS,this.featurePrefix+":"+
+this.layerName);var fid=feature.fid||feature.id;featureContainer.setAttribute("fid",fid);featureContainer.appendChild(geomContainer);for(var attr in feature.attributes){var attrText=this.createTextNode(feature.attributes[attr]);var nodename=attr.substring(attr.lastIndexOf(":")+1);var attrContainer=this.createElementNS(this.featureNS,this.featurePrefix+":"+
+nodename);attrContainer.appendChild(attrText);featureContainer.appendChild(attrContainer);}
+featureNode.appendChild(featureContainer);return featureNode;},buildGeometryNode:function(geometry){if(this.externalProjection&&this.internalProjection){geometry=geometry.clone();geometry.transform(this.internalProjection,this.externalProjection);}
+var className=geometry.CLASS_NAME;var type=className.substring(className.lastIndexOf(".")+1);var builder=this.buildGeometry[type.toLowerCase()];return builder.apply(this,[geometry]);},buildGeometry:{point:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:Point");gml.appendChild(this.buildCoordinatesNode(geometry));return gml;},multipoint:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:MultiPoint");var points=geometry.components;var pointMember,pointGeom;for(var i=0;i<points.length;i++){pointMember=this.createElementNS(this.gmlns,"gml:pointMember");pointGeom=this.buildGeometry.point.apply(this,[points[i]]);pointMember.appendChild(pointGeom);gml.appendChild(pointMember);}
+return gml;},linestring:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:LineString");gml.appendChild(this.buildCoordinatesNode(geometry));return gml;},multilinestring:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:MultiLineString");var lines=geometry.components;var lineMember,lineGeom;for(var i=0;i<lines.length;++i){lineMember=this.createElementNS(this.gmlns,"gml:lineStringMember");lineGeom=this.buildGeometry.linestring.apply(this,[lines[i]]);lineMember.appendChild(lineGeom);gml.appendChild(lineMember);}
+return gml;},linearring:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:LinearRing");gml.appendChild(this.buildCoordinatesNode(geometry));return gml;},polygon:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:Polygon");var rings=geometry.components;var ringMember,ringGeom,type;for(var i=0;i<rings.length;++i){type=(i==0)?"outerBoundaryIs":"innerBoundaryIs";ringMember=this.createElementNS(this.gmlns,"gml:"+type);ringGeom=this.buildGeometry.linearring.apply(this,[rings[i]]);ringMember.appendChild(ringGeom);gml.appendChild(ringMember);}
+return gml;},multipolygon:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:MultiPolygon");var polys=geometry.components;var polyMember,polyGeom;for(var i=0;i<polys.length;++i){polyMember=this.createElementNS(this.gmlns,"gml:polygonMember");polyGeom=this.buildGeometry.polygon.apply(this,[polys[i]]);polyMember.appendChild(polyGeom);gml.appendChild(polyMember);}
+return gml;},bounds:function(bounds){var gml=this.createElementNS(this.gmlns,"gml:Box");gml.appendChild(this.buildCoordinatesNode(bounds));return gml;}},buildCoordinatesNode:function(geometry){var coordinatesNode=this.createElementNS(this.gmlns,"gml:coordinates");coordinatesNode.setAttribute("decimal",".");coordinatesNode.setAttribute("cs",",");coordinatesNode.setAttribute("ts"," ");var parts=[];if(geometry instanceof OpenLayers.Bounds){parts.push(geometry.left+","+geometry.bottom);parts.push(geometry.right+","+geometry.top);}else{var points=(geometry.components)?geometry.components:[geometry];for(var i=0;i<points.length;i++){parts.push(points[i].x+","+points[i].y);}}
+var txtNode=this.createTextNode(parts.join(" "));coordinatesNode.appendChild(txtNode);return coordinatesNode;},CLASS_NAME:"OpenLayers.Format.GML"});
 /**
  * @license
  * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
@@ -40601,736 +41159,5 @@ L.wfst = function(geojson,options){
     root._ = _;
   }
 }.call(this));
-
-/*
-
-  OpenLayers.js -- OpenLayers Map Viewer Library
-
-  Copyright (c) 2006-2013 by OpenLayers Contributors
-  Published under the 2-clause BSD license.
-  See http://openlayers.org/dev/license.txt for the full text of the license, and http://openlayers.org/dev/authors.txt for full list of contributors.
-
-  Includes compressed code under the following licenses:
-
-  (For uncompressed versions of the code used, please see the
-  OpenLayers Github repository: <https://github.com/openlayers/openlayers>)
-
-*/
-
-/**
- * Contains XMLHttpRequest.js <http://code.google.com/p/xmlhttprequest/>
- * Copyright 2007 Sergey Ilinsky (http://www.ilinsky.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- */
-
-/**
- * OpenLayers.Util.pagePosition is based on Yahoo's getXY method, which is
- * Copyright (c) 2006, Yahoo! Inc.
- * All rights reserved.
- * 
- * Redistribution and use of this software in source and binary forms, with or
- * without modification, are permitted provided that the following conditions
- * are met:
- * 
- * * Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
- * 
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- * 
- * * Neither the name of Yahoo! Inc. nor the names of its contributors may be
- *   used to endorse or promote products derived from this software without
- *   specific prior written permission of Yahoo! Inc.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
- * POSSIBILITY OF SUCH DAMAGE.
- */
-var OpenLayers={VERSION_NUMBER:"Release 2.14 dev",singleFile:true,_getScriptLocation:(function(){var r=new RegExp("(^|(.*?\\/))(OpenLayers[^\\/]*?\\.js)(\\?|$)"),s=document.getElementsByTagName('script'),src,m,l="";for(var i=0,len=s.length;i<len;i++){src=s[i].getAttribute('src');if(src){m=src.match(r);if(m){l=m[1];break;}}}
-return(function(){return l;});})(),ImgPath:''};OpenLayers.Class=function(){var len=arguments.length;var P=arguments[0];var F=arguments[len-1];var C=typeof F.initialize=="function"?F.initialize:function(){P.prototype.initialize.apply(this,arguments);};if(len>1){var newArgs=[C,P].concat(Array.prototype.slice.call(arguments).slice(1,len-1),F);OpenLayers.inherit.apply(null,newArgs);}else{C.prototype=F;}
-return C;};OpenLayers.inherit=function(C,P){var F=function(){};F.prototype=P.prototype;C.prototype=new F;var i,l,o;for(i=2,l=arguments.length;i<l;i++){o=arguments[i];if(typeof o==="function"){o=o.prototype;}
-OpenLayers.Util.extend(C.prototype,o);}};OpenLayers.Util=OpenLayers.Util||{};OpenLayers.Util.extend=function(destination,source){destination=destination||{};if(source){for(var property in source){var value=source[property];if(value!==undefined){destination[property]=value;}}
-var sourceIsEvt=typeof window.Event=="function"&&source instanceof window.Event;if(!sourceIsEvt&&source.hasOwnProperty&&source.hasOwnProperty("toString")){destination.toString=source.toString;}}
-return destination;};OpenLayers.Geometry=OpenLayers.Class({id:null,parent:null,bounds:null,initialize:function(){this.id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_");},destroy:function(){this.id=null;this.bounds=null;},clone:function(){return new OpenLayers.Geometry();},setBounds:function(bounds){if(bounds){this.bounds=bounds.clone();}},clearBounds:function(){this.bounds=null;if(this.parent){this.parent.clearBounds();}},extendBounds:function(newBounds){var bounds=this.getBounds();if(!bounds){this.setBounds(newBounds);}else{this.bounds.extend(newBounds);}},getBounds:function(){if(this.bounds==null){this.calculateBounds();}
-return this.bounds;},calculateBounds:function(){},distanceTo:function(geometry,options){},getVertices:function(nodes){},atPoint:function(lonlat,toleranceLon,toleranceLat){var atPoint=false;var bounds=this.getBounds();if((bounds!=null)&&(lonlat!=null)){var dX=(toleranceLon!=null)?toleranceLon:0;var dY=(toleranceLat!=null)?toleranceLat:0;var toleranceBounds=new OpenLayers.Bounds(this.bounds.left-dX,this.bounds.bottom-dY,this.bounds.right+dX,this.bounds.top+dY);atPoint=toleranceBounds.containsLonLat(lonlat);}
-return atPoint;},getLength:function(){return 0.0;},getArea:function(){return 0.0;},getCentroid:function(){return null;},toString:function(){var string;if(OpenLayers.Format&&OpenLayers.Format.WKT){string=OpenLayers.Format.WKT.prototype.write(new OpenLayers.Feature.Vector(this));}else{string=Object.prototype.toString.call(this);}
-return string;},CLASS_NAME:"OpenLayers.Geometry"});OpenLayers.Geometry.fromWKT=function(wkt){var geom;if(OpenLayers.Format&&OpenLayers.Format.WKT){var format=OpenLayers.Geometry.fromWKT.format;if(!format){format=new OpenLayers.Format.WKT();OpenLayers.Geometry.fromWKT.format=format;}
-var result=format.read(wkt);if(result instanceof OpenLayers.Feature.Vector){geom=result.geometry;}else if(OpenLayers.Util.isArray(result)){var len=result.length;var components=new Array(len);for(var i=0;i<len;++i){components[i]=result[i].geometry;}
-geom=new OpenLayers.Geometry.Collection(components);}}
-return geom;};OpenLayers.Geometry.segmentsIntersect=function(seg1,seg2,options){var point=options&&options.point;var tolerance=options&&options.tolerance;var intersection=false;var x11_21=seg1.x1-seg2.x1;var y11_21=seg1.y1-seg2.y1;var x12_11=seg1.x2-seg1.x1;var y12_11=seg1.y2-seg1.y1;var y22_21=seg2.y2-seg2.y1;var x22_21=seg2.x2-seg2.x1;var d=(y22_21*x12_11)-(x22_21*y12_11);var n1=(x22_21*y11_21)-(y22_21*x11_21);var n2=(x12_11*y11_21)-(y12_11*x11_21);if(d==0){if(n1==0&&n2==0){intersection=true;}}else{var along1=n1/d;var along2=n2/d;if(along1>=0&&along1<=1&&along2>=0&&along2<=1){if(!point){intersection=true;}else{var x=seg1.x1+(along1*x12_11);var y=seg1.y1+(along1*y12_11);intersection=new OpenLayers.Geometry.Point(x,y);}}}
-if(tolerance){var dist;if(intersection){if(point){var segs=[seg1,seg2];var seg,x,y;outer:for(var i=0;i<2;++i){seg=segs[i];for(var j=1;j<3;++j){x=seg["x"+j];y=seg["y"+j];dist=Math.sqrt(Math.pow(x-intersection.x,2)+
-Math.pow(y-intersection.y,2));if(dist<tolerance){intersection.x=x;intersection.y=y;break outer;}}}}}else{var segs=[seg1,seg2];var source,target,x,y,p,result;outer:for(var i=0;i<2;++i){source=segs[i];target=segs[(i+1)%2];for(var j=1;j<3;++j){p={x:source["x"+j],y:source["y"+j]};result=OpenLayers.Geometry.distanceToSegment(p,target);if(result.distance<tolerance){if(point){intersection=new OpenLayers.Geometry.Point(p.x,p.y);}else{intersection=true;}
-break outer;}}}}}
-return intersection;};OpenLayers.Geometry.distanceToSegment=function(point,segment){var result=OpenLayers.Geometry.distanceSquaredToSegment(point,segment);result.distance=Math.sqrt(result.distance);return result;};OpenLayers.Geometry.distanceSquaredToSegment=function(point,segment){var x0=point.x;var y0=point.y;var x1=segment.x1;var y1=segment.y1;var x2=segment.x2;var y2=segment.y2;var dx=x2-x1;var dy=y2-y1;var along=(dx==0&&dy==0)?0:((dx*(x0-x1))+(dy*(y0-y1)))/(Math.pow(dx,2)+Math.pow(dy,2));var x,y;if(along<=0.0){x=x1;y=y1;}else if(along>=1.0){x=x2;y=y2;}else{x=x1+along*dx;y=y1+along*dy;}
-return{distance:Math.pow(x-x0,2)+Math.pow(y-y0,2),x:x,y:y,along:along};};OpenLayers.Geometry.Collection=OpenLayers.Class(OpenLayers.Geometry,{components:null,componentTypes:null,initialize:function(components){OpenLayers.Geometry.prototype.initialize.apply(this,arguments);this.components=[];if(components!=null){this.addComponents(components);}},destroy:function(){this.components.length=0;this.components=null;OpenLayers.Geometry.prototype.destroy.apply(this,arguments);},clone:function(){var Constructor=OpenLayers.Util.getConstructor(this.CLASS_NAME);var geometry=new Constructor();for(var i=0,len=this.components.length;i<len;i++){geometry.addComponent(this.components[i].clone());}
-OpenLayers.Util.applyDefaults(geometry,this);return geometry;},getComponentsString:function(){var strings=[];for(var i=0,len=this.components.length;i<len;i++){strings.push(this.components[i].toShortString());}
-return strings.join(",");},calculateBounds:function(){this.bounds=null;var bounds=new OpenLayers.Bounds();var components=this.components;if(components){for(var i=0,len=components.length;i<len;i++){bounds.extend(components[i].getBounds());}}
-if(bounds.left!=null&&bounds.bottom!=null&&bounds.right!=null&&bounds.top!=null){this.setBounds(bounds);}},addComponents:function(components){if(!(OpenLayers.Util.isArray(components))){components=[components];}
-for(var i=0,len=components.length;i<len;i++){this.addComponent(components[i]);}},addComponent:function(component,index){var added=false;if(component){if(this.componentTypes==null||(OpenLayers.Util.indexOf(this.componentTypes,component.CLASS_NAME)>-1)){if(index!=null&&(index<this.components.length)){var components1=this.components.slice(0,index);var components2=this.components.slice(index,this.components.length);components1.push(component);this.components=components1.concat(components2);}else{this.components.push(component);}
-component.parent=this;this.clearBounds();added=true;}}
-return added;},removeComponents:function(components){var removed=false;if(!(OpenLayers.Util.isArray(components))){components=[components];}
-for(var i=components.length-1;i>=0;--i){removed=this.removeComponent(components[i])||removed;}
-return removed;},removeComponent:function(component){OpenLayers.Util.removeItem(this.components,component);this.clearBounds();return true;},getLength:function(){var length=0.0;for(var i=0,len=this.components.length;i<len;i++){length+=this.components[i].getLength();}
-return length;},getArea:function(){var area=0.0;for(var i=0,len=this.components.length;i<len;i++){area+=this.components[i].getArea();}
-return area;},getGeodesicArea:function(projection){var area=0.0;for(var i=0,len=this.components.length;i<len;i++){area+=this.components[i].getGeodesicArea(projection);}
-return area;},getCentroid:function(weighted){if(!weighted){return this.components.length&&this.components[0].getCentroid();}
-var len=this.components.length;if(!len){return false;}
-var areas=[];var centroids=[];var areaSum=0;var minArea=Number.MAX_VALUE;var component;for(var i=0;i<len;++i){component=this.components[i];var area=component.getArea();var centroid=component.getCentroid(true);if(isNaN(area)||isNaN(centroid.x)||isNaN(centroid.y)){continue;}
-areas.push(area);areaSum+=area;minArea=(area<minArea&&area>0)?area:minArea;centroids.push(centroid);}
-len=areas.length;if(areaSum===0){for(var i=0;i<len;++i){areas[i]=1;}
-areaSum=areas.length;}else{for(var i=0;i<len;++i){areas[i]/=minArea;}
-areaSum/=minArea;}
-var xSum=0,ySum=0,centroid,area;for(var i=0;i<len;++i){centroid=centroids[i];area=areas[i];xSum+=centroid.x*area;ySum+=centroid.y*area;}
-return new OpenLayers.Geometry.Point(xSum/areaSum,ySum/areaSum);},getGeodesicLength:function(projection){var length=0.0;for(var i=0,len=this.components.length;i<len;i++){length+=this.components[i].getGeodesicLength(projection);}
-return length;},move:function(x,y){for(var i=0,len=this.components.length;i<len;i++){this.components[i].move(x,y);}},rotate:function(angle,origin){for(var i=0,len=this.components.length;i<len;++i){this.components[i].rotate(angle,origin);}},resize:function(scale,origin,ratio){for(var i=0;i<this.components.length;++i){this.components[i].resize(scale,origin,ratio);}
-return this;},distanceTo:function(geometry,options){var edge=!(options&&options.edge===false);var details=edge&&options&&options.details;var result,best,distance;var min=Number.POSITIVE_INFINITY;for(var i=0,len=this.components.length;i<len;++i){result=this.components[i].distanceTo(geometry,options);distance=details?result.distance:result;if(distance<min){min=distance;best=result;if(min==0){break;}}}
-return best;},equals:function(geometry){var equivalent=true;if(!geometry||!geometry.CLASS_NAME||(this.CLASS_NAME!=geometry.CLASS_NAME)){equivalent=false;}else if(!(OpenLayers.Util.isArray(geometry.components))||(geometry.components.length!=this.components.length)){equivalent=false;}else{for(var i=0,len=this.components.length;i<len;++i){if(!this.components[i].equals(geometry.components[i])){equivalent=false;break;}}}
-return equivalent;},transform:function(source,dest){if(source&&dest){for(var i=0,len=this.components.length;i<len;i++){var component=this.components[i];component.transform(source,dest);}
-this.bounds=null;}
-return this;},intersects:function(geometry){var intersect=false;for(var i=0,len=this.components.length;i<len;++i){intersect=geometry.intersects(this.components[i]);if(intersect){break;}}
-return intersect;},getVertices:function(nodes){var vertices=[];for(var i=0,len=this.components.length;i<len;++i){Array.prototype.push.apply(vertices,this.components[i].getVertices(nodes));}
-return vertices;},CLASS_NAME:"OpenLayers.Geometry.Collection"});OpenLayers.Geometry.Point=OpenLayers.Class(OpenLayers.Geometry,{x:null,y:null,initialize:function(x,y){OpenLayers.Geometry.prototype.initialize.apply(this,arguments);this.x=parseFloat(x);this.y=parseFloat(y);},clone:function(obj){if(obj==null){obj=new OpenLayers.Geometry.Point(this.x,this.y);}
-OpenLayers.Util.applyDefaults(obj,this);return obj;},calculateBounds:function(){this.bounds=new OpenLayers.Bounds(this.x,this.y,this.x,this.y);},distanceTo:function(geometry,options){var edge=!(options&&options.edge===false);var details=edge&&options&&options.details;var distance,x0,y0,x1,y1,result;if(geometry instanceof OpenLayers.Geometry.Point){x0=this.x;y0=this.y;x1=geometry.x;y1=geometry.y;distance=Math.sqrt(Math.pow(x0-x1,2)+Math.pow(y0-y1,2));result=!details?distance:{x0:x0,y0:y0,x1:x1,y1:y1,distance:distance};}else{result=geometry.distanceTo(this,options);if(details){result={x0:result.x1,y0:result.y1,x1:result.x0,y1:result.y0,distance:result.distance};}}
-return result;},equals:function(geom){var equals=false;if(geom!=null){equals=((this.x==geom.x&&this.y==geom.y)||(isNaN(this.x)&&isNaN(this.y)&&isNaN(geom.x)&&isNaN(geom.y)));}
-return equals;},toShortString:function(){return(this.x+", "+this.y);},move:function(x,y){this.x=this.x+x;this.y=this.y+y;this.clearBounds();},rotate:function(angle,origin){angle*=Math.PI/180;var radius=this.distanceTo(origin);var theta=angle+Math.atan2(this.y-origin.y,this.x-origin.x);this.x=origin.x+(radius*Math.cos(theta));this.y=origin.y+(radius*Math.sin(theta));this.clearBounds();},getCentroid:function(){return new OpenLayers.Geometry.Point(this.x,this.y);},resize:function(scale,origin,ratio){ratio=(ratio==undefined)?1:ratio;this.x=origin.x+(scale*ratio*(this.x-origin.x));this.y=origin.y+(scale*(this.y-origin.y));this.clearBounds();return this;},intersects:function(geometry){var intersect=false;if(geometry.CLASS_NAME=="OpenLayers.Geometry.Point"){intersect=this.equals(geometry);}else{intersect=geometry.intersects(this);}
-return intersect;},transform:function(source,dest){if((source&&dest)){OpenLayers.Projection.transform(this,source,dest);this.bounds=null;}
-return this;},getVertices:function(nodes){return[this];},CLASS_NAME:"OpenLayers.Geometry.Point"});OpenLayers.Geometry.MultiPoint=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.Point"],addPoint:function(point,index){this.addComponent(point,index);},removePoint:function(point){this.removeComponent(point);},CLASS_NAME:"OpenLayers.Geometry.MultiPoint"});OpenLayers.Geometry.Curve=OpenLayers.Class(OpenLayers.Geometry.MultiPoint,{componentTypes:["OpenLayers.Geometry.Point"],getLength:function(){var length=0.0;if(this.components&&(this.components.length>1)){for(var i=1,len=this.components.length;i<len;i++){length+=this.components[i-1].distanceTo(this.components[i]);}}
-return length;},getGeodesicLength:function(projection){var geom=this;if(projection){var gg=new OpenLayers.Projection("EPSG:4326");if(!gg.equals(projection)){geom=this.clone().transform(projection,gg);}}
-var length=0.0;if(geom.components&&(geom.components.length>1)){var p1,p2;for(var i=1,len=geom.components.length;i<len;i++){p1=geom.components[i-1];p2=geom.components[i];length+=OpenLayers.Util.distVincenty({lon:p1.x,lat:p1.y},{lon:p2.x,lat:p2.y});}}
-return length*1000;},CLASS_NAME:"OpenLayers.Geometry.Curve"});OpenLayers.Geometry.LineString=OpenLayers.Class(OpenLayers.Geometry.Curve,{removeComponent:function(point){var removed=this.components&&(this.components.length>2);if(removed){OpenLayers.Geometry.Collection.prototype.removeComponent.apply(this,arguments);}
-return removed;},intersects:function(geometry){var intersect=false;var type=geometry.CLASS_NAME;if(type=="OpenLayers.Geometry.LineString"||type=="OpenLayers.Geometry.LinearRing"||type=="OpenLayers.Geometry.Point"){var segs1=this.getSortedSegments();var segs2;if(type=="OpenLayers.Geometry.Point"){segs2=[{x1:geometry.x,y1:geometry.y,x2:geometry.x,y2:geometry.y}];}else{segs2=geometry.getSortedSegments();}
-var seg1,seg1x1,seg1x2,seg1y1,seg1y2,seg2,seg2y1,seg2y2;outer:for(var i=0,len=segs1.length;i<len;++i){seg1=segs1[i];seg1x1=seg1.x1;seg1x2=seg1.x2;seg1y1=seg1.y1;seg1y2=seg1.y2;inner:for(var j=0,jlen=segs2.length;j<jlen;++j){seg2=segs2[j];if(seg2.x1>seg1x2){break;}
-if(seg2.x2<seg1x1){continue;}
-seg2y1=seg2.y1;seg2y2=seg2.y2;if(Math.min(seg2y1,seg2y2)>Math.max(seg1y1,seg1y2)){continue;}
-if(Math.max(seg2y1,seg2y2)<Math.min(seg1y1,seg1y2)){continue;}
-if(OpenLayers.Geometry.segmentsIntersect(seg1,seg2)){intersect=true;break outer;}}}}else{intersect=geometry.intersects(this);}
-return intersect;},getSortedSegments:function(){var numSeg=this.components.length-1;var segments=new Array(numSeg),point1,point2;for(var i=0;i<numSeg;++i){point1=this.components[i];point2=this.components[i+1];if(point1.x<point2.x){segments[i]={x1:point1.x,y1:point1.y,x2:point2.x,y2:point2.y};}else{segments[i]={x1:point2.x,y1:point2.y,x2:point1.x,y2:point1.y};}}
-function byX1(seg1,seg2){return seg1.x1-seg2.x1;}
-return segments.sort(byX1);},splitWithSegment:function(seg,options){var edge=!(options&&options.edge===false);var tolerance=options&&options.tolerance;var lines=[];var verts=this.getVertices();var points=[];var intersections=[];var split=false;var vert1,vert2,point;var node,vertex,target;var interOptions={point:true,tolerance:tolerance};var result=null;for(var i=0,stop=verts.length-2;i<=stop;++i){vert1=verts[i];points.push(vert1.clone());vert2=verts[i+1];target={x1:vert1.x,y1:vert1.y,x2:vert2.x,y2:vert2.y};point=OpenLayers.Geometry.segmentsIntersect(seg,target,interOptions);if(point instanceof OpenLayers.Geometry.Point){if((point.x===seg.x1&&point.y===seg.y1)||(point.x===seg.x2&&point.y===seg.y2)||point.equals(vert1)||point.equals(vert2)){vertex=true;}else{vertex=false;}
-if(vertex||edge){if(!point.equals(intersections[intersections.length-1])){intersections.push(point.clone());}
-if(i===0){if(point.equals(vert1)){continue;}}
-if(point.equals(vert2)){continue;}
-split=true;if(!point.equals(vert1)){points.push(point);}
-lines.push(new OpenLayers.Geometry.LineString(points));points=[point.clone()];}}}
-if(split){points.push(vert2.clone());lines.push(new OpenLayers.Geometry.LineString(points));}
-if(intersections.length>0){var xDir=seg.x1<seg.x2?1:-1;var yDir=seg.y1<seg.y2?1:-1;result={lines:lines,points:intersections.sort(function(p1,p2){return(xDir*p1.x-xDir*p2.x)||(yDir*p1.y-yDir*p2.y);})};}
-return result;},split:function(target,options){var results=null;var mutual=options&&options.mutual;var sourceSplit,targetSplit,sourceParts,targetParts;if(target instanceof OpenLayers.Geometry.LineString){var verts=this.getVertices();var vert1,vert2,seg,splits,lines,point;var points=[];sourceParts=[];for(var i=0,stop=verts.length-2;i<=stop;++i){vert1=verts[i];vert2=verts[i+1];seg={x1:vert1.x,y1:vert1.y,x2:vert2.x,y2:vert2.y};targetParts=targetParts||[target];if(mutual){points.push(vert1.clone());}
-for(var j=0;j<targetParts.length;++j){splits=targetParts[j].splitWithSegment(seg,options);if(splits){lines=splits.lines;if(lines.length>0){lines.unshift(j,1);Array.prototype.splice.apply(targetParts,lines);j+=lines.length-2;}
-if(mutual){for(var k=0,len=splits.points.length;k<len;++k){point=splits.points[k];if(!point.equals(vert1)){points.push(point);sourceParts.push(new OpenLayers.Geometry.LineString(points));if(point.equals(vert2)){points=[];}else{points=[point.clone()];}}}}}}}
-if(mutual&&sourceParts.length>0&&points.length>0){points.push(vert2.clone());sourceParts.push(new OpenLayers.Geometry.LineString(points));}}else{results=target.splitWith(this,options);}
-if(targetParts&&targetParts.length>1){targetSplit=true;}else{targetParts=[];}
-if(sourceParts&&sourceParts.length>1){sourceSplit=true;}else{sourceParts=[];}
-if(targetSplit||sourceSplit){if(mutual){results=[sourceParts,targetParts];}else{results=targetParts;}}
-return results;},splitWith:function(geometry,options){return geometry.split(this,options);},getVertices:function(nodes){var vertices;if(nodes===true){vertices=[this.components[0],this.components[this.components.length-1]];}else if(nodes===false){vertices=this.components.slice(1,this.components.length-1);}else{vertices=this.components.slice();}
-return vertices;},distanceTo:function(geometry,options){var edge=!(options&&options.edge===false);var details=edge&&options&&options.details;var result,best={};var min=Number.POSITIVE_INFINITY;if(geometry instanceof OpenLayers.Geometry.Point){var segs=this.getSortedSegments();var x=geometry.x;var y=geometry.y;var seg;for(var i=0,len=segs.length;i<len;++i){seg=segs[i];result=OpenLayers.Geometry.distanceToSegment(geometry,seg);if(result.distance<min){min=result.distance;if(details){best={distance:min,x0:result.x,y0:result.y,x1:x,y1:y,index:i,indexDistance:new OpenLayers.Geometry.Point(seg.x1,seg.y1).distanceTo(geometry)};}else{best=min;}
-if(min===0){break;}}}}else if(geometry instanceof OpenLayers.Geometry.LineString){var segs0=this.getSortedSegments();var segs1=geometry.getSortedSegments();var seg0,seg1,intersection,x0,y0;var len1=segs1.length;var interOptions={point:true};outer:for(var i=0,len=segs0.length;i<len;++i){seg0=segs0[i];x0=seg0.x1;y0=seg0.y1;for(var j=0;j<len1;++j){seg1=segs1[j];intersection=OpenLayers.Geometry.segmentsIntersect(seg0,seg1,interOptions);if(intersection){min=0;best={distance:0,x0:intersection.x,y0:intersection.y,x1:intersection.x,y1:intersection.y};break outer;}else{result=OpenLayers.Geometry.distanceToSegment({x:x0,y:y0},seg1);if(result.distance<min){min=result.distance;best={distance:min,x0:x0,y0:y0,x1:result.x,y1:result.y};}}}}
-if(!details){best=best.distance;}
-if(min!==0){if(seg0){result=geometry.distanceTo(new OpenLayers.Geometry.Point(seg0.x2,seg0.y2),options);var dist=details?result.distance:result;if(dist<min){if(details){best={distance:min,x0:result.x1,y0:result.y1,x1:result.x0,y1:result.y0};}else{best=dist;}}}}}else{best=geometry.distanceTo(this,options);if(details){best={distance:best.distance,x0:best.x1,y0:best.y1,x1:best.x0,y1:best.y0};}}
-return best;},simplify:function(tolerance){if(this&&this!==null){var points=this.getVertices();if(points.length<3){return this;}
-var compareNumbers=function(a,b){return(a-b);};var douglasPeuckerReduction=function(points,firstPoint,lastPoint,tolerance){var maxDistance=0;var indexFarthest=0;for(var index=firstPoint,distance;index<lastPoint;index++){distance=perpendicularDistance(points[firstPoint],points[lastPoint],points[index]);if(distance>maxDistance){maxDistance=distance;indexFarthest=index;}}
-if(maxDistance>tolerance&&indexFarthest!=firstPoint){pointIndexsToKeep.push(indexFarthest);douglasPeuckerReduction(points,firstPoint,indexFarthest,tolerance);douglasPeuckerReduction(points,indexFarthest,lastPoint,tolerance);}};var perpendicularDistance=function(point1,point2,point){var area=Math.abs(0.5*(point1.x*point2.y+point2.x*point.y+point.x*point1.y-point2.x*point1.y-point.x*point2.y-point1.x*point.y));var bottom=Math.sqrt(Math.pow(point1.x-point2.x,2)+Math.pow(point1.y-point2.y,2));var height=area/bottom*2;return height;};var firstPoint=0;var lastPoint=points.length-1;var pointIndexsToKeep=[];pointIndexsToKeep.push(firstPoint);pointIndexsToKeep.push(lastPoint);while(points[firstPoint].equals(points[lastPoint])){lastPoint--;pointIndexsToKeep.push(lastPoint);}
-douglasPeuckerReduction(points,firstPoint,lastPoint,tolerance);var returnPoints=[];pointIndexsToKeep.sort(compareNumbers);for(var index=0;index<pointIndexsToKeep.length;index++){returnPoints.push(points[pointIndexsToKeep[index]]);}
-return new OpenLayers.Geometry.LineString(returnPoints);}
-else{return this;}},CLASS_NAME:"OpenLayers.Geometry.LineString"});OpenLayers.Geometry.LineString.geodesic=function(interpolate,transform,squaredTolerance){var components=[];var geoA=interpolate(0);var geoB=interpolate(1);var a=transform(geoA);var b=transform(geoB);var geoStack=[geoB,geoA];var stack=[b,a];var fractionStack=[1,0];var fractions={};var maxIterations=1e5;var geoM,m,fracA,fracB,fracM,key;while(--maxIterations>0&&fractionStack.length>0){fracA=fractionStack.pop();geoA=geoStack.pop();a=stack.pop();key=fracA.toString();if(!(key in fractions)){components.push(a);fractions[key]=true;}
-fracB=fractionStack.pop();geoB=geoStack.pop();b=stack.pop();fracM=(fracA+fracB)/2;geoM=interpolate(fracM);m=transform(geoM);if(OpenLayers.Geometry.distanceSquaredToSegment(m,{x1:a.x,y1:a.y,x2:b.x,y2:b.y}).distance<squaredTolerance){components.push(b);key=fracB.toString();fractions[key]=true;}else{fractionStack.push(fracB,fracM,fracM,fracA);stack.push(b,m,m,a);geoStack.push(geoB,geoM,geoM,geoA);}}
-return new OpenLayers.Geometry.LineString(components);};OpenLayers.Geometry.LineString.geodesicMeridian=function(lon,lat1,lat2,projection,squaredTolerance){var epsg4326Projection=new OpenLayers.Projection('EPSG:4326');return OpenLayers.Geometry.LineString.geodesic(function(frac){return new OpenLayers.Geometry.Point(lon,lat1+((lat2-lat1)*frac));},function(point){return point.transform(epsg4326Projection,projection);},squaredTolerance);};OpenLayers.Geometry.LineString.geodesicParallel=function(lat,lon1,lon2,projection,squaredTolerance){var epsg4326Projection=new OpenLayers.Projection('EPSG:4326');return OpenLayers.Geometry.LineString.geodesic(function(frac){return new OpenLayers.Geometry.Point(lon1+((lon2-lon1)*frac),lat);},function(point){return point.transform(epsg4326Projection,projection);},squaredTolerance);};OpenLayers.Geometry.LinearRing=OpenLayers.Class(OpenLayers.Geometry.LineString,{componentTypes:["OpenLayers.Geometry.Point"],addComponent:function(point,index){var added=false;var lastPoint=this.components.pop();if(index!=null||!point.equals(lastPoint)){added=OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,arguments);}
-var firstPoint=this.components[0];OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,[firstPoint]);return added;},removeComponent:function(point){var removed=this.components&&(this.components.length>3);if(removed){this.components.pop();OpenLayers.Geometry.Collection.prototype.removeComponent.apply(this,arguments);var firstPoint=this.components[0];OpenLayers.Geometry.Collection.prototype.addComponent.apply(this,[firstPoint]);}
-return removed;},move:function(x,y){for(var i=0,len=this.components.length;i<len-1;i++){this.components[i].move(x,y);}},rotate:function(angle,origin){for(var i=0,len=this.components.length;i<len-1;++i){this.components[i].rotate(angle,origin);}},resize:function(scale,origin,ratio){for(var i=0,len=this.components.length;i<len-1;++i){this.components[i].resize(scale,origin,ratio);}
-return this;},transform:function(source,dest){if(source&&dest){for(var i=0,len=this.components.length;i<len-1;i++){var component=this.components[i];component.transform(source,dest);}
-this.bounds=null;}
-return this;},getCentroid:function(){if(this.components){var len=this.components.length;if(len>0&&len<=2){return this.components[0].clone();}else if(len>2){var sumX=0.0;var sumY=0.0;var x0=this.components[0].x;var y0=this.components[0].y;var area=-1*this.getArea();if(area!=0){for(var i=0;i<len-1;i++){var b=this.components[i];var c=this.components[i+1];sumX+=(b.x+c.x-2*x0)*((b.x-x0)*(c.y-y0)-(c.x-x0)*(b.y-y0));sumY+=(b.y+c.y-2*y0)*((b.x-x0)*(c.y-y0)-(c.x-x0)*(b.y-y0));}
-var x=x0+sumX/(6*area);var y=y0+sumY/(6*area);}else{for(var i=0;i<len-1;i++){sumX+=this.components[i].x;sumY+=this.components[i].y;}
-var x=sumX/(len-1);var y=sumY/(len-1);}
-return new OpenLayers.Geometry.Point(x,y);}else{return null;}}},getArea:function(){var area=0.0;if(this.components&&(this.components.length>2)){var sum=0.0;for(var i=0,len=this.components.length;i<len-1;i++){var b=this.components[i];var c=this.components[i+1];sum+=(b.x+c.x)*(c.y-b.y);}
-area=-sum/2.0;}
-return area;},getGeodesicArea:function(projection){var ring=this;if(projection){var gg=new OpenLayers.Projection("EPSG:4326");if(!gg.equals(projection)){ring=this.clone().transform(projection,gg);}}
-var area=0.0;var len=ring.components&&ring.components.length;if(len>2){var p1,p2;for(var i=0;i<len-1;i++){p1=ring.components[i];p2=ring.components[i+1];area+=OpenLayers.Util.rad(p2.x-p1.x)*(2+Math.sin(OpenLayers.Util.rad(p1.y))+
-Math.sin(OpenLayers.Util.rad(p2.y)));}
-area=area*OpenLayers.Util.VincentyConstants.a*OpenLayers.Util.VincentyConstants.a/2.0;}
-return area;},containsPoint:function(point){var approx=OpenLayers.Number.limitSigDigs;var digs=14;var px=approx(point.x,digs);var py=approx(point.y,digs);function getX(y,x1,y1,x2,y2){return(y-y2)*((x2-x1)/(y2-y1))+x2;}
-var numSeg=this.components.length-1;var start,end,x1,y1,x2,y2,cx,cy;var crosses=0;for(var i=0;i<numSeg;++i){start=this.components[i];x1=approx(start.x,digs);y1=approx(start.y,digs);end=this.components[i+1];x2=approx(end.x,digs);y2=approx(end.y,digs);if(y1==y2){if(py==y1){if(x1<=x2&&(px>=x1&&px<=x2)||x1>=x2&&(px<=x1&&px>=x2)){crosses=-1;break;}}
-continue;}
-cx=approx(getX(py,x1,y1,x2,y2),digs);if(cx==px){if(y1<y2&&(py>=y1&&py<=y2)||y1>y2&&(py<=y1&&py>=y2)){crosses=-1;break;}}
-if(cx<=px){continue;}
-if(x1!=x2&&(cx<Math.min(x1,x2)||cx>Math.max(x1,x2))){continue;}
-if(y1<y2&&(py>=y1&&py<y2)||y1>y2&&(py<y1&&py>=y2)){++crosses;}}
-var contained=(crosses==-1)?1:!!(crosses&1);return contained;},intersects:function(geometry){var intersect=false;if(geometry.CLASS_NAME=="OpenLayers.Geometry.Point"){intersect=this.containsPoint(geometry);}else if(geometry.CLASS_NAME=="OpenLayers.Geometry.LineString"){intersect=geometry.intersects(this);}else if(geometry.CLASS_NAME=="OpenLayers.Geometry.LinearRing"){intersect=OpenLayers.Geometry.LineString.prototype.intersects.apply(this,[geometry]);}else{for(var i=0,len=geometry.components.length;i<len;++i){intersect=geometry.components[i].intersects(this);if(intersect){break;}}}
-return intersect;},getVertices:function(nodes){return(nodes===true)?[]:this.components.slice(0,this.components.length-1);},CLASS_NAME:"OpenLayers.Geometry.LinearRing"});OpenLayers.Geometry.Polygon=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.LinearRing"],getArea:function(){var area=0.0;if(this.components&&(this.components.length>0)){area+=Math.abs(this.components[0].getArea());for(var i=1,len=this.components.length;i<len;i++){area-=Math.abs(this.components[i].getArea());}}
-return area;},getGeodesicArea:function(projection){var area=0.0;if(this.components&&(this.components.length>0)){area+=Math.abs(this.components[0].getGeodesicArea(projection));for(var i=1,len=this.components.length;i<len;i++){area-=Math.abs(this.components[i].getGeodesicArea(projection));}}
-return area;},containsPoint:function(point){var numRings=this.components.length;var contained=false;if(numRings>0){contained=this.components[0].containsPoint(point);if(contained!==1){if(contained&&numRings>1){var hole;for(var i=1;i<numRings;++i){hole=this.components[i].containsPoint(point);if(hole){if(hole===1){contained=1;}else{contained=false;}
-break;}}}}}
-return contained;},intersects:function(geometry){var intersect=false;var i,len;if(geometry.CLASS_NAME=="OpenLayers.Geometry.Point"){intersect=this.containsPoint(geometry);}else if(geometry.CLASS_NAME=="OpenLayers.Geometry.LineString"||geometry.CLASS_NAME=="OpenLayers.Geometry.LinearRing"){for(i=0,len=this.components.length;i<len;++i){intersect=geometry.intersects(this.components[i]);if(intersect){break;}}
-if(!intersect){for(i=0,len=geometry.components.length;i<len;++i){intersect=this.containsPoint(geometry.components[i]);if(intersect){break;}}}}else{for(i=0,len=geometry.components.length;i<len;++i){intersect=this.intersects(geometry.components[i]);if(intersect){break;}}}
-if(!intersect&&geometry.CLASS_NAME=="OpenLayers.Geometry.Polygon"){var ring=this.components[0];for(i=0,len=ring.components.length;i<len;++i){intersect=geometry.containsPoint(ring.components[i]);if(intersect){break;}}}
-return intersect;},distanceTo:function(geometry,options){var edge=!(options&&options.edge===false);var result;if(!edge&&this.intersects(geometry)){result=0;}else{result=OpenLayers.Geometry.Collection.prototype.distanceTo.apply(this,[geometry,options]);}
-return result;},CLASS_NAME:"OpenLayers.Geometry.Polygon"});OpenLayers.Geometry.Polygon.createRegularPolygon=function(origin,radius,sides,rotation){var angle=Math.PI*((1/sides)-(1/2));if(rotation){angle+=(rotation/180)*Math.PI;}
-var rotatedAngle,x,y;var points=[];for(var i=0;i<sides;++i){rotatedAngle=angle+(i*2*Math.PI/sides);x=origin.x+(radius*Math.cos(rotatedAngle));y=origin.y+(radius*Math.sin(rotatedAngle));points.push(new OpenLayers.Geometry.Point(x,y));}
-var ring=new OpenLayers.Geometry.LinearRing(points);return new OpenLayers.Geometry.Polygon([ring]);};OpenLayers.Bounds=OpenLayers.Class({left:null,bottom:null,right:null,top:null,centerLonLat:null,initialize:function(left,bottom,right,top){if(OpenLayers.Util.isArray(left)){top=left[3];right=left[2];bottom=left[1];left=left[0];}
-if(left!=null){this.left=OpenLayers.Util.toFloat(left);}
-if(bottom!=null){this.bottom=OpenLayers.Util.toFloat(bottom);}
-if(right!=null){this.right=OpenLayers.Util.toFloat(right);}
-if(top!=null){this.top=OpenLayers.Util.toFloat(top);}},clone:function(){return new OpenLayers.Bounds(this.left,this.bottom,this.right,this.top);},equals:function(bounds){var equals=false;if(bounds!=null){equals=((this.left==bounds.left)&&(this.right==bounds.right)&&(this.top==bounds.top)&&(this.bottom==bounds.bottom));}
-return equals;},toString:function(){return[this.left,this.bottom,this.right,this.top].join(",");},toArray:function(reverseAxisOrder){if(reverseAxisOrder===true){return[this.bottom,this.left,this.top,this.right];}else{return[this.left,this.bottom,this.right,this.top];}},toBBOX:function(decimal,reverseAxisOrder){if(decimal==null){decimal=6;}
-var mult=Math.pow(10,decimal);var xmin=Math.round(this.left*mult)/mult;var ymin=Math.round(this.bottom*mult)/mult;var xmax=Math.round(this.right*mult)/mult;var ymax=Math.round(this.top*mult)/mult;if(reverseAxisOrder===true){return ymin+","+xmin+","+ymax+","+xmax;}else{return xmin+","+ymin+","+xmax+","+ymax;}},toGeometry:function(){return new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing([new OpenLayers.Geometry.Point(this.left,this.bottom),new OpenLayers.Geometry.Point(this.right,this.bottom),new OpenLayers.Geometry.Point(this.right,this.top),new OpenLayers.Geometry.Point(this.left,this.top)])]);},getWidth:function(){return(this.right-this.left);},getHeight:function(){return(this.top-this.bottom);},getSize:function(){return new OpenLayers.Size(this.getWidth(),this.getHeight());},getCenterPixel:function(){return new OpenLayers.Pixel((this.left+this.right)/2,(this.bottom+this.top)/2);},getCenterLonLat:function(){if(!this.centerLonLat){this.centerLonLat=new OpenLayers.LonLat((this.left+this.right)/2,(this.bottom+this.top)/2);}
-return this.centerLonLat;},scale:function(ratio,origin){if(origin==null){origin=this.getCenterLonLat();}
-var origx,origy;if(origin.CLASS_NAME=="OpenLayers.LonLat"){origx=origin.lon;origy=origin.lat;}else{origx=origin.x;origy=origin.y;}
-var left=(this.left-origx)*ratio+origx;var bottom=(this.bottom-origy)*ratio+origy;var right=(this.right-origx)*ratio+origx;var top=(this.top-origy)*ratio+origy;return new OpenLayers.Bounds(left,bottom,right,top);},add:function(x,y){if((x==null)||(y==null)){throw new TypeError('Bounds.add cannot receive null values');}
-return new OpenLayers.Bounds(this.left+x,this.bottom+y,this.right+x,this.top+y);},extend:function(object){if(object){switch(object.CLASS_NAME){case"OpenLayers.LonLat":this.extendXY(object.lon,object.lat);break;case"OpenLayers.Geometry.Point":this.extendXY(object.x,object.y);break;case"OpenLayers.Bounds":this.centerLonLat=null;if((this.left==null)||(object.left<this.left)){this.left=object.left;}
-if((this.bottom==null)||(object.bottom<this.bottom)){this.bottom=object.bottom;}
-if((this.right==null)||(object.right>this.right)){this.right=object.right;}
-if((this.top==null)||(object.top>this.top)){this.top=object.top;}
-break;}}},extendXY:function(x,y){this.centerLonLat=null;if((this.left==null)||(x<this.left)){this.left=x;}
-if((this.bottom==null)||(y<this.bottom)){this.bottom=y;}
-if((this.right==null)||(x>this.right)){this.right=x;}
-if((this.top==null)||(y>this.top)){this.top=y;}},containsLonLat:function(ll,options){if(typeof options==="boolean"){options={inclusive:options};}
-options=options||{};var contains=this.contains(ll.lon,ll.lat,options.inclusive),worldBounds=options.worldBounds;if(worldBounds&&!contains){var worldWidth=worldBounds.getWidth();var worldCenterX=(worldBounds.left+worldBounds.right)/2;var worldsAway=Math.round((ll.lon-worldCenterX)/worldWidth);contains=this.containsLonLat({lon:ll.lon-worldsAway*worldWidth,lat:ll.lat},{inclusive:options.inclusive});}
-return contains;},containsPixel:function(px,inclusive){return this.contains(px.x,px.y,inclusive);},contains:function(x,y,inclusive){if(inclusive==null){inclusive=true;}
-if(x==null||y==null){return false;}
-x=OpenLayers.Util.toFloat(x);y=OpenLayers.Util.toFloat(y);var contains=false;if(inclusive){contains=((x>=this.left)&&(x<=this.right)&&(y>=this.bottom)&&(y<=this.top));}else{contains=((x>this.left)&&(x<this.right)&&(y>this.bottom)&&(y<this.top));}
-return contains;},intersectsBounds:function(bounds,options){if(typeof options==="boolean"){options={inclusive:options};}
-options=options||{};if(options.worldBounds){var self=this.wrapDateLine(options.worldBounds);bounds=bounds.wrapDateLine(options.worldBounds);}else{self=this;}
-if(options.inclusive==null){options.inclusive=true;}
-var intersects=false;var mightTouch=(self.left==bounds.right||self.right==bounds.left||self.top==bounds.bottom||self.bottom==bounds.top);if(options.inclusive||!mightTouch){var inBottom=(((bounds.bottom>=self.bottom)&&(bounds.bottom<=self.top))||((self.bottom>=bounds.bottom)&&(self.bottom<=bounds.top)));var inTop=(((bounds.top>=self.bottom)&&(bounds.top<=self.top))||((self.top>bounds.bottom)&&(self.top<bounds.top)));var inLeft=(((bounds.left>=self.left)&&(bounds.left<=self.right))||((self.left>=bounds.left)&&(self.left<=bounds.right)));var inRight=(((bounds.right>=self.left)&&(bounds.right<=self.right))||((self.right>=bounds.left)&&(self.right<=bounds.right)));intersects=((inBottom||inTop)&&(inLeft||inRight));}
-if(options.worldBounds&&!intersects){var world=options.worldBounds;var width=world.getWidth();var selfCrosses=!world.containsBounds(self);var boundsCrosses=!world.containsBounds(bounds);if(selfCrosses&&!boundsCrosses){bounds=bounds.add(-width,0);intersects=self.intersectsBounds(bounds,{inclusive:options.inclusive});}else if(boundsCrosses&&!selfCrosses){self=self.add(-width,0);intersects=bounds.intersectsBounds(self,{inclusive:options.inclusive});}}
-return intersects;},containsBounds:function(bounds,partial,inclusive){if(partial==null){partial=false;}
-if(inclusive==null){inclusive=true;}
-var bottomLeft=this.contains(bounds.left,bounds.bottom,inclusive);var bottomRight=this.contains(bounds.right,bounds.bottom,inclusive);var topLeft=this.contains(bounds.left,bounds.top,inclusive);var topRight=this.contains(bounds.right,bounds.top,inclusive);return(partial)?(bottomLeft||bottomRight||topLeft||topRight):(bottomLeft&&bottomRight&&topLeft&&topRight);},determineQuadrant:function(lonlat){var quadrant="";var center=this.getCenterLonLat();quadrant+=(lonlat.lat<center.lat)?"b":"t";quadrant+=(lonlat.lon<center.lon)?"l":"r";return quadrant;},transform:function(source,dest){this.centerLonLat=null;var ll=OpenLayers.Projection.transform({'x':this.left,'y':this.bottom},source,dest);var lr=OpenLayers.Projection.transform({'x':this.right,'y':this.bottom},source,dest);var ul=OpenLayers.Projection.transform({'x':this.left,'y':this.top},source,dest);var ur=OpenLayers.Projection.transform({'x':this.right,'y':this.top},source,dest);this.left=Math.min(ll.x,ul.x);this.bottom=Math.min(ll.y,lr.y);this.right=Math.max(lr.x,ur.x);this.top=Math.max(ul.y,ur.y);return this;},wrapDateLine:function(maxExtent,options){options=options||{};var leftTolerance=options.leftTolerance||0;var rightTolerance=options.rightTolerance||0;var newBounds=this.clone();if(maxExtent){var width=maxExtent.getWidth();while(newBounds.left<maxExtent.left&&newBounds.right-rightTolerance<=maxExtent.left){newBounds=newBounds.add(width,0);}
-while(newBounds.left+leftTolerance>=maxExtent.right&&newBounds.right>maxExtent.right){newBounds=newBounds.add(-width,0);}
-var newLeft=newBounds.left+leftTolerance;if(newLeft<maxExtent.right&&newLeft>maxExtent.left&&newBounds.right-rightTolerance>maxExtent.right){newBounds=newBounds.add(-width,0);}}
-return newBounds;},CLASS_NAME:"OpenLayers.Bounds"});OpenLayers.Bounds.fromString=function(str,reverseAxisOrder){var bounds=str.split(",");return OpenLayers.Bounds.fromArray(bounds,reverseAxisOrder);};OpenLayers.Bounds.fromArray=function(bbox,reverseAxisOrder){return reverseAxisOrder===true?new OpenLayers.Bounds(bbox[1],bbox[0],bbox[3],bbox[2]):new OpenLayers.Bounds(bbox[0],bbox[1],bbox[2],bbox[3]);};OpenLayers.Bounds.fromSize=function(size){return new OpenLayers.Bounds(0,size.h,size.w,0);};OpenLayers.Bounds.oppositeQuadrant=function(quadrant){var opp="";opp+=(quadrant.charAt(0)=='t')?'b':'t';opp+=(quadrant.charAt(1)=='l')?'r':'l';return opp;};OpenLayers.String={startsWith:function(str,sub){return(str.indexOf(sub)==0);},contains:function(str,sub){return(str.indexOf(sub)!=-1);},trim:function(str){return str.replace(/^\s\s*/,'').replace(/\s\s*$/,'');},camelize:function(str){var oStringList=str.split('-');var camelizedString=oStringList[0];for(var i=1,len=oStringList.length;i<len;i++){var s=oStringList[i];camelizedString+=s.charAt(0).toUpperCase()+s.substring(1);}
-return camelizedString;},format:function(template,context,args){if(!context){context=window;}
-var replacer=function(str,match){var replacement;var subs=match.split(/\.+/);for(var i=0;i<subs.length;i++){if(i==0){replacement=context;}
-if(replacement===undefined){break;}
-replacement=replacement[subs[i]];}
-if(typeof replacement=="function"){replacement=args?replacement.apply(null,args):replacement();}
-if(typeof replacement=='undefined'){return'undefined';}else{return replacement;}};return template.replace(OpenLayers.String.tokenRegEx,replacer);},tokenRegEx:/\$\{([\w.]+?)\}/g,numberRegEx:/^([+-]?)(?=\d|\.\d)\d*(\.\d*)?([Ee]([+-]?\d+))?$/,isNumeric:function(value){return OpenLayers.String.numberRegEx.test(value);},numericIf:function(value,trimWhitespace){var originalValue=value;if(trimWhitespace===true&&value!=null&&value.replace){value=value.replace(/^\s*|\s*$/g,"");}
-return OpenLayers.String.isNumeric(value)?parseFloat(value):originalValue;}};OpenLayers.Number={decimalSeparator:".",thousandsSeparator:",",limitSigDigs:function(num,sig){var fig=0;if(sig>0){fig=parseFloat(num.toPrecision(sig));}
-return fig;},format:function(num,dec,tsep,dsep){dec=(typeof dec!="undefined")?dec:0;tsep=(typeof tsep!="undefined")?tsep:OpenLayers.Number.thousandsSeparator;dsep=(typeof dsep!="undefined")?dsep:OpenLayers.Number.decimalSeparator;if(dec!=null){num=parseFloat(num.toFixed(dec));}
-var parts=num.toString().split(".");if(parts.length==1&&dec==null){dec=0;}
-var integer=parts[0];if(tsep){var thousands=/(-?[0-9]+)([0-9]{3})/;while(thousands.test(integer)){integer=integer.replace(thousands,"$1"+tsep+"$2");}}
-var str;if(dec==0){str=integer;}else{var rem=parts.length>1?parts[1]:"0";if(dec!=null){rem=rem+new Array(dec-rem.length+1).join("0");}
-str=integer+dsep+rem;}
-return str;},zeroPad:function(num,len,radix){var str=num.toString(radix||10);while(str.length<len){str="0"+str;}
-return str;}};OpenLayers.Function={bind:function(func,object){var args=Array.prototype.slice.call(arguments,2);return function(){var newArgs=args.concat(Array.prototype.slice.call(arguments,0));return func.apply(object,newArgs);};},bindAsEventListener:function(func,object){return function(event){return func.call(object,event||window.event);};},False:function(){return false;},True:function(){return true;},Void:function(){}};OpenLayers.Array={filter:function(array,callback,caller){var selected=[];if(Array.prototype.filter){selected=array.filter(callback,caller);}else{var len=array.length;if(typeof callback!="function"){throw new TypeError();}
-for(var i=0;i<len;i++){if(i in array){var val=array[i];if(callback.call(caller,val,i,array)){selected.push(val);}}}}
-return selected;}};OpenLayers.Size=OpenLayers.Class({w:0.0,h:0.0,initialize:function(w,h){this.w=parseFloat(w);this.h=parseFloat(h);},toString:function(){return("w="+this.w+",h="+this.h);},clone:function(){return new OpenLayers.Size(this.w,this.h);},equals:function(sz){var equals=false;if(sz!=null){equals=((this.w==sz.w&&this.h==sz.h)||(isNaN(this.w)&&isNaN(this.h)&&isNaN(sz.w)&&isNaN(sz.h)));}
-return equals;},CLASS_NAME:"OpenLayers.Size"});OpenLayers.Element={visible:function(element){return OpenLayers.Util.getElement(element).style.display!='none';},toggle:function(){for(var i=0,len=arguments.length;i<len;i++){var element=OpenLayers.Util.getElement(arguments[i]);var display=OpenLayers.Element.visible(element)?'none':'';element.style.display=display;}},remove:function(element){element=OpenLayers.Util.getElement(element);element.parentNode.removeChild(element);},getHeight:function(element){element=OpenLayers.Util.getElement(element);return element.offsetHeight;},hasClass:function(element,name){var names=element.className;return(!!names&&new RegExp("(^|\\s)"+name+"(\\s|$)").test(names));},addClass:function(element,name){if(!OpenLayers.Element.hasClass(element,name)){element.className+=(element.className?" ":"")+name;}
-return element;},removeClass:function(element,name){var names=element.className;if(names){element.className=OpenLayers.String.trim(names.replace(new RegExp("(^|\\s+)"+name+"(\\s+|$)")," "));}
-return element;},toggleClass:function(element,name){if(OpenLayers.Element.hasClass(element,name)){OpenLayers.Element.removeClass(element,name);}else{OpenLayers.Element.addClass(element,name);}
-return element;},getStyle:function(element,style){element=OpenLayers.Util.getElement(element);var value=null;if(element&&element.style){value=element.style[OpenLayers.String.camelize(style)];if(!value){if(document.defaultView&&document.defaultView.getComputedStyle){var css=document.defaultView.getComputedStyle(element,null);value=css?css.getPropertyValue(style):null;}else if(element.currentStyle){value=element.currentStyle[OpenLayers.String.camelize(style)];}}
-var positions=['left','top','right','bottom'];if(window.opera&&(OpenLayers.Util.indexOf(positions,style)!=-1)&&(OpenLayers.Element.getStyle(element,'position')=='static')){value='auto';}}
-return value=='auto'?null:value;}};OpenLayers.LonLat=OpenLayers.Class({lon:0.0,lat:0.0,initialize:function(lon,lat){if(OpenLayers.Util.isArray(lon)){lat=lon[1];lon=lon[0];}
-this.lon=OpenLayers.Util.toFloat(lon);this.lat=OpenLayers.Util.toFloat(lat);},toString:function(){return("lon="+this.lon+",lat="+this.lat);},toShortString:function(){return(this.lon+", "+this.lat);},clone:function(){return new OpenLayers.LonLat(this.lon,this.lat);},add:function(lon,lat){if((lon==null)||(lat==null)){throw new TypeError('LonLat.add cannot receive null values');}
-return new OpenLayers.LonLat(this.lon+OpenLayers.Util.toFloat(lon),this.lat+OpenLayers.Util.toFloat(lat));},equals:function(ll){var equals=false;if(ll!=null){equals=((this.lon==ll.lon&&this.lat==ll.lat)||(isNaN(this.lon)&&isNaN(this.lat)&&isNaN(ll.lon)&&isNaN(ll.lat)));}
-return equals;},transform:function(source,dest){var point=OpenLayers.Projection.transform({'x':this.lon,'y':this.lat},source,dest);this.lon=point.x;this.lat=point.y;return this;},wrapDateLine:function(maxExtent){var newLonLat=this.clone();if(maxExtent){while(newLonLat.lon<maxExtent.left){newLonLat.lon+=maxExtent.getWidth();}
-while(newLonLat.lon>maxExtent.right){newLonLat.lon-=maxExtent.getWidth();}}
-return newLonLat;},CLASS_NAME:"OpenLayers.LonLat"});OpenLayers.LonLat.fromString=function(str){var pair=str.split(",");return new OpenLayers.LonLat(pair[0],pair[1]);};OpenLayers.LonLat.fromArray=function(arr){var gotArr=OpenLayers.Util.isArray(arr),lon=gotArr&&arr[0],lat=gotArr&&arr[1];return new OpenLayers.LonLat(lon,lat);};OpenLayers.Pixel=OpenLayers.Class({x:0.0,y:0.0,initialize:function(x,y){this.x=parseFloat(x);this.y=parseFloat(y);},toString:function(){return("x="+this.x+",y="+this.y);},clone:function(){return new OpenLayers.Pixel(this.x,this.y);},equals:function(px){var equals=false;if(px!=null){equals=((this.x==px.x&&this.y==px.y)||(isNaN(this.x)&&isNaN(this.y)&&isNaN(px.x)&&isNaN(px.y)));}
-return equals;},distanceTo:function(px){return Math.sqrt(Math.pow(this.x-px.x,2)+
-Math.pow(this.y-px.y,2));},add:function(x,y){if((x==null)||(y==null)){throw new TypeError('Pixel.add cannot receive null values');}
-return new OpenLayers.Pixel(this.x+x,this.y+y);},offset:function(px){var newPx=this.clone();if(px){newPx=this.add(px.x,px.y);}
-return newPx;},CLASS_NAME:"OpenLayers.Pixel"});OpenLayers.Console={log:function(){},debug:function(){},info:function(){},warn:function(){},error:function(){},userError:function(error){alert(error);},assert:function(){},dir:function(){},dirxml:function(){},trace:function(){},group:function(){},groupEnd:function(){},time:function(){},timeEnd:function(){},profile:function(){},profileEnd:function(){},count:function(){},CLASS_NAME:"OpenLayers.Console"};(function(){var scripts=document.getElementsByTagName("script");for(var i=0,len=scripts.length;i<len;++i){if(scripts[i].src.indexOf("firebug.js")!=-1){if(console){OpenLayers.Util.extend(OpenLayers.Console,console);break;}}}})();OpenLayers.Lang={code:null,defaultCode:"en",getCode:function(){if(!OpenLayers.Lang.code){OpenLayers.Lang.setCode();}
-return OpenLayers.Lang.code;},setCode:function(code){var lang;if(!code){code=(OpenLayers.BROWSER_NAME=="msie")?navigator.userLanguage:navigator.language;}
-var parts=code.split('-');parts[0]=parts[0].toLowerCase();if(typeof OpenLayers.Lang[parts[0]]=="object"){lang=parts[0];}
-if(parts[1]){var testLang=parts[0]+'-'+parts[1].toUpperCase();if(typeof OpenLayers.Lang[testLang]=="object"){lang=testLang;}}
-if(!lang){OpenLayers.Console.warn('Failed to find OpenLayers.Lang.'+parts.join("-")+' dictionary, falling back to default language');lang=OpenLayers.Lang.defaultCode;}
-OpenLayers.Lang.code=lang;},translate:function(key,context){var dictionary=OpenLayers.Lang[OpenLayers.Lang.getCode()];var message=dictionary&&dictionary[key];if(!message){message=key;}
-if(context){message=OpenLayers.String.format(message,context);}
-return message;}};OpenLayers.i18n=OpenLayers.Lang.translate;OpenLayers.Util=OpenLayers.Util||{};OpenLayers.Util.getElement=function(){var elements=[];for(var i=0,len=arguments.length;i<len;i++){var element=arguments[i];if(typeof element=='string'){element=document.getElementById(element);}
-if(arguments.length==1){return element;}
-elements.push(element);}
-return elements;};OpenLayers.Util.isElement=function(o){return!!(o&&o.nodeType===1);};OpenLayers.Util.isArray=function(a){return(Object.prototype.toString.call(a)==='[object Array]');};OpenLayers.Util.removeItem=function(array,item){for(var i=array.length-1;i>=0;i--){if(array[i]==item){array.splice(i,1);}}
-return array;};OpenLayers.Util.indexOf=function(array,obj){if(typeof array.indexOf=="function"){return array.indexOf(obj);}else{for(var i=0,len=array.length;i<len;i++){if(array[i]==obj){return i;}}
-return-1;}};OpenLayers.Util.dotless=/\./g;OpenLayers.Util.modifyDOMElement=function(element,id,px,sz,position,border,overflow,opacity){if(id){element.id=id.replace(OpenLayers.Util.dotless,"_");}
-if(px){element.style.left=px.x+"px";element.style.top=px.y+"px";}
-if(sz){element.style.width=sz.w+"px";element.style.height=sz.h+"px";}
-if(position){element.style.position=position;}
-if(border){element.style.border=border;}
-if(overflow){element.style.overflow=overflow;}
-if(parseFloat(opacity)>=0.0&&parseFloat(opacity)<1.0){element.style.filter='alpha(opacity='+(opacity*100)+')';element.style.opacity=opacity;}else if(parseFloat(opacity)==1.0){element.style.filter='';element.style.opacity='';}};OpenLayers.Util.createDiv=function(id,px,sz,imgURL,position,border,overflow,opacity){var dom=document.createElement('div');if(imgURL){dom.style.backgroundImage='url('+imgURL+')';}
-if(!id){id=OpenLayers.Util.createUniqueID("OpenLayersDiv");}
-if(!position){position="absolute";}
-OpenLayers.Util.modifyDOMElement(dom,id,px,sz,position,border,overflow,opacity);return dom;};OpenLayers.Util.createImage=function(id,px,sz,imgURL,position,border,opacity,delayDisplay){var image=document.createElement("img");if(!id){id=OpenLayers.Util.createUniqueID("OpenLayersDiv");}
-if(!position){position="relative";}
-OpenLayers.Util.modifyDOMElement(image,id,px,sz,position,border,null,opacity);if(delayDisplay){image.style.display="none";function display(){image.style.display="";OpenLayers.Event.stopObservingElement(image);}
-OpenLayers.Event.observe(image,"load",display);OpenLayers.Event.observe(image,"error",display);}
-image.style.alt=id;image.galleryImg="no";if(imgURL){image.src=imgURL;}
-return image;};OpenLayers.IMAGE_RELOAD_ATTEMPTS=0;OpenLayers.Util.alphaHackNeeded=null;OpenLayers.Util.alphaHack=function(){if(OpenLayers.Util.alphaHackNeeded==null){var arVersion=navigator.appVersion.split("MSIE");var version=parseFloat(arVersion[1]);var filter=false;try{filter=!!(document.body.filters);}catch(e){}
-OpenLayers.Util.alphaHackNeeded=(filter&&(version>=5.5)&&(version<7));}
-return OpenLayers.Util.alphaHackNeeded;};OpenLayers.Util.modifyAlphaImageDiv=function(div,id,px,sz,imgURL,position,border,sizing,opacity){OpenLayers.Util.modifyDOMElement(div,id,px,sz,position,null,null,opacity);var img=div.childNodes[0];if(imgURL){img.src=imgURL;}
-OpenLayers.Util.modifyDOMElement(img,div.id+"_innerImage",null,sz,"relative",border);if(OpenLayers.Util.alphaHack()){if(div.style.display!="none"){div.style.display="inline-block";}
-if(sizing==null){sizing="scale";}
-div.style.filter="progid:DXImageTransform.Microsoft"+".AlphaImageLoader(src='"+img.src+"', "+"sizingMethod='"+sizing+"')";if(parseFloat(div.style.opacity)>=0.0&&parseFloat(div.style.opacity)<1.0){div.style.filter+=" alpha(opacity="+div.style.opacity*100+")";}
-img.style.filter="alpha(opacity=0)";}};OpenLayers.Util.createAlphaImageDiv=function(id,px,sz,imgURL,position,border,sizing,opacity,delayDisplay){var div=OpenLayers.Util.createDiv();var img=OpenLayers.Util.createImage(null,null,null,null,null,null,null,delayDisplay);img.className="olAlphaImg";div.appendChild(img);OpenLayers.Util.modifyAlphaImageDiv(div,id,px,sz,imgURL,position,border,sizing,opacity);return div;};OpenLayers.Util.upperCaseObject=function(object){var uObject={};for(var key in object){uObject[key.toUpperCase()]=object[key];}
-return uObject;};OpenLayers.Util.applyDefaults=function(to,from){to=to||{};var fromIsEvt=typeof window.Event=="function"&&from instanceof window.Event;for(var key in from){if(to[key]===undefined||(!fromIsEvt&&from.hasOwnProperty&&from.hasOwnProperty(key)&&!to.hasOwnProperty(key))){to[key]=from[key];}}
-if(!fromIsEvt&&from&&from.hasOwnProperty&&from.hasOwnProperty('toString')&&!to.hasOwnProperty('toString')){to.toString=from.toString;}
-return to;};OpenLayers.Util.getParameterString=function(params){var paramsArray=[];for(var key in params){var value=params[key];if((value!=null)&&(typeof value!='function')){var encodedValue;if(typeof value=='object'&&value.constructor==Array){var encodedItemArray=[];var item;for(var itemIndex=0,len=value.length;itemIndex<len;itemIndex++){item=value[itemIndex];encodedItemArray.push(encodeURIComponent((item===null||item===undefined)?"":item));}
-encodedValue=encodedItemArray.join(",");}
-else{encodedValue=encodeURIComponent(value);}
-paramsArray.push(encodeURIComponent(key)+"="+encodedValue);}}
-return paramsArray.join("&");};OpenLayers.Util.urlAppend=function(url,paramStr){var newUrl=url;if(paramStr){var parts=(url+" ").split(/[?&]/);newUrl+=(parts.pop()===" "?paramStr:parts.length?"&"+paramStr:"?"+paramStr);}
-return newUrl;};OpenLayers.Util.getImagesLocation=function(){return OpenLayers.ImgPath||(OpenLayers._getScriptLocation()+"img/");};OpenLayers.Util.getImageLocation=function(image){return OpenLayers.Util.getImagesLocation()+image;};OpenLayers.Util.Try=function(){var returnValue=null;for(var i=0,len=arguments.length;i<len;i++){var lambda=arguments[i];try{returnValue=lambda();break;}catch(e){}}
-return returnValue;};OpenLayers.Util.getXmlNodeValue=function(node){var val=null;OpenLayers.Util.Try(function(){val=node.text;if(!val){val=node.textContent;}
-if(!val){val=node.firstChild.nodeValue;}},function(){val=node.textContent;});return val;};OpenLayers.Util.mouseLeft=function(evt,div){var target=(evt.relatedTarget)?evt.relatedTarget:evt.toElement;while(target!=div&&target!=null){target=target.parentNode;}
-return(target!=div);};OpenLayers.Util.DEFAULT_PRECISION=14;OpenLayers.Util.toFloat=function(number,precision){if(precision==null){precision=OpenLayers.Util.DEFAULT_PRECISION;}
-if(typeof number!=="number"){number=parseFloat(number);}
-return precision===0?number:parseFloat(number.toPrecision(precision));};OpenLayers.Util.rad=function(x){return x*Math.PI/180;};OpenLayers.Util.deg=function(x){return x*180/Math.PI;};OpenLayers.Util.VincentyConstants={a:6378137,b:6356752.3142,f:1/298.257223563};OpenLayers.Util.distVincenty=function(p1,p2){var ct=OpenLayers.Util.VincentyConstants;var a=ct.a,b=ct.b,f=ct.f;var L=OpenLayers.Util.rad(p2.lon-p1.lon);var U1=Math.atan((1-f)*Math.tan(OpenLayers.Util.rad(p1.lat)));var U2=Math.atan((1-f)*Math.tan(OpenLayers.Util.rad(p2.lat)));var sinU1=Math.sin(U1),cosU1=Math.cos(U1);var sinU2=Math.sin(U2),cosU2=Math.cos(U2);var lambda=L,lambdaP=2*Math.PI;var iterLimit=20;while(Math.abs(lambda-lambdaP)>1e-12&&--iterLimit>0){var sinLambda=Math.sin(lambda),cosLambda=Math.cos(lambda);var sinSigma=Math.sqrt((cosU2*sinLambda)*(cosU2*sinLambda)+
-(cosU1*sinU2-sinU1*cosU2*cosLambda)*(cosU1*sinU2-sinU1*cosU2*cosLambda));if(sinSigma==0){return 0;}
-var cosSigma=sinU1*sinU2+cosU1*cosU2*cosLambda;var sigma=Math.atan2(sinSigma,cosSigma);var alpha=Math.asin(cosU1*cosU2*sinLambda/sinSigma);var cosSqAlpha=Math.cos(alpha)*Math.cos(alpha);var cos2SigmaM=cosSigma-2*sinU1*sinU2/cosSqAlpha;var C=f/16*cosSqAlpha*(4+f*(4-3*cosSqAlpha));lambdaP=lambda;lambda=L+(1-C)*f*Math.sin(alpha)*(sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)));}
-if(iterLimit==0){return NaN;}
-var uSq=cosSqAlpha*(a*a-b*b)/(b*b);var A=1+uSq/16384*(4096+uSq*(-768+uSq*(320-175*uSq)));var B=uSq/1024*(256+uSq*(-128+uSq*(74-47*uSq)));var deltaSigma=B*sinSigma*(cos2SigmaM+B/4*(cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)-
-B/6*cos2SigmaM*(-3+4*sinSigma*sinSigma)*(-3+4*cos2SigmaM*cos2SigmaM)));var s=b*A*(sigma-deltaSigma);var d=s.toFixed(3)/1000;return d;};OpenLayers.Util.destinationVincenty=function(lonlat,brng,dist){var u=OpenLayers.Util;var ct=u.VincentyConstants;var a=ct.a,b=ct.b,f=ct.f;var lon1=lonlat.lon;var lat1=lonlat.lat;var s=dist;var alpha1=u.rad(brng);var sinAlpha1=Math.sin(alpha1);var cosAlpha1=Math.cos(alpha1);var tanU1=(1-f)*Math.tan(u.rad(lat1));var cosU1=1/Math.sqrt((1+tanU1*tanU1)),sinU1=tanU1*cosU1;var sigma1=Math.atan2(tanU1,cosAlpha1);var sinAlpha=cosU1*sinAlpha1;var cosSqAlpha=1-sinAlpha*sinAlpha;var uSq=cosSqAlpha*(a*a-b*b)/(b*b);var A=1+uSq/16384*(4096+uSq*(-768+uSq*(320-175*uSq)));var B=uSq/1024*(256+uSq*(-128+uSq*(74-47*uSq)));var sigma=s/(b*A),sigmaP=2*Math.PI;while(Math.abs(sigma-sigmaP)>1e-12){var cos2SigmaM=Math.cos(2*sigma1+sigma);var sinSigma=Math.sin(sigma);var cosSigma=Math.cos(sigma);var deltaSigma=B*sinSigma*(cos2SigmaM+B/4*(cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)-
-B/6*cos2SigmaM*(-3+4*sinSigma*sinSigma)*(-3+4*cos2SigmaM*cos2SigmaM)));sigmaP=sigma;sigma=s/(b*A)+deltaSigma;}
-var tmp=sinU1*sinSigma-cosU1*cosSigma*cosAlpha1;var lat2=Math.atan2(sinU1*cosSigma+cosU1*sinSigma*cosAlpha1,(1-f)*Math.sqrt(sinAlpha*sinAlpha+tmp*tmp));var lambda=Math.atan2(sinSigma*sinAlpha1,cosU1*cosSigma-sinU1*sinSigma*cosAlpha1);var C=f/16*cosSqAlpha*(4+f*(4-3*cosSqAlpha));var L=lambda-(1-C)*f*sinAlpha*(sigma+C*sinSigma*(cos2SigmaM+C*cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)));var revAz=Math.atan2(sinAlpha,-tmp);return new OpenLayers.LonLat(lon1+u.deg(L),u.deg(lat2));};OpenLayers.Util.getParameters=function(url,options){options=options||{};url=(url===null||url===undefined)?window.location.href:url;var paramsString="";if(OpenLayers.String.contains(url,'?')){var start=url.indexOf('?')+1;var end=OpenLayers.String.contains(url,"#")?url.indexOf('#'):url.length;paramsString=url.substring(start,end);}
-var parameters={};var pairs=paramsString.split(/[&;]/);for(var i=0,len=pairs.length;i<len;++i){var keyValue=pairs[i].split('=');if(keyValue[0]){var key=keyValue[0];try{key=decodeURIComponent(key);}catch(err){key=unescape(key);}
-var value=(keyValue[1]||'').replace(/\+/g," ");try{value=decodeURIComponent(value);}catch(err){value=unescape(value);}
-if(options.splitArgs!==false){value=value.split(",");}
-if(value.length==1){value=value[0];}
-parameters[key]=value;}}
-return parameters;};OpenLayers.Util.lastSeqID=0;OpenLayers.Util.createUniqueID=function(prefix){if(prefix==null){prefix="id_";}else{prefix=prefix.replace(OpenLayers.Util.dotless,"_");}
-OpenLayers.Util.lastSeqID+=1;return prefix+OpenLayers.Util.lastSeqID;};OpenLayers.INCHES_PER_UNIT={'inches':1.0,'ft':12.0,'mi':63360.0,'m':39.37,'km':39370,'dd':4374754,'yd':36};OpenLayers.INCHES_PER_UNIT["in"]=OpenLayers.INCHES_PER_UNIT.inches;OpenLayers.INCHES_PER_UNIT["degrees"]=OpenLayers.INCHES_PER_UNIT.dd;OpenLayers.INCHES_PER_UNIT["nmi"]=1852*OpenLayers.INCHES_PER_UNIT.m;OpenLayers.METERS_PER_INCH=0.02540005080010160020;OpenLayers.Util.extend(OpenLayers.INCHES_PER_UNIT,{"Inch":OpenLayers.INCHES_PER_UNIT.inches,"Meter":1.0/OpenLayers.METERS_PER_INCH,"Foot":0.30480060960121920243/OpenLayers.METERS_PER_INCH,"IFoot":0.30480000000000000000/OpenLayers.METERS_PER_INCH,"ClarkeFoot":0.3047972651151/OpenLayers.METERS_PER_INCH,"SearsFoot":0.30479947153867624624/OpenLayers.METERS_PER_INCH,"GoldCoastFoot":0.30479971018150881758/OpenLayers.METERS_PER_INCH,"IInch":0.02540000000000000000/OpenLayers.METERS_PER_INCH,"MicroInch":0.00002540000000000000/OpenLayers.METERS_PER_INCH,"Mil":0.00000002540000000000/OpenLayers.METERS_PER_INCH,"Centimeter":0.01000000000000000000/OpenLayers.METERS_PER_INCH,"Kilometer":1000.00000000000000000000/OpenLayers.METERS_PER_INCH,"Yard":0.91440182880365760731/OpenLayers.METERS_PER_INCH,"SearsYard":0.914398414616029/OpenLayers.METERS_PER_INCH,"IndianYard":0.91439853074444079983/OpenLayers.METERS_PER_INCH,"IndianYd37":0.91439523/OpenLayers.METERS_PER_INCH,"IndianYd62":0.9143988/OpenLayers.METERS_PER_INCH,"IndianYd75":0.9143985/OpenLayers.METERS_PER_INCH,"IndianFoot":0.30479951/OpenLayers.METERS_PER_INCH,"IndianFt37":0.30479841/OpenLayers.METERS_PER_INCH,"IndianFt62":0.3047996/OpenLayers.METERS_PER_INCH,"IndianFt75":0.3047995/OpenLayers.METERS_PER_INCH,"Mile":1609.34721869443738887477/OpenLayers.METERS_PER_INCH,"IYard":0.91440000000000000000/OpenLayers.METERS_PER_INCH,"IMile":1609.34400000000000000000/OpenLayers.METERS_PER_INCH,"NautM":1852.00000000000000000000/OpenLayers.METERS_PER_INCH,"Lat-66":110943.316488932731/OpenLayers.METERS_PER_INCH,"Lat-83":110946.25736872234125/OpenLayers.METERS_PER_INCH,"Decimeter":0.10000000000000000000/OpenLayers.METERS_PER_INCH,"Millimeter":0.00100000000000000000/OpenLayers.METERS_PER_INCH,"Dekameter":10.00000000000000000000/OpenLayers.METERS_PER_INCH,"Decameter":10.00000000000000000000/OpenLayers.METERS_PER_INCH,"Hectometer":100.00000000000000000000/OpenLayers.METERS_PER_INCH,"GermanMeter":1.0000135965/OpenLayers.METERS_PER_INCH,"CaGrid":0.999738/OpenLayers.METERS_PER_INCH,"ClarkeChain":20.1166194976/OpenLayers.METERS_PER_INCH,"GunterChain":20.11684023368047/OpenLayers.METERS_PER_INCH,"BenoitChain":20.116782494375872/OpenLayers.METERS_PER_INCH,"SearsChain":20.11676512155/OpenLayers.METERS_PER_INCH,"ClarkeLink":0.201166194976/OpenLayers.METERS_PER_INCH,"GunterLink":0.2011684023368047/OpenLayers.METERS_PER_INCH,"BenoitLink":0.20116782494375872/OpenLayers.METERS_PER_INCH,"SearsLink":0.2011676512155/OpenLayers.METERS_PER_INCH,"Rod":5.02921005842012/OpenLayers.METERS_PER_INCH,"IntnlChain":20.1168/OpenLayers.METERS_PER_INCH,"IntnlLink":0.201168/OpenLayers.METERS_PER_INCH,"Perch":5.02921005842012/OpenLayers.METERS_PER_INCH,"Pole":5.02921005842012/OpenLayers.METERS_PER_INCH,"Furlong":201.1684023368046/OpenLayers.METERS_PER_INCH,"Rood":3.778266898/OpenLayers.METERS_PER_INCH,"CapeFoot":0.3047972615/OpenLayers.METERS_PER_INCH,"Brealey":375.00000000000000000000/OpenLayers.METERS_PER_INCH,"ModAmFt":0.304812252984505969011938/OpenLayers.METERS_PER_INCH,"Fathom":1.8288/OpenLayers.METERS_PER_INCH,"NautM-UK":1853.184/OpenLayers.METERS_PER_INCH,"50kilometers":50000.0/OpenLayers.METERS_PER_INCH,"150kilometers":150000.0/OpenLayers.METERS_PER_INCH});OpenLayers.Util.extend(OpenLayers.INCHES_PER_UNIT,{"mm":OpenLayers.INCHES_PER_UNIT["Meter"]/1000.0,"cm":OpenLayers.INCHES_PER_UNIT["Meter"]/100.0,"dm":OpenLayers.INCHES_PER_UNIT["Meter"]*100.0,"km":OpenLayers.INCHES_PER_UNIT["Meter"]*1000.0,"kmi":OpenLayers.INCHES_PER_UNIT["nmi"],"fath":OpenLayers.INCHES_PER_UNIT["Fathom"],"ch":OpenLayers.INCHES_PER_UNIT["IntnlChain"],"link":OpenLayers.INCHES_PER_UNIT["IntnlLink"],"us-in":OpenLayers.INCHES_PER_UNIT["inches"],"us-ft":OpenLayers.INCHES_PER_UNIT["Foot"],"us-yd":OpenLayers.INCHES_PER_UNIT["Yard"],"us-ch":OpenLayers.INCHES_PER_UNIT["GunterChain"],"us-mi":OpenLayers.INCHES_PER_UNIT["Mile"],"ind-yd":OpenLayers.INCHES_PER_UNIT["IndianYd37"],"ind-ft":OpenLayers.INCHES_PER_UNIT["IndianFt37"],"ind-ch":20.11669506/OpenLayers.METERS_PER_INCH});OpenLayers.DOTS_PER_INCH=72;OpenLayers.Util.normalizeScale=function(scale){var normScale=(scale>1.0)?(1.0/scale):scale;return normScale;};OpenLayers.Util.getResolutionFromScale=function(scale,units){var resolution;if(scale){if(units==null){units="degrees";}
-var normScale=OpenLayers.Util.normalizeScale(scale);resolution=1/(normScale*OpenLayers.INCHES_PER_UNIT[units]*OpenLayers.DOTS_PER_INCH);}
-return resolution;};OpenLayers.Util.getScaleFromResolution=function(resolution,units){if(units==null){units="degrees";}
-var scale=resolution*OpenLayers.INCHES_PER_UNIT[units]*OpenLayers.DOTS_PER_INCH;return scale;};OpenLayers.Util.pagePosition=function(forElement){var pos=[0,0];var viewportElement=OpenLayers.Util.getViewportElement();if(!forElement||forElement==window||forElement==viewportElement){return pos;}
-var BUGGY_GECKO_BOX_OBJECT=OpenLayers.IS_GECKO&&document.getBoxObjectFor&&OpenLayers.Element.getStyle(forElement,'position')=='absolute'&&(forElement.style.top==''||forElement.style.left=='');var parent=null;var box;if(forElement.getBoundingClientRect){box=forElement.getBoundingClientRect();var scrollTop=window.pageYOffset||viewportElement.scrollTop;var scrollLeft=window.pageXOffset||viewportElement.scrollLeft;pos[0]=box.left+scrollLeft;pos[1]=box.top+scrollTop;}else if(document.getBoxObjectFor&&!BUGGY_GECKO_BOX_OBJECT){box=document.getBoxObjectFor(forElement);var vpBox=document.getBoxObjectFor(viewportElement);pos[0]=box.screenX-vpBox.screenX;pos[1]=box.screenY-vpBox.screenY;}else{pos[0]=forElement.offsetLeft;pos[1]=forElement.offsetTop;parent=forElement.offsetParent;if(parent!=forElement){while(parent){pos[0]+=parent.offsetLeft;pos[1]+=parent.offsetTop;parent=parent.offsetParent;}}
-var browser=OpenLayers.BROWSER_NAME;if(browser=="opera"||(browser=="safari"&&OpenLayers.Element.getStyle(forElement,'position')=='absolute')){pos[1]-=document.body.offsetTop;}
-parent=forElement.offsetParent;while(parent&&parent!=document.body){pos[0]-=parent.scrollLeft;if(browser!="opera"||parent.tagName!='TR'){pos[1]-=parent.scrollTop;}
-parent=parent.offsetParent;}}
-return pos;};OpenLayers.Util.getViewportElement=function(){var viewportElement=arguments.callee.viewportElement;if(viewportElement==undefined){viewportElement=(OpenLayers.BROWSER_NAME=="msie"&&document.compatMode!='CSS1Compat')?document.body:document.documentElement;arguments.callee.viewportElement=viewportElement;}
-return viewportElement;};OpenLayers.Util.isEquivalentUrl=function(url1,url2,options){options=options||{};OpenLayers.Util.applyDefaults(options,{ignoreCase:true,ignorePort80:true,ignoreHash:true,splitArgs:false});var urlObj1=OpenLayers.Util.createUrlObject(url1,options);var urlObj2=OpenLayers.Util.createUrlObject(url2,options);for(var key in urlObj1){if(key!=="args"){if(urlObj1[key]!=urlObj2[key]){return false;}}}
-for(var key in urlObj1.args){if(urlObj1.args[key]!=urlObj2.args[key]){return false;}
-delete urlObj2.args[key];}
-for(var key in urlObj2.args){return false;}
-return true;};OpenLayers.Util.createUrlObject=function(url,options){options=options||{};if(!(/^\w+:\/\//).test(url)){var loc=window.location;var port=loc.port?":"+loc.port:"";var fullUrl=loc.protocol+"//"+loc.host.split(":").shift()+port;if(url.indexOf("/")===0){url=fullUrl+url;}else{var parts=loc.pathname.split("/");parts.pop();url=fullUrl+parts.join("/")+"/"+url;}}
-if(options.ignoreCase){url=url.toLowerCase();}
-var a=document.createElement('a');a.href=url;var urlObject={};urlObject.host=a.host.split(":").shift();urlObject.protocol=a.protocol;if(options.ignorePort80){urlObject.port=(a.port=="80"||a.port=="0")?"":a.port;}else{urlObject.port=(a.port==""||a.port=="0")?"80":a.port;}
-urlObject.hash=(options.ignoreHash||a.hash==="#")?"":a.hash;var queryString=a.search;if(!queryString){var qMark=url.indexOf("?");queryString=(qMark!=-1)?url.substr(qMark):"";}
-urlObject.args=OpenLayers.Util.getParameters(queryString,{splitArgs:options.splitArgs});urlObject.pathname=(a.pathname.charAt(0)=="/")?a.pathname:"/"+a.pathname;return urlObject;};OpenLayers.Util.removeTail=function(url){var head=null;var qMark=url.indexOf("?");var hashMark=url.indexOf("#");if(qMark==-1){head=(hashMark!=-1)?url.substr(0,hashMark):url;}else{head=(hashMark!=-1)?url.substr(0,Math.min(qMark,hashMark)):url.substr(0,qMark);}
-return head;};OpenLayers.IS_GECKO=(function(){var ua=navigator.userAgent.toLowerCase();return ua.indexOf("webkit")==-1&&ua.indexOf("gecko")!=-1;})();OpenLayers.CANVAS_SUPPORTED=(function(){var elem=document.createElement('canvas');return!!(elem.getContext&&elem.getContext('2d'));})();OpenLayers.BROWSER_NAME=(function(){var name="";var ua=navigator.userAgent.toLowerCase();if(ua.indexOf("opera")!=-1){name="opera";}else if(ua.indexOf("msie")!=-1){name="msie";}else if(ua.indexOf("safari")!=-1){name="safari";}else if(ua.indexOf("mozilla")!=-1){if(ua.indexOf("firefox")!=-1){name="firefox";}else{name="mozilla";}}
-return name;})();OpenLayers.Util.getBrowserName=function(){return OpenLayers.BROWSER_NAME;};OpenLayers.Util.getRenderedDimensions=function(contentHTML,size,options){var w,h;var container=document.createElement("div");container.style.visibility="hidden";var containerElement=(options&&options.containerElement)?options.containerElement:document.body;var parentHasPositionAbsolute=false;var superContainer=null;var parent=containerElement;while(parent&&parent.tagName.toLowerCase()!="body"){var parentPosition=OpenLayers.Element.getStyle(parent,"position");if(parentPosition=="absolute"){parentHasPositionAbsolute=true;break;}else if(parentPosition&&parentPosition!="static"){break;}
-parent=parent.parentNode;}
-if(parentHasPositionAbsolute&&(containerElement.clientHeight===0||containerElement.clientWidth===0)){superContainer=document.createElement("div");superContainer.style.visibility="hidden";superContainer.style.position="absolute";superContainer.style.overflow="visible";superContainer.style.width=document.body.clientWidth+"px";superContainer.style.height=document.body.clientHeight+"px";superContainer.appendChild(container);}
-container.style.position="absolute";if(size){if(size.w){w=size.w;container.style.width=w+"px";}else if(size.h){h=size.h;container.style.height=h+"px";}}
-if(options&&options.displayClass){container.className=options.displayClass;}
-var content=document.createElement("div");content.innerHTML=contentHTML;content.style.overflow="visible";if(content.childNodes){for(var i=0,l=content.childNodes.length;i<l;i++){if(!content.childNodes[i].style)continue;content.childNodes[i].style.overflow="visible";}}
-container.appendChild(content);if(superContainer){containerElement.appendChild(superContainer);}else{containerElement.appendChild(container);}
-if(!w){w=parseInt(content.scrollWidth);container.style.width=w+"px";}
-if(!h){h=parseInt(content.scrollHeight);}
-container.removeChild(content);if(superContainer){superContainer.removeChild(container);containerElement.removeChild(superContainer);}else{containerElement.removeChild(container);}
-return new OpenLayers.Size(w,h);};OpenLayers.Util.getScrollbarWidth=function(){var scrollbarWidth=OpenLayers.Util._scrollbarWidth;if(scrollbarWidth==null){var scr=null;var inn=null;var wNoScroll=0;var wScroll=0;scr=document.createElement('div');scr.style.position='absolute';scr.style.top='-1000px';scr.style.left='-1000px';scr.style.width='100px';scr.style.height='50px';scr.style.overflow='hidden';inn=document.createElement('div');inn.style.width='100%';inn.style.height='200px';scr.appendChild(inn);document.body.appendChild(scr);wNoScroll=inn.offsetWidth;scr.style.overflow='scroll';wScroll=inn.offsetWidth;document.body.removeChild(document.body.lastChild);OpenLayers.Util._scrollbarWidth=(wNoScroll-wScroll);scrollbarWidth=OpenLayers.Util._scrollbarWidth;}
-return scrollbarWidth;};OpenLayers.Util.getFormattedLonLat=function(coordinate,axis,dmsOption){if(!dmsOption){dmsOption='dms';}
-coordinate=(coordinate+540)%360-180;var abscoordinate=Math.abs(coordinate);var coordinatedegrees=Math.floor(abscoordinate);var coordinateminutes=(abscoordinate-coordinatedegrees)/(1/60);var tempcoordinateminutes=coordinateminutes;coordinateminutes=Math.floor(coordinateminutes);var coordinateseconds=(tempcoordinateminutes-coordinateminutes)/(1/60);coordinateseconds=Math.round(coordinateseconds*10);coordinateseconds/=10;if(coordinateseconds>=60){coordinateseconds-=60;coordinateminutes+=1;if(coordinateminutes>=60){coordinateminutes-=60;coordinatedegrees+=1;}}
-if(coordinatedegrees<10){coordinatedegrees="0"+coordinatedegrees;}
-var str=coordinatedegrees+"\u00B0";if(dmsOption.indexOf('dm')>=0){if(coordinateminutes<10){coordinateminutes="0"+coordinateminutes;}
-str+=coordinateminutes+"'";if(dmsOption.indexOf('dms')>=0){if(coordinateseconds<10){coordinateseconds="0"+coordinateseconds;}
-str+=coordinateseconds+'"';}}
-if(axis=="lon"){str+=coordinate<0?OpenLayers.i18n("W"):OpenLayers.i18n("E");}else{str+=coordinate<0?OpenLayers.i18n("S"):OpenLayers.i18n("N");}
-return str;};OpenLayers.Util.getConstructor=function(className){var Constructor;var parts=className.split('.');if(parts[0]==="OpenLayers"){Constructor=OpenLayers;}else{Constructor=window[parts[0]];}
-for(var i=1,ii=parts.length;i<ii;++i){Constructor=Constructor[parts[i]];}
-return Constructor;};OpenLayers.Feature=OpenLayers.Class({layer:null,id:null,lonlat:null,data:null,marker:null,popupClass:null,popup:null,initialize:function(layer,lonlat,data){this.layer=layer;this.lonlat=lonlat;this.data=(data!=null)?data:{};this.id=OpenLayers.Util.createUniqueID(this.CLASS_NAME+"_");},destroy:function(){if((this.layer!=null)&&(this.layer.map!=null)){if(this.popup!=null){this.layer.map.removePopup(this.popup);}}
-if(this.layer!=null&&this.marker!=null){this.layer.removeMarker(this.marker);}
-this.layer=null;this.id=null;this.lonlat=null;this.data=null;if(this.marker!=null){this.destroyMarker(this.marker);this.marker=null;}
-if(this.popup!=null){this.destroyPopup(this.popup);this.popup=null;}},onScreen:function(){var onScreen=false;if((this.layer!=null)&&(this.layer.map!=null)){var screenBounds=this.layer.map.getExtent();onScreen=screenBounds.containsLonLat(this.lonlat);}
-return onScreen;},createMarker:function(){if(this.lonlat!=null){this.marker=new OpenLayers.Marker(this.lonlat,this.data.icon);}
-return this.marker;},destroyMarker:function(){this.marker.destroy();},createPopup:function(closeBox){if(this.lonlat!=null){if(!this.popup){var anchor=(this.marker)?this.marker.icon:null;var popupClass=this.popupClass?this.popupClass:OpenLayers.Popup.Anchored;this.popup=new popupClass(this.id+"_popup",this.lonlat,this.data.popupSize,this.data.popupContentHTML,anchor,closeBox);}
-if(this.data.overflow!=null){this.popup.contentDiv.style.overflow=this.data.overflow;}
-this.popup.feature=this;}
-return this.popup;},destroyPopup:function(){if(this.popup){this.popup.feature=null;this.popup.destroy();this.popup=null;}},CLASS_NAME:"OpenLayers.Feature"});OpenLayers.State={UNKNOWN:'Unknown',INSERT:'Insert',UPDATE:'Update',DELETE:'Delete'};OpenLayers.Feature.Vector=OpenLayers.Class(OpenLayers.Feature,{fid:null,geometry:null,attributes:null,bounds:null,state:null,style:null,url:null,renderIntent:"default",modified:null,initialize:function(geometry,attributes,style){OpenLayers.Feature.prototype.initialize.apply(this,[null,null,attributes]);this.lonlat=null;this.geometry=geometry?geometry:null;this.state=null;this.attributes={};if(attributes){this.attributes=OpenLayers.Util.extend(this.attributes,attributes);}
-this.style=style?style:null;},destroy:function(){if(this.layer){this.layer.removeFeatures(this);this.layer=null;}
-this.geometry=null;this.modified=null;OpenLayers.Feature.prototype.destroy.apply(this,arguments);},clone:function(){return new OpenLayers.Feature.Vector(this.geometry?this.geometry.clone():null,this.attributes,this.style);},onScreen:function(boundsOnly){var onScreen=false;if(this.layer&&this.layer.map){var screenBounds=this.layer.map.getExtent();if(boundsOnly){var featureBounds=this.geometry.getBounds();onScreen=screenBounds.intersectsBounds(featureBounds);}else{var screenPoly=screenBounds.toGeometry();onScreen=screenPoly.intersects(this.geometry);}}
-return onScreen;},getVisibility:function(){return!(this.style&&this.style.display=='none'||!this.layer||this.layer&&this.layer.styleMap&&this.layer.styleMap.createSymbolizer(this,this.renderIntent).display=='none'||this.layer&&!this.layer.getVisibility());},createMarker:function(){return null;},destroyMarker:function(){},createPopup:function(){return null;},atPoint:function(lonlat,toleranceLon,toleranceLat){var atPoint=false;if(this.geometry){atPoint=this.geometry.atPoint(lonlat,toleranceLon,toleranceLat);}
-return atPoint;},destroyPopup:function(){},move:function(location){if(!this.layer||!this.geometry.move){return undefined;}
-var pixel;if(location.CLASS_NAME=="OpenLayers.LonLat"){pixel=this.layer.getViewPortPxFromLonLat(location);}else{pixel=location;}
-var lastPixel=this.layer.getViewPortPxFromLonLat(this.geometry.getBounds().getCenterLonLat());var res=this.layer.map.getResolution();this.geometry.move(res*(pixel.x-lastPixel.x),res*(lastPixel.y-pixel.y));this.layer.drawFeature(this);return lastPixel;},toState:function(state){if(state==OpenLayers.State.UPDATE){switch(this.state){case OpenLayers.State.UNKNOWN:case OpenLayers.State.DELETE:this.state=state;break;case OpenLayers.State.UPDATE:case OpenLayers.State.INSERT:break;}}else if(state==OpenLayers.State.INSERT){switch(this.state){case OpenLayers.State.UNKNOWN:break;default:this.state=state;break;}}else if(state==OpenLayers.State.DELETE){switch(this.state){case OpenLayers.State.INSERT:break;case OpenLayers.State.DELETE:break;case OpenLayers.State.UNKNOWN:case OpenLayers.State.UPDATE:this.state=state;break;}}else if(state==OpenLayers.State.UNKNOWN){this.state=state;}},CLASS_NAME:"OpenLayers.Feature.Vector"});OpenLayers.Feature.Vector.style={'default':{fillColor:"#ee9900",fillOpacity:0.4,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"#ee9900",strokeOpacity:1,strokeWidth:1,strokeLinecap:"round",strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"inherit",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},'select':{fillColor:"blue",fillOpacity:0.4,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"blue",strokeOpacity:1,strokeWidth:2,strokeLinecap:"round",strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"pointer",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},'temporary':{fillColor:"#66cccc",fillOpacity:0.2,hoverFillColor:"white",hoverFillOpacity:0.8,strokeColor:"#66cccc",strokeOpacity:1,strokeLinecap:"round",strokeWidth:2,strokeDashstyle:"solid",hoverStrokeColor:"red",hoverStrokeOpacity:1,hoverStrokeWidth:0.2,pointRadius:6,hoverPointRadius:1,hoverPointUnit:"%",pointerEvents:"visiblePainted",cursor:"inherit",fontColor:"#000000",labelAlign:"cm",labelOutlineColor:"white",labelOutlineWidth:3},'delete':{display:"none"}};OpenLayers.Geometry.MultiLineString=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.LineString"],split:function(geometry,options){var results=null;var mutual=options&&options.mutual;var splits,sourceLine,sourceLines,sourceSplit,targetSplit;var sourceParts=[];var targetParts=[geometry];for(var i=0,len=this.components.length;i<len;++i){sourceLine=this.components[i];sourceSplit=false;for(var j=0;j<targetParts.length;++j){splits=sourceLine.split(targetParts[j],options);if(splits){if(mutual){sourceLines=splits[0];for(var k=0,klen=sourceLines.length;k<klen;++k){if(k===0&&sourceParts.length){sourceParts[sourceParts.length-1].addComponent(sourceLines[k]);}else{sourceParts.push(new OpenLayers.Geometry.MultiLineString([sourceLines[k]]));}}
-sourceSplit=true;splits=splits[1];}
-if(splits.length){splits.unshift(j,1);Array.prototype.splice.apply(targetParts,splits);break;}}}
-if(!sourceSplit){if(sourceParts.length){sourceParts[sourceParts.length-1].addComponent(sourceLine.clone());}else{sourceParts=[new OpenLayers.Geometry.MultiLineString(sourceLine.clone())];}}}
-if(sourceParts&&sourceParts.length>1){sourceSplit=true;}else{sourceParts=[];}
-if(targetParts&&targetParts.length>1){targetSplit=true;}else{targetParts=[];}
-if(sourceSplit||targetSplit){if(mutual){results=[sourceParts,targetParts];}else{results=targetParts;}}
-return results;},splitWith:function(geometry,options){var results=null;var mutual=options&&options.mutual;var splits,targetLine,sourceLines,sourceSplit,targetSplit,sourceParts,targetParts;if(geometry instanceof OpenLayers.Geometry.LineString){targetParts=[];sourceParts=[geometry];for(var i=0,len=this.components.length;i<len;++i){targetSplit=false;targetLine=this.components[i];for(var j=0;j<sourceParts.length;++j){splits=sourceParts[j].split(targetLine,options);if(splits){if(mutual){sourceLines=splits[0];if(sourceLines.length){sourceLines.unshift(j,1);Array.prototype.splice.apply(sourceParts,sourceLines);j+=sourceLines.length-2;}
-splits=splits[1];if(splits.length===0){splits=[targetLine.clone()];}}
-for(var k=0,klen=splits.length;k<klen;++k){if(k===0&&targetParts.length){targetParts[targetParts.length-1].addComponent(splits[k]);}else{targetParts.push(new OpenLayers.Geometry.MultiLineString([splits[k]]));}}
-targetSplit=true;}}
-if(!targetSplit){if(targetParts.length){targetParts[targetParts.length-1].addComponent(targetLine.clone());}else{targetParts=[new OpenLayers.Geometry.MultiLineString([targetLine.clone()])];}}}}else{results=geometry.split(this);}
-if(sourceParts&&sourceParts.length>1){sourceSplit=true;}else{sourceParts=[];}
-if(targetParts&&targetParts.length>1){targetSplit=true;}else{targetParts=[];}
-if(sourceSplit||targetSplit){if(mutual){results=[sourceParts,targetParts];}else{results=targetParts;}}
-return results;},CLASS_NAME:"OpenLayers.Geometry.MultiLineString"});OpenLayers.Format=OpenLayers.Class({options:null,externalProjection:null,internalProjection:null,data:null,keepData:false,initialize:function(options){OpenLayers.Util.extend(this,options);this.options=options;},destroy:function(){},read:function(data){throw new Error('Read not implemented.');},write:function(object){throw new Error('Write not implemented.');},CLASS_NAME:"OpenLayers.Format"});OpenLayers.Format.XML=OpenLayers.Class(OpenLayers.Format,{namespaces:null,namespaceAlias:null,defaultPrefix:null,readers:{},writers:{},xmldom:null,initialize:function(options){if(window.ActiveXObject){this.xmldom=new ActiveXObject("Microsoft.XMLDOM");}
-OpenLayers.Format.prototype.initialize.apply(this,[options]);this.namespaces=OpenLayers.Util.extend({},this.namespaces);this.namespaceAlias={};for(var alias in this.namespaces){this.namespaceAlias[this.namespaces[alias]]=alias;}},destroy:function(){this.xmldom=null;OpenLayers.Format.prototype.destroy.apply(this,arguments);},setNamespace:function(alias,uri){this.namespaces[alias]=uri;this.namespaceAlias[uri]=alias;},read:function(text){var index=text.indexOf('<');if(index>0){text=text.substring(index);}
-var node=OpenLayers.Util.Try(OpenLayers.Function.bind((function(){var xmldom;if(window.ActiveXObject&&!this.xmldom){xmldom=new ActiveXObject("Microsoft.XMLDOM");}else{xmldom=this.xmldom;}
-xmldom.loadXML(text);return xmldom;}),this),function(){return new DOMParser().parseFromString(text,'text/xml');},function(){var req=new XMLHttpRequest();req.open("GET","data:"+"text/xml"+";charset=utf-8,"+encodeURIComponent(text),false);if(req.overrideMimeType){req.overrideMimeType("text/xml");}
-req.send(null);return req.responseXML;});if(this.keepData){this.data=node;}
-return node;},write:function(node){var data;if(this.xmldom){data=node.xml;}else{var serializer=new XMLSerializer();if(node.nodeType==1){var doc=document.implementation.createDocument("","",null);if(doc.importNode){node=doc.importNode(node,true);}
-doc.appendChild(node);data=serializer.serializeToString(doc);}else{data=serializer.serializeToString(node);}}
-return data;},createElementNS:function(uri,name){var element;if(this.xmldom){if(typeof uri=="string"){element=this.xmldom.createNode(1,name,uri);}else{element=this.xmldom.createNode(1,name,"");}}else{element=document.createElementNS(uri,name);}
-return element;},createDocumentFragment:function(){var element;if(this.xmldom){element=this.xmldom.createDocumentFragment();}else{element=document.createDocumentFragment();}
-return element;},createTextNode:function(text){var node;if(typeof text!=="string"){text=String(text);}
-if(this.xmldom){node=this.xmldom.createTextNode(text);}else{node=document.createTextNode(text);}
-return node;},getElementsByTagNameNS:function(node,uri,name){var elements=[];if(node.getElementsByTagNameNS){elements=node.getElementsByTagNameNS(uri,name);}else{var allNodes=node.getElementsByTagName("*");var potentialNode,fullName;for(var i=0,len=allNodes.length;i<len;++i){potentialNode=allNodes[i];fullName=(potentialNode.prefix)?(potentialNode.prefix+":"+name):name;if((name=="*")||(fullName==potentialNode.nodeName)){if((uri=="*")||(uri==potentialNode.namespaceURI)){elements.push(potentialNode);}}}}
-return elements;},getAttributeNodeNS:function(node,uri,name){var attributeNode=null;if(node.getAttributeNodeNS){attributeNode=node.getAttributeNodeNS(uri,name);}else{var attributes=node.attributes;var potentialNode,fullName;for(var i=0,len=attributes.length;i<len;++i){potentialNode=attributes[i];if(potentialNode.namespaceURI==uri){fullName=(potentialNode.prefix)?(potentialNode.prefix+":"+name):name;if(fullName==potentialNode.nodeName){attributeNode=potentialNode;break;}}}}
-return attributeNode;},getAttributeNS:function(node,uri,name){var attributeValue="";if(node.getAttributeNS){attributeValue=node.getAttributeNS(uri,name)||"";}else{var attributeNode=this.getAttributeNodeNS(node,uri,name);if(attributeNode){attributeValue=attributeNode.nodeValue;}}
-return attributeValue;},getChildValue:function(node,def){var value=def||"";if(node){for(var child=node.firstChild;child;child=child.nextSibling){switch(child.nodeType){case 3:case 4:value+=child.nodeValue;}}}
-return value;},isSimpleContent:function(node){var simple=true;for(var child=node.firstChild;child;child=child.nextSibling){if(child.nodeType===1){simple=false;break;}}
-return simple;},contentType:function(node){var simple=false,complex=false;var type=OpenLayers.Format.XML.CONTENT_TYPE.EMPTY;for(var child=node.firstChild;child;child=child.nextSibling){switch(child.nodeType){case 1:complex=true;break;case 8:break;default:simple=true;}
-if(complex&&simple){break;}}
-if(complex&&simple){type=OpenLayers.Format.XML.CONTENT_TYPE.MIXED;}else if(complex){return OpenLayers.Format.XML.CONTENT_TYPE.COMPLEX;}else if(simple){return OpenLayers.Format.XML.CONTENT_TYPE.SIMPLE;}
-return type;},hasAttributeNS:function(node,uri,name){var found=false;if(node.hasAttributeNS){found=node.hasAttributeNS(uri,name);}else{found=!!this.getAttributeNodeNS(node,uri,name);}
-return found;},setAttributeNS:function(node,uri,name,value){if(node.setAttributeNS){node.setAttributeNS(uri,name,value);}else{if(this.xmldom){if(uri){var attribute=node.ownerDocument.createNode(2,name,uri);attribute.nodeValue=value;node.setAttributeNode(attribute);}else{node.setAttribute(name,value);}}else{throw"setAttributeNS not implemented";}}},createElementNSPlus:function(name,options){options=options||{};var uri=options.uri||this.namespaces[options.prefix];if(!uri){var loc=name.indexOf(":");uri=this.namespaces[name.substring(0,loc)];}
-if(!uri){uri=this.namespaces[this.defaultPrefix];}
-var node=this.createElementNS(uri,name);if(options.attributes){this.setAttributes(node,options.attributes);}
-var value=options.value;if(value!=null){node.appendChild(this.createTextNode(value));}
-return node;},setAttributes:function(node,obj){var value,uri;for(var name in obj){if(obj[name]!=null&&obj[name].toString){value=obj[name].toString();uri=this.namespaces[name.substring(0,name.indexOf(":"))]||null;this.setAttributeNS(node,uri,name,value);}}},getFirstElementChild:function(node){if(node.firstElementChild){return node.firstElementChild;}
-else{var child=node.firstChild;while(child.nodeType!=1&&(child=child.nextSibling)){}
-return child;}},readNode:function(node,obj){if(!obj){obj={};}
-var group=this.readers[node.namespaceURI?this.namespaceAlias[node.namespaceURI]:this.defaultPrefix];if(group){var local=node.localName||node.nodeName.split(":").pop();var reader=group[local]||group["*"];if(reader){reader.apply(this,[node,obj]);}}
-return obj;},readChildNodes:function(node,obj){if(!obj){obj={};}
-var children=node.childNodes;var child;for(var i=0,len=children.length;i<len;++i){child=children[i];if(child.nodeType==1){this.readNode(child,obj);}}
-return obj;},writeNode:function(name,obj,parent){var prefix,local;var split=name.indexOf(":");if(split>0){prefix=name.substring(0,split);local=name.substring(split+1);}else{if(parent){prefix=this.namespaceAlias[parent.namespaceURI];}else{prefix=this.defaultPrefix;}
-local=name;}
-var child=this.writers[prefix][local].apply(this,[obj]);if(parent){parent.appendChild(child);}
-return child;},getChildEl:function(node,name,uri){return node&&this.getThisOrNextEl(node.firstChild,name,uri);},getNextEl:function(node,name,uri){return node&&this.getThisOrNextEl(node.nextSibling,name,uri);},getThisOrNextEl:function(node,name,uri){outer:for(var sibling=node;sibling;sibling=sibling.nextSibling){switch(sibling.nodeType){case 1:if((!name||name===(sibling.localName||sibling.nodeName.split(":").pop()))&&(!uri||uri===sibling.namespaceURI)){break outer;}
-sibling=null;break outer;case 3:if(/^\s*$/.test(sibling.nodeValue)){break;}
-case 4:case 6:case 12:case 10:case 11:sibling=null;break outer;}}
-return sibling||null;},lookupNamespaceURI:function(node,prefix){var uri=null;if(node){if(node.lookupNamespaceURI){uri=node.lookupNamespaceURI(prefix);}else{outer:switch(node.nodeType){case 1:if(node.namespaceURI!==null&&node.prefix===prefix){uri=node.namespaceURI;break outer;}
-var len=node.attributes.length;if(len){var attr;for(var i=0;i<len;++i){attr=node.attributes[i];if(attr.prefix==="xmlns"&&attr.name==="xmlns:"+prefix){uri=attr.value||null;break outer;}else if(attr.name==="xmlns"&&prefix===null){uri=attr.value||null;break outer;}}}
-uri=this.lookupNamespaceURI(node.parentNode,prefix);break outer;case 2:uri=this.lookupNamespaceURI(node.ownerElement,prefix);break outer;case 9:uri=this.lookupNamespaceURI(node.documentElement,prefix);break outer;case 6:case 12:case 10:case 11:break outer;default:uri=this.lookupNamespaceURI(node.parentNode,prefix);break outer;}}}
-return uri;},getXMLDoc:function(){if(!OpenLayers.Format.XML.document&&!this.xmldom){if(document.implementation&&document.implementation.createDocument){OpenLayers.Format.XML.document=document.implementation.createDocument("","",null);}else if(!this.xmldom&&window.ActiveXObject){this.xmldom=new ActiveXObject("Microsoft.XMLDOM");}}
-return OpenLayers.Format.XML.document||this.xmldom;},CLASS_NAME:"OpenLayers.Format.XML"});OpenLayers.Format.XML.CONTENT_TYPE={EMPTY:0,SIMPLE:1,COMPLEX:2,MIXED:3};OpenLayers.Format.XML.lookupNamespaceURI=OpenLayers.Function.bind(OpenLayers.Format.XML.prototype.lookupNamespaceURI,OpenLayers.Format.XML.prototype);OpenLayers.Format.XML.document=null;OpenLayers.Geometry.MultiPolygon=OpenLayers.Class(OpenLayers.Geometry.Collection,{componentTypes:["OpenLayers.Geometry.Polygon"],CLASS_NAME:"OpenLayers.Geometry.MultiPolygon"});OpenLayers.Format.GML=OpenLayers.Class(OpenLayers.Format.XML,{featureNS:"http://mapserver.gis.umn.edu/mapserver",featurePrefix:"feature",featureName:"featureMember",layerName:"features",geometryName:"geometry",collectionName:"FeatureCollection",gmlns:"http://www.opengis.net/gml",extractAttributes:true,xy:true,initialize:function(options){this.regExes={trimSpace:(/^\s*|\s*$/g),removeSpace:(/\s*/g),splitSpace:(/\s+/),trimComma:(/\s*,\s*/g)};OpenLayers.Format.XML.prototype.initialize.apply(this,[options]);},read:function(data){if(typeof data=="string"){data=OpenLayers.Format.XML.prototype.read.apply(this,[data]);}
-var featureNodes=this.getElementsByTagNameNS(data.documentElement,this.gmlns,this.featureName);var features=[];for(var i=0;i<featureNodes.length;i++){var feature=this.parseFeature(featureNodes[i]);if(feature){features.push(feature);}}
-return features;},parseFeature:function(node){var order=["MultiPolygon","Polygon","MultiLineString","LineString","MultiPoint","Point","Envelope"];var type,nodeList,geometry,parser;for(var i=0;i<order.length;++i){type=order[i];nodeList=this.getElementsByTagNameNS(node,this.gmlns,type);if(nodeList.length>0){parser=this.parseGeometry[type.toLowerCase()];if(parser){geometry=parser.apply(this,[nodeList[0]]);if(this.internalProjection&&this.externalProjection){geometry.transform(this.externalProjection,this.internalProjection);}}else{throw new TypeError("Unsupported geometry type: "+type);}
-break;}}
-var bounds;var boxNodes=this.getElementsByTagNameNS(node,this.gmlns,"Box");for(i=0;i<boxNodes.length;++i){var boxNode=boxNodes[i];var box=this.parseGeometry["box"].apply(this,[boxNode]);var parentNode=boxNode.parentNode;var parentName=parentNode.localName||parentNode.nodeName.split(":").pop();if(parentName==="boundedBy"){bounds=box;}else{geometry=box.toGeometry();}}
-var attributes;if(this.extractAttributes){attributes=this.parseAttributes(node);}
-var feature=new OpenLayers.Feature.Vector(geometry,attributes);feature.bounds=bounds;var firstChild=this.getFirstElementChild(node);feature.gml={featureType:firstChild.nodeName.split(":")[1],featureNS:firstChild.namespaceURI,featureNSPrefix:firstChild.prefix};feature.type=feature.gml.featureType;var childNode=node.firstChild;var fid;while(childNode){if(childNode.nodeType==1){fid=childNode.getAttribute("fid")||childNode.getAttribute("id");if(fid){break;}}
-childNode=childNode.nextSibling;}
-feature.fid=fid;return feature;},parseGeometry:{point:function(node){var nodeList,coordString;var coords=[];var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"pos");if(nodeList.length>0){coordString=nodeList[0].firstChild.nodeValue;coordString=coordString.replace(this.regExes.trimSpace,"");coords=coordString.split(this.regExes.splitSpace);}
-if(coords.length==0){nodeList=this.getElementsByTagNameNS(node,this.gmlns,"coordinates");if(nodeList.length>0){coordString=nodeList[0].firstChild.nodeValue;coordString=coordString.replace(this.regExes.removeSpace,"");coords=coordString.split(",");}}
-if(coords.length==0){nodeList=this.getElementsByTagNameNS(node,this.gmlns,"coord");if(nodeList.length>0){var xList=this.getElementsByTagNameNS(nodeList[0],this.gmlns,"X");var yList=this.getElementsByTagNameNS(nodeList[0],this.gmlns,"Y");if(xList.length>0&&yList.length>0){coords=[xList[0].firstChild.nodeValue,yList[0].firstChild.nodeValue];}}}
-if(coords.length==2){coords[2]=null;}
-if(this.xy){return new OpenLayers.Geometry.Point(coords[0],coords[1],coords[2]);}
-else{return new OpenLayers.Geometry.Point(coords[1],coords[0],coords[2]);}},multipoint:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"Point");var components=[];if(nodeList.length>0){var point;for(var i=0;i<nodeList.length;++i){point=this.parseGeometry.point.apply(this,[nodeList[i]]);if(point){components.push(point);}}}
-return new OpenLayers.Geometry.MultiPoint(components);},linestring:function(node,ring){var nodeList,coordString;var coords=[];var points=[];nodeList=this.getElementsByTagNameNS(node,this.gmlns,"posList");if(nodeList.length>0){coordString=this.getChildValue(nodeList[0]);coordString=coordString.replace(this.regExes.trimSpace,"");coords=coordString.split(this.regExes.splitSpace);var dim=parseInt(nodeList[0].getAttribute("dimension"));var j,x,y,z;for(var i=0;i<coords.length/dim;++i){j=i*dim;x=coords[j];y=coords[j+1];z=(dim==2)?null:coords[j+2];if(this.xy){points.push(new OpenLayers.Geometry.Point(x,y,z));}else{points.push(new OpenLayers.Geometry.Point(y,x,z));}}}
-if(coords.length==0){nodeList=this.getElementsByTagNameNS(node,this.gmlns,"coordinates");if(nodeList.length>0){coordString=this.getChildValue(nodeList[0]);coordString=coordString.replace(this.regExes.trimSpace,"");coordString=coordString.replace(this.regExes.trimComma,",");var pointList=coordString.split(this.regExes.splitSpace);for(var i=0;i<pointList.length;++i){coords=pointList[i].split(",");if(coords.length==2){coords[2]=null;}
-if(this.xy){points.push(new OpenLayers.Geometry.Point(coords[0],coords[1],coords[2]));}else{points.push(new OpenLayers.Geometry.Point(coords[1],coords[0],coords[2]));}}}}
-var line=null;if(points.length!=0){if(ring){line=new OpenLayers.Geometry.LinearRing(points);}else{line=new OpenLayers.Geometry.LineString(points);}}
-return line;},multilinestring:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"LineString");var components=[];if(nodeList.length>0){var line;for(var i=0;i<nodeList.length;++i){line=this.parseGeometry.linestring.apply(this,[nodeList[i]]);if(line){components.push(line);}}}
-return new OpenLayers.Geometry.MultiLineString(components);},polygon:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"LinearRing");var components=[];if(nodeList.length>0){var ring;for(var i=0;i<nodeList.length;++i){ring=this.parseGeometry.linestring.apply(this,[nodeList[i],true]);if(ring){components.push(ring);}}}
-return new OpenLayers.Geometry.Polygon(components);},multipolygon:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"Polygon");var components=[];if(nodeList.length>0){var polygon;for(var i=0;i<nodeList.length;++i){polygon=this.parseGeometry.polygon.apply(this,[nodeList[i]]);if(polygon){components.push(polygon);}}}
-return new OpenLayers.Geometry.MultiPolygon(components);},envelope:function(node){var components=[];var coordString;var envelope;var lpoint=this.getElementsByTagNameNS(node,this.gmlns,"lowerCorner");if(lpoint.length>0){var coords=[];if(lpoint.length>0){coordString=lpoint[0].firstChild.nodeValue;coordString=coordString.replace(this.regExes.trimSpace,"");coords=coordString.split(this.regExes.splitSpace);}
-if(coords.length==2){coords[2]=null;}
-if(this.xy){var lowerPoint=new OpenLayers.Geometry.Point(coords[0],coords[1],coords[2]);}else{var lowerPoint=new OpenLayers.Geometry.Point(coords[1],coords[0],coords[2]);}}
-var upoint=this.getElementsByTagNameNS(node,this.gmlns,"upperCorner");if(upoint.length>0){var coords=[];if(upoint.length>0){coordString=upoint[0].firstChild.nodeValue;coordString=coordString.replace(this.regExes.trimSpace,"");coords=coordString.split(this.regExes.splitSpace);}
-if(coords.length==2){coords[2]=null;}
-if(this.xy){var upperPoint=new OpenLayers.Geometry.Point(coords[0],coords[1],coords[2]);}else{var upperPoint=new OpenLayers.Geometry.Point(coords[1],coords[0],coords[2]);}}
-if(lowerPoint&&upperPoint){components.push(new OpenLayers.Geometry.Point(lowerPoint.x,lowerPoint.y));components.push(new OpenLayers.Geometry.Point(upperPoint.x,lowerPoint.y));components.push(new OpenLayers.Geometry.Point(upperPoint.x,upperPoint.y));components.push(new OpenLayers.Geometry.Point(lowerPoint.x,upperPoint.y));components.push(new OpenLayers.Geometry.Point(lowerPoint.x,lowerPoint.y));var ring=new OpenLayers.Geometry.LinearRing(components);envelope=new OpenLayers.Geometry.Polygon([ring]);}
-return envelope;},box:function(node){var nodeList=this.getElementsByTagNameNS(node,this.gmlns,"coordinates");var coordString;var coords,beginPoint=null,endPoint=null;if(nodeList.length>0){coordString=nodeList[0].firstChild.nodeValue;coords=coordString.split(" ");if(coords.length==2){beginPoint=coords[0].split(",");endPoint=coords[1].split(",");}}
-if(beginPoint!==null&&endPoint!==null){return new OpenLayers.Bounds(parseFloat(beginPoint[0]),parseFloat(beginPoint[1]),parseFloat(endPoint[0]),parseFloat(endPoint[1]));}}},parseAttributes:function(node){var attributes={};var childNode=node.firstChild;var children,i,child,grandchildren,grandchild,name,value;while(childNode){if(childNode.nodeType==1){children=childNode.childNodes;for(i=0;i<children.length;++i){child=children[i];if(child.nodeType==1){grandchildren=child.childNodes;if(grandchildren.length==1){grandchild=grandchildren[0];if(grandchild.nodeType==3||grandchild.nodeType==4){name=(child.prefix)?child.nodeName.split(":")[1]:child.nodeName;value=grandchild.nodeValue.replace(this.regExes.trimSpace,"");attributes[name]=value;}}else{attributes[child.nodeName.split(":").pop()]=null;}}}
-break;}
-childNode=childNode.nextSibling;}
-return attributes;},write:function(features){if(!(OpenLayers.Util.isArray(features))){features=[features];}
-var gml=this.createElementNS("http://www.opengis.net/wfs","wfs:"+this.collectionName);for(var i=0;i<features.length;i++){gml.appendChild(this.createFeatureXML(features[i]));}
-return OpenLayers.Format.XML.prototype.write.apply(this,[gml]);},createFeatureXML:function(feature){var geometry=feature.geometry;var geometryNode=this.buildGeometryNode(geometry);var geomContainer=this.createElementNS(this.featureNS,this.featurePrefix+":"+
-this.geometryName);geomContainer.appendChild(geometryNode);var featureNode=this.createElementNS(this.gmlns,"gml:"+this.featureName);var featureContainer=this.createElementNS(this.featureNS,this.featurePrefix+":"+
-this.layerName);var fid=feature.fid||feature.id;featureContainer.setAttribute("fid",fid);featureContainer.appendChild(geomContainer);for(var attr in feature.attributes){var attrText=this.createTextNode(feature.attributes[attr]);var nodename=attr.substring(attr.lastIndexOf(":")+1);var attrContainer=this.createElementNS(this.featureNS,this.featurePrefix+":"+
-nodename);attrContainer.appendChild(attrText);featureContainer.appendChild(attrContainer);}
-featureNode.appendChild(featureContainer);return featureNode;},buildGeometryNode:function(geometry){if(this.externalProjection&&this.internalProjection){geometry=geometry.clone();geometry.transform(this.internalProjection,this.externalProjection);}
-var className=geometry.CLASS_NAME;var type=className.substring(className.lastIndexOf(".")+1);var builder=this.buildGeometry[type.toLowerCase()];return builder.apply(this,[geometry]);},buildGeometry:{point:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:Point");gml.appendChild(this.buildCoordinatesNode(geometry));return gml;},multipoint:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:MultiPoint");var points=geometry.components;var pointMember,pointGeom;for(var i=0;i<points.length;i++){pointMember=this.createElementNS(this.gmlns,"gml:pointMember");pointGeom=this.buildGeometry.point.apply(this,[points[i]]);pointMember.appendChild(pointGeom);gml.appendChild(pointMember);}
-return gml;},linestring:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:LineString");gml.appendChild(this.buildCoordinatesNode(geometry));return gml;},multilinestring:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:MultiLineString");var lines=geometry.components;var lineMember,lineGeom;for(var i=0;i<lines.length;++i){lineMember=this.createElementNS(this.gmlns,"gml:lineStringMember");lineGeom=this.buildGeometry.linestring.apply(this,[lines[i]]);lineMember.appendChild(lineGeom);gml.appendChild(lineMember);}
-return gml;},linearring:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:LinearRing");gml.appendChild(this.buildCoordinatesNode(geometry));return gml;},polygon:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:Polygon");var rings=geometry.components;var ringMember,ringGeom,type;for(var i=0;i<rings.length;++i){type=(i==0)?"outerBoundaryIs":"innerBoundaryIs";ringMember=this.createElementNS(this.gmlns,"gml:"+type);ringGeom=this.buildGeometry.linearring.apply(this,[rings[i]]);ringMember.appendChild(ringGeom);gml.appendChild(ringMember);}
-return gml;},multipolygon:function(geometry){var gml=this.createElementNS(this.gmlns,"gml:MultiPolygon");var polys=geometry.components;var polyMember,polyGeom;for(var i=0;i<polys.length;++i){polyMember=this.createElementNS(this.gmlns,"gml:polygonMember");polyGeom=this.buildGeometry.polygon.apply(this,[polys[i]]);polyMember.appendChild(polyGeom);gml.appendChild(polyMember);}
-return gml;},bounds:function(bounds){var gml=this.createElementNS(this.gmlns,"gml:Box");gml.appendChild(this.buildCoordinatesNode(bounds));return gml;}},buildCoordinatesNode:function(geometry){var coordinatesNode=this.createElementNS(this.gmlns,"gml:coordinates");coordinatesNode.setAttribute("decimal",".");coordinatesNode.setAttribute("cs",",");coordinatesNode.setAttribute("ts"," ");var parts=[];if(geometry instanceof OpenLayers.Bounds){parts.push(geometry.left+","+geometry.bottom);parts.push(geometry.right+","+geometry.top);}else{var points=(geometry.components)?geometry.components:[geometry];for(var i=0;i<points.length;i++){parts.push(points[i].x+","+points[i].y);}}
-var txtNode=this.createTextNode(parts.join(" "));coordinatesNode.appendChild(txtNode);return coordinatesNode;},CLASS_NAME:"OpenLayers.Format.GML"});
-/*!
-* screenfull
-* v1.2.0 - 2014-04-29
-* (c) Sindre Sorhus; MIT License
-*/
-(function () {
-	'use strict';
-
-	var isCommonjs = typeof module !== 'undefined' && module.exports;
-	var keyboardAllowed = typeof Element !== 'undefined' && 'ALLOW_KEYBOARD_INPUT' in Element;
-
-	var fn = (function () {
-		var val;
-		var valLength;
-
-		var fnMap = [
-			[
-				'requestFullscreen',
-				'exitFullscreen',
-				'fullscreenElement',
-				'fullscreenEnabled',
-				'fullscreenchange',
-				'fullscreenerror'
-			],
-			// new WebKit
-			[
-				'webkitRequestFullscreen',
-				'webkitExitFullscreen',
-				'webkitFullscreenElement',
-				'webkitFullscreenEnabled',
-				'webkitfullscreenchange',
-				'webkitfullscreenerror'
-
-			],
-			// old WebKit (Safari 5.1)
-			[
-				'webkitRequestFullScreen',
-				'webkitCancelFullScreen',
-				'webkitCurrentFullScreenElement',
-				'webkitCancelFullScreen',
-				'webkitfullscreenchange',
-				'webkitfullscreenerror'
-
-			],
-			[
-				'mozRequestFullScreen',
-				'mozCancelFullScreen',
-				'mozFullScreenElement',
-				'mozFullScreenEnabled',
-				'mozfullscreenchange',
-				'mozfullscreenerror'
-			],
-			[
-				'msRequestFullscreen',
-				'msExitFullscreen',
-				'msFullscreenElement',
-				'msFullscreenEnabled',
-				'MSFullscreenChange',
-				'MSFullscreenError'
-			]
-		];
-
-		var i = 0;
-		var l = fnMap.length;
-		var ret = {};
-
-		for (; i < l; i++) {
-			val = fnMap[i];
-			if (val && val[1] in document) {
-				for (i = 0, valLength = val.length; i < valLength; i++) {
-					ret[fnMap[0][i]] = val[i];
-				}
-				return ret;
-			}
-		}
-
-		return false;
-	})();
-
-	var screenfull = {
-		request: function (elem) {
-			var request = fn.requestFullscreen;
-
-			elem = elem || document.documentElement;
-
-			// Work around Safari 5.1 bug: reports support for
-			// keyboard in fullscreen even though it doesn't.
-			// Browser sniffing, since the alternative with
-			// setTimeout is even worse.
-			if (/5\.1[\.\d]* Safari/.test(navigator.userAgent)) {
-				elem[request]();
-			} else {
-				elem[request](keyboardAllowed && Element.ALLOW_KEYBOARD_INPUT);
-			}
-		},
-		exit: function () {
-			document[fn.exitFullscreen]();
-		},
-		toggle: function (elem) {
-			if (this.isFullscreen) {
-				this.exit();
-			} else {
-				this.request(elem);
-			}
-		},
-		onchange: function () {},
-		onerror: function () {},
-		raw: fn
-	};
-
-	if (!fn) {
-		if (isCommonjs) {
-			module.exports = false;
-		} else {
-			window.screenfull = false;
-		}
-
-		return;
-	}
-
-	Object.defineProperties(screenfull, {
-		isFullscreen: {
-			get: function () {
-				return !!document[fn.fullscreenElement];
-			}
-		},
-		element: {
-			enumerable: true,
-			get: function () {
-				return document[fn.fullscreenElement];
-			}
-		},
-		enabled: {
-			enumerable: true,
-			get: function () {
-				// Coerce to boolean in case of old WebKit
-				return !!document[fn.fullscreenEnabled];
-			}
-		}
-	});
-
-	document.addEventListener(fn.fullscreenchange, function (e) {
-		screenfull.onchange.call(screenfull, e);
-	});
-
-	document.addEventListener(fn.fullscreenerror, function (e) {
-		screenfull.onerror.call(screenfull, e);
-	});
-
-	if (isCommonjs) {
-		module.exports = screenfull;
-	} else {
-		window.screenfull = screenfull;
-	}
-})();
-
-L.BingLayer = L.TileLayer.extend({
-	options: {
-		subdomains: [0, 1, 2, 3],
-		type: 'Aerial',
-		attribution: 'Bing',
-		culture: ''
-	},
-
-	initialize: function(key, options) {
-		L.Util.setOptions(this, options);
-
-		this._key = key;
-		this._url = null;
-		this.meta = {};
-		this.loadMetadata();
-	},
-
-	tile2quad: function(x, y, z) {
-		var quad = '';
-		for (var i = z; i > 0; i--) {
-			var digit = 0;
-			var mask = 1 << (i - 1);
-			if ((x & mask) !== 0) digit += 1;
-			if ((y & mask) !== 0) digit += 2;
-			quad = quad + digit;
-		}
-		return quad;
-	},
-
-	getTileUrl: function(p, z) {
-		var zoom = this._getZoomForUrl();
-		var subdomains = this.options.subdomains,
-			s = this.options.subdomains[Math.abs((p.x + p.y) % subdomains.length)];
-		return this._url.replace('{subdomain}', s)
-				.replace('{quadkey}', this.tile2quad(p.x, p.y, zoom))
-				.replace('{culture}', this.options.culture);
-	},
-
-	loadMetadata: function() {
-		var _this = this;
-		var cbid = '_bing_metadata_' + L.Util.stamp(this);
-		window[cbid] = function (meta) {
-			_this.meta = meta;
-			window[cbid] = undefined;
-			var e = document.getElementById(cbid);
-			e.parentNode.removeChild(e);
-			if (meta.errorDetails) {
-				return;
-			}
-			_this.initMetadata();
-		};
-		var url = document.location.protocol + '//dev.virtualearth.net/REST/v1/Imagery/Metadata/' + this.options.type + '?include=ImageryProviders&jsonp=' + cbid +
-		          '&key=' + this._key + '&UriScheme=' + document.location.protocol.slice(0, -1);
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = url;
-		script.id = cbid;
-		document.getElementsByTagName('head')[0].appendChild(script);
-	},
-
-	initMetadata: function() {
-		var r = this.meta.resourceSets[0].resources[0];
-		this.options.subdomains = r.imageUrlSubdomains;
-		this._url = r.imageUrl;
-		this._providers = [];
-		if (r.imageryProviders) {
-			for (var i = 0; i < r.imageryProviders.length; i++) {
-				var p = r.imageryProviders[i];
-				for (var j = 0; j < p.coverageAreas.length; j++) {
-					var c = p.coverageAreas[j];
-					var coverage = {zoomMin: c.zoomMin, zoomMax: c.zoomMax, active: false};
-					var bounds = new L.LatLngBounds(
-							new L.LatLng(c.bbox[0]+0.01, c.bbox[1]+0.01),
-							new L.LatLng(c.bbox[2]-0.01, c.bbox[3]-0.01)
-					);
-					coverage.bounds = bounds;
-					coverage.attrib = p.attribution;
-					this._providers.push(coverage);
-				}
-			}
-		}
-		this._update();
-	},
-
-	_update: function() {
-		if (this._url === null || !this._map) return;
-		this._update_attribution();
-		L.TileLayer.prototype._update.apply(this, []);
-	},
-
-	_update_attribution: function() {
-		var bounds = this._map.getBounds();
-		var zoom = this._map.getZoom();
-		for (var i = 0; i < this._providers.length; i++) {
-			var p = this._providers[i];
-			if ((zoom <= p.zoomMax && zoom >= p.zoomMin) &&
-					bounds.intersects(p.bounds)) {
-				if (!p.active && this._map.attributionControl)
-					this._map.attributionControl.addAttribution(p.attrib);
-				p.active = true;
-			} else {
-				if (p.active && this._map.attributionControl)
-					this._map.attributionControl.removeAttribution(p.attrib);
-				p.active = false;
-			}
-		}
-	},
-
-	onRemove: function(map) {
-		for (var i = 0; i < this._providers.length; i++) {
-			var p = this._providers[i];
-			if (p.active && this._map.attributionControl) {
-				this._map.attributionControl.removeAttribution(p.attrib);
-				p.active = false;
-			}
-		}
-        	L.TileLayer.prototype.onRemove.apply(this, [map]);
-	}
-});
-
-L.bingLayer = function (key, options) {
-    return new L.BingLayer(key, options);
-};
 
 L.Icon.Default.imagePath = "lib/leaflet/dist/images";
