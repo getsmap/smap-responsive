@@ -181,6 +181,7 @@ smap.core.Layer = L.Class.extend({
 											"palette", "propertyname", "tiled", "tilesorigin", "scalemethod"]);
 					layer = new init(t.url, newOpts);
 					$.extend(layer.options, opts);
+					layer.setZIndex(opts.zIndex);
 				}
 				else {
 					layer = new init(t.url, opts);
@@ -191,9 +192,9 @@ smap.core.Layer = L.Class.extend({
 				this._layers[t.options.layerId] = layer;
 				// layer.setZIndex(layer.options.zIndex);
 			}
-			else if (layer instanceof L.NonTiledLayer.WMS) {
-				layer.options.zIndex = -1; // Solves issue where layer goes on top of vector features
-			}
+			// else if (layer instanceof L.NonTiledLayer.WMS) {
+			// 	layer.options.zIndex = -1; // Solves issue where layer goes on top of vector features
+			// }
 		}
 		
 		var self = this;
