@@ -52,7 +52,10 @@
   background-position: -92px -2px;
 }
 .drawicons.leaflet-draw-draw-marker {
-  background-position: -122px -2px;
+  background-position: -122px -3px;
+}
+.dropdown-toggle .drawicons.leaflet-draw-draw-marker {
+  background-position: -125px -5px;
 }
 .drawicons.leaflet-draw-edit-edit {
   background-position: -152px -2px;
