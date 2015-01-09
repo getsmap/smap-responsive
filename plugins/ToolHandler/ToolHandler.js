@@ -66,6 +66,9 @@ L.Control.ToolHandler = L.Control.extend({
 			var isVisible = $(".thandler-popover").length && parseInt($(".thandler-popover").css("opacity") || 0) > 0;
 			var $popCont = $(".popover-content");
 			if ( $thBtn.data('bs.popover') && isVisible && $popCont.children().length) {
+				if (utils.getBrowser().ie9) {
+					onPopoverHidden();
+				}
 				$thBtn.popover("hide");
 			}
 			smap.event.trigger("smap.toolhandler.hide", e);
@@ -84,13 +87,30 @@ L.Control.ToolHandler = L.Control.extend({
 		
 		this._map.on("click dragstart", hidePopover);
 		$(window).on("orientationchange", hidePopover);
+	
+		var onPopoverHidden = function() {
+			/*var drawBtns = $('.leaflet-control-drawsmap').children();
+			if(drawBtns.length > 0){
+				drawBtns.removeClass('drawBtnsTight');
+			}*/
+			$(window).off("resize", hidePopover);
+			var $popCont = $(".popover-content");
 
+			// It seems as though the hidden.bs.popover-event is triggered before animation 
+			// is completed - so we need to add a timeout, to avoid ugly animation.
+			setTimeout(function() {
+				$(".thandler-container").append( $popCont.children() );
+			}, 150);
+		}
 
 		$thBtn.on("click", function() {
 			var $this = $(this);
 			if ( $this.data('bs.popover') ) {
 				var isVisible = $(".thandler-popover").length && parseInt($(".thandler-popover").css("opacity") || 0) > 0;
 				if (isVisible) {
+					if (utils.getBrowser().ie9) {
+						onPopoverHidden();
+					}
 					$this.popover("hide");
 					return false;
 				}
@@ -113,32 +133,20 @@ L.Control.ToolHandler = L.Control.extend({
 					$popover.addClass("thandler-popover");
 
 					// Move control divs into the popover - but only those which contains a button tag
-					var btns = $(".thandler-container").children(".leaflet-control:has('button')");
+					var btns = $(".thandler-container").children(".leaflet-control:has('button')").detach();
 					$popCont.empty();
 					$popCont.append( btns );
 					
-					var drawBtns = $('.leaflet-control-drawsmap').children();
+					/*var drawBtns = $('.leaflet-control-drawsmap').children();
 					if(drawBtns.length > 0){
 						drawBtns.addClass('drawBtnsTight');
-					}
+					}*/
 										
 					$(window).on("resize", hidePopover);
 					
 				});
-				$this.on("hidden.bs.popover", function() {
-					var drawBtns = $('.leaflet-control-drawsmap').children();
-					if(drawBtns.length > 0){
-						drawBtns.removeClass('drawBtnsTight');
-					}
-					$(window).off("resize", hidePopover);
-					var $popCont = $(".popover-content");
-
-					// It seems as though the hidden.bs.popover-event is triggered before animation 
-					// is completed - so we need to add a timeout, to avoid ugly animation.
-					setTimeout(function() {
-						$(".thandler-container").append( $popCont.children() );
-					}, 150);
-				});
+				
+				$this.on("hidden.bs.popover", onPopoverHidden);
 				// $(".thandler-container").toggleClass("thandler-visible");
 			}
 			togglePopover();
