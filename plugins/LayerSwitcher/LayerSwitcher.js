@@ -135,7 +135,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			$(".lswitch-panel").remove();
 		}
 
-		// this._setSwitcherPosition();
+		this._setSwitcherPosition();
 		this.__setSwitcherPosition = this.__setSwitcherPosition || $.proxy(this._setSwitcherPosition, this);
 		$(window).on("resize", this.__setSwitcherPosition);
 	},
@@ -153,6 +153,16 @@ L.Control.LayerSwitcher = L.Control.extend({
 		else {
 			// Allow interacting with map "behind" layer switcher (panel is within map and no scroll needed)
 			$(".lswitch-panel").css("position", "relative");
+			/*if (b.ie9 || b.ie10 || b.ie11) {
+				$(".lswitch-panel").css({
+					"padding-top": "0",
+					"margin-top": "0"
+				});
+			}*/
+		}
+		var b = utils.getBrowser();
+		if (b.ie9 || b.ie10 || b.ie11) {
+			$(".lswitch-panel").css("position", "absolute");
 		}
 		this.hidePanel();
 	},
