@@ -1,4 +1,5 @@
 .leaflet-control-measuredraw .dropdown-menu {
+  overflow: hidden;
   left: auto;
   right: 0;
 }

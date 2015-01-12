@@ -182,6 +182,8 @@
   }
   .lswitch-panel .panel-default > .panel-heading {
     background: none;
+    -webkit-filter: none !important;
+    filter: none !important;
     color: #fff;
     outline: none;
     font-weight: bold;
@@ -205,6 +207,8 @@
   .lswitch-panel a.active:hover,
   .lswitch-panel a.active:active {
     background: none;
+    -webkit-filter: none !important;
+    filter: none !important;
     background-image: none !important;
     text-shadow: none !important;
     background-color: #fff;
@@ -259,6 +263,8 @@
     transition: all 300ms;
     display: block !important;
     background-color: none;
+    -webkit-filter: none !important;
+    filter: none !important;
     background-color: rgba(255,255,255,0);
     z-index: 900;
     max-height: 100%;
@@ -277,6 +283,8 @@
   .lswitch-panel .panel-default {
     border: none;
     background: none;
+    -webkit-filter: none !important;
+    filter: none !important;
   }
   #lswitch-olcont,
   #lswitch-blcont {

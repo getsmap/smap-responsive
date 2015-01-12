@@ -21,6 +21,10 @@
     left: auto !important;
     right: 0.2em;
   }
+  .thandler-popover .popover-content {
+    padding: 0;
+    padding-bottom: 1em;
+  }
   .thandler-popover .popover-content .leaflet-control {
     clear: none;
     margin: 0.2em;
@@ -28,9 +32,8 @@
   .thandler-popover .popover-content .leaflet-control button {
     width: 2.75em;
   }
-  .thandler-popover .popover-content {
-    padding: 0;
-    padding-bottom: 1em;
+  .thandler-popover .dropdown-menu {
+    left: -17em !important;
   }
   .thandler-popover .arrow {
     left: auto !important;
