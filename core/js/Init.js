@@ -45,7 +45,7 @@ smap.core.Init = L.Class.extend({
 
 				smap.config = config || window.config;
 				if (smap.config.onLoad) {
-					var deferred = smap.config.onLoad.call(this);
+					var deferred = smap.config.onLoad(smap.config);
 					deferred.done(applyConfig);
 				}
 				else {
