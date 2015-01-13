@@ -4,5 +4,5 @@
 }
 
 .leaflet-draw-tooltip {
-	z-index: 1001;
+	z-index: 3001;
 }

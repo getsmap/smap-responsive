@@ -12,5 +12,7 @@ smap.core.mainConfig = {
 		},
 		
 		toolbarPlugin: "Menu",
-		defaultTheme: "smap"
+		defaultTheme: "smap",
+
+		configFolders: ["/rest/leaf/configs-1.0/"]
 };
