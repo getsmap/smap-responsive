@@ -34,16 +34,23 @@ smap.core.Init = L.Class.extend({
 		smap.core.pluginHandlerInst = new smap.core.PluginHandler(this.map);
 		var params = options.params || smap.core.paramInst.getParams(); //Parameters from URL
 		this.loadConfig(params.CONFIG).done(function() {
+				function applyConfig() {
+					smap.config.configName = params.CONFIG; // Store for creating params
+					smap.config.langCode = smap.cmd.getLang();
+					params = $.extend( utils.objectToUpperCase(smap.config.params || {}), params);
+					self.applyConfig(smap.config);
+					smap.core.paramInst.applyParams(params);
+					smap.cmd.loading(false);
+				}
+
 				smap.config = config || window.config;
 				if (smap.config.onLoad) {
-					smap.config.onLoad.call(this);
+					var deferred = smap.config.onLoad.call(this);
+					deferred.done(applyConfig);
 				}
-				smap.config.configName = params.CONFIG; // Store for creating params
-				smap.config.langCode = smap.cmd.getLang();
-				params = $.extend( utils.objectToUpperCase(smap.config.params || {}), params);
-				self.applyConfig(smap.config);
-				smap.core.paramInst.applyParams(params);
-				smap.cmd.loading(false);
+				else {
+					applyConfig();
+				}
 		}).fail(function(a, text, c) {
 			utils.log("Config not loaded because: "+text);
 			smap.cmd.loading(false);
