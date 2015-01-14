@@ -518,7 +518,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}
 
 		var btn = $('<span class="fa fa-info-circle lswitch-btndialog" aria-hidden="true"></span>');
-		row.on("click touchstart", function() {
+		btn.on("click touchstart", function(e) {
 			openDialog( $(this).data("t").options );
 			return false;
 		});
