@@ -53,6 +53,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		this.__onRowTap = this.__onRowTap || $.proxy(this._onRowTap, this);
 		this.__onHeaderClick = this.__onHeaderClick || $.proxy(this._onHeaderClick, this);
 		this.__onHeaderIconClick = this.__onHeaderIconClick || $.proxy(this._onHeaderIconClick, this);
+		this.__onBtnDialogClick = this.__onBtnDialogClick || $.proxy(this._onBtnDialogClick, this);
 
 		this.__onLegendEnter = this.__onLegendEnter || $.proxy(this._onLegendEnter, this);
 		this.__onLegendLeave = this.__onLegendLeave || $.proxy(this._onLegendLeave, this);
@@ -493,35 +494,34 @@ L.Control.LayerSwitcher = L.Control.extend({
 		return false;
 	},
 
+	_onBtnDialogClick: function(e) {
+		var o = $(e.target).parents(".list-group-item:first").data("t").options,
+			body = "";
+		var dialogContent = o.dialog;
+		if (dialogContent.substring(0, 4) === "http" || dialogContent.substring(0, 2) === "//") {
+			// We are dealing with a URL
+			body = '<div class="modal-body-container"><iframe frameborder="0" scrolling="auto" src="'+dialogContent+'" width="100%" height="100%" style="position:absolute;left:0;top:0;margin:0;padding:0;" frameborder="0"></iframe></div>';
+		}
+		var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+		var d = utils.drawDialog(o.displayName, body, footerContent, {});
+		d.addClass("lswitch-dialog");
+		d.modal("show");
+
+		var h = $("#mapdiv").height();
+		h = h > 500 ? 500 : h; // set max height
+		d.find(".modal-body").css({
+			"min-height": h+"px"
+		});
+		d.on("hidden.bs.modal", function() {
+			$(this).empty().remove();
+		});
+		return false;
+	},
+
 	_addBtnDialog: function(row, t) {
 		var self = this;
-		function openDialog(o) {
-			var body = "";
-			var dialogContent = o.dialog;
-			if (dialogContent.substring(0, 4) === "http" || dialogContent.substring(0, 2) === "//") {
-				// We are dealing with a URL
-				body = '<div class="modal-body-container"><iframe frameborder="0" scrolling="auto" src="'+dialogContent+'" width="100%" height="100%" style="position:absolute;left:0;top:0;margin:0;padding:0;" frameborder="0"></iframe></div>';
-			}
-			var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+self.lang.close+'</button>';
-			var d = utils.drawDialog(t.options.displayName, body, footerContent, {});
-			d.addClass("lswitch-dialog");
-			d.modal("show");
-
-			var h = $("#mapdiv").height();
-			h = h > 500 ? 500 : h; // set max height
-			d.find(".modal-body").css({
-				"min-height": h+"px"
-			});
-			d.on("hidden.bs.modal", function() {
-				$(this).empty().remove();
-			});
-		}
-
 		var btn = $('<span class="fa fa-info-circle lswitch-btndialog" aria-hidden="true"></span>');
-		btn.on("click touchstart", function(e) {
-			openDialog( $(this).data("t").options );
-			return false;
-		});
+		btn.on("click touchstart", this.__onBtnDialogClick);
 		row.prepend(btn);
 	},
 
