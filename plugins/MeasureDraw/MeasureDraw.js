@@ -736,7 +736,7 @@ L.Control.MeasureDraw = L.Control.extend({
 				else {
 					layer.properties.measure_text = val;
 					layer.properties.measure_form = ""; // erase
-					layer.options.label = val; // For mapfish print
+					// layer.options.label = val; // Dont do this. If label is set, markers become black points
 					layer.closePopup();
 				}
 			});
