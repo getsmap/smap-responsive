@@ -146,7 +146,6 @@ L.Control.MeasureDraw = L.Control.extend({
 		smap.event.on("smap.core.createparams", $.proxy(this._onCreateParams, this));
 		smap.event.on("smap.core.applyparams", $.proxy(this._onApplyParams, this));
 
-
 		return this._container;
 	},
 
@@ -167,26 +166,33 @@ L.Control.MeasureDraw = L.Control.extend({
 				}
 				props.push(lay.properties);
 			});
-			// 	lay.feature = {
-			// 		properties: $.extend(true, {}, lay.properties)
-			// 	};
-			// 	if (lay._latlng) {
-			// 		lay.feature._latlng = $.extend(true, {}, lay._latlng);
-			// 	}
-			// 	else if (lay.geometry) {
-			// 		lay.feature.geometry = $.extend(true, {}, lay.geometry);
-			// 	}
-			// });
+			
+			function diveInto(n) {
+				// Recursively reduce the number of digits for each node (to make the link shorter)
+				var item;
+				for (var i=0,len=n.length; i<len; i++) {   
+					item = n[i];
+					if (item instanceof Array) {
+						 diveInto(item);   
+					}
+					else {
+						 n[i] = L.Util.formatNum(item, 5);
+					}
+				}
+			}
 			
 			var md = this._layer.toGeoJSON();
 			var fs = md.features,
-				f;
+				f, ff;
 			var newFs = [];
 			for (var i=0,len=fs.length; i<len; i++) {
-				f = fs[i];
+				ff = fs[i];
+				f = $.extend(true, {}, ff);
+				diveInto(f.geometry.coordinates);
 				if (props[i]) {
 					// Only keep real features (not labels)
-					f.properties = props[i];
+					// f.properties = props[i];
+					delete f.properties.measure_form;
 					newFs.push(f);
 				}
 			}
@@ -256,7 +262,7 @@ L.Control.MeasureDraw = L.Control.extend({
 	 * and round to even m
 	 * @param  {Number} val [in meters]
 	 * @param {Integer} dim Number of dimensions (optional) Default 1
-	 * @return {String}     [Value in m or km and rounded]
+	 * @return {String}	 [Value in m or km and rounded]
 	 */
 	readableDistance: function(val, dim) {
 		dim = dim || 1; // Defaults to line measurement
@@ -414,7 +420,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			delete layer.feature;
 		}
 
-		if (!layer.properties) {
+		if (!layer.properties || !layer.properties.measure_form) {
 			layer.properties = {
 				id: layer._leaflet_id,
 				measure_form: '<div class="measuredraw-popup-div-save"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>',
