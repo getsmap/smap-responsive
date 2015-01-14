@@ -9,12 +9,16 @@ L.Control.ShareLink = L.Control.extend({
 		"sv": {
 			caption: "Länk till kartan",
 			close: "Stäng",
-			tooLongUrl: "Notera! URL:en är för lång för att fungera i en del äldre webbläsare"
+			tooLong: "För lång länk",
+			tooLongUrl: "Notera! Länken är för lång för att fungera i en del äldre webbläsare. "+
+					"Ta bort ett eller flera ritade objekt för att göra länken kortare."
 		},
 		"en": {
 			caption: "Share link",
 			close: "Close",
-			tooLongUrl: "Note! The URL may not work in very old browsers"
+			tooLong: "Too long link",
+			tooLongUrl: "Note! The link may not work in some older browsers. Please remove "+
+				"one or more drawn features to make it shorter."
 		}
 	},
 
@@ -83,8 +87,16 @@ L.Control.ShareLink = L.Control.extend({
 			
 		}
 		if (url.length > this.options.maxLen) {
+			var d = this._$dialog;
 			var note = smap.cmd.notify(this.lang.tooLongUrl, "warning", {parent: inputDiv.parent()});
 			note.removeClass("map-alert");
+			function notifyTooLong() {
+				// alert(self.lang.tooLongUrl);
+				d.find("input[type=text]").prop("disabled", true);
+				d.off("shown.bs.modal", notifyTooLong);
+			}
+			d.find("input[type=text]").val(this.lang.tooLong);
+			d.on("shown.bs.modal", notifyTooLong);
 		}
 		this._$dialog.modal("show");
 
