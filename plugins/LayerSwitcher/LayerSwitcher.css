@@ -149,6 +149,22 @@
 .panel-with-toolbar {
   padding-top: 5em;
 }
+.lswitch-btndialog {
+  font-size: 1.4em;
+  vertical-align: middle;
+  margin-right: 0.2em;
+}
+.lswitch-dialog {
+  overflow-y: scroll;
+}
+.lswitch-dialog .modal-body-container {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  position: absolute;
+  -webkit-overflow-scrolling: touch;
+}
 @media (max-width: 991px) {
   .lswitch-cat {
     color: #fff;
