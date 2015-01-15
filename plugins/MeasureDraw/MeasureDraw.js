@@ -123,9 +123,9 @@ L.Control.MeasureDraw = L.Control.extend({
 		'"geometry":' : ':g:',
 		'"coordinates":' : ':c:',
 		'"properties":' : ':p',
-		'},{"' : ':-:',
-		']}' : ':--:',
-		'}]' : ':---:',
+		// '},{"' : '::-',
+		// ']}' : '::--',
+		// '}]' : ':---',
 		'"measure_form"': ':m:',
 		'"measure_text"': ':mt:'
 	},
@@ -238,7 +238,11 @@ L.Control.MeasureDraw = L.Control.extend({
 			var json = JSON.stringify(md);
 			json = this._compressJson(json);
 			var param = encodeURIComponent(this.options.saveMode + "," + json);
-			param = param.replace(/%3A/g, ":"); // Keep these as they are safe
+
+			// Keep these as they are safe
+			param = param.replace(/%3A/g, ":");
+			param = param.replace(/%3A/g, ":");
+
 			p.md = param;
 		}
 	},
