@@ -114,6 +114,44 @@ L.Control.MeasureDraw = L.Control.extend({
 		this._setLabels();
 	},
 
+	_jsonCompressDict: {
+		'"FeatureCollection":' : ':fc:',
+		'"Feature"' : ':F:',
+		'"Point"' : ':P:',
+		'"features":' : ':fs:',
+		'"type":' : ':t:',
+		'"geometry":' : ':g:',
+		'"coordinates":' : ':c:',
+		'"properties":' : ':p',
+		'},{"' : ':-:',
+		']}' : ':--:',
+		'}]' : ':---:',
+		'"measure_form"': ':m:',
+		'"measure_text"': ':mt:'
+	},
+
+	_compressJson: function(s) {
+		var d = this._jsonCompressDict,
+			f;
+		for (var key in d) {
+			f = new RegExp(key, 'g');
+			s = s.replace(f, d[key]);
+		}
+		return s;
+		
+	},
+
+	_uncompressJson: function(s) {
+		var d = this._jsonCompressDict,
+			f;
+		for (var key in d) {
+			f = new RegExp(d[key], 'g');
+			s = s.replace(f, key);
+		}
+		return s;
+
+	},
+
 	onAdd: function(map) {
 		this.map = map;
 		this._container = L.DomUtil.create('div', 'leaflet-control-measuredraw'); // second parameter is class name
@@ -191,15 +229,17 @@ L.Control.MeasureDraw = L.Control.extend({
 				diveInto(f.geometry.coordinates);
 				if (props[i]) {
 					// Only keep real features (not labels)
-					// f.properties = props[i];
+					f.properties = $.extend({}, props[i]);
 					delete f.properties.measure_form;
 					newFs.push(f);
 				}
 			}
 			md.features = newFs;
 			var json = JSON.stringify(md);
-			json = encodeURIComponent(this.options.saveMode + "," + json);
-			p.md = json;
+			json = this._compressJson(json);
+			var param = encodeURIComponent(this.options.saveMode + "," + json);
+			param = param.replace(/%3A/g, ":"); // Keep these as they are safe
+			p.md = param;
 		}
 	},
 
@@ -210,6 +250,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			var saveMode = d.substring(0, firstComma);
 			var data = d.substring(firstComma+1);
 			if (saveMode === "url") {
+				data = this._uncompressJson(data);
 				var json = JSON.parse(data);
 				var md = L.geoJson(json);
 
@@ -420,7 +461,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			delete layer.feature;
 		}
 
-		if (!layer.properties || !layer.properties.measure_form) {
+		if (!layer.properties || (!layer.properties.measure_form && !layer.properties.measure_text)) {
 			layer.properties = {
 				id: layer._leaflet_id,
 				measure_form: '<div class="measuredraw-popup-div-save"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>',

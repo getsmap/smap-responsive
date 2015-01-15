@@ -213,7 +213,7 @@ smap.core.Select = L.Class.extend({
 						lay.unbindPopup();
 					}
 					lay.bindPopup(html, {autoPan: true, keepInView: false, autoPanPadding: L.point(0, 70)});
-					if (lay._popup) {
+					if (lay._popup && lay._map) {
 						lay.openPopup(latLng);
 					}
 				}
