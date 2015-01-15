@@ -211,6 +211,21 @@
 			return out;
 		},
 
+		_preprocessLayers: function() {
+			var map = this.map;
+			for (lid in map._layers) {
+				var lyr = map._layers[lid];
+				if (lyr instanceof L.NonTiledLayer.WMS) {
+					if (!lyr.options.printLayer) {
+						lyr.options.printLayer = {
+							init: "L.TileLayer.WMS",
+							options: lyr.options
+						}
+					}
+				}
+			}
+		},
+
 		print: function(options) {
 			if (!this.printProvider._capabilities) {
 				console.log("Print capabilities could not be loaded. Cannot print.");
@@ -220,6 +235,7 @@
 			b.attr("data-loading-text", this.lang.processingPrint);
 			b.button("loading");
 			smap.cmd.loading(true);
+			this._preprocessLayers();
 			this.printProvider.print(options);
 		},
 

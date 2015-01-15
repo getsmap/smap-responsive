@@ -227,7 +227,7 @@ L.print.Provider = L.Class.extend({
 
 				if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
 					tiles.push(lyr);
-				} else if (lyr instanceof L.ImageOverlay || lyr instanceof L.NonTiledLayer.WMS) {
+				} else if (lyr instanceof L.ImageOverlay) {
 					imageOverlays.push(lyr);
 				} else if (lyr instanceof L.Marker) {
 					markers.push(lyr);
