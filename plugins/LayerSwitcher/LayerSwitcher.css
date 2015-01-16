@@ -250,6 +250,10 @@
     background-color: #fff;
     color: #000;
   }
+  .list-group-item.lswitch-cat.open.active {
+    background: none;
+    background-image: none;
+  }
   .lswitch-cat {
     background: none;
     background-image: none;
