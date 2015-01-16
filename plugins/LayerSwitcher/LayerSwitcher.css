@@ -252,6 +252,9 @@
     background-color: #fff;
     color: #000;
   }
+  .list-group-item.lswitch-cat.active,
+  .list-group-item.lswitch-cat.active:focus,
+  .list-group-item.lswitch-cat.active:hover,
   .list-group-item.lswitch-cat.open.active,
   .list-group-item.lswitch-cat.open.active:focus,
   .list-group-item.lswitch-cat.open.active:hover {
