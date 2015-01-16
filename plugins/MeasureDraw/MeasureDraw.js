@@ -167,11 +167,6 @@ L.Control.MeasureDraw = L.Control.extend({
 				$('.leaflet-control-measuredraw .dropdown-toggle').dropdown();
 			});
 		}
-		if (utils.getBrowser().ie) {
-			$(".dropdown-toggle .drawicons.leaflet-draw-draw-marker").css({
-				"background-position": "-125px 0"
-			});
-		}
 
 		var self = this;
 		this.map.on("layeradd", function(e) {
@@ -885,6 +880,11 @@ L.Control.MeasureDraw = L.Control.extend({
 					// '<li>'+this.lang.drawTools+'</li>'+
 				'</ul>'+
 			'</div>');
+		if (utils.getBrowser().ie) {
+			$btn.find(".measuredraw-btntoggle-image").css({
+				"background-position": "-125px 0"
+			});
+		}
 		var b, t,
 			dm = $btn.find(".dropdown-menu");
 		for (var i=0,len=btnsArr.length; i<len; i++) {
