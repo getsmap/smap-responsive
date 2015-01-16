@@ -53,6 +53,7 @@
   text-shadow: none;
   background-image: none;
   white-space: nowrap;
+  background: #fff;
 }
 .lswitch-cat span {
   margin-left: 0.7em;

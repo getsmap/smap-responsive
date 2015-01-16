@@ -27493,7 +27493,7 @@ L.print.Provider = L.Class.extend({
 					var t = lyr.options.printLayer;
 					var layerClass = eval(t.init);
 					this._tempRemovedLayers.push(lyr);
-					map.removeLayer(lyr);
+					lyr = null;
 					lyr = new layerClass(t.url, t.options);
 					map.addLayer(lyr);
 					this._tempAddedLayers.push(lyr);
@@ -27510,6 +27510,12 @@ L.print.Provider = L.Class.extend({
 				}
 			}
 		}
+		// Remove layers which have a print layer. We must do it after the for-loop
+		// or the for-loop will be messed up (leaving out some layers).
+		for (var i=0,len=this._tempRemovedLayers.length; i<len; i++) {
+			map.removeLayer(this._tempRemovedLayers[i]);
+		}
+
 		markers.sort(function (a, b) {
 			return a._icon.style.zIndex - b._icon.style.zIndex;
 		});
