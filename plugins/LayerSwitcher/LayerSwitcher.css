@@ -245,12 +245,14 @@
   .lswitch-cat.open,
   .lswitch-cat.open:hover {
     background: none;
+    background-image: none;
     background-color: #fff;
     background-color: #fff;
     color: #000;
   }
   .lswitch-cat {
     background: none;
+    background-image: none;
     color: #000;
     background-color: #fff;
     outline: 1px solid #ccc;
