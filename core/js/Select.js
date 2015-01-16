@@ -316,7 +316,7 @@ smap.core.Select = L.Class.extend({
 							}
 						});
 						self.map.addLayer(self._rasterFeature);
-						// self._rasterFeature.setZIndex(900);
+						self._rasterFeature.setZIndex(900);
 					}
 					return self._rasterFeature;
 				}
