@@ -225,6 +225,7 @@
 						var t = smap.cmd.getLayerConfig(lyr.options.layerId);
 						if (t) {
 							t.init = "L.TileLayer.WMS";
+							t.options.layerId = t.options.layerId + "1";
 							lyr.options.printLayer = $.extend(true, {}, t);
 						}
 					}
