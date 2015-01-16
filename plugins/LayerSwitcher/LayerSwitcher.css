@@ -53,7 +53,8 @@
   text-shadow: none;
   background-image: none;
   white-space: nowrap;
-  background: #fff;
+  background: none;
+  background-color: #fff;
 }
 .lswitch-cat span {
   margin-left: 0.7em;
@@ -243,6 +244,7 @@
   }
   .lswitch-cat.open,
   .lswitch-cat.open:hover {
+    background-color: #fff;
     background-color: #fff;
     color: #000;
   }
