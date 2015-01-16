@@ -244,7 +244,10 @@
   }
   .lswitch-cat.open,
   .lswitch-cat.open:hover {
+    background: none;
     background-image: none;
+    -webkit-filter: none;
+    filter: none;
     background-color: #fff;
     background-color: #fff;
     color: #000;
@@ -254,6 +257,7 @@
     background-image: none;
     -webkit-filter: none;
     filter: none;
+    background-color: #fff;
   }
   .lswitch-cat {
     background: none;
