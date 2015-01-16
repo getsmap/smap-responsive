@@ -18,6 +18,7 @@ var utils = {
     		var ieVersion = match ? parseInt(match[1]) : undefined;
 
 			return {
+				ie: match,
 				ie8: ieVersion === 8,
 				ie9: ieVersion === 9,
 				ie10: ieVersion === 10,

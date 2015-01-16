@@ -167,6 +167,11 @@ L.Control.MeasureDraw = L.Control.extend({
 				$('.leaflet-control-measuredraw .dropdown-toggle').dropdown();
 			});
 		}
+		if (utils.getBrowser().ie) {
+			$(".dropdown-toggle .drawicons.leaflet-draw-draw-marker").css({
+				"background-position": "-125px 0"
+			});
+		}
 
 		var self = this;
 		this.map.on("layeradd", function(e) {
