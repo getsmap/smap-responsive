@@ -245,14 +245,12 @@
   .lswitch-cat.open,
   .lswitch-cat.open:hover {
     background: none;
+    -webkit-filter: none;
+    filter: none;
     background-image: none;
     background-color: #fff;
     background-color: #fff;
     color: #000;
-  }
-  .list-group-item.lswitch-cat.open.active {
-    background: none;
-    background-image: none;
   }
   .lswitch-cat {
     background: none;
