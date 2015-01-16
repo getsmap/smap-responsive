@@ -168,6 +168,10 @@
 				if (!o || o.legend !== undefined && o.legend === false) {
 					continue;
 				}
+				if (o.isBaseLayer) {
+					delete o.legend;
+					continue;
+				}
 				if (o && (o.legend || (layInst instanceof L.TileLayer.WMS || layInst instanceof L.GeoJSON.WFS))) {
 					url = o.legend;
 					if (!url || !url.length) {
