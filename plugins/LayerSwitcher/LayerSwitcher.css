@@ -260,8 +260,8 @@
   .list-group-item.lswitch-cat.open.active:hover {
     background: none;
     background-image: none;
-    -webkit-filter: none;
-    filter: none;
+    -webkit-filter: none !important;
+    filter: none !important;
     background-color: #fff;
   }
   .lswitch-cat {
