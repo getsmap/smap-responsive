@@ -295,6 +295,9 @@ body {
 .leaflet-container a.leaflet-popup-close-button {
   z-index: 100;
 }
+.leaflet-container a.leaflet-popup-minimize-button {
+  right: 20px;
+}
 @media (max-width: 991px) {
   .leaflet-right .leaflet-control {
     margin-right: 5px;

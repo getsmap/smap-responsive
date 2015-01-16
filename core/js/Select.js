@@ -95,7 +95,30 @@ smap.core.Select = L.Class.extend({
 	_bindEvents: function(map) {
 		var self = this;
 
-		map.on("layerremove", function() {
+		function onPopupOpen(e) {
+			// Add close popup button without unselecting feature (btnMinimize)
+			var btnClose = $(".leaflet-popup-close-button"),
+				btnMinimize = '<a class="leaflet-popup-close-button leaflet-popup-minimize-button" href="#">–</a>';
+			btnClose.before(btnMinimize);
+
+			$(".leaflet-popup-minimize-button").on("click", function(e) {
+				smap.map.closePopup();
+				return false;
+			});
+			btnClose.on("click", function() {
+				map.fire("unselected", {});
+				return false;
+			});
+		}
+		map.on("popupopen", onPopupOpen); // off("popupopen", onPopupOpen)
+
+
+		map.on("layerremove", function(e) {
+			var isPopup = e.layer._tip !== undefined;
+			if (isPopup) {
+				return false;
+			}
+
 			if (self._rasterFeature) {
 				map.removeLayer(self._rasterFeature);
 				self._rasterFeature = null;
@@ -357,14 +380,16 @@ smap.core.Select = L.Class.extend({
 							html = self._processHtml(html);
 							popup.setContent(html);
 
-							if (self._rasterFeature && self._rasterFeature.getBounds) {
-								var bounds = self._rasterFeature.getBounds();
-								var latLng = bounds.getCenter();
-								popup.setLatLng(latLng);
-							}
-							else {
-								popup.setLatLng(sf.latLng);
-							}
+							// if (self._rasterFeature && self._rasterFeature.getBounds) {
+							// 	// var bounds = self._rasterFeature.getBounds();
+							// 	// var latLng = bounds.getCenter();
+							// 	popup.setLatLng(sf.latLng); // latLng
+							// }
+							// else {
+							// 	popup.setLatLng(sf.latLng);
+							// }
+							popup.setLatLng(sf.latLng);
+
 							popup.openOn(self.map);
 							$(this).trigger("mouseenter");
 
@@ -444,6 +469,7 @@ smap.core.Select = L.Class.extend({
 						}
 					}
 				}
+
 				popup.setContent($html.html());
 				popup.setLatLng(f.latLng);
 
