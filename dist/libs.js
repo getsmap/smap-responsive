@@ -27416,6 +27416,16 @@ L.print.Provider = L.Class.extend({
 			});
 		}
 
+		// Remove temporary added layers and again add removed layers
+		for (var i=0,len=this._tempAddedLayers.length; i<len; i++) {
+			this._map.removeLayer(this._tempAddedLayers[i]);
+		}
+		for (var i=0,len=this._tempRemovedLayers.length; i<len; i++) {
+			this._map.addLayer(this._tempRemovedLayers[i]);
+		}
+		this._tempRemovedLayers = [];
+		this._tempAddedLayers = [];
+
 	},
 
 	getCapabilities: function () {
@@ -27471,10 +27481,23 @@ L.print.Provider = L.Class.extend({
 			pathNodes,
 			id;
 
+		this._tempRemovedLayers = [];
+		this._tempAddedLayers = [];
+
 		for (id in map._layers) {
 			if (map._layers.hasOwnProperty(id)) {
 				if (!map._layers.hasOwnProperty(id)) { continue; }
 				var lyr = map._layers[id];
+				if (lyr.options && lyr.options.printLayer) {
+					// Temporary replace the layer with the printLayer (add back after print)
+					var t = lyr.options.printLayer;
+					var layerClass = eval(t.init);
+					this._tempRemovedLayers.push(lyr);
+					map.removeLayer(lyr);
+					lyr = new layerClass(t.url, t.options);
+					map.addLayer(lyr);
+					this._tempAddedLayers.push(lyr);
+				}
 
 				if (lyr instanceof L.TileLayer.WMS || lyr instanceof L.TileLayer) {
 					tiles.push(lyr);
@@ -27583,11 +27606,6 @@ L.print.Provider = L.Class.extend({
 		var layers = this._getLayers(map);
 		for (i = 0; i < layers.length; i++) {
 			layer = layers[i];
-			if (layer.options.printLayer) {
-				var t = layer.options.printLayer;
-				var layerClass = eval(t.init);
-				layer = new layerClass(t.url, t.options);
-			}
 			if (layer instanceof L.TileLayer.WMS) {
 				enc.push(this._encoders.layers.tilelayerwms.call(this, layer));
 			} else if (layer instanceof L.mapbox.TileLayer){
