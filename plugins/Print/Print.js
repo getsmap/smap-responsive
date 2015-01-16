@@ -212,14 +212,16 @@
 		},
 
 		_preprocessLayers: function() {
-			var map = this.map;
+			var map = this.map,
+				lid;
 			for (lid in map._layers) {
 				var lyr = map._layers[lid];
 				if (lyr instanceof L.NonTiledLayer.WMS) {
 					if (!lyr.options.printLayer) {
-						lyr.options.printLayer = {
-							init: "L.TileLayer.WMS",
-							options: lyr.options
+						var t = smap.cmd.getLayerConfig(lyr.options.layerId);
+						if (t) {
+							t.init = "L.TileLayer.WMS";
+							lyr.options.printLayer = $.extend(true, {}, t);
 						}
 					}
 				}
