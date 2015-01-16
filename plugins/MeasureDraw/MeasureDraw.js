@@ -882,7 +882,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			'</div>');
 		if (utils.getBrowser().ie) {
 			$btn.find(".measuredraw-btntoggle-image").css({
-				"background-position": "-125px 0"
+				"background-position": "-120px 0"
 			});
 		}
 		var b, t,
