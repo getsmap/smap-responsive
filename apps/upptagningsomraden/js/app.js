@@ -117,7 +117,7 @@ var app = {
 				tag = $('<label class="radio-inline">\
 						<input type="radio" name="term" value="{yearText}"> {yearText}\
 					</label>'.replace(/\{yearText\}/g, y+"/"+(y+1) ));
-				if (y < yearNow) {
+				if (y < yearNow && m >= 6) {
 					tag.addClass("disabled").find("input").prop("disabled", true);
 				}
 				$(".termselect").append(tag);
