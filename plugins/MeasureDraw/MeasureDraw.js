@@ -18,6 +18,7 @@ L.Control.MeasureDraw = L.Control.extend({
 	_lang: {
 		"sv": {
 			drawTools: "Ritverktyg",
+			draggableMarker: "Markören är dragbar",
 			btnTitle: "Rita & Mät",
 			drawPoint: "Punkt/Koordinater",
 			drawLine: "Linje",
@@ -79,6 +80,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		},
 		"en": {
 			drawTools: "Draw tools",
+			draggableMarker: "The marker is draggable",
 			btnTitle: "Draw & Measure",
 			drawPoint: "Point/Coordinates",
 			drawLine: "Line",
@@ -363,7 +365,8 @@ L.Control.MeasureDraw = L.Control.extend({
 		var espg3008 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3008");
 		var espg3021 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3021");
 
-		html =	'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
+		html =	'<div>'+this.lang.draggableMarker+'</div>'
+				'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
 				"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
 				"Lon: &nbsp;"+utils.round(wgs.lat, 5)+'<div><br><button onclick="var tag=jQuery(this).parent().parent().parent().find(\'.measuredraw-morecoords\');tag.toggleClass(\'hidden\');jQuery(this).parent().remove();return false;" class="btn btn-primary btn-sm">'+this.lang.moreCoords+'</button></div></div>';
 

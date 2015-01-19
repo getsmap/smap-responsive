@@ -146,19 +146,20 @@ L.Control.LayerSwitcher = L.Control.extend({
 
 	_setSwitcherPosition: function() {
 		var panelsHeight = 0;
-		$(".lswitch-panel").children().each(function() {
+		var lp = $(".lswitch-panel");
+		lp.children().each(function() {
 			panelsHeight += $(this).outerHeight();
 		});
 
-		if (panelsHeight > ( $("#mapdiv").innerHeight() - 35) ) {
+		if (panelsHeight > ( $("#mapdiv").innerHeight() - utils.rmPx( lp.css("padding-top")+20 )) ) {
 			// Allow scroll (panel is going outside map)
-			$(".lswitch-panel").css("position", "absolute");
+			lp.css("position", "absolute");
 		}
 		else {
 			// Allow interacting with map "behind" layer switcher (panel is within map and no scroll needed)
-			$(".lswitch-panel").css("position", "relative");
+			lp.css("position", "relative");
 			/*if (b.ie9 || b.ie10 || b.ie11) {
-				$(".lswitch-panel").css({
+				lp.css({
 					"padding-top": "0",
 					"margin-top": "0"
 				});
@@ -166,7 +167,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}
 		var b = utils.getBrowser();
 		if (b.ie9 || b.ie10 || b.ie11) {
-			$(".lswitch-panel").css("position", "absolute");
+			lp.css("position", "absolute");
 		}
 		this.hidePanel();
 	},
