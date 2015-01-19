@@ -3,6 +3,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		pxDesktop: 992,
 		toggleSubLayersOnClick: true,
 		unfoldOnClick: true,
+		olFirst: false,
 		unfoldAll: false,
 		catIconClass: "fa fa-chevron-right" //fa-chevron-circle-right
 
@@ -284,6 +285,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 				'<div id="lswitch-olcont" class="list-group"></div>'+
 			'</div>');
 		this.$panel.append(this.$list);
+		if (this.options.olFirst && this.options.olFirst === true) {
+			this.$panel.prepend( this.$panel.find(".lswitch-panel-ol") );
+		}
 		$("#maindiv").append( this.$panel );
 	},
 	
