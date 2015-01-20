@@ -380,15 +380,19 @@ smap.core.Select = L.Class.extend({
 							html = self._processHtml(html);
 							popup.setContent(html);
 
-							// if (self._rasterFeature && self._rasterFeature.getBounds) {
-							// 	// var bounds = self._rasterFeature.getBounds();
-							// 	// var latLng = bounds.getCenter();
-							// 	popup.setLatLng(sf.latLng); // latLng
-							// }
-							// else {
-							// 	popup.setLatLng(sf.latLng);
-							// }
-							popup.setLatLng(sf.latLng);
+							// Intelligently distinguish if the popup should center at centroid or at click.
+							// When clicking on (especially) large polygons/polylines the centroid falls outside the polygon (#146)
+							// and therefore a coarse estimate is made here that multi-type geometries should use clicked latLng
+							// rather than using the centroid of a feature.
+							if (self._rasterFeature && self._rasterFeature.getBounds && sf.geometry.coordinates.length === 1) {
+								var bounds = self._rasterFeature.getBounds();
+								var latLng = bounds.getCenter();
+								popup.setLatLng(latLng); // latLng
+							}
+							else {
+								popup.setLatLng(sf.latLng);
+							}
+							// popup.setLatLng(sf.latLng);
 
 							popup.openOn(self.map);
 							$(this).trigger("mouseenter");

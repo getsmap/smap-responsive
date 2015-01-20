@@ -55,7 +55,7 @@ L.Control.SelectWMS = L.Control.extend({
 					}
 					for (var i=0,len=fs.length; i<len; i++) {
 						f = fs[i];
-						f.latLng = other.latLng;
+						// f.latLng = other.latLng;
 						t = smap.cmd.getLayerConfigBy("options.layers", params.layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", params.layers);
 						if (!t) {
 							// Find out which layer this feature belongs to by using the id
@@ -83,7 +83,24 @@ L.Control.SelectWMS = L.Control.extend({
 								// reverseAxis: true
 							});
 						}
+						var type = f.geometry.type;
+						if (type === "Point" || type === "MultiPoint") {
+							var coords = [];
+							switch (type) {
+								case "Point":
+									coords = f.geometry.coordinates;
+									break;
+								case "MultiPoint":
+									coords = f.geometry.coordinates[0];
+									break;
+							}
+							f.latLng = L.latLng([coords[1], coords[0]]);
+						}
+						else {
+							f.latLng = other.latLng;
+						}
 						f.options = $.extend({}, o);
+						fs[i] = f;
 					}
 					this._selectedFeatures = this._selectedFeatures.concat(fs);
 				}
@@ -105,7 +122,7 @@ L.Control.SelectWMS = L.Control.extend({
 							// Create a pseudo feature based on properties and latLng
 							var f = {
 								geometry: {coordinates: [latLng.lng, latLng.lat]},
-								latLng: latLng,
+								latLng: L.latLng([latLng.lat, latLng.lng]),  // latLng
 								properties: p,
 								layerId: layerId,
 								options: t.options

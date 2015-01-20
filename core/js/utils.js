@@ -327,7 +327,7 @@ var utils = {
 							coords = this.swapCoords(coords);
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
-						// features[i].geometry.coordinates[p] = projectedCoords;
+						geom.coordinates[p] = projectedCoords;
 					}
 					break;
 				case "LineString":
