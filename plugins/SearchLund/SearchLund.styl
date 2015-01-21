@@ -1,14 +1,11 @@
 
-@import "../../core/css/global"
-// generalMargins = 5px
+generalMargins = 5px
+fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera Sans", sans-serif
 
 .smap-searchlund-div-in-toolbar
 	top .2em !important
 	z-index 1002 !important
 
-
-.smap-searchlund-div-focused
-	max-width 450px !important
 
 
 #smap-searchlund-div .form-control, #smap-searchlund-div .input-group-addon
@@ -18,25 +15,23 @@
 	position relative
 	left generalMargins
 	top generalMargins
-	z-index 1001
+	z-index 1010
 	width 79%
 	max-width 380px
-	-webkit-transition left .3s, max-width .3s
-	transition left .3s, max-width .3s
+	transition left .3s, width 0.4s, max-width 0.4s
 	overflow-y hidden
 	border 1px solid #ccc
+	.smap-searchlund-div-focused
+		max-width 450px
 	input
+		letter-spacing -1px
 		width 100%
 		border-left none
-		/*border none
-		border 1px solid #ccc
-		border-width 1px 1px 1px 0*/
-		-webkit-box-shadow none
 		box-shadow none
-		-webkit-appearance none
+		appearance none
 		border-radius 0 !important
-	input:focus
-		border-color #ccc
+	// input:focus
+	// 	border-color #ccc
 	.dropdown-menu
 		/* Autocomplete Typehead overrides */
 		left 0px !important
@@ -80,17 +75,21 @@
 @media (max-width: 767px)
 	.smap-searchlund-div-in-toolbar
 		max-width 80% !important
-	
+	.smap-searchlund-div-focused
+		// max-width au
+		width 83%
+		max-width 83%
 	
 @media (max-width: 467px)
 	.smap-searchlund-div-focused
-		max-width calc(100% - 20px) !important
-		width auto !important
+		// max-width au
+		width calc(100% - 10px) !important
+		max-width calc(100% - 10px) !important
 
 
 
 @media (min-width: 992px)
 	#smap-searchlund-div
-		left generalMargins + 309
+		left generalMargins + 325px
 		
 

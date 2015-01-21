@@ -2,9 +2,6 @@
   top: 0.2em !important;
   z-index: 1002 !important;
 }
-.smap-searchlund-div-focused {
-  max-width: 450px !important;
-}
 #smap-searchlund-div .form-control,
 #smap-searchlund-div .input-group-addon {
   border: none;
@@ -13,27 +10,25 @@
   position: relative;
   left: 5px;
   top: 5px;
-  z-index: 1001;
+  z-index: 1010;
   width: 79%;
   max-width: 380px;
-  -webkit-transition: left 0.3s, max-width 0.3s;
-  transition: left 0.3s, max-width 0.3s;
+  -webkit-transition: left 0.3s, width 0.4s, max-width 0.4s;
+  transition: left 0.3s, width 0.4s, max-width 0.4s;
   overflow-y: hidden;
   border: 1px solid #ccc;
 }
+#smap-searchlund-div .smap-searchlund-div-focused {
+  max-width: 450px;
+}
 #smap-searchlund-div input {
+  letter-spacing: -1px;
   width: 100%;
   border-left: none;
-/*border none
-		border 1px solid #ccc
-		border-width 1px 1px 1px 0*/
   -webkit-box-shadow: none;
   box-shadow: none;
-  -webkit-appearance: none;
+  appearance: none;
   border-radius: 0 !important;
-}
-#smap-searchlund-div input:focus {
-  border-color: #ccc;
 }
 #smap-searchlund-div .dropdown-menu {
 /* Autocomplete Typehead overrides */
@@ -75,15 +70,19 @@
   .smap-searchlund-div-in-toolbar {
     max-width: 80% !important;
   }
+  .smap-searchlund-div-focused {
+    width: 83%;
+    max-width: 83%;
+  }
 }
 @media (max-width: 467px) {
   .smap-searchlund-div-focused {
-    max-width: calc(100% - 20px) !important;
-    width: auto !important;
+    width: calc(100% - 10px) !important;
+    max-width: calc(100% - 10px) !important;
   }
 }
 @media (min-width: 992px) {
   #smap-searchlund-div {
-    left: 314px;
+    left: 330px;
   }
 }
