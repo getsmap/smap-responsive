@@ -58,7 +58,15 @@
 			</div>
 		</div>
 		<div class="row" style="padding: 0 1em; margin-top: 2em;">
-			<button type="submit" data-loading-text="${loading}" class="btn btn-primary btn-lg">${create}</button>
+			<div class="col-xs-12 col-sm-4">
+				<button type="submit" disabled data-loading-text="${loading}" class="btn btn-primary btn-lg">${create}</button>
+			</div>
+			<div class="col-xs-12 col-sm-8">
+			<div class="checkbox " id="conditionsLink" >
+					<input name="conditions" type="checkbox">${conditionsHeader}
+			</div>
+			<div id="conditions" class="hiddenText reducedSize">${conditions}</div>
+			</div>
 		</div>
 	</form>
 </div>

@@ -262,11 +262,7 @@
 			}
 			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
-				// var $html = $(html);
-				// $html.find(".form-group").remove();
-				// var d = $("<div />");
-				// $html.appendTo( d );
-				// html = d.html();
+
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
 
 				self.conditionsText = self._modal.find('.hiddenText');
@@ -305,32 +301,6 @@
 				btn.prop('disabled', true);
 			}
 		},
-
-
-
-/*		_termsOfService: function() {
-
-			var yesBtn = '<button id="accept" class="btn btn-success">' + this.lang.yes + '</button>';
-			var noBtn = '<button id="decline" class="btn btn-danger">' + this.lang.no + '</button>';
-			
-
-
-			//var footer = $noBtn.prop('outerHTML') + $yesBtn.prop('outerHTML');
-			var footer = yesBtn + noBtn;
-
-
-			var tosDialog = utils.drawDialog(this.lang.tosTitle, this.lang.tos, footer);
-
-			tosDialog.find('#accept').on('click touchstart', function() {
-				utils.log('yes');
-			});
-			tosDialog.find('#decline').on('click touchstart', function() {
-				utils.log('no');
-			});
-
-			tosDialog.modal('show');
-
-		},*/
 
 		_loadCapabilities: function() {
 			var self = this;
