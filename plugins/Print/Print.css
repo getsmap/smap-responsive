@@ -1,14 +1,11 @@
 .sprint-modal .checkbox label {
   padding: 0;
 }
-
 #conditionsLink span {
-  color: blue;
+  color: #00f;
   text-decoration: underline;
   cursor: pointer;
-
 }
-
 .reducedSize {
-	  font-size: 0.8em;
+  font-size: 0.8em;
 }
