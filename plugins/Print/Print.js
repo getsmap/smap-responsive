@@ -26,7 +26,9 @@
 				northarrow: "Nordpil",
 				scale: "Skala",
 				misc: "Övrigt",
-				legend: "Teckenförklaring"
+				legend: "Teckenförklaring",
+				conditionsHeader: "Jag godkänner <span>användarvillkoren</span>",
+				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor.<br>Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning: 040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
 				// , scalebar: "Skalstock"
 			},
 			"en": {
@@ -48,7 +50,9 @@
 				northarrow: "North arrow",
 				scale: "Scale",
 				misc: "Miscellaneous",
-				legend: "Legend"
+				legend: "Legend",
+				conditionsHeader: "I agree to these <span>terms</span>",
+				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor.<br>Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning: 040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
 				// , scalebar: "Scalebar"
 			}
 		},
@@ -77,6 +81,8 @@
 			this._initPrint(); // Load the print capabilities from the mapfish print
 			this._drawModal();
 
+
+
 			return this._container;
 		},
 
@@ -94,6 +100,7 @@
 				return false;
 			});
 			this.$container.append(this.$btn);
+
 		},
 
 		_removeBtn: function() {
@@ -234,6 +241,7 @@
 		},
 
 		print: function(options) {
+			utils.log('print');
 			if (!this.printProvider._capabilities) {
 				console.log("Print capabilities could not be loaded. Cannot print.");
 				return false;
@@ -260,6 +268,21 @@
 				// $html.appendTo( d );
 				// html = d.html();
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
+
+				self.conditionsText = self._modal.find('.hiddenText');
+				self.conditionsText.hide();
+
+				var conditionsCheckbox = self._modal.find('[name="conditions"]');
+				conditionsCheckbox.change( function() {
+					self._setButtonState(conditionsCheckbox.prop('checked'));
+				});
+				var conditionsLink = self._modal.find('#conditionsLink span');
+				conditionsLink.on('click touchstart', function() {
+					self.conditionsText.slideToggle(250);
+
+					utils.log('link');
+				})
+				
 				self._modal.addClass("sprint-modal");
 				self._modal.find("form").submit(function() {
 					var p = utils.paramsStringToObject( $(this).serialize(), false );
@@ -272,12 +295,51 @@
 			});
 		},
 
+		_setButtonState: function(state) {
+			var btn = $('#sprint-tabs-1').find('button');
+
+			if (state) {
+				btn.prop('disabled', false);
+			}
+			else {
+				btn.prop('disabled', true);
+			}
+		},
+
+
+
+/*		_termsOfService: function() {
+
+			var yesBtn = '<button id="accept" class="btn btn-success">' + this.lang.yes + '</button>';
+			var noBtn = '<button id="decline" class="btn btn-danger">' + this.lang.no + '</button>';
+			
+
+
+			//var footer = $noBtn.prop('outerHTML') + $yesBtn.prop('outerHTML');
+			var footer = yesBtn + noBtn;
+
+
+			var tosDialog = utils.drawDialog(this.lang.tosTitle, this.lang.tos, footer);
+
+			tosDialog.find('#accept').on('click touchstart', function() {
+				utils.log('yes');
+			});
+			tosDialog.find('#decline').on('click touchstart', function() {
+				utils.log('no');
+			});
+
+			tosDialog.modal('show');
+
+		},*/
+
 		_loadCapabilities: function() {
 			var self = this;
+
 			this._modal.find('button[type="submit"]').button("loading");
 			this.printProvider.loadCapabilities().done(function() {
 				self._modal.find('button[type="submit"]').button("reset");
 			});
+
 		},
 
 		show: function() {
@@ -295,6 +357,7 @@
 					self._modal.modal("show");
 				});
 			}
+
 		},
 
 		hide: function() {
