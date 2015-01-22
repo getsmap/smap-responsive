@@ -26087,732 +26087,128 @@ L.EditToolbar.Delete = L.Handler.extend({
 /*! jQuery Mobile v1.4.0 | Copyright 2010, 2013 jQuery Foundation, Inc. | jquery.org/license */
 
 (function(e,t,n){typeof define=="function"&&define.amd?define(["jquery"],function(r){return n(r,e,t),r.mobile}):n(e.jQuery,e,t)})(this,document,function(e,t,n,r){(function(e,n){e.extend(e.support,{orientation:"orientation"in t&&"onorientationchange"in t})})(e),function(e){e.event.special.throttledresize={setup:function(){e(this).bind("resize",n)},teardown:function(){e(this).unbind("resize",n)}};var t=250,n=function(){s=(new Date).getTime(),o=s-r,o>=t?(r=s,e(this).trigger("throttledresize")):(i&&clearTimeout(i),i=setTimeout(n,t-o))},r=0,i,s,o}(e),function(e,t){function p(){var e=s();e!==o&&(o=e,r.trigger(i))}var r=e(t),i="orientationchange",s,o,u,a,f={0:!0,180:!0},l,c,h;if(e.support.orientation){l=t.innerWidth||r.width(),c=t.innerHeight||r.height(),h=50,u=l>c&&l-c>h,a=f[t.orientation];if(u&&a||!u&&!a)f={"-90":!0,90:!0}}e.event.special.orientationchange=e.extend({},e.event.special.orientationchange,{setup:function(){if(e.support.orientation&&!e.event.special.orientationchange.disabled)return!1;o=s(),r.bind("throttledresize",p)},teardown:function(){if(e.support.orientation&&!e.event.special.orientationchange.disabled)return!1;r.unbind("throttledresize",p)},add:function(e){var t=e.handler;e.handler=function(e){return e.orientation=s(),t.apply(this,arguments)}}}),e.event.special.orientationchange.orientation=s=function(){var r=!0,i=n.documentElement;return e.support.orientation?r=f[t.orientation]:r=i&&i.clientWidth/i.clientHeight<1.1,r?"portrait":"landscape"},e.fn[i]=function(e){return e?this.bind(i,e):this.trigger(i)},e.attrFn&&(e.attrFn[i]=!0)}(e,this),function(e,t,n,r){function T(e){while(e&&typeof e.originalEvent!="undefined")e=e.originalEvent;return e}function N(t,n){var i=t.type,s,o,a,l,c,h,p,d,v;t=e.Event(t),t.type=n,s=t.originalEvent,o=e.event.props,i.search(/^(mouse|click)/)>-1&&(o=f);if(s)for(p=o.length,l;p;)l=o[--p],t[l]=s[l];i.search(/mouse(down|up)|click/)>-1&&!t.which&&(t.which=1);if(i.search(/^touch/)!==-1){a=T(s),i=a.touches,c=a.changedTouches,h=i&&i.length?i[0]:c&&c.length?c[0]:r;if(h)for(d=0,v=u.length;d<v;d++)l=u[d],t[l]=h[l]}return t}function C(t){var n={},r,s;while(t){r=e.data(t,i);for(s in r)r[s]&&(n[s]=n.hasVirtualBinding=!0);t=t.parentNode}return n}function k(t,n){var r;while(t){r=e.data(t,i);if(r&&(!n||r[n]))return t;t=t.parentNode}return null}function L(){g=!1}function A(){g=!0}function O(){E=0,v.length=0,m=!1,A()}function M(){L()}function _(){D(),c=setTimeout(function(){c=0,O()},e.vmouse.resetTimerDuration)}function D(){c&&(clearTimeout(c),c=0)}function P(t,n,r){var i;if(r&&r[t]||!r&&k(n.target,t))i=N(n,t),e(n.target).trigger(i);return i}function H(t){var n=e.data(t.target,s),r;!m&&(!E||E!==n)&&(r=P("v"+t.type,t),r&&(r.isDefaultPrevented()&&t.preventDefault(),r.isPropagationStopped()&&t.stopPropagation(),r.isImmediatePropagationStopped()&&t.stopImmediatePropagation()))}function B(t){var n=T(t).touches,r,i,o;n&&n.length===1&&(r=t.target,i=C(r),i.hasVirtualBinding&&(E=w++,e.data(r,s,E),D(),M(),d=!1,o=T(t).touches[0],h=o.pageX,p=o.pageY,P("vmouseover",t,i),P("vmousedown",t,i)))}function j(e){if(g)return;d||P("vmousecancel",e,C(e.target)),d=!0,_()}function F(t){if(g)return;var n=T(t).touches[0],r=d,i=e.vmouse.moveDistanceThreshold,s=C(t.target);d=d||Math.abs(n.pageX-h)>i||Math.abs(n.pageY-p)>i,d&&!r&&P("vmousecancel",t,s),P("vmousemove",t,s),_()}function I(e){if(g)return;A();var t=C(e.target),n,r;P("vmouseup",e,t),d||(n=P("vclick",e,t),n&&n.isDefaultPrevented()&&(r=T(e).changedTouches[0],v.push({touchID:E,x:r.clientX,y:r.clientY}),m=!0)),P("vmouseout",e,t),d=!1,_()}function q(t){var n=e.data(t,i),r;if(n)for(r in n)if(n[r])return!0;return!1}function R(){}function U(t){var n=t.substr(1);return{setup:function(){q(this)||e.data(this,i,{});var r=e.data(this,i);r[t]=!0,l[t]=(l[t]||0)+1,l[t]===1&&b.bind(n,H),e(this).bind(n,R),y&&(l.touchstart=(l.touchstart||0)+1,l.touchstart===1&&b.bind("touchstart",B).bind("touchend",I).bind("touchmove",F).bind("scroll",j))},teardown:function(){--l[t],l[t]||b.unbind(n,H),y&&(--l.touchstart,l.touchstart||b.unbind("touchstart",B).unbind("touchmove",F).unbind("touchend",I).unbind("scroll",j));var r=e(this),s=e.data(this,i);s&&(s[t]=!1),r.unbind(n,R),q(this)||r.removeData(i)}}}var i="virtualMouseBindings",s="virtualTouchID",o="vmouseover vmousedown vmousemove vmouseup vclick vmouseout vmousecancel".split(" "),u="clientX clientY pageX pageY screenX screenY".split(" "),a=e.event.mouseHooks?e.event.mouseHooks.props:[],f=e.event.props.concat(a),l={},c=0,h=0,p=0,d=!1,v=[],m=!1,g=!1,y="addEventListener"in n,b=e(n),w=1,E=0,S,x;e.vmouse={moveDistanceThreshold:10,clickDistanceThreshold:10,resetTimerDuration:1500};for(x=0;x<o.length;x++)e.event.special[o[x]]=U(o[x]);y&&n.addEventListener("click",function(t){var n=v.length,r=t.target,i,o,u,a,f,l;if(n){i=t.clientX,o=t.clientY,S=e.vmouse.clickDistanceThreshold,u=r;while(u){for(a=0;a<n;a++){f=v[a],l=0;if(u===r&&Math.abs(f.x-i)<S&&Math.abs(f.y-o)<S||e.data(u,s)===f.touchID){t.preventDefault(),t.stopPropagation();return}}u=u.parentNode}}},!0)}(e,t,n),function(e){e.mobile={}}(e),function(e,t){var r={touch:"ontouchend"in n};e.mobile.support=e.mobile.support||{},e.extend(e.support,r),e.extend(e.mobile.support,r)}(e),function(e,t,r){function l(t,n,r){var i=r.type;r.type=n,e.event.dispatch.call(t,r),r.type=i}var i=e(n),s=e.mobile.support.touch,o="touchmove scroll",u=s?"touchstart":"mousedown",a=s?"touchend":"mouseup",f=s?"touchmove":"mousemove";e.each("touchstart touchmove touchend tap taphold swipe swipeleft swiperight scrollstart scrollstop".split(" "),function(t,n){e.fn[n]=function(e){return e?this.bind(n,e):this.trigger(n)},e.attrFn&&(e.attrFn[n]=!0)}),e.event.special.scrollstart={enabled:!0,setup:function(){function s(e,n){r=n,l(t,r?"scrollstart":"scrollstop",e)}var t=this,n=e(t),r,i;n.bind(o,function(t){if(!e.event.special.scrollstart.enabled)return;r||s(t,!0),clearTimeout(i),i=setTimeout(function(){s(t,!1)},50)})},teardown:function(){e(this).unbind(o)}},e.event.special.tap={tapholdThreshold:750,emitTapOnTaphold:!0,setup:function(){var t=this,n=e(t),r=!1;n.bind("vmousedown",function(s){function a(){clearTimeout(u)}function f(){a(),n.unbind("vclick",c).unbind("vmouseup",a),i.unbind("vmousecancel",f)}function c(e){f(),!r&&o===e.target?l(t,"tap",e):r&&e.stopPropagation()}r=!1;if(s.which&&s.which!==1)return!1;var o=s.target,u;n.bind("vmouseup",a).bind("vclick",c),i.bind("vmousecancel",f),u=setTimeout(function(){e.event.special.tap.emitTapOnTaphold||(r=!0),l(t,"taphold",e.Event("taphold",{target:o}))},e.event.special.tap.tapholdThreshold)})},teardown:function(){e(this).unbind("vmousedown").unbind("vclick").unbind("vmouseup"),i.unbind("vmousecancel")}},e.event.special.swipe={scrollSupressionThreshold:30,durationThreshold:1e3,horizontalDistanceThreshold:30,verticalDistanceThreshold:75,start:function(t){var n=t.originalEvent.touches?t.originalEvent.touches[0]:t;return{time:(new Date).getTime(),coords:[n.pageX,n.pageY],origin:e(t.target)}},stop:function(e){var t=e.originalEvent.touches?e.originalEvent.touches[0]:e;return{time:(new Date).getTime(),coords:[t.pageX,t.pageY]}},handleSwipe:function(t,n,r,i){if(n.time-t.time<e.event.special.swipe.durationThreshold&&Math.abs(t.coords[0]-n.coords[0])>e.event.special.swipe.horizontalDistanceThreshold&&Math.abs(t.coords[1]-n.coords[1])<e.event.special.swipe.verticalDistanceThreshold){var s=t.coords[0]>n.coords[0]?"swipeleft":"swiperight";return l(r,"swipe",e.Event("swipe",{target:i,swipestart:t,swipestop:n})),l(r,s,e.Event(s,{target:i,swipestart:t,swipestop:n})),!0}return!1},setup:function(){var t=this,n=e(t);n.bind(u,function(r){function l(n){if(!s)return;i=e.event.special.swipe.stop(n),u||(u=e.event.special.swipe.handleSwipe(s,i,t,o)),Math.abs(s.coords[0]-i.coords[0])>e.event.special.swipe.scrollSupressionThreshold&&n.preventDefault()}var i,s=e.event.special.swipe.start(r),o=r.target,u=!1;n.bind(f,l).one(a,function(){u=!0,n.unbind(f,l)})})},teardown:function(){e(this).unbind(u).unbind(f).unbind(a)}},e.each({scrollstop:"scrollstart",taphold:"tap",swipeleft:"swipe",swiperight:"swipe"},function(t,n){e.event.special[t]={setup:function(){e(this).bind(n,e.noop)},teardown:function(){e(this).unbind(n)}}})}(e,this),function(e,t,n){e.extend(e.mobile,{version:"1.4.0",subPageUrlKey:"ui-page",hideUrlBar:!0,keepNative:":jqmData(role='none'), :jqmData(role='nojs')",activePageClass:"ui-page-active",activeBtnClass:"ui-btn-active",focusClass:"ui-focus",ajaxEnabled:!0,hashListeningEnabled:!0,linkBindingEnabled:!0,defaultPageTransition:"fade",maxTransitionWidth:!1,minScrollBack:0,defaultDialogTransition:"pop",pageLoadErrorMessage:"Error Loading Page",pageLoadErrorMessageTheme:"a",phonegapNavigationEnabled:!1,autoInitializePage:!0,pushStateEnabled:!0,ignoreContentEnabled:!1,buttonMarkup:{hoverDelay:200},dynamicBaseEnabled:!0,pageContainer:e(),allowCrossDomainPages:!1,dialogHashKey:"&ui-state=dialog"})}(e,this),function(e,t,n){var r={},i=e.find,s=/(?:\{[\s\S]*\}|\[[\s\S]*\])$/,o=/:jqmData\(([^)]*)\)/g;e.extend(e.mobile,{ns:"",getAttribute:function(t,n){var r;t=t.jquery?t[0]:t,t&&t.getAttribute&&(r=t.getAttribute("data-"+e.mobile.ns+n));try{r=r==="true"?!0:r==="false"?!1:r==="null"?null:+r+""===r?+r:s.test(r)?JSON.parse(r):r}catch(i){}return r},nsNormalizeDict:r,nsNormalize:function(t){return r[t]||(r[t]=e.camelCase(e.mobile.ns+t))},closestPageData:function(e){return e.closest(":jqmData(role='page'), :jqmData(role='dialog')").data("mobile-page")}}),e.fn.jqmData=function(t,r){var i;return typeof t!="undefined"&&(t&&(t=e.mobile.nsNormalize(t)),arguments.length<2||r===n?i=this.data(t):i=this.data(t,r)),i},e.jqmData=function(t,n,r){var i;return typeof n!="undefined"&&(i=e.data(t,n?e.mobile.nsNormalize(n):n,r)),i},e.fn.jqmRemoveData=function(t){return this.removeData(e.mobile.nsNormalize(t))},e.jqmRemoveData=function(t,n){return e.removeData(t,e.mobile.nsNormalize(n))},e.find=function(t,n,r,s){return t.indexOf(":jqmData")>-1&&(t=t.replace(o,"[data-"+(e.mobile.ns||"")+"$1]")),i.call(this,t,n,r,s)},e.extend(e.find,i)}(e,this),function(e,t){function s(t,n){var r,i,s,u=t.nodeName.toLowerCase();return"area"===u?(r=t.parentNode,i=r.name,!t.href||!i||r.nodeName.toLowerCase()!=="map"?!1:(s=e("img[usemap=#"+i+"]")[0],!!s&&o(s))):(/input|select|textarea|button|object/.test(u)?!t.disabled:"a"===u?t.href||n:n)&&o(t)}function o(t){return e.expr.filters.visible(t)&&!e(t).parents().addBack().filter(function(){return e.css(this,"visibility")==="hidden"}).length}var r=0,i=/^ui-id-\d+$/;e.ui=e.ui||{},e.extend(e.ui,{version:"c0ab71056b936627e8a7821f03c044aec6280a40",keyCode:{BACKSPACE:8,COMMA:188,DELETE:46,DOWN:40,END:35,ENTER:13,ESCAPE:27,HOME:36,LEFT:37,PAGE_DOWN:34,PAGE_UP:33,PERIOD:190,RIGHT:39,SPACE:32,TAB:9,UP:38}}),e.fn.extend({focus:function(t){return function(n,r){return typeof n=="number"?this.each(function(){var t=this;setTimeout(function(){e(t).focus(),r&&r.call(t)},n)}):t.apply(this,arguments)}}(e.fn.focus),scrollParent:function(){var t;return e.ui.ie&&/(static|relative)/.test(this.css("position"))||/absolute/.test(this.css("position"))?t=this.parents().filter(function(){return/(relative|absolute|fixed)/.test(e.css(this,"position"))&&/(auto|scroll)/.test(e.css(this,"overflow")+e.css(this,"overflow-y")+e.css(this,"overflow-x"))}).eq(0):t=this.parents().filter(function(){return/(auto|scroll)/.test(e.css(this,"overflow")+e.css(this,"overflow-y")+e.css(this,"overflow-x"))}).eq(0),/fixed/.test(this.css("position"))||!t.length?e(this[0].ownerDocument||n):t},uniqueId:function(){return this.each(function(){this.id||(this.id="ui-id-"+ ++r)})},removeUniqueId:function(){return this.each(function(){i.test(this.id)&&e(this).removeAttr("id")})}}),e.extend(e.expr[":"],{data:e.expr.createPseudo?e.expr.createPseudo(function(t){return function(n){return!!e.data(n,t)}}):function(t,n,r){return!!e.data(t,r[3])},focusable:function(t){return s(t,!isNaN(e.attr(t,"tabindex")))},tabbable:function(t){var n=e.attr(t,"tabindex"),r=isNaN(n);return(r||n>=0)&&s(t,!r)}}),e("<a>").outerWidth(1).jquery||e.each(["Width","Height"],function(n,r){function u(t,n,r,s){return e.each(i,function(){n-=parseFloat(e.css(t,"padding"+this))||0,r&&(n-=parseFloat(e.css(t,"border"+this+"Width"))||0),s&&(n-=parseFloat(e.css(t,"margin"+this))||0)}),n}var i=r==="Width"?["Left","Right"]:["Top","Bottom"],s=r.toLowerCase(),o={innerWidth:e.fn.innerWidth,innerHeight:e.fn.innerHeight,outerWidth:e.fn.outerWidth,outerHeight:e.fn.outerHeight};e.fn["inner"+r]=function(n){return n===t?o["inner"+r].call(this):this.each(function(){e(this).css(s,u(this,n)+"px")})},e.fn["outer"+r]=function(t,n){return typeof t!="number"?o["outer"+r].call(this,t):this.each(function(){e(this).css(s,u(this,t,!0,n)+"px")})}}),e.fn.addBack||(e.fn.addBack=function(e){return this.add(e==null?this.prevObject:this.prevObject.filter(e))}),e("<a>").data("a-b","a").removeData("a-b").data("a-b")&&(e.fn.removeData=function(t){return function(n){return arguments.length?t.call(this,e.camelCase(n)):t.call(this)}}(e.fn.removeData)),e.ui.ie=!!/msie [\w.]+/.exec(navigator.userAgent.toLowerCase()),e.support.selectstart="onselectstart"in n.createElement("div"),e.fn.extend({disableSelection:function(){return this.bind((e.support.selectstart?"selectstart":"mousedown")+".ui-disableSelection",function(e){e.preventDefault()})},enableSelection:function(){return this.unbind(".ui-disableSelection")},zIndex:function(r){if(r!==t)return this.css("zIndex",r);if(this.length){var i=e(this[0]),s,o;while(i.length&&i[0]!==n){s=i.css("position");if(s==="absolute"||s==="relative"||s==="fixed"){o=parseInt(i.css("zIndex"),10);if(!isNaN(o)&&o!==0)return o}i=i.parent()}}return 0}}),e.ui.plugin={add:function(t,n,r){var i,s=e.ui[t].prototype;for(i in r)s.plugins[i]=s.plugins[i]||[],s.plugins[i].push([n,r[i]])},call:function(e,t,n,r){var i,s=e.plugins[t];if(!s)return;if(!r&&(!e.element[0].parentNode||e.element[0].parentNode.nodeType===11))return;for(i=0;i<s.length;i++)e.options[s[i][0]]&&s[i][1].apply(e.element,n)}}}(e),function(e,t,r){e.extend(e.mobile,{window:e(t),document:e(n),keyCode:e.ui.keyCode,behaviors:{},silentScroll:function(n){e.type(n)!=="number"&&(n=e.mobile.defaultHomeScroll),e.event.special.scrollstart.enabled=!1,setTimeout(function(){t.scrollTo(0,n),e.mobile.document.trigger("silentscroll",{x:0,y:n})},20),setTimeout(function(){e.event.special.scrollstart.enabled=!0},150)},getClosestBaseUrl:function(t){var n=e(t).closest(".ui-page").jqmData("url"),r=e.mobile.path.documentBase.hrefNoHash;if(!e.mobile.dynamicBaseEnabled||!n||!e.mobile.path.isPath(n))n=r;return e.mobile.path.makeUrlAbsolute(n,r)},removeActiveLinkClass:function(t){!!e.mobile.activeClickedLink&&(!e.mobile.activeClickedLink.closest("."+e.mobile.activePageClass).length||t)&&e.mobile.activeClickedLink.removeClass(e.mobile.activeBtnClass),e.mobile.activeClickedLink=null},getInheritedTheme:function(e,t){var n=e[0],r="",i=/ui-(bar|body|overlay)-([a-z])\b/,s,o;while(n){s=n.className||"";if(s&&(o=i.exec(s))&&(r=o[2]))break;n=n.parentNode}return r||t||"a"},enhanceable:function(e){return this.haveParents(e,"enhance")},hijackable:function(e){return this.haveParents(e,"ajax")},haveParents:function(t,n){if(!e.mobile.ignoreContentEnabled)return t;var r=t.length,i=e(),s,o,u,a,f;for(a=0;a<r;a++){o=t.eq(a),u=!1,s=t[a];while(s){f=s.getAttribute?s.getAttribute("data-"+e.mobile.ns+n):"";if(f==="false"){u=!0;break}s=s.parentNode}u||(i=i.add(o))}return i},getScreenHeight:function(){return t.innerHeight||e.mobile.window.height()},resetActivePageHeight:function(t){var n=e("."+e.mobile.activePageClass),r=n.height(),i=n.outerHeight(!0);t=typeof t=="number"?t:e.mobile.getScreenHeight(),n.css("min-height",t-(i-r))},loading:function(){var t=this.loading._widget||e(e.mobile.loader.prototype.defaultHtml).loader(),n=t.loader.apply(t,arguments);return this.loading._widget=t,n}}),e.addDependents=function(t,n){var r=e(t),i=r.jqmData("dependents")||e();r.jqmData("dependents",e(i).add(n))},e.fn.extend({removeWithDependents:function(){e.removeWithDependents(this)},enhanceWithin:function(){var t,n={},r=e.mobile.page.prototype.keepNativeSelector(),i=this;e.mobile.nojs&&e.mobile.nojs(this),e.mobile.links&&e.mobile.links(this),e.mobile.degradeInputsWithin&&e.mobile.degradeInputsWithin(this),e.fn.buttonMarkup&&this.find(e.fn.buttonMarkup.initSelector).not(r).jqmEnhanceable().buttonMarkup(),e.fn.fieldcontain&&this.find(":jqmData(role='fieldcontain')").not(r).jqmEnhanceable().fieldcontain(),e.each(e.mobile.widgets,function(t,s){if(s.initSelector){var o=e.mobile.enhanceable(i.find(s.initSelector));o.length>0&&(o=o.not(r)),o.length>0&&(n[s.prototype.widgetName]=o)}});for(t in n)n[t][t]();return this},addDependents:function(t){e.addDependents(this,t)},getEncodedText:function(){return e("<a>").text(this.text()).html()},jqmEnhanceable:function(){return e.mobile.enhanceable(this)},jqmHijackable:function(){return e.mobile.hijackable(this)}}),e.removeWithDependents=function(t){var n=e(t);(n.jqmData("dependents")||e()).remove(),n.remove()},e.addDependents=function(t,n){var r=e(t),i=r.jqmData("dependents")||e();r.jqmData("dependents",e(i).add(n))},e.find.matches=function(t,n){return e.find(t,null,null,n)},e.find.matchesSelector=function(t,n){return e.find(n,null,null,[t]).length>0}}(e,this),function(e,r){t.matchMedia=t.matchMedia||function(e,t){var n,r=e.documentElement,i=r.firstElementChild||r.firstChild,s=e.createElement("body"),o=e.createElement("div");return o.id="mq-test-1",o.style.cssText="position:absolute;top:-100em",s.style.background="none",s.appendChild(o),function(e){return o.innerHTML='&shy;<style media="'+e+'"> #mq-test-1 { width: 42px; }</style>',r.insertBefore(s,i),n=o.offsetWidth===42,r.removeChild(s),{matches:n,media:e}}}(n),e.mobile.media=function(e){return t.matchMedia(e).matches}}(e)});
-L.GeoJSON.Custom = L.GeoJSON.extend({
-	
-	CLASS_NAME: "L.GeoJSON.Custom",
-	
+L.BingLayer = L.TileLayer.extend({
 	options: {
-		params: {},
-		style: {},
-		inputCrs: "EPSG:4326",
-		pointToLayer: function (feature, latlng) {
-			return L.circleMarker(latlng, this.style);
-		}
+		subdomains: [0, 1, 2, 3],
+		type: 'Aerial',
+		attribution: 'Bing',
+		culture: ''
 	},
-	
-	initialize: function(serviceUrl, options) {
-		options = options || {};
-		
-		L.GeoJSON.prototype.initialize.call(this, null, options);
-//		$.each(options.params, function(param){
-//			var tempString = "&" + param + "=" + options.params[param];
-//			serviceUrl += tempString;
-//		});
-		serviceUrl += $.param(options.params);
-		this.serviceUrl = serviceUrl;
-		
-		var self = this;
-		this.getFeature(function() {
-			var layer = self.addData(self.jsonData);
-		});
-		
-	},
-	
-	//onAdd: function(map) {
-	//	L.LayerGroup.prototype.onAdd.call(this, map);
-	//},
-    
-    /*_projectBounds: function(bounds, fromEpsg, toEpsg) {
-    	this.centerLonLat = null;
-    	
-    	var sw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getSouth()]),
-    		se = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getSouth()]),
-    		ne = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getNorth()]),
-    		nw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getNorth()]);
 
-        var left   = Math.min(sw[0], se[0]),
-        	bottom = Math.min(sw[1], se[1]),
-        	right  = Math.max(nw[0], ne[0]),
-        	top    = Math.max(nw[1], ne[1]);
-        
-        bounds = L.latLngBounds(L.latLng(bottom, left), L.latLng(top, right));
-        return bounds;
-    },*/
-	
-	getFeature: function(callback) {
-		var url = this.proxy ? this.proxy + encodeURIComponent(this.serviceUrl) : this.serviceUrl;
-		this.fire("loading", {layer: this});
-		if (this.xhr) {
-			this.xhr.abort();
-			this.xhr = null;
+	initialize: function(key, options) {
+		L.Util.setOptions(this, options);
+
+		this._key = key;
+		this._url = null;
+		this.meta = {};
+		this.loadMetadata();
+	},
+
+	tile2quad: function(x, y, z) {
+		var quad = '';
+		for (var i = z; i > 0; i--) {
+			var digit = 0;
+			var mask = 1 << (i - 1);
+			if ((x & mask) !== 0) digit += 1;
+			if ((y & mask) !== 0) digit += 2;
+			quad = quad + digit;
 		}
-		this.xhr = $.ajax({
-			url: url,
-			type: "POST",
-			data: this.options.params,
-			context: this,
-			success: function(response) {
-				if (response.type && response.type == "FeatureCollection") {
-					this.jsonData = response;
-					if (this.options.inputCrs !== "EPSG:4326") {
-						this.toGeographicCoords(this.options.inputCrs);
-					}
-					callback();
-					this.fire("load", {layer: this});
-				}				
-			},
-			dataType: "json"
-		});
+		return quad;
 	},
-	
-	swapCoords: function(coords) {
-		coords = [coords[1], coords[0]];
-		return coords;
+
+	getTileUrl: function(p, z) {
+		var zoom = this._getZoomForUrl();
+		var subdomains = this.options.subdomains,
+			s = this.options.subdomains[Math.abs((p.x + p.y) % subdomains.length)];
+		return this._url.replace('{subdomain}', s)
+				.replace('{quadkey}', this.tile2quad(p.x, p.y, zoom))
+				.replace('{culture}', this.options.culture);
 	},
-	
-	toGeographicCoords: function(inputCrs) {
-		function projectPoint(coordinates /*[easting, northing]*/, inputCrs) {
-			var source = inputCrs || "EPSG:4326",
-				dest = "EPSG:4326",
-				x = coordinates[0], 
-				y = coordinates[1];
-			return window.proj4(source, dest, [x, y]); // [easting, northing]
+
+	loadMetadata: function() {
+		var _this = this;
+		var cbid = '_bing_metadata_' + L.Util.stamp(this);
+		window[cbid] = function (meta) {
+			_this.meta = meta;
+			window[cbid] = undefined;
+			var e = document.getElementById(cbid);
+			e.parentNode.removeChild(e);
+			if (meta.errorDetails) {
+				return;
+			}
+			_this.initMetadata();
 		};
-		
-		var coords, coordsArr, projectedCoords, i, p, geom,
-			features = this.jsonData.features || [];
-		for (i=0,len=features.length; i<len; i++) {
-			geom = features[i].geometry;
-			switch (geom.type) {
-				case "Point":
-					coords = geom.coordinates;
-					if (this.options.reverseAxis) {
-						coords = this.swapCoords(coords);
-					}
-					projectedCoords = projectPoint(coords, inputCrs);
-					geom.coordinates = projectedCoords;
-					break;
-				case "MultiPoint":
-					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
-						coords = geom.coordinates[p];
-						if (this.options.reverseAxis) {
-							coords = this.swapCoords(coords);
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						features[i].geometry.coordinates[p] = projectedCoords;
-					}
-					break;
-				case "MultiLineString":
-					coordsArr = [];
-					var pp, ii,
-						newCoords = [];
-					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
-						coordsArr = geom.coordinates[p];
-						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
-							coords = coordsArr[pp];
-							if (this.options.reverseAxis) {
-								coords = this.swapCoords( coords );								
-							}
-							projectedCoords = projectPoint(coords, inputCrs);
-							coordsArr[pp] = projectedCoords;
-						}
-						geom.coordinates[p] = coordsArr; // needed?
-					}
-					break;
-				case "Polygon":
-					coordsArr = geom.coordinates[0];
-					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
-						coords = coordsArr[p];
-						if (this.options.reverseAxis) {
-							coords = this.swapCoords( coords );								
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						coordsArr[p] = projectedCoords;
-					}
-					
-					break;
-				case "MultiPolygon":
-					coordsArr = geom.coordinates[0][0];
-					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
-						coords = coordsArr[p];
-						if (this.options.reverseAxis) {
-							coords = this.swapCoords( coords );								
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						coordsArr[p] = projectedCoords;
-					}
-//					geom.coordinates[0][0] = coordsArr; // needed?
-					break;
-			}
-		}
-	}
-});
-L.GeoJSON.WFS = L.GeoJSON.extend({
-	
-	CLASS_NAME: "L.GeoJSON.WFS",
-	 
-	options: {
-		uniqueKey: "",
-		noBindZoom: false,
-		noBindDrag: false,
-		xhrType: "POST",
-		params: {
-			typeName: null, // required
-			service: "WFS",
-			version: "1.1.0",
-			request: "GetFeature",
-			srsName: "EPSG:4326",
-			format: "text/geojson",
-			maxFeatures: 10000,
-			outputFormat: "json"
-		},
-		selectStyle: {
-			weight: 5,
-	        color: '#00FFFF',
-	        opacity: 1
-		}
+		var url = document.location.protocol + '//dev.virtualearth.net/REST/v1/Imagery/Metadata/' + this.options.type + '?include=ImageryProviders&jsonp=' + cbid +
+		          '&key=' + this._key + '&UriScheme=' + document.location.protocol.slice(0, -1);
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = url;
+		script.id = cbid;
+		document.getElementsByTagName('head')[0].appendChild(script);
 	},
-	
-	/**
-	 * Keeps track of if a feature has been added or not
-	 * by storing its unique id: feature.id.
-	 */
-	_featureIndexes: [],
-	
-	initialize: function(serviceUrl, options) {
-		options = options || {};
-		
-		options = $.extend(true, {}, this.options, options);
-		
-		L.GeoJSON.prototype.initialize.call(this, null, options);
-		
-		// if (options.proxy || L.GeoJSON.WFS.proxy) {
-		// 	this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
-		// }
-		this._featureIndexes = [];
-		this.getFeatureUrl = serviceUrl;
-	},
-	
-	onAdd: function(map) {
-		L.LayerGroup.prototype.onAdd.call(this, map);
-		
-		this._refresh();
-		this._bindEvents(map);
-	},
-	
-	onRemove: function(map) {
-		if (this.xhr) {
-			this.xhr.abort();
-			this.xhr = null;
-			this.fire("loadcancel", {layer: this});
-		}
-		this._unbindEvents(map);
-		L.GeoJSON.prototype.onRemove.call(this, map);
-	},
-	
-	_onZoomEnd: function() {
-		if (this._prevZoom > this._map.getZoom()) {
-			this._refresh();
-		}
-		this._prevZoom = this._map.getZoom();
-	},
-	
-	_bindEvents: function(map) {
-		var self = this;
-		
-		this.__refresh = this.__refresh || $.proxy(this._refresh, this);
-		this.__onZoomEnd = this.__onZoomEnd || $.proxy(this._onZoomEnd, this);
-		
-		if (!this.options.noBindDrag) {
-			map.on("dragend", this.__refresh);
-		}
 
-		// Only refresh is last zoom was higher than current (i.e. map zoomed out)
-		if (!this.options.noBindZoom) {
-			var self = this;
-			this._prevZoom = map.getZoom();
-			map.on("zoomend", this.__onZoomEnd);
-		}
-	},
-	
-	_unbindEvents: function(map) {
-		map.off("dragend", this.__refresh);
-		map.off("zoomend", this.__onZoomEnd);
-	},
-	
-	
-	/**
-	 * Overriding method so that features are added only if they are 
-	 * not already added. An array keeps track of the ids to know
-	 * if a feature has already been added.
-	 *  
-	 * @param geojson
-	 * @returns
-	 */
-	addData: function (geojson) {
-		var features = L.Util.isArray(geojson) ? geojson : geojson.features,
-		    i, len, feature, fid,
-		    uniqueKey = this.options.uniqueKey;
-		if (features) {
-			var featureIndexes = this._featureIndexes,
-				addData = this.addData;
-			for (i=0, len=features.length; i<len; i++) {
-				// Only add this if geometry or geometries are set and not null
-				feature = features[i];
-				var uniqueVal = "";
-				if (uniqueKey) {
-					uniqueKeyArr = uniqueKey.split(";");
-					var props = feature.properties;
-					$.each(uniqueKeyArr, function(i, val) {
-						uniqueVal += (""+props[val]);
-					});
-				}
-				else {
-					uniqueVal = feature.id;
-				}
-				if ((feature.geometries || feature.geometry || feature.features || feature.coordinates)
-						&& $.inArray(uniqueVal, featureIndexes) === -1 && this) {
-					addData.call(this, feature);
-					featureIndexes.push(uniqueVal);
+	initMetadata: function() {
+		var r = this.meta.resourceSets[0].resources[0];
+		this.options.subdomains = r.imageUrlSubdomains;
+		this._url = r.imageUrl;
+		this._providers = [];
+		if (r.imageryProviders) {
+			for (var i = 0; i < r.imageryProviders.length; i++) {
+				var p = r.imageryProviders[i];
+				for (var j = 0; j < p.coverageAreas.length; j++) {
+					var c = p.coverageAreas[j];
+					var coverage = {zoomMin: c.zoomMin, zoomMax: c.zoomMax, active: false};
+					var bounds = new L.LatLngBounds(
+							new L.LatLng(c.bbox[0]+0.01, c.bbox[1]+0.01),
+							new L.LatLng(c.bbox[2]-0.01, c.bbox[3]-0.01)
+					);
+					coverage.bounds = bounds;
+					coverage.attrib = p.attribution;
+					this._providers.push(coverage);
 				}
 			}
-			return this;
 		}
+		this._update();
+	},
 
-		var options = this.options;
-//		if (options.filter && !options.filter(geojson)) { return; }
-		
-		var isPointLayer = !options.pointToLayer && geojson.geometry && (geojson.geometry.type === "MultiPoint" || geojson.geometry.type === "Point");
-		if (isPointLayer && !options.pointToLayer && options.style) {
-			var func;
-			if (options.style.icon) {
-				// Create a marker with an icon with given options
-				func = function(feature, latLng) {
-					return L.marker(latLng, {
-	     				icon: L.icon(options.style.icon)
-	     			});
-				}
-			}
-			else {
-				func = function(feature, latLng) {
-					return L.circleMarker(latLng, options.style);
-				};
-			}
-			options.pointToLayer = func;
-	    }
-		
-		var layer = L.GeoJSON.geometryToLayer(geojson, options.pointToLayer, options.coordsToLatLng, options);
-		layer.feature = L.GeoJSON.asFeature(geojson);
-		layer.defaultOptions = layer.options;
-		this.resetStyle(layer);
-		if (options.onEachFeature) {
-			options.onEachFeature(geojson, layer);
-		}
-		return this.addLayer(layer);
+	_update: function() {
+		if (this._url === null || !this._map) return;
+		this._update_attribution();
+		L.TileLayer.prototype._update.apply(this, []);
 	},
-	
-	_refresh: function(force) {
-		force = force || false;
-		
-		if (force === true) {
-			// Also reload features already added.
-			this._featureIndexes = [];
-		}
-		
-		var self = this;
-		if (!this._map) {
-			return false;
-		}
+
+	_update_attribution: function() {
 		var bounds = this._map.getBounds();
-		this.getFeature(bounds, function() {
-			if (self.options.uniqueKey === null) {
-				self.clearLayers();
+		var zoom = this._map.getZoom();
+		for (var i = 0; i < this._providers.length; i++) {
+			var p = this._providers[i];
+			if ((zoom <= p.zoomMax && zoom >= p.zoomMin) &&
+					bounds.intersects(p.bounds)) {
+				if (!p.active && this._map.attributionControl)
+					this._map.attributionControl.addAttribution(p.attrib);
+				p.active = true;
+			} else {
+				if (p.active && this._map.attributionControl)
+					this._map.attributionControl.removeAttribution(p.attrib);
+				p.active = false;
 			}
-			self.addData(self.jsonData);
-		});
-	},
-	
-	/**
-	 * Code borrowed from OpenLayers 2.13.1
-	 * @param bounds {Leaflet bounds}
-	 * @param reverseAxisOrder {Boolean}
-	 * @returns {String}
-	 */
-	_boundsToBbox: function(bounds, reverseAxisOrder) {
-    	var decimal = 6; 
-        var mult = Math.pow(10, decimal);
-        var xmin = Math.round(bounds.getWest() * mult) / mult;
-        var ymin = Math.round(bounds.getSouth() * mult) / mult;
-        var xmax = Math.round(bounds.getEast() * mult) / mult;
-        var ymax = Math.round(bounds.getNorth() * mult) / mult;
-        if (reverseAxisOrder === true) {
-            return ymin + "," + xmin + "," + ymax + "," + xmax;
-        } else {
-            return xmin + "," + ymin + "," + xmax + "," + ymax;
-        }
-    },
-    
-    _projectBounds: function(bounds, fromEpsg, toEpsg) {
-    	this.centerLonLat = null;
-    	
-    	var sw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getSouth()]),
-    		se = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getSouth()]),
-    		ne = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getNorth()]),
-    		nw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getNorth()]);
-
-        var left   = Math.min(sw[0], se[0]),
-        	bottom = Math.min(sw[1], se[1]),
-        	right  = Math.max(nw[0], ne[0]),
-        	top    = Math.max(nw[1], ne[1]);
-        
-        bounds = L.latLngBounds(L.latLng(bottom, left), L.latLng(top, right));
-        return bounds;
-    },
-	
-	getFeature: function(bounds, callback) {
-		var proxy = this.options.proxy || null;
-		if (bounds && !this.options.params.filter) {
-			// Make a filter so that we only fetch features within current viewport.
-			// Don't use bbox if filter is specified (wfs does not support a combination)
-			var reverseBbox = this.options.hasOwnProperty("reverseAxisBbox") ? this.options.reverseAxisBbox : this.options.reverseAxis;
-			if (this.options.inputCrs) {
-				if (this.options.inputCrs.toUpperCase() !== "EPSG:4326") {
-					bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
-				}
-				this.options.params.srsName = this.options.inputCrs;
-			}
-			this.options.params.bbox = this._boundsToBbox(bounds, reverseBbox);
-		}
-		var url,
-			params = null;
-		if (this.options.xhrType === "GET") {
-			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
-			params = null;
-		}
-		else {
-			// POST
-			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
-			params = this.options.params;
-		}
-		
-		if (this.xhr) {
-			this.xhr.abort();
-			this.xhr = null;
-		}
-		this.fire("loading", {layer: this});
-		this.xhr = $.ajax({
-			url: url,
-			type: this.options.xhrType,
-			data: params,
-			context: this,
-			success: function(response) {
-				this.onGetFeatureSuccess(response, callback);
-			},
-			error: this.onGetFeatureError,
-			dataType: "json"
-		});
-	},
-
-	/**
-	 * The function must be called with context <this> (this class instance).
-	 * @param  {[type]} response [description]
-	 * @return {[type]}          [description]
-	 */
-	onGetFeatureSuccess: function(response, callback) {
-		if (response.type && response.type == "FeatureCollection") {
-			this.jsonData = response;
-			this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
-			callback();
-			this.fire("load", {layer: this});
 		}
 	},
 
-	onGetFeatureError: function(e) {
-		this.fire("loaderror", {layer: this});
-	},
-	
-	swapCoords: function(coords) {
-		coords = [coords[1], coords[0]];
-		return coords;
-	},
-	
-	toGeographicCoords: function(inputCrs) {
-		function projectPoint(coordinates /*[easting, northing]*/, inputCrs) {
-			var source = inputCrs || "EPSG:4326",
-				dest = "EPSG:4326",
-				x = coordinates[0],
-				y = coordinates[1];
-			if (source == dest) {
-				return coordinates;
-			}
-			return window.proj4(source, dest, [x, y]); // [easting, northing]
-		};
-		
-		var coords, coordsArr, projectedCoords, i, p, geom,
-			features = this.jsonData.features || [];
-		var options = this.options;
-		for (i=0,len=features.length; i<len; i++) {
-			geom = features[i].geometry;
-			switch (geom.type) {
-				case "Point":
-					coords = geom.coordinates;
-					if (options.reverseAxis) {
-						coords = this.swapCoords(coords);
-					}
-					projectedCoords = projectPoint(coords, inputCrs);
-					geom.coordinates = projectedCoords;
-					break;
-				case "MultiPoint":
-					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
-						coords = geom.coordinates[p];
-						if (options.reverseAxis) {
-							coords = this.swapCoords(coords);
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						// features[i].geometry.coordinates[p] = projectedCoords;
-					}
-					break;
-				case "LineString":
-					// TODO Not yet tested
-					coordsArr = geom.coordinates[0];
-					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
-						coords = coordsArr[p];
-						if (options.reverseAxis) {
-							coords = this.swapCoords( coords );
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						coordsArr[p] = projectedCoords;
-					}
-					break;
-				case "MultiLineString":
-					coordsArr = [];
-					var pp, len2, len3;
-					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
-						coordsArr = geom.coordinates[p];
-						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
-							coords = coordsArr[pp];
-							if (options.reverseAxis) {
-								coords = swapCoords( coords );
-							}
-							projectedCoords = projectPoint(coords, inputCrs);
-							coordsArr[pp] = projectedCoords;
-						}
-						geom.coordinates[p] = coordsArr; // needed?
-					}
-					break;
-				case "Polygon":
-					coordsArr = geom.coordinates[0];
-					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
-						coords = coordsArr[p];
-						if (options.reverseAxis) {
-							coords = this.swapCoords( coords );
-						}
-						projectedCoords = projectPoint(coords, inputCrs);
-						coordsArr[p] = projectedCoords;
-					}
-					break;
-				case "MultiPolygon":
-					coordsArr = [];
-					var pp, ppp, len2, len3, len4, coordsArr2;
-					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
-						coordsArr = geom.coordinates[p];
-						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
-							coordsArr2 = coordsArr[pp];
-							for (ppp=0, len4=coordsArr2.length; ppp<len4; ppp++) {
-								coords = coordsArr2[ppp];
-								if (options.reverseAxis) {
-									coords = swapCoords( coords );
-								}
-								projectedCoords = projectPoint(coords, inputCrs);
-								coordsArr2[ppp] = projectedCoords;
-							}
-						}
-					}
-					break;
+	onRemove: function(map) {
+		for (var i = 0; i < this._providers.length; i++) {
+			var p = this._providers[i];
+			if (p.active && this._map.attributionControl) {
+				this._map.attributionControl.removeAttribution(p.attrib);
+				p.active = false;
 			}
 		}
+        	L.TileLayer.prototype.onRemove.apply(this, [map]);
 	}
 });
 
-/*
- * L.NonTiledLayer.WMS is used for putting WMS non tiled layers on the map.
- */
-L.NonTiledLayer.WMS = L.NonTiledLayer.extend({
-
-    defaultWmsParams: {
-        service: 'WMS',
-        request: 'GetMap',
-        version: '1.1.1',
-        layers: '',
-        styles: '',
-        format: 'image/jpeg',
-        transparent: false
-    },
-
-    initialize: function (url, options) { // (String, Object)
-        this._wmsUrl = url;
-
-        var wmsParams = L.extend({}, this.defaultWmsParams);
-		
-		// all keys that are not NonTiledLayer options go to WMS params
-		for (var i in options) {
-			if (!L.NonTiledLayer.prototype.options.hasOwnProperty(i)) {
-				wmsParams[i] = options[i];
-			}
-		}
-
-        this.wmsParams = wmsParams;
-
-        L.setOptions(this, options);
-    },
-
-    onAdd: function (map) {
-        var projectionKey = parseFloat(this.wmsParams.version) >= 1.3 ? 'crs' : 'srs';
-        this.wmsParams[projectionKey] = map.options.crs.code;
-
-        L.NonTiledLayer.prototype.onAdd.call(this, map);
-    },
-
-    getImageUrl: function (world1, world2, width, height) {
-        var wmsParams = this.wmsParams;
-        wmsParams.width = width;
-        wmsParams.height = height;
-
-        var crs = this._map.options.crs;
-
-        var p1 = crs.project(world1);
-        var p2 = crs.project(world2);
-
-        var url = this._wmsUrl + L.Util.getParamString(wmsParams, this._wmsUrl) + '&bbox=' + p1.x + ',' + p2.y + ',' + p2.x + ',' + p1.y;
-        return url;
-    },
-
-    setParams: function (params, noRedraw) {
-
-        L.extend(this.wmsParams, params);
-
-        if (!noRedraw) {
-            this.redraw();
-        }
-
-        return this;
-    }
-});
-
-L.nonTiledLayer.wms = function (url, options) {
-    return new L.NonTiledLayer.WMS(url, options);
-};
-/*
- * L.TileLayer.EsriRest is used for putting ESRI REST tile layers on the map.
- */
-
-L.TileLayer.EsriRest = L.TileLayer.extend({
-
-	defaultEsriParams: {
-		layers: '',
-		format: 'png',
-		transparent: false,
-        dpi: '92',
-        f: 'image'
-	},
-
-	initialize: function (url, options) { // (String, Object)
-
-		this._url = url;
-
-		var esriParams = L.extend({}, this.defaultEsriParams),
-		    tileSize = options.tileSize || this.options.tileSize;
-
-		if (options.detectRetina && L.Browser.retina) {
-            esriParams.size = [tileSize * 2, tileSize * 2].join(',');
-		} else {
-            esriParams.size = [tileSize, tileSize].join(',');
-        }
-
-		for (var i in options) {
-			// all keys that are not TileLayer options go to ESRI params
-			if (!this.options.hasOwnProperty(i)) {
-				esriParams[i] = options[i];
-			}
-		}
-
-		this.esriParams = esriParams;
-
-		L.setOptions(this, options);
-	},
-
-	onAdd: function (map) {
-
-		this.esriParams['bboxSR'] = map.options.crs.code.substring(5);
-        this.esriParams['imageSR'] = map.options.crs.code.substring(5);
-        this.esriParams['layers'] = "show:" + this.esriParams['layers'];
-
-		L.TileLayer.prototype.onAdd.call(this, map);
-	},
-
-	getTileUrl: function (tilePoint, zoom) { // (Point, Number) -> String
-
-		var map = this._map,
-		    crs = map.options.crs,
-		    tileSize = this.options.tileSize,
-
-		    nwPoint = tilePoint.multiplyBy(tileSize),
-		    sePoint = nwPoint.add([tileSize, tileSize]),
-
-		    nw = crs.project(map.unproject(nwPoint, zoom)),
-		    se = crs.project(map.unproject(sePoint, zoom)),
-
-		    bbox = [nw.x, se.y, se.x, nw.y].join(','),
-
-		    url = L.Util.template(this._url, {s: this._getSubdomain(tilePoint)});
-
-		return url + '/export' + L.Util.getParamString(this.esriParams, url, true) + '&bbox=' + bbox;
-	},
-
-    getIdentifyUrl: function(point, params) {
-
-        params = params ? params : {};
-
-        var defaultIdentifyParams = {
-            geometryType: 'esriGeometryPoint',
-            sr: '4326',
-            layers: this.esriParams['layers'].substring(5),
-            tolerance: 0,
-            imageDisplay: this.esriParams.size + ',' + this.esriParams.dpi,
-            returnGeometry: false,
-            f: 'pjson',
-            geometry: [point.x, point.y].join(','),
-            mapExtent: [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat, map.getBounds()._southWest.lng, map.getBounds()._southWest.lat].join(','),
-            showLayers: 'visible'
-        };
-
-        for (var i in defaultIdentifyParams) {
-            // all keys that are not TileLayer options go to ESRI params
-            if (!params.hasOwnProperty(i)) {
-                params[i] = defaultIdentifyParams[i];
-            }
-        }
-
-        params['layers'] = params['showLayers'] + ":" + params['layers'];
-
-        url = L.Util.template(this._url, {s: this._getSubdomain(point)});
-        return url + '/identify' + L.Util.getParamString(params, url, true);
-    },
-
-	setParams: function (params, noRedraw) {
-
-		L.extend(this.esriParams, params);
-
-		if (!noRedraw) {
-			this.redraw();
-		}
-
-		return this;
-	}
-});
-
-L.tileLayer.esri = function (url, options) {
-	return new L.TileLayer.ESRI(url, options);
+L.bingLayer = function (key, options) {
+    return new L.BingLayer(key, options);
 };
 
 (function(root,factory){"use strict";if(typeof module!=="undefined"&&module.exports){module.exports=factory(require("jquery")(root))}else if(typeof define==="function"&&define.amd){define("bootstrap3-typeahead",["jquery"],function($){return factory($)})}else{factory(root.jQuery)}})(this,function($){"use strict";var Typeahead=function(element,options){this.$element=$(element);this.options=$.extend({},$.fn.typeahead.defaults,options);this.matcher=this.options.matcher||this.matcher;this.sorter=this.options.sorter||this.sorter;this.select=this.options.select||this.select;this.autoSelect=typeof this.options.autoSelect=="boolean"?this.options.autoSelect:true;this.highlighter=this.options.highlighter||this.highlighter;this.render=this.options.render||this.render;this.updater=this.options.updater||this.updater;this.source=this.options.source;this.delay=typeof this.options.delay=="number"?this.options.delay:250;this.$menu=$(this.options.menu);this.shown=false;this.listen();this.showHintOnFocus=typeof this.options.showHintOnFocus=="boolean"?this.options.showHintOnFocus:false};Typeahead.prototype={constructor:Typeahead,select:function(){var val=this.$menu.find(".active").data("value");if(this.autoSelect||val){this.$element.val(this.updater(val)).change()}return this.hide()},updater:function(item){return item},setSource:function(source){this.source=source},show:function(){var pos=$.extend({},this.$element.position(),{height:this.$element[0].offsetHeight}),scrollHeight;scrollHeight=typeof this.options.scrollHeight=="function"?this.options.scrollHeight.call():this.options.scrollHeight;this.$menu.insertAfter(this.$element).css({top:pos.top+pos.height+scrollHeight,left:pos.left}).show();this.shown=true;return this},hide:function(){this.$menu.hide();this.shown=false;return this},lookup:function(query){var items;if(typeof query!="undefined"&&query!==null){this.query=query}else{this.query=this.$element.val()||""}if(this.query.length<this.options.minLength&&!this.showHintOnFocus){return this.shown?this.hide():this}var worker=$.proxy(function(){items=$.isFunction(this.source)?this.source(this.query,$.proxy(this.process,this)):this.source;if(items){this.process(items)}},this);clearTimeout(this.lookupWorker);this.lookupWorker=setTimeout(worker,this.delay)},process:function(items){var that=this;items=$.grep(items,function(item){return that.matcher(item)});items=this.sorter(items);if(!items.length){return this.shown?this.hide():this}if(this.options.items=="all"){return this.render(items).show()}else{return this.render(items.slice(0,this.options.items)).show()}},matcher:function(item){return~item.toLowerCase().indexOf(this.query.toLowerCase())},sorter:function(items){var beginswith=[],caseSensitive=[],caseInsensitive=[],item;while(item=items.shift()){if(!item.toLowerCase().indexOf(this.query.toLowerCase()))beginswith.push(item);else if(~item.indexOf(this.query))caseSensitive.push(item);else caseInsensitive.push(item)}return beginswith.concat(caseSensitive,caseInsensitive)},highlighter:function(item){var html=$("<div></div>");var query=this.query;var i=item.indexOf(query);var len,leftPart,middlePart,rightPart,strong;len=query.length;if(len==0){return html.text(item).html()}while(i>-1){leftPart=item.substr(0,i);middlePart=item.substr(i,len);rightPart=item.substr(i+len);strong=$("<strong></strong>").text(middlePart);html.append(document.createTextNode(leftPart)).append(strong);item=rightPart;i=item.indexOf(query)}return html.append(document.createTextNode(item)).html()},render:function(items){var that=this;items=$(items).map(function(i,item){i=$(that.options.item).data("value",item);i.find("a").html(that.highlighter(item));return i[0]});if(this.autoSelect){items.first().addClass("active")}this.$menu.html(items);return this},next:function(event){var active=this.$menu.find(".active").removeClass("active"),next=active.next();if(!next.length){next=$(this.$menu.find("li")[0])}next.addClass("active")},prev:function(event){var active=this.$menu.find(".active").removeClass("active"),prev=active.prev();if(!prev.length){prev=this.$menu.find("li").last()}prev.addClass("active")},listen:function(){this.$element.on("focus",$.proxy(this.focus,this)).on("blur",$.proxy(this.blur,this)).on("keypress",$.proxy(this.keypress,this)).on("keyup",$.proxy(this.keyup,this));if(this.eventSupported("keydown")){this.$element.on("keydown",$.proxy(this.keydown,this))}this.$menu.on("click",$.proxy(this.click,this)).on("mouseenter","li",$.proxy(this.mouseenter,this)).on("mouseleave","li",$.proxy(this.mouseleave,this))},destroy:function(){this.$element.data("typeahead",null);this.$element.off("focus").off("blur").off("keypress").off("keyup");if(this.eventSupported("keydown")){this.$element.off("keydown")}this.$menu.remove()},eventSupported:function(eventName){var isSupported=eventName in this.$element;if(!isSupported){this.$element.setAttribute(eventName,"return;");isSupported=typeof this.$element[eventName]==="function"}return isSupported},move:function(e){if(!this.shown)return;switch(e.keyCode){case 9:case 13:case 27:e.preventDefault();break;case 38:e.preventDefault();this.prev();break;case 40:e.preventDefault();this.next();break}e.stopPropagation()},keydown:function(e){this.suppressKeyPressRepeat=~$.inArray(e.keyCode,[40,38,9,13,27]);if(!this.shown&&e.keyCode==40){this.lookup("")}else{this.move(e)}},keypress:function(e){if(this.suppressKeyPressRepeat)return;this.move(e)},keyup:function(e){switch(e.keyCode){case 40:case 38:case 16:case 17:case 18:break;case 9:case 13:if(!this.shown)return;this.select();break;case 27:if(!this.shown)return;this.hide();break;default:this.lookup()}e.stopPropagation();e.preventDefault()},focus:function(e){if(!this.focused){this.focused=true;if(this.options.minLength===0&&!this.$element.val()||this.options.showHintOnFocus){this.lookup()}}},blur:function(e){this.focused=false;if(!this.mousedover&&this.shown)this.hide()},click:function(e){e.stopPropagation();e.preventDefault();this.select();this.$element.focus()},mouseenter:function(e){this.mousedover=true;this.$menu.find(".active").removeClass("active");$(e.currentTarget).addClass("active")},mouseleave:function(e){this.mousedover=false;if(!this.focused&&this.shown)this.hide()}};var old=$.fn.typeahead;$.fn.typeahead=function(option){var arg=arguments;return this.each(function(){var $this=$(this),data=$this.data("typeahead"),options=typeof option=="object"&&option;if(!data)$this.data("typeahead",data=new Typeahead(this,options));if(typeof option=="string"){if(arg.length>1){data[option].apply(data,Array.prototype.slice.call(arg,1))}else{data[option]()}}})};$.fn.typeahead.defaults={source:[],items:8,menu:'<ul class="typeahead dropdown-menu"></ul>',item:'<li><a href="#"></a></li>',minLength:1,scrollHeight:0,autoSelect:true};$.fn.typeahead.Constructor=Typeahead;$.fn.typeahead.noConflict=function(){$.fn.typeahead=old;return this};$(document).on("focus.typeahead.data-api",'[data-provide="typeahead"]',function(e){var $this=$(this);if($this.data("typeahead"))return;$this.typeahead($this.data())})});
@@ -27287,6 +26683,601 @@ if (!Object.isExtensible) {
 }));
 
 
+L.GeoJSON.Custom = L.GeoJSON.extend({
+	
+	CLASS_NAME: "L.GeoJSON.Custom",
+	
+	options: {
+		params: {},
+		style: {},
+		inputCrs: "EPSG:4326",
+		pointToLayer: function (feature, latlng) {
+			return L.circleMarker(latlng, this.style);
+		}
+	},
+	
+	initialize: function(serviceUrl, options) {
+		options = options || {};
+		
+		L.GeoJSON.prototype.initialize.call(this, null, options);
+//		$.each(options.params, function(param){
+//			var tempString = "&" + param + "=" + options.params[param];
+//			serviceUrl += tempString;
+//		});
+		serviceUrl += $.param(options.params);
+		this.serviceUrl = serviceUrl;
+		
+		var self = this;
+		this.getFeature(function() {
+			var layer = self.addData(self.jsonData);
+		});
+		
+	},
+	
+	//onAdd: function(map) {
+	//	L.LayerGroup.prototype.onAdd.call(this, map);
+	//},
+    
+    /*_projectBounds: function(bounds, fromEpsg, toEpsg) {
+    	this.centerLonLat = null;
+    	
+    	var sw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getSouth()]),
+    		se = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getSouth()]),
+    		ne = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getNorth()]),
+    		nw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getNorth()]);
+
+        var left   = Math.min(sw[0], se[0]),
+        	bottom = Math.min(sw[1], se[1]),
+        	right  = Math.max(nw[0], ne[0]),
+        	top    = Math.max(nw[1], ne[1]);
+        
+        bounds = L.latLngBounds(L.latLng(bottom, left), L.latLng(top, right));
+        return bounds;
+    },*/
+	
+	getFeature: function(callback) {
+		var url = this.proxy ? this.proxy + encodeURIComponent(this.serviceUrl) : this.serviceUrl;
+		this.fire("loading", {layer: this});
+		if (this.xhr) {
+			this.xhr.abort();
+			this.xhr = null;
+		}
+		this.xhr = $.ajax({
+			url: url,
+			type: "POST",
+			data: this.options.params,
+			context: this,
+			success: function(response) {
+				if (response.type && response.type == "FeatureCollection") {
+					this.jsonData = response;
+					if (this.options.inputCrs !== "EPSG:4326") {
+						this.toGeographicCoords(this.options.inputCrs);
+					}
+					callback();
+					this.fire("load", {layer: this});
+				}				
+			},
+			dataType: "json"
+		});
+	},
+	
+	swapCoords: function(coords) {
+		coords = [coords[1], coords[0]];
+		return coords;
+	},
+	
+	toGeographicCoords: function(inputCrs) {
+		function projectPoint(coordinates /*[easting, northing]*/, inputCrs) {
+			var source = inputCrs || "EPSG:4326",
+				dest = "EPSG:4326",
+				x = coordinates[0], 
+				y = coordinates[1];
+			return window.proj4(source, dest, [x, y]); // [easting, northing]
+		};
+		
+		var coords, coordsArr, projectedCoords, i, p, geom,
+			features = this.jsonData.features || [];
+		for (i=0,len=features.length; i<len; i++) {
+			geom = features[i].geometry;
+			switch (geom.type) {
+				case "Point":
+					coords = geom.coordinates;
+					if (this.options.reverseAxis) {
+						coords = this.swapCoords(coords);
+					}
+					projectedCoords = projectPoint(coords, inputCrs);
+					geom.coordinates = projectedCoords;
+					break;
+				case "MultiPoint":
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coords = geom.coordinates[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords(coords);
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						features[i].geometry.coordinates[p] = projectedCoords;
+					}
+					break;
+				case "MultiLineString":
+					coordsArr = [];
+					var pp, ii,
+						newCoords = [];
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coordsArr = geom.coordinates[p];
+						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
+							coords = coordsArr[pp];
+							if (this.options.reverseAxis) {
+								coords = this.swapCoords( coords );								
+							}
+							projectedCoords = projectPoint(coords, inputCrs);
+							coordsArr[pp] = projectedCoords;
+						}
+						geom.coordinates[p] = coordsArr; // needed?
+					}
+					break;
+				case "Polygon":
+					coordsArr = geom.coordinates[0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+					
+					break;
+				case "MultiPolygon":
+					coordsArr = geom.coordinates[0][0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+//					geom.coordinates[0][0] = coordsArr; // needed?
+					break;
+			}
+		}
+	}
+});
+L.GeoJSON.WFS = L.GeoJSON.extend({
+	
+	CLASS_NAME: "L.GeoJSON.WFS",
+	 
+	options: {
+		uniqueKey: "",
+		noBindZoom: false,
+		noBindDrag: false,
+		xhrType: "POST",
+		params: {
+			typeName: null, // required
+			service: "WFS",
+			version: "1.1.0",
+			request: "GetFeature",
+			srsName: "EPSG:4326",
+			format: "text/geojson",
+			maxFeatures: 10000,
+			outputFormat: "json"
+		},
+		selectStyle: {
+			weight: 5,
+	        color: '#00FFFF',
+	        opacity: 1
+		}
+	},
+	
+	/**
+	 * Keeps track of if a feature has been added or not
+	 * by storing its unique id: feature.id.
+	 */
+	_featureIndexes: [],
+	
+	initialize: function(serviceUrl, options) {
+		options = options || {};
+		
+		options = $.extend(true, {}, this.options, options);
+		
+		L.GeoJSON.prototype.initialize.call(this, null, options);
+		
+		// if (options.proxy || L.GeoJSON.WFS.proxy) {
+		// 	this.proxy = options.proxy || L.GeoJSON.WFS.proxy || null;
+		// }
+		this._featureIndexes = [];
+		this.getFeatureUrl = serviceUrl;
+	},
+	
+	onAdd: function(map) {
+		L.LayerGroup.prototype.onAdd.call(this, map);
+		
+		this._refresh();
+		this._bindEvents(map);
+	},
+	
+	onRemove: function(map) {
+		if (this.xhr) {
+			this.xhr.abort();
+			this.xhr = null;
+			this.fire("loadcancel", {layer: this});
+		}
+		this._unbindEvents(map);
+		L.GeoJSON.prototype.onRemove.call(this, map);
+	},
+	
+	_onZoomEnd: function() {
+		if (this._prevZoom > this._map.getZoom()) {
+			this._refresh();
+		}
+		this._prevZoom = this._map.getZoom();
+	},
+	
+	_bindEvents: function(map) {
+		var self = this;
+		
+		this.__refresh = this.__refresh || $.proxy(this._refresh, this);
+		this.__onZoomEnd = this.__onZoomEnd || $.proxy(this._onZoomEnd, this);
+		
+		if (!this.options.noBindDrag) {
+			map.on("dragend", this.__refresh);
+		}
+
+		// Only refresh is last zoom was higher than current (i.e. map zoomed out)
+		if (!this.options.noBindZoom) {
+			var self = this;
+			this._prevZoom = map.getZoom();
+			map.on("zoomend", this.__onZoomEnd);
+		}
+	},
+	
+	_unbindEvents: function(map) {
+		map.off("dragend", this.__refresh);
+		map.off("zoomend", this.__onZoomEnd);
+	},
+	
+	
+	/**
+	 * Overriding method so that features are added only if they are 
+	 * not already added. An array keeps track of the ids to know
+	 * if a feature has already been added.
+	 *  
+	 * @param geojson
+	 * @returns
+	 */
+	addData: function (geojson) {
+		var features = L.Util.isArray(geojson) ? geojson : geojson.features,
+		    i, len, feature, fid,
+		    uniqueKey = this.options.uniqueKey;
+		if (features) {
+			var featureIndexes = this._featureIndexes,
+				addData = this.addData;
+			for (i=0, len=features.length; i<len; i++) {
+				// Only add this if geometry or geometries are set and not null
+				feature = features[i];
+				var uniqueVal = "";
+				if (uniqueKey) {
+					uniqueKeyArr = uniqueKey.split(";");
+					var props = feature.properties;
+					$.each(uniqueKeyArr, function(i, val) {
+						uniqueVal += (""+props[val]);
+					});
+				}
+				else {
+					uniqueVal = feature.id;
+				}
+				if ((feature.geometries || feature.geometry || feature.features || feature.coordinates)
+						&& $.inArray(uniqueVal, featureIndexes) === -1 && this) {
+					addData.call(this, feature);
+					featureIndexes.push(uniqueVal);
+				}
+			}
+			return this;
+		}
+
+		var options = this.options;
+//		if (options.filter && !options.filter(geojson)) { return; }
+		
+		var isPointLayer = !options.pointToLayer && geojson.geometry && (geojson.geometry.type === "MultiPoint" || geojson.geometry.type === "Point");
+		if (isPointLayer && !options.pointToLayer && options.style) {
+			var func;
+			if (options.style.icon) {
+				// Create a marker with an icon with given options
+				func = function(feature, latLng) {
+					return L.marker(latLng, {
+	     				icon: L.icon(options.style.icon)
+	     			});
+				}
+			}
+			else {
+				func = function(feature, latLng) {
+					return L.circleMarker(latLng, options.style);
+				};
+			}
+			options.pointToLayer = func;
+	    }
+		
+		var layer = L.GeoJSON.geometryToLayer(geojson, options.pointToLayer, options.coordsToLatLng, options);
+		layer.feature = L.GeoJSON.asFeature(geojson);
+		layer.defaultOptions = layer.options;
+		this.resetStyle(layer);
+		if (options.onEachFeature) {
+			options.onEachFeature(geojson, layer);
+		}
+		return this.addLayer(layer);
+	},
+	
+	_refresh: function(force) {
+		force = force || false;
+		
+		if (force === true) {
+			// Also reload features already added.
+			this._featureIndexes = [];
+		}
+		
+		var self = this;
+		if (!this._map) {
+			return false;
+		}
+		var bounds = this._map.getBounds();
+		this.getFeature(bounds, function() {
+			if (self.options.uniqueKey === null) {
+				self.clearLayers();
+			}
+			self.addData(self.jsonData);
+		});
+	},
+	
+	/**
+	 * Code borrowed from OpenLayers 2.13.1
+	 * @param bounds {Leaflet bounds}
+	 * @param reverseAxisOrder {Boolean}
+	 * @returns {String}
+	 */
+	_boundsToBbox: function(bounds, reverseAxisOrder) {
+    	var decimal = 6; 
+        var mult = Math.pow(10, decimal);
+        var xmin = Math.round(bounds.getWest() * mult) / mult;
+        var ymin = Math.round(bounds.getSouth() * mult) / mult;
+        var xmax = Math.round(bounds.getEast() * mult) / mult;
+        var ymax = Math.round(bounds.getNorth() * mult) / mult;
+        if (reverseAxisOrder === true) {
+            return ymin + "," + xmin + "," + ymax + "," + xmax;
+        } else {
+            return xmin + "," + ymin + "," + xmax + "," + ymax;
+        }
+    },
+    
+    _projectBounds: function(bounds, fromEpsg, toEpsg) {
+    	this.centerLonLat = null;
+    	
+    	var sw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getSouth()]),
+    		se = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getSouth()]),
+    		ne = window.proj4(fromEpsg, toEpsg, [bounds.getEast(), bounds.getNorth()]),
+    		nw = window.proj4(fromEpsg, toEpsg, [bounds.getWest(), bounds.getNorth()]);
+
+        var left   = Math.min(sw[0], se[0]),
+        	bottom = Math.min(sw[1], se[1]),
+        	right  = Math.max(nw[0], ne[0]),
+        	top    = Math.max(nw[1], ne[1]);
+        
+        bounds = L.latLngBounds(L.latLng(bottom, left), L.latLng(top, right));
+        return bounds;
+    },
+	
+	getFeature: function(bounds, callback) {
+		var proxy = this.options.proxy || null;
+		if (bounds && !this.options.params.filter) {
+			// Make a filter so that we only fetch features within current viewport.
+			// Don't use bbox if filter is specified (wfs does not support a combination)
+			var reverseBbox = this.options.hasOwnProperty("reverseAxisBbox") ? this.options.reverseAxisBbox : this.options.reverseAxis;
+			if (this.options.inputCrs) {
+				if (this.options.inputCrs.toUpperCase() !== "EPSG:4326") {
+					bounds = this._projectBounds(bounds, "EPSG:4326", this.options.inputCrs);
+				}
+				this.options.params.srsName = this.options.inputCrs;
+			}
+			this.options.params.bbox = this._boundsToBbox(bounds, reverseBbox);
+		}
+		var url,
+			params = null;
+		if (this.options.xhrType === "GET") {
+			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl + "?" + $.param(this.options.params)) : this.getFeatureUrl;
+			params = null;
+		}
+		else {
+			// POST
+			url = proxy ? proxy + encodeURIComponent(this.getFeatureUrl) : this.getFeatureUrl;
+			params = this.options.params;
+		}
+		
+		if (this.xhr) {
+			this.xhr.abort();
+			this.xhr = null;
+		}
+		this.fire("loading", {layer: this});
+		this.xhr = $.ajax({
+			url: url,
+			type: this.options.xhrType,
+			data: params,
+			context: this,
+			success: function(response) {
+				this.onGetFeatureSuccess(response, callback);
+			},
+			error: this.onGetFeatureError,
+			dataType: "json"
+		});
+	},
+
+	/**
+	 * The function must be called with context <this> (this class instance).
+	 * @param  {[type]} response [description]
+	 * @return {[type]}          [description]
+	 */
+	onGetFeatureSuccess: function(response, callback) {
+		if (response.type && response.type == "FeatureCollection") {
+			this.jsonData = response;
+			this.toGeographicCoords(this.options.inputCrs || "EPSG:4326");
+			callback();
+			this.fire("load", {layer: this});
+		}
+	},
+
+	onGetFeatureError: function(e) {
+		this.fire("loaderror", {layer: this});
+	},
+	
+	swapCoords: function(coords) {
+		coords = [coords[1], coords[0]];
+		return coords;
+	},
+	
+	toGeographicCoords: function(inputCrs) {
+		function projectPoint(coordinates /*[easting, northing]*/, inputCrs) {
+			var source = inputCrs || "EPSG:4326",
+				dest = "EPSG:4326",
+				x = coordinates[0], 
+				y = coordinates[1];
+			return window.proj4(source, dest, [x, y]); // [easting, northing]
+		};
+		
+		var coords, coordsArr, projectedCoords, i, p, geom,
+			features = this.jsonData.features || [];
+		for (i=0,len=features.length; i<len; i++) {
+			geom = features[i].geometry;
+			switch (geom.type) {
+				case "Point":
+					coords = geom.coordinates;
+					if (this.options.reverseAxis) {
+						coords = this.swapCoords(coords);
+					}
+					projectedCoords = projectPoint(coords, inputCrs);
+					geom.coordinates = projectedCoords;
+					break;
+				case "MultiPoint":
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coords = geom.coordinates[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords(coords);
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						features[i].geometry.coordinates[p] = projectedCoords;
+					}
+					break;
+				case "MultiLineString":
+					coordsArr = [];
+					var pp, ii,
+						newCoords = [];
+					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
+						coordsArr = geom.coordinates[p];
+						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
+							coords = coordsArr[pp];
+							if (this.options.reverseAxis) {
+								coords = this.swapCoords( coords );								
+							}
+							projectedCoords = projectPoint(coords, inputCrs);
+							coordsArr[pp] = projectedCoords;
+						}
+						geom.coordinates[p] = coordsArr; // needed?
+					}
+					break;
+				case "Polygon":
+					coordsArr = geom.coordinates[0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+					
+					break;
+				case "MultiPolygon":
+					coordsArr = geom.coordinates[0][0];
+					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
+						coords = coordsArr[p];
+						if (this.options.reverseAxis) {
+							coords = this.swapCoords( coords );								
+						}
+						projectedCoords = projectPoint(coords, inputCrs);
+						coordsArr[p] = projectedCoords;
+					}
+//					geom.coordinates[0][0] = coordsArr; // needed?
+					break;
+			}
+		}
+	}
+});
+
+/*
+ * L.NonTiledLayer.WMS is used for putting WMS non tiled layers on the map.
+ */
+L.NonTiledLayer.WMS = L.NonTiledLayer.extend({
+
+    defaultWmsParams: {
+        service: 'WMS',
+        request: 'GetMap',
+        version: '1.1.1',
+        layers: '',
+        styles: '',
+        format: 'image/jpeg',
+        transparent: false
+    },
+
+    initialize: function (url, options) { // (String, Object)
+        this._wmsUrl = url;
+
+        var wmsParams = L.extend({}, this.defaultWmsParams);
+		
+		// all keys that are not NonTiledLayer options go to WMS params
+		for (var i in options) {
+			if (!L.NonTiledLayer.prototype.options.hasOwnProperty(i)) {
+				wmsParams[i] = options[i];
+			}
+		}
+
+        this.wmsParams = wmsParams;
+
+        L.setOptions(this, options);
+    },
+
+    onAdd: function (map) {
+        var projectionKey = parseFloat(this.wmsParams.version) >= 1.3 ? 'crs' : 'srs';
+        this.wmsParams[projectionKey] = map.options.crs.code;
+
+        L.NonTiledLayer.prototype.onAdd.call(this, map);
+    },
+
+    getImageUrl: function (world1, world2, width, height) {
+        var wmsParams = this.wmsParams;
+        wmsParams.width = width;
+        wmsParams.height = height;
+
+        var crs = this._map.options.crs;
+
+        var p1 = crs.project(world1);
+        var p2 = crs.project(world2);
+
+        var url = this._wmsUrl + L.Util.getParamString(wmsParams, this._wmsUrl) + '&bbox=' + p1.x + ',' + p2.y + ',' + p2.x + ',' + p1.y;
+        return url;
+    },
+
+    setParams: function (params, noRedraw) {
+
+        L.extend(this.wmsParams, params);
+
+        if (!noRedraw) {
+            this.redraw();
+        }
+
+        return this;
+    }
+});
+
+L.nonTiledLayer.wms = function (url, options) {
+    return new L.NonTiledLayer.WMS(url, options);
+};
 /*
 	Leaflet.print, implements the Mapfish print protocol allowing a Leaflet map to be printed using either the Mapfish or GeoServer print module.
 	(c) 2013, Adam Ratcliffe, GeoSmart Maps Limited
@@ -28823,17 +28814,6 @@ $.notify.addStyle("bootstrap", {
   }
 
   /**
-   * Returns the absolute page-offset of the given element.
-   */
-  function pos(el) {
-    var o = { x:el.offsetLeft, y:el.offsetTop }
-    while((el = el.offsetParent))
-      o.x+=el.offsetLeft, o.y+=el.offsetTop
-
-    return o
-  }
-
-  /**
    * Returns the line color from the given string or array.
    */
   function getColor(color, idx) {
@@ -28883,7 +28863,6 @@ $.notify.addStyle("bootstrap", {
       var self = this
         , o = self.opts
         , el = self.el = css(createEl(0, {className: o.className}), {position: o.position, width: 0, zIndex: o.zIndex})
-        , mid = o.radius+o.length+o.width
 
       css(el, {
         left: o.left,
@@ -29054,140 +29033,118 @@ $.notify.addStyle("bootstrap", {
 }));
 
 /*
-  Leaflet.AwesomeMarkers, a plugin that adds colorful iconic markers for Leaflet, based on the Font Awesome icons
-  (c) 2012-2013, Lennard Voogdt
+ * L.TileLayer.EsriRest is used for putting ESRI REST tile layers on the map.
+ */
 
-  http://leafletjs.com
-  https://github.com/lvoogdt
-*/
+L.TileLayer.EsriRest = L.TileLayer.extend({
 
-/*global L*/
+	defaultEsriParams: {
+		layers: '',
+		format: 'png',
+		transparent: false,
+        dpi: '92',
+        f: 'image'
+	},
 
-(function (window, document, undefined) {
-    "use strict";
-    /*
-     * Leaflet.AwesomeMarkers assumes that you have already included the Leaflet library.
-     */
+	initialize: function (url, options) { // (String, Object)
 
-    L.AwesomeMarkers = {};
+		this._url = url;
 
-    L.AwesomeMarkers.version = '2.0.1';
+		var esriParams = L.extend({}, this.defaultEsriParams),
+		    tileSize = options.tileSize || this.options.tileSize;
 
-    L.AwesomeMarkers.Icon = L.Icon.extend({
-        options: {
-            iconSize: [35, 45],
-            iconAnchor:   [17, 42],
-            popupAnchor: [1, -32],
-            shadowAnchor: [10, 12],
-            shadowSize: [36, 16],
-            className: 'awesome-marker',
-            prefix: 'glyphicon',
-            spinClass: 'fa-spin',
-            extraClasses: '',
-            icon: 'home',
-            markerColor: 'blue',
-            iconColor: 'white'
-        },
+		if (options.detectRetina && L.Browser.retina) {
+            esriParams.size = [tileSize * 2, tileSize * 2].join(',');
+		} else {
+            esriParams.size = [tileSize, tileSize].join(',');
+        }
 
-        initialize: function (options) {
-            options = L.Util.setOptions(this, options);
-        },
+		for (var i in options) {
+			// all keys that are not TileLayer options go to ESRI params
+			if (!this.options.hasOwnProperty(i)) {
+				esriParams[i] = options[i];
+			}
+		}
 
-        createIcon: function () {
-            var div = document.createElement('div'),
-                options = this.options;
+		this.esriParams = esriParams;
 
-            if (options.icon) {
-                div.innerHTML = this._createInner();
+		L.setOptions(this, options);
+	},
+
+	onAdd: function (map) {
+
+		this.esriParams['bboxSR'] = map.options.crs.code.substring(5);
+        this.esriParams['imageSR'] = map.options.crs.code.substring(5);
+        this.esriParams['layers'] = "show:" + this.esriParams['layers'];
+
+		L.TileLayer.prototype.onAdd.call(this, map);
+	},
+
+	getTileUrl: function (tilePoint, zoom) { // (Point, Number) -> String
+
+		var map = this._map,
+		    crs = map.options.crs,
+		    tileSize = this.options.tileSize,
+
+		    nwPoint = tilePoint.multiplyBy(tileSize),
+		    sePoint = nwPoint.add([tileSize, tileSize]),
+
+		    nw = crs.project(map.unproject(nwPoint, zoom)),
+		    se = crs.project(map.unproject(sePoint, zoom)),
+
+		    bbox = [nw.x, se.y, se.x, nw.y].join(','),
+
+		    url = L.Util.template(this._url, {s: this._getSubdomain(tilePoint)});
+
+		return url + '/export' + L.Util.getParamString(this.esriParams, url, true) + '&bbox=' + bbox;
+	},
+
+    getIdentifyUrl: function(point, params) {
+
+        params = params ? params : {};
+
+        var defaultIdentifyParams = {
+            geometryType: 'esriGeometryPoint',
+            sr: '4326',
+            layers: this.esriParams['layers'].substring(5),
+            tolerance: 0,
+            imageDisplay: this.esriParams.size + ',' + this.esriParams.dpi,
+            returnGeometry: false,
+            f: 'pjson',
+            geometry: [point.x, point.y].join(','),
+            mapExtent: [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat, map.getBounds()._southWest.lng, map.getBounds()._southWest.lat].join(','),
+            showLayers: 'visible'
+        };
+
+        for (var i in defaultIdentifyParams) {
+            // all keys that are not TileLayer options go to ESRI params
+            if (!params.hasOwnProperty(i)) {
+                params[i] = defaultIdentifyParams[i];
             }
+        }
 
-            if (options.bgPos) {
-                div.style.backgroundPosition =
-                    (-options.bgPos.x) + 'px ' + (-options.bgPos.y) + 'px';
-            }
+        params['layers'] = params['showLayers'] + ":" + params['layers'];
 
-            this._setIconStyles(div, 'icon-' + options.markerColor);
-            return div;
-        },
+        url = L.Util.template(this._url, {s: this._getSubdomain(point)});
+        return url + '/identify' + L.Util.getParamString(params, url, true);
+    },
 
-        _createInner: function() {
-            var iconClass, iconSpinClass = "", iconColorClass = "", iconColorStyle = "", options = this.options;
+	setParams: function (params, noRedraw) {
 
-            if(options.icon.slice(0,options.prefix.length+1) === options.prefix + "-") {
-                iconClass = options.icon;
-            } else {
-                iconClass = options.prefix + "-" + options.icon;
-            }
+		L.extend(this.esriParams, params);
 
-            if(options.spin && typeof options.spinClass === "string") {
-                iconSpinClass = options.spinClass;
-            }
+		if (!noRedraw) {
+			this.redraw();
+		}
 
-            if(options.iconColor) {
-                if(options.iconColor === 'white' || options.iconColor === 'black') {
-                    iconColorClass = "icon-" + options.iconColor;
-                } else {
-                    iconColorStyle = "style='color: " + options.iconColor + "' ";
-                }
-            }
+		return this;
+	}
+});
 
-            return "<i " + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + iconClass + " " + iconSpinClass + " " + iconColorClass + "'></i>";
-        },
+L.tileLayer.esri = function (url, options) {
+	return new L.TileLayer.ESRI(url, options);
+};
 
-        _setIconStyles: function (img, name) {
-            var options = this.options,
-                size = L.point(options[name === 'shadow' ? 'shadowSize' : 'iconSize']),
-                anchor;
-
-            if (name === 'shadow') {
-                anchor = L.point(options.shadowAnchor || options.iconAnchor);
-            } else {
-                anchor = L.point(options.iconAnchor);
-            }
-
-            if (!anchor && size) {
-                anchor = size.divideBy(2, true);
-            }
-
-            img.className = 'awesome-marker-' + name + ' ' + options.className;
-
-            if (anchor) {
-                img.style.marginLeft = (-anchor.x) + 'px';
-                img.style.marginTop  = (-anchor.y) + 'px';
-            }
-
-            if (size) {
-                img.style.width  = size.x + 'px';
-                img.style.height = size.y + 'px';
-            }
-        },
-
-        createShadow: function () {
-            var div = document.createElement('div');
-
-            this._setIconStyles(div, 'shadow');
-            return div;
-      }
-    });
-        
-    L.AwesomeMarkers.icon = function (options) {
-        return new L.AwesomeMarkers.Icon(options);
-    };
-
-}(this, document));
-
-
-
-
-/*
-	Leaflet.label, a plugin that adds labels to markers and vectors for Leaflet powered maps.
-	(c) 2012-2013, Jacob Toye, Smartrak
-
-	https://github.com/Leaflet/Leaflet.label
-	http://leafletjs.com
-	https://github.com/jacobtoye
-*/
-(function(){L.labelVersion="0.2.1",L.Label=L.Class.extend({includes:L.Mixin.Events,options:{className:"",clickable:!1,direction:"right",noHide:!1,offset:[12,-15],opacity:1,zoomAnimation:!0},initialize:function(t,e){L.setOptions(this,t),this._source=e,this._animated=L.Browser.any3d&&this.options.zoomAnimation,this._isOpen=!1},onAdd:function(t){this._map=t,this._pane=this._source instanceof L.Marker?t._panes.markerPane:t._panes.popupPane,this._container||this._initLayout(),this._pane.appendChild(this._container),this._initInteraction(),this._update(),this.setOpacity(this.options.opacity),t.on("moveend",this._onMoveEnd,this).on("viewreset",this._onViewReset,this),this._animated&&t.on("zoomanim",this._zoomAnimation,this),L.Browser.touch&&!this.options.noHide&&L.DomEvent.on(this._container,"click",this.close,this)},onRemove:function(t){this._pane.removeChild(this._container),t.off({zoomanim:this._zoomAnimation,moveend:this._onMoveEnd,viewreset:this._onViewReset},this),this._removeInteraction(),this._map=null},setLatLng:function(t){return this._latlng=L.latLng(t),this._map&&this._updatePosition(),this},setContent:function(t){return this._previousContent=this._content,this._content=t,this._updateContent(),this},close:function(){var t=this._map;t&&(L.Browser.touch&&!this.options.noHide&&L.DomEvent.off(this._container,"click",this.close),t.removeLayer(this))},updateZIndex:function(t){this._zIndex=t,this._container&&this._zIndex&&(this._container.style.zIndex=t)},setOpacity:function(t){this.options.opacity=t,this._container&&L.DomUtil.setOpacity(this._container,t)},_initLayout:function(){this._container=L.DomUtil.create("div","leaflet-label "+this.options.className+" leaflet-zoom-animated"),this.updateZIndex(this._zIndex)},_update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updatePosition(),this._container.style.visibility="")},_updateContent:function(){this._content&&this._map&&this._prevContent!==this._content&&"string"==typeof this._content&&(this._container.innerHTML=this._content,this._prevContent=this._content,this._labelWidth=this._container.offsetWidth)},_updatePosition:function(){var t=this._map.latLngToLayerPoint(this._latlng);this._setPosition(t)},_setPosition:function(t){var e=this._map,i=this._container,n=e.latLngToContainerPoint(e.getCenter()),o=e.layerPointToContainerPoint(t),s=this.options.direction,a=this._labelWidth,l=L.point(this.options.offset);"right"===s||"auto"===s&&o.x<n.x?(L.DomUtil.addClass(i,"leaflet-label-right"),L.DomUtil.removeClass(i,"leaflet-label-left"),t=t.add(l)):(L.DomUtil.addClass(i,"leaflet-label-left"),L.DomUtil.removeClass(i,"leaflet-label-right"),t=t.add(L.point(-l.x-a,l.y))),L.DomUtil.setPosition(i,t)},_zoomAnimation:function(t){var e=this._map._latLngToNewLayerPoint(this._latlng,t.zoom,t.center).round();this._setPosition(e)},_onMoveEnd:function(){this._animated&&"auto"!==this.options.direction||this._updatePosition()},_onViewReset:function(t){t&&t.hard&&this._update()},_initInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.addClass(t,"leaflet-clickable"),L.DomEvent.on(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.on(t,e[i],this._fireMouseEvent,this)}},_removeInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.removeClass(t,"leaflet-clickable"),L.DomEvent.off(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.off(t,e[i],this._fireMouseEvent,this)}},_onMouseClick:function(t){this.hasEventListeners(t.type)&&L.DomEvent.stopPropagation(t),this.fire(t.type,{originalEvent:t})},_fireMouseEvent:function(t){this.fire(t.type,{originalEvent:t}),"contextmenu"===t.type&&this.hasEventListeners(t.type)&&L.DomEvent.preventDefault(t),"mousedown"!==t.type?L.DomEvent.stopPropagation(t):L.DomEvent.preventDefault(t)}}),L.BaseMarkerMethods={showLabel:function(){return this.label&&this._map&&(this.label.setLatLng(this._latlng),this._map.showLabel(this.label)),this},hideLabel:function(){return this.label&&this.label.close(),this},setLabelNoHide:function(t){this._labelNoHide!==t&&(this._labelNoHide=t,t?(this._removeLabelRevealHandlers(),this.showLabel()):(this._addLabelRevealHandlers(),this.hideLabel()))},bindLabel:function(t,e){var i=this.options.icon?this.options.icon.options.labelAnchor:this.options.labelAnchor,n=L.point(i)||L.point(0,0);return n=n.add(L.Label.prototype.options.offset),e&&e.offset&&(n=n.add(e.offset)),e=L.Util.extend({offset:n},e),this._labelNoHide=e.noHide,this.label||(this._labelNoHide||this._addLabelRevealHandlers(),this.on("remove",this.hideLabel,this).on("move",this._moveLabel,this).on("add",this._onMarkerAdd,this),this._hasLabelHandlers=!0),this.label=new L.Label(e,this).setContent(t),this},unbindLabel:function(){return this.label&&(this.hideLabel(),this.label=null,this._hasLabelHandlers&&(this._labelNoHide||this._removeLabelRevealHandlers(),this.off("remove",this.hideLabel,this).off("move",this._moveLabel,this).off("add",this._onMarkerAdd,this)),this._hasLabelHandlers=!1),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},getLabel:function(){return this.label},_onMarkerAdd:function(){this._labelNoHide&&this.showLabel()},_addLabelRevealHandlers:function(){this.on("mouseover",this.showLabel,this).on("mouseout",this.hideLabel,this),L.Browser.touch&&this.on("click",this.showLabel,this)},_removeLabelRevealHandlers:function(){this.off("mouseover",this.showLabel,this).off("mouseout",this.hideLabel,this),L.Browser.touch&&this.off("click",this.showLabel,this)},_moveLabel:function(t){this.label.setLatLng(t.latlng)}},L.Icon.Default.mergeOptions({labelAnchor:new L.Point(9,-20)}),L.Marker.mergeOptions({icon:new L.Icon.Default}),L.Marker.include(L.BaseMarkerMethods),L.Marker.include({_originalUpdateZIndex:L.Marker.prototype._updateZIndex,_updateZIndex:function(t){var e=this._zIndex+t;this._originalUpdateZIndex(t),this.label&&this.label.updateZIndex(e)},_originalSetOpacity:L.Marker.prototype.setOpacity,setOpacity:function(t,e){this.options.labelHasSemiTransparency=e,this._originalSetOpacity(t)},_originalUpdateOpacity:L.Marker.prototype._updateOpacity,_updateOpacity:function(){var t=0===this.options.opacity?0:1;this._originalUpdateOpacity(),this.label&&this.label.setOpacity(this.options.labelHasSemiTransparency?this.options.opacity:t)},_originalSetLatLng:L.Marker.prototype.setLatLng,setLatLng:function(t){return this.label&&!this._labelNoHide&&this.hideLabel(),this._originalSetLatLng(t)}}),L.CircleMarker.mergeOptions({labelAnchor:new L.Point(0,0)}),L.CircleMarker.include(L.BaseMarkerMethods),L.Path.include({bindLabel:function(t,e){return this.label&&this.label.options===e||(this.label=new L.Label(e,this)),this.label.setContent(t),this._showLabelAdded||(this.on("mouseover",this._showLabel,this).on("mousemove",this._moveLabel,this).on("mouseout remove",this._hideLabel,this),L.Browser.touch&&this.on("click",this._showLabel,this),this._showLabelAdded=!0),this},unbindLabel:function(){return this.label&&(this._hideLabel(),this.label=null,this._showLabelAdded=!1,this.off("mouseover",this._showLabel,this).off("mousemove",this._moveLabel,this).off("mouseout remove",this._hideLabel,this)),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},_showLabel:function(t){this.label.setLatLng(t.latlng),this._map.showLabel(this.label)},_moveLabel:function(t){this.label.setLatLng(t.latlng)},_hideLabel:function(){this.label.close()}}),L.Map.include({showLabel:function(t){return this.addLayer(t)}}),L.FeatureGroup.include({clearLayers:function(){return this.unbindLabel(),this.eachLayer(this.removeLayer,this),this},bindLabel:function(t,e){return this.invoke("bindLabel",t,e)},unbindLabel:function(){return this.invoke("unbindLabel")},updateLabelContent:function(t){this.invoke("updateLabelContent",t)}})})(this,document);
 /*! esri-leaflet - v1.0.0-rc.5 - 2015-01-03
 *   Copyright (c) 2015 Environmental Systems Research Institute, Inc.
 *   Apache License*/
@@ -32925,6 +32882,141 @@ L.PolylineUtil = {
     };
 })(window);
 
+/*
+  Leaflet.AwesomeMarkers, a plugin that adds colorful iconic markers for Leaflet, based on the Font Awesome icons
+  (c) 2012-2013, Lennard Voogdt
+
+  http://leafletjs.com
+  https://github.com/lvoogdt
+*/
+
+/*global L*/
+
+(function (window, document, undefined) {
+    "use strict";
+    /*
+     * Leaflet.AwesomeMarkers assumes that you have already included the Leaflet library.
+     */
+
+    L.AwesomeMarkers = {};
+
+    L.AwesomeMarkers.version = '2.0.1';
+
+    L.AwesomeMarkers.Icon = L.Icon.extend({
+        options: {
+            iconSize: [35, 45],
+            iconAnchor:   [17, 42],
+            popupAnchor: [1, -32],
+            shadowAnchor: [10, 12],
+            shadowSize: [36, 16],
+            className: 'awesome-marker',
+            prefix: 'glyphicon',
+            spinClass: 'fa-spin',
+            extraClasses: '',
+            icon: 'home',
+            markerColor: 'blue',
+            iconColor: 'white'
+        },
+
+        initialize: function (options) {
+            options = L.Util.setOptions(this, options);
+        },
+
+        createIcon: function () {
+            var div = document.createElement('div'),
+                options = this.options;
+
+            if (options.icon) {
+                div.innerHTML = this._createInner();
+            }
+
+            if (options.bgPos) {
+                div.style.backgroundPosition =
+                    (-options.bgPos.x) + 'px ' + (-options.bgPos.y) + 'px';
+            }
+
+            this._setIconStyles(div, 'icon-' + options.markerColor);
+            return div;
+        },
+
+        _createInner: function() {
+            var iconClass, iconSpinClass = "", iconColorClass = "", iconColorStyle = "", options = this.options;
+
+            if(options.icon.slice(0,options.prefix.length+1) === options.prefix + "-") {
+                iconClass = options.icon;
+            } else {
+                iconClass = options.prefix + "-" + options.icon;
+            }
+
+            if(options.spin && typeof options.spinClass === "string") {
+                iconSpinClass = options.spinClass;
+            }
+
+            if(options.iconColor) {
+                if(options.iconColor === 'white' || options.iconColor === 'black') {
+                    iconColorClass = "icon-" + options.iconColor;
+                } else {
+                    iconColorStyle = "style='color: " + options.iconColor + "' ";
+                }
+            }
+
+            return "<i " + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + iconClass + " " + iconSpinClass + " " + iconColorClass + "'></i>";
+        },
+
+        _setIconStyles: function (img, name) {
+            var options = this.options,
+                size = L.point(options[name === 'shadow' ? 'shadowSize' : 'iconSize']),
+                anchor;
+
+            if (name === 'shadow') {
+                anchor = L.point(options.shadowAnchor || options.iconAnchor);
+            } else {
+                anchor = L.point(options.iconAnchor);
+            }
+
+            if (!anchor && size) {
+                anchor = size.divideBy(2, true);
+            }
+
+            img.className = 'awesome-marker-' + name + ' ' + options.className;
+
+            if (anchor) {
+                img.style.marginLeft = (-anchor.x) + 'px';
+                img.style.marginTop  = (-anchor.y) + 'px';
+            }
+
+            if (size) {
+                img.style.width  = size.x + 'px';
+                img.style.height = size.y + 'px';
+            }
+        },
+
+        createShadow: function () {
+            var div = document.createElement('div');
+
+            this._setIconStyles(div, 'shadow');
+            return div;
+      }
+    });
+        
+    L.AwesomeMarkers.icon = function (options) {
+        return new L.AwesomeMarkers.Icon(options);
+    };
+
+}(this, document));
+
+
+
+
+/*
+	Leaflet.label, a plugin that adds labels to markers and vectors for Leaflet powered maps.
+	(c) 2012-2013, Jacob Toye, Smartrak
+
+	https://github.com/Leaflet/Leaflet.label
+	http://leafletjs.com
+	https://github.com/jacobtoye
+*/
+(function(){L.labelVersion="0.2.1",L.Label=L.Class.extend({includes:L.Mixin.Events,options:{className:"",clickable:!1,direction:"right",noHide:!1,offset:[12,-15],opacity:1,zoomAnimation:!0},initialize:function(t,e){L.setOptions(this,t),this._source=e,this._animated=L.Browser.any3d&&this.options.zoomAnimation,this._isOpen=!1},onAdd:function(t){this._map=t,this._pane=this._source instanceof L.Marker?t._panes.markerPane:t._panes.popupPane,this._container||this._initLayout(),this._pane.appendChild(this._container),this._initInteraction(),this._update(),this.setOpacity(this.options.opacity),t.on("moveend",this._onMoveEnd,this).on("viewreset",this._onViewReset,this),this._animated&&t.on("zoomanim",this._zoomAnimation,this),L.Browser.touch&&!this.options.noHide&&L.DomEvent.on(this._container,"click",this.close,this)},onRemove:function(t){this._pane.removeChild(this._container),t.off({zoomanim:this._zoomAnimation,moveend:this._onMoveEnd,viewreset:this._onViewReset},this),this._removeInteraction(),this._map=null},setLatLng:function(t){return this._latlng=L.latLng(t),this._map&&this._updatePosition(),this},setContent:function(t){return this._previousContent=this._content,this._content=t,this._updateContent(),this},close:function(){var t=this._map;t&&(L.Browser.touch&&!this.options.noHide&&L.DomEvent.off(this._container,"click",this.close),t.removeLayer(this))},updateZIndex:function(t){this._zIndex=t,this._container&&this._zIndex&&(this._container.style.zIndex=t)},setOpacity:function(t){this.options.opacity=t,this._container&&L.DomUtil.setOpacity(this._container,t)},_initLayout:function(){this._container=L.DomUtil.create("div","leaflet-label "+this.options.className+" leaflet-zoom-animated"),this.updateZIndex(this._zIndex)},_update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updatePosition(),this._container.style.visibility="")},_updateContent:function(){this._content&&this._map&&this._prevContent!==this._content&&"string"==typeof this._content&&(this._container.innerHTML=this._content,this._prevContent=this._content,this._labelWidth=this._container.offsetWidth)},_updatePosition:function(){var t=this._map.latLngToLayerPoint(this._latlng);this._setPosition(t)},_setPosition:function(t){var e=this._map,i=this._container,n=e.latLngToContainerPoint(e.getCenter()),o=e.layerPointToContainerPoint(t),s=this.options.direction,a=this._labelWidth,l=L.point(this.options.offset);"right"===s||"auto"===s&&o.x<n.x?(L.DomUtil.addClass(i,"leaflet-label-right"),L.DomUtil.removeClass(i,"leaflet-label-left"),t=t.add(l)):(L.DomUtil.addClass(i,"leaflet-label-left"),L.DomUtil.removeClass(i,"leaflet-label-right"),t=t.add(L.point(-l.x-a,l.y))),L.DomUtil.setPosition(i,t)},_zoomAnimation:function(t){var e=this._map._latLngToNewLayerPoint(this._latlng,t.zoom,t.center).round();this._setPosition(e)},_onMoveEnd:function(){this._animated&&"auto"!==this.options.direction||this._updatePosition()},_onViewReset:function(t){t&&t.hard&&this._update()},_initInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.addClass(t,"leaflet-clickable"),L.DomEvent.on(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.on(t,e[i],this._fireMouseEvent,this)}},_removeInteraction:function(){if(this.options.clickable){var t=this._container,e=["dblclick","mousedown","mouseover","mouseout","contextmenu"];L.DomUtil.removeClass(t,"leaflet-clickable"),L.DomEvent.off(t,"click",this._onMouseClick,this);for(var i=0;e.length>i;i++)L.DomEvent.off(t,e[i],this._fireMouseEvent,this)}},_onMouseClick:function(t){this.hasEventListeners(t.type)&&L.DomEvent.stopPropagation(t),this.fire(t.type,{originalEvent:t})},_fireMouseEvent:function(t){this.fire(t.type,{originalEvent:t}),"contextmenu"===t.type&&this.hasEventListeners(t.type)&&L.DomEvent.preventDefault(t),"mousedown"!==t.type?L.DomEvent.stopPropagation(t):L.DomEvent.preventDefault(t)}}),L.BaseMarkerMethods={showLabel:function(){return this.label&&this._map&&(this.label.setLatLng(this._latlng),this._map.showLabel(this.label)),this},hideLabel:function(){return this.label&&this.label.close(),this},setLabelNoHide:function(t){this._labelNoHide!==t&&(this._labelNoHide=t,t?(this._removeLabelRevealHandlers(),this.showLabel()):(this._addLabelRevealHandlers(),this.hideLabel()))},bindLabel:function(t,e){var i=this.options.icon?this.options.icon.options.labelAnchor:this.options.labelAnchor,n=L.point(i)||L.point(0,0);return n=n.add(L.Label.prototype.options.offset),e&&e.offset&&(n=n.add(e.offset)),e=L.Util.extend({offset:n},e),this._labelNoHide=e.noHide,this.label||(this._labelNoHide||this._addLabelRevealHandlers(),this.on("remove",this.hideLabel,this).on("move",this._moveLabel,this).on("add",this._onMarkerAdd,this),this._hasLabelHandlers=!0),this.label=new L.Label(e,this).setContent(t),this},unbindLabel:function(){return this.label&&(this.hideLabel(),this.label=null,this._hasLabelHandlers&&(this._labelNoHide||this._removeLabelRevealHandlers(),this.off("remove",this.hideLabel,this).off("move",this._moveLabel,this).off("add",this._onMarkerAdd,this)),this._hasLabelHandlers=!1),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},getLabel:function(){return this.label},_onMarkerAdd:function(){this._labelNoHide&&this.showLabel()},_addLabelRevealHandlers:function(){this.on("mouseover",this.showLabel,this).on("mouseout",this.hideLabel,this),L.Browser.touch&&this.on("click",this.showLabel,this)},_removeLabelRevealHandlers:function(){this.off("mouseover",this.showLabel,this).off("mouseout",this.hideLabel,this),L.Browser.touch&&this.off("click",this.showLabel,this)},_moveLabel:function(t){this.label.setLatLng(t.latlng)}},L.Icon.Default.mergeOptions({labelAnchor:new L.Point(9,-20)}),L.Marker.mergeOptions({icon:new L.Icon.Default}),L.Marker.include(L.BaseMarkerMethods),L.Marker.include({_originalUpdateZIndex:L.Marker.prototype._updateZIndex,_updateZIndex:function(t){var e=this._zIndex+t;this._originalUpdateZIndex(t),this.label&&this.label.updateZIndex(e)},_originalSetOpacity:L.Marker.prototype.setOpacity,setOpacity:function(t,e){this.options.labelHasSemiTransparency=e,this._originalSetOpacity(t)},_originalUpdateOpacity:L.Marker.prototype._updateOpacity,_updateOpacity:function(){var t=0===this.options.opacity?0:1;this._originalUpdateOpacity(),this.label&&this.label.setOpacity(this.options.labelHasSemiTransparency?this.options.opacity:t)},_originalSetLatLng:L.Marker.prototype.setLatLng,setLatLng:function(t){return this.label&&!this._labelNoHide&&this.hideLabel(),this._originalSetLatLng(t)}}),L.CircleMarker.mergeOptions({labelAnchor:new L.Point(0,0)}),L.CircleMarker.include(L.BaseMarkerMethods),L.Path.include({bindLabel:function(t,e){return this.label&&this.label.options===e||(this.label=new L.Label(e,this)),this.label.setContent(t),this._showLabelAdded||(this.on("mouseover",this._showLabel,this).on("mousemove",this._moveLabel,this).on("mouseout remove",this._hideLabel,this),L.Browser.touch&&this.on("click",this._showLabel,this),this._showLabelAdded=!0),this},unbindLabel:function(){return this.label&&(this._hideLabel(),this.label=null,this._showLabelAdded=!1,this.off("mouseover",this._showLabel,this).off("mousemove",this._moveLabel,this).off("mouseout remove",this._hideLabel,this)),this},updateLabelContent:function(t){this.label&&this.label.setContent(t)},_showLabel:function(t){this.label.setLatLng(t.latlng),this._map.showLabel(this.label)},_moveLabel:function(t){this.label.setLatLng(t.latlng)},_hideLabel:function(){this.label.close()}}),L.Map.include({showLabel:function(t){return this.addLayer(t)}}),L.FeatureGroup.include({clearLayers:function(){return this.unbindLabel(),this.eachLayer(this.removeLayer,this),this},bindLabel:function(t,e){return this.invoke("bindLabel",t,e)},unbindLabel:function(){return this.invoke("unbindLabel")},updateLabelContent:function(t){this.invoke("updateLabelContent",t)}})})(this,document);
 L.Path.include(
     {
         toGML: function(){
@@ -41338,129 +41430,5 @@ var txtNode=this.createTextNode(parts.join(" "));coordinatesNode.appendChild(txt
 		window.screenfull = screenfull;
 	}
 })();
-
-L.BingLayer = L.TileLayer.extend({
-	options: {
-		subdomains: [0, 1, 2, 3],
-		type: 'Aerial',
-		attribution: 'Bing',
-		culture: ''
-	},
-
-	initialize: function(key, options) {
-		L.Util.setOptions(this, options);
-
-		this._key = key;
-		this._url = null;
-		this.meta = {};
-		this.loadMetadata();
-	},
-
-	tile2quad: function(x, y, z) {
-		var quad = '';
-		for (var i = z; i > 0; i--) {
-			var digit = 0;
-			var mask = 1 << (i - 1);
-			if ((x & mask) !== 0) digit += 1;
-			if ((y & mask) !== 0) digit += 2;
-			quad = quad + digit;
-		}
-		return quad;
-	},
-
-	getTileUrl: function(p, z) {
-		var zoom = this._getZoomForUrl();
-		var subdomains = this.options.subdomains,
-			s = this.options.subdomains[Math.abs((p.x + p.y) % subdomains.length)];
-		return this._url.replace('{subdomain}', s)
-				.replace('{quadkey}', this.tile2quad(p.x, p.y, zoom))
-				.replace('{culture}', this.options.culture);
-	},
-
-	loadMetadata: function() {
-		var _this = this;
-		var cbid = '_bing_metadata_' + L.Util.stamp(this);
-		window[cbid] = function (meta) {
-			_this.meta = meta;
-			window[cbid] = undefined;
-			var e = document.getElementById(cbid);
-			e.parentNode.removeChild(e);
-			if (meta.errorDetails) {
-				return;
-			}
-			_this.initMetadata();
-		};
-		var url = document.location.protocol + '//dev.virtualearth.net/REST/v1/Imagery/Metadata/' + this.options.type + '?include=ImageryProviders&jsonp=' + cbid +
-		          '&key=' + this._key + '&UriScheme=' + document.location.protocol.slice(0, -1);
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = url;
-		script.id = cbid;
-		document.getElementsByTagName('head')[0].appendChild(script);
-	},
-
-	initMetadata: function() {
-		var r = this.meta.resourceSets[0].resources[0];
-		this.options.subdomains = r.imageUrlSubdomains;
-		this._url = r.imageUrl;
-		this._providers = [];
-		if (r.imageryProviders) {
-			for (var i = 0; i < r.imageryProviders.length; i++) {
-				var p = r.imageryProviders[i];
-				for (var j = 0; j < p.coverageAreas.length; j++) {
-					var c = p.coverageAreas[j];
-					var coverage = {zoomMin: c.zoomMin, zoomMax: c.zoomMax, active: false};
-					var bounds = new L.LatLngBounds(
-							new L.LatLng(c.bbox[0]+0.01, c.bbox[1]+0.01),
-							new L.LatLng(c.bbox[2]-0.01, c.bbox[3]-0.01)
-					);
-					coverage.bounds = bounds;
-					coverage.attrib = p.attribution;
-					this._providers.push(coverage);
-				}
-			}
-		}
-		this._update();
-	},
-
-	_update: function() {
-		if (this._url === null || !this._map) return;
-		this._update_attribution();
-		L.TileLayer.prototype._update.apply(this, []);
-	},
-
-	_update_attribution: function() {
-		var bounds = this._map.getBounds();
-		var zoom = this._map.getZoom();
-		for (var i = 0; i < this._providers.length; i++) {
-			var p = this._providers[i];
-			if ((zoom <= p.zoomMax && zoom >= p.zoomMin) &&
-					bounds.intersects(p.bounds)) {
-				if (!p.active && this._map.attributionControl)
-					this._map.attributionControl.addAttribution(p.attrib);
-				p.active = true;
-			} else {
-				if (p.active && this._map.attributionControl)
-					this._map.attributionControl.removeAttribution(p.attrib);
-				p.active = false;
-			}
-		}
-	},
-
-	onRemove: function(map) {
-		for (var i = 0; i < this._providers.length; i++) {
-			var p = this._providers[i];
-			if (p.active && this._map.attributionControl) {
-				this._map.attributionControl.removeAttribution(p.attrib);
-				p.active = false;
-			}
-		}
-        	L.TileLayer.prototype.onRemove.apply(this, [map]);
-	}
-});
-
-L.bingLayer = function (key, options) {
-    return new L.BingLayer(key, options);
-};
 
 L.Icon.Default.imagePath = "lib/leaflet/dist/images";
