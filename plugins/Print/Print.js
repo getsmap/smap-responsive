@@ -241,7 +241,6 @@
 		},
 
 		print: function(options) {
-			utils.log('print');
 			if (!this.printProvider._capabilities) {
 				console.log("Print capabilities could not be loaded. Cannot print.");
 				return false;
@@ -275,8 +274,6 @@
 				var conditionsLink = self._modal.find('#conditionsLink span');
 				conditionsLink.on('click touchstart', function() {
 					self.conditionsText.slideToggle(250);
-
-					utils.log('link');
 				})
 				
 				self._modal.addClass("sprint-modal");
