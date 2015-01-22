@@ -1,5 +1,5 @@
 #malmo-masthead {
-  z-index: 2000;
+  z-index: 1999;
 }
 #malmo-masthead .dropdown-menu {
   overflow-y: auto !important;

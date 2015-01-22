@@ -127,7 +127,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 			for (var i=0,len=ols.length; i<len; i++) {
 				t = ols[i];
 				t.options.isBaseLayer = false;
-				this._addRow(t);
+				if (t.options.showInLayerSwitcher !== false) {
+					this._addRow(t);
+				}
 			}
 		}
 		else {
@@ -166,7 +168,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			}*/
 		}
 		var b = utils.getBrowser();
-		if (b.ie9 || b.ie10 || b.ie11) {
+		if (b.ie) {
 			lp.css("position", "absolute");
 		}
 		this.hidePanel();

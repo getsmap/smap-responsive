@@ -35,7 +35,7 @@ body {
   right: 100px;
 }
 .modal {
-  z-index: 3000;
+  z-index: 2000;
 }
 .modal-dialog {
   font-size: 1em;

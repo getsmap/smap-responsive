@@ -42,7 +42,7 @@ smap.core.Layer = L.Class.extend({
 				map.addLayer(this._createLayer(tBL));
 			}
 			if (p.OL) {
-				var t, i;
+				var t, i, len;
 				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
 				for (i=0,len=ol.length; i<len; i++) {
 					this._addLayerWithConfig( smap.cmd.getLayerConfig(ol[i]) );
@@ -81,8 +81,9 @@ smap.core.Layer = L.Class.extend({
 		if (!layer) {
 			return false;
 		}
-//		return this._addLayer(layer);
-		this.map.addLayer(layer);
+
+		var cont = t.options.parentLayerId ? this._getLayer(t.options.parentLayerId) || this.map : this.map;
+		cont.addLayer(layer);
 		return layer;
 	},
 	
@@ -198,32 +199,34 @@ smap.core.Layer = L.Class.extend({
 		}
 		
 		var self = this;
-		if (layer._layers) {
-			if (!layer.options.style && layer.options.geomType && layer.options.geomType.search(/POINT/gi) > -1) {
-				// Render as markers if no style (but only for point layers, which must be declared with geomType)
-				layer.options.style = null;
+		if (layer.on && layer.options) {
+			if (layer._layers) {
+				if (!layer.options.style && layer.options.geomType && layer.options.geomType.search(/POINT/gi) > -1) {
+					// Render as markers if no style (but only for point layers, which must be declared with geomType)
+					layer.options.style = null;
+				}
+				else {
+					layer.options.style = layer.options.style || $.extend({}, self.options.defaultStyle);
+				}
+				// Listen to these "home-made" events added to our own L.GeoJSON.WFS layer class.
+				layer.on("loadcancel loaderror", function(e) {
+					smap.cmd.loading(false);
+				});
 			}
 			else {
-				layer.options.style = layer.options.style || $.extend({}, self.options.defaultStyle);
+				layer.on("load", function(e) {
+					smap.cmd.loading(false);
+				});
 			}
-			// Listen to these "home-made" events added to our own L.GeoJSON.WFS layer class.
-			layer.on("loadcancel loaderror", function(e) {
-				smap.cmd.loading(false);
-			});
-		}
-		else {
-			layer.on("load", function(e) {
-				smap.cmd.loading(false);
-			});
-		}
 
-		if (layer.on) {
-			layer.on("load", function(e) {
-				smap.cmd.loading(false);
-			});
-			layer.on("loading", function(e) {
-				smap.cmd.loading(true);
-			});
+			if (layer.on) {
+				layer.on("load", function(e) {
+					smap.cmd.loading(false);
+				});
+				layer.on("loading", function(e) {
+					smap.cmd.loading(true);
+				});
+			}
 		}
 		
 		return layer;
@@ -240,8 +243,9 @@ smap.core.Layer = L.Class.extend({
 		if (!layer) {
 			layer = this._createLayer(t);
 		}
-		if (this.map.hasLayer(layer) === false) {
-			this.map.addLayer(layer);
+		var cont = t.options.parentLayerId ? this._getLayer(t.options.parentLayerId) || this.map : this.map;
+		if (cont.hasLayer(layer) === false) {
+			cont.addLayer(layer);
 		}
 		return layer;
 	},
@@ -252,7 +256,8 @@ smap.core.Layer = L.Class.extend({
 		if (layer.fire) {
 			layer.fire("loadcancel", {layer: this});
 		}
-		this.map.removeLayer(layer);
+		var cont = layer.options.parentLayerId ? this._getLayer(layer.options.parentLayerId) || this.map : this.map;
+		cont.removeLayer(layer);
 	},
 	
 	CLASS_NAME: "smap.core.Layer"
