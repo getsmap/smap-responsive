@@ -28,31 +28,31 @@
 				misc: "Övrigt",
 				legend: "Teckenförklaring",
 				conditionsHeader: "Jag godkänner <span>användarvillkoren</span>",
-				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor.<br>Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning: 040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
+				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor. Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning:<br>040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
 				// , scalebar: "Skalstock"
 			},
 			"en": {
-				caption: "Skriv ut",
-				mTitle: "Skriv ut/Exportera",
+				caption: "Print",
+				mTitle: "Print/Export",
 				header: "Rubrik",
-				tip_header: "Rubrik (valfritt)",
-				descript: "Beskrivning",
-				tip_descript: "Beskrivning (valfritt)",
+				tip_header: "Header (optional)",
+				descript: "Description",
+				tip_descript: "Description (optional)",
 				layout: "Layout",
 				resolution: "Resolution",
 				orientation: "Orientation",
 				portrait: "Portrait",
 				landscape: "landscape",
 				create: "Create image",
-				close: "Stäng",
-				loading: "Laddar…",
+				close: "Close",
+				loading: "Loading…",
 				processingPrint: "Creating image…",
 				northarrow: "North arrow",
 				scale: "Scale",
 				misc: "Miscellaneous",
 				legend: "Legend",
 				conditionsHeader: "I agree to these <span>terms</span>",
-				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor.<br>Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning: 040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
+				conditions:'For excerpts from the map or aerial photo for commercial printing or other types of publication, permission is required from the City Planning Office. For questions about these terms or map products, please contact our sales office: <br> +46 40 34 24 35 or <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.</a>.'
 				// , scalebar: "Scalebar"
 			}
 		},
@@ -261,21 +261,18 @@
 			}
 			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
-
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
-
 				self.conditionsText = self._modal.find('.hiddenText');
-				self.conditionsText.hide();
-
 				var conditionsCheckbox = self._modal.find('[name="conditions"]');
+				var conditionsLink = self._modal.find('#conditionsLink span');
+
+				self.conditionsText.hide();
 				conditionsCheckbox.change( function() {
 					self._setButtonState(conditionsCheckbox.prop('checked'));
 				});
-				var conditionsLink = self._modal.find('#conditionsLink span');
 				conditionsLink.on('click touchstart', function() {
 					self.conditionsText.slideToggle(250);
-				})
-				
+				});
 				self._modal.addClass("sprint-modal");
 				self._modal.find("form").submit(function() {
 					var p = utils.paramsStringToObject( $(this).serialize(), false );
