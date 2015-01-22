@@ -43,7 +43,10 @@ L.Control.GuidePopup = L.Control.extend({
 		// Define proxy functions
 		this.__onPopupClick = this.__onPopupClick || $.proxy(this._onPopupClick, this);
 		
-		this._activate();
+		var self = this;
+		self._activate();
+		// smap.event.on("smap.core.applyparams", function() {
+		// });
 
 		return this._container;
 	},
@@ -90,9 +93,9 @@ L.Control.GuidePopup = L.Control.extend({
 	_onPopupOpen: function(e) {
 		if (e.popup._source && e.popup._source.feature) {
 			var layerId = e.popup._source.feature.layerId;
-			if (layerId !== this.options.layerId) {
-				return;
-			}
+			// if (layerId !== this.options.layerId) {
+			// 	return;
+			// }
 			var props = e.popup._source.feature.properties;
 			e.popup.options.autoPanPaddingTopLeft = [0, 60]; // Does this work?
 
@@ -121,16 +124,16 @@ L.Control.GuidePopup = L.Control.extend({
 		var icons = {
 				audio: {
 					icon:L.icon({
-					    iconUrl: "img/glyphish-icons/PNG-icons/120-headphones.png",
-					    iconSize:     [22, 21],
-					    iconAnchor:   [11, 10],
-					    popupAnchor:  [0, -8]
+						iconUrl: "img/glyphish-icons/PNG-icons/120-headphones.png",
+						iconSize:	 [22, 21],
+						iconAnchor:   [11, 10],
+						popupAnchor:  [0, -8]
 					})
 				},
 				video: {
 					icon:L.icon({
 						iconUrl: "img/glyphish-icons/PNG-icons/46-movie-2.png",
-						iconSize:     [20, 25],
+						iconSize:	 [20, 25],
 						iconAnchor:   [10, 12],
 						popupAnchor:  [0, -9]
 					})
@@ -138,33 +141,97 @@ L.Control.GuidePopup = L.Control.extend({
 				image: {
 					icon:L.icon({
 						iconUrl: "img/glyphish-icons/PNG-icons/121-landscape.png",
-					    iconSize:     [22, 21],
-					    iconAnchor:   [11, 10],
-					    popupAnchor:  [0, -8]
+						iconSize:	 [22, 21],
+						iconAnchor:   [11, 10],
+						popupAnchor:  [0, -8]
 					})
 				}
 		};
-	
-		var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
-		layerConfig.options.pointToLayer = function(f, latLng) {
-			var props = f.properties || {};
-			var t = self.options.modalContentOverrides[ props[self.options.attrId] ] || {};
-			var m = t.tabMedia;
-			if (t.iconType && icons[t.iconType]) {
-				return L.marker(latLng, icons[t.iconType]);
-			}
-			else {
-				return L.marker(latLng);
-			}
+
+		var icons = {
+				audio: {
+					icon:L.icon({
+						iconUrl: "img/glyphish-icons/PNG-icons/120-headphones.png",
+						iconSize:	 [22, 21],
+						iconAnchor:   [11, 10],
+						popupAnchor:  [0, -8]
+					})
+				},
+				video: {
+					icon:L.icon({
+						iconUrl: "img/glyphish-icons/PNG-icons/46-movie-2.png",
+						iconSize:	 [20, 25],
+						iconAnchor:   [10, 12],
+						popupAnchor:  [0, -9]
+					})
+				},
+				image: {
+					icon:L.icon({
+						iconUrl: "img/glyphish-icons/PNG-icons/121-landscape.png",
+						iconSize:	 [22, 21],
+						iconAnchor:   [11, 10],
+						popupAnchor:  [0, -8]
+					})
+				}
 		};
-		var layer = smap.cmd.addLayerWithConfig(layerConfig);
 
-
-		this.__onPopupOpen = this.__onPopupOpen || $.proxy(this._onPopupOpen, this);
-		this.__onPopupClose = this.__onPopupClose || $.proxy(this._onPopupClose, this);
+		var o, t;
+		var ols = smap.config.ol || [];
+		for (var i=0,len=ols.length; i<len; i++) {
+			o = ols[i].options;
+			if (o.params && o.params.q) {
+				// Our definition of a guide layer...
+				o.pointToLayer = function(f, latLng) {
+					var props = f.properties || {};
+					var t = self.options.modalContentOverrides[ props[self.options.attrId] ] || {};
+					var m = t.tabMedia;
+					if (t.iconType && icons[t.iconType]) {
+						return L.marker(latLng, icons[t.iconType]);
+					}
+					else {
+						return L.marker(latLng);
+					}
+				};
+			}
+		}
+		// var layerId = layer.options.layerId;
+		// var layerConfig = smap.cmd.getLayerConfig(layerId);
 		
-		this.map.on("popupopen", this.__onPopupOpen);
-		this.map.on("popupclose", this.__onPopupClose);
+		// layerConfig.options.pointToLayer = function(f, latLng) {
+		// 	var props = f.properties || {};
+		// 	var t = self.options.modalContentOverrides[ props[self.options.attrId] ] || {};
+		// 	var m = t.tabMedia;
+		// 	if (t.iconType && icons[t.iconType]) {
+		// 		return L.marker(latLng, icons[t.iconType]);
+		// 	}
+		// 	else {
+		// 		return L.marker(latLng);
+		// 	}
+		// };
+
+
+		// this.map.on("layeradd", this._onLayerAdd, this);
+	
+		// var layerConfig = smap.cmd.getLayerConfig(this.options.layerId);
+		// layerConfig.options.pointToLayer = function(f, latLng) {
+		// 	var props = f.properties || {};
+		// 	var t = self.options.modalContentOverrides[ props[self.options.attrId] ] || {};
+		// 	var m = t.tabMedia;
+		// 	if (t.iconType && icons[t.iconType]) {
+		// 		return L.marker(latLng, icons[t.iconType]);
+		// 	}
+		// 	else {
+		// 		return L.marker(latLng);
+		// 	}
+		// };
+		// var layer = smap.cmd.addLayerWithConfig(layerConfig);
+
+
+		// this.__onPopupOpen = this.__onPopupOpen || $.proxy(this._onPopupOpen, this);
+		// this.__onPopupClose = this.__onPopupClose || $.proxy(this._onPopupClose, this);
+		
+		this.map.on("popupopen", this._onPopupOpen, this);
+		this.map.on("popupclose", this._onPopupClose, this);
 	},
 	
 	_deactivate: function() {
@@ -312,6 +379,7 @@ L.Control.GuidePopup = L.Control.extend({
 			t = arrMedia[i];
 			if (!t.condition || (t.condition && t.condition(props) === true)) {
 				li = $('<a href="#" class="list-group-item"><span class="'+glyphs[t.mediaType]+'"></span>&nbsp;&nbsp;&nbsp;'+ utils.extractToHtml(t.label, props) +'</a>');
+				li.data("mediaType", i);
 				list.append(li);
 			}
 		}
@@ -448,7 +516,7 @@ L.Control.GuidePopup = L.Control.extend({
 		this.dialog.attr("id", "gp-popup");
 		
 		function onLiTap(e) {
-			var index = $(this).index(); // The tag's order corresponds to index in tabMedia array
+			var index = $(this).data("mediaType");
 			var t = data.tabMedia[index];
 			var sources = utils.extractToHtml(t.sources, props);
 			var content = self._makeMediaContent(t.mediaType, sources.split(","));

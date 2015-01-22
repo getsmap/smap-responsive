@@ -1,6 +1,8 @@
 var utils = {
 		rmPx: function(text) {
-			return parseInt( text.replace(/px/gi, "").replace(/em/gi, "").replace(/pt/gi, "") );
+			if (text && text.replace)
+				return parseInt( text.replace(/px/gi, "").replace(/em/gi, "").replace(/pt/gi, "") );
+			return text;
 		},
 		
 		log: function(msg) {
