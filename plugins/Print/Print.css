@@ -9,3 +9,6 @@
 .reducedSize {
   font-size: 0.8em;
 }
+.printmodal .alert {
+  width: 100%;
+}

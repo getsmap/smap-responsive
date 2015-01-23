@@ -27,6 +27,7 @@
 				scale: "Skala",
 				misc: "Övrigt",
 				legend: "Teckenförklaring",
+				couldNotLoadCapabilities: "Kan inte skriva ut/exportera. Fick inget/felaktigt svar från servern.",
 				conditionsHeader: "Jag godkänner <span>användarvillkoren</span>",
 				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor. Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning:<br>040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
 				// , scalebar: "Skalstock"
@@ -51,6 +52,7 @@
 				scale: "Scale",
 				misc: "Miscellaneous",
 				legend: "Legend",
+				couldNotLoadCapabilities: "Cannot print/export. Bad response from the server.",
 				conditionsHeader: "I agree to these <span>terms</span>",
 				conditions:'For excerpts from the map or aerial photo for commercial printing or other types of publication, permission is required from the City Planning Office. For questions about these terms or map products, please contact our sales office: <br> +46 40 34 24 35 or <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.</a>.'
 				// , scalebar: "Scalebar"
@@ -125,6 +127,26 @@
 				b.button("reset");
 				smap.cmd.loading(false);
 			});
+
+			function notifyError() {
+				smap.cmd.notify(self.lang.couldNotLoadCapabilities, "error", {
+					parent: $(".modal-body")
+				});
+				self._modal.off("shown.bs.modal", notifyError);
+			}
+			this.printProvider.on("oncapabilitiesloaderror", function(e) {
+				if (!self._modal) {
+					return;
+				}
+				if (!$(".modal-body").length) {
+					self._modal.on("shown.bs.modal", notifyError);
+				}
+				else {
+					notifyError();
+				}
+
+			});
+			
 
 			// Print options picked from the GUI. Will be sent into print func when printing.
 			this.printOptions = {
@@ -273,7 +295,8 @@
 				conditionsLink.on('click touchstart', function() {
 					self.conditionsText.slideToggle(250);
 				});
-				self._modal.addClass("sprint-modal");
+				self._modal.attr("id", "printmodal");
+				self._modal.addClass("printmodal");
 				self._modal.find("form").submit(function() {
 					var p = utils.paramsStringToObject( $(this).serialize(), false );
 					p = self._preprocessPrintOptions(p);
@@ -286,7 +309,7 @@
 		},
 
 		_setButtonState: function(state) {
-			var btn = $('#sprint-tabs-1').find('button');
+			var btn = $('#printmodal').find('button');
 
 			if (state) {
 				btn.prop('disabled', false);
