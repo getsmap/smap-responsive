@@ -27351,9 +27351,13 @@ L.print.Provider = L.Class.extend({
 			return;
 		}
 
-		var url;
+		var url = this.options.url;
 
-		url = this.options.url + '/info.json';
+		if (url.length && url.charAt(url.length-1) === "/") {
+			url = url.substring(0, url.length-1);
+		}
+
+		url = url + '/info.json';
 		if (this.options.proxy) {
 			url = this.options.proxy + url;
 		}
@@ -27362,7 +27366,11 @@ L.print.Provider = L.Class.extend({
 			type: 'GET',
 			dataType: 'json',
 			url: url,
-			success: L.Util.bind(this.onCapabilitiesLoad, this)
+			context: this,
+			success: L.Util.bind(this.onCapabilitiesLoad, this),
+			error: function(a, b, c) {
+				this.fire("oncapabilitiesloaderror", {text: b});
+			}
 		});
 	},
 
