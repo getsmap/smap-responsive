@@ -172,6 +172,7 @@
   .lswitch-panel {
     position: absolute !important;
     background-color: #38454e;
+    height: 100%;
   }
   .lswitch-catcont a {
     border: none !important;
