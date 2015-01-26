@@ -7,8 +7,11 @@
   cursor: pointer;
 }
 .reducedSize {
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 .printmodal .alert {
   width: 100%;
+}
+a:active {
+  text-decoration: none;
 }

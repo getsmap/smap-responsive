@@ -30,6 +30,7 @@
 				couldNotLoadCapabilities: "Kan inte skriva ut/exportera. Fick inget/felaktigt svar från servern.",
 				conditionsHeader: "Jag godkänner <span>användarvillkoren</span>",
 				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor. Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning:<br>040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
+				conditionsTip: 'För att kunna skriva ut måste du godkänna användarvillkoren.'
 				// , scalebar: "Skalstock"
 			},
 			"en": {
@@ -54,7 +55,8 @@
 				legend: "Legend",
 				couldNotLoadCapabilities: "Cannot print/export. Bad response from the server.",
 				conditionsHeader: "I agree to these <span>terms</span>",
-				conditions:'For excerpts from the map or aerial photo for commercial printing or other types of publication, permission is required from the City Planning Office. For questions about these terms or map products, please contact our sales office: <br> +46 40 34 24 35 or <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.</a>.'
+				conditions:'For excerpts from the map or aerial photo for commercial printing or other types of publication, permission is required from the City Planning Office. For questions about these terms or map products, please contact our sales office: <br> +46 40 34 24 35 or <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo</a>.',
+				conditionsTip: 'För att kunna skriva ut måste du godkänna användarvillkoren.'
 				// , scalebar: "Scalebar"
 			}
 		},
@@ -284,16 +286,28 @@
 			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
-				self.conditionsText = self._modal.find('.hiddenText');
-				var conditionsCheckbox = self._modal.find('[name="conditions"]');
-				var conditionsLink = self._modal.find('#conditionsLink span');
 
-				self.conditionsText.hide();
-				conditionsCheckbox.change( function() {
-					self._setButtonState(conditionsCheckbox.prop('checked'));
+				var conditionsText = self._modal.find('.hiddenText');
+				self.conditionsCheckbox = self._modal.find('[name="conditions"]');
+				var conditionsLink = self._modal.find('#conditionsLink span');
+				self.submitDiv = self._modal.find("#submitDiv");
+
+				conditionsText.hide();
+				self.conditionsCheckbox.change( function() {
+					self._setButtonState(self.conditionsCheckbox.prop('checked'));
 				});
 				conditionsLink.on('click touchstart', function() {
-					self.conditionsText.slideToggle(250);
+					conditionsText.slideToggle(250);
+				});
+				self.submitDiv.on('click touchstart', function() {
+					if (!self.conditionsCheckbox.prop('checked')) {
+						self.conditionsCheckbox = $('#printmodal').find('[name="conditions"]');
+						self.conditionsCheckbox.popover({content: self.lang.conditionsTip, trigger:('focus'), placement: 'bottom', animation: 'false' });
+						self.conditionsCheckbox.popover('show').focus();
+					}
+				});
+				self.conditionsCheckbox.on('click touchstart', function() {
+					self.conditionsCheckbox.popover('destroy').blur();
 				});
 				self._modal.attr("id", "printmodal");
 				self._modal.addClass("printmodal");
@@ -309,14 +323,8 @@
 		},
 
 		_setButtonState: function(state) {
-			var btn = $('#printmodal').find('button');
-
-			if (state) {
-				btn.prop('disabled', false);
-			}
-			else {
-				btn.prop('disabled', true);
-			}
+		var btn = $('#printmodal').find('button');
+		btn.prop('disabled', (state ? false : true));
 		},
 
 		_loadCapabilities: function() {
