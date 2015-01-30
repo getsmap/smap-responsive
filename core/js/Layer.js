@@ -239,6 +239,9 @@ smap.core.Layer = L.Class.extend({
 	 */
 	showLayer: function(layerId) {
 		var t = layerId instanceof Object ? layerId : smap.cmd.getLayerConfig(layerId);
+		if (!t) {
+			return;
+		}
 		var layer = this._getLayer(layerId);
 		if (!layer) {
 			layer = this._createLayer(t);

@@ -187,6 +187,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		if ( L.Browser.ielt9 ) {
 			var self = this;
 			this.map.on("click dragstart", function() {
+				alert("click/dragstart");
 				self.hidePanel();
 			});
 		}

@@ -5,6 +5,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		saveMode: "url", // url | wfs  (if "wfs" you also need additional parameters)
 		saveWfsUrl: "",
 		saveWfsTypeName: "",
+		layerName: "measurelayer",
 		stylePolygon: {
 			color: '#0077e2',
 			weight: 3
@@ -190,6 +191,21 @@ L.Control.MeasureDraw = L.Control.extend({
 	},
 
 	_onCreateParams: function(e, p) {
+
+		// First of all - remove the measurelayer from the ol param
+		var ol = p.ol;
+		var i = 0,
+			len=ol.length,
+			layerName = this.options.layerName;
+		for (;i<len; i++) {
+			if (ol[i] === layerName) {
+				ol.splice(i, 1);
+				break;
+			}
+		}
+
+		// Next - store the features
+
 		if (this.options.saveMode === "url") {
 
 			// Properties must be set on a feature attribute for geojson to include properties
@@ -661,7 +677,7 @@ L.Control.MeasureDraw = L.Control.extend({
 	_initDraw: function() {
 		this._layer = L.featureGroup();
 		this._layer.options = {
-			layerId: "measurelayer",
+			layerId: this.options.layerName,
 			popup: '${measure_text}${measure_form}',
 			uniqueKey: "id"
 		};

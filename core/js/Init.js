@@ -136,6 +136,10 @@ smap.core.Init = L.Class.extend({
 		this.map = L.map("mapdiv", mapOptions);
 		smap.map = this.map;
 
+		// Add attribution for smap responsive
+		var a = this.map.attributionControl;
+		a.addAttribution('<a href="//github.com/getsmap/smap-responsive" target="_blank">sMap responsive</a>');
+
 		if (mapOptions.disabledRightClick) {
 			this.map.on("contextmenu", function(e) {
 				e.originalEvent.preventDefault();
