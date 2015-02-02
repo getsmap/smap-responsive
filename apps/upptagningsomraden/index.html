@@ -37,55 +37,65 @@
 	<body class="mf-v4 test">
 		<article>
 			<form class="schoolform" action="" method="POST">
-				<label>Ange årskurs</label>
-				<div class="form-group batchselect">
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="F"> F
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="1"> 1
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="2"> 2
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="3"> 3
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="4"> 4
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="5"> 5
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="6"> 6
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="7"> 7
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="8"> 8
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="batch" value="9"> 9
-					</label>
+				<div class="form-group form-group-termselect">
+					<label>Ange läsår</label>
+					<div class="form-group termselect"></div>
 				</div>
 				<br>
-				<label>Ange läsår</label>
-				<div class="form-group termselect"></div>
-
-				<label>Ange barnets folkbokföringsadress</label>
-				<div class="form-group addresssearch">
-					<input autocorrect="off" autocomplete="off" data-provide="typeahead" name="q" class="form-control typeahead" placeholder="Skriv och välj adress" type="text" autocapitalize="off" />
+				<label>Ange årskurs</label>
+				<div class="form-group batchselect">
+					<div>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="0"> F
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="1"> 1
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="2"> 2
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="3"> 3
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="4"> 4
+						</label>
+					</div>
+					<div>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="5"> 5
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="6"> 6
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="7"> 7
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="8"> 8
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="batch" value="9"> 9
+						</label>
+					</div>
 				</div>
-				<div class="controls">
-					<button type="submit" class="btn btn-primary disabled invisible" data-loading-text="Laddar. Var god vänta…">Visa resultat</button>
-					<label id="result"></label>
+				<br>
+				<br>
+				<div class="form-group">
+					<label>Ange elevens folkbokföringsadress</label>
+					<div class="form-group addresssearch">
+						<input autocorrect="off" autocomplete="off" data-provide="typeahead" name="q" class="form-control typeahead" placeholder="Skriv och välj adress" type="text" autocapitalize="off" />
+					</div>
+					<div class="controls">
+						<button type="submit" class="btn btn-primary disabled invisible" data-loading-text="Laddar. Var god vänta…">Visa resultat</button>
+						<label id="result"></label>
+					</div>
 				</div>
 				<iframe id="map-iframe" frameborder="0" class="hidden"></iframe>
 
 			</form>
 		</article>
+		<script src="lib/es5-shim/es5-shim.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="lib/bootstrap-3/js/bootstrap.min.js"></script>
 		<script src="lib/bootstrap3-typeahead.min.js"></script>

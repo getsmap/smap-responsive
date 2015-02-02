@@ -19,7 +19,11 @@ var app = {
 				}
 				self._calcResult(formData).done(function(schoolName) {
 					// e.text;
-					$("#result").html("Om man är folkbokförd på <strong>"+formData.q+"</strong> ska man gå på <strong>"+schoolName+"</strong> i <strong>årskurs "+formData.batch+"</strong>");
+					var visibleBatch = "årskurs "+formData.batch;
+					if (formData.batch === "0") {
+						visibleBatch = "förskoleklass";
+					}
+					$("#result").html("Elev som är folkbokförd på <strong>"+formData.q+"</strong> har <strong>"+schoolName+"</strong> som hemskola i <strong>"+visibleBatch+"</strong>.");
 					// TODO: Call script to fetch result. On fetch done – show a button
 					// which toggles the map
 				});
@@ -45,8 +49,10 @@ var app = {
 		_projectCoords: function(latLng) {
 			
 			// Project coords to web mercator
-			var projArr = window.proj4("EPSG:3008", "EPSG:4326", [latLng.lng, latLng.lat]);
-			this.latLng = L.latLng(projArr[1], projArr[0]);
+			if (window.proj4) {
+				var projArr = window.proj4("EPSG:3008", "EPSG:4326", [latLng.lng, latLng.lat]);
+				this.latLng = L.latLng(projArr[1], projArr[0]);
+			}
 		},
 
 		_calcResult: function(formData) {
@@ -60,7 +66,7 @@ var app = {
 			}
 
 			// Get address's lat/lng
-			var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx?q="+formData.q;
+			var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt_v.ashx?q="+encodeURIComponent(formData.q);
 			$.ajax({
 				url: proxy ? proxy + encodeURIComponent(url).replace(/%20/g, "%2B") : url,
 				type: "GET",
@@ -71,8 +77,11 @@ var app = {
 				dataType: "json"
 			}).done(function(resp) {
 				// Result from "get coordinates script"
+				if ( !(resp && resp.features && resp.features.length && resp.features[0].geometry) ) {
+					return;
+				}
 				var coords = resp.features[0].geometry.coordinates;
-				var url = "http://kartor.malmo.se/api/v1/schoolname/?e="+coords[0]+"&n="+coords[1]+"&arsk="+formData.batch;
+				var url = "http://kartor.malmo.se/api/v1/schoolname/?e="+coords[0]+"&n="+coords[1]+"&arsk="+formData.batch+"&lasar="+formData.term;
 				$.ajax({
 					url: proxy ? proxy + encodeURIComponent(url).replace(/%20/g, "%2B") : url,
 					dataType: "json",
@@ -115,8 +124,8 @@ var app = {
 			for (var i=0,len=years.length; i<len; i++) {
 				y = years[i];
 				tag = $('<label class="radio-inline">\
-						<input type="radio" name="term" value="{yearText}"> {yearText}\
-					</label>'.replace(/\{yearText\}/g, y+"/"+(y+1) ));
+						<input type="radio" name="term" value="{yearValue}"> {yearText}\
+					</label>'.replace(/\{yearText\}/g, y+"/"+(y+1) ).replace(/\{yearValue\}/g, y.toString().replace("20","")+(y+1).toString().replace("20","") ));
 				if (y < yearNow && m >= 6) {
 					tag.addClass("disabled").find("input").prop("disabled", true);
 				}
@@ -221,8 +230,9 @@ var app = {
 			// }
 			
 			var batch = this._formData.batch;
+			var term = this._formData.term;
 			var poi = encodeURIComponent(this._formData.q); //.replace(/%20/g, "%2B");
-			var ols = [batch, "AREA_"+batch].join(",");
+			var ols = [batch+"_"+term, "AREA_"+batch+"_"+term].join(","); //UTBILDNING_UPPTAGNINGSOMR_ARSK_0_1516_P UTBILDNING_SKOLA_ARSK_2_1415_PT
 			var src = "http://kartor.malmo.se/rest/leaf/1.0-dev/?config=http://kartor.malmo.se/test/upptagning/js/config_skolupptag.js&ol="+ols+"&poi="+poi;
 			// window.open(src);
 			$("#map-iframe").attr("src", src);
@@ -241,18 +251,22 @@ var app = {
 				type: "GET",
 				dataType: "json",
 				context: this,
-				success: function(json) {
-					if (json && json.features && json.features.length) {
-						
-						var f = json.features[0];
-						var coords = json.features[0].geometry.coordinates;
+				success: function(resp) {
+					if (resp && resp.features && resp.features.length) {
+						var f = resp.features[0];
+						var coords = resp.features[0].geometry.coordinates;
 						var latLng = L.latLng( coords[1], coords[0] );
 
 						// Project coords to web mercator
-						var projArr = window.proj4("EPSG:3008", "EPSG:4326", [latLng.lng, latLng.lat]);
-						this.latLng = L.latLng(projArr[1], projArr[0]);
+						if (window.proj4) {
+							var projArr = window.proj4("EPSG:3008", "EPSG:4326", [latLng.lng, latLng.lat]);
+							this.latLng = L.latLng(projArr[1], projArr[0]);
+						}
 					}
 				},
+				// error: function(a, text, c) {
+				// 	console.log("Error response from geolocate script: "+text);
+				// },
 				complete: function() {
 					this.loading(false);
 				}
@@ -306,8 +320,11 @@ var app = {
 							success: function(resp) {
 								var arr = resp.split("\n");
 								process(arr);
-							},
-							error: function() {}
+							}
+							// ,
+							// error: function() {
+							// 	console.log("Error response from autocomplete script");
+							// }
 						});
 					},
 					updater: function(val) {

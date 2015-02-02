@@ -3,14 +3,34 @@ body {
 	margin: 0;
 }
 .schoolform {
-	margin-top: 4em;
+	margin-top: 0 em;
 	padding: 0 1em;
 }
+.batchselect div {
+	display: inline;
+	float: left;
+	margin-right: 2em;
+
+}
+
+.form-group-termselect {
+	display: block;
+	margin-top: 0;
+}
+
 .batchselect input[type=radio] {
 	position: relative !important;
 	float: right;
 	top: 1.1em;
 	left: 0.1em;
+}
+.batchselect label:first-child {
+	padding-left: .4em;
+	left: 0;
+}
+.batchselect label:nth-child(8) {
+	padding-left: .3em;
+	left: 0;
 }
 .addresssearch {
 	max-width: 27em;
@@ -34,8 +54,13 @@ body {
 	display: none;
 }
 
-/*@media (max-width: 42em) {
-	article {
-		max-width: 50%;
+
+@media (max-width: 42em) {
+	.batchselect div {
+		display: block;
+		margin-bottom: 1.2em;
 	}
-}*/
+	.form-group-termselect {
+		display: inline-block;
+	}
+}

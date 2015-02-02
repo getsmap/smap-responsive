@@ -15,7 +15,7 @@ var ws = {
 
 var config = {
 
-		params:{
+		params: {
 			center: [13.0, 55.58],
 			zoom: 10
 		},
@@ -31,21 +31,21 @@ var config = {
 		bl: [
 
 		{
-				init: "L.TileLayer.WMS",
-				url: "http://kartor.malmo.se/arcgis/services/malmokarta_3857_wms/MapServer/WMSServer",
-				options: {
-					layerId: "stadskartan",
-					displayName: "Stadskarta",
-					layers: '0',
-					legend: null,
-					minZoom: 10,
-					maxZoom: 21,
-					format: 'image/png',
-					transparent: false,
-					opacity: 1.0,
-					attribution: "© Malmö Stadsbyggnadskontor",
-					zIndex: 50
-				}
+			init: "L.TileLayer.WMS",
+			url: "http://kartor.malmo.se/arcgis/services/malmokarta_3857_wms/MapServer/WMSServer",
+			options: {
+				layerId: "stadskartan",
+				displayName: "Stadskarta",
+				layers: '0',
+				legend: null,
+				minZoom: 10,
+				maxZoom: 21,
+				format: 'image/png',
+				transparent: false,
+				opacity: 1.0,
+				attribution: "© Malmö Stadsbyggnadskontor",
+				zIndex: 50
+			}
 		}
 
 		],
@@ -111,6 +111,7 @@ var config = {
 								"sv": {search: "Sök adress eller plats"}
 							},
 							gui: false,
+							zoom: 15,
 							whitespace: "%20",
 							wsOrgProj: "EPSG:3008",
 							useProxy: false,
@@ -200,7 +201,8 @@ var selectOptions = {
 // -- Add the overlays using a for-loop --
 
 var ol = config.ol,
-	batches = "F,1,2,3,4,5,6,7,8,9".split(","),
+	batches = "0,1,2,3,4,5,6,7,8,9".split(","),
+	terms = ["1415", "1516"], // Remember to change this when adding new layers. TODO automatically create this array based on current date
 	template = {
 		init: "L.NonTiledLayer.WMS",
 		url: "http://kartor.malmo.se/geoserver/wms", //"http://kartor.malmo.se/geoserver/wms",
@@ -208,7 +210,7 @@ var ol = config.ol,
 			displayName: null,
 			layerId: null,
 			category: null,
-			layers: "malmows:UTBILDNING_SKOLA_ARSK_{batch}_PT",
+			layers: "malmows:UTBILDNING_SKOLA_ARSK_{batch}_{term}_PT",
 			selectOptions: selectOptions,
 			selectable: true,
 			popup: '*',
@@ -219,37 +221,49 @@ var ol = config.ol,
 		}
 };
 
-var tPoint, tArea, batch, o;
+var tPoint, tArea, batch, term, o;
 
 for (var i=0,len=batches.length; i<len; i++) {
-	batch = batches[i];
+	for (var j=0,lenj=terms.length; j<lenj; j++) {
 
-	// Upptagningsomraden schools
-	tPoint = $.extend(true, {}, template);
-	o = tPoint.options;
-	o.layers = tPoint.options.layers.replace(/\{batch\}/g, batch);
-	o.layerId = batch;
-	o.category = ["Skolor"],
-	o.displayName = batch;
-	o.selectable = false;
-	o.zIndex = 1100 + i;
-	ol.push(tPoint);
+		term = terms[j];
+		batch = batches[i];
 
-	// Upptagningsomraden area
-	tArea = $.extend(true, {}, template);
-	o = tArea.options;
-	o.layers = "malmows:UTBILDNING_GRUNDSKOLA_UPPTAGNINGSOMR_ARSK_{batch}_P".replace(/\{batch\}/g, batch);
-	o.layerId = "AREA_"+batch;
-	o.category = ["Upptagningsområden"],
-	o.displayName = "AREA_"+batch;
-	o.zIndex = 100 + i;
-	o.popup = '<div>Skola:&nbsp;${skola}</div>\
-				<div>Adress:&nbsp;${adress}</div>\
-				<div>Årskurs:&nbsp;${arskurs}</div>\
-				<div>Stadsområde:&nbsp;${stadsomr}</div>\
-				<div>Kommunal:&nbsp;${kommunal}</div>\
-				<br><a target="_blank" href="${url}">Hemsida</a>',
-	ol.push(tArea);
+		// Upptagningsomraden schools
+		tPoint = $.extend(true, {}, template);
+		o = tPoint.options;
+		o.layers = tPoint.options.layers.replace(/\{batch\}/g, batch).replace(/\{term\}/g, term);
+		o.layerId = batch+"_"+term;
+		o.category = ["Skola"],
+		o.displayName = "Skola";
+		//o.selectable = false;
+		o.popup = '<div>${objektnamn}</div>\
+					<div>Årskurs:&nbsp;${arskurs}</div>\
+					<div>${adress}</div>\
+					<div>${postnr}&nbsp;${ort}</div>\
+					<div>Stadsområde:&nbsp;${stadsomr}</div>\
+					<br><a target="_blank" href="${url}">Läs mer</a>\
+					<br><a target="_blank" href="http://xyz.malmo.se/urbex/index.htm?p=true&xy=${easting};${northing}">Visa snedbild över skolan</a>',
+		o.zIndex = 1100 + i;
+		ol.push(tPoint);
+
+		// Upptagningsomraden area
+		tArea = $.extend(true, {}, template);
+		o = tArea.options; //UTBILDNING_GRUNDSKOLA_UPPTAGNINGSOMR_ARSK_0_1516_P UTBILDNING_SKOLA_ARSK_2_1415_PT
+		o.layers = "malmows:UTBILDNING_UPPTAGNINGSOMR_ARSK_{batch}_{term}_P".replace(/\{batch\}/g, batch).replace(/\{term\}/g, term);
+		o.layerId = "AREA_"+batch+"_"+term;
+		o.category = ["Upptagningsområde"],
+		o.displayName = "Upptagningsområde";
+		o.zIndex = 100 + i;
+		o.popup = '<div>${skola}</div>\
+					<div>Årskurs:&nbsp;${arskurs}</div>\
+					<div>${adress}</div>\
+					<div>${postnr}&nbsp;${ort}</div>\
+					<div>Stadsområde:&nbsp;${stadsomr}</div>\
+					<br><a target="_blank" href="${url}">Läs mer</a>\
+					<br><a target="_blank" href="http://xyz.malmo.se/urbex/index.htm?p=true&xy=${easting};${northing}">Visa snedbild över skolan</a>',
+		ol.push(tArea);
+	}
 }
 
 
