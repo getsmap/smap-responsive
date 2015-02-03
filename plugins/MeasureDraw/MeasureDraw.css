@@ -1,43 +1,24 @@
-.leaflet-control-measuredraw .mf-v4 .dropdown-menu,
-.leaflet-control-measuredraw .mf-v4 overflow hidden,
-.leaflet-control-measuredraw .mf-v4 left auto,
-.leaflet-control-measuredraw .mf-v4 right 0,
-.leaflet-control-measuredraw .mf-v4 min-width 15em,
-.leaflet-control-measuredraw .mf-v4 li {
+.leaflet-control-measuredraw .mf-v4 .dropdown-menu {
+  overflow: hidden;
+  left: auto;
+  right: 0;
+  min-width: 15em;
+}
+.leaflet-control-measuredraw .mf-v4 .dropdown-menu li {
   min-width: 14em;
 }
-.leaflet-control-measuredraw .mf-v4 .dropdown-menu a,
-.leaflet-control-measuredraw .mf-v4 overflow hidden a,
-.leaflet-control-measuredraw .mf-v4 left auto a,
-.leaflet-control-measuredraw .mf-v4 right 0 a,
-.leaflet-control-measuredraw .mf-v4 min-width 15em a,
-.leaflet-control-measuredraw .mf-v4 li a {
+.leaflet-control-measuredraw .mf-v4 .dropdown-menu li a {
   line-height: 2.5 !important;
   cursor: pointer;
 }
-.leaflet-control-measuredraw .mf-v4 .dropdown-menu a span,
-.leaflet-control-measuredraw .mf-v4 overflow hidden a span,
-.leaflet-control-measuredraw .mf-v4 left auto a span,
-.leaflet-control-measuredraw .mf-v4 right 0 a span,
-.leaflet-control-measuredraw .mf-v4 min-width 15em a span,
-.leaflet-control-measuredraw .mf-v4 li a span {
+.leaflet-control-measuredraw .mf-v4 .dropdown-menu li a span {
   display: table-cell;
   vertical-align: middle;
 }
-.leaflet-control-measuredraw .mf-v4 .dropdown-menu a span:first-child,
-.leaflet-control-measuredraw .mf-v4 overflow hidden a span:first-child,
-.leaflet-control-measuredraw .mf-v4 left auto a span:first-child,
-.leaflet-control-measuredraw .mf-v4 right 0 a span:first-child,
-.leaflet-control-measuredraw .mf-v4 min-width 15em a span:first-child,
-.leaflet-control-measuredraw .mf-v4 li a span:first-child {
+.leaflet-control-measuredraw .mf-v4 .dropdown-menu li a span:first-child {
   top: 3px;
 }
-.leaflet-control-measuredraw .mf-v4 .dropdown-menu a .drawicons,
-.leaflet-control-measuredraw .mf-v4 overflow hidden a .drawicons,
-.leaflet-control-measuredraw .mf-v4 left auto a .drawicons,
-.leaflet-control-measuredraw .mf-v4 right 0 a .drawicons,
-.leaflet-control-measuredraw .mf-v4 min-width 15em a .drawicons,
-.leaflet-control-measuredraw .mf-v4 li a .drawicons {
+.leaflet-control-measuredraw .mf-v4 .dropdown-menu li a .drawicons {
   width: 30px;
   height: 20px;
   margin-right: 0.2em;
