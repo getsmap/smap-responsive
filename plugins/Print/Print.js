@@ -30,7 +30,8 @@
 				couldNotLoadCapabilities: "Kan inte skriva ut/exportera. Fick inget/felaktigt svar från servern.",
 				conditionsHeader: "Jag godkänner <span>användarvillkoren</span>",
 				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor. Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning:<br>040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
-				conditionsTip: 'För att kunna skriva ut måste du godkänna användarvillkoren.'
+				conditionsTip: 'För att kunna skriva ut måste du godkänna användarvillkoren.',
+				confirm: 'Kom ihåg mitt val'
 				// , scalebar: "Skalstock"
 			},
 			"en": {
@@ -84,8 +85,6 @@
 			this._createBtn();
 			this._initPrint(); // Load the print capabilities from the mapfish print
 			this._drawModal();
-
-
 
 			return this._container;
 		},
@@ -291,10 +290,24 @@
 				self.conditionsCheckbox = self._modal.find('[name="conditions"]');
 				var conditionsLink = self._modal.find('#conditionsLink span');
 				self.submitDiv = self._modal.find("#submitDiv");
+				var storeCheckbox = self._modal.find('[name="storeAnswer"]');
+				var btn = self._modal.find('button');
 
+				if (localStorage.getItem('smapConditionsAgreed') === 'yes'){
+					self.conditionsCheckbox.prop('checked', true);
+					storeCheckbox.prop({'checked': true, 'disabled': false});
+					btn.prop('disabled', false);
+				}
+				else {
+					self.conditionsCheckbox.prop('checked', false);
+				}
+				storeCheckbox.change(function() {
+					self._storeConditions(storeCheckbox.prop('checked'));
+				});
 				conditionsText.hide();
 				self.conditionsCheckbox.change( function() {
 					self._setButtonState(self.conditionsCheckbox.prop('checked'));
+
 				});
 				conditionsLink.on('click touchstart', function() {
 					conditionsText.slideToggle(250);
@@ -322,9 +335,34 @@
 			});
 		},
 
-		_setButtonState: function(state) {
-		var btn = $('#printmodal').find('button');
-		btn.prop('disabled', (state ? false : true));
+		_setButtonState: function(checkboxState) {
+			var btn = $('#printmodal').find('button');
+			var storeCheckbox = $('#printmodal').find('[name="storeAnswer"]');
+			btn.prop('disabled', (checkboxState ? false : true));
+			storeCheckbox.prop({'disabled': (checkboxState ? false : true)});
+		},
+
+		_storeConditions: function(checkboxState) {
+
+			if (typeof(Storage) !== 'undefined') {
+				var localData = localStorage.getItem('smapConditionsAgreed');
+				
+				if (localData === 'yes' && checkboxState) {
+					return false;
+					utils.log('item already stored, doing nothing.');
+				}
+				else if (localData && !checkboxState){
+					localStorage.removeItem('smapConditionsAgreed');
+					utils.log('removed item');
+				}
+				else if (checkboxState) {
+					localStorage.setItem('smapConditionsAgreed', 'yes');
+					utils.log('set item to yes');
+				}
+			}
+			else {
+				utils.log('No local storage support, unable to set user conditions confirmation.')
+			}
 		},
 
 		_loadCapabilities: function() {
