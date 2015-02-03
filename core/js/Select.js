@@ -54,7 +54,7 @@ smap.core.Select = L.Class.extend({
 		// Fix – anchors cannot be tapped inside a popup – so creating a button instead (also easier to tap on).
 		// (This issue was only found for touch devices.)
 		var $html = $("<div>"+html+"</div>");
-		$html.find(".popup-divider:last").remove();
+		// $html.find(".popup-divider:last").remove();
 		$html.find("a").each(function() {
 			var $this = $(this);
 			var href = $this.attr("href"),
@@ -242,17 +242,17 @@ smap.core.Select = L.Class.extend({
 			}
 
 
-			function drawPopupHtml(popup, props, displayName, classShort) {
-				classShort = classShort || false;
+			function drawPopupHtml(popup, props, displayName) {
+				// classShort = classShort || false;
 
 				var className = "";
-				if (classShort) {
-					className += "leaflet-popup-option leaflet-popup-option-short";
-				}
+				// if (classShort) {
+				// 	className += "leaflet-popup-option leaflet-popup-option-short";
+				// }
 				var html = "";
 				html += '<div class="'+className+'"><h4 class="popup-layertitle">'+displayName+'</h4>';
 				html += utils.extractToHtml(popup, props) + '</div>';
-				html += '<div class="popup-divider"></div>';
+				// html += '<div class="popup-divider"></div>';
 				return html;
 			}
 			
@@ -262,15 +262,15 @@ smap.core.Select = L.Class.extend({
 			if (!isVector) {
 				var html = "", f, props;
 				var popupText;
-				for (var i=0,len=selectedFeatures.length; i<len; i++) {
-					f = selectedFeatures[i];
+				// for (var i=0,len=selectedFeatures.length; i<len; i++) {
+					f = selectedFeatures[0];
 					props = f.properties;
 					popupText = f.options.popup;
 					if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
 						popupText = self._extractAllAttributes(popupText, props);
 					}
-					html = drawPopupHtml(popupText, f.properties, f.options.displayName, true);
-				}
+					html = drawPopupHtml(popupText, f.properties, f.options.displayName); //, true);
+				// }
 				
 				html = self._processHtml(html);
 				map.closePopup();
@@ -323,7 +323,7 @@ smap.core.Select = L.Class.extend({
 				var $html = $("<div />").append(html);
 				if (self._selectedFeaturesWms.length === 1) {
 					addWmsFeature(f);
-					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
+					// $html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
 				}
 				else {
 					if (self.options.manyUseDialog) {
@@ -466,9 +466,23 @@ smap.core.Select = L.Class.extend({
 						// }
 
 						// TODO: Find closest feature to click instead of this unqualified guess
-						var half = parseInt(self._selectedFeaturesWms.length / 2);
-						var sf = self._selectedFeaturesWms[half];
-						addWmsFeature(sf);
+						var fs = self._selectedFeaturesWms || [];
+						var f, closest;
+						for (var i=0,len=fs.length; i<len; i++) {
+							f = fs[i];
+							if (f.geometry && f.geometry.type && f.geometry.type.search(/point/gi) > -1) {
+								// Prefer points because they are otherwise blocked by polygons
+								closest = f;
+								break;
+							}
+						}
+						if (!closest) {
+							var half = parseInt(self._selectedFeaturesWms.length / 2);
+							closest = self._selectedFeaturesWms[half];
+						}
+						addWmsFeature(closest);
+						html = drawPopupHtml(popupText, closest.properties, closest.options.displayName);
+						$html = $("<div />").append(html);
 					}
 				}
 
