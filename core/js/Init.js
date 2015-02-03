@@ -49,7 +49,7 @@ smap.core.Init = L.Class.extend({
 					deferred.done(applyConfig);
 				}
 				else {
-					applyConfig();
+					applyConfig(smap.config);
 				}
 		}).fail(function(a, text, c) {
 			utils.log("Config not loaded because: "+text);
@@ -69,6 +69,9 @@ smap.core.Init = L.Class.extend({
 		// 	L.GeoJSON.Custom.prototype.proxy = proxy;
 		// 	L.Control.SelectWMS.prototype.proxy = proxy;
 		// }
+
+		var coreConfig = theConfig.coreConfig || {};
+		$.extend(smap.core.selectInst.options, coreConfig.select || {});
 		
 		// Extend map options
 		$.extend(this.map.options, theConfig.mapConfig || {});

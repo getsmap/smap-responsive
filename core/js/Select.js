@@ -13,7 +13,6 @@ smap.core.Select = L.Class.extend({
 	initialize: function(map) {
 		this.map = map;
 		this._bindEvents(map);
-		
 		this._wfsLayers = smap.core.layerInst._wfsLayers;
 	},
 	
@@ -327,7 +326,7 @@ smap.core.Select = L.Class.extend({
 					$html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
 				}
 				else {
-					if ( self.options.manyUseDialog) {
+					if (self.options.manyUseDialog) {
 						if (!self._selectManyModal) {
 							var footerContent = $('<button type="button" class="btn btn-default">Stäng</button>');
 							var bodyContent = $('<div class="list-group"></div>');
@@ -445,32 +444,31 @@ smap.core.Select = L.Class.extend({
 						return true;
 					}
 					else {
-						// -- Create the select options inside the popup --
-						function onClick() {
-							var theIndex = $(this).data("index");
-							if (theIndex || theIndex === 0) {
-								var sf = self._selectedFeaturesWms[ theIndex ];
-								addWmsFeature(sf);
-							}
-							$(this).siblings().addClass("leaflet-popup-option-short");
-							$(this).removeClass("leaflet-popup-option-short");
-							return false;
-						}
-						self._onPopupOpen = self._onPopupOpen || function() {
-							$(".leaflet-popup-content-wrapper").addClass("leaflet-popup-content-wrapper-multichoice");
-							$(".leaflet-popup-content .leaflet-popup-option").each(function(i) {
-								var $this = $(this);
-								$this.data("index", i);
-							});
-							$(".leaflet-popup-content .leaflet-popup-option").addClass("leaflet-popup-option-short").on("click", onClick);
-							$(".leaflet-popup-content .leaflet-popup-option:first").click();
-							map.off("popupopen", self._onPopupOpen);
-						}
-						map.on("popupopen", self._onPopupOpen);
-							
-						if (self._selectedFeaturesWms.length > 3) {
-							popup.options.autoPan = false;
-						}
+						// var fs = self._selectedFeaturesWms || [];
+						// var f, closest, d;
+						// var minDist = 999999999;
+						// var latLng = e.feature.latLng;
+						// for (var i=0,len=fs.length; i<len; i++) {
+						// 	f = fs[i];
+						// 	if (f.geometry && f.geometry.type.search("point") > -1) {
+						// 		// Find closest
+						// 		d = latLng.distanceTo( L.latLng(f.geometry.coordinates[1], f.geometry.coordinates[0]) );
+						// 		if (d < minDist) {
+						// 			minDist = d;
+						// 			closest = f;
+						// 		}
+						// 	}
+						// 	else {
+						// 		// Find interects
+						// 		closest = 
+
+						// 	}
+						// }
+
+						// TODO: Find closest feature to click instead of this unqualified guess
+						var half = parseInt(self._selectedFeaturesWms.length / 2);
+						var sf = self._selectedFeaturesWms[half];
+						addWmsFeature(sf);
 					}
 				}
 
