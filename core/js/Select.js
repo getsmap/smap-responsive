@@ -484,9 +484,11 @@ smap.core.Select = L.Class.extend({
 				html = self._processHtml(html);
 				map.closePopup();
 				
-				$html = $("<div />").append(html);
+				// $html = $("<div />").append(html);
+				// popup.setContent($html.html());
 
-				popup.setContent($html.html());
+				popup.setContent(html);
+
 				popup.setLatLng(f.latLng);
 
 				// Wait for possible dblclick to be detected. If that happens,
