@@ -184,13 +184,13 @@ L.Control.LayerSwitcher = L.Control.extend({
 			}
 		}, this));
 		
-		if ( L.Browser.ielt9 ) {
-			var self = this;
-			this.map.on("click dragstart", function() {
-				alert("click/dragstart");
-				self.hidePanel();
-			});
-		}
+		// if ( L.Browser.ielt9 ) {
+		// 	var self = this;
+		// 	this.map.on("click dragstart", function() {
+		// 		alert("click/dragstart");
+		// 		self.hidePanel();
+		// 	});
+		// }
 		
 		var showPanel = $.proxy(this.showPanel, this),
 			hidePanel = $.proxy(this.hidePanel, this);
