@@ -260,22 +260,6 @@ smap.core.Select = L.Class.extend({
 			 * If WMS GetFeatureInfo – create a popup with the response.
 			 */
 			if (!isVector) {
-				var html = "", f, props;
-				var popupText;
-				// for (var i=0,len=selectedFeatures.length; i<len; i++) {
-					f = selectedFeatures[0];
-					props = f.properties;
-					popupText = f.options.popup;
-					if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
-						popupText = self._extractAllAttributes(popupText, props);
-					}
-					html = drawPopupHtml(popupText, f.properties, f.options.displayName); //, true);
-				// }
-				
-				html = self._processHtml(html);
-				map.closePopup();
-
-
 				function removeWmsFeature() {
 					if (self._rasterFeature) {
 						self._rasterFeature.resetStyle();
@@ -320,12 +304,15 @@ smap.core.Select = L.Class.extend({
 					return self._rasterFeature;
 				}
 				var popup = L.popup();
-				var $html = $("<div />").append(html);
+				var f = self._selectedFeaturesWms[0]; // select feature per default (if only one hit)
 				if (self._selectedFeaturesWms.length === 1) {
 					addWmsFeature(f);
 					// $html.find(".leaflet-popup-option").removeClass("leaflet-popup-option leaflet-popup-option-short");
 				}
 				else {
+					// Many hits. These are the options (depending on manyUseDialog setting):
+					// 	1) Create a dialog where user can choose which one to select, or
+					// 	2) Select one of the features (preferably the nearest feature)
 					if (self.options.manyUseDialog) {
 						if (!self._selectManyModal) {
 							var footerContent = $('<button type="button" class="btn btn-default">Stäng</button>');
@@ -465,9 +452,9 @@ smap.core.Select = L.Class.extend({
 						// 	}
 						// }
 
-						// TODO: Find closest feature to click instead of this unqualified guess
+						// TODO: Find closest feature to click instead of this...
 						var fs = self._selectedFeaturesWms || [];
-						var f, closest;
+						var closest;
 						for (var i=0,len=fs.length; i<len; i++) {
 							f = fs[i];
 							if (f.geometry && f.geometry.type && f.geometry.type.search(/point/gi) > -1) {
@@ -481,10 +468,23 @@ smap.core.Select = L.Class.extend({
 							closest = self._selectedFeaturesWms[half];
 						}
 						addWmsFeature(closest);
-						html = drawPopupHtml(popupText, closest.properties, closest.options.displayName);
-						$html = $("<div />").append(html);
+						f = closest;
 					}
 				}
+
+				var html = "";
+				// f = closest || f;
+				var props = f.properties;
+				var popupText = f.options.popup;
+				if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
+					popupText = self._extractAllAttributes(popupText, props);
+				}
+				html = drawPopupHtml(popupText, f.properties, f.options.displayName);
+				
+				html = self._processHtml(html);
+				map.closePopup();
+				
+				$html = $("<div />").append(html);
 
 				popup.setContent($html.html());
 				popup.setLatLng(f.latLng);
