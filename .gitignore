@@ -3,3 +3,5 @@ bower_components/
 *.scssc
 plugins/GuidePopup/qgis_calc_cat.txt
 dist
+
+dist/smap.js
