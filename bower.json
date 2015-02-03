@@ -52,7 +52,8 @@
     "malmo_shared_assets": "malmostad/shared_assets",
     "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
     "lodash": "~2.4.1",
-    "Leaflet.print-smap": "./lib/leaflet.print-smap/"
+    "Leaflet.print-smap": "./lib/leaflet.print-smap/",
+    "json3": "~3.3.2"
   },
   "overrides": {
     "leaflet-polyline-distance": {
