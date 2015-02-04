@@ -56,8 +56,9 @@
 				legend: "Legend",
 				couldNotLoadCapabilities: "Cannot print/export. Bad response from the server.",
 				conditionsHeader: "I agree to these <span>terms</span>",
-				conditions:'For excerpts from the map or aerial photo for commercial printing or other types of publication, permission is required from the City Planning Office. For questions about these terms or map products, please contact our sales office: <br> +46 40 34 24 35 or <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo</a>.',
-				conditionsTip: 'För att kunna skriva ut måste du godkänna användarvillkoren.'
+				conditions:'For excerpts from the map or aerial photo for commercial printing or other types of publication, permission is required from the City Planning Office. For questions about these terms or map products, please contact our sales office: <br> +46 40 34 24 35 or <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
+				conditionsTip: 'To print you must agree to the user terms.',
+				confirm: 'Remember my choice'
 				// , scalebar: "Scalebar"
 			}
 		},
@@ -301,13 +302,13 @@
 				else {
 					self.conditionsCheckbox.prop('checked', false);
 				}
+
 				storeCheckbox.change(function() {
 					self._storeConditions(storeCheckbox.prop('checked'));
 				});
 				conditionsText.hide();
 				self.conditionsCheckbox.change( function() {
 					self._setButtonState(self.conditionsCheckbox.prop('checked'));
-
 				});
 				conditionsLink.on('click touchstart', function() {
 					conditionsText.slideToggle(250);
@@ -349,15 +350,12 @@
 				
 				if (localData === 'yes' && checkboxState) {
 					return false;
-					utils.log('item already stored, doing nothing.');
 				}
 				else if (localData && !checkboxState){
 					localStorage.removeItem('smapConditionsAgreed');
-					utils.log('removed item');
 				}
 				else if (checkboxState) {
 					localStorage.setItem('smapConditionsAgreed', 'yes');
-					utils.log('set item to yes');
 				}
 			}
 			else {
