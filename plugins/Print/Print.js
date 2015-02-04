@@ -292,7 +292,7 @@
 				var conditionsLink = self._modal.find('#conditionsLink span');
 				self.submitDiv = self._modal.find("#submitDiv");
 				var storeCheckbox = self._modal.find('[name="storeAnswer"]');
-				var btn = self._modal.find('button');
+				var btn = self._modal.find('button[type=submit]');
 
 				if (localStorage.getItem('smapConditionsAgreed') === 'yes'){
 					self.conditionsCheckbox.prop('checked', true);
@@ -343,7 +343,7 @@
 		},
 
 		_setButtonState: function(checkboxState) {
-			var btn = $('#printmodal').find('button');
+			var btn = $('#printmodal').find('button[type=submit]');
 			var storeCheckbox = $('#printmodal').find('[name="storeAnswer"]');
 			btn.prop('disabled', (checkboxState ? false : true));
 			storeCheckbox.prop({'disabled': (checkboxState ? false : true)});
