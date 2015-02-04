@@ -150,15 +150,19 @@ html, body
 .unselectable
 	user-select none
 
+.modal-dialog
+	.modal-header
+		.close
+			font-size 2em
+			margin-top -3px
+
 .core-select-modal
 	.modal-dialog
 		max-width 400px
-	.modal-header
-		background-color #fff
 	.modal-content
 		background-color rgba(255, 255, 255, 0.8)
-	// .modal-header
-	// 	border-bottom none
+		.modal-header
+			background-color #fff
 	.modal-body
 		padding 0
 		.list-group

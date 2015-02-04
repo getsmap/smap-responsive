@@ -1,16 +1,22 @@
 .sprint-modal .checkbox label {
   padding: 0;
 }
+#conditionsLink {
+  font-size: 1.1em;
+}
 #conditionsLink span {
   color: #00f;
   text-decoration: underline;
   cursor: pointer;
 }
-.reducedSize {
+.print-conditions {
   font-size: 0.9em;
 }
 .printmodal .alert {
   width: 100%;
+}
+.printmodal .checkbox label {
+  padding-left: 0;
 }
 a:active {
   text-decoration: none;

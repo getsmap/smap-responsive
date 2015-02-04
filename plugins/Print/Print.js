@@ -287,7 +287,7 @@
 				html = utils.extractToHtml(html, self.lang);
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
 
-				var conditionsText = self._modal.find('.hiddenText');
+				var conditionsText = self._modal.find('.print-conditions');
 				self.conditionsCheckbox = self._modal.find('[name="conditions"]');
 				var conditionsLink = self._modal.find('#conditionsLink span');
 				self.submitDiv = self._modal.find("#submitDiv");
@@ -306,10 +306,16 @@
 				storeCheckbox.change(function() {
 					self._storeConditions(storeCheckbox.prop('checked'));
 				});
-				conditionsText.hide();
+				storeCheckbox.next().on("click touchstart", function() {
+					var cb = $(this).prev();
+					cb.prop("checked", !cb.prop("checked"));
+					return false;
+				});
+
 				self.conditionsCheckbox.change( function() {
 					self._setButtonState(self.conditionsCheckbox.prop('checked'));
 				});
+				conditionsText.hide();
 				conditionsLink.on('click touchstart', function() {
 					conditionsText.slideToggle(250);
 				});
@@ -359,7 +365,7 @@
 				}
 			}
 			else {
-				utils.log('No local storage support, unable to set user conditions confirmation.')
+				console.log('No local storage support, unable to set user conditions confirmation.');
 			}
 		},
 
