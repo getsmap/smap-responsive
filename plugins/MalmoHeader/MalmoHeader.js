@@ -51,7 +51,7 @@ L.Control.MalmoHeader = L.Control.extend({
 			'    <link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico" />'
 		$("head").prepend(headerHtml);
 		$("body").addClass("mf-v4 no-footer");
-		$("body").addClass("test"); // during dev only
+		// $("body").addClass("test"); // during dev only
 		$("body").append('<script src="//assets.malmo.se/external/v4/masthead_standalone_without_jquery.js"></script>');
 		
 		return this._container;
