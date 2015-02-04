@@ -45,7 +45,7 @@ L.Control.RedirectClick = L.Control.extend({
 			this.staticTooltip = $('<div class="rclick-static-tooltip">'+this.lang.hoverText+'</div>');
 			$("#mapdiv").append(this.staticTooltip);
 		}
-		else {
+		else if (!L.Browser.touch) {
 			this._tooltip = {};
 			this._tooltip.text = this.lang.hoverText; // L.Tooltip expects an object with key "text"
 			this.tooltip = new L.Tooltip(this.map).updateContent(this._tooltip);
@@ -54,12 +54,10 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 	
 	removeHooks: function () {
-		if (this.map) {
-			if(this.tooltip){					
-				this.tooltip.dispose();
-				this.map.off('click', this.onMapClick, this);
-				this.map.off('mousemove mouseup', this._onMouseMove, this);
-			}
+		this.map.off('click', this.onMapClick, this);
+		if (this.tooltip) {
+			this.map.off('mousemove mouseup', this._onMouseMove, this);
+			this.tooltip.dispose();
 		}
 	},
 	
@@ -120,11 +118,9 @@ L.Control.RedirectClick = L.Control.extend({
 		this.$btn.addClass("active");
 		this.$btn.blur(); // looks nicer without a blue frame around it...
 		if (this.options.url) {
-			if (this.map) {
-				this.removeHooks();
-				this.addHooks();
-				$("#mapdiv").css({'cursor': this.options.cursor});
-			}
+			this.removeHooks();
+			this.addHooks();
+			$("#mapdiv").css({'cursor': this.options.cursor});
 		}
 
 		else {
