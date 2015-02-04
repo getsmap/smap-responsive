@@ -13,6 +13,9 @@
 .map-with-header .lswitch-panel {
   padding-top: 49px;
 }
+.leaflet-top.leaflet-right.map-with-header-ie8 {
+  margin-top: 48px;
+}
 #smap-search-div .dropdown-menu li {
   font-size: 14px;
 }

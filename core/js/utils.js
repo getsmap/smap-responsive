@@ -21,6 +21,7 @@ var utils = {
 
 			return {
 				ie: match,
+				ieVersion: ieVersion,
 				ie8: ieVersion === 8,
 				ie9: ieVersion === 9,
 				ie10: ieVersion === 10,

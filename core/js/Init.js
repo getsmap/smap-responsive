@@ -14,7 +14,6 @@ smap.core.Init = L.Class.extend({
 	
 	init: function(options) {
 		options = options || {};
-		
 		var self = this;
 		this.drawMap();
 

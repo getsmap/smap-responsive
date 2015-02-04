@@ -1,8 +1,7 @@
 L.Control.RedirectClick = L.Control.extend({
 	
 	options: {
-		position: 'topright',
-		btnID: "smap-redirect-btn",
+		position: 'topright'
 	},
 	
 	_setLang: function(langCode) {
@@ -41,11 +40,17 @@ L.Control.RedirectClick = L.Control.extend({
 	},
 
 	addHooks: function () {
-		this._tooltip = {};
-		this._tooltip.text = this.lang.hoverText; // L.Tooltip expects an object with key "text"
-		this.tooltip = new L.Tooltip(this.map).updateContent(this._tooltip);
 		this.map.on("click", this.onMapClick, this);
-		this.map.on('mousemove mouseup', this._onMouseMove, this);
+		if (L.Browser.touch) {
+			this.staticTooltip = $('<div class="rclick-static-tooltip">'+this.lang.hoverText+'</div>');
+			$("#mapdiv").append(this.staticTooltip);
+		}
+		else {
+			this._tooltip = {};
+			this._tooltip.text = this.lang.hoverText; // L.Tooltip expects an object with key "text"
+			this.tooltip = new L.Tooltip(this.map).updateContent(this._tooltip);
+			this.map.on('mousemove mouseup', this._onMouseMove, this);
+		}
 	},
 	
 	removeHooks: function () {
@@ -86,8 +91,7 @@ L.Control.RedirectClick = L.Control.extend({
 
 	_createButton: function() {
 		var self = this;
-
-		var $btn = $('<button id="'+ this.options.btnID +'" title="' + this.lang.name + '" class="btn btn-default"><span class="'+this.options.btnClass+'"></span></button>');
+		var $btn = $('<button title="' + this.lang.name + '" class="btn btn-default"><span class="'+this.options.btnClass+'"></span></button>');
 		$btn.on("click touchstart", function() {
 			if (!self.active || self.active === false) {
 				self._deactivate();
@@ -103,28 +107,28 @@ L.Control.RedirectClick = L.Control.extend({
 
 			return false;
 		});
+		this.$btn = $btn;
 
 		self.$container.append($btn);
 	},
 
 	_activate: function() {
-		var self = this;
-		if (self.active) {
+		if (this.active) {
 			return false; 
 		}
-
 		this._deactivateAll();
-
+		this.$btn.addClass("active");
+		this.$btn.blur(); // looks nicer without a blue frame around it...
 		if (this.options.url) {
 			if (this.map) {
-				self.removeHooks();
-				self.addHooks();
-				$("#mapdiv").css({'cursor': self.options.cursor});
+				this.removeHooks();
+				this.addHooks();
+				$("#mapdiv").css({'cursor': this.options.cursor});
 			}
 		}
 
 		else {
-			self._deactivate()
+			this._deactivate()
 			$("#mapdiv").focus(); //takes focus from button
 			utils.log('RedirectClick error: Redirect URL missing. Check config-file.')
 		}
@@ -132,7 +136,11 @@ L.Control.RedirectClick = L.Control.extend({
 
 	_deactivate: function() {
 		this.active = false;
+		this.$btn.removeClass("active");
 		this.removeHooks();
+		if (this.staticTooltip) {
+			this.staticTooltip.remove();
+		}
 		$("#mapdiv").css({'cursor': ''}); //reset cursor CSS
 		
 	},
@@ -146,23 +154,25 @@ L.Control.RedirectClick = L.Control.extend({
 
 	onRemove: function(map) {
 		this.$container.empty();
+		if (this.staticTooltip) {
+			this.staticTooltip.remove();
+		}
 	},
 	
 	onDone : function(e) {
 		var self = this;
-
 		var url = self.options.url;
 		var source = new proj4.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
 		var dest = new proj4.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
-
 		var point = {
 			x:e.latlng.lng,
 			y:e.latlng.lat
 		};
-
+		if (this.staticTooltip) {
+			this.staticTooltip.remove();
+		}
 		proj4.transform(source, dest,point);
-		url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y); 
-		
+		url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y);
 		window.open(url, this.lang.name);
 	},
 });

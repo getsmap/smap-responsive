@@ -135,10 +135,15 @@ L.Control.LayerSwitcher = L.Control.extend({
 		else {
 			$(".lswitch-panel-ol").hide();
 		}
+
+		var b = utils.getBrowser();
+		if ( !(b.ie && !b.ieVersion <= 8) ) {
+
+		}
 		
 		if (bls.length <= 1 && ols.length === 0) {
 			// Hide all 
-			$(".lswitch-panel").remove();
+			$(".lswitch-panel span").css("color", "#fff");
 		}
 
 		this._setSwitcherPosition();
@@ -171,7 +176,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 		if (b.ie) {
 			lp.css("position", "absolute");
 		}
-		this.hidePanel();
+		if ( !(b.ie && !b.ieVersion <= 8) ) {
+			this.hidePanel();
+		}
 	},
 	
 	_bindEvents: function() {

@@ -6,3 +6,17 @@
 .leaflet-draw-tooltip {
 	z-index: 3001;
 }
+
+.rclick-static-tooltip {
+	z-index: 1101;
+	background-color: #000;
+	color: #fff;
+	padding: 0.1em 0.5em;
+	position: absolute;
+	width: 73%;
+	left: 10%;
+	bottom: 4em;
+	text-align: center;
+	border-radius: 1em;
+	-webkit-border-radius: 1em;
+}

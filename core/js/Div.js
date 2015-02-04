@@ -29,6 +29,11 @@ smap.core.Div = L.Class.extend({
 				// a toolbar exists and the map should have a chance to adapt.
 				mainDiv.addClass("map-with-header");
 			}
+			var b = utils.getBrowser();
+			if ( b.ie && b.ieVersion <= 8 ) {
+				// Because IE8 >= doesn't seem to understand
+				$(".leaflet-top.leaflet-right").addClass("map-with-header-ie8");
+			}
 		});
 	},
 	
