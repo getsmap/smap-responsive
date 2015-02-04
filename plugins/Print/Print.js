@@ -283,6 +283,7 @@
 			if (document.URL.search(/\/dev.html/) > -1) {
 				src = "plugins/Print/"+src;
 			}
+			var clickEvent = L.Browser.touch ? "tap" : "click";
 			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
 				self._modal = utils.drawDialog(self.lang.mTitle, html);
@@ -306,7 +307,7 @@
 				storeCheckbox.change(function() {
 					self._storeConditions(storeCheckbox.prop('checked'));
 				});
-				storeCheckbox.next().on("click touchstart", function() {
+				storeCheckbox.next().on(clickEvent, function() {
 					var cb = $(this).prev();
 					cb.prop("checked", !cb.prop("checked"));
 					return false;
@@ -316,17 +317,17 @@
 					self._setButtonState(self.conditionsCheckbox.prop('checked'));
 				});
 				conditionsText.hide();
-				conditionsLink.on('click touchstart', function() {
+				conditionsLink.on(clickEvent, function() {
 					conditionsText.slideToggle(250);
 				});
-				self.submitDiv.on('click touchstart', function() {
+				self.submitDiv.on(clickEvent, function() {
 					if (!self.conditionsCheckbox.prop('checked')) {
 						self.conditionsCheckbox = $('#printmodal').find('[name="conditions"]');
 						self.conditionsCheckbox.popover({content: self.lang.conditionsTip, trigger:('focus'), placement: 'bottom', animation: 'false' });
 						self.conditionsCheckbox.popover('show').focus();
 					}
 				});
-				self.conditionsCheckbox.on('click touchstart', function() {
+				self.conditionsCheckbox.on(clickEvent, function() {
 					self.conditionsCheckbox.popover('destroy').blur();
 				});
 				self._modal.attr("id", "printmodal");

@@ -201,7 +201,7 @@ smap.core.Layer = L.Class.extend({
 		var self = this;
 		if (layer.on && layer.options) {
 			if (layer._layers) {
-				if (!layer.options.style && layer.options.geomType && layer.options.geomType.search(/POINT/gi) > -1) {
+				if (!layer.options.style && (!layer.options.geomType || (layer.options.geomType && layer.options.geomType.search(/POINT/gi))) > -1) {
 					// Render as markers if no style (but only for point layers, which must be declared with geomType)
 					layer.options.style = null;
 				}
