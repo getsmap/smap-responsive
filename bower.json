@@ -54,13 +54,11 @@
     "lodash": "~2.4.1",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "json3": "~3.3.2",
-    "html5-placeholder-polyfill": "~2.0.10"
+    "Placeholder": "https://github.com/UmbraEngineering/Placeholder.git"
   },
   "overrides": {
-    "html5-placeholder-polyfill": {
-      "main": [
-        "dist/placeholder_polyfill.jquery.min.combo.js", "dist/placeholder_polyfill.min.css"
-      ]
+    "Placeholder": {
+      "main": "src/simple.js"
     },
     "leaflet-polyline-distance": {
       "main": [
