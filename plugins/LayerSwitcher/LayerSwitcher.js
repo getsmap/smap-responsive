@@ -472,7 +472,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			});
 		}
 
-		if (this.options.toggleSubLayersOnClick) {
+		if (this.options.toggleSubLayersOnClick && tag.parents("#lswitch-blcont").length === 0) {
 			// Render cat header as active or inactive (toggle)
 
 			var headerIsActive = tag.hasClass("active"),
@@ -486,7 +486,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 			else {
 				tag.toggleClass("active");
 			}
-
 			cont.children(".list-group-item").each(function() {
 				row = $(this);
 				rowIsActive = row.hasClass("active");
