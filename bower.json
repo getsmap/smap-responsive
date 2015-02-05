@@ -57,6 +57,11 @@
     "html5-placeholder-polyfill": "~2.0.10"
   },
   "overrides": {
+    "html5-placeholder-polyfill": {
+      "main": [
+        "dist/placeholder_polyfill.jquery.min.combo.js", "dist/placeholder_polyfill.min.css"
+      ]
+    },
     "leaflet-polyline-distance": {
       "main": [
         "dist/L.Polyline.measuredDistance.js"
