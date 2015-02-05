@@ -174,12 +174,12 @@ L.print.Provider = L.Class.extend({
 		}
 
 		// Remove temporary added layers and again add removed layers
-		for (var i=0,len=this._tempAddedLayers.length; i<len; i++) {
-			this._map.removeLayer(this._tempAddedLayers[i]);
-		}
-		for (var i=0,len=this._tempRemovedLayers.length; i<len; i++) {
-			this._map.addLayer(this._tempRemovedLayers[i]);
-		}
+		// while (this._tempAddedLayers.length) {
+		// 	this._map.removeLayer(this._tempAddedLayers.pop());
+		// }
+		// while (this._tempRemovedLayers.length) {
+		// 	this._map.addLayer(this._tempRemovedLayers.pop());
+		// }
 		this._tempRemovedLayers = [];
 		this._tempAddedLayers = [];
 
