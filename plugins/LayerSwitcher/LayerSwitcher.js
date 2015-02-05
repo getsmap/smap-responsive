@@ -58,7 +58,12 @@ L.Control.LayerSwitcher = L.Control.extend({
 
 		this.__onLegendEnter = this.__onLegendEnter || $.proxy(this._onLegendEnter, this);
 		this.__onLegendLeave = this.__onLegendLeave || $.proxy(this._onLegendLeave, this);
+
+		var self = this;
 		this._moveWithCursor = function(e) {
+			if ( !$("body").find(".lswitch-legend-big").length ) {
+				$("body").append(self._hoverImg);
+			}
 			$(".lswitch-legend-big").css({
 				left:  e.pageX+10+"px",
 				top:   e.pageY-30+"px"
@@ -559,9 +564,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		var t = $this.parent().data("t");
 		var src = t.options.legendBig || t.options.legend;
 		$(".lswitch-legend-big").remove();
+		delete this._hoverImg;
 		var img = $('<img class="lswitch-legend-big" src="'+src+'" />');
+		this._hoverImg = img;
 		$(document).on("mousemove", this._moveWithCursor);
-		$("body").append(img);
 	},
 	
 	_addRow: function(t) {
