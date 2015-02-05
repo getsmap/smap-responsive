@@ -53,7 +53,8 @@
     "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
     "lodash": "~2.4.1",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
-    "json3": "~3.3.2"
+    "json3": "~3.3.2",
+    "html5-placeholder-polyfill": "~2.0.10"
   },
   "overrides": {
     "leaflet-polyline-distance": {
