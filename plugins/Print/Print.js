@@ -340,6 +340,7 @@
 					return false;
 				});
 				smap.event.trigger("smap:print:modaldrawn");
+				self._modal.find("[placeholder]").placeholder(); // IE9<= polyfill
 			});
 		},
 
