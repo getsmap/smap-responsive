@@ -242,7 +242,7 @@ L.Control.SearchLund = L.Control.extend({
 			q = utils.extractToHtml(this.options.qPattern, {q: q});
 		}
 		//alert(q);
-		var url = encodeURIComponent( this.options.wsLocateUrl + "?format=json&prefix="+q);
+		var url = encodeURIComponent( this.options.wsLocateUrl + "?format=json&objectname="+q);
 		//alert(url);
 		var whitespace = this.options.whitespace;
 		if (whitespace) {
