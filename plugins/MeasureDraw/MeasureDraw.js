@@ -779,6 +779,7 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		if (ta.length) {
 			// ta.focus();
+			ta.placeholder();
 			ta.tooltip({
 				placement: "top",
 				title: this.lang.helpTextSavePopup,
