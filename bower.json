@@ -54,12 +54,9 @@
     "lodash": "~2.4.1",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "json3": "~3.3.2",
-    "Placeholder": "https://github.com/UmbraEngineering/Placeholder.git"
+    "jquery-placeholder": "~2.1.0"
   },
   "overrides": {
-    "Placeholder": {
-      "main": "src/simple.js"
-    },
     "leaflet-polyline-distance": {
       "main": [
         "dist/L.Polyline.measuredDistance.js"

@@ -170,10 +170,10 @@ smap.cmd = {
 		loading: function(show) {
 			var _lang = {
 				"sv": {
-						loading: 'Laddar…'
+						loading: 'Laddar'
 				},
 				"en": {
-						loading: 'Loading…'
+						loading: 'Loading'
 				}
 			};
 
@@ -192,7 +192,7 @@ smap.cmd = {
 							lines: 12,
 							length: 4,
 							width: 6,
-							radius: 25
+							radius: 40
 					};
 					this.spinner = new Spinner(opts).spin();
 				}

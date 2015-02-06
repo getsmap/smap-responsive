@@ -232,15 +232,15 @@ body {
 }
 #loadingText {
   background-color: #fff;
-  background-color: rgba(255,255,255,0.25);
-  height: 4em;
-  width: 4em;
-  left: -2em;
-  top: -2em;
+  background-color: rgba(255,255,255,0.1);
+  height: 5em;
+  width: 5em;
+  line-height: 5em;
+  left: -2.5em;
+  top: -2.5em;
   position: absolute;
   border-radius: 100%;
   text-align: center;
-  line-height: 4em;
   font-weight: bold;
 }
 .popup-divider {
