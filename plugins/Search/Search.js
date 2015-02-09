@@ -293,11 +293,12 @@ L.Control.Search = L.Control.extend({
 			e.stopPropagation();
 		};
 		
-		$entry.on("keypress", activate)
+		$entry //.on("keypress", activate)
 			.on("dblclick", prevDefault)
 			.on("mousedown", prevDefault)
 			.on("focus", function() {
 				$(this).parent().addClass("smap-search-div-focused");
+				activate();
 			})
 			.on("blur", function() {
 				$(this).parent().removeClass("smap-search-div-focused");
