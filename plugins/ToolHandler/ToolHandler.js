@@ -101,7 +101,9 @@ L.Control.ToolHandler = L.Control.extend({
 			// It seems as though the hidden.bs.popover-event is triggered before animation 
 			// is completed - so we need to add a timeout, to avoid ugly animation.
 			setTimeout(function() {
-				$(".thandler-container").append( $popCont.children() );
+				$popCont.children().each(function() {
+					$(".thandler-container").prepend(this); // must prepend (instead of append) to preserve the order of buttons
+				});
 			}, 150);
 		}
 
@@ -137,7 +139,9 @@ L.Control.ToolHandler = L.Control.extend({
 					// Move control divs into the popover - but only those which contains a button tag
 					var btns = $(".thandler-container").children(".leaflet-control:has('button')").detach();
 					$popCont.empty();
-					$popCont.append( btns );
+					btns.each(function() {
+						$popCont.prepend(this); // must prepend (instead of append) to preserve the order of buttons
+					});
 					
 					/*var drawBtns = $('.leaflet-control-drawsmap').children();
 					if(drawBtns.length > 0){
