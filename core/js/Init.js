@@ -11,11 +11,19 @@ smap.core.Init = L.Class.extend({
 		smap.cmd.loading(true); // needs the mapdiv to work :)
 		this.init();
 	},
+
+	_checkBrowserSupport: function() {
+		var b = utils.getBrowser();
+		if (b.ie && b.ieVersion <= 8) {
+			smap.cmd.notify("Din webbläsare är gammal och kartan kommer därför inte fungera optimalt.", "warning");
+		}
+	},
 	
 	init: function(options) {
 		options = options || {};
 		var self = this;
 		this.drawMap();
+		this._checkBrowserSupport();
 
 		// if (utils.isInIframe()) {
 		// 	var w = window.frameElement.offsetWidth;

@@ -192,12 +192,6 @@
     filter: none;
     color: #fff;
   }
-  .lswitch-panel .panel-default > .list-group-item {
-    color: #fff !important;
-    background: none !important;
-    -webkit-filter: none !important;
-    filter: none !important;
-  }
   .lswitch-catcont a {
     border: none !important;
   }

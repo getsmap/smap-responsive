@@ -68,7 +68,7 @@ L.Control.Geolocate = L.Control.extend({
 			return false;
 		}
 		if (!navigator.geolocation) {
-			smap.cmd.notify(this.lang.notSupported);
+			smap.cmd.notify(this.lang.notSupported, "error");
 			return false;
 		}
 		this.active = true;
