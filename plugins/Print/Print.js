@@ -255,9 +255,14 @@
 					if (!lyr.options.printLayer) {
 						var t = smap.cmd.getLayerConfig(lyr.options.layerId);
 						if (t) {
-							t.init = "L.TileLayer.WMS";
-							t.options.layerId = t.options.layerId + "1";
-							lyr.options.printLayer = $.extend(true, {}, t);
+							var options = $.extend(true, {}, t.options);
+							options.layerId += "1";
+							t.options.printLayer = {
+								url: t.url,
+								init: "L.TileLayer.WMS",
+								options: options
+							};
+							lyr.options.printLayer = $.extend(true, {}, t.options.printLayer);
 						}
 					}
 				}

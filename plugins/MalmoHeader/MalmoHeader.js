@@ -35,7 +35,7 @@ L.Control.MalmoHeader = L.Control.extend({
 		this.$container = $(this._container);
 
 		smap.event.on("smap.core.pluginsadded", function() {
-			$("#smap-search-div, .thandler-container, .thandler-btn").addClass("malmoheader-offset-top");
+			$("#smap-search-div, .leaflet-top.leaflet-right, .thandler-btn").addClass("malmoheader-offset-top");
 		});
 
 		// if ( $("#malmo-masthead").length ) {
