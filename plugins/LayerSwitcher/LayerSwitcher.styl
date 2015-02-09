@@ -65,9 +65,18 @@ indentDist = 1.3em
 	-ms-overflow-style -ms-autohiding-scrollbar !important /* Nasty bug fix Required for WP8 IE10!!! */
 	font-size 0.9em
 	.panel-heading
-		margin-bottom 2px
-		// padding 13px 15px // fit the height of the search field
 		border-radius 0
+		border none
+		border 1px solid #ccc
+		border-width 1px 1px 0 1px
+		border-radius 3px 3px 0 0
+		margin-left -1px
+		margin-right -1px
+		margin-bottom 2px
+		background-color #fff
+		padding 0.75em 1em
+		font-size 1.1em
+		letter-spacing 0px
 
 // .lswitch-panel .panel-heading
 // 	background-color headerBg
@@ -117,7 +126,7 @@ indentDist = 1.3em
 	opacity 1
 	background-color none //rgba(255,255,255,.3)
 	overflow visible
-	box-shadow #000 0px 2px 6px inset
+	box-shadow rgba(0, 0, 0, 0.5) 0px 2px 6px inset
 
 	.lswitch-cat
 		padding-left 1em + indentDist
@@ -244,6 +253,13 @@ indentDist = 1.3em
 		position absolute !important
 		background-color mobPanelBg
 		height 100%
+		.panel-default > .panel-heading
+			// box-shadow inset #000 -3px 0px 17px
+			border none
+			background-image none
+			background none
+			filter none
+			color #fff
 	
 	.lswitch-catcont a
 		border none !important

@@ -253,18 +253,6 @@ body {
 .esri-attribution-logo {
   display: none;
 }
-.maindiv .panel-default > .panel-heading {
-  border: none;
-  border: 1px solid #ccc;
-  border-width: 1px 1px 0 1px;
-  border-radius: 3px 3px 0 0;
-  margin-left: -1px;
-  margin-right: -1px;
-  background-color: #fff;
-  padding: 0.75em 1em;
-  font-size: 1.1em;
-  letter-spacing: 0px;
-}
 .leaflet-popup-option {
   position: relative;
   padding: 0;
