@@ -185,8 +185,7 @@
   }
   .lswitch-panel .panel-default > .panel-heading {
     border: none;
-    background-image: none;
-    background: none;
+    background: none !important;
     -webkit-filter: none;
     filter: none;
     color: #fff;
