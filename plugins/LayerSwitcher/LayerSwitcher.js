@@ -245,6 +245,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		});
 		
 		var autoOpenSwitcher = function() {
+			// smap.event.off("smap.core.pluginsadded", autoOpenSwitcher);
+			if ( $(window).width() > self.options.pxDesktop ) {
+				return false;
+			}
 			var p = smap.core.paramInst.getParams();
 			if (p.LSW && p.LSW === "1") {
 				// We need a timeout here – or the switcher will not open (_panelIsSliding == true).
@@ -255,7 +259,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 					$("#lswitch-btn").trigger("mousedown");
 				}, 310);
 			}
-			smap.event.off("smap.core.pluginsadded", autoOpenSwitcher);
 		};
 		smap.event.on("smap.core.pluginsadded", autoOpenSwitcher);
 	},
