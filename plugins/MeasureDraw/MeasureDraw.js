@@ -211,17 +211,24 @@ L.Control.MeasureDraw = L.Control.extend({
 			// Properties must be set on a feature attribute for geojson to include properties
 			
 			var props = [];
+			var nonEmptyProps = 0;
 			this._layer.eachLayer(function(lay) {
 				if (lay._radius) {
 					// Circles are not represented in JSON
 					lay.properties.radius = lay.getRadius();
 				}
 				if (lay._popup && lay._popup._isOpen) {
-					delete p.SEL;
+					delete p.sel;
 					lay.properties.popupIsOpen = true;
 				}
 				props.push(lay.properties);
+				if (lay.properties) {
+					nonEmptyProps += 1;
+				}
 			});
+			if (nonEmptyProps === 0) {
+				return false; // Nothing to add to parameters
+			}
 			
 			function diveInto(n) {
 				// Recursively reduce the number of digits for each node (to make the link shorter)
@@ -730,6 +737,8 @@ L.Control.MeasureDraw = L.Control.extend({
 
 	_removeFeature: function(layer) {
 		var self = this;
+
+		this.map.fire("unselected", {});
 		var labels = this._labels;
 		this._layer.eachLayer(function(label) {
 			if (label._parentFeature && label._parentFeature === layer) {
