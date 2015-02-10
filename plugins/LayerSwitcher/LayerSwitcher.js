@@ -243,6 +243,21 @@ L.Control.LayerSwitcher = L.Control.extend({
 				p.lsw = oldP.LSW;
 			}
 		});
+		
+		var autoOpenSwitcher = function() {
+			var p = smap.core.paramInst.getParams();
+			if (p.LSW && p.LSW === "1") {
+				// We need a timeout here – or the switcher will not open (_panelIsSliding == true).
+				// The timeout needs to be as long as the transition time 
+				// (closing the switcher). The reason is, when starting the map
+				// on a small screen, the switcher is hiding, which takes 300 ms.
+				setTimeout(function() {
+					$("#lswitch-btn").trigger("mousedown");
+				}, 310);
+			}
+			smap.event.off("smap.core.pluginsadded", autoOpenSwitcher);
+		};
+		smap.event.on("smap.core.pluginsadded", autoOpenSwitcher);
 	},
 	
 	_addBtn: function() {
@@ -263,13 +278,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 		btn.on("dblclick", function() {
 			return false;
 		});
-
-		if (btn.is(":visible")) {
-			var p = smap.core.paramInst.getParams();
-			if (p.LSW && p.LSW === "1") {
-				btn.trigger("mousedown");
-			}
-		}
 	},
 	
 	_addPanel: function() {
@@ -339,6 +347,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			utils.log("no slide");
 			return false;
 		}
+		this._panelIsSliding = true;
 		$("#lswitch-btn span").removeClass("fa-chevron-left").addClass("fa-bars");
 		$("#mapdiv").css({
 			"margin-left": "0",
