@@ -104,7 +104,7 @@ smap.core.Param = L.Class.extend({
 		
 		var self = this;
 		
-		// smap.event.trigger("smap.core.beforeapplyparams", p);
+		smap.event.trigger("smap.core.beforeapplyparams", p);
 		this._setLang();
 		
 		var zoom = p.ZOOM ? parseInt(p.ZOOM) : 0,

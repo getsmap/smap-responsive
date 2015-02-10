@@ -34,13 +34,13 @@ smap.core.Layer = L.Class.extend({
 			if (p.BL) {
 				tBL = smap.cmd.getLayerConfig( p.BL );
 			}
-			else {
-				tBL = smap.config.bl[0];
-			}
+			tBL = tBL || smap.config.bl[0]; // Use first bl as baselayer if no config exists for given bl
+
 			if (tBL && tBL.options) {
 				tBL.options.isBaseLayer = true;
 				map.addLayer(this._createLayer(tBL));
 			}
+
 			if (p.OL) {
 				var t, i, len;
 				var ol = p.OL instanceof Array ? p.OL : p.OL.split(",");
