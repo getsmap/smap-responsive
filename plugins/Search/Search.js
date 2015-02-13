@@ -228,9 +228,9 @@ L.Control.Search = L.Control.extend({
 	_onCreateParams: function(e, obj) {
 		if (this.marker && this.marker.options.q) {
 			var showPopup = this.marker.getPopup()._isOpen ? true : false;
-			obj.POI = [encodeURIComponent( this.marker.options.q.replace(/,/g, "--c--") )];
+			obj.poi = [encodeURIComponent( this.marker.options.q.replace(/,/g, "--c--") )];
 			if (showPopup) {
-				obj.POI.push(1);
+				obj.poi.push(1);
 			}
 		}
 	},

@@ -251,21 +251,35 @@
 				lid;
 			for (lid in map._layers) {
 				var lyr = map._layers[lid];
+				var t = smap.cmd.getLayerConfig(lyr.options.layerId);
+				if (!t)
+					continue;
 				if (lyr instanceof L.NonTiledLayer.WMS) {
-					if (!lyr.options.printLayer) {
-						var t = smap.cmd.getLayerConfig(lyr.options.layerId);
-						if (t) {
-							var options = $.extend(true, {}, t.options);
-							options.layerId += "1";
-							t.options.printLayer = {
-								url: t.url,
-								init: "L.TileLayer.WMS",
-								options: options
-							};
-							lyr.options.printLayer = $.extend(true, {}, t.options.printLayer);
-						}
+					if (!t.options.printLayer) {
+						// if (t) {
+						var options = $.extend(true, {}, t.options);
+						options.layerId += "1";
+						t.options.printLayer = {
+							url: t.url,
+							init: "L.TileLayer.WMS",
+							options: options
+						};
+						lyr.options.printLayer = $.extend(true, {}, t.options.printLayer);
+						// }
 					}
 				}
+				// else if (t.options.printLayer) {
+				// 	t.options.printLayer = $.extend(true, {
+				// 		url: t.url,
+				// 		init: "L.TileLayer.WMS",
+				// 		options: $.extend(true, {}, t.options)
+				// 	}, t.options.printLayer);
+				// 	delete t.options.printLayer.options.printLayer;
+				// 	var o = t.options.printLayer.options;
+				// 	o.layerId += "1";
+				// 	o.request = "Get"
+				// 	lyr.options.printLayer = $.extend(true, {}, t.options.printLayer);
+				// }
 			}
 		},
 
