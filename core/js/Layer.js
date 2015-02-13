@@ -175,13 +175,14 @@ smap.core.Layer = L.Class.extend({
 					// WMS layers will use all options as parameters for image requests (=bad)
 					var newOpts = $.extend(true, {}, opts);
 
-					// Remove all key-objects not in the WMS-API
+					// Keep only keys which belong to the WMS-API.
 					// newOpts = _.omit(newOpts, ["legend", "category", "selectable", "popup", "zIndex", "attribution", "displayName", "layerId"]);
-					newOpts = _.pick(newOpts, ["service", "request", "version", "layers", "styles", "format", "transparent", "width", "height", "bbox",
-												"angle", "buffer", "cql_filter", "env", "featureid", "filter", "format_options", "maxfeatures", "namespace",
-												"palette", "propertyname", "tiled", "tilesorigin", "scalemethod",
-												"srs", "map_resolution"]);
+					newOpts = _.pick(newOpts, ["service", "request", "version", "layers", "styles", "format", "width", "height", "bbox",
+										"angle", "buffer", "cql_filter", "env", "featureid", "filter", "format_options", "maxfeatures", "namespace",
+										"palette", "propertyname", "tiled", "tilesorigin", "scalemethod",
+										"srs", "map_resolution", "transparent"]);
 					layer = new init(t.url, newOpts);
+					$.extend(layer.wmsParams, newOpts);
 					$.extend(layer.options, opts);
 					layer.setZIndex(opts.zIndex);
 				}
