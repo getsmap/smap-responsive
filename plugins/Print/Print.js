@@ -248,24 +248,26 @@
 
 		_preprocessLayers: function() {
 			var map = this.map,
-				lid;
+				lid, t;
 			for (lid in map._layers) {
 				var lyr = map._layers[lid];
-				var t = smap.cmd.getLayerConfig(lyr.options.layerId);
-				if (!t)
-					continue;
-				if (lyr instanceof L.NonTiledLayer.WMS) {
-					if (!t.options.printLayer) {
-						// if (t) {
-						var options = $.extend(true, {}, t.options);
-						options.layerId += "1";
-						t.options.printLayer = {
-							url: t.url,
-							init: "L.TileLayer.WMS",
-							options: options
-						};
-						lyr.options.printLayer = $.extend(true, {}, t.options.printLayer);
-						// }
+				if (lyr.options && lyr.options.layerId) {
+					t = smap.cmd.getLayerConfig(lyr.options.layerId);
+					if (!t)
+						continue;
+					if (lyr instanceof L.NonTiledLayer.WMS) {
+						if (!t.options.printLayer) {
+							// if (t) {
+							var options = $.extend(true, {}, t.options);
+							options.layerId += "1";
+							t.options.printLayer = {
+								url: t.url,
+								init: "L.TileLayer.WMS",
+								options: options
+							};
+							lyr.options.printLayer = $.extend(true, {}, t.options.printLayer);
+							// }
+						}
 					}
 				}
 				// else if (t.options.printLayer) {

@@ -54,7 +54,8 @@
     "lodash": "~2.4.1",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "json3": "~3.3.2",
-    "jquery-placeholder": "~2.1.0"
+    "jquery-placeholder": "~2.1.0",
+    "Leaflet.draw": "~0.2.0"
   },
   "overrides": {
     "leaflet-polyline-distance": {
