@@ -81,6 +81,10 @@ var app = {
 					return;
 				}
 				var coords = resp.features[0].geometry.coordinates;
+				for (var i=0,len=coords.length; i<len; i++) {
+					coords[i] = parseInt(Math.round(coords[i]));
+				}
+
 				var url = "http://kartor.malmo.se/api/v1/schoolname/?e="+coords[0]+"&n="+coords[1]+"&arsk="+formData.batch+"&lasar="+formData.term;
 				$.ajax({
 					url: proxy ? proxy + encodeURIComponent(url).replace(/%20/g, "%2B") : url,
@@ -233,7 +237,7 @@ var app = {
 			var term = this._formData.term;
 			var poi = encodeURIComponent(this._formData.q); //.replace(/%20/g, "%2B");
 			var ols = [batch+"_"+term, "AREA_"+batch+"_"+term].join(","); //UTBILDNING_UPPTAGNINGSOMR_ARSK_0_1516_P UTBILDNING_SKOLA_ARSK_2_1415_PT
-			var src = "http://kartor.malmo.se/rest/leaf/1.0-dev/?config=http://kartor.malmo.se/test/upptagning/js/config_skolupptag.js&ol="+ols+"&poi="+poi;
+			var src = "http://kartor.malmo.se/init/?appid=skolupptag-v1&ol="+ols+"&poi="+poi; //"http://kartor.malmo.se/rest/leaf/1.0-dev/?config=http://kartor.malmo.se/test/upptagning/js/config_skolupptag.js&ol="+ols+"&poi="+poi;
 			// window.open(src);
 			$("#map-iframe").attr("src", src);
 			$("#map-iframe").removeClass("hidden");

@@ -24,6 +24,12 @@ var config = {
 			maxZoom: 21
 		},
 
+		coreConfig: {
+			select: {
+				manyUseDialog: false
+			}
+		},
+
 		ws: ws,
 				
 		ol: [],
