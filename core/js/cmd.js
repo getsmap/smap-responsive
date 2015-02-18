@@ -26,7 +26,7 @@ smap.cmd = {
 
 		/**
 		 * Create params as a string.
-		 * @param addRoot {Boolean}
+		 * @param addRoot {Boolean | String}
 		 * @returns {String} URL (or just params) recreating the map.
 		 */
 		createParams: function(addRoot) {

@@ -76,7 +76,7 @@ smap.core.Param = L.Class.extend({
 	},
 	
 	createParams: function(addRoot) {
-		addRoot = addRoot || false;
+		addRoot = addRoot || false; // addRoot can also be a string which will then be used instead of location.href
 		
 		var p = this.createParamsAsObject();
 		
@@ -92,9 +92,16 @@ smap.core.Param = L.Class.extend({
 			}
 			pString += "&" + key + "=" + val;
 		}
-		pString = pString.substring(1); // remove &
-		if (addRoot === true) {
-			pString = document.URL.split("?")[0] + "?" + pString;
+		pString = pString.substring(1); // remove & 
+		if (addRoot) {
+			var root = "";
+			if (addRoot === true) {
+				root = document.URL.split("?")[0] + "?";
+			}
+			else if (typeof(addRoot) === "string") {
+				root = addRoot;
+			}
+			pString = root + pString;
 		}
 		return pString;
 	},

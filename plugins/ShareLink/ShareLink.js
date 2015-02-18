@@ -2,7 +2,8 @@ L.Control.ShareLink = L.Control.extend({
 	options: {
 		position: 'bottomright', // just an example
 		addToMenu: false,
-		maxLen: 2083
+		maxLen: 2083,
+		root: null
 	},
 
 	_lang: {
@@ -49,7 +50,7 @@ L.Control.ShareLink = L.Control.extend({
 
 	activate: function() {
 		var self = this;
-		var url = smap.cmd.createParams(true);
+		var url = smap.cmd.createParams(this.options.root);
 		var inputDiv = $('<div class="form-group"><input type="text" class="form-control" placeholder="'+this.lang.caption+'"></div>');
 		var input = inputDiv.find("input");
 		input.val(url);

@@ -174,6 +174,22 @@ smap.core.Init = L.Class.extend({
 				configName = "configs/" + configName;
 			}
 		}
+		// if (location.protocol === "https:") {
+		// 	// Create an absolute path or otherwise the ajax call will not work on https
+			
+		// 	// First, create a root (with correct protocol – http/https) to which we can add the relative path
+		// 	var root = document.location.href.split("?")[0];
+		// 	var index = root.lastIndexOf("/");
+		// 	if (index > 7) { // prevent http://kartor.malmo.se from being cut
+		// 		root = root.substring(0, index);
+		// 	}
+		// 	root += "/";
+
+		// 	// Second, add the relative path to the absolute
+		// 	if (configName.substring(0, 2) !== "//" && configName.substring(0, 4).toLowerCase() !== "http") {
+		// 		configName = root + configName;
+		// 	}
+		// }
 		return $.ajax({
 			url: configName,	
 			context: this,
