@@ -739,9 +739,14 @@ L.Control.MeasureDraw = L.Control.extend({
 		var self = this;
 
 		this.map.fire("unselected", {});
+		if (this.map._popup) {
+			this.map.closePopup();
+		}
 		var labels = this._labels;
+		layer.off();
 		this._layer.eachLayer(function(label) {
 			if (label._parentFeature && label._parentFeature === layer) {
+				label.off();
 				self.map.removeLayer(label);
 			}
 		});
