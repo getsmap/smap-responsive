@@ -32,7 +32,7 @@
     "leaflet.markercluster": "~0.4.0",
     "leaflet": "latest",
     "modernizr": "~2.6.2",
-    "openlayers": "latest",
+    "openlayers-smap": "./lib/OpenLayers-smap.js",
     "spinjs": "~2.0.1",
     "sass-bootstrap": "~3.0.0",
     "add-to-homescreen": "~3.0.7",
@@ -133,11 +133,6 @@
       "main": [
         "js/leaflet.gml.js",
         "js/leaflet.wfst.js"
-      ]
-    },
-    "openlayers": {
-      "main": [
-        "build/OpenLayers.js"
       ]
     },
     "singleTileWms": {

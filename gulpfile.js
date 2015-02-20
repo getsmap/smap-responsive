@@ -35,7 +35,7 @@ var pngcrush = require('imagemin-pngcrush');
 
 var p = {
 
-	htmlTemplate: "index_template.html",
+	htmlTemplate: "index_template_malmo.html",
 
 	// ----- Our libs ------
 	libsCss: [
