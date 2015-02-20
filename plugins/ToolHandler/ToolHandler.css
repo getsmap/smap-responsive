@@ -10,6 +10,9 @@
   height: 47px;
   border-radius: 0 !important;
 }
+.mf-v4 .thandler-btn {
+  top: 48px;
+}
 .thandler-container.thandler-visible {
   display: block;
 }

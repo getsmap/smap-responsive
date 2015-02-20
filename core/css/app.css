@@ -45,6 +45,9 @@ body {
   max-width: 4.1em;
   min-width: 3.1em;
 }
+.mf-v4 .leaflet-top {
+  top: 43px;
+}
 .leaflet-bottom.leaflet-right .btn {
   max-width: 50px;
   min-width: 100%;
