@@ -10,7 +10,13 @@ sMap-responsive
 
 sMap-responsive is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which supports a range of different browsers and devices (specified in the wiki). smap-responsive was developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors).
 
+###Credit
+The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) together with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors). Credit should also go to the testers and those giving feedback regarding design and usage. The examples above should also credit the data managers of respective [organisation](https://github.com/getsmap/smap-responsive/wiki/Projektgrupp).
+
+###Technical overview
 The framework can be extended with Leaflet controls. This modular approach is great, because you can easily pick other Leaflet tools from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework.
+
+A configuration file lets the manager of the map create a unique map, with its own layers and plugins etc. Which configuration file to going to be used is determined by the web parameter ```config```. For instance ```config=my_config.js``` will load a unique map defined in the file ```my_config.js```.
 
 ###Scope
 
