@@ -8,7 +8,11 @@
 		<meta name="apple-mobile-web-app-title" content="sMap responsive">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		
-		<title>smap-responsive</title>
+		<title>Malmö stads kartor</title>
+
+		<link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico" />
+		<link href="//assets.malmo.se/external/v4/malmo.css" media="all" rel="stylesheet" type="text/css" />
+		<noscript><link href="//assets.malmo.se/external/v4/icons.fallback.css" rel="stylesheet"></noscript>
 
 		<!-- inject:css -->
 		<link rel="stylesheet" href="dist/lib/font-awesome/css/font-awesome.css">
@@ -16,8 +20,8 @@
 		<link rel="stylesheet" href="dist/lib/leaflet/dist/leaflet.css">
 		<link rel="stylesheet" href="dist/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css">
 		<link rel="stylesheet" href="dist/lib/Leaflet.label/dist/leaflet.label.css">
-		<link rel="stylesheet" href="dist/lib/bootstrap-3/css/bootstrap.icon-large.css">
 		<link rel="stylesheet" href="dist/lib/add-to-homescreen/style/addtohomescreen.css">
+		<link rel="stylesheet" href="dist/lib/bootstrap-3/css/bootstrap.icon-large.css">
 		<link rel="stylesheet" href="dist/lib/html5-placeholder-polyfill/dist/placeholder_polyfill.min.css">
 		<link rel="stylesheet" href="dist/lib/leaflet-usermarker/src/leaflet.usermarker.css">
 		<link rel="stylesheet" href="dist/lib/leaflet.draw/dist/leaflet.draw.css">
@@ -31,8 +35,8 @@
 		<link rel="stylesheet" href="plugins/LayerSwitcher/LayerSwitcher.css">
 		<link rel="stylesheet" href="plugins/MalmoHeader/MalmoHeader.css">
 		<link rel="stylesheet" href="plugins/MeasureDraw/MeasureDraw.css">
-		<link rel="stylesheet" href="plugins/Menu/Menu.css">
 		<link rel="stylesheet" href="plugins/Opacity/Opacity.css">
+		<link rel="stylesheet" href="plugins/Menu/Menu.css">
 		<link rel="stylesheet" href="plugins/Print/Print.css">
 		<link rel="stylesheet" href="plugins/RedirectClick/RedirectClick.css">
 		<link rel="stylesheet" href="plugins/Search/Search.css">
@@ -54,11 +58,13 @@
 		<script src="dist/lib/sass-bootstrap/dist/js/bootstrap.js"></script>
 		<script src="dist/lib/leaflet/dist/leaflet-src.js"></script>
 		<script src="dist/lib/Leaflet.NonTiledLayer/NonTiledLayer.js"></script>
+		<script src="dist/lib/GeoJSON.WFS/index.js"></script>
 		<script src="dist/lib/leaflet.draw/dist/leaflet.draw-src.js"></script>
 		<script src="lib/jquery.mobile.custom/jquery.mobile.custom.min.js"></script>
+		<script src="dist/lib/smap.leaflet.wfs-t/js/leaflet.gml.js"></script>
+		<script src="dist/lib/smap.leaflet.wfs-t/js/leaflet.wfst.js"></script>
 		<script src="dist/lib/leaflet-plugins/layer/tile/Bing.js"></script>
 		<script src="dist/lib/GeoJSON.Custom/index.js"></script>
-		<script src="dist/lib/GeoJSON.WFS/index.js"></script>
 		<script src="dist/lib/Leaflet.NonTiledLayer/NonTiledLayer.WMS.js"></script>
 		<script src="dist/lib/TileLayer.EsriRest/index.js"></script>
 		<script src="dist/lib/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
@@ -66,6 +72,7 @@
 		<script src="dist/lib/jquery-placeholder/jquery.placeholder.js"></script>
 		<script src="dist/lib/leaflet.print-smap/leaflet.print-src.js"></script>
 		<script src="dist/lib/notify-custom/notify.js"></script>
+		<script src="dist/lib/openlayers-smap/index.js"></script>
 		<script src="dist/lib/spinjs/spin.js"></script>
 		<script src="dist/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
 		<script src="dist/lib/Leaflet.label/dist/leaflet.label.js"></script>
@@ -77,8 +84,6 @@
 		<script src="dist/lib/leaflet-usermarker/src/leaflet.usermarker.js"></script>
 		<script src="dist/lib/lodash/dist/lodash.compat.js"></script>
 		<script src="dist/lib/screenfull/dist/screenfull.js"></script>
-		<script src="dist/lib/smap.leaflet.wfs-t/js/leaflet.gml.js"></script>
-		<script src="dist/lib/smap.leaflet.wfs-t/js/leaflet.wfst.js"></script>
 		<script src="core/js/smap.js"></script>
 		<script src="core/js/Div.js"></script>
 		<script src="core/js/Init.js"></script>
@@ -101,16 +106,16 @@
 		<script src="plugins/MalmoHeader/MalmoHeader.js"></script>
 		<script src="plugins/Mapillary/Mapillary.js"></script>
 		<script src="plugins/MeasureDraw/MeasureDraw.js"></script>
-		<script src="plugins/Menu/Menu.js"></script>
 		<script src="plugins/Opacity/Opacity.js"></script>
+		<script src="plugins/Menu/Menu.js"></script>
 		<script src="plugins/Print/Print.js"></script>
 		<script src="plugins/Printer/Printer.js"></script>
 		<script src="plugins/RedirectClick/RedirectClick.js"></script>
 		<script src="plugins/Search/Search.js"></script>
 		<script src="plugins/SearchLund/SearchLund.js"></script>
 		<script src="plugins/SelectVector/SelectVector.js"></script>
-		<script src="plugins/ShareLink/ShareLink.js"></script>
 		<script src="plugins/SelectWMS/SelectWMS.js"></script>
+		<script src="plugins/ShareLink/ShareLink.js"></script>
 		<script src="plugins/SharePosition/SharePosition.js"></script>
 		<script src="plugins/ShareTweet/ShareTweet.js"></script>
 		<script src="plugins/ToolHandler/ToolHandler.js"></script>

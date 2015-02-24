@@ -10,8 +10,8 @@
 }
 .leaflet-control-container .smap-editor-savetoolbar {
   z-index: 1002;
-  top: 4px;
-  left: 4px;
+  top: -2px;
+  left: 14px;
   pointer-events: all;
   white-space: nowrap;
   min-width: 25em;

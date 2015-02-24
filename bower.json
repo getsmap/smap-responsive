@@ -32,7 +32,7 @@
     "leaflet.markercluster": "~0.4.0",
     "leaflet": "latest",
     "modernizr": "~2.6.2",
-    "openlayers": "latest",
+    "openlayers-smap": "./lib/openlayers-smap/",
     "spinjs": "~2.0.1",
     "sass-bootstrap": "~3.0.0",
     "add-to-homescreen": "~3.0.7",
@@ -54,8 +54,7 @@
     "lodash": "~2.4.1",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "json3": "~3.3.2",
-    "jquery-placeholder": "~2.1.0",
-    "Leaflet.draw": "~0.2.0"
+    "jquery-placeholder": "~2.1.0"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -133,11 +132,6 @@
       "main": [
         "js/leaflet.gml.js",
         "js/leaflet.wfst.js"
-      ]
-    },
-    "openlayers": {
-      "main": [
-        "build/OpenLayers.js"
       ]
     },
     "singleTileWms": {
