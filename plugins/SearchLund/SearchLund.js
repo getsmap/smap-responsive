@@ -207,7 +207,7 @@ L.Control.SearchLund = L.Control.extend({
 						var arr2 = [];
 						for (i=0, len=arr.items.length; i<len; i++) {
 							//alert("in");
-							arr2[i]= arr.items[i].name.split(",")[0];
+							arr2[i]= arr.items[i].name; //.split(",")[0];
 							//alert("ut");
 						}
 						//alert(arr2[0]);
