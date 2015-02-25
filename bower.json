@@ -54,7 +54,8 @@
     "lodash": "~2.4.1",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "json3": "~3.3.2",
-    "jquery-placeholder": "~2.1.0"
+    "jquery-placeholder": "~2.1.0",
+	"osmbuildings": "./lib/osmbuildings/"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -155,5 +156,8 @@
   },
   "devDependencies": {
     "leaflet.draw": "~0.2.3"
-  }
+  },
+  "osmbuildings": {
+      "main": "OSMBuildings-Leaflet.js"
+    }
 }
