@@ -258,8 +258,10 @@ L.Control.SearchLund = L.Control.extend({
 					if (this.marker) {
 						this.map.removeLayer(this.marker);
 						this.marker = null;
-						this.polyLayerGroup.clearLayers();
-						self.map.removeLayer(this.polyLayerGroup);
+						if(this.polyLayerGroup){
+							this.polyLayerGroup.clearLayers();
+							self.map.removeLayer(this.polyLayerGroup);
+						}
 					}
 					if (!json.items.length) {
 						// This means the searched place does not exist – inform user
