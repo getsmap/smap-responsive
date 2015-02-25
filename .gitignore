@@ -6,3 +6,4 @@ dist/
 meeting_150126.txt
 dev.html
 plugins/**/*.css
+core/css/*.css
