@@ -5,3 +5,4 @@ plugins/GuidePopup/qgis_calc_cat.txt
 dist/
 meeting_150126.txt
 dev.html
+plugins/**/*.css
