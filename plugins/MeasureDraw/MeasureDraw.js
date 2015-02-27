@@ -805,19 +805,23 @@ L.Control.MeasureDraw = L.Control.extend({
 					$(this).tooltip("show");
 				}
 			});
+			var b = utils.getBrowser();
 			ta.on("focus", function() {
 				// $(this).attr("rows", 5);
 				$(".measuredraw-btn-popupremove").prop("disabled", true);
+				if (b.ie10 || b.ie11) {
+					// Fix for IE10/11 bug: https://github.com/getsmap/smap-responsive/issues/160
+					$(this).val("");
+				}
 			});
+			var placeholderText = this.lang.clickToAddText;
 			ta.on("blur", function() {
 				// $(this).attr("rows", 3);
 				$(".measuredraw-btn-popupremove").prop("disabled", false);
 				$(this).tooltip("hide");
 				var layer = e.popup._source;
 				var val = $(this).val();
-				if (val === "") {
-					// layer.closePopup();
-				}
+				if (val === "") {}
 				else {
 					layer.properties.measure_text = val;
 					layer.properties.measure_form = ""; // erase
