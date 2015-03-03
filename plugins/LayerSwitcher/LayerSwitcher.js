@@ -250,7 +250,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 				return false;
 			}
 			var p = smap.core.paramInst.getParams();
-			if (p.LSW && p.LSW === "1") {
+			if (p.LSW && parseInt(p.LSW) === 1) {
 				// We need a timeout here – or the switcher will not open (_panelIsSliding == true).
 				// The timeout needs to be as long as the transition time 
 				// (closing the switcher). The reason is, when starting the map

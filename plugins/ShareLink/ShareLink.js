@@ -50,7 +50,7 @@ L.Control.ShareLink = L.Control.extend({
 
 	activate: function() {
 		var self = this;
-		var url = smap.cmd.createParams(this.options.root);
+		var url = smap.cmd.createParams(this.options.root || true);
 		var inputDiv = $('<div class="form-group"><input type="text" class="form-control" placeholder="'+this.lang.caption+'"></div>');
 		var input = inputDiv.find("input");
 		input.val(url);

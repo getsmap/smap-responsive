@@ -22,13 +22,21 @@ smap.core.Param = L.Class.extend({
 
 	
 	getParams: function() {
-		if (!this._cachedParams) {
+		var paramsObject = this._cachedParams || null;
+		if (!paramsObject) {
+			// Create the params
 			var sep = "?";
 			var p = location.href.split(sep);
 	    	var pString = p.length > 1 ? p[1] : "";
-	    	this._cachedParams = utils.paramsStringToObject(pString, true);
+	    	paramsObject = utils.paramsStringToObject(pString, true);
+	    	if (smap.config) {
+	    		// Only cache params if no params were used in the config
+	    		configParams = smap.config.params || {};
+	    		paramsObject = $.extend({}, utils.objectToUpperCase(configParams), paramsObject);
+	    		this._cachedParams = paramsObject;
+	    	}
 		}
-		return this._cachedParams;
+		return paramsObject;
 	},
 	
 	createParamsAsObject: function() {

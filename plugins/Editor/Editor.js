@@ -133,7 +133,7 @@ L.Control.Editor = L.Control.extend({
 		};
 		for (var i=0,len=ols.length; i<len; i++) {
 			t = ols[i];
-			editIcon = $('<i class="fa fa-edit smap-editor-switcher-icon"></i>')
+			editIcon = $('<i class="fa fa-edit smap-editor-switcher-icon"></i>');
 			if (t.options.isEditable) {
 				// Add the edit icon
 				row = $("#"+s._makeId(t.options.layerId));
@@ -581,10 +581,11 @@ L.Control.Editor = L.Control.extend({
 				continue;
 			}
 			val = props[key];
+			val = val ? decodeURIComponent(val) : ""; // Always decode first
 			inputId = "smap-editor-propentry-"+key;
 			group = '<div class="form-group">\
 					<label for="'+inputId+'">'+key+'</label>\
-					<input type="text" name="'+key+'" class="form-control" id="'+inputId+'" value="'+(val || "")+'">\
+					<input type="text" name="'+key+'" class="form-control" id="'+inputId+'" value="'+val+'">\
 				</div>';
 			form.append(group);
 		}
@@ -607,7 +608,7 @@ L.Control.Editor = L.Control.extend({
 			return false;
 		}
 		inputs.each(function() {
-			newProps[$(this).attr("name")] = $(this).val();
+			newProps[$(this).attr("name")] = encodeURIComponent( $(this).val() );
 		});
 		var saveProps = $.extend({}, orgProps, newProps);
 		this._marker.feature.properties = saveProps;

@@ -179,7 +179,6 @@ var utils = {
 					}
 					else {
 						endIndex = attr.search(/\}/g);
-						
 					}
 					attr = attr.substring(0, endIndex);
 					
@@ -190,7 +189,24 @@ var utils = {
 					}
 					else {
 						// Replace ${...} by the extracted attribute.
-						extractedAttribute = a[attr] || ""; // If attribute does not exist – use empty string "".						
+						
+						// Check if any parameter was sent in here
+						var paramsArr = attr.split(",");
+						if (paramsArr.length > 1) {
+							var firstParam = $.trim(paramsArr[0]),
+								secondParam = $.trim(paramsArr[1]);
+							extractedAttribute = a[firstParam] || "";
+							if (secondParam && parseInt(secondParam) === 1) {
+								// Decode parameter
+								try {
+									extractedAttribute = decodeURIComponent(extractedAttribute);
+								}
+								catch(e) {}
+							}
+						}
+						else {
+							extractedAttribute = a[attr] || ""; // If attribute does not exist – use empty string "".
+						}
 					}
 					txt = txt.replace("${"+attr+"}", extractedAttribute);
 				}

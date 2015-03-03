@@ -39,13 +39,14 @@ smap.core.Init = L.Class.extend({
 		smap.core.selectInst = new smap.core.Select(this.map);
 		smap.core.paramInst = new smap.core.Param(this.map);
 		smap.core.pluginHandlerInst = new smap.core.PluginHandler(this.map);
-		var params = options.params || smap.core.paramInst.getParams(); //Parameters from URL
+		var params = options.params || smap.core.paramInst.getParams(); //Parameters from URL / config
 		this.loadConfig(params.CONFIG).done(function() {
 				function applyConfig() {
 					smap.config.configName = params.CONFIG; // Store for creating params
 					smap.config.langCode = smap.cmd.getLang();
-					params = $.extend( utils.objectToUpperCase(smap.config.params || {}), params);
 					self.applyConfig(smap.config);
+					// params = smap.core.paramInst.getParams();
+					params = $.extend({}, utils.objectToUpperCase(smap.config.params || {}), params);
 					smap.core.paramInst.applyParams(params);
 					smap.cmd.loading(false);
 				}
@@ -82,9 +83,24 @@ smap.core.Init = L.Class.extend({
 		
 		// Extend map options
 		$.extend(this.map.options, theConfig.mapConfig || {});
+
+		// Extend smap options
+		var smapOptions = $.extend({}, smap.core.mainConfig.smapOptions, theConfig.smapOptions || {});
+
+		// Set title
+		$("title").text(smapOptions.title);
+
+		// // Set favicon
+		// var favIconUrl = smapOptions.favIcon;
+		// if (favIconUrl) {
+		// 	var favIcon = $('<link rel="shortcut icon" type="image/x-icon" href="'+favIconUrl+'" />');
+		// 	$("title").after(favIcon);
+		// }
+
 		if (this.map.options.maxBounds) {
 			this.map.setMaxBounds(this.map.options.maxBounds); // [[north, west], [south, east]]
 		}
+		
 		smap.core.pluginHandlerInst.addPlugins( theConfig.plugins );
 	},
 
