@@ -31,7 +31,7 @@
   top: -4px;
 }
 .drawicons {
-  background-image: url("lib/leaflet.draw/dist/images/spritesheet-2x.png");
+  background-image: url("../../lib/leaflet.draw-smap/dist/images/spritesheet-2x.png");
   -webkit-background-size: 270px 30px;
   background-size: 270px 30px;
   display: block;
