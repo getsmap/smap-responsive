@@ -88,14 +88,18 @@ smap.core.Init = L.Class.extend({
 		var smapOptions = $.extend({}, smap.core.mainConfig.smapOptions, theConfig.smapOptions || {});
 
 		// Set title
-		$("title").text(smapOptions.title);
+		var b = utils.getBrowser();
+		if ( !(b.ie && b.ieVersion <= 8) ) {
+			$("title").text(smapOptions.title);
+		}
 
 		// // Set favicon
-		// var favIconUrl = smapOptions.favIcon;
-		// if (favIconUrl) {
-		// 	var favIcon = $('<link rel="shortcut icon" type="image/x-icon" href="'+favIconUrl+'" />');
-		// 	$("title").after(favIcon);
-		// }
+		var favIconUrl = smapOptions.favIcon;
+		if (favIconUrl && !(b.ie && b.ieVersion <= 8)) {
+			var favIcon = $('<link rel="shortcut icon" type="image/x-icon" href="'+favIconUrl+'" />');
+			$("[rel=shortcut]").remove();
+			$("title").after(favIcon);
+		}
 
 		if (this.map.options.maxBounds) {
 			this.map.setMaxBounds(this.map.options.maxBounds); // [[north, west], [south, east]]
