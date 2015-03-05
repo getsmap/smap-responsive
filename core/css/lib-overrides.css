@@ -4,11 +4,9 @@
 .leaflet-top, .leaflet-bottom {
 	z-index: 900; /*Appear behind Malmo header for instance*/
 }
-.dropdown-menu {
-	font-size: 12px;
-}
+
 .navbar {
-	margin-bottom: 800px;
+	margin-bottom: 800px;  /* to be able to use drop down menues in header*/
 }
 
 
