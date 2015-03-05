@@ -25,17 +25,26 @@ smap.core.Param = L.Class.extend({
 		var paramsObject = this._cachedParams || null;
 		if (!paramsObject) {
 			// Create the params
-			var sep = "?";
-			var p = location.href.split(sep);
-	    	var pString = p.length > 1 ? p[1] : "";
-	    	paramsObject = utils.paramsStringToObject(pString, true);
-	    	if (smap.config) {
-	    		// Only cache params if no params were used in the config
-	    		configParams = smap.config.params || {};
-	    		paramsObject = $.extend({}, utils.objectToUpperCase(configParams), paramsObject);
-	    		this._cachedParams = paramsObject;
-	    	}
+			paramsObject = this.getWebParamsAsObject();
+			if (smap.config) {
+				// Only cache params if no params were used in the config
+				configParams = smap.config.params || {};
+				paramsObject = $.extend({}, utils.objectToUpperCase(configParams), paramsObject);
+				this._cachedParams = paramsObject;
+			}
 		}
+		return paramsObject;
+	},
+
+	/**
+	 * Get the original web params, totally unmodified, as object.
+	 * @return {Object} The params as an object
+	 */
+	getWebParamsAsObject: function() {
+		var sep = "?";
+		var p = location.href.split(sep);
+		var pString = p.length > 1 ? p[1] : "";
+		paramsObject = utils.paramsStringToObject(pString, true);
 		return paramsObject;
 	},
 	
@@ -164,12 +173,12 @@ smap.core.Param = L.Class.extend({
 //		
 //		layer.on("load", function() {
 //			var clickEvent= document.createEvent('MouseEvents');
-//		    clickEvent.initMouseEvent(
-//			    'click', true, true, window, 0,
-//			    0, 0, cPoint.x, cPoint.y, false, false,
-//			    false, false, 0, null
-//		    );
-//		    document.elementFromPoint(cPoint.x, cPoint.y).dispatchEvent(clickEvent);
+//			clickEvent.initMouseEvent(
+//				'click', true, true, window, 0,
+//				0, 0, cPoint.x, cPoint.y, false, false,
+//				false, false, 0, null
+//			);
+//			document.elementFromPoint(cPoint.x, cPoint.y).dispatchEvent(clickEvent);
 //		});
 			
 	CLASS_NAME: "smap.core.Param"
