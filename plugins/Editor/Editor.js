@@ -3,7 +3,8 @@ L.Control.Editor = L.Control.extend({
 	options: {
 		position: 'bottomright',
 		useProxy: false,
-		reverseAxis: false
+		reverseAxis: false,
+		encodeKeys: null // values with these keys will be encoded before saved to server. For example: ["id", "someattribute", "pics"] or "*" for encode all
 	},
 	
 	_lang: {
@@ -572,16 +573,19 @@ L.Control.Editor = L.Control.extend({
 		if (props === null) {
 			return false;
 		}
-
 		var cont = this._modalEdit.find("#smap-editor-content");
 		var key, val, group, inputId,
-			form = $('<form role="form" />');
+			form = $('<form role="form" />'),
+			encodeKeys = this.options.encodeKeys || [];
 		for (key in props) {
 			if (key === "fid" || key === "id" || key === "gid") {
 				continue;
 			}
 			val = props[key];
-			val = val ? decodeURIComponent(val) : ""; // Always decode first
+			val = val || ""; // Always decode first
+			if ( encodeKeys === "*" || $.inArray(key, encodeKeys) > -1 ) {
+				val = decodeURIComponent(val);
+			}
 			inputId = "smap-editor-propentry-"+key;
 			group = '<div class="form-group">\
 					<label for="'+inputId+'">'+key+'</label>\
@@ -607,8 +611,15 @@ L.Control.Editor = L.Control.extend({
 			this._modalEdit.modal("hide");
 			return false;
 		}
+		var key, val,
+			encodeKeys = this.options.encodeKeys || [];
 		inputs.each(function() {
-			newProps[$(this).attr("name")] = encodeURIComponent( $(this).val() );
+			key = $(this).attr("name");
+			val = $(this).val();
+			if ( encodeKeys === "*" || $.inArray(key, encodeKeys) > -1 ) {
+				val = encodeURIComponent( val );
+			}
+			newProps[key] = val;
 		});
 		var saveProps = $.extend({}, orgProps, newProps);
 		this._marker.feature.properties = saveProps;
