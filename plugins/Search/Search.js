@@ -214,12 +214,29 @@ L.Control.Search = L.Control.extend({
 			var showPopup = p.POI instanceof Array && p.POI.length > 1 ? p.POI[1] : false;
 
 			var setView = false;
-			var orgParams = smap.core.paramInst.getParams();
-			if (!orgParams.ZOOM && !orgParams.CENTER) {
+
+			// If POI is specified, then CENTER and ZOOM params given in the config should have no effect.
+			// Therefore, we need the original web parameters and not those "polluted" with the params
+			// from the config.
+			var webParams = smap.core.paramInst.getWebParamsAsObject(),
+				configParams = config.params;
+
+			var zoom = webParams.ZOOM || this.options.zoom;
+			if (!webParams.CENTER) {
 				setView = true;
+				if (!webParams.POI && configParams.CENTER) { // => POI is only defined in config
+					// Follows this reasoning: https://github.com/getsmap/smap-responsive/issues/162 
+					// If POI is only defined in config (not as a web parameter), then – and only then – will the CENTER and ZOOM 
+					// in the config "fill in" (be a fallback) for missing CENTER or ZOOM in the web parameters – which would otherwise
+					// set view to default poi CENTER and ZOOM.
+					setView = false;
+					zoom = p.ZOOM;
+				}
 			}
+
 			this._geoLocate(decodeURIComponent(q), {
 				setView: setView,
+				zoom: zoom,
 				showPopup: showPopup
 			});
 		}
@@ -433,8 +450,14 @@ L.Control.Search = L.Control.extend({
 					
 					this.marker.bindPopup('<p class="lead">'+decodeURIComponent(q)+'</p><div><button id="smap-search-popupbtn" class="btn btn-default btn-sm">'+this.lang.remove+'</button></div>');
 					
+					var zoom = options.zoom || this.options.zoom;
 					if (options.setView) {
-						this.map.setView(latLng, this.options.zoom, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+						this.map.setView(latLng, zoom, {animate: false}); // animate false fixes bug for IE10 where map turns white: https://github.com/getsmap/smap-mobile/issues/59					
+					}
+					else {
+						// Don't let the popup force the map to pan – messing up the 
+						// location we intended to set the map around.
+						this.marker._popup.options.autoPan = false;
 					}
 					if (options.showPopup) {
 						this.marker.openPopup();
