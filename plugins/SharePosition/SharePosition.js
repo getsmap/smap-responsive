@@ -2,7 +2,7 @@ L.Control.SharePosition = L.Control.extend({
 	options: {
 		position: 'bottomright', // just an example
 		autoActivate: false,
-		wfsSource: "//xyz.malmo.se:8081/geoserver/wfs",
+		wfsSource: "//kartor.malmo.se:8081/geoserver/wfs",
 		wfsFeatureType: "sandbox:sharedpositions",
 		wfsUri: "//www.malmo.se/sandbox/",
 		useProxy: true,
