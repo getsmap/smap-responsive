@@ -31,11 +31,11 @@ var connect = require('gulp-connect');
 var es = require('event-stream');
 var pngcrush = require('imagemin-pngcrush');
 
-
+var indexTemplate = "index_template.html";
 
 var p = {
 
-	htmlTemplate: "index_template_malmo.html",
+	htmlTemplate: indexTemplate,
 
 	// ----- Our libs ------
 	libsCss: [
@@ -299,7 +299,7 @@ gulp.task('full', ["cleancode"], function() {
 
 gulp.task('fullmalmo', ["cleancode"], function() {
 	// p.ourSass.unshift("dist/lib/malmo_shared_assets/**/*.scss");  In case we need advanced sass functionality from malmo assets
-	p.htmlTemplate = "index_template_malmo.html"
+	p.htmlTemplate = indexTemplate;
 	return gulp.start("_full");
 });
 
@@ -326,28 +326,6 @@ gulp.task('watch', function() {
 gulp.task('watchweb', ["webserver", "watch"]); // Allow auto-publishing whenever something changes
 
 gulp.task('default', ["watch"]); // Note! <gulp> is same as <gulp default>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
