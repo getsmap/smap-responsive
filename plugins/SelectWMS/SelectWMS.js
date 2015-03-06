@@ -422,9 +422,10 @@ L.Control.SelectWMS = L.Control.extend({
 	
 	
 	_parseText: function(resp) {
+
 		var out = {},
 			dict = {},
-			row, t, val, nbr, featureType,
+			row, t, key, val, nbr, featureType,
 			rows = resp.split("\n");
 		
 		for (var i=0,len=rows.length; i<len; i++) {
@@ -450,9 +451,16 @@ L.Control.SelectWMS = L.Control.extend({
 					continue;
 				}
 				else {
-					if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
+					if (featureType && out[featureType] && $.isEmptyObject(dict) === false && row.search(/\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-/gi) > -1) {
 						out[featureType].push($.extend({}, dict));
 						dict = {};
+					}
+					else {
+						// Just a continuation of previous row's value (a newline sign was in the value)
+						
+						if (key && val) {
+							dict[key] = val + " " + row; // Maybe a new row value "\n" or <br> should be between val and row?
+						}
 					}
 					continue;
 				}
@@ -467,6 +475,10 @@ L.Control.SelectWMS = L.Control.extend({
 				val = t[1];
 			}
 			val = $.trim(val);
+			if (val.toLowerCase() == "null") {
+				// Convert null to ""
+				val = "";
+			}
 			
 			var onlyNumbers = /^[0-9.]+$/.test(val);
 			var s = val.split(".");
@@ -488,7 +500,8 @@ L.Control.SelectWMS = L.Control.extend({
 					val = nbr;
 				}
 			}
-			dict[ $.trim(t[0]) ] = val;
+			key = $.trim(t[0]);
+			dict[key] = val;
 		}
 		if (featureType && out[featureType] && $.isEmptyObject(dict) === false) {
 			// Store the old result and create a new dict
