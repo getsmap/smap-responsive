@@ -6,8 +6,12 @@
 #smap-search-div .input-group-addon {
   border: none;
 }
+.lswitcher-slidetransition .smap-search-div {
+  left: 325px !important;
+  width: 100% !important;
+}
 #smap-search-div {
-  position: relative;
+  position: absolute;
   left: 5px;
   top: 5px;
   z-index: 1010;
@@ -30,9 +34,12 @@
   appearance: none;
   border-radius: 0 !important;
 }
-#smap-search-div .dropdown-menu {
-/* Autocomplete Typehead overrides */
-  left: 0px !important;
+#smap-search-div ul {
+  left: -1px !important;
+  width: calc(100% + 2px);
+  border-radius: 0;
+  max-height: 11.3em;
+  overflow-y: auto;
 }
 #smap-search-div .input-group-addon {
   background-color: #fff !important;

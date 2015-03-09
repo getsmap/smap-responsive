@@ -337,6 +337,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}, 300);
 		
 		$("#mapdiv").addClass("mapdiv-slidetransition");
+		$("#maindiv").addClass("lswitcher-slidetransition");
 		var panelWidth = this.$panel.outerWidth();
 		$("#mapdiv").css({
 			"margin-left": panelWidth + "px",
@@ -359,6 +360,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		$(".lswitch-panel").removeClass("panel-visible");
 		
 		$("#maindiv").addClass("lswitch-overflow-hidden");
+		$("#maindiv").removeClass("lswitcher-slidetransition");
 		setTimeout($.proxy(function() {
 			$("#mapdiv").removeClass("mapdiv-slidetransition");
 			this._panelIsSliding = false;

@@ -11,8 +11,13 @@ fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera
 #smap-search-div .form-control, #smap-search-div .input-group-addon
 	border none
 
+
+.lswitcher-slidetransition .smap-search-div
+	left 320px + generalMargins !important
+	width 100% !important
+
 #smap-search-div
-	position relative
+	position absolute
 	left generalMargins
 	top generalMargins
 	z-index 1010
@@ -32,9 +37,13 @@ fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera
 		border-radius 0 !important
 	// input:focus
 	// 	border-color #ccc
-	.dropdown-menu
-		/* Autocomplete Typehead overrides */
-		left 0px !important
+	ul
+		left -1px !important
+		width calc(100% + 2px)
+		border-radius 0
+		max-height 11.3em
+		overflow-y auto
+		
 	.input-group-addon
 		background-color #fff !important
 		padding-right 0 !important

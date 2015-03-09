@@ -10,7 +10,12 @@ L.Control.Search = L.Control.extend({
 		pxDesktop: 992,
 		gui: false,
 		addToMenu: false,
-		zoom: 15
+		zoom: 15,
+		acOptions: {
+			items: 5
+		}
+
+
 		// _geoLocate: function(q) {
 			// // TODO: When this function is completed, move to config file cultmap.js
 			// function cleanUp() {
@@ -33,7 +38,7 @@ L.Control.Search = L.Control.extend({
 			// }
 			// // This code should not be here, but it's ok because it doesn't harm anyone
 			// this._onKeyUp = this._onKeyUp || onKeyUp;
-			// $("#smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
+			// $(".smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
 
 			// cleanUp(); // clean up old searches
 
@@ -104,7 +109,7 @@ L.Control.Search = L.Control.extend({
 							// 	}
 							// 	// This code should not be here, but it's ok because it doesn't harm anyone
 							// 	this._onKeyUp = this._onKeyUp || onKeyUp;
-							// 	$("#smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
+							// 	$(".smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
 
 							// 	if (!json.features.length) {
 							// 		smap.cmd.notify("Inga sökträffar", "error");
@@ -182,6 +187,7 @@ L.Control.Search = L.Control.extend({
 		if (this.options.gui === undefined || this.options.gui === true) {
 			this.$container = $(this._container);
 			this.$container.css("display", "none");
+			// this.$container.remove();
 			this._makeSearchField();
 			this.map.on("click", this._blurSearch);
 		}
@@ -192,13 +198,15 @@ L.Control.Search = L.Control.extend({
 		
 		this.__onCreateParams = this.__onCreateParams || $.proxy( this._onCreateParams, this );
 		smap.event.on("smap.core.createparams", this.__onCreateParams);
-		
+
+		// this.$container.on("mousedown", $.noop);
+		// this.$container.on("touchstart", $.noop);
 		
 		return self._container;
 	},
 	
 	_blurSearch: function() {
-		$("#smap-search-div input").blur();
+		$(".smap-search-div input").blur();
 	},
 	
 	onRemove: function(map) {
@@ -262,7 +270,7 @@ L.Control.Search = L.Control.extend({
 	_makeSearchField: function() {
 		var self = this;
 		
-		var $searchDiv = $('<div id="smap-search-div" class="input-group input-group-lg"><span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>'+
+		var $searchDiv = $('<div id="smap-search-div" class="smap-search-div input-group input-group-lg"><span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>'+
 				'<input autocorrect="off" autocomplete="off" data-provide="typeahead" type="text" class="form-control" placeholder="'+this.lang.search+'"></input></div>');
 		var $entry = $searchDiv.find("input");
 		$entry.placeholder(); // IE9<= polyfill
@@ -329,7 +337,7 @@ L.Control.Search = L.Control.extend({
 		});
 		$entry.on("blur", deactivate);
 		
-		$("#mapdiv").append( $searchDiv );
+		$("#maindiv").append( $searchDiv );
 		smap.event.on("smap.core.pluginsadded", function() {
 			var toolbar = $("#smap-menu-div nav");
 			if (toolbar.length) {
@@ -354,6 +362,7 @@ L.Control.Search = L.Control.extend({
 	//		   displayKey: 'value',
 	//		   source: bHound.ttAdapter(),
 		};
+		$.extend(typeheadOptions, this.options.acOptions || {});
 
 		if (this.options.wsAcUrl) {
 			typeheadOptions.source = function(q, process) {
@@ -462,10 +471,10 @@ L.Control.Search = L.Control.extend({
 					if (options.showPopup) {
 						this.marker.openPopup();
 					}
-					$("#smap-search-div input").val(null);
-					$("#smap-search-div input").blur();
+					$(".smap-search-div input").val(null);
+					$(".smap-search-div input").blur();
 					setTimeout(function() {
-						$("#smap-search-div input").blur();
+						$(".smap-search-div input").blur();
 					}, 100);
 				},
 				complete: function() {
