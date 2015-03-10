@@ -323,6 +323,7 @@ L.Control.Search = L.Control.extend({
 			.on("mousedown", prevDefault)
 			.on("focus", function() {
 				$(this).parent().addClass("smap-search-div-focused");
+				$("#mapdiv").trigger("touchstart"); // Hide switcher panel
 				activate();
 			})
 			.on("blur", function() {

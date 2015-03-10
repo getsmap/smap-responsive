@@ -4,7 +4,8 @@ L.Control.Editor = L.Control.extend({
 		position: 'bottomright',
 		useProxy: false,
 		reverseAxis: false,
-		encodeKeys: null // values with these keys will be encoded before saved to server. For example: ["id", "someattribute", "pics"] or "*" for encode all
+		encodeKeys: null, // values with these keys will be encoded before saved to server. For example: ["id", "someattribute", "pics"] or "*" for encode all
+		saveOnPressEnter: false
 	},
 	
 	_lang: {
@@ -589,11 +590,11 @@ L.Control.Editor = L.Control.extend({
 			inputId = "smap-editor-propentry-"+key;
 			group = '<div class="form-group">\
 					<label for="'+inputId+'">'+key+'</label>\
-					<input type="text" name="'+key+'" class="form-control" id="'+inputId+'" value="'+val+'">\
+					<textarea rows="1" resizable name="'+key+'" class="form-control" id="'+inputId+'">'+val+'</textarea>\
 				</div>';
 			form.append(group);
 		}
-		form.find("input").on("change", function() {
+		form.find("textarea").on("change", function() {
 			$(this).addClass("changed");
 		});
 		cont.append(form);
@@ -606,7 +607,7 @@ L.Control.Editor = L.Control.extend({
 	_saveAttributes: function() {
 		var orgProps = this._marker.feature.properties,
 			newProps = {};
-		var inputs = this._modalEdit.find("form").find('input.changed');
+		var inputs = this._modalEdit.find("form").find('textarea.changed');
 		if (!inputs.length) {
 			this._modalEdit.modal("hide");
 			return false;
@@ -656,16 +657,20 @@ L.Control.Editor = L.Control.extend({
 		this._modalEdit.on("shown.bs.modal", function() {
 			var props = self._marker.feature.properties;
 			self._fillModal(props);
-			self._modalEdit.on("keypress", function(e) {
-				if (e.which === 13) {
-					// Trigger save and prevent event bubbling
-					// self._modalEdit.blur();
-					$("#smap-editor-editmodal-btnsave").focus();
-					self._saveAttributes();
-					self._modalEdit.modal("hide");
-					e.preventDefault();
-				}
-			});
+
+			if (self.options.saveOnPressEnter) {
+				// Trigger save and close modal if user presses Enter.
+				self._modalEdit.on("keypress", function(e) {
+					if (e.which === 13) {
+						// Trigger save and prevent event bubbling
+						// self._modalEdit.blur();
+						$("#smap-editor-editmodal-btnsave").focus();
+						self._saveAttributes();
+						self._modalEdit.modal("hide");
+						e.preventDefault();
+					}
+				});
+			}
 		});
 		
 
