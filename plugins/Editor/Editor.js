@@ -573,7 +573,7 @@ L.Control.Editor = L.Control.extend({
 
 		if (props === null) {
 			return false;
-		}
+		} 
 		var cont = this._modalEdit.find("#smap-editor-content");
 		var key, val, group, inputId,
 			form = $('<form role="form" />'),
@@ -596,6 +596,10 @@ L.Control.Editor = L.Control.extend({
 		}
 		form.find("textarea").on("change", function() {
 			$(this).addClass("changed");
+		}).on("focus", function() {
+			$(this).prop("rows", 5);
+		}).on("blur", function() {
+			$(this).prop("rows", 1);
 		});
 		cont.append(form);
 	},
