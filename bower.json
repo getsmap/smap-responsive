@@ -55,7 +55,8 @@
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "json3": "~3.3.2",
     "jquery-placeholder": "~2.1.0",
-	"osmbuildings": "./lib/osmbuildings/"
+    "osmbuildings": "./lib/osmbuildings/",
+    "jquery.scrollTo": "~1.4.14"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -65,7 +66,7 @@
     },
     "bootstrap3-typeahead": {
       "main": [
-        "bootstrap3-typeahead.min.js"
+        "bootstrap3-typeahead.js"
       ]
     },
     "notify-custom": {
@@ -158,6 +159,6 @@
     "leaflet.draw": "~0.2.3"
   },
   "osmbuildings": {
-      "main": "OSMBuildings-Leaflet.js"
-    }
+    "main": "OSMBuildings-Leaflet.js"
+  }
 }

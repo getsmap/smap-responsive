@@ -354,6 +354,7 @@ L.Control.Search = L.Control.extend({
 				minLength: 2,
 				highlight: true,
 				hint: true,
+				showHintOnFocus: true,
 				updater: function(val) {
 					smap.cmd.loading(true);
 					geoLocate.call(self, val);
@@ -363,6 +364,7 @@ L.Control.Search = L.Control.extend({
 	//		   displayKey: 'value',
 	//		   source: bHound.ttAdapter(),
 		};
+
 		$.extend(typeheadOptions, this.options.acOptions || {});
 
 		if (this.options.wsAcUrl) {
@@ -391,9 +393,18 @@ L.Control.Search = L.Control.extend({
 			// Use local autocomplete words
 			typeheadOptions.source = this.options.wsAcLocal;
 		}
-
-		
 		$entry.typeahead(typeheadOptions);
+
+		$entry.on("keydown", function(e) {
+			var isDownKey = e.which === 38 || e.which === 40;  // Up or down key
+			if (isDownKey) {
+				var $item = $(".typeahead.dropdown-menu li.active");
+				var nbrOfRows = 3;
+				if ($item.index() >= nbrOfRows) {
+					$item.parent().scrollTo($item.prev().prev(), 0);
+				}
+			}
+		});
 	},
 	
 	
