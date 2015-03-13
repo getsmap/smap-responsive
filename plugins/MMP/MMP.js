@@ -72,7 +72,7 @@ L.Control.MMP = L.Control.extend({
 	_createBtn: function() {
 		var self = this;
 
-		this.$btn = $('<button id="smap-mmp-btn" title="' + self.lang.btnLabel + '" class="btn btn-default"><span class="fa fa-save"></span><label>'+this.lang.btnLabel+'</label></button>');
+		this.$btn = $('<button id="smap-mmp-btn" disabled title="' + self.lang.btnLabel + '" class="btn btn-default"><span class="fa fa-save"></span><label>'+this.lang.btnLabel+'</label></button>');
 		this.$btn.on("click", function () {
 			self.save();
 			return false;
@@ -99,6 +99,7 @@ L.Control.MMP = L.Control.extend({
 			e.target.closePopup();
 		});
 		marker.on("dragend", function(e) {
+			$("#smap-mmp-btn").prop("disabled", false);
 			e.target.openPopup();
 			self._latLng = e.target.getLatLng();
 		});
