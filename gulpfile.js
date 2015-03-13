@@ -55,6 +55,9 @@ var p = {
 		'dist/lib/GeoJSON.WFS/index.js',
 		'dist/lib/leaflet.draw/**/*.js',
 
+		'dist/lib/Leaflet.GeometryUtil/dist/*.js',
+		'dist/lib/Leaflet.Snap/*.js',
+
 		//'dist/lib/Leaflet.print-smap/**/*.js',
 		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
 		'dist/lib/**/*.js',
