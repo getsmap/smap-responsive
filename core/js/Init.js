@@ -85,7 +85,8 @@ smap.core.Init = L.Class.extend({
 		$.extend(this.map.options, theConfig.mapConfig || {});
 
 		// Extend smap options
-		var smapOptions = $.extend({}, smap.core.mainConfig.smapOptions, theConfig.smapOptions || {});
+		$.extend(smap.core.mainConfig.smapOptions, theConfig.smapOptions || {});
+		var smapOptions = smap.core.mainConfig.smapOptions;
 
 		// Set title
 		var b = utils.getBrowser();

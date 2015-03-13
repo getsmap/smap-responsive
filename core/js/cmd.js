@@ -167,7 +167,9 @@ smap.cmd = {
 		},
 		
 		
-		loading: function(show) {
+		loading: function(show, options) {
+			options = options || {};
+
 			var _lang = {
 				"sv": {
 						loading: 'Laddar'
@@ -179,6 +181,11 @@ smap.cmd = {
 
 			var langCode = this.getLang();
 			var lang = _lang.hasOwnProperty(langCode) ? _lang[langCode] : _lang["en"];
+
+			var text = options.text;
+			if (text instanceof Object) {
+				text = text[lang];
+			}
 
 			if (show && show === true) {
 
@@ -202,7 +209,7 @@ smap.cmd = {
 					"top": "50%",
 					"left": "50%"
 				});
-				$(this.spinner.el).append('<div id="loadingText">'+lang.loading+'</div>');
+				$(this.spinner.el).append('<div id="loadingText">'+(text || lang.loading)+'</div>');
 			}
 			else {
 				// this.loader.detach();

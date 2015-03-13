@@ -56,7 +56,9 @@
     "json3": "~3.3.2",
     "jquery-placeholder": "~2.1.0",
     "osmbuildings": "./lib/osmbuildings/",
-    "jquery.scrollTo": "~1.4.14"
+    "jquery.scrollTo": "~1.4.14",
+    "Leaflet.GeometryUtil": "https://github.com/makinacorpus/Leaflet.GeometryUtil.git#~0.3.2",
+    "Leaflet.Snap": "https://github.com/makinacorpus/Leaflet.Snap.git"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -109,6 +111,12 @@
         "dist/leaflet.draw-src.js",
         "dist/images/*.png"
       ]
+    },
+    "Leaflet.GeometryUtil": {
+      "main": "dist/leaflet.Geometryutil.js"
+    },
+    "Leaflet.Snap": {
+      "main": "leaflet.snap.js"
     },
     "leaflet.markercluster": {
       "main": [

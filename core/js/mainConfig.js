@@ -8,12 +8,13 @@ smap.core.mainConfig = {
 			// center: [0, 0],
 			// zoom: 2,
 			maxZoom: 18,
-			disabledRightClick: true,
+			disabledRightClick: true
 		},
 		
 		smapOptions: {
 			title: "sMap-responsive",
-			favIcon: "https://assets-cdn.github.com/favicon.ico" //"//assets.malmo.se/external/v4/favicon.ico"
+			favIcon: "https://assets-cdn.github.com/favicon.ico", //"//assets.malmo.se/external/v4/favicon.ico"
+			popupAutoPanPadding: [0, 70]  // left(right, top/bottom
 		},
 
 		toolbarPlugin: "Menu",
