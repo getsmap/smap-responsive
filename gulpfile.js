@@ -19,7 +19,7 @@ var order = require('gulp-order');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var rimraf = require('gulp-rimraf');
-var sass = require('gulp-sass');
+// var sass = require('gulp-sass');
 var stripDebug = require('gulp-strip-debug');
 var stylus = require('gulp-stylus');
 var todo = require('gulp-todo');
@@ -161,10 +161,10 @@ gulp.task('move', function() {
 gulp.task('ourcsscompile', function() {
 	var streamStylus = gulp.src(p.ourStylus, {base: "./"})
 			.pipe(stylus()).on("error", onError);
-	var streamSass = gulp.src(p.ourSass, {base: "./"})
-			.pipe(sass());
+	// var streamSass = gulp.src(p.ourSass, {base: "./"})
+	// 		.pipe(sass());
 
-	return es.merge(streamStylus, streamSass)
+	return es.merge(streamStylus) //streamSass)
 			.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9")) //.on('error', onError)
 			.pipe(gulp.dest("."));
 });

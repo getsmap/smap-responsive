@@ -170,6 +170,11 @@ smap.cmd = {
 		loading: function(show, options) {
 			options = options || {};
 
+			if (!window.Spinner) {
+				// IE8 cannot loading spinner lib for some reason
+				return false;
+			}
+			
 			var _lang = {
 				"sv": {
 						loading: 'Laddar'

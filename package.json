@@ -1,6 +1,6 @@
 {
   "name": "smap-responsive",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "A web mapping framework",
   "main": "gulpfile.js",
   "directories": {
@@ -39,7 +39,8 @@
     "imagemin-pngcrush": "^0.1.0",
     "main-bower-files": "^1.0.2",
     "matchdep": "^0.3.0",
-    "multipipe": "^0.1.2"
+    "multipipe": "^0.1.2",
+    "node-sass": "^3.0.0-alpha.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -52,7 +53,7 @@
     "map"
   ],
   "author": "Johan Lahti",
-  "license": "Apache Software License 2.0",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/getsmap/smap-responsive/issues"
   },

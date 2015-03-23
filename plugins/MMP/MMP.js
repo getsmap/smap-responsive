@@ -1,4 +1,6 @@
 
+document.domain = "malmo.se";
+
 L.Control.MMP = L.Control.extend({
 	options: {
 		position: 'topright'

@@ -30,6 +30,7 @@
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script type="text/javascript">
+			document.domain = "malmo.se";
 			$("body").on("smap:updatedata", function(e, mapData) {
 				alert("Följande data skickades från iframe till förälder:\n\n\n"+JSON.stringify(mapData));
 			});

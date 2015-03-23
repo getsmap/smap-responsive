@@ -5,20 +5,31 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, target-densitydpi=medium-dpi, minimal-ui">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="default">
-		<meta name="apple-mobile-web-app-title" content="sMap responsive">
+		<meta name="apple-mobile-web-app-title" content="smap responsive">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		
 		<title>smap-responsive</title>
+
+		<link rel="apple-touch-icon-precomposed" sizes="152x152" href="img/appicons/apple-touch-icon-152x152.png">
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/appicons/apple-touch-icon-144x144.png">
+		<link rel="apple-touch-icon-precomposed" sizes="120x120" href="img/appicons/apple-touch-icon-120x120.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/appicons/apple-touch-icon-114x114.png">
+		<link rel="apple-touch-icon-precomposed" sizes="76x76" href="img/appicons/apple-touch-icon-76x76.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/appicons/apple-touch-icon-72x72.png">
+		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="img/appicons/apple-touch-icon-57x57.png">
+		<link rel="apple-touch-icon-precomposed" href="img/appicons/apple-touch-icon.png">
+		<link rel="apple-touch-startup-image" href="img/appicons/Default-Landscape.jpg" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+		<link rel="apple-touch-startup-image" href="img/appicons/Default-Portrait.jpg" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+		<link rel="apple-touch-startup-image" href="img/appicons/Default.jpg" media="screen and (max-device-width: 320px)">
 
 		<!-- inject:css -->
 		<link rel="stylesheet" href="dist/lib/font-awesome/css/font-awesome.css">
 		<link rel="stylesheet" href="dist/lib/sass-bootstrap/dist/css/bootstrap.css">
 		<link rel="stylesheet" href="dist/lib/leaflet/dist/leaflet.css">
-		<link rel="stylesheet" href="dist/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css">
 		<link rel="stylesheet" href="dist/lib/Leaflet.label/dist/leaflet.label.css">
-		<link rel="stylesheet" href="dist/lib/bootstrap-3/css/bootstrap.icon-large.css">
+		<link rel="stylesheet" href="dist/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css">
 		<link rel="stylesheet" href="dist/lib/add-to-homescreen/style/addtohomescreen.css">
-		<link rel="stylesheet" href="dist/lib/html5-placeholder-polyfill/dist/placeholder_polyfill.min.css">
+		<link rel="stylesheet" href="dist/lib/bootstrap-3/css/bootstrap.icon-large.css">
 		<link rel="stylesheet" href="dist/lib/leaflet-usermarker/src/leaflet.usermarker.css">
 		<link rel="stylesheet" href="dist/lib/leaflet.draw/dist/leaflet.draw.css">
 		<link rel="stylesheet" href="core/css/app.css">
@@ -32,14 +43,14 @@
 		<link rel="stylesheet" href="plugins/MMP/MMP.css">
 		<link rel="stylesheet" href="plugins/MalmoHeader/MalmoHeader.css">
 		<link rel="stylesheet" href="plugins/MeasureDraw/MeasureDraw.css">
-		<link rel="stylesheet" href="plugins/Menu/Menu.css">
 		<link rel="stylesheet" href="plugins/Opacity/Opacity.css">
+		<link rel="stylesheet" href="plugins/Menu/Menu.css">
 		<link rel="stylesheet" href="plugins/Print/Print.css">
 		<link rel="stylesheet" href="plugins/RedirectClick/RedirectClick.css">
 		<link rel="stylesheet" href="plugins/Search/Search.css">
 		<link rel="stylesheet" href="plugins/SearchLund/SearchLund.css">
-		<link rel="stylesheet" href="plugins/SharePosition/SharePosition.css">
 		<link rel="stylesheet" href="plugins/ShareTweet/ShareTweet.css">
+		<link rel="stylesheet" href="plugins/SharePosition/SharePosition.css">
 		<link rel="stylesheet" href="plugins/Test/Test.css">
 		<link rel="stylesheet" href="plugins/ToolHandler/ToolHandler.css">
 		<link rel="stylesheet" href="plugins/osmbuildings/osmbuildings.css">
@@ -61,32 +72,27 @@
 		<script src="dist/lib/Leaflet.GeometryUtil/dist/leaflet.Geometryutil.js"></script>
 		<script src="dist/lib/Leaflet.Snap/leaflet.snap.js"></script>
 		<script src="lib/jquery.mobile.custom/jquery.mobile.custom.min.js"></script>
+		<script src="dist/lib/smap.leaflet.wfs-t/js/leaflet.gml.js"></script>
+		<script src="dist/lib/smap.leaflet.wfs-t/js/leaflet.wfst.js"></script>
 		<script src="dist/lib/leaflet-plugins/layer/tile/Bing.js"></script>
 		<script src="dist/lib/GeoJSON.Custom/index.js"></script>
 		<script src="dist/lib/Leaflet.NonTiledLayer/NonTiledLayer.WMS.js"></script>
 		<script src="dist/lib/TileLayer.EsriRest/index.js"></script>
-		<script src="dist/lib/es5-shim/es5-sham.js"></script>
 		<script src="dist/lib/bootstrap3-typeahead/bootstrap3-typeahead.js"></script>
-		<script src="dist/lib/bootstrap3-typeahead/bootstrap3-typeahead.min.js"></script>
+		<script src="dist/lib/es5-shim/es5-sham.js"></script>
 		<script src="dist/lib/jquery-placeholder/jquery.placeholder.js"></script>
 		<script src="dist/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
 		<script src="dist/lib/leaflet.print-smap/leaflet.print-src.js"></script>
-		<script src="dist/lib/notify-custom/notify.js"></script>
+		<script src="dist/lib/lodash/index.js"></script>
 		<script src="dist/lib/openlayers-smap/index.js"></script>
-		<script src="dist/lib/osmbuildings/index.js"></script>
 		<script src="dist/lib/spinjs/spin.js"></script>
-		<script src="dist/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
 		<script src="dist/lib/Leaflet.label/dist/leaflet.label.js"></script>
-		<script src="dist/lib/Placeholder/src/simple.js"></script>
+		<script src="dist/lib/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
 		<script src="dist/lib/esri-leaflet/dist/esri-leaflet-src.js"></script>
-		<script src="dist/lib/html5-placeholder-polyfill/dist/placeholder_polyfill.jquery.min.combo.js"></script>
 		<script src="dist/lib/jquery-xml2json/src/xml2json.js"></script>
-		<script src="dist/lib/leaflet-usermarker/src/leaflet.usermarker.js"></script>
 		<script src="dist/lib/leaflet-polyline-distance/dist/L.Polyline.measuredDistance.js"></script>
-		<script src="dist/lib/lodash/dist/lodash.compat.js"></script>
+		<script src="dist/lib/leaflet-usermarker/src/leaflet.usermarker.js"></script>
 		<script src="dist/lib/screenfull/dist/screenfull.js"></script>
-		<script src="dist/lib/smap.leaflet.wfs-t/js/leaflet.gml.js"></script>
-		<script src="dist/lib/smap.leaflet.wfs-t/js/leaflet.wfst.js"></script>
 		<script src="core/js/smap.js"></script>
 		<script src="core/js/Div.js"></script>
 		<script src="core/js/Init.js"></script>
@@ -99,19 +105,19 @@
 		<script src="core/js/utils.js"></script>
 		<script src="plugins/Add2HomeScreen/Add2HomeScreen.js"></script>
 		<script src="plugins/DrawSmap/Draw.js"></script>
-		<script src="plugins/FullScreen/FullScreen.js"></script>
 		<script src="plugins/Editor/Editor.js"></script>
+		<script src="plugins/FullScreen/FullScreen.js"></script>
 		<script src="plugins/Geolocate/Geolocate.js"></script>
 		<script src="plugins/GuideIntroScreen/GuideIntroScreen.js"></script>
-		<script src="plugins/Info/Info.js"></script>
 		<script src="plugins/GuidePopup/GuidePopup.js"></script>
+		<script src="plugins/Info/Info.js"></script>
 		<script src="plugins/LayerSwitcher/LayerSwitcher.js"></script>
 		<script src="plugins/MMP/MMP.js"></script>
-		<script src="plugins/Mapillary/Mapillary.js"></script>
 		<script src="plugins/MalmoHeader/MalmoHeader.js"></script>
+		<script src="plugins/Mapillary/Mapillary.js"></script>
 		<script src="plugins/MeasureDraw/MeasureDraw.js"></script>
-		<script src="plugins/Menu/Menu.js"></script>
 		<script src="plugins/Opacity/Opacity.js"></script>
+		<script src="plugins/Menu/Menu.js"></script>
 		<script src="plugins/Print/Print.js"></script>
 		<script src="plugins/Printer/Printer.js"></script>
 		<script src="plugins/RedirectClick/RedirectClick.js"></script>
@@ -120,11 +126,11 @@
 		<script src="plugins/SelectVector/SelectVector.js"></script>
 		<script src="plugins/SelectWMS/SelectWMS.js"></script>
 		<script src="plugins/ShareLink/ShareLink.js"></script>
-		<script src="plugins/SharePosition/SharePosition.js"></script>
 		<script src="plugins/ShareTweet/ShareTweet.js"></script>
+		<script src="plugins/SharePosition/SharePosition.js"></script>
 		<script src="plugins/ToolHandler/ToolHandler.js"></script>
-		<script src="plugins/Zoombar/Zoombar.js"></script>
 		<script src="plugins/VspuHeaderLund/VspuHeaderLund.js"></script>
+		<script src="plugins/Zoombar/Zoombar.js"></script>
 		<script src="plugins/osmbuildings/osmbuildings.js"></script>
 		<!-- endinject -->
 

@@ -34,10 +34,10 @@
     "modernizr": "~2.6.2",
     "openlayers-smap": "./lib/openlayers-smap/",
     "spinjs": "~2.0.1",
-    "sass-bootstrap": "~3.0.0",
+    "sass-bootstrap": "latest",
     "add-to-homescreen": "~3.0.7",
     "screenfull": "~1.2.1",
-    "esri-leaflet": "latest",
+    "esri-leaflet": "v1.0.0-rc.5",
     "leaflet.draw": "latest",
     "leaflet-plugins": "~1.2.0",
     "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
@@ -46,19 +46,17 @@
     "proj4": "~2.2.2",
     "jquery": "1.11.2",
     "bootstrap-3": "./lib/bootstrap-3/",
-    "notify-custom": "./lib/notify-custom/",
     "leaflet.print-smap": "./lib/leaflet.print-smap/",
     "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/",
     "malmo_shared_assets": "malmostad/shared_assets",
     "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
-    "lodash": "~2.4.1",
+    "lodash": "./lib/lodash/",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "json3": "~3.3.2",
     "jquery-placeholder": "~2.1.0",
-    "osmbuildings": "./lib/osmbuildings/",
     "jquery.scrollTo": "~1.4.14",
     "Leaflet.GeometryUtil": "https://github.com/makinacorpus/Leaflet.GeometryUtil.git#~0.3.2",
-    "Leaflet.Snap": "https://github.com/makinacorpus/Leaflet.Snap.git"
+    "Leaflet.Snap": "./lib/leaflet.snap/"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -161,12 +159,9 @@
         "NonTiledLayer.js",
         "NonTiledLayer.WMS.js"
       ]
+    },
+    "osmbuildings": {
+      "main": "OSMBuildings-Leaflet.js"
     }
-  },
-  "devDependencies": {
-    "leaflet.draw": "~0.2.3"
-  },
-  "osmbuildings": {
-    "main": "OSMBuildings-Leaflet.js"
   }
 }
