@@ -589,6 +589,13 @@ L.Control.MeasureDraw = L.Control.extend({
 			layer.on("mouseover", this.onMouseOver);
 			layer.on("mouseout", this.onMouseOut);
 			label.options.clickable = true;
+
+			if (type === "marker") {
+				$(label._icon).on("tap click", function() {
+					// Prevent click from going through for marker's coordinates systems button
+					return false;
+				});
+			}
 			
 			// Set this layer as "parent feature" of all labels so 
 			// we know where they belong (when removing the feature we 
