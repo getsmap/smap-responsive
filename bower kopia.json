@@ -1,0 +1,171 @@
+{
+  "name": "smap-responsive",
+  "version": "1.1.0",
+  "homepage": "https://github.com/getsmap/smap-responsive",
+  "authors": [
+    "Johan Lahti <johanlahti@gmail.com>"
+  ],
+  "description": "A web mapping framework",
+  "main": "index.html",
+  "keywords": [
+    "map"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "GeoJSON.WFS": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.WFS.js",
+    "Leaflet.label": "~0.2.1",
+    "GeoJSON.Custom": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js",
+    "Leaflet.awesome-markers": "~2.0.2",
+    "bootstrap3-typeahead": "~3.0.3",
+    "es5-shim": "~3.4.0",
+    "font-awesome": "~4.2.0",
+    "jquery-xml2json": "~0.0.6",
+    "leaflet-usermarker": "https://github.com/heyman/leaflet-usermarker.git",
+    "leaflet.markercluster": "~0.4.0",
+    "leaflet": "latest",
+    "modernizr": "~2.6.2",
+    "openlayers-smap": "./lib/openlayers-smap/",
+    "spinjs": "~2.0.1",
+    "sass-bootstrap": "~3.0.0",
+    "add-to-homescreen": "~3.0.7",
+    "screenfull": "~1.2.1",
+    "esri-leaflet": "v1.0.0-rc.5",
+    "leaflet.draw": "latest",
+    "leaflet-plugins": "~1.2.0",
+    "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
+    "leaflet-polyline-distance": "./lib/leaflet-polyline-distance/",
+    "bootstrap-stylus": "~3.2.0",
+    "proj4": "~2.2.2",
+    "jquery": "1.11.2",
+    "bootstrap-3": "./lib/bootstrap-3/",
+    "notify-custom": "./lib/notify-custom/",
+    "leaflet.print-smap": "./lib/leaflet.print-smap/",
+    "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/",
+    "malmo_shared_assets": "malmostad/shared_assets",
+    "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
+    "lodash": "./lib/lodash/",
+    "Leaflet.print-smap": "./lib/leaflet.print-smap/",
+    "json3": "~3.3.2",
+    "jquery-placeholder": "~2.1.0",
+    "jquery.scrollTo": "~1.4.14",
+    "Leaflet.GeometryUtil": "https://github.com/makinacorpus/Leaflet.GeometryUtil.git#~0.3.2",
+    "Leaflet.Snap": "https://github.com/makinacorpus/Leaflet.Snap.git"
+  },
+  "overrides": {
+    "leaflet-polyline-distance": {
+      "main": [
+        "dist/L.Polyline.measuredDistance.js"
+      ]
+    },
+    "bootstrap3-typeahead": {
+      "main": [
+        "bootstrap3-typeahead.js"
+      ]
+    },
+    "notify-custom": {
+      "main": [
+        "notify.js"
+      ]
+    },
+    "bootstrap-3": {
+      "main": [
+        "css/bootstrap.icon-large.css",
+        "fonts/glyphicons-draw.png"
+      ]
+    },
+    "es5-shim": {
+      "main": [
+        "es5-shim.js",
+        "es5-sham.js"
+      ]
+    },
+    "esri-leaflet": {
+      "main": "dist/esri-leaflet-src.js"
+    },
+    "leaflet": {
+      "main": [
+        "dist/leaflet-src.js",
+        "dist/leaflet.css",
+        "dist/images/layers-2x.png",
+        "dist/images/layers.png",
+        "dist/images/marker-icon-2x.png",
+        "dist/images/marker-icon.png",
+        "dist/images/marker-shadow.png"
+      ]
+    },
+    "Leaflet.favorDoubleClick": {
+      "main": "src/*.js"
+    },
+    "leaflet.draw": {
+      "main": [
+        "dist/leaflet.draw.css",
+        "dist/leaflet.draw-src.js",
+        "dist/images/*.png"
+      ]
+    },
+    "Leaflet.GeometryUtil": {
+      "main": "dist/leaflet.Geometryutil.js"
+    },
+    "Leaflet.Snap": {
+      "main": "leaflet.snap.js"
+    },
+    "leaflet.markercluster": {
+      "main": [
+        "leaflet.markercluster.js",
+        "MarkerCluster.Default.css",
+        "MarkerCluster.css"
+      ]
+    },
+    "leaflet-usermarker": {
+      "main": [
+        "src/leaflet.usermarker.js",
+        "src/leaflet.usermarker.css",
+        "src/img/bluedot.png"
+      ]
+    },
+    "Leaflet.label": {
+      "main": [
+        "dist/leaflet.label.js",
+        "dist/leaflet.label.css"
+      ]
+    },
+    "smap.leaflet.wfs-t": {
+      "main": [
+        "js/leaflet.gml.js",
+        "js/leaflet.wfst.js"
+      ]
+    },
+    "singleTileWms": {
+      "main": "SingleTile.js"
+    },
+    "leaflet-plugins": {
+      "main": "layer/tile/Bing.js"
+    },
+    "malmo_shared_assets": {
+      "main": [
+        "stylesheets/**/*.scss",
+        "!stylesheets/internal/*.scss"
+      ]
+    },
+    "Leaflet.NonTiledLayer": {
+      "main": [
+        "NonTiledLayer.js",
+        "NonTiledLayer.WMS.js"
+      ]
+    }
+  },
+  "devDependencies": {
+    "leaflet.draw": "~0.2.3"
+  },
+  "osmbuildings": {
+    "main": "OSMBuildings-Leaflet.js"
+  }
+}

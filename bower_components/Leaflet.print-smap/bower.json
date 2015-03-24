@@ -1,0 +1,20 @@
+{
+  "name": "Leaflet.print-smap",
+  "version": "1.0",
+  "homepage": "https://github.com/getsmap/smap-responsive/",
+  "authors": [
+    "johanlahti <info@lahtitude.se>"
+  ],
+  "description": "smap version of print",
+  "main": "leaflet.print-src.js",
+  "keywords": [
+    "print",
+    "leaflet"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ]
+}

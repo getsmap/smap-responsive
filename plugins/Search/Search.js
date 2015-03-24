@@ -199,6 +199,8 @@ L.Control.Search = L.Control.extend({
 		this.__onCreateParams = this.__onCreateParams || $.proxy( this._onCreateParams, this );
 		smap.event.on("smap.core.createparams", this.__onCreateParams);
 
+		$(".leaflet-top.leaflet-left").addClass("with-search-bar");
+
 		// this.$container.on("mousedown", $.noop);
 		// this.$container.on("touchstart", $.noop);
 		
@@ -213,6 +215,7 @@ L.Control.Search = L.Control.extend({
 		smap.event.off("smap.core.applyparams", this.__onApplyParams);
 		smap.event.off("smap.core.createparams", this.__onCreateParams);
 		this.map.off("click", this._blurSearch);
+		$(".leaflet-top.leaflet-left").removeClass("with-search-bar");
 	},
 	
 	_onApplyParams: function(e, p) {
@@ -354,7 +357,7 @@ L.Control.Search = L.Control.extend({
 				minLength: 2,
 				highlight: true,
 				hint: true,
-				showHintOnFocus: true,
+				// showHintOnFocus: true,
 				updater: function(val) {
 					smap.cmd.loading(true);
 					geoLocate.call(self, val);
