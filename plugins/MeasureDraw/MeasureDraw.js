@@ -396,7 +396,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		html +=		"<br><div class='measuredraw-morecoords hidden'><strong>Sweref99 TM (EPSG:3006)</strong><br>"+
 					"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
 					"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
-					"<strong>Sweref99 13 39 (EPSG:3008)</strong><br>"+
+					"<strong>Sweref99 13 30 (EPSG:3008)</strong><br>"+
 					"East: &nbsp;"+utils.round(espg3008.lng)+"<br>"+
 					"North: &nbsp;"+utils.round(espg3008.lat)+"<br><br>"+
 					"<strong>RT90 2.5 gon V (EPSG:3021)</strong><br>"+

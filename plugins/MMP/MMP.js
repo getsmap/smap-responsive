@@ -1,9 +1,8 @@
 
-document.domain = "malmo.se";
-
 L.Control.MMP = L.Control.extend({
 	options: {
-		position: 'topright'
+		position: 'topright',
+		forcedDomain: "malmo.se"
 	},
 	
 	_lang: {
@@ -32,6 +31,10 @@ L.Control.MMP = L.Control.extend({
 	},
 
 	onAdd: function(map) {
+		if (document.domain === "kartor.malmo.se") {
+			// Solve cross-domain issue between iframe and parent
+			document.domain = this.options.forcedDomain;
+		}
 		this.map = map;
 		this._container = L.DomUtil.create('div', 'leaflet-control-mmp');
 		L.DomEvent.disableClickPropagation(this._container);

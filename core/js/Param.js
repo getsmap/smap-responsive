@@ -148,14 +148,34 @@ smap.core.Param = L.Class.extend({
 			/*
 			 * e.g. xy=13.0,55.0,A%popup%20text (third parameter is optional)
 			 */ 
-			var marker = L.marker( L.latLng(parseFloat(p.XY[1]), parseFloat(p.XY[0])) );
-			this.map.addLayer(marker);
+			var north = parseFloat(p.XY[1]),
+				east = parseFloat(p.XY[0]),
+				html = null;
 			if (p.XY.length > 2) {
-				var html = '<p>'+p.XY[2]+'</p><button class="btn btn-default smap-core-btn-popup">'+this.lang.remove+'</button>';
+				var thirdParam = p.XY[2];
+				html = '<p>'+thirdParam+'</p><button class="btn btn-default smap-core-btn-popup">'+this.lang.remove+'</button>';
+				if (p.XY.length > 3) {
+					var fourthParam = p.XY[3];
+					if (/^EPSG:/.test(fourthParam) != true) {
+						// Add "EPSG:" if only number was added
+						fourthParam = "EPSG:"+fourthParam;
+					}
+					var coordsArr = utils.projectPoint(east, north, fourthParam, "EPSG:4326");
+					east = coordsArr[0];
+					north = coordsArr[1];
+				}
+			}
+			var marker = L.marker([north, east]);
+			this.map.addLayer(marker);
+			if (html) {
+				function onPopupOpen() {
+					$(".smap-core-btn-popup").on("click", function() {
+						self.map.removeLayer(marker);
+						return false;
+					});
+				}
+				this.map.off("popupopen", onPopupOpen).on("popupopen", onPopupOpen);
 				marker.bindPopup(html).openPopup();
-				$(".smap-core-btn-popup").on("click", function() {
-					self.map.removeLayer(marker);
-				});
 			}
 		}
 		smap.event.trigger("smap.core.applyparams", p);
