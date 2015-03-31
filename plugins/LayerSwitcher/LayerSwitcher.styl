@@ -35,6 +35,24 @@ indentDist = 1.3em
 	border-radius 0 0.4em 0.4em 0
 	// border-radius 0
 
+.lswitch-btnhide.btn
+	display table-cell
+	right 0
+	vertical-align middle
+	position relative
+	top 0
+	float right
+	margin-top -0.4em
+	outline 0
+	i
+		transition all 0.2s
+		
+.lswitch-btnhide.btn:focus
+	outline 0
+	
+.rotate-90
+	transform rotate(90deg)
+
 // This class is temporarily added to the mapdiv during slide to avoid 
 // changes in media query width when runnning the map in an iframe
 .mapdiv-slidetransition
@@ -42,6 +60,7 @@ indentDist = 1.3em
 
 .lswitch-panel .panel
 	box-shadow none
+	transition opacity 0.2s
 
 .lswitch-panelslide
 	transition margin-left 300ms ease
@@ -216,6 +235,10 @@ indentDist = 1.3em
 	border none
 	background-color #38454E
 
+.lswitch-panel
+	.list-group
+		transition opacity 0.2s
+		// visible hidden
 
 
 /* Added to html and body temporarily to avoid scrollbars during transitions */
@@ -245,6 +268,9 @@ indentDist = 1.3em
 
 
 @media (max-width: 991px)
+	.lswitch-btnhide.btn
+		display none
+		
 	.lswitch-cat
 		color #fff
 
@@ -296,10 +322,38 @@ indentDist = 1.3em
 		font-size 1.2em
 	
 
-
+@keyframes slipout
+	0%
+		margin-left 0
+	50%
+		margin-left -100%
+	100%
+		margin-left 0
 
 @media (min-width: 992px)
 	/* For desktop computers */
+	.lswitch-displaynone
+		.list-group
+			display none
+		.panel:nth-child(2)
+			display none
+	
+	.lswitch-panel.lswitch-hidden
+		.panel-heading
+			border-width 1px
+		.panel-heading:nth-child(1)
+			span
+				animation-name slipout
+				animation-duration 0.4s
+				
+		.list-group
+			opacity 0
+		.panel:nth-child(2)
+			opacity 0
+
+	.slipout-anim
+		animation-name slipout
+		animation-duration 0.6s
 
 	a.list-group-item
 		color #000

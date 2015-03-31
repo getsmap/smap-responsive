@@ -5,6 +5,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		unfoldOnClick: true,
 		olFirst: false,
 		unfoldAll: false,
+		btnHide: true,
 		catIconClass: "fa fa-chevron-right" //fa-chevron-circle-right
 
 	},
@@ -13,12 +14,20 @@ L.Control.LayerSwitcher = L.Control.extend({
 		"sv": {
 			baselayers: "Bakgrundslager",
 			overlays: "Kartskikt",
-			close: "Stäng"
+			close: "Stäng",
+			hide: "Göm",
+			btnHideTooltip: "Göm lagerväljaren",
+			btnShowTooltip: "Visa lagerväljaren",
+			layerSwitcher: "Lagerväljare"
 		},
 		"en": {
 			baselayers: "Baselayers",
 			overlays: "Overlays",
-			close: "Close"
+			close: "Close",
+			hide: "Hide",
+			btnHideTooltip: "Hide layer switcher",
+			btnShowTooltip: "Show layer switcher",
+			layerSwitcher: "Layer switcher"
 		}
 	},
 	
@@ -284,6 +293,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	_addPanel: function() {
+		var self = this;
+
 		this.$panel = $('<div class="lswitch-panel unselectable" />');
 		// smap.event.on("smap.core.pluginsadded", function() {
 		// 	if ( $("body > header.navbar").length ) {
@@ -304,16 +315,66 @@ L.Control.LayerSwitcher = L.Control.extend({
 		
 		this.$list = $(
 			'<div class="panel panel-default lswitch-panel-bl">'+
-				'<div class="panel-heading">'+this.lang.baselayers+'</div>'+
+				'<div class="panel-heading"><span>'+this.lang.baselayers+'</span></div>'+
 				'<div id="lswitch-blcont" class="list-group"></div>'+
 			'</div>'+
 			'<div class="panel panel-default lswitch-panel-ol">'+
-				'<div class="panel-heading">'+this.lang.overlays+'</div>'+
+				'<div class="panel-heading"><span>'+this.lang.overlays+'</span></div>'+
 				'<div id="lswitch-olcont" class="list-group"></div>'+
 			'</div>');
 		this.$panel.append(this.$list);
 		if (this.options.olFirst && this.options.olFirst === true) {
 			this.$panel.prepend( this.$panel.find(".lswitch-panel-ol") );
+		}
+		if (this.options.btnHide) {
+			var $btn = $('<button title="'+this.lang.btnHideTooltip+'" type="button" class="lswitch-btnhide btn btn-default"><i class="fa fa-chevron-down"></i></button>');   //'+this.lang.hide+'
+			this.$panel.find(".panel-heading:first").append( $btn );
+
+			function setTooltip(text) {
+				$btn.prop("title", text);
+				$btn.tooltip("destroy");
+				$btn.tooltip({placement: "right", text: text, container: "#maindiv"});
+			}
+			setTooltip(this.lang.btnHideTooltip);
+			var oldText = $btn.parent().text();
+
+			var working = false;
+			$btn.on("tap click", function() {
+				var $this = $(this);
+				if (working) {
+					return false;
+				}
+				var className = "rotate-90";
+				var icon = $this.find("i");
+				if (icon.hasClass(className)) {
+					// Showing
+					icon.removeClass(className);
+					$(".lswitch-panel").removeClass("lswitch-displaynone");
+					$this.prev().text(oldText);
+					// $(".lswitch-panel .panel-heading span").removeClass("slipout-anim").addClass("slipout-anim");
+					setTimeout(function() {
+						$(".lswitch-panel").removeClass("lswitch-hidden");
+					}, 1);
+					
+					setTimeout(function() {
+						setTooltip(self.lang.btnHideTooltip);
+					}, 300);
+					
+				}
+				else {
+					// Hiding
+					working = true;
+					icon.addClass(className);
+					$(".lswitch-panel").addClass("lswitch-hidden");
+					setTooltip(self.lang.btnShowTooltip);
+					$this.prev().text(self.lang.layerSwitcher);
+					setTimeout(function() {
+						$(".lswitch-panel").addClass("lswitch-displaynone");
+						working = false;
+					}, 200);
+				}
+				return false;
+			});
 		}
 		$("#maindiv").append( this.$panel );
 	},
@@ -594,7 +655,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		row.on("tap", this.__onRowTap);
 		row.data("t", t); // Faster to fetch than fetching from config on click
 		
-		if (o.legend && !L.Browser.touch) {
+		if (o.legend && !(L.Browser.touch && $(window).width() < this.options.pxDesktop)) {
 			this._addLegend(row, o.legend);
 		}
 		if (o.dialog) {

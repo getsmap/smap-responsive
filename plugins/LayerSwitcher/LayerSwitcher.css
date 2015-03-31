@@ -12,6 +12,28 @@
   cursor: pointer;
   border-radius: 0 0.4em 0.4em 0;
 }
+.lswitch-btnhide.btn {
+  display: table-cell;
+  right: 0;
+  vertical-align: middle;
+  position: relative;
+  top: 0;
+  float: right;
+  margin-top: -0.4em;
+  outline: 0;
+}
+.lswitch-btnhide.btn i {
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+.lswitch-btnhide.btn:focus {
+  outline: 0;
+}
+.rotate-90 {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
 .mapdiv-slidetransition {
   -webkit-transition: all 0.3s ease !important;
   transition: all 0.3s ease !important;
@@ -19,6 +41,8 @@
 .lswitch-panel .panel {
   -webkit-box-shadow: none;
   box-shadow: none;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
 }
 .lswitch-panelslide {
   -webkit-transition: margin-left 300ms ease;
@@ -151,6 +175,10 @@
   border: none;
   background-color: #38454e;
 }
+.lswitch-panel .list-group {
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+}
 /* Added to html and body temporarily to avoid scrollbars during transitions */
 .lswitch-overflow-hidden {
   overflow: hidden !important;
@@ -175,6 +203,9 @@
   -webkit-overflow-scrolling: touch;
 }
 @media (max-width: 991px) {
+  .lswitch-btnhide.btn {
+    display: none;
+  }
   .lswitch-cat {
     color: #fff;
   }
@@ -224,6 +255,33 @@
   }
 }
 @media (min-width: 992px) {
+  .lswitch-displaynone .list-group {
+    display: none;
+  }
+  .lswitch-displaynone .panel:nth-child(2) {
+    display: none;
+  }
+  .lswitch-panel.lswitch-hidden .panel-heading {
+    border-width: 1px;
+  }
+  .lswitch-panel.lswitch-hidden .panel-heading:nth-child(1) span {
+    -webkit-animation-name: slipout;
+    animation-name: slipout;
+    -webkit-animation-duration: 0.4s;
+    animation-duration: 0.4s;
+  }
+  .lswitch-panel.lswitch-hidden .list-group {
+    opacity: 0;
+  }
+  .lswitch-panel.lswitch-hidden .panel:nth-child(2) {
+    opacity: 0;
+  }
+  .slipout-anim {
+    -webkit-animation-name: slipout;
+    animation-name: slipout;
+    -webkit-animation-duration: 0.6s;
+    animation-duration: 0.6s;
+  }
   a.list-group-item {
     color: #000;
   }
@@ -346,5 +404,27 @@
   #lswitch-olcont a:last-child,
   #lswitch-blcont a:last-child {
     border-radius: 0 0 0.4em 0.4em;
+  }
+}
+@-webkit-keyframes slipout {
+  0% {
+    margin-left: 0;
+  }
+  50% {
+    margin-left: -100%;
+  }
+  100% {
+    margin-left: 0;
+  }
+}
+@keyframes slipout {
+  0% {
+    margin-left: 0;
+  }
+  50% {
+    margin-left: -100%;
+  }
+  100% {
+    margin-left: 0;
   }
 }
