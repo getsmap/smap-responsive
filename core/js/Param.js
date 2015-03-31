@@ -143,12 +143,13 @@ smap.core.Param = L.Class.extend({
 		else {
 			this.map.fitWorld();
 		}
-		
+
 		if (p.XY) {
 			/*
 			 * e.g. xy=13.0,55.0,A%popup%20text (third parameter is optional)
-			 */ 
-			var north = parseFloat(p.XY[1]),
+			 */
+			var orgParams = this.getWebParamsAsObject(),
+				north = parseFloat(p.XY[1]),
 				east = parseFloat(p.XY[0]),
 				html = null;
 			if (p.XY.length > 2) {
@@ -167,6 +168,10 @@ smap.core.Param = L.Class.extend({
 			}
 			var marker = L.marker([north, east]);
 			this.map.addLayer(marker);
+			if (!orgParams.CENTER) {
+				// Center around marker
+				this.map.setView(marker.getLatLng(), orgParams.ZOOM || 16);
+			}
 			if (html) {
 				function onPopupOpen() {
 					$(".smap-core-btn-popup").on("click", function() {
@@ -178,6 +183,7 @@ smap.core.Param = L.Class.extend({
 				marker.bindPopup(html).openPopup();
 			}
 		}
+		
 		smap.event.trigger("smap.core.applyparams", p);
 	},
 	
