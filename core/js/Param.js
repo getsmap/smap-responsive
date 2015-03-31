@@ -170,7 +170,7 @@ smap.core.Param = L.Class.extend({
 			this.map.addLayer(marker);
 			if (!orgParams.CENTER) {
 				// Center around marker
-				this.map.setView(marker.getLatLng(), orgParams.ZOOM || 16);
+				this.map.setView(marker.getLatLng(), orgParams.ZOOM || 16, {animate: false});
 			}
 			if (html) {
 				function onPopupOpen() {
