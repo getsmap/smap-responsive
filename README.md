@@ -95,7 +95,7 @@ The application can be called with various URL parameters. For instance, [http:/
 
 
 
-#####Plugins parameters (for the plugins hosted here):
+#####Plugin parameters (for the plugins hosted here):
 
 | Parameter key |  Parameter value(s) | Decides | Example value | Plugin |
 | ------------- | ------------- | ------------- | ------------- | ---------- |
