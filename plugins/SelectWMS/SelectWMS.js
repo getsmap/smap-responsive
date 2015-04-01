@@ -1,10 +1,10 @@
 L.Control.SelectWMS = L.Control.extend({
 	options: {
 		wmsVersion: "1.3.0",
-		outputFormat: "GML2",
+		// outputFormat: "GML2",
 		info_format: "text/plain",
 		maxFeatures: 20,
-		buffer: 10,
+		buffer: 12,
 		useProxy: false
 	},
 	

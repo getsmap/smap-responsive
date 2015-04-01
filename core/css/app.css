@@ -44,12 +44,14 @@ body {
   padding: 12px 18px;
   max-width: 4.1em;
   min-width: 3.1em;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 .mf-v4 .leaflet-top {
   top: 43px;
 }
 .leaflet-bottom.leaflet-right .btn {
-  max-width: 50px;
+  max-width: 3.5em;
   min-width: 100%;
 }
 .leaflet-maplabel {

@@ -1,7 +1,7 @@
 L.Control.LayerSwitcher = L.Control.extend({
 	options: {
 		pxDesktop: 992,
-		toggleSubLayersOnClick: true,
+		toggleSubLayersOnClick: false,
 		unfoldOnClick: true,
 		olFirst: false,
 		unfoldAll: false,
@@ -330,12 +330,14 @@ L.Control.LayerSwitcher = L.Control.extend({
 			var $btn = $('<button title="'+this.lang.btnHideTooltip+'" type="button" class="lswitch-btnhide btn btn-default"><i class="fa fa-chevron-down"></i></button>');   //'+this.lang.hide+'
 			this.$panel.find(".panel-heading:first").append( $btn );
 
-			function setTooltip(text) {
-				$btn.prop("title", text);
-				$btn.tooltip("destroy");
-				$btn.tooltip({placement: "right", text: text, container: "#maindiv"});
+			function setTooltip($theBtn, text) {
+				// $(".tooltip").tooltip("destroy");
+				$theBtn.tooltip("destroy"); // Doesn't work for me! tag not removed from dom. TODO: Check if newer version of Bootstrap solves it.
+				$(".tooltip").remove(); // Fix for previous row mal function.
+				$theBtn.prop("title", text);
+				$theBtn.tooltip({placement: "right", text: text, container: "#maindiv"});
 			}
-			setTooltip(this.lang.btnHideTooltip);
+			setTooltip($btn, this.lang.btnHideTooltip);
 			var oldText = $btn.parent().text();
 
 			var working = false;
@@ -355,18 +357,14 @@ L.Control.LayerSwitcher = L.Control.extend({
 					setTimeout(function() {
 						$(".lswitch-panel").removeClass("lswitch-hidden");
 					}, 1);
-					
-					setTimeout(function() {
-						setTooltip(self.lang.btnHideTooltip);
-					}, 300);
-					
+					setTooltip($this, self.lang.btnHideTooltip);
 				}
 				else {
 					// Hiding
 					working = true;
 					icon.addClass(className);
 					$(".lswitch-panel").addClass("lswitch-hidden");
-					setTooltip(self.lang.btnShowTooltip);
+					setTooltip($this, self.lang.btnShowTooltip);
 					$this.prev().text(self.lang.layerSwitcher);
 					setTimeout(function() {
 						$(".lswitch-panel").addClass("lswitch-displaynone");

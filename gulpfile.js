@@ -216,11 +216,11 @@ gulp.task('images', function () {
         .pipe(gulp.dest(imgDest));
 });
 
-// gulp.task('configs', function() {
-// 	return gulp
-// 		.src(['configs/*.js'])
-// 		.pipe(gulp.dest("dist/configs"));
-// });
+gulp.task('configs', function() {
+	return gulp
+		.src(['examples/configs/*.js'])
+			.pipe(gulp.dest("dist/configs"));
+});
 
 // gulp.task('movecssresources', function() {
 // 	return gulp
@@ -292,7 +292,7 @@ gulp.task('html', ["htmlcompress"]);
 // Build our code (during dev)
 gulp.task('ourcode', ["ourcss", "ourjs"]);  // "move"
 
-gulp.task('_full', ["images", "html", "move"]);
+gulp.task('_full', ["images", "html", "move", "configs"]);
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).

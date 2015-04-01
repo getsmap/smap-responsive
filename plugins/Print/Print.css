@@ -1,8 +1,8 @@
+.sprint-modal .checkbox {
+  font-size: 90%;
+}
 .sprint-modal .checkbox label {
   padding: 0;
-}
-#conditionsLink {
-  font-size: 1.1em;
 }
 #conditionsLink span {
   color: #00f;

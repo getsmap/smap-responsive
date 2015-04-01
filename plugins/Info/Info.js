@@ -10,13 +10,7 @@ L.Control.Info = L.Control.extend({
 					'<h4>Vad?</h4>'+
 			  		'<p>Smap-responsive är ett ramverk för att skapa kartor med "responsiv design". '+
 			  			'Det innebär att kartorna anpassar sitt innehåll efter skärmens storlek. Ramverket kan byggas ut med plugins (Leaflet-kontroller).</p>'+
-		  			'<p>Koden är öppen och kan laddas ner gratis från <a target="_blank" href="https://github.com/getsmap/smap-responsive/">GitHub</a>.</p>'+
-		  			'<h4>Vem?</h4>'+
-			  		'<p>Ramverket har ursprungligen utvecklats av Malmö Stadsbyggnadskontor men utvecklas numera tillsammans med Kristianstad, Helsingborg och Lunds kommun.'+
-			  		'<h4>Kontakta oss!</h4>'+
-					'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
-					'<p>Vill du veta mer om andra öppenkällkodsprojekt som drivs under namnet sMap – eller veta mer om bakomliggande geodata? Kontakta <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
-					'<a href="mailto :Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
+		  			'<p>Koden är öppen och kan laddas ner gratis från <a target="_blank" href="https://github.com/getsmap/smap-responsive/">GitHub</a>.</p>'
 			},
 			"en": {
 				titleInfo: "<h4>Welcome to smap-responsive!</h4>",
@@ -24,13 +18,7 @@ L.Control.Info = L.Control.extend({
 					'<h4>What?</h4>'+
 			  		'<p>Smap-responsive is a framework for creating maps with a "responsive design". '+
 			  			'This means the site adapts the content to the screen size. The framework can be extended with plugins (Leaflet controls).</p>'+
-		  			'<p>The code is open source and can be downloaded free from <a target="_blank" href="https://github.com/getsmap/smap-responsive/">GitHub</a>.</p>'+
-		  			'<h4>Who?</h4>'+
-			  		'<p>The framework was originally developed by Malmö Stadsbyggnadskontor but is now developed together with the municipalities of Kristianstad, Helsingborg and Lund.'+
-			  		'<h4>Feed-back!</h4>'+
-					'<p>Do you have suggestions, or are you interested in contributing to the development of sMap-responsive? Please contact <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
-					'<p>Do you want more info about other open source projects denoted as "sMap" – or do you want to know more about the geodata in the map(s)? Then contact <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> or '+
-					'<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
+		  			'<p>The code is open source and can be downloaded free from <a target="_blank" href="https://github.com/getsmap/smap-responsive/">GitHub</a>.</p>'
 			}
 		}
 	},

@@ -2,7 +2,6 @@
 	L.Control.Print = L.Control.extend({
 		options: {
 			position: 'topleft',
-			addToMenu: false,
 			printUrl: "//localhost/print-servlet/print" ////localhost/geoserver/pdf"
 		},
 

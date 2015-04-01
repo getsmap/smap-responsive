@@ -3,10 +3,10 @@ L.Control.SelectVector = L.Control.extend({
 		position: 'bottomright', // just an example
 		selectStyle: {
 			weight: 5,
-	        color: '#00FFFF',
-	        fillColor: '#00FFFF',
-	        opacity: 1,
-	        fillOpacity: .5
+			color: '#00FFFF',
+			fillColor: '#00FFFF',
+			opacity: 1,
+			fillOpacity: .5
 		}
 	},
 	
