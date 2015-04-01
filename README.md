@@ -9,15 +9,17 @@ sMap-responsive
 
 ###Introduction
 
-sMap-responsive is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which supports a range of different browsers and devices (specified in the wiki).
+sMap-responsive is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which support a range of different browsers and devices (specified in the wiki).
 
 ###Credit
-The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) together with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors). Credit should also go to the testers and all the users giving feedback. Many thanks also to those who have shared their map link above. If you also want to share you map, please contact the [the site admin](https://github.com/johanlahti).
+The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) together with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors). Credit should also go to the testers and users providing feedback – as well as those who have shared a link to their maps above. If you also want to share your map with us, please contact the [the site admin](https://github.com/johanlahti).
 
-###Technical overview
-The framework can be extended with Leaflet controls. This modular approach is great, because you can easily pick other Leaflet tools from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework.
+###Why another framework?
+*First of all*, this framework is based around Leaflet controls. This means most of the code here is **reusable** in any other Leaflet-based framework. You can easily pick other Leaflet tools from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework.
 
-A configuration file allows you to create a custom map, using your own layers and plugins. Which configuration to be used by the application is set by a web parameter ```config```. For instance ```config=my_config.js``` will load a unique map defined in the file ```my_config.js```. Thereby you can use one code base, but let it host an unlimited number of map applications.
+*Second*, the framework is based around modules (plugins). The administrator can choose exactly what functionality should be present in the map – this makes it very **dynamic**.
+
+*Third*, new maps – from the most advanced to the simplest of all – can be created by just copying and modifying **one configuration file**. Which configuration file to be used by the application is determined by a URL parameter ```config```. Thereby you can use one code base, but let it host an unlimited number of map applications.
 
 ###Getting started…
 These steps describe:
