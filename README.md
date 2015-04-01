@@ -20,14 +20,18 @@ The framework can be extended with Leaflet controls. This modular approach is gr
 A configuration file allows you to create a custom map, using your own layers and plugins. Which configuration to be used by the application is set by a web parameter ```config```. For instance ```config=my_config.js``` will load a unique map defined in the file ```my_config.js```. Thereby you can use one code base, but let it host an unlimited number of map applications.
 
 ###Getting started…
-
-####Preconditions
+These steps describe:
+- Installing (step 1-2)
+- Creating a map (step 3)
+- URL parameters (step 4)
+ 
+####1. Preconditions
 First, make sure you have the following applications installed.
 - node and npm: [https://nodejs.org/download/](https://nodejs.org/download/)
 - bower: [http://bower.io/](http://bower.io/)
 - A webserver like Apache, Nginx or IIS (either locally installed or on a server)
 
-####Clone and install dependencies
+####2. Clone and install dependencies
 If you are running on Mac or Linux, you may need to use ```sudo``` before some of the commands.
 Clone the project using Git or Subversion (you can also use a GUI version of the mentioned):
 ```
@@ -47,12 +51,17 @@ Build the application. Run this from the root directory of your smap clone.
 ```
 gulp full
 ```
-If the build went fine, point your browser to http://localhost/smap-responsive/dev.html – or wherever your clone is located. If you want to use a minified version of the map, just point your browser to http://localhost/smap-responsive/dist/index.html instead. The ```dist``` folder contains the whole application but with everything minified and compressed. While debugging, it is better to use dev.html.
+If the build went fine, point your browser to [http://localhost/smap-responsive/dev.html](http://localhost/smap-responsive/dev.html) – or wherever your clone is located.
+If you want to use a minified version of the map, just point your browser to [http://localhost/smap-responsive/dist/index.html](http://localhost/smap-responsive/dist/index.html) instead.
+The ```dist``` folder contains the whole application but everything is minified and compressed. While debugging, it is better to use dev.html.
 
 Now you are finally ready to create some maps!
 
-### Create a customized map
-Copy and modify [this](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js) configuration file. Rename it to ```myconfig.js```. The configuration file informs the map of:
+#### 3. Create a customized map
+1. Copy and modify the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js).
+2. Rename it to ```myconfig.js```.
+
+The configuration file informs the map of:
 - Starting zoom and centering of the map
 - Background layers to use (e.g. OpenStreetMap)
 - Overlays to use
@@ -67,9 +76,32 @@ http://localhost/smap-responsive/dev.html?config=examples/configs/myconfig.js
 ```
 Other URL parameters can also be used to control the map. They are described below:
 
-### URL parameters
+#### 4. URL parameters
 
-TODO: working on this… going for lunch now
+The application can be called with various URL parameters. For instance, [http://localhost/smap?config=another_config.js&zoom=12](http://ralocalhost/smap?config=another_config.js&zoom=12) will load the config file ``` another_config.js ``` and zoom to level 12.
+
+#####Core parameters:
+
+| Parameter key |  Parameter value(s) | Decides | Example value |
+| ------------- | ------------- | ------------- | ------------- |
+| config        | {String}      | Config to use | my_config.js or somefolder/my_config.js or http://someserver.com/folder/my_config.js |
+| zoom          | {Integer}   range: 0-18 | Starting zoom level | zoom=12 (higher=more zoomed in) |
+| center        | {Integer},{Integer} | Starting center | 13.1,55.6 |
+| bl            | {String}      | Starting baselayer | bl=citymap - the baselayer with given layerId will be active from start |
+| ol            | {String}, …   | Starting overlay(s) | ol=some_points,some_data (layerId for two layers) |
+| xy            | {Integer},{Integer},{Optional String},{Optional String} | Adds a marker | 13.1,55.6 or 13.1,55.6,Text%20in%20popup or xy=117541,6163401,Projected coords,EPSG:3008 |
+
+
+
+#####Plugins parameters (for the plugins hosted here):
+
+| Parameter key |  Parameter value(s) | Decides | Example value | Plugin |
+| ------------- | ------------- | ------------- | ------------- | ---------- |
+| poi           | {String},{Optional Integer} | Triggers geolocate for given address | poi=Storgatan%201,1 (open popup) poi=Storgatan%201 (no popup) | L.Control.Search |
+| lsw           | {Integer}     | Open switcher from start | lsw=1 opens switcher from start (only small screens) | L.Control.LayerSwitcher |
+| md            | {String} | Features to draw | - (created internally) | L.Control.MeasureDraw |
+
+
 
 ###Scope
 
