@@ -10,6 +10,16 @@ var config = {
 			zoom: $(window).width() < 600 ? 11 : 12
 		},
 
+		// Optional configuration object for the Leaflet map object. You can use all options specified here: http://leafletjs.com/reference.html#map-class
+		// mapConfig: {
+		// 	maxBounds: [	// Optional. Limit panning of the map. Given as [[north, west], [south, east]]
+		// 		[55.71628170645908, 12.6507568359375],
+		// 		[55.42589636057864, 13.34564208984375]
+		// 	],	
+		// 	minZoom: 11,	// Optional. Limit how much you can zoom out. 0 is maximum zoomed out.
+		// 	maxZoom: 18 	// Optional. Limit how much you can zoom in. 18 is usually the maximum zoom.
+		// },
+
 		smapOptions: {
 			// The text of the <title>-tag
 			title: "Malmö Stadsatlas",

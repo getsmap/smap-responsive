@@ -144,8 +144,9 @@ smap.cmd = {
 		},
 
 		getLang: function() {
-			var lang = smap.core.paramInst ? smap.core.paramInst.getParams().LANG : "sv"; //Parameters from URL
-			var langCode = lang ? lang.split("-")[0] : "sv";
+			var defaultLang = smap.core.mainConfig.smapOptions.defaultLanguage || "en";
+			var lang = smap.core.paramInst ? smap.core.paramInst.getParams().LANG : defaultLang; //Parameters from URL
+			var langCode = lang ? lang.split("-")[0] : defaultLang;
 			return langCode;
 		},
 		
