@@ -19,7 +19,7 @@ First of all. This framework is based around Leaflet controls. This means most o
 
 Second. This framework is built to be **dynamic** and serve multiple objectives in various contexts. Smap-responsive is used in many different types of external applications as well as for stand-alone maps. Although every map is unique, most functionality can be re-used for each map. As a bonus, this also means existing functionality has been well tested.
 
-Third. In order to minimise the need of programmers' hands-on – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying one configuration file. This gives the administrator a lot of **power** and **flexibility** – without doing any programming. For instance, all options of a plugin can be changed from the configuration file. But if no options are provided the plugin's defaults are used. As simple as possible, yet no simpler.
+Third. In order to minimise the need of programmers' hands-on – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying one configuration file. This gives the administrator a lot of **power** and **flexibility** – without doing any programming.
 
 ---
 
