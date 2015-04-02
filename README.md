@@ -158,12 +158,12 @@ Note! While developing a plugin you can execute gulp without any parameter: ``` 
 
 #### 7. Developer API
 
-The developer contains:
-- Events
+This section describes:
+- Core events
 - Core methods (used for communicating with the core)
 - Utility methods
 
-##### Events:
+##### Core events:
 | Event name | Triggered… | Example | 
 | ---------- | ----------- | ------- | 
 | smap.core.createparams | …when URL params are created. Useful if your plugin needs to add something to the URL. | ```smap.event.on("smap.core.createparams", function(e, paramsObject) { paramsObject.new_param = 3; });``` |
