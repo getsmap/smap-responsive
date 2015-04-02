@@ -21,18 +21,23 @@ Second. This framework is built to be **dynamic** and serve multiple objectives 
 
 Third. In order to minimise the need of programmers' hands-on – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying one configuration file. This gives the administrator a lot of **power** and **flexibility** – without doing any programming.
 
+<br />
+
 ---
+
+<br />
 
 ###Getting started…
 
-**Basic steps:**
+**Basic chapters:**
 - Installing (step 1-2)
 - Creating a map (step 3)
 - URL parameters (step 4)
 
-**Advanced steps:**
+**Advanced chapters:**
 - Include external plugins (step 5)
 - Develop new plugins (step 6)
+- Developer API
 
 <br />
 
@@ -150,6 +155,8 @@ Use the [plugin template](https://github.com/getsmap/smap-responsive/blob/master
 Note! While developing a plugin you can execute gulp without any parameter: ``` gulp ```. It will then automatically compile .styl and .sass files into CSS whenever you save something. Check the ```gulpfile.js``` and learn more about how to modify it for your needs.
 
 <br />
+
+#### 7. Developer API
 
 ##### Events:
 | Event name | Triggered… | Example | 
