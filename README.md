@@ -34,7 +34,7 @@ Third. In order to minimise the need of programmers' hands-on – we put a lot o
 - Include external plugins (step 5)
 - Develop new plugins (step 6)
 
-<br /><br />
+<br />
 
 ####1. Preconditions
 First, make sure you have the following applications installed.
@@ -42,7 +42,7 @@ First, make sure you have the following applications installed.
 - bower: [http://bower.io/](http://bower.io/)
 - A webserver like Apache, Nginx or IIS (either locally installed or on a server)
 
-<br /><br />
+<br />
 
 ####2. Clone and install dependencies
 If you are using a Mac or Linux computer, you may need to use ```sudo``` before some of the commands.
@@ -70,7 +70,7 @@ The ```dist``` folder contains the whole application but everything is minimised
 
 Now you are finally ready to create some maps!
 
-<br /><br />
+<br />
 
 #### 3. Create a customised map
 1. Copy and modify the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js).
@@ -96,7 +96,7 @@ Note that the path to the config file is relative to the html file.
 
 Next step is to change the application's behaviour using URL parameters.
 
-<br /><br />
+<br />
 
 #### 4. URL parameters (REST API)
 
@@ -114,7 +114,7 @@ The application can be called with various URL parameters. For instance, [http:/
 | xy            | {Integer},{Integer},{Optional String},{Optional String} | Adds a marker | 13.1,55.6 or 13.1,55.6,Text%20in%20popup or xy=117541,6163401,Projected coords,EPSG:3008 |
 | lang          | {String}      | Sets language | lang=en (for English) |
 
-
+<br />
 #####Plugin parameters (for the plugins hosted here):
 
 | Parameter key |  Parameter value(s) | Decides | Example value | Plugin |
@@ -123,7 +123,7 @@ The application can be called with various URL parameters. For instance, [http:/
 | lsw           | {Integer}     | Open switcher from start | lsw=1 opens switcher from start (only small screens) | L.Control.LayerSwitcher |
 | md            | {String} | Features to draw | - (created internally) | L.Control.MeasureDraw |
 
-<br /><br />
+<br />
 
 #### 5. Include external plugins
 
@@ -135,7 +135,7 @@ However, first you need to incorporate the plugin into the code. Follow these st
 2. Run gulp in order to build the code (from the root directory of your smap clone): ```gulp full```
 3. Open dev.html or index.html and confirm that the plugin has been added into these html-files. Add the plugin to the configuration file in the same manner as in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js)
 
-<br /><br />
+<br />
 
 #### 6. Develop plugins
 
@@ -149,6 +149,8 @@ Use the [plugin template](https://github.com/getsmap/smap-responsive/blob/master
 
 Note! While developing a plugin you can execute gulp without any parameter: ``` gulp ```. It will then automatically compile .styl and .sass files into CSS whenever you save something. Check the ```gulpfile.js``` and learn more about how to modify it for your needs.
 
+<br />
+
 ##### Events:
 | Event name | Triggered… | Example | 
 | ---------- | ----------- | ------- | 
@@ -159,9 +161,12 @@ Note! While developing a plugin you can execute gulp without any parameter: ``` 
 | selected   | …when a feature is selected (through getfeatureinfo or vector select) | ```smap.map.on("selected", function(e) { /* e.layer, e.feature, e.latLng, e.selectedFeatures */});``` |
 | unselected   | …when a feature is unselected | ```smap.map.on("unselected", function(e) {});``` |
 
-Check the file where the method exists for a more detailed description of the parameters.
+<br />
 
 ##### Methods in core/js/cmd.js:
+
+Note! Check the file where the method exists for a more detailed description of the parameters below.
+
 | Method | Params | Description | Example | 
 | ---------- | ----------- | ----------- | ------- |
 | smap.cmd.createParams | addRoot {Boolean} | Create URL params that recreates the map | var s = smap.cmd.createParams(true); |
@@ -177,11 +182,37 @@ Check the file where the method exists for a more detailed description of the pa
 | smap.cmd.reloadCore | options {Object} | Reload the map without reloading the browser | smap.cmd.reloadCore({}); |
 | smap.cmd.loading | show {Boolean}, options {Object} | Show/hide the loading indicator (set ```show``` to false to hide) | smap.cmd.loading(true, {text: "Fetching data"}); |
 
-<br /><br />
+<br />
+
+##### Methods in core/js/utils.js:
+
+| Method | Params | Description | Example | 
+| ---------- | ----------- | ----------- | ------- |
+| utils.rmPx | text {String} | Converts a CSS "size" given as text into an integer | utils.rmPx("10px") // -> 10 |
+| utils.capitalize | theString {String} | Converts string into upper-case | utils.capitalize("Hey there") // -> "HEY THERE" |
+| utils.getBrowser | - | Get current browser (so far only IE versions) | utils.getBrowser().ie8; // {Boolean} |
+| utils.urlAppend | baseUrl {String}, params {String}, separator {String} | Merges a URL with params | utils.urlAppend("http://myurl/folder/, "param=1&hey=2, "?"); |
+| utils.isInIframe | - | Check whether this app runs inside an iframe | utils.isInIframe() // {Boolean} |
+| utils.makeUniqueArr | arr {String} | Removes all duplicates from array | utils.makeUniqueArr([1,1,2,2,2]); // -> [1,2] |
+| utils.objectToUpperCase | o {Object} | Converts all keys in the object into upper-case | utils.objectToUpperCase({test: "hey"}); // -> {"TEST": "hey"} |
+| utils.drawDialog | title {String}, bodyContent {String|HTML|jQuery Object}, footerContent{String|HTML|jQuery Object}, options {Object} | Returns a Bootstrap modal | utils.drawDialog("Title", "<p>Body</p>", '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>').modal("show"); |
+| utils.getLayerFromFeature | feature {unknown}, layer {unknown} | Return the parent layer of a feature | utils.getLayerFromFeature(f, layer); |
+| utils.round | val {Number}, nbrOfDecimals {Integer} | Rounds to number of decimals | utils.round(4.87123, 1); // -> 4.9 |
+| utils.makeUnselectable | tag {jQuery tag} | Make HTML elements in (old) IE unselectable | utils.makeUnselectable($("body")); |
+| utils.extractToHtml | html {String}, props {Object} | Replaces all ${key} with the corresponding value found in props | utils.extractToHtml("<p>${some_key}</p>", {"some_key": "Hey"}); // -> <p>Hey</p> |
+| utils.createLabel | center {L.LatLng}, html {String}, className {String} | Returns a map label | utils.createLabel([13,55.6], "I am a label", "label-nbr-1"); |
+| utils.getLength | arrLatLng {Array({L.LatLng},{…})} | Returns total true (curved) distance for the line | utils.getLength([L.latLng(13, 55), L.latLng(14, 67)]) |
+| utils.paramsStringToObject | pString {String}, keysToUpperCase {Boolean} | Converts a parameter string into an object | utils.paramsStringToObject("a=2&b=3", true); // -> {"A":2, "B":3} |
+| utils.projectPoint | east {Number}, north {Number}, srsSrc {String}, srsDest {String} | Convert coords from one projection to another | utils.projectPoint(13,56,"EPSG:4326","EPSG:3008"); // -> [118803, 6208675] |
+| utils.projectLatLng | latLng, srsSrc, srsDest, reverseAxisSrc, reverseAxisDest | Similar as previous but for L.LatLng | utils.projectLatLng(L.latLng([13,56]), "EPSG:4326", "EPSG:3008", false, true); |
+| utils.projectFeature | feature {GeoJSON Object}, inputCrs {String}, options {Object} | Convert entire GeoJSON object into another projection (used by WFS layer class) | - |
+
+
+<br />
 
 ---
 
-<br /><br />
+<br />
 
 ###Scope
 
