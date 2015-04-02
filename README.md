@@ -195,7 +195,7 @@ Note! Check the file where the method exists for a more detailed description of 
 | utils.isInIframe | - | Check whether this app runs inside an iframe | utils.isInIframe() // {Boolean} |
 | utils.makeUniqueArr | arr {String} | Removes all duplicates from array | utils.makeUniqueArr([1,1,2,2,2]); // -> [1,2] |
 | utils.objectToUpperCase | o {Object} | Converts all keys in the object into upper-case | utils.objectToUpperCase({test: "hey"}); // -> {"TEST": "hey"} |
-| utils.drawDialog | title {String}, bodyContent {String|HTML|jQuery Object}, footerContent{String|HTML|jQuery Object}, options {Object} | Returns a Bootstrap modal | utils.drawDialog("Title", "<p>Body</p>", '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>').modal("show"); |
+| utils.drawDialog | title {String}, bodyContent {String or jQuery Object}, footerContent{String or jQuery Object}, options {Object} | Returns a Bootstrap modal | utils.drawDialog("Title", "<p>Body</p>", '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>').modal("show"); |
 | utils.getLayerFromFeature | feature {unknown}, layer {unknown} | Return the parent layer of a feature | utils.getLayerFromFeature(f, layer); |
 | utils.round | val {Number}, nbrOfDecimals {Integer} | Rounds to number of decimals | utils.round(4.87123, 1); // -> 4.9 |
 | utils.makeUnselectable | tag {jQuery tag} | Make HTML elements in (old) IE unselectable | utils.makeUnselectable($("body")); |
@@ -205,7 +205,7 @@ Note! Check the file where the method exists for a more detailed description of 
 | utils.paramsStringToObject | pString {String}, keysToUpperCase {Boolean} | Converts a parameter string into an object | utils.paramsStringToObject("a=2&b=3", true); // -> {"A":2, "B":3} |
 | utils.projectPoint | east {Number}, north {Number}, srsSrc {String}, srsDest {String} | Convert coords from one projection to another | utils.projectPoint(13,56,"EPSG:4326","EPSG:3008"); // -> [118803, 6208675] |
 | utils.projectLatLng | latLng, srsSrc, srsDest, reverseAxisSrc, reverseAxisDest | Similar as previous but for L.LatLng | utils.projectLatLng(L.latLng([13,56]), "EPSG:4326", "EPSG:3008", false, true); |
-| utils.projectFeature | feature {GeoJSON Object}, inputCrs {String}, options {Object} | Convert entire GeoJSON object into another projection (used by WFS layer class) | - |
+| utils.projectFeature | feature {GeoJSON Object}, inputCrs {String}, options {Object} | Convert entire GeoJSON object into another projection (used by WFS layer class) | See L.GeoJSON.WFS class for example usage |
 
 
 <br />
