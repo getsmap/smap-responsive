@@ -73,6 +73,8 @@ If the build went fine, point your browser to [http://localhost/smap-responsive/
 If you want to use a minimised version of the application, just point your browser to [http://localhost/smap-responsive/dist/index.html](http://localhost/smap-responsive/dist/index.html) instead.
 The ```dist``` folder contains the whole application but everything is minimised and compressed. While debugging, it is better to use dev.html.
 
+> The default language is Swedish (language code "sv"). If you want to change this to English, then edit the file ```core/js/mainConfig.js``` and change the variable to ```defaultLanguage: "en" ```.
+
 Now you are finally ready to create some maps!
 
 <br />
@@ -97,7 +99,7 @@ http://localhost/smap-responsive/dev.html?config=examples/configs/myconfig.js
 // Or, using compressed code:
 http://localhost/smap-responsive/dist/index.html?config=../examples/configs/myconfig.js
 ```
-Note that the path to the config file is relative to the html file.
+> Note that the path to the config file is relative to the html file.
 
 Next step is to change the application's behaviour using URL parameters.
 
@@ -152,7 +154,7 @@ Developing a plugin for smap-responsive is no different than developing an ordin
 
 Use the [plugin template](https://github.com/getsmap/smap-responsive/blob/master/plugins/PluginTemplate.js) when developing a new plugin. The only addition to an ordinary Leaflet plugin is the ```_lang``` object which allows you to adapt labels and stuff depending on language. If you don't need it, just ignore it.
 
-Note! While developing a plugin you can execute gulp without any parameter: ``` gulp ```. It will then automatically compile .styl and .sass files into CSS whenever you save something. Check the ```gulpfile.js``` and learn more about how to modify it for your needs.
+> Note! While developing a plugin you can execute gulp without any parameter: ``` gulp ```. It will then automatically compile .styl and .sass files into CSS whenever you save something. Check the ```gulpfile.js``` and learn more about how to modify it for your needs.
 
 <br />
 
@@ -175,7 +177,7 @@ This section describes:
 
 <br />
 
-Note! Check the file where the method exists for a more detailed description of the parameters below.
+> Note! Check the file where the method exists for a more detailed description of the parameters below.
 
 ##### Core methods – in core/js/cmd.js:
 
