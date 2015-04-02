@@ -15,11 +15,13 @@ sMap-responsive is a software framework for web maps built with Leaflet and Boot
 The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) together with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors). Credit should also go to the testers and users providing feedback – as well as those who have shared a link to their maps above. If you also want to share your map with us, please contact the [the site admin](https://github.com/johanlahti).
 
 ###Why another framework?
-*First* of all. This framework is based around Leaflet controls. This means most of the code here is **reusable** in any other Leaflet-based framework. You can easily pick other Leaflet tools from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework.
+First of all. This framework is based around Leaflet controls. This means most of the code here is **reusable** in any other Leaflet-based framework. You can easily pick other Leaflet tools from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework.
 
-*Second*. This framework is built to serve a multiple of objectives. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying *one configuration file*. This gives the administrator a lot of **power** and **flexibility** – without doing any programming.
+Second. This framework is built to be **dynamic** and serve multiple objectives in various contexts. Smap-responsive is used in many different types of external applications as well as for stand-alone maps. Although every map is unique, most functionality can be re-used for each map. As a bonus, this also means existing functionality has been well tested.
 
-*Third*. In order to minimize the need of programmers' hands-on – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. For instance, all options of a plugin can be changed from the configuration file. But if no options are provided, the plugin's defaults are used. As simple as needed, but yet no simpler.
+Third. In order to minimise the need of programmers' hands-on – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying one configuration file. This gives the administrator a lot of **power** and **flexibility** – without doing any programming. For instance, all options of a plugin can be changed from the configuration file. But if no options are provided the plugin's defaults are used. As simple as possible, yet no simpler.
+
+---
 
 ###Getting started…
 These steps describe:
@@ -56,7 +58,7 @@ Build the application. Run this from the root directory of your smap clone.
 gulp full
 ```
 If the build went fine, point your browser to [http://localhost/smap-responsive/dev.html](http://localhost/smap-responsive/dev.html) – or wherever your clone is located.
-If you want to use a minimised version of the map, just point your browser to [http://localhost/smap-responsive/dist/index.html](http://localhost/smap-responsive/dist/index.html) instead.
+If you want to use a minimised version of the application, just point your browser to [http://localhost/smap-responsive/dist/index.html](http://localhost/smap-responsive/dist/index.html) instead.
 The ```dist``` folder contains the whole application but everything is minimised and compressed. While debugging, it is better to use dev.html.
 
 Now you are finally ready to create some maps!
@@ -65,15 +67,15 @@ Now you are finally ready to create some maps!
 1. Copy and modify the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js).
 2. Rename it to ```myconfig.js```.
 
-The configuration file informs the map of:
+The configuration file informs the application of:
 - Starting zoom and centering of the map
 - Background layers to use (e.g. OpenStreetMap)
 - Overlays to use
 - Plugins to be included and their settings
 
-Inside the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js) (the one you just copied) is described how each and every parameter affects the map.
+Inside the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js) (the one you just copied) is described how each and every parameter affects the application.
 
-Next. When calling the map, we need to specify which configuration file to use. This is accomplished with the URL parameter ```config```:
+Next. We need to specify which configuration file to use. This is accomplished with the URL parameter ```config```:
 ```
 // Using our newly created configuration file myconfig.js
 http://localhost/smap-responsive/dev.html?config=examples/configs/myconfig.js
@@ -83,9 +85,9 @@ http://localhost/smap-responsive/dist/index.html?config=../examples/configs/myco
 ```
 Note that the path to the config file is relative to the html file.
 
-Next step is to learn how other URL parameters can be used to control the map.
+Next step is to change the application's behaviour using URL parameters.
 
-#### 4. URL parameters
+#### 4. URL parameters (REST API)
 
 The application can be called with various URL parameters. For instance, [http://localhost/smap?config=another_config.js&zoom=12](http://ralocalhost/smap?config=another_config.js&zoom=12) will load the config file ``` another_config.js ``` and set the zoom to 12 (higher means more zoomed in).
 
@@ -99,7 +101,7 @@ The application can be called with various URL parameters. For instance, [http:/
 | bl            | {String}      | Starting baselayer | bl=citymap - the baselayer with given layerId will be active from start |
 | ol            | {String}, …   | Starting overlay(s) | ol=some_points,some_data (layerId for two layers) |
 | xy            | {Integer},{Integer},{Optional String},{Optional String} | Adds a marker | 13.1,55.6 or 13.1,55.6,Text%20in%20popup or xy=117541,6163401,Projected coords,EPSG:3008 |
-
+| lang          | {String}      | Sets language | lang=en (for English) |
 
 
 #####Plugin parameters (for the plugins hosted here):
@@ -115,27 +117,52 @@ The application can be called with various URL parameters. For instance, [http:/
 
 As seen in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js) plugins, any Leaflet control can be included in the map, simply by adding its constructor and its options to the plugins array. All options will be transferred to the plugin when it is instanstiated (the pre-assumption is that all controls follow the same syntax pattern, taking only one parameter which is ```options```).
 
-However, before the plugin is callable, you need follow these steps:
+However, first you need to incorporate the plugin into the code. Follow these steps:
 
 1. Place the files, e.g. ```MyPlugin.js``` and ```MyPlugin.css``` inside a folder named ```MyPlugin```. This folder should be placed inside the plugins-folder of your smap clone.
 2. Run gulp in order to build the code (from the root directory of your smap clone): ```gulp full```
-3. Add the plugin to configuration file in the same manner as in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js)
+3. Open dev.html or index.html and confirm that the plugin has been added into these html-files. Add the plugin to the configuration file in the same manner as in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js)
 
 #### 6. Develop plugins
 
-Developing a plugin for smap-responsive is no different than developing an ordinary Leaflet control – which you can learn better from other sources. However, smap-responsive has some special additions which can be useful when you want to interact with core funcionality. For instance, responding to a selected feature event, creating or adding URL parameters, or fetching an already added layer using its layerId.
+Developing a plugin for smap-responsive is no different than developing an ordinary Leaflet control, which you can learn better from other sources. However, smap-responsive has some special additions which can be useful when you want to interact with core funcionality. For instance:
+- Responding to a selected feature event
+- Creating or adding URL parameters
+- Fetching an already added layer using its layerId
+- Adding language support
 
-(This section will be improved with time.)
+Use the [plugin template](https://github.com/getsmap/smap-responsive/blob/master/plugins/PluginTemplate.js) when developing a new plugin. The main addition to ordinary Leaflet plugin is the ```_lang``` object which allows you to adapt labels and stuff depending on language.
+
+Note! While developing a plugin you can execute gulp without any parameter: ``` gulp ```. It will then automatically compile .styl and .sass files into CSS whenever you save something. Check the ```gulpfile.js``` and learn more about how to modify it for your needs.
 
 ##### Events:
-| Event name | Description | Example | 
+| Event name | Triggered… | Example | 
 | ---------- | ----------- | ------- | 
-| smap.core.createparams | Triggered when URL params are created. Useful if your plugin needs to add something to the URL. | ```smap.event.on("smap.core.createparams", function(e, paramsObject) { paramsObject.new_param = 3; });``` |
+| smap.core.createparams | …when URL params are created. Useful if your plugin needs to add something to the URL. | ```smap.event.on("smap.core.createparams", function(e, paramsObject) { paramsObject.new_param = 3; });``` |
+| smap.core.beforeapplyparams | …before URL params are applied in core | ```smap.event.on("smap.core.beforeapplyparams", function(e, paramsObj) { alert(paramsObj.MY_PARAM); });``` |
+| smap.core.applyparams | …after URL params have been applied in core | – " " – |
+| smap.core.pluginsadded | …when all plugins have been added. Useful if you need another plugin to be added before you do something. | ```smap.event.on("smap.core.pluginsadded", function() {}); ``` |
+| selected   | …when a feature is selected (through getfeatureinfo or vector select) | ```smap.map.on("selected", function(e) { /* e.layer, e.feature, e.latLng, e.selectedFeatures */});``` |
+| unselected   | …when a feature is unselected | ```smap.map.on("unselected", function(e) {});``` |
 
-##### Methods:
-| Method name | Description | Example | 
-| ---------- | ----------- | ------- |
+Check the file where the method exists for a more detailed description of the parameters.
 
+##### Methods in core/js/cmd.js:
+| Method | Params | Description | Example | 
+| ---------- | ----------- | ----------- | ------- |
+| smap.cmd.createParams | addRoot {Boolean} | Create URL params that recreates the map | var s = smap.cmd.createParams(true); |
+| smap.cmd.createParamsAsObject | - | Same as previous but params as object | var obj = smap.cmd.createParamsAsObject(); |
+| smap.cmd.getControl | controlName {String} | Get control with given name OR full class name | var search = smap.cmd.getControl("Search"); |
+| smap.cmd.getControls | controlName {String} | Same as above but to be used if there are many instances | var arr = smap.cmd.getControls("RedirectClick"); |
+| smap.cmd.notify | text {String}, msgType {String}, options {Object} | Alert the user about something | smap.cmd.notify("An error", "error"); |
+| smap.cmd.addLayerWithConfig | layerConfig {Object} | Same method used by core when adding layers from config file | – |
+| smap.cmd.getLayer | layerId {String} | Fetch an already added layer | var layer = smap.cmd.getLayer("some_layer_id"); |
+| smap.cmd.getLayerConfig | layerId {String} | Fetch configuration for a specific layer from config file | var t = smap.cmd.getLayerConfig("some_layer_id"); |
+| smap.cmd.getLayerConfigBy | key {String}, val {String}, options {Object} | Same as previous, but based on different key and val | smap.cmd.getLayerConfigBy("options.displayName", "Districts of Malmö"); |
+| smap.cmd.getLang | - | Get the currently set language | var lang = smap.cmd.getLang(); // e.g. "en" |
+| smap.cmd.reloadCore | options {Object} | Reload the map without reloading the browser | smap.cmd.reloadCore({}); |
+| smap.cmd.loading | show {Boolean}, options {Object} | Show/hide the loading indicator (set ```show``` to false to hide) | smap.cmd.loading(true, {text: "Fetching data"}); |
+---
 
 ###Scope
 
