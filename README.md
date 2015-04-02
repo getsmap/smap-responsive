@@ -30,14 +30,14 @@ Third. In order to minimise the need of programmers' hands-on – we put a lot o
 ###Getting started…
 
 **Basic chapters:**
-- Installing (step 1-2)
-- Creating a map (step 3)
-- URL parameters (step 4)
+- Installing (1-2)
+- Creating a map (3)
+- URL parameters (4)
 
 **Advanced chapters:**
-- Include external plugins (step 5)
-- Develop new plugins (step 6)
-- Developer API
+- Include external plugins (5)
+- Develop new plugins (6)
+- Developer API (7)
 
 <br />
 
@@ -158,6 +158,11 @@ Note! While developing a plugin you can execute gulp without any parameter: ``` 
 
 #### 7. Developer API
 
+The developer contains:
+- Events
+- Core methods (used for communicating with the core)
+- Utility methods
+
 ##### Events:
 | Event name | Triggered… | Example | 
 | ---------- | ----------- | ------- | 
@@ -170,9 +175,9 @@ Note! While developing a plugin you can execute gulp without any parameter: ``` 
 
 <br />
 
-##### Methods in core/js/cmd.js:
-
 Note! Check the file where the method exists for a more detailed description of the parameters below.
+
+##### Core methods – in core/js/cmd.js:
 
 | Method | Params | Description | Example | 
 | ---------- | ----------- | ----------- | ------- |
@@ -191,7 +196,7 @@ Note! Check the file where the method exists for a more detailed description of 
 
 <br />
 
-##### Methods in core/js/utils.js:
+##### Utility methods – in core/js/utils.js:
 
 | Method | Params | Description | Example | 
 | ---------- | ----------- | ----------- | ------- |
