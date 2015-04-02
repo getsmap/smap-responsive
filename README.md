@@ -24,18 +24,25 @@ Third. In order to minimise the need of programmers' hands-on – we put a lot o
 ---
 
 ###Getting started…
-These steps describe:
+
+**Basic steps:**
 - Installing (step 1-2)
 - Creating a map (step 3)
 - URL parameters (step 4)
+
+**Advanced steps:**
 - Include external plugins (step 5)
 - Develop new plugins (step 6)
- 
+
+<br /><br />
+
 ####1. Preconditions
 First, make sure you have the following applications installed.
 - node and npm: [https://nodejs.org/download/](https://nodejs.org/download/)
 - bower: [http://bower.io/](http://bower.io/)
 - A webserver like Apache, Nginx or IIS (either locally installed or on a server)
+
+<br /><br />
 
 ####2. Clone and install dependencies
 If you are using a Mac or Linux computer, you may need to use ```sudo``` before some of the commands.
@@ -63,6 +70,8 @@ The ```dist``` folder contains the whole application but everything is minimised
 
 Now you are finally ready to create some maps!
 
+<br /><br />
+
 #### 3. Create a customised map
 1. Copy and modify the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js).
 2. Rename it to ```myconfig.js```.
@@ -86,6 +95,8 @@ http://localhost/smap-responsive/dist/index.html?config=../examples/configs/myco
 Note that the path to the config file is relative to the html file.
 
 Next step is to change the application's behaviour using URL parameters.
+
+<br /><br />
 
 #### 4. URL parameters (REST API)
 
@@ -112,16 +123,19 @@ The application can be called with various URL parameters. For instance, [http:/
 | lsw           | {Integer}     | Open switcher from start | lsw=1 opens switcher from start (only small screens) | L.Control.LayerSwitcher |
 | md            | {String} | Features to draw | - (created internally) | L.Control.MeasureDraw |
 
+<br /><br />
 
 #### 5. Include external plugins
 
-As seen in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js) plugins, any Leaflet control can be included in the map, simply by adding its constructor and its options to the plugins array. All options will be transferred to the plugin when it is instanstiated (the pre-assumption is that all controls follow the same syntax pattern, taking only one parameter which is ```options```).
+As seen in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js) plugins, any Leaflet control can be included in the map simply by adding its constructor and its options to the plugins array. All options will be transferred to the plugin when it is instanstiated (the pre-assumption is that all controls follow the same syntax pattern, taking only one parameter which is ```options```).
 
 However, first you need to incorporate the plugin into the code. Follow these steps:
 
 1. Place the files, e.g. ```MyPlugin.js``` and ```MyPlugin.css``` inside a folder named ```MyPlugin```. This folder should be placed inside the plugins-folder of your smap clone.
 2. Run gulp in order to build the code (from the root directory of your smap clone): ```gulp full```
 3. Open dev.html or index.html and confirm that the plugin has been added into these html-files. Add the plugin to the configuration file in the same manner as in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js)
+
+<br /><br />
 
 #### 6. Develop plugins
 
@@ -131,7 +145,7 @@ Developing a plugin for smap-responsive is no different than developing an ordin
 - Fetching an already added layer using its layerId
 - Adding language support
 
-Use the [plugin template](https://github.com/getsmap/smap-responsive/blob/master/plugins/PluginTemplate.js) when developing a new plugin. The main addition to ordinary Leaflet plugin is the ```_lang``` object which allows you to adapt labels and stuff depending on language.
+Use the [plugin template](https://github.com/getsmap/smap-responsive/blob/master/plugins/PluginTemplate.js) when developing a new plugin. The only addition to an ordinary Leaflet plugin is the ```_lang``` object which allows you to adapt labels and stuff depending on language. If you don't need it, just ignore it.
 
 Note! While developing a plugin you can execute gulp without any parameter: ``` gulp ```. It will then automatically compile .styl and .sass files into CSS whenever you save something. Check the ```gulpfile.js``` and learn more about how to modify it for your needs.
 
@@ -162,7 +176,12 @@ Check the file where the method exists for a more detailed description of the pa
 | smap.cmd.getLang | - | Get the currently set language | var lang = smap.cmd.getLang(); // e.g. "en" |
 | smap.cmd.reloadCore | options {Object} | Reload the map without reloading the browser | smap.cmd.reloadCore({}); |
 | smap.cmd.loading | show {Boolean}, options {Object} | Show/hide the loading indicator (set ```show``` to false to hide) | smap.cmd.loading(true, {text: "Fetching data"}); |
+
+<br /><br />
+
 ---
+
+<br /><br />
 
 ###Scope
 
