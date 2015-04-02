@@ -56,7 +56,7 @@ var config = {
 				options: {
 					displayName: "Districts of Malmö", 			// The name visible to users
 					layerId: "districts_malmo", 				// Internal name (must be unique). Used e.g. when creating a link to the map.
-					category: ["Main category", "Sub category"],// Decides the categories for the LayerSwitcher plugin (any number of sub-categories can in theory be used)
+					category: ["Raster layers", "Sub category"],// Decides the categories for the LayerSwitcher plugin (any number of sub-categories can in theory be used)
 					layers: "malmows:SMA_DELOMRADE_P", 			// Required WMS-parameter
 					legend: null,								// Optional legend (otherwise tries to create based on layer's url)
 					legendBig: null,							// Optional hover legend (displayed on legend hover). If not provided, the value of legend is used.
@@ -93,7 +93,8 @@ var config = {
 					params: {
 						typeName: "skane:POI_VHAMN_PT" 			// Required WFS parameter
 					},
-					displayName: "Western Harbour, Malmö",		// Name visible to users
+					category: ["Vector layers"],				// Category
+					displayName: "Western Harbour (cross domain)",	// Name visible to users
 					layerId: "western_harbour",					// A required unique id
 					xhrType: "POST",							// The request method (using jquery ajax)
 					attribution: "Malmö stad",					// Copyright
@@ -105,7 +106,7 @@ var config = {
 					geomType: "POINT",							// geometry type (used so far only by the Editor plugin)
 					popup: 										// HTML template for popup. Extract properties by writing the column name inside brackets ${}
 						'<h4>${namn} </h4>'+
-						'<p>Some nonsense info with a bootstrap class</p>'
+						'<p>Some nonsense info</p>'
 				}
 			},
 
@@ -117,6 +118,7 @@ var config = {
 				url: document.URL.search(/dev.html?/) > 0 ? "examples/data/vastra_hamnen_malmo.geojson" : "../examples/data/vastra_hamnen_malmo.geojson",
 				options: {
 					displayName: "Western Harbour - local file",	// Name visible to users
+					category: ["Vector layers"],				// Category
 					layerId: "western_harbour_local",				// A required unique id
 					attribution: "Malmö stad",					// Copyright
 					inputCrs: "EPSG:4326",						// The projection to request for. If not EPSG:4326 it will be projected on the fly.
@@ -127,7 +129,7 @@ var config = {
 					geomType: "POINT",							// geometry type (used so far only by the Editor plugin)
 					popup: 										// HTML template for popup. Extract properties by writing the column name inside brackets ${}
 						'<h4>${namn} </h4>'+
-						'<p>Some nonsense info with a bootstrap class</p>'
+						'<p>Some nonsense info</p>'
 				}
 			}
 
