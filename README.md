@@ -19,7 +19,7 @@ The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [C
 
 *Second*. This framework is built to serve a multiple of objectives. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying *one configuration file*. This gives the administrator a lot of **power** and **flexibility** – without doing any programming.
 
-*Third*. In order to minimize the need of programmers – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. For instance, all options of a plugin can be changed from the configuration file. But if no options are provided, the plugin's defaults are used. As simple as needed, but yet no simpler.
+*Third*. In order to minimize the need of programmers' hands-on – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. For instance, all options of a plugin can be changed from the configuration file. But if no options are provided, the plugin's defaults are used. As simple as needed, but yet no simpler.
 
 ###Getting started…
 These steps describe:
