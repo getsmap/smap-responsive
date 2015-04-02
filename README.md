@@ -116,11 +116,9 @@ The application can be called with various URL parameters. For instance, [http:/
 As seen in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js) plugins, any Leaflet control can be included in the map, simply by adding its constructor and its options to the plugins array. All options will be transferred to the plugin when it is instanstiated (the pre-assumption is that all controls follow the same syntax pattern, taking only one parameter which is ```options```).
 
 However, before the plugin is callable, you need follow these steps:
-1. Place the files, e.g. ```MyPlugin.js``` and ```MyPlugin.css``` inside a folder named ```MyPlugin```. This folder should be placed inside the ```plugins```-folder of your smap clone.
-2. Run gulp in order to build the code (from the root directory of your smap clone):
-```
-gulp full
-```
+
+1. Place the files, e.g. ```MyPlugin.js``` and ```MyPlugin.css``` inside a folder named ```MyPlugin```. This folder should be placed inside the plugins-folder of your smap clone.
+2. Run gulp in order to build the code (from the root directory of your smap clone): ```gulp full```
 3. Add the plugin to configuration file in the same manner as in the example [configuration file](https://github.com/getsmap/smap-responsive/blob/master/examples/configs/config.js)
 
 #### 6. Develop plugins
