@@ -196,7 +196,8 @@ var config = {
 					},
 
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
-					// SelectVector is needed in order to make vector (e.g. WFS) layers selectable.
+					// SelectVector is needed to make WMS layers selectable 
+					// using getfeatureinfo requests.
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
 					{
 						init: "L.Control.SelectWMS",
