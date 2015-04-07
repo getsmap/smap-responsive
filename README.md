@@ -27,10 +27,10 @@ Third. In order to minimise the need of programmers' hands-on – we put a lot o
 
 <br />
 
-###Getting started…
+###Tutorial
 
 **Basic chapters:**
-- Installing (1-2)
+- Getting started (1-2)
 - Creating a map (3)
 - URL parameters (4)
 
