@@ -15,7 +15,7 @@ smap.core.mainConfig = {
 			title: "sMap-responsive",
 			favIcon: "https://assets-cdn.github.com/favicon.ico", //"//assets.malmo.se/external/v4/favicon.ico"
 			popupAutoPanPadding: [0, 70],  // left(right, top/bottom
-			defaultLanguage: "en"
+			defaultLanguage: "sv"
 		},
 
 		toolbarPlugin: "Menu",
