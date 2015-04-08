@@ -15,6 +15,21 @@ var utils = {
 			return theString.charAt(0).toUpperCase() + theString.slice(1);
 		},
 
+		addImageLoadIndicator: function($img) {
+			var $indicator = $('<div class="img-load-indicator"><i class="fa fa-spinner"></i></div>');
+			$indicator.css("height", "100px");	
+			$img.before( $indicator );
+			$img.addClass("hidden img-smooth-loading");
+			$img.on("load", function() {
+				var $this = $(this);
+				$this.prev(".img-load-indicator").remove();
+				$this.removeClass("hidden");
+				setTimeout(function() {
+					$this.addClass("img-fade-in");
+				}, 200);
+			});
+		},
+
 		getBrowser: function() {
 			var match = navigator.userAgent.match(/(?:MSIE |Trident\/.*; rv:)(\d+)/);
     		var ieVersion = match ? parseInt(match[1]) : undefined;

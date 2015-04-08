@@ -261,6 +261,34 @@ body {
 .esri-attribution-logo {
   display: none;
 }
+.img-load-indicator {
+  display: block;
+  position: relative;
+  height: 200px;
+}
+.img-load-indicator i {
+  font-size: 4em;
+  display: block;
+  position: absolute;
+  bottom: 30%;
+  vertical-align: middle;
+  -webkit-animation-name: circulate;
+  animation-name: circulate;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+}
+.img-smooth-loading {
+  opacity: 0;
+}
+.img-fade-in {
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  opacity: 1;
+}
 .leaflet-popup-option {
   position: relative;
   padding: 0;
@@ -330,6 +358,26 @@ body {
     transform: rotate(0deg);
   }
   100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes circulate {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes circulate {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }

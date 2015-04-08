@@ -299,6 +299,42 @@ loadingTextWidth = 5em
 	// Note! Remember to give correct attribution in the layer instead (© ESRI)
 	display none
 
+
+// -- Image load indicator --
+@keyframes circulate
+	from
+		transform rotate(0)
+	to
+		transform rotate(360deg)
+
+.img-load-indicator
+	// height 10em
+	display block
+	position relative
+	height 200px
+	// text-align center
+	i
+		font-size 4em
+		display block
+		position absolute
+		bottom 30%
+		vertical-align middle
+		animation-name circulate
+		animation-duration 1s
+		animation-iteration-count infinite
+		animation-timing-function linear
+		
+	
+
+.img-smooth-loading
+	opacity 0
+.img-fade-in
+	transition all 1s
+	opacity 1
+// -- End --
+
+
+
 // ----------- THEME --------------
 
 // a.list-group-item.active a.list-group-item.activehover a.list-group-item.activefocus
@@ -363,6 +399,7 @@ loadingTextWidth = 5em
 		z-index 100
 	a.leaflet-popup-minimize-button
 		right 20px
+
 
 @media (max-width: 991px)
 	.leaflet-right .leaflet-control

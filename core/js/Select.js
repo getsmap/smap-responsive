@@ -237,6 +237,13 @@ smap.core.Select = L.Class.extend({
 					lay.bindPopup(html, {autoPan: true, keepInView: false, autoPanPadding: L.point(smap.core.mainConfig.smapOptions.popupAutoPanPadding)});
 					if (lay._popup && lay._map) {
 						lay.openPopup(latLng);
+						
+						var $content = $(".leaflet-popup-content:visible");
+						$content.find("img").each(function() {
+							utils.addImageLoadIndicator( $(this), {
+								height: "100px"
+							});
+						});
 					}
 				}
 			}
@@ -381,8 +388,16 @@ smap.core.Select = L.Class.extend({
 							// popup.setLatLng(sf.latLng);
 
 							popup.openOn(self.map);
-							$(this).trigger("mouseenter");
 
+							// Add image load indicator
+							var $content = $(".leaflet-popup-content:visible");
+							$content.find("img").each(function() {
+								utils.addImageLoadIndicator( $(this), {
+									height: "100px"
+								});
+							});
+
+							$(this).trigger("mouseenter");
 							self._selectManyModal.modal("hide");
 							return false;
 						}
@@ -502,7 +517,13 @@ smap.core.Select = L.Class.extend({
 					}
 					else {
 						popup.openOn(map);
-						// self._onPopupOpen();
+						// Add image load indicator
+						var $content = $(".leaflet-popup-content:visible");
+						$content.find("img").each(function() {
+							utils.addImageLoadIndicator( $(this), {
+								height: "100px"
+							});
+						});
 					}
 				}, 100);
 			}

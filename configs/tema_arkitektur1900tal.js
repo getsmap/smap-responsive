@@ -48,38 +48,37 @@ var config = {
 					reverseAxisBbox: true,
 					geomType: "POINT",
 					popup:
-						'<h4>${fid}: ${title} </h4>'
-						// +
-						// '<div class="gp-mediaicons">${function(p) {'+
-						// 		'var out = "";'+
-						// 		'var style="margin-right:.3em;";'+
-						// 		'if (p.video) {'+
-						// 			'	out += \'<span style="\'+style+\'" class="fa fa-film fa-lg"></span>\';'+
-						// 			'}'+
-						// 		'if (p.audio) {'+
-						// 		'	out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-lg"></span>\';'+
-						// 		'}'+
-						// 	'if (p.pics && p.pics.split(",").length > 1) {'+
-						// 	'	out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-lg"></span>\';'+
-						// 	'}'+
-						// 'return out;'+
-						// '}'+
-						// '}</div>'+
-						// '${function(p) {'+
-						// 		'var out = "";'+
-						// 		'var pics = p.pics || "",'+
-						// 			'pic;'+
-						// 		'pics = pics ? pics.split(",") : [];'+
-						// 		'if (pics.length > 1 && pics[0].length) {'+
-						// 			'pic = pics[0];'+
-						// 		'}'+
-						// 		'else if (pics.length === 1) {'+
-						// 			'pic = pics;'+
-						// 		'}'+
-						// 		'else {return "";}'+
-						// 		'pic = decodeURIComponent($.trim(pic));'+
-						// 		'return "<img style=\'width:100%;max-height:200px;margin-top: 1em;\' src=\'"+pic+"\'></img>";'+
-						// 	'}}'
+						'<h4>${fid}: ${title} </h4>'+
+						'<div class="gp-mediaicons">${function(p) {'+
+								'var out = "";'+
+								'var style="margin-right:.3em;";'+
+								'if (p.video) {'+
+									'	out += \'<span style="\'+style+\'" class="fa fa-film fa-lg"></span>\';'+
+									'}'+
+								'if (p.audio) {'+
+								'	out += \'<span style="\'+style+\'" class="fa fa-volume-up fa-lg"></span>\';'+
+								'}'+
+							'if (p.pics && p.pics.split(",").length > 1) {'+
+							'	out += \'<span style="\'+style+\'" class="fa fa-picture-o fa-lg"></span>\';'+
+							'}'+
+						'return out;'+
+						'}'+
+						'}</div>'+
+						'${function(p) {'+
+								'var out = "";'+
+								'var pics = p.pics || "",'+
+									'pic;'+
+								'pics = pics ? pics.split(",") : [];'+
+								'if (pics.length > 1 && pics[0].length) {'+
+									'pic = pics[0];'+
+								'}'+
+								'else if (pics.length === 1) {'+
+									'pic = pics;'+
+								'}'+
+								'else {return "";}'+
+								'pic = decodeURIComponent($.trim(pic));'+
+								'return "<img style=\'width:100%;max-height:200px;margin-top: 1em;\' src=\'"+pic+"\'></img>";'+
+							'}}'
 						//kartor.malmo.se/rest/resources/vara_fotspar/${pics}"></img>'
 				}
 			}
