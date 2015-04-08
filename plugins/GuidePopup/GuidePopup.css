@@ -1,76 +1,114 @@
 .gp-popup img {
-	max-width: 100%;
-	margin: 10px 0;
+  max-width: 100%;
+  margin: 10px 0;
 }
 .gp-popup .tab-pane {
-	padding-top: .5em;
+  padding-top: 0.5em;
 }
-
 #gp-btn-show {
-	display: block;	
+  display: block;
 }
-
 #gp-listmoreinfo {
-	margin-top: 10px;
+  margin-top: 10px;
 }
-
 .gp-fullscreen {
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 2000;
-	background-color: #000;
-	text-align: center;
-	opacity: 0;
-	-webkit-transition: opacity .5s;
-	transition: opacity .5s;
-	padding-top: 53px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  background-color: #000;
+  text-align: center;
+  opacity: 0;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
+  padding-top: 53px;
 }
-
 .gp-fullscreen h1 {
-	color: #fff;
-	margin-top: -20px;
+  color: #fff;
+  margin-top: -20px;
 }
 .gp-fullscreen .gp-mediapic {
-	display: block;
-	margin: 2em 0;
+  display: block;
+  margin: 2em 0;
 }
-
 .gp-fullscreen .carousel {
-	max-height: calc(100% - 50px);
+  max-height: calc(100% - 50px);
 }
-
 .gp-fs-visible {
-	opacity: 1;
-	-webkit-transition: opacity .5s;
-	transition: opacity .5s;
+  opacity: 1;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
 }
-
 .gp-fullscreen img {
-	max-width: 100%;
-	max-height: 82%;
-	display: inline !important;
+  max-width: 100%;
+  max-height: 82%;
+  display: inline !important;
 }
-
 .gp-fullscreen .btn-default {
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	color: #fff;
-	opacity: 1;
-	border: 1px solid #fff;
-	background: none;
-	border-radius: 0;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #fff;
+  opacity: 1;
+  border: 1px solid #fff;
+  background: none;
+  border-radius: 0;
 }
-
 .gp-fullscreen .btn-default:hover {
-	background: #fff;
-	background: rgba(255,255,255,1);
-	color: #000;
+  background: #fff;
+  background: #fff;
+  color: #000;
 }
-
 .gp-mediaicons {
-	cursor: pointer;
+  cursor: pointer;
+}
+.img-load-indicator {
+  display: block;
+  position: relative;
+  height: 200px;
+}
+.img-load-indicator i {
+  font-size: 4em;
+  display: block;
+  position: absolute;
+  bottom: 30%;
+  vertical-align: middle;
+  -webkit-animation-name: circulate;
+  animation-name: circulate;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+}
+.img-smooth-loading {
+  opacity: 0;
+}
+.img-fade-in {
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  opacity: 1;
+}
+@-webkit-keyframes circulate {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes circulate {
+  from {
+    -webkit-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }

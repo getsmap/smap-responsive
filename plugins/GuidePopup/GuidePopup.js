@@ -12,14 +12,16 @@ L.Control.GuidePopup = L.Control.extend({
 			mediaHeader: "Media",
 			accessHeader: "Tillgänglighet",
 			close: "Stäng",
-			showMore: "Visa mer"
+			showMore: "Visa mer",
+			loadingPic: "Hämtar bild"
 		},
 		"en": {
 			introHeader: "About",
 			mediaHeader: "Media",
 			accessHeader: "Accessibility",
 			close: "Close",
-			showMore: "Read more"
+			showMore: "Read more",
+			loadingPic: "Loading photo"
 		}
 	},
 	
@@ -543,7 +545,26 @@ L.Control.GuidePopup = L.Control.extend({
 			}
 			else {
 				// We are dealing with HTML
-				$("#gp-intro").append(tabIntro);
+				var $tabIntro = $("<div />").append(tabIntro);
+				var $divLoadIndicator = $('<div class="img-load-indicator"><i class="fa fa-spinner"></i></div>');
+				$tabIntro.find("img").each(function() {
+					var $clone = $divLoadIndicator.clone();
+					// $clone.css({
+					// 	"max-width": $(this).css("max-width"),
+					// 	"max-height": $(this).css("max-height")
+					// });
+					$(this).before( $clone );
+					$(this).addClass("hidden img-smooth-loading");
+				});
+				$tabIntro.find("img").on("load", function() {
+					var $this = $(this);
+					$this.prev(".img-load-indicator").remove();
+					$this.removeClass("hidden");
+					setTimeout(function() {
+						$this.addClass("img-fade-in");
+					}, 200);
+				});
+				$("#gp-intro").append($tabIntro);
 			}
 		}
 	},

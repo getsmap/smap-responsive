@@ -1,0 +1,109 @@
+.gp-popup img
+	max-width 100%
+	margin 10px 0
+
+.gp-popup .tab-pane
+	padding-top .5em
+
+
+#gp-btn-show
+	display block;
+
+
+#gp-listmoreinfo
+	margin-top 10px
+
+
+.gp-fullscreen
+	position absolute
+	left 0
+	top 0
+	width 100%
+	height 100%
+	z-index 2000
+	background-color #000
+	text-align center
+	opacity 0
+	-webkit-transition opacity .5s
+	transition opacity .5s
+	padding-top 53px
+
+
+.gp-fullscreen h1
+	color #fff
+	margin-top -20px
+
+.gp-fullscreen .gp-mediapic
+	display block
+	margin 2em 0
+
+
+.gp-fullscreen .carousel
+	max-height calc(100% - 50px)
+
+
+.gp-fs-visible
+	opacity 1
+	-webkit-transition opacity .5s
+	transition opacity .5s
+
+
+.gp-fullscreen img
+	max-width 100%
+	max-height 82%
+	display inline !important
+
+
+.gp-fullscreen .btn-default
+	position absolute
+	top 10px
+	right 10px
+	color #fff
+	opacity 1
+	border 1px solid #fff
+	background none
+	border-radius 0
+
+
+.gp-fullscreen .btn-default:hover
+	background #fff
+	background rgba(255,255,255,1)
+	color #000
+
+
+.gp-mediaicons
+	cursor pointer
+
+
+@keyframes circulate
+	from
+		transform rotate(0)
+	to
+		transform rotate(360deg)
+
+.img-load-indicator
+	// height 10em
+	display block
+	position relative
+	height 200px
+	// text-align center
+	i
+		font-size 4em
+		display block
+		position absolute
+		bottom 30%
+		vertical-align middle
+		animation-name circulate
+		animation-duration 1s
+		animation-iteration-count infinite
+		animation-timing-function linear
+		
+	
+
+.img-smooth-loading
+	opacity 0
+.img-fade-in
+	transition all 1s
+	opacity 1
+	
+
