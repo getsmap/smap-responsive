@@ -7,10 +7,10 @@ L.Control.VspuHeaderLund = L.Control.extend({
 
     _lang: {
         "sv": {
-            caption: "Meny"
+            caption: "Snabbkartor"
         },
         "en": {
-            caption: "Menu"
+            caption: "Themes"
         }
     },
 
@@ -68,11 +68,13 @@ L.Control.VspuHeaderLund = L.Control.extend({
 					'<span class="sr-only">Toggle Dropdown</span>'+
 					  '</button>'+
 					  '<ul class="dropdown-menu" role="menu">'+
-						'<li><a href="http://localhost:8080/smap-responsive/dev.html?zoom=10&center=13.3717,55.66209&ol=Avrinningsområde,Vattendrag-huvud,Vattendrag-mellan,Vattendrag-sma,Kommungränser,Höjdkurva5m,DetaljplaneradMark&bl=mapboxlund&config=configVspu.js">Länk 1</a></li>'+
-						'<li><a href="http://localhost:8080/smap-responsive/dev.html?zoom=10&center=13.3717,55.66209&bl=mapboxlund&config=configVspu.js">Länk 2</a></li>'+
-						'<li><a href="http://www.google.se">Länk 3</a></li>'+
+						'<li><a href="http://localhost:8080/karta/dev.html?zoom=14&center=13.6306,55.65929&ol=Avrinningsområde,Kommungränser,VA_vattenskyddsområde,Dammdatabas&bl=binglayer&config=configVspu.js">'+
+						'Björkaprojektet</a></li>'+
+						'<li><a href="http://localhost:8080/karta/dev.html?zoom=12&center=13.64777,55.71735&ol=Avrinningsområde,Vattendrag-huvud,Vattendrag-mellan,Vattendrag-sma,Kommungränser,Dammdatabas&bl=mapboxlund&config=configVspu.js">'+
+						'Torpsbäcken</a></li>'+
 						//'<li class="divider"></li>'+
-						'<li><a href="http://getbootstrap.com/components/#btn-dropdowns-single">Länk 4</a></li>'+
+						'<li><a href="http://localhost:8080/karta/dev.html?zoom=12&center=13.03768,55.73929&ol=Avrinningsområde,Kommungränser,OP_nybyggnad,OP_omvandling,Havsnivåökning3m,Havsnivåökning1m,OP_linje&bl=mapboxlund&config=configVspu.js">'+
+						'Översvämningsrisker</a></li>'+
 					  '</ul>'+
 					'</div>'
 				);
@@ -103,7 +105,7 @@ L.Control.VspuHeaderLund = L.Control.extend({
 	      '      <span class="sr-only">Toggle navigation</span>'+
 	      '      <span class="fa fa-bars"></span>'+
 	      '    </button>'+
-	      		'<a class="navbar-brand" href="#">Vspu</a>'+
+	      		'<a class="navbar-brand" href="localhost:8080/karta/dev.html?config=configVspu.js">Kävlingeåns vattenstrategiska planeringsunderlag</a>'+
 	      '  </div>'+
 	      '  <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">'+
 	      '    <ul id="btns" class="nav navbar-nav navbar-right">'+
