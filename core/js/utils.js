@@ -15,7 +15,15 @@ var utils = {
 			return theString.charAt(0).toUpperCase() + theString.slice(1);
 		},
 
-		addImageLoadIndicator: function($img) {
+		addImageLoadIndicator: function($img, options) {
+			options = options || {};
+
+			var defaults = {
+				"height": "100px"
+			};
+			$.extend(defaults, options);
+
+
 			var $indicator = $('<div class="img-load-indicator"><i class="fa fa-spinner"></i></div>');
 			$indicator.css("height", "100px");	
 			$img.before( $indicator );

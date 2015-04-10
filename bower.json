@@ -24,39 +24,38 @@
     "Leaflet.label": "~0.2.1",
     "GeoJSON.Custom": "https://raw.githubusercontent.com/johanlahti/azgs-leaflet/master/js/azgs-leaflet/GeoJSON.Custom.js",
     "Leaflet.awesome-markers": "~2.0.2",
-    "bootstrap3-typeahead": "~3.0.3",
-    "es5-shim": "~3.4.0",
-    "font-awesome": "~4.2.0",
+    "bootstrap3-typeahead": "~3.1.1",
+    "es5-shim": "~4.1.0",
+    "font-awesome": "~4.3.0",
     "jquery-xml2json": "~0.0.6",
     "leaflet-usermarker": "https://github.com/heyman/leaflet-usermarker.git",
     "leaflet.markercluster": "~0.4.0",
     "leaflet": "latest",
-    "modernizr": "~2.6.2",
+    "modernizr": "~2.8.3",
     "openlayers-smap": "./lib/openlayers-smap/",
     "spinjs": "~2.0.1",
     "sass-bootstrap": "latest",
-    "add-to-homescreen": "~3.0.7",
-    "screenfull": "~1.2.1",
-    "esri-leaflet": "v1.0.0-rc.5",
+    "add-to-homescreen": "~3.1.1",
+    "screenfull": "~2.0.0",
+    "esri-leaflet": "~1.0.0-rc.6",
     "leaflet.draw": "latest",
-    "leaflet-plugins": "~1.2.0",
+    "leaflet-plugins": "~1.3.3",
     "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
     "leaflet-polyline-distance": "./lib/leaflet-polyline-distance/",
-    "bootstrap-stylus": "~3.2.0",
-    "proj4": "~2.2.2",
+    "bootstrap-stylus": "~4.0.3",
+    "proj4": "~2.3.5",
     "jquery": "1.11.2",
     "bootstrap-3": "./lib/bootstrap-3/",
-    "leaflet.print-smap": "./lib/leaflet.print-smap/",
-    "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/",
     "malmo_shared_assets": "malmostad/shared_assets",
     "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
     "lodash": "./lib/lodash/",
-    "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "json3": "~3.3.2",
     "jquery-placeholder": "~2.1.0",
-    "jquery.scrollTo": "~1.4.14",
+    "jquery.scrollTo": "~2.1.0",
     "Leaflet.GeometryUtil": "https://github.com/makinacorpus/Leaflet.GeometryUtil.git#~0.3.2",
-    "Leaflet.Snap": "./lib/leaflet.snap/"
+    "Leaflet.Snap": "./lib/leaflet.snap/",
+    "Leaflet.print-smap": "./lib/leaflet.print-smap/",
+    "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/"
   },
   "overrides": {
     "leaflet-polyline-distance": {
@@ -75,7 +74,12 @@
       ]
     },
     "sass-bootstrap": {
-      "main": ["./dist/js/bootstrap.js", "./dist/css/bootstrap.css", "./dist/fonts/*", "./dist/css/bootstrap-theme.min.css"]
+      "main": [
+        "./dist/js/bootstrap.js",
+        "./dist/css/bootstrap.css",
+        "./dist/fonts/*",
+        "./dist/css/bootstrap-theme.min.css"
+      ]
     },
     "bootstrap-3": {
       "main": [
@@ -167,5 +171,18 @@
     "osmbuildings": {
       "main": "OSMBuildings-Leaflet.js"
     }
+  },
+  "resolutions": {
+    "bootstrap3-typeahead": "~3.1.1",
+    "es5-shim": "~4.1.0",
+    "font-awesome": "~4.3.0",
+    "modernizr": "~2.8.3",
+    "add-to-homescreen": "~3.1.1",
+    "screenfull": "~2.0.0",
+    "esri-leaflet": "~1.0.0-rc.6",
+    "leaflet-plugins": "~1.3.3",
+    "bootstrap-stylus": "~4.0.3",
+    "proj4": "~2.3.5",
+    "jquery.scrollTo": "~2.1.0"
   }
 }

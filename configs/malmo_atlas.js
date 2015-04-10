@@ -30,7 +30,49 @@ var config = {
 				
 		ol: [
 			
-			
+			// {
+			// 	init: "L.esri.Services.FeatureLayer",
+			// 	options: {
+			// 		url: "http://services.arcgis.com/sH96KgSw0uy6vpvJ/arcgis/rest/services/LarplatserUTF8/FeatureServer/0",
+			// 		displayName: "ESRI Feature Layer",
+			// 		layerId: "esri_feature_layer"
+			// 		// category: null,
+			// 		// legend: "http://localhost/geoserver/wms?request=GetLegendGraphic&layer=malmows:SMA_SUM_FASTYTA_P&version=1.1.1&format=image/png&rule=1",
+			// 		// legendBig: "http://localhost/geoserver/wms?request=GetLegendGraphic&layer=malmows:SMA_SUM_FASTYTA_P&version=1.1.1&format=image/png&scale=1&legend_options=forceLabels:on",
+			// 		// selectOptions: {layers: "malmows:SMA_SUM_FASTYTA_P"},
+			// 		// selectable: true,
+			// 		// popup: '<div>${fastighet}</div>',
+			// 		// zIndex: 150,
+			// 		// attribution: "@ Helsingborg stad"
+			// 	}
+			// },
+			{
+				init: "L.GeoJSON.WFS",
+				url: "http://services.arcgis.com/sH96KgSw0uy6vpvJ/arcgis/rest/services/LarplatserUTF8/FeatureServer/0/query",
+				options: {
+					params: {
+						returnGeometry: true,
+						outSr: 4326,
+						outFields: "*",
+						f: "geojson",
+						where: "1=1"
+					},
+					category: null,				// Category
+					displayName: "ESRI source",	// Name visible to users
+					layerId: "esri",					// A required unique id
+					xhrType: "GET",							// The request method (using jquery ajax)
+					attribution: "Malmö stad",					// Copyright
+					inputCrs: "EPSG:4326",						// The projection to request for. If not EPSG:4326 it will be projected on the fly.
+					uniqueKey: "OBJECTID",							// Important! WFS layers must have a unique id (used for caching already fetched features)
+					selectable: true,							// Selectable or not
+					reverseAxis: false,							// If WFS service returns coordinates as [northing, easting] then set this to true
+					reverseAxisBbox: true,						// If WFS service expects coordinates as [north, west, south, east] then set this to true
+					geomType: "POINT",							// geometry type (used so far only by the Editor plugin)
+					popup: 										// HTML template for popup. Extract properties by writing the column name inside brackets ${}
+						'<h4>${Title} </h4>'+
+						'<p>${Address}</p>'
+				}
+			},
 			{
 				init: "L.NonTiledLayer.WMS",
 				url: "http://localhost/geoserver/wms",
@@ -1504,16 +1546,16 @@ var config = {
 			
 		bl: [
 
-		// {
-		// 	init: "L.TileLayer",
-		// 	url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-		// 	options: {
-		// 		layerId: "osm",
-		// 		displayName: "OSM",
-		// 		attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="//developer.mapquest.com/content/osm/mq_logo.png"></span>',
-		// 		maxZoom: 18
-		// 	}
-		// },		
+		{
+			init: "L.TileLayer",
+			url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			options: {
+				layerId: "osm",
+				displayName: "OSM",
+				attribution: '<span>© OpenStreetMap contributors</span>&nbsp;|&nbsp;<span>Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="//developer.mapquest.com/content/osm/mq_logo.png"></span>',
+				maxZoom: 18
+			}
+		},		
 
 		{
 				init: "L.TileLayer.WMS",

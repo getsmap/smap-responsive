@@ -61,6 +61,7 @@ var p = {
 		//'dist/lib/Leaflet.print-smap/**/*.js',
 		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
 		'dist/lib/**/*.js',
+		'!dist/lib/leaflet-dist/*', // messing up
 		'!dist/lib/libs.js', // Don't use previously compressed lib file
 		'!dist/lib/add-to-homescreen/**/*.js', // Exclude this lib, it's optionally injected by plugin
 		'core/js/buildLibOverrides.js'  // Override libs js
@@ -91,6 +92,7 @@ var p = {
 		// last
 		"plugins/**/*.css",
 		"!plugins/**/_*.css",
+		"!plugins/DrawSmap/*.css",
 		"!plugins/Edit/**/*.css",
 		"!plugins/MyPlugin/**/*.css",
 		"!plugins/SideBars/**/*.css",
@@ -106,6 +108,7 @@ var p = {
 		"plugins/**/*.js",
 		"!plugins/**/_*.js",
 		"!plugins/Test/**/*.js",
+		"!plugins/DrawSmap/*.js",
 		"!plugins/Edit/**/*.js",
 		"!plugins/MyPlugin/**/*.js",
 		"!plugins/SideBars/**/*.js",

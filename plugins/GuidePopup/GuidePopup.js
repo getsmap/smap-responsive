@@ -13,7 +13,8 @@ L.Control.GuidePopup = L.Control.extend({
 			accessHeader: "Tillgänglighet",
 			close: "Stäng",
 			showMore: "Visa mer",
-			loadingPic: "Hämtar bild"
+			loadingPic: "Hämtar bild",
+			tipClickForFullScreen: "Klicka för fullskärmsbild"
 		},
 		"en": {
 			introHeader: "About",
@@ -21,7 +22,9 @@ L.Control.GuidePopup = L.Control.extend({
 			accessHeader: "Accessibility",
 			close: "Close",
 			showMore: "Read more",
-			loadingPic: "Loading photo"
+			loadingPic: "Loading photo",
+			picFullScreenTitle: "Slideshow",
+			tipClickForFullScreen: "Click for full-screen photo"
 		}
 	},
 	
@@ -546,24 +549,15 @@ L.Control.GuidePopup = L.Control.extend({
 			else {
 				// We are dealing with HTML
 				var $tabIntro = $("<div />").append(tabIntro);
-				var $divLoadIndicator = $('<div class="img-load-indicator"><i class="fa fa-spinner"></i></div>');
 				$tabIntro.find("img").each(function() {
-					var $clone = $divLoadIndicator.clone();
-					// $clone.css({
-					// 	"max-width": $(this).css("max-width"),
-					// 	"max-height": $(this).css("max-height")
-					// });
-					$(this).before( $clone );
-					$(this).addClass("hidden img-smooth-loading");
+					utils.addImageLoadIndicator( $(this), {
+						height: "150px"
+					});
 				});
-				$tabIntro.find("img").on("load", function() {
-					var $this = $(this);
-					$this.prev(".img-load-indicator").remove();
-					$this.removeClass("hidden");
-					setTimeout(function() {
-						$this.addClass("img-fade-in");
-					}, 200);
-				});
+				$tabIntro.find("img").on("click tap", function() {
+					var $fsContent = self._makeCarousel( [$(this).prop("src")] );
+					self.showFullScreen($fsContent, dialogTitle);
+				}).prop("title", this.lang.tipClickForFullScreen).tooltip();
 				$("#gp-intro").append($tabIntro);
 			}
 		}

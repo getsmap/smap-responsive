@@ -285,8 +285,8 @@ body {
   opacity: 0;
 }
 .img-fade-in {
-  -webkit-transition: all 1s;
-  transition: all 1s;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
   opacity: 1;
 }
 .leaflet-popup-option {

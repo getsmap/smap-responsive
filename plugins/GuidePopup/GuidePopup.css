@@ -64,3 +64,6 @@
 .gp-mediaicons {
   cursor: pointer;
 }
+#gp-intro img {
+  cursor: pointer;
+}
