@@ -47,7 +47,7 @@ Third. In order to minimise the need of programmers' hands-on – we put a lot o
 First, make sure you have the following applications installed.
 - node and npm: [https://nodejs.org/download/](https://nodejs.org/download/)
 - bower: [http://bower.io/](http://bower.io/)
-- A webserver like Apache, Nginx or IIS (either locally installed or on a server)
+- A webserver like Apache, Nginx, IIS, or whatever your prefer (either locally installed or on a server)
 
 <br />
 
