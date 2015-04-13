@@ -167,7 +167,7 @@
   margin-top: 1px;
 }
 .lswitch-cat.active {
-  letter-spacing: -2px;
+  font-weight: bold;
 }
 .lswitch-panel a.active {
   cursor: pointer;
