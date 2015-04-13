@@ -135,8 +135,8 @@
 }
 .lswitch-catcont.lswitch-catcont-visible a {
   padding-left: 2.5em;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
+  -webkit-transition: padding-left 0.2s;
+  transition: padding-left 0.2s;
 }
 .lswitch-legend {
   width: 20px;
@@ -167,7 +167,6 @@
   margin-top: 1px;
 }
 .lswitch-cat.active {
-  font-weight: bold;
   letter-spacing: -2px;
 }
 .lswitch-panel a.active {
@@ -308,7 +307,6 @@
     background-color: rgba(255,255,255,0.9);
     color: #000;
     color: #000;
-    font-weight: bold;
   }
   .lswitch-catcont.lswitch-catcont-visible a {
     border: 1px solid #ccc;
