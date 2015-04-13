@@ -24,6 +24,7 @@
   -webkit-transition: opacity 0.5s;
   transition: opacity 0.5s;
   padding-top: 53px;
+  overflow-y: auto;
 }
 .gp-fullscreen h1 {
   color: #fff;
