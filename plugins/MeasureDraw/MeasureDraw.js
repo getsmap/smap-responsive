@@ -766,8 +766,8 @@ L.Control.MeasureDraw = L.Control.extend({
 		var self = this;
 
 		self.map.on("click", function() {
-			self._removeAlerts();
-		});
+			this._removeAlerts();
+		}, this);
 
 		this.map.on("draw:drawstart", function() {
 			self._nodes = [];
