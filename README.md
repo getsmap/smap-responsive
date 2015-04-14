@@ -3,7 +3,8 @@ sMap-responsive
 
 ###Examples
 - [Malmö Stadsatlas (City Map of Malmö)](http://kartor.malmo.se/init/?appid=stadsatlas-v1&lang=en)
-- [Guided tour](http://kartor.malmo.se/init/?appid=tema_vh-v1&lang=en) in Western Harbour, Malmö
+- [Guided tour](http://kartor.malmo.se/init/?appid=tema_vh-v1&lang=en) for pedestrians in Western Harbour, Malmö (and [more tours](http://malmo.se/kartor/promenadstaden/))
+- [Find your school](http://malmo.se/Forskola--utbildning/Grundskola/Grundskolor-och-forskoleklass/Att-valja-skola/Upptagningsomraden-och-hemskola.html) in Malmö (map integrated in a form)
 - [Lunds Stadskarta (City Map of Lund)](http://www.lund.se/Tillbehor/Karta-over-Lund/)
 - [Map with editable points, lines and polygons](http://kartor.malmo.se/init/?appid=edit_demo) (using WFS-T, requires password to save)
 
