@@ -82,10 +82,20 @@ smap.cmd = {
 			case "error":
 				msgType = "alert-danger";
 				break;
+			default:
+				msgType = "alert-"+msgType;
+				break;
 			}
 			var msg = $('<div class="alert map-alert '+msgType+' alert-dismissable"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+text+'</div>');
 			options.parent.find(".alert").remove();
+
 			options.parent.append(msg);
+			if (options.fade) {
+				msg.addClass("notify-transition");
+				setTimeout(function() {
+					msg.addClass("notify-visible");
+				}, 1);
+			}
 			return msg;
 		},
 		

@@ -88,11 +88,15 @@ html, body
 	// text-shadow 2px 2px 0px #444
 	.hidden-labelinfo
 		display none
+	// button.btn, button.btn:hover, button.btn:active, button.btn:focus
+	// 	background none !important
+	// 	color #fff
+	// 	border 2px solid #fff
 
 .leaflet-maplabel-hover, .leaflet-maplabel:hover
 	text-shadow none
 	background-color #000
-	background-color rgba(0,0,0, 0.5)
+	background-color rgba(0,0,0, 0.6)
 	color #fff
 	visibility visible
 	margin-top 0
@@ -333,7 +337,26 @@ loadingTextWidth = 5em
 	opacity 1
 // -- End --
 
+// Utility classes for fading in/out tags.
+// Example fade in:
+//     tag.addClass("transition-250ms");
+//     msg.addClass("opaque");
 
+.notify-transition
+	opacity 0
+	transition all 0.3s
+	margin-bottom -10%
+.notify-visible
+	opacity 1
+	margin-bottom 0
+
+.alert-blank
+	background none
+	background-color rgba(0,0,0,0.6)
+	color #fff
+	.close
+		color #fff
+		opacity 1
 
 // ----------- THEME --------------
 

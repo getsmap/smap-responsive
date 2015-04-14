@@ -79,7 +79,7 @@ body {
 .leaflet-maplabel:hover {
   text-shadow: none;
   background-color: #000;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.6);
   color: #fff;
   visibility: visible;
   margin-top: 0;
@@ -287,6 +287,25 @@ body {
 .img-fade-in {
   -webkit-transition: all 0.5s;
   transition: all 0.5s;
+  opacity: 1;
+}
+.notify-transition {
+  opacity: 0;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  margin-bottom: -10%;
+}
+.notify-visible {
+  opacity: 1;
+  margin-bottom: 0;
+}
+.alert-blank {
+  background: none;
+  background-color: rgba(0,0,0,0.6);
+  color: #fff;
+}
+.alert-blank .close {
+  color: #fff;
   opacity: 1;
 }
 .leaflet-popup-option {

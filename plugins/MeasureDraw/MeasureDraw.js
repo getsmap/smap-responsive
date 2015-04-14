@@ -6,6 +6,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		saveWfsUrl: "",
 		saveWfsTypeName: "",
 		layerName: "measurelayer",
+		moreCoordsAsModal: true,
 		stylePolygon: {
 			color: '#0077e2',
 			weight: 3
@@ -18,6 +19,7 @@ L.Control.MeasureDraw = L.Control.extend({
 	
 	_lang: {
 		"sv": {
+			close: "Stäng",
 			drawTools: "Ritverktyg",
 			draggableMarker: "Markören är dragbar",
 			btnTitle: "Rita & Mät",
@@ -80,6 +82,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			// coordinates: "Koordinater"
 		},
 		"en": {
+			close: "Close",
 			drawTools: "Draw tools",
 			draggableMarker: "The marker is draggable",
 			btnTitle: "Draw & Measure",
@@ -383,17 +386,28 @@ L.Control.MeasureDraw = L.Control.extend({
 		console.log("node click");
 	},
 
-	_createCoordsHtml: function(wgs) {
+	_createCoordsHtml: function(wgs, showAll) {
+		showAll = showAll || false;
+
+		var self = this;
+
 		var espg3006 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3006");
 		var espg3008 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3008");
 		var espg3021 = utils.projectLatLng(wgs, "EPSG:4326", "EPSG:3021");
 
-		html =	'<div style="margin-bottom:1em;">['+this.lang.draggableMarker+']</div>'+
+		var hiddenClass="", draggable="", btnShow="";
+		if (!showAll) {
+			hiddenClass = " hidden";
+			draggable = '<div style="margin-bottom:1em;">['+this.lang.draggableMarker+']</div>';
+			btnShow = '<br><button ondrag="return false;" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i>&nbsp;&nbsp;'+this.lang.moreCoords+'</button></div></div>';
+		}
+
+		html =	draggable+
 				'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
 				"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
-				"Lon: &nbsp;"+utils.round(wgs.lat, 5)+'<div><br><button onclick="var tag=jQuery(this).parent().parent().parent().find(\'.measuredraw-morecoords\');tag.toggleClass(\'hidden\');jQuery(this).parent().remove();return false;" class="btn btn-primary btn-sm">'+this.lang.moreCoords+'</button></div></div>';
+				"Lon: &nbsp;"+utils.round(wgs.lat, 5)+'<div>'+btnShow;
 
-		html +=		"<br><div class='measuredraw-morecoords hidden'><strong>Sweref99 TM (EPSG:3006)</strong><br>"+
+		html +=		"<br><div class='measuredraw-morecoords"+hiddenClass+"'><strong>Sweref99 TM (EPSG:3006)</strong><br>"+
 					"East: &nbsp;"+utils.round(espg3006.lng)+"<br>"+
 					"North: &nbsp;"+utils.round(espg3006.lat)+"<br><br>"+
 					"<strong>Sweref99 13 30 (EPSG:3008)</strong><br>"+
@@ -465,11 +479,23 @@ L.Control.MeasureDraw = L.Control.extend({
 				// });
 			});
 			layer.on("drag", function(e) {
+				// $(".alert").removeClass("notify-visible");
+				// setTimeout(function() {
+				// 	$(".alert").remove();
+				// }, 500);
+
 				var lay = e.target;
 				var label = self._getLabel(lay);
 				label.setLatLng(lay.getLatLng());
 				var html = self._createCoordsHtml(lay.getLatLng());
 				$(label._icon).html(html);
+
+				var $alert = $(".alert");
+				if ($alert.length) {
+					var $msg = smap.cmd.notify(self._createCoordsHtml(lay.getLatLng(), true), "blank");
+					$msg.addClass("notify-transition notify-visible");
+				}
+
 				// var labelTag = $(".leaflet-maplabel:last");
 
 				// self._layer.addLayer(label);
@@ -591,7 +617,42 @@ L.Control.MeasureDraw = L.Control.extend({
 			label.options.clickable = true;
 
 			if (type === "marker") {
-				$(label._icon).on("tap click", function() {
+				var onBtnClick = function(e) {
+					// On click btn "show more coordinates"
+					if (self.options.moreCoordsAsModal) {
+						// Create a modal with the coordinates
+						// var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+self.lang.close+'</button>',
+						// 	bodyContent = $('<div />');
+						// var coordsHtml = self._createCoordsHtml( layer.getLatLng(), true);
+						// bodyContent.append(coordsHtml);
+						// var d = utils.drawDialog(self.lang.moreCoords, bodyContent, footerContent);
+						// d.on("hidden.bs.modal", function() {
+						// 	$(this).empty().remove();
+						// 	d = null;
+						// });
+						// d.modal("show");
+						var coordsHtml = self._createCoordsHtml( layer.getLatLng(), true);
+						smap.cmd.notify(coordsHtml, "blank", {fade: true});
+					}
+					else {
+						// Just expand the label, showing the other coordinates
+						var $this = $(this);
+						var $tag = $this.parent().parent().parent();
+						$tag.find(".measuredraw-morecoords").toggleClass("hidden");
+						$this.parent().remove();
+					}
+					return false;
+				};
+
+				var onLabelEnter = function(e) {
+					// Bind btn click to show more coordinates
+					var $this = $(this);
+					$this.find("button")
+						.off("click", onBtnClick)
+						.on("click", onBtnClick);
+				};
+				$(label._icon).on("mouseenter", onLabelEnter);
+				$(label._icon).on("click", function() {
 					// Prevent click from going through for marker's coordinates systems button
 					return false;
 				});
@@ -618,7 +679,6 @@ L.Control.MeasureDraw = L.Control.extend({
 			labelTag.css({
 				"margin-left": (-labelTag.width()/2-15)+"px"
 			});
-			// labelTag.on("click", this.returnFalse);
 			
 		}
 		if (!e._silent) {
@@ -643,21 +703,11 @@ L.Control.MeasureDraw = L.Control.extend({
 				});
 			}
 		}
-
-
-
-		// var popupHtml = '<div class="measuredraw-popup-div-save '+fidClass+'"><textarea class="form-control" placeholder="'+this.lang.clickToAddText+'" rows="3"></textarea></div>';
-		// layer.options.popup = popupHtml;
-		// layer.bindPopup(popupHtml);
-		// layer.openPopup();
-	},
-
-	returnFalse: function() {
-		return false;
 	},
 
 	onMouseOver: function(e) {
-		$(".measuredrawlabel_"+e.target._leaflet_id+"_").addClass("leaflet-maplabel-hover");
+		var label = $(".measuredrawlabel_"+e.target._leaflet_id+"_");
+		label.addClass("leaflet-maplabel-hover");
 	},
 
 	onMouseOut: function(e) {
@@ -715,6 +765,10 @@ L.Control.MeasureDraw = L.Control.extend({
 		this.map.on("draw:created", this._onCreated);
 		var self = this;
 
+		self.map.on("click", function() {
+			self._removeAlerts();
+		});
+
 		this.map.on("draw:drawstart", function() {
 			self._nodes = [];
 			self._selection(false); // Deactivate select
@@ -762,6 +816,8 @@ L.Control.MeasureDraw = L.Control.extend({
 
 	onPopupOpen: function(e) {
 		var self = this;
+
+		this._removeAlerts();
 
 		var layer = e.popup && e.popup._source ? e.popup._source : null;
 		if (!layer || !layer._measureDrawFeature) {
@@ -856,6 +912,19 @@ L.Control.MeasureDraw = L.Control.extend({
 			ts[key].disable();
 			this.$container.find(".dropdown-menu li.active").removeClass("active");
 		}
+		this._removeAlerts();
+	},
+
+	_removeAlerts: function() {
+		// Remove alerts
+		var alert = $(".alert");
+		if (alert.length) {
+			alert.removeClass("notify-visible");
+			setTimeout(function() {
+				alert.remove();
+			}, 500);
+		}
+
 	},
 
 	_onRowClick: function(e) {
