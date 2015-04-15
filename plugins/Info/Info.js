@@ -5,21 +5,41 @@ L.Control.Info = L.Control.extend({
 		position: 'bottomright',
 		_lang: {
 			"sv": {
-				titleInfo: "<h4>Välkommen till smap-responsive!</h4>",
+				titleInfo: "<h4>Välkommen till Kävlingeåns vattenstrategiska planeringsunderlag!</h4>",
 				bodyContent:
-					'<h4>Vad?</h4>'+
+					'<p>Kävlingeåns vattenstrategiska planeringsunderlag (VSPU) är samlad kartinformation om hela avrinningsområdet vars syfte är informationsspridning och samordning över kommungränser. </p>'+
+					'<p>Källor</p>'+
+					'SMHI: Lager1, Lager2<br/>'+
+					'LST: Lager3, Lager4<br/>'+
+					'<p>Länkar</p>'+
+					'<p><a href="http://kavlingean.se">Vattenrådets hemsida</a></br>'+
+					'<a href="https://www.geodata.se/GeodataExplorer/index.jsp?loc=sv">Geodataportalen</a><br/>'+
+					'<a href="http://vattenwebb.smhi.se/">SMHI Vattenwebb</a><br/>'+
+					'<a href=http://www.smhi.se/klimatdata/hydrologi/ladda-ner-data-fran-svenskt-vattenarkiv-1.20127">SMHI SVAR (Svenskt Vattenarkiv)</a><br/>'+
+					'<a href="http://opendata-catalog.smhi.se/explore/">SMHI Datautforskaren</a><br/>'+
+					'<a href="http://viss.lansstyrelsen.se/Monitoringprograms.aspx?monitoringProgramID=189">Kävlingeån på VISS</a>'+
+					'<p>VSPU administreras av vattenrådet och data uppdateras av rådets medlemskommuner. Kontakt:...</p>'+
+					'<h4>Smap</h4>'+
 			  		'<p>Smap-responsive är ett ramverk för att skapa kartor med "responsiv design". '+
-			  			'Det innebär att kartorna anpassar sitt innehåll efter skärmens storlek. Ramverket kan byggas ut med plugins (Leaflet-kontroller).</p>'+
-		  			'<p>Koden är öppen och kan laddas ner gratis från <a target="_blank" href="https://github.com/getsmap/smap-responsive/">GitHub</a>.</p>'
+			  		'<p>Ramverket har ursprungligen utvecklats av Malmö Stadsbyggnadskontor men utvecklas numera tillsammans med Kristianstad, Helsingborg och Lunds kommun.'+
+			  		'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
+					'<p>Vill du veta mer om andra öppenkällkodsprojekt som drivs under namnet sMap – eller veta mer om bakomliggande geodata? Kontakta <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
+					'<a href="mailto :Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
 			},
-			"en": {
-				titleInfo: "<h4>Welcome to smap-responsive!</h4>",
-				bodyContent:
-					'<h4>What?</h4>'+
-			  		'<p>Smap-responsive is a framework for creating maps with a "responsive design". '+
-			  			'This means the site adapts the content to the screen size. The framework can be extended with plugins (Leaflet controls).</p>'+
-		  			'<p>The code is open source and can be downloaded free from <a target="_blank" href="https://github.com/getsmap/smap-responsive/">GitHub</a>.</p>'
-			}
+			// "en": {
+				// titleInfo: "<h4>Welcome to smap-responsive!</h4>",
+				// bodyContent:
+					// '<h4>What?</h4>'+
+			  		// '<p>Smap-responsive is a framework for creating maps with a "responsive design". '+
+			  			// 'This means the site adapts the content to the screen size. The framework can be extended with plugins (Leaflet controls).</p>'+
+		  			// '<p>The code is open source and can be downloaded free from <a target="_blank" href="https://github.com/getsmap/smap-responsive/">GitHub</a>.</p>'+
+		  			// '<h4>Who?</h4>'+
+			  		// '<p>The framework was originally developed by Malmö Stadsbyggnadskontor but is now developed together with the municipalities of Kristianstad, Helsingborg and Lund.'+
+			  		// '<h4>Feed-back!</h4>'+
+					// '<p>Do you have suggestions, or are you interested in contributing to the development of sMap-responsive? Please contact <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
+					// '<p>Do you want more info about other open source projects denoted as "sMap" – or do you want to know more about the geodata in the map(s)? Then contact <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> or '+
+					// '<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
+			// }
 		}
 	},
 	
