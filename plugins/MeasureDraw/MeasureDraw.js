@@ -7,6 +7,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		saveWfsTypeName: "",
 		layerName: "measurelayer",
 		moreCoordsAsModal: true,
+		touchShowButtonAsDisabled: true,
 		stylePolygon: {
 			color: '#0077e2',
 			weight: 3
@@ -19,6 +20,7 @@ L.Control.MeasureDraw = L.Control.extend({
 	
 	_lang: {
 		"sv": {
+			btnDisabledBecauseTouch: "Rita & Mät stödjer inte din nuvarande enhet",
 			close: "Stäng",
 			drawTools: "Ritverktyg",
 			draggableMarker: "Markören är dragbar",
@@ -82,6 +84,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			// coordinates: "Koordinater"
 		},
 		"en": {
+			btnDisabledBecauseTouch: "Draw & Measure is not supported on your device",
 			close: "Close",
 			drawTools: "Draw tools",
 			draggableMarker: "The marker is draggable",
@@ -167,11 +170,19 @@ L.Control.MeasureDraw = L.Control.extend({
 		this._proxyListeners();
 
 		this._initDraw();
-		if (!L.Browser.touch) {
-			this._createBtn();
-			smap.event.on("smap.core.pluginsadded", function() {
-				$('.leaflet-control-measuredraw .dropdown-toggle').dropdown();
-			});
+		this._showButtonAsDisabled = L.Browser.touch && this.options.touchShowButtonAsDisabled;
+		if (!L.Browser.touch || this._showButtonAsDisabled) {
+			var $btn = this._createBtn();
+			if (this._showButtonAsDisabled) {
+				$btn.prop("title", this.lang.btnDisabledBecauseTouch);
+				$btn.tooltip({placement: "bottom"});
+				$btn.prop("disabled", true);
+			}
+			else {
+				smap.event.on("smap.core.pluginsadded", function() {
+					$('.leaflet-control-measuredraw .dropdown-toggle').dropdown();
+				});
+			}
 		}
 
 		var self = this;
@@ -1007,6 +1018,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			dm.append(b);
 		}
 		this.$container.append($btn);
+		return $btn;
 	}
 });
 
