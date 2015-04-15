@@ -340,16 +340,19 @@
 				conditionsLink.on(clickEvent, function() {
 					conditionsText.slideToggle(250);
 				});
-				self.submitDiv.on(clickEvent, function() {
+				self.submitDiv.on(clickEvent, function(e) {
 					if (!self.conditionsCheckbox.prop('checked')) {
 						self.conditionsCheckbox = $('#printmodal').find('[name="conditions"]');
-						self.conditionsCheckbox.popover({content: self.lang.conditionsTip, trigger:('focus'), placement: 'bottom', animation: 'false' });
-						self.conditionsCheckbox.popover('show').focus();
+						self.conditionsCheckbox.popover({content: self.lang.conditionsTip, trigger:('manual'), placement: 'bottom', animation: 'false' });
+						self.conditionsCheckbox.popover('show');
+						e.stopPropagation();
+						
+						self._modal.one(clickEvent, function() {
+							self.conditionsCheckbox.popover('destroy');
+						});
 					}
 				});
-				self.conditionsCheckbox.on(clickEvent, function() {
-					self.conditionsCheckbox.popover('destroy').blur();
-				});
+
 				self._modal.attr("id", "printmodal");
 				self._modal.addClass("printmodal");
 				self._modal.find("form").submit(function() {
