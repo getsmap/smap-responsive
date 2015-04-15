@@ -8,21 +8,29 @@ L.Control.Info = L.Control.extend({
 				titleInfo: "<h4>Välkommen till Kävlingeåns vattenstrategiska planeringsunderlag!</h4>",
 				bodyContent:
 					'<p>Kävlingeåns vattenstrategiska planeringsunderlag (VSPU) är samlad kartinformation om hela avrinningsområdet vars syfte är informationsspridning och samordning över kommungränser. </p>'+
+					'<p>Asterisk (*) betyder att lagret är klickbart för mer information. Vid problem kan det hjälpa att zooma in.</p>'+
 					'<p>Källor</p>'+
-					'SMHI: Lager1, Lager2<br/>'+
-					'LST: Lager3, Lager4<br/>'+
+					'SMHI: Hydrologi<br/>'+
+					'LST: Dikningsföretag, Riksintressen, Tillståndsverksamhet<br/>'+
+					'Vattenmyndigheten: Vattenförvaltning, Miljöövervakning<br/>'+
+					'Kommuner: Planer, VA, Miljö<br/>'+
+					'Naturvårdsverket: Skyddade områden<br/>'+
+					'Jordbruksverket: Äng- och betesmark<br/>'+
+					'Riksantikvarieämbetet: Fornminnen<br/>'+
+					'SGU: Berg och jord<br/>'+
+					'Skogsstyrelsen: Nyckelbiotop, Sumpskog<br/>'+
 					'<p>Länkar</p>'+
 					'<p><a href="http://kavlingean.se">Vattenrådets hemsida</a></br>'+
-					'<a href="https://www.geodata.se/GeodataExplorer/index.jsp?loc=sv">Geodataportalen</a><br/>'+
-					'<a href="http://vattenwebb.smhi.se/">SMHI Vattenwebb</a><br/>'+
-					'<a href=http://www.smhi.se/klimatdata/hydrologi/ladda-ner-data-fran-svenskt-vattenarkiv-1.20127">SMHI SVAR (Svenskt Vattenarkiv)</a><br/>'+
-					'<a href="http://opendata-catalog.smhi.se/explore/">SMHI Datautforskaren</a><br/>'+
-					'<a href="http://viss.lansstyrelsen.se/Monitoringprograms.aspx?monitoringProgramID=189">Kävlingeån på VISS</a>'+
+					'<a href="https://www.geodata.se/GeodataExplorer/index.jsp?loc=sv" target="_blank">Geodataportalen</a><br/>'+
+					'<a href="http://vattenwebb.smhi.se/" target="_blank">SMHI Vattenwebb</a><br/>'+
+					'<a href=http://www.smhi.se/klimatdata/hydrologi/ladda-ner-data-fran-svenskt-vattenarkiv-1.20127" target="_blank">SMHI SVAR (Svenskt Vattenarkiv)</a><br/>'+
+					'<a href="http://opendata-catalog.smhi.se/explore/" target="_blank">SMHI Datautforskaren</a><br/>'+
+					'<a href="http://viss.lansstyrelsen.se/Monitoringprograms.aspx?monitoringProgramID=189" target="_blank">Kävlingeån på VISS</a>'+
 					'<p>VSPU administreras av vattenrådet och data uppdateras av rådets medlemskommuner. Kontakt:...</p>'+
 					'<h4>Smap</h4>'+
-			  		'<p>Smap-responsive är ett ramverk för att skapa kartor med "responsiv design". '+
-			  		'<p>Ramverket har ursprungligen utvecklats av Malmö Stadsbyggnadskontor men utvecklas numera tillsammans med Kristianstad, Helsingborg och Lunds kommun.'+
-			  		'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
+					'<p>Smap-responsive är ett ramverk för att skapa kartor med "responsiv design". '+
+					'<p>Ramverket har ursprungligen utvecklats av Malmö Stadsbyggnadskontor men utvecklas numera tillsammans med Kristianstad, Helsingborg och Lunds kommun.'+
+					'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
 					'<p>Vill du veta mer om andra öppenkällkodsprojekt som drivs under namnet sMap – eller veta mer om bakomliggande geodata? Kontakta <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
 					'<a href="mailto :Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
 			},
