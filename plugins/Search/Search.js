@@ -12,6 +12,8 @@ L.Control.Search = L.Control.extend({
 		addToMenu: false,
 		zoom: 15,
 		markerIcon: $.extend({}, new L.Icon.Default().options, {iconUrl: L.Icon.Default.imagePath + '/marker-icon.png'}),
+		source: null,
+		acHeight: null, // CSS value - height of autocomplete div
 		acOptions: {
 			items: 100
 		}
@@ -359,7 +361,7 @@ L.Control.Search = L.Control.extend({
 				highlight: true,
 				hint: true,
 				// showHintOnFocus: true,
-				updater: function(val) {
+				afterSelect: function(val) {  // updater:
 					smap.cmd.loading(true);
 					geoLocate.call(self, val);
 					deactivate();
@@ -371,44 +373,58 @@ L.Control.Search = L.Control.extend({
 
 		$.extend(typeheadOptions, this.options.acOptions || {});
 
-		if (this.options.wsAcUrl) {
-			typeheadOptions.source = function(q, process) {
-				q = encodeURIComponent(q);
-				var url = self.options.wsAcUrl;
-				if (whitespace) {
-					q = q.replace(/%20/g, whitespace);
+		if (this.options.source) {
+			// Use your own custom source for autocomplete
+			typeheadOptions.source = $.proxy(this.options.source, this);
+		}
+		else {
+			if (this.options.wsAcUrl) {
+				typeheadOptions.source = function(q, process) {
+					q = encodeURIComponent(q);
+					var url = self.options.wsAcUrl;
+					if (whitespace) {
+						q = q.replace(/%20/g, whitespace);
+					}
+					if (self.proxyInst) {
+						self.proxyInst.abort();
+					}
+					self.proxyInst = $.ajax({
+						type: "GET",
+						url: self.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url + "?q=") + q : url + "?q="+q,
+						dataType: "text",
+						success: function(resp) {
+							var arr = resp.split("\n");
+							process(arr);
+						},
+						error: function() {}
+					});
 				}
-				if (self.proxyInst) {
-					self.proxyInst.abort();
-				}
-				self.proxyInst = $.ajax({
-					type: "GET",
-					url: self.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url + "?q=") + q : url + "?q="+q,
-					dataType: "text",
-					success: function(resp) {
-						var arr = resp.split("\n");
-						process(arr);
-					},
-					error: function() {}
-				});
+			}
+			else if (this.options.wsAcLocal && this.options.wsAcLocal instanceof Array) {
+				// Use local autocomplete words
+				typeheadOptions.source = this.options.wsAcLocal;
 			}
 		}
-		else if (this.options.wsAcLocal && this.options.wsAcLocal instanceof Array) {
-			// Use local autocomplete words
-			typeheadOptions.source = this.options.wsAcLocal;
-		}
 		$entry.typeahead(typeheadOptions);
-
 		$entry.on("keydown", function(e) {
 			var isDownKey = e.which === 38 || e.which === 40;  // Up or down key
 			if (isDownKey) {
 				var $item = $(".typeahead.dropdown-menu li.active");
 				var nbrOfRows = 3;
-				if ($item.index() >= nbrOfRows) {
+				if ( $item.index() === 0) {
+					// When going from last item and pressing arrow-down-key we want to scroll to top
+					$item.parent().scrollTo($(".typeahead.dropdown-menu li:first"), 0);
+				}
+				else if ($item.index() >= nbrOfRows) {
 					$item.parent().scrollTo($item.prev().prev(), 0);
 				}
 			}
 		});
+		// Set ac field height
+		if (this.options.acHeight) {
+			var $menu = $entry.data("typeahead").$menu;
+			$menu.css({"max-height": this.options.acHeight});
+		}
 	},
 	
 	
@@ -432,11 +448,11 @@ L.Control.Search = L.Control.extend({
 			url = smap.config.ws.proxy + encodeURIComponent(url+"?q=")+q;
 			var whitespace = this.options.whitespace;
 			if (whitespace) {
-				url = url.replace(/%20/g, whitespace);			
+				url = url.replace(/%20/g, whitespace);
 			}
 		}
 		else {
-			url = url+"?q="+q
+			url = url+"?q="+q;
 		}
 
 		var callbacks = {

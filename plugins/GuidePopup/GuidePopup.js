@@ -96,6 +96,9 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	
 	_onPopupOpen: function(e) {
+		// This is essentially what binds a WFS layer to this module.
+		// Currently, all vector layers will be bound since no check
+		// against any "guideLayerId" is done.
 		if (e.popup._source && e.popup._source.feature) {
 			var layerId = e.popup._source.feature.layerId;
 			// if (layerId !== this.options.layerId) {
