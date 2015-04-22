@@ -66,7 +66,8 @@ var app = {
 			}
 
 			// Get address's lat/lng
-			var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt_v.ashx?q="+encodeURIComponent(formData.q);
+			//var url = "http://kartor.malmo.se/WS/search-1.0/sokexakt_v.ashx?q="+encodeURIComponent(formData.q);
+			var url = "http://kartor.malmo.se/api/v1/schoolname/search/?q="+encodeURIComponent(formData.q);
 			$.ajax({
 				url: proxy ? proxy + encodeURIComponent(url).replace(/%20/g, "%2B") : url,
 				type: "GET",
@@ -81,9 +82,9 @@ var app = {
 					return;
 				}
 				var coords = resp.features[0].geometry.coordinates;
-				for (var i=0,len=coords.length; i<len; i++) {
-					coords[i] = parseInt(Math.round(coords[i]));
-				}
+				// for (var i=0,len=coords.length; i<len; i++) {
+				//	coords[i] = parseInt(Math.round(coords[i]));
+				// }
 
 				var url = "http://kartor.malmo.se/api/v1/schoolname/?e="+coords[0]+"&n="+coords[1]+"&arsk="+formData.batch+"&lasar="+formData.term;
 				$.ajax({
