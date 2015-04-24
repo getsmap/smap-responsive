@@ -1,0 +1,120 @@
+.popover.smap-helper-popover
+	z-index 10000
+	background-color #000
+	color #fff
+		
+.popover.smap-helper-popover.top .arrow:after
+	border-top-color #000
+	
+
+.smap-helper-stepcont
+	position absolute
+	z-index 2001
+	transition all 1s
+	font-size 2em
+	max-width 9em
+	padding-left 1em
+	*
+		color #fff
+	.smap-helper-steptitle
+		font-size 1em
+		word-wrap break-word
+		// white-space nowrap
+	.smap-helper-stepdescription
+		font-size 0.5em
+		margin-top 0.5em
+		
+
+.smap-helper-bgcanvas
+	position absolute
+	z-index 2000
+	left 0
+	top 0
+	transition all 0.3s
+	opacity 0
+
+.smap-helper-btnclose
+	position absolute
+	right 30px
+	top 10px
+	font-size 3em
+	z-index 3000
+	cursor pointer
+	color #fff
+	opacity 0.8
+	transition opacity 0.3s
+.smap-helper-btnclose:hover
+	opacity 1
+	
+.smap-helper-fadein
+	opacity 1 !important
+	transition opacity 0.2s
+	
+// .smap-helper-darken
+// 	transform scale(1.2, 1.2)
+
+
+.smap-helper-button-group.smap-helper-clicktip
+	position absolute
+	font-size 2em
+	display block
+	width 100%
+	text-align center
+	bottom 1em
+
+.smap-helper-button-group
+	position relative
+	z-index 2002
+	font-size 0.7em
+	white-space nowrap
+	opacity 0
+	margin-top 0.5em
+	text-align left
+	display block
+.smap-helper-button
+	cursor pointer
+	display inline-block
+	white-space nowrap
+	margin 0 0.5em
+	*
+		color #E76A54
+	span
+		display inline-block
+		font-size 1.1em
+	i
+		display inline-block
+		margin 0 8px
+		transition all 0.3s
+.smap-helper-button:first-child
+	margin-left 0
+	i, span
+		margin-left 0
+.smap-helper-button:first-of-type
+	margin-left 0
+
+.smap-helper-button.smap-helper-button-icon-effect:first-child:hover
+	i
+		transform translateX(-2px)
+.smap-helper-button.smap-helper-button-icon-effect:nth-child(2):hover
+	i
+		transform translateX(2px)
+
+
+.smap-helper-button-border
+	border 1px solid #fff
+	padding 0.2em 0.5em
+	
+@media (max-width: 991px)
+	
+	.smap-helper-btnclose
+		opacity 1
+		top 0
+		right 10px
+		
+	.smap-helper-button-group.smap-helper-clicktip
+		background-color rgba(0, 0, 0, 1)
+		bottom 0
+
+
+
+
