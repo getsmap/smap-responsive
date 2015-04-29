@@ -60,7 +60,7 @@ smap.core.Init = L.Class.extend({
 					applyConfig(smap.config);
 				}
 		}).fail(function(a, text, c) {
-			utils.log("Config not loaded because: "+text);
+			console.log("Config not loaded because: "+text);
 			smap.cmd.loading(false);
 		});
 	},
