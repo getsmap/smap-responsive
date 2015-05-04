@@ -38,6 +38,22 @@ var utils = {
 			});
 		},
 
+		/**
+		 * Python/C like insert using %s. E.g.
+		 * utils.textInsert('First name is %s and surname is %s.', ["Sven", "Svensson"]);
+		 * Result -> 'First name is Sven and surname is Svensson.'
+		 * 
+		 * @param  {String} textString
+		 * @param  {Array} valueArr 
+		 * @return {String}
+		 */
+		textInsert: function(textString, valueArr) {
+			for (var i=0,len=valueArr.length; i<len; i++) {
+				textString = textString.replace("%s", valueArr[i]);
+			}
+			return textString;
+		},
+
 		getBrowser: function() {
 			var match = navigator.userAgent.match(/(?:MSIE |Trident\/.*; rv:)(\d+)/);
     		var ieVersion = match ? parseInt(match[1]) : undefined;

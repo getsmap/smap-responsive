@@ -44,6 +44,12 @@ smap.core.PluginHandler = L.Class.extend({
 		for (var i=0,len=autoActivates.length; i<len; i++) {
 			autoActivates[i].activate();
 		}
+
+		// Enhance title by adding a tooltip to all buttons
+		$(".leaflet-bottom.leaflet-right button").tooltip({
+			placement: "left",
+			container: "#mapdiv"
+		});
 	},
 	
 	_callQueue: [],

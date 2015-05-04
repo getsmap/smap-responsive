@@ -6,10 +6,10 @@ L.Control.Template = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			exampleLabel: "Ett exempel"
+			btnLabel: "Ett exempel"
 		},
 		"en": {
-			exampleLabel: "An example"
+			btnLabel: "An example"
 		}
 	},
 	
@@ -39,7 +39,7 @@ L.Control.Template = L.Control.extend({
 	_createBtn: function() {
 		var self = this;
 
-		this.$btn = $('<button id="smap-template-btn" title="' + self.lang.exampleLabel + '" class="btn btn-default"><span class="fa fa-expand"></span></button>');
+		this.$btn = $('<button id="smap-template-btn" title="' + self.lang.btnLabel + '" class="btn btn-default"><span class="fa fa-expand"></span></button>');
 		this.$btn.on("click", function () {
 			self.activate();
 			return false;

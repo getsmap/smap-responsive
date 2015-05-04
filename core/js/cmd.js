@@ -98,6 +98,14 @@ smap.cmd = {
 			}
 			return msg;
 		},
+
+		showLayer: function(layerId) {
+			return smap.core.layerInst.showLayer(layerId);
+		},
+
+		hideLayer: function(layerId) {
+			return smap.core.layerInst.hideLayer(layerId);
+		},
 		
 		addLayerWithConfig: function(layerConfig) {
 			return smap.core.layerInst._addLayerWithConfig(layerConfig);
