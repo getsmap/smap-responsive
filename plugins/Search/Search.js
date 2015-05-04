@@ -16,139 +16,17 @@ L.Control.Search = L.Control.extend({
 		acHeight: null, // CSS value - height of autocomplete div
 		acOptions: {
 			items: 100
+		},
+		vectorSearch: {
+			wfsLayerId: "guidelayer",
+			wfsCustomParams: {}, // Overrides WFS default parameters
+			keyVals: {
+				title: "Titel",
+				architect: "Arkitekt",
+				byggherre: "Byggherre",
+				address: "Husadress"
+			}
 		}
-
-
-		// _geoLocate: function(q) {
-			// // TODO: When this function is completed, move to config file cultmap.js
-			// function cleanUp() {
-				// // Hide layer if added and
-				// $(".lswitch-temprow.active").tap();
-				// $(".lswitch-temprow").remove(); // Remove old searches
-				// // $(".lswitch-temprow.active").each(function() {
-				// // 	var t = $(this).data("t");
-				// // 	var layer = smap.cmd.getLayer( t.options.layerId );
-				// // 	if (layer) {
-				// // 		layer.destroy();
-				// // 	}
-				// // });
-			// }
-
-			// function onKeyUp(e) {
-				// if (e.keyCode === 8 && $(this).val() == "") {
-					// cleanUp();
-				// }
-			// }
-			// // This code should not be here, but it's ok because it doesn't harm anyone
-			// this._onKeyUp = this._onKeyUp || onKeyUp;
-			// $(".smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
-
-			// cleanUp(); // clean up old searches
-
-			// var lswitchInst = smap.cmd.getControl("L.Control.LayerSwitcher");
-			// if (lswitchInst) {
-				// var t = {
-						// init: "L.GeoJSON.WFS",
-						// url: "//localhost/cherrypy/cultmap/getdata", //"//localhost/cgi-bin/cultMap/getGeoData.py",
-						// options: {
-							// proxy: null,
-							// // zoomToExtent: true,
-							// // xhrType: "GET",
-							// layerId: "searchresults",
-							// displayName: "Sökresultat: "+'"'+q+'"',
-							// category: null,
-							// attribution: "Stadsbyggnadskontoret, Malmö",
-							// inputCrs: "EPSG:4326",
-							// reverseAxis: false,
-							// reverseAxisBbox: false,
-							// selectable: true,
-							// popup: '<h4>${txt_name}</h4>',
-							// uniqueKey: "id",
-							// params: {
-								// q: encodeURIComponent(q)
-							// },
-							// style: {
-								// radius: 8,
-								// fillColor: "#ff7800",
-								// color: "#000",
-								// weight: 1,
-								// opacity: 1,
-								// fillOpacity: 0.8
-							// },
-							// selectStyle: {
-								// radius: 8,
-								// fillColor: "#0FF",
-								// color: "#0FF",
-								// weight: 1,
-								// opacity: 1,
-								// fillOpacity: 0.5
-							// }
-						// }
-				// };
-				// var row = lswitchInst._addRow(t);
-				// row.data("t", t);
-				// row.addClass("lswitch-temprow");
-				// row.tap();
-
-			// }
-		// }
-
-							// onLocateSuccess: function(json) {
-							// 	// Simply add all the features to a new layer we call "searchlayer"
-							// 	// TODO: This layer should have the same popup interaction as all other layers.
-							// 	// TODO: Probably the layer should be cleared when an overlay is turned on.
-								
-							// 	var self = this;
-							// 	function clearMarkerLayer() {
-							// 		if (self.markerLayer) {
-							// 			self.map.removeLayer(self.markerLayer);
-							// 			self.markerLayer = null;
-							// 		}
-							// 	}
-							// 	function onKeyUp(e) {
-							// 		if (e.keyCode === 8 && $(this).val() == "") {
-							// 			clearMarkerLayer();
-							// 		}
-							// 	}
-							// 	// This code should not be here, but it's ok because it doesn't harm anyone
-							// 	this._onKeyUp = this._onKeyUp || onKeyUp;
-							// 	$(".smap-search-div input").off("keyup", this._onKeyUp).on("keyup", this._onKeyUp);
-
-							// 	if (!json.features.length) {
-							// 		smap.cmd.notify("Inga sökträffar", "error");
-							// 		return;
-							// 	}
-							// 	var geoJson = L.geoJson(json);
-							// 	if (this.markerLayer) {
-							// 		clearMarkerLayer()
-							// 	}
-							// 	this.markerLayer = L.geoJson(null, {
-							// 		layerId: "searchlayer",
-							// 		selectable: true,
-							// 		popup: '${txt_cat}',
-							// 		uniqueKey: "id",
-							// 		style: {
-							// 			radius: 8,
-							// 			fillColor: "#00F",
-							// 			color: "#00F",
-							// 			weight: 2,
-							// 			opacity: 1,
-							// 			fillOpacity: 0.2
-							// 		},
-							// 		selectStyle: {
-							// 			weight: 5,
-							// 			fillColor: "#0FF",
-							// 	       color: "#0FF",
-							// 	       opacity: 1,
-							// 	       fillOpacity: 1
-							// 		}
-							// 	}).addTo(this.map);
-							// 	this.map.addLayer(this.markerLayer);
-							// 	this.markerLayer.addData(json);
-							// 	this.markerLayer.fire("load"); // Make all features selectable
-							// 	this.map.fitBounds(this.markerLayer.getBounds());
-							// }
-		// qPattern: '{"txt_cat": ${q}}'
 	},
 	
 	_lang: {
@@ -194,6 +72,11 @@ L.Control.Search = L.Control.extend({
 			this._makeSearchField();
 			this.map.on("click", this._blurSearch);
 		}
+		if (this.options.vectorSearch) {
+			// Initiate vector search (cache search/auto-complete values)
+			this._initVectorSearch();
+			
+		}
 		
 		// Bind events
 		this.__onApplyParams = this.__onApplyParams || $.proxy( this._onApplyParams, this );
@@ -219,6 +102,150 @@ L.Control.Search = L.Control.extend({
 		smap.event.off("smap.core.createparams", this.__onCreateParams);
 		this.map.off("click", this._blurSearch);
 		$(".leaflet-top.leaflet-left").removeClass("with-search-bar");
+	},
+
+	_initVectorSearch: function() {
+		var vsConfig = this.options.vectorSearch;
+		var t = smap.cmd.getLayerConfig(vsConfig.wfsLayerId) || {};
+		var o = t.options;
+		if (!o) {
+			return false;
+		}
+
+		$.ajax({
+			url: t.url,
+			type: "GET",
+			data: {
+				typeName: o.params.typeName,
+				service: "WFS",
+				request: "GetFeature",
+				srsName: "EPSG:4326",
+				format: "text/geojson",
+				maxFeatures: 10000,
+				outputFormat: "json"
+			},
+			dataType: "json",
+			success: function(resp) {
+				if (resp && resp.features && resp.features.length) {
+					var fs = resp.features;
+					var t, val, keysVals, props, obj, searchWords;
+					for (var i=0,len=fs.length; i<len; i++) {
+						t = fs[i];
+						props = t.properties;
+						obj = $.extend(true, {}, {
+							name: props[keys[0]]
+						});
+						keysVals = {};
+						searchWords = [];
+						for (var j=0,lenj=keys.length; j<lenj; j++) {
+							val = props[ keys[j] ]; // Extract value for this key
+							if (val && val.length) {
+								searchWords.push(keysDisplay[j]+"=="+val);
+							}
+						}
+						obj.searchWords = searchWords.join("&&");
+						out.push(obj);
+
+					}
+					this._acVector = out; // The cached search words for autocomplete
+				}
+			},
+			error: function() {
+				alert("Error loading autocomplete data from WFS");
+			}
+		});
+
+		this._setACOptions();
+	},
+
+
+
+
+
+
+	_setACOptions: function() {
+		// Extend ac options to suit vector search
+		var self = this;
+
+		var vsConfig = this.options.vectorSearch;
+
+		// Get any of the vector keys for distinguishing between address 
+		// search result and wfs result.
+		for (var anyVectorKey in vsConfig.keyVals) {break;};
+
+		this.options.acOptions = $.extend({
+			displayText: function(item) {
+				return item.searchWords;
+			},
+			// matcher: function(item) {
+			// 	return item.name.search(this.query) > -1;
+			// },
+			highlighter: function(item) {
+
+				// Make a dict from string
+				var dict = {}, keyVal;
+				var keyVals = item.split("&&");
+				for (var i=0,len=keyVals.length; i<len; i++) {
+					keyVal = keyVals[i].split("==");
+					dict[keyVal[0]] = keyVal[1];
+				}
+				// Create HTML from dict
+				var out = "";
+				var i = 0;
+				for (var key in dict) {
+					if (i === 0) {
+						out += '<div style="font-size:1.2em;">'+dict[key]+'</div>';
+					}
+					else {
+						out += '<div><span>'+key+'</span>:&nbsp;<span>'+dict[key]+'</span></div>';
+					}
+					i++;
+				}
+				return out;
+			},
+			updater: function(item) {
+				// Make a dict from string
+				var dict = {}, keyVal;
+				var keyVals = item.searchWords.split("&&");
+				for (var i=0,len=keyVals.length; i<len; i++) {
+					keyVal = keyVals[i].split("==");
+					dict[keyVal[0]] = keyVal[1];
+				}
+				if ( dict[anyVectorKey] ) {
+					return item.name + " [Hus]";
+				}
+				return item.name + " [Adress]";
+			},
+			afterSelect: function(item) {
+				// Do something with the result (geolocate it)
+
+				if (item.search(" \\[Adress\\]") > -1) {
+					item = item.replace(" [Adress]", "");
+					self._geoLocate(item, "");
+				}
+				else if (item.search(" \\[Hus\\]") > -1) {
+					item = item.replace(" [Hus]", "");
+					var layer = smap.cmd.getLayer(guideLayerName),
+						lay, key;
+					for (key in layer._layers) {
+						lay = layer._layers[key];
+						if (lay.feature.properties.title === item) {
+							// This is the one
+							var latLng = lay.getLatLng();
+							smap.map.setView(latLng, 17);
+							smap.map.fire("selected", {
+								feature: lay.feature,
+								selectedFeatures: [lay],
+								layer: layer,
+								latLng: latLng,
+								shiftKeyWasPressed: false
+							});
+							break;
+						}
+					}
+				}
+			}
+		}, this.options.acOptions);
 	},
 	
 	_onApplyParams: function(e, p) {
