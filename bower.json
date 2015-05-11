@@ -108,6 +108,9 @@
         "dist/images/marker-shadow.png"
       ]
     },
+    "leaflet-boundary-canvas": {
+      "main": "src/*.js"
+    },
     "Leaflet.favorDoubleClick": {
       "main": "src/*.js"
     },

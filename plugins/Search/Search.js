@@ -14,12 +14,14 @@ L.Control.Search = L.Control.extend({
 		markerIcon: $.extend({}, new L.Icon.Default().options, {iconUrl: L.Icon.Default.imagePath + '/marker-icon.png'}),
 		source: null,
 		acHeight: null, // CSS value - height of autocomplete div
+		autoScrollAcOnRowNbr: 2,
 		acOptions: {
 			items: 100
 		},
+		suffix: "[Adress]", // If you want to distinguish it from other hits (usually only desirable if using vectorSearch)
 		vectorSearch: {
-			wfsLayerId: "guidelayer",
-			wfsCustomParams: {}, // Overrides WFS default parameters
+			layerId: "guidelayer",
+			suffix: "[Hus]",
 			keyVals: {
 				title: "Titel",
 				architect: "Arkitekt",
@@ -74,7 +76,7 @@ L.Control.Search = L.Control.extend({
 		}
 		if (this.options.vectorSearch) {
 			// Initiate vector search (cache search/auto-complete values)
-			this._initVectorSearch();
+			this.map.on("layeradd", this._onLayerAdd, this);
 			
 		}
 		
@@ -104,64 +106,75 @@ L.Control.Search = L.Control.extend({
 		$(".leaflet-top.leaflet-left").removeClass("with-search-bar");
 	},
 
-	_initVectorSearch: function() {
-		var vsConfig = this.options.vectorSearch;
-		var t = smap.cmd.getLayerConfig(vsConfig.wfsLayerId) || {};
-		var o = t.options;
+	_onLayerAdd: function(e) {
+		var layer = e.layer || {};
+		if (!layer.options || layer.options._silent || !layer.options.layerId || layer.feature) {
+			return;
+		}
+		if (this.options.vectorSearch && this.options.vectorSearch.layerId === layer.options.layerId) {
+			this._setACOptions();
+			this._initVectorSearch(layer);
+		}
+	},
+
+	_cacheProperties: function(props, keys, displayKeys) {
+		var val, obj,
+			searchWords = [];
+
+		obj = $.extend(true, {}, {
+			// Use the first key for the name/title (the "header" or "label" of the autocomplete result row)
+			name: props[keys[0]]
+		});
+		searchWords = [];
+		for (var i=0,len=keys.length; i<len; i++) {
+			val = props[ keys[i] ]; // Extract value for this key
+			if (val && val.length) {
+				searchWords.push(displayKeys[i]+"=="+val);
+			}
+		}
+		obj.searchWords = searchWords.join("&&");
+		return obj;
+	},
+
+	_cacheLayers: function(layer) {
+		var val, props, obj,
+			out = [],
+			cacheProperties = this._cacheProperties,
+			keyVals = this.options.vectorSearch.keyVals;
+		var keys = [], displayKeys = [];
+		for (var key in keyVals) {
+			keys.push( key );
+			displayKeys.push( keyVals[key] );
+		}
+		layer.eachLayer(function(lay) {
+			props = lay.feature.properties;
+			obj = cacheProperties(props, keys, displayKeys);
+			out.push(obj);
+		});
+
+		this._acVector = out; // The cached search words for autocomplete
+		$("#smap-search-div input").prop("disabled", false);
+
+	},
+
+	_initVectorSearch: function(layer) {
+		var o = layer.options;
 		if (!o) {
 			return false;
 		}
-
-		$.ajax({
-			url: t.url,
-			type: "GET",
-			data: {
-				typeName: o.params.typeName,
-				service: "WFS",
-				request: "GetFeature",
-				srsName: "EPSG:4326",
-				format: "text/geojson",
-				maxFeatures: 10000,
-				outputFormat: "json"
-			},
-			dataType: "json",
-			success: function(resp) {
-				if (resp && resp.features && resp.features.length) {
-					var fs = resp.features;
-					var t, val, keysVals, props, obj, searchWords;
-					for (var i=0,len=fs.length; i<len; i++) {
-						t = fs[i];
-						props = t.properties;
-						obj = $.extend(true, {}, {
-							name: props[keys[0]]
-						});
-						keysVals = {};
-						searchWords = [];
-						for (var j=0,lenj=keys.length; j<lenj; j++) {
-							val = props[ keys[j] ]; // Extract value for this key
-							if (val && val.length) {
-								searchWords.push(keysDisplay[j]+"=="+val);
-							}
-						}
-						obj.searchWords = searchWords.join("&&");
-						out.push(obj);
-
-					}
-					this._acVector = out; // The cached search words for autocomplete
-				}
-			},
-			error: function() {
-				alert("Error loading autocomplete data from WFS");
-			}
-		});
-
-		this._setACOptions();
+		$("#smap-search-div input").prop("disabled", true);
+		if ($.isEmptyObject(layer._layers)) {
+			// Need to wait for features to load
+			var onLayerLoad = function(e) {
+				this._cacheLayers(layer);
+				layer.off("load", onLayerLoad);
+			};
+			layer.on("load", onLayerLoad, this);
+		}
+		else {
+			this._cacheLayers(layer); // Already loaded
+		}
 	},
-
-
-
-
-
 
 	_setACOptions: function() {
 		// Extend ac options to suit vector search
@@ -172,8 +185,60 @@ L.Control.Search = L.Control.extend({
 		// Get any of the vector keys for distinguishing between address 
 		// search result and wfs result.
 		for (var anyVectorKey in vsConfig.keyVals) {break;};
+		var anyDisplayVectorKey = vsConfig.keyVals[anyVectorKey];
 
-		this.options.acOptions = $.extend({
+		var vectorSuffix = this.options.vectorSearch.suffix,
+			addressSuffix = this.options.suffix;
+
+		// var typeaheadInst = $("#smap-search-div input").data("typeahead");
+		// typeaheadInst.options = $.extend(typeaheadInst.options, {
+
+		this.options.typeaheadOptions = $.extend(true, {}, this.options.typeaheadOptions, {
+			
+			// Merge address request with vector request in some more clever way than this.
+			source: $.proxy(function(q, process) {
+						q = encodeURIComponent(q);
+						var url = this.options.wsAcUrl;  // "http://kartor.malmo.se/api/v1/addresses/autocomplete/";
+						if (url) {
+							if (this.options.whitespace) {
+								q = q.replace(/%20/g, this.options.whitespace);
+							}
+							if (this._proxyInst) {
+								this._proxyInst.abort();
+							}
+							smap.cmd.loading(true);
+							this._proxyInst = $.ajax({
+								type: "GET",
+								url: this.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url + "?q=") + q : url + "?q="+q,
+								dataType: "text",
+								context: this,
+								success: function(resp) {
+									var arr = resp.split("\n");
+
+									// Process arr to fit vector search
+									var out = [], item;
+									for (var i=0,len=arr.length; i<len; i++) {
+										item = $.trim(arr[i]);
+										if (item.length) {
+											out.push({
+												name: arr[i],
+												searchWords: "Adress=="+arr[i]
+											});
+										}
+									}
+									out = this._acVector.concat(out);
+									process(out);
+								},
+								error: function() {},
+								complete: function() {
+									smap.cmd.loading(false);
+								}
+							});
+						}
+						else {
+							process(this._acVector);
+						}
+					}, this),
 			displayText: function(item) {
 				return item.searchWords;
 			},
@@ -211,21 +276,21 @@ L.Control.Search = L.Control.extend({
 					keyVal = keyVals[i].split("==");
 					dict[keyVal[0]] = keyVal[1];
 				}
-				if ( dict[anyVectorKey] ) {
-					return item.name + " [Hus]";
+				if ( dict[anyDisplayVectorKey] ) {
+					return item.name + " " + vectorSuffix; //" [Hus]";
 				}
-				return item.name + " [Adress]";
+				return item.name + " " + addressSuffix; //" [Adress]";
 			},
 			afterSelect: function(item) {
 				// Do something with the result (geolocate it)
 
-				if (item.search(" \\[Adress\\]") > -1) {
-					item = item.replace(" [Adress]", "");
+				if ( encodeURIComponent(item).search(encodeURIComponent(addressSuffix)) > -1) {
+					item = $.trim(item.replace(addressSuffix, ""));
 					self._geoLocate(item, "");
 				}
-				else if (item.search(" \\[Hus\\]") > -1) {
-					item = item.replace(" [Hus]", "");
-					var layer = smap.cmd.getLayer(guideLayerName),
+				else if (encodeURIComponent(item).search(encodeURIComponent(vectorSuffix)) > -1) {
+					item = $.trim(item.replace(vectorSuffix, ""));
+					var layer = smap.cmd.getLayer(self.options.vectorSearch.layerId),
 						lay, key;
 					for (key in layer._layers) {
 						lay = layer._layers[key];
@@ -245,7 +310,12 @@ L.Control.Search = L.Control.extend({
 					}
 				}
 			}
-		}, this.options.acOptions);
+		});
+	
+		// Set options again
+		var $entry = $("#smap-search-div input");
+		$entry.typeahead('destroy');
+		this._initAutoComplete($entry);
 	},
 	
 	_onApplyParams: function(e, p) {
@@ -382,7 +452,7 @@ L.Control.Search = L.Control.extend({
 		var whitespace = this.options.whitespace;
 
 		var geoLocate = this.options._geoLocate || this._geoLocate;
-		var typeheadOptions = {
+		var typeaheadOptions = {
 				items: 5,
 				minLength: 2,
 				highlight: true,
@@ -398,24 +468,24 @@ L.Control.Search = L.Control.extend({
 	//		   source: bHound.ttAdapter(),
 		};
 
-		$.extend(typeheadOptions, this.options.acOptions || {});
+		$.extend(typeaheadOptions, this.options.acOptions || {});
 
 		if (this.options.source) {
 			// Use your own custom source for autocomplete
-			typeheadOptions.source = $.proxy(this.options.source, this);
+			typeaheadOptions.source = $.proxy(this.options.source, this);
 		}
 		else {
 			if (this.options.wsAcUrl) {
-				typeheadOptions.source = function(q, process) {
+				typeaheadOptions.source = function(q, process) {
 					q = encodeURIComponent(q);
 					var url = self.options.wsAcUrl;
 					if (whitespace) {
 						q = q.replace(/%20/g, whitespace);
 					}
-					if (self.proxyInst) {
-						self.proxyInst.abort();
+					if (self._proxyInst) {
+						self._proxyInst.abort();
 					}
-					self.proxyInst = $.ajax({
+					self._proxyInst = $.ajax({
 						type: "GET",
 						url: self.options.useProxy ? smap.config.ws.proxy + encodeURIComponent(url + "?q=") + q : url + "?q="+q,
 						dataType: "text",
@@ -429,24 +499,47 @@ L.Control.Search = L.Control.extend({
 			}
 			else if (this.options.wsAcLocal && this.options.wsAcLocal instanceof Array) {
 				// Use local autocomplete words
-				typeheadOptions.source = this.options.wsAcLocal;
+				typeaheadOptions.source = this.options.wsAcLocal;
 			}
 		}
-		$entry.typeahead(typeheadOptions);
-		$entry.on("keydown", function(e) {
-			var isDownKey = e.which === 38 || e.which === 40;  // Up or down key
-			if (isDownKey) {
+		// $entry.typeahead(typeaheadOptions);
+		this._initAutoComplete($entry, typeaheadOptions);
+	},
+
+	_initAutoComplete: function($entry, typeaheadOptions) {
+		typeaheadOptions = typeaheadOptions || this.options.typeaheadOptions;
+
+		var nbrOfRows = this.options.autoScrollAcOnRowNbr;
+		this._onKeyPress = this._onKeyPress || function(e) {
+			var isScrollUp = e.which === 38; // down
+			var isScrollDown = e.which === 40; // up
+			if (isScrollUp || isScrollDown) {
 				var $item = $(".typeahead.dropdown-menu li.active");
-				var nbrOfRows = 3;
-				if ( $item.index() === 0) {
+				var totNbrOfRows = $item.parent().find("li").length;
+				if ( isScrollUp && $item.index() === 1 || isScrollDown && $item.index() === totNbrOfRows-1) {
+					// alert($item.find("a").text());
 					// When going from last item and pressing arrow-down-key we want to scroll to top
 					$item.parent().scrollTo($(".typeahead.dropdown-menu li:first"), 0);
 				}
+				else if ( isScrollUp && $item.index() === 0) {
+					// alert($item.find("a").text());
+					// When going from last item and pressing arrow-down-key we want to scroll to top
+					$item.parent().scrollTo($(".typeahead.dropdown-menu li:last"), 0);
+				}
 				else if ($item.index() >= nbrOfRows) {
-					$item.parent().scrollTo($item.prev().prev(), 0);
+					// Scroll so that the selected item is vertically centered
+					var $midItem = $item;
+					for (var i = 0; i < nbrOfRows/2; i++) {
+						$midItem = $midItem.prev();
+					}
+					if ($midItem && $midItem.length) {
+						$item.parent().scrollTo($midItem, 0);
+					}
 				}
 			}
-		});
+		};
+		$entry.off("keydown", this._onKeyPress).on("keydown", this._onKeyPress);
+		$entry.typeahead(typeaheadOptions);
 		// Set ac field height
 		if (this.options.acHeight) {
 			var $menu = $entry.data("typeahead").$menu;
