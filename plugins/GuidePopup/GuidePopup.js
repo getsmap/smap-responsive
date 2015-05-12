@@ -272,16 +272,21 @@ L.Control.GuidePopup = L.Control.extend({
 		// Render first image as active
 		$inner.find(".item:first").add($indicators.find("li:first")).addClass("active");
 		
-		// Append everything
-		$carousel.append($indicators).append($inner).append($controls);
+		// Append everything…
+		$carousel.append($inner);
 		
-		$carousel
-			.swiperight(function() {  
-				$(this).carousel('prev');
-			})
-			.swipeleft(function() {  
-				$(this).carousel('next');  
-			});
+		if (arrImageSources.length > 1) {
+			// … but only append swipe controls if more than one pic
+			$carousel.prepend($indicators);
+			$carousel.append($controls);
+			$carousel
+				.swiperight(function() {  
+					$(this).carousel('prev');
+				})
+				.swipeleft(function() {  
+					$(this).carousel('next');  
+				});
+		}
 		
 		$(document).on("orientationchange", function() {
 			var ih = window.innerHeight;
