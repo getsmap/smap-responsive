@@ -2,7 +2,7 @@
 L.Control.MMP = L.Control.extend({
 	options: {
 		position: 'bottomright',
-		forcedDomain: "malmo.se",
+		forcedDomain: null,
 		wsSave: "http://gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
@@ -34,7 +34,7 @@ L.Control.MMP = L.Control.extend({
 	},
 
 	onAdd: function(map) {
-		if (document.domain === "kartor.malmo.se") {
+		if (document.domain === "kartor.malmo.se" && this.options.forcedDomain) {
 			// Solve cross-domain issue between iframe and parent
 			document.domain = this.options.forcedDomain;
 		}
@@ -87,10 +87,11 @@ L.Control.MMP = L.Control.extend({
 	_save: function(data) {
 
 		var url = this.options.wsSave;
-		if (document.domain !== "gkkundservice.test.malmo.se") {
+		if (document.domain === "localhost") {
 			// For debug
 			url = url.replace("gkkundservice.test.malmo.se", "localhost");
 		}
+		else if (document.domain === "localhost")
 
 		smap.cmd.loading(true);
 		$.ajax({
