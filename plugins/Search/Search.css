@@ -39,6 +39,7 @@
   border-radius: 0;
   max-height: 11.3em;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 #smap-search-div .input-group-addon {
   background-color: #fff !important;

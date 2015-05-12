@@ -13,6 +13,7 @@ L.Control.GuidePopup = L.Control.extend({
 			accessHeader: "Tillgänglighet",
 			close: "Stäng",
 			showMore: "Visa mer",
+			clickToSee: "Klicka för mer info",
 			loadingPic: "Hämtar bild",
 			tipClickForFullScreen: "Klicka för fullskärmsbild"
 		},
@@ -23,6 +24,7 @@ L.Control.GuidePopup = L.Control.extend({
 			close: "Close",
 			showMore: "Read more",
 			loadingPic: "Loading photo",
+			clickToSee: "Click for more info",
 			picFullScreenTitle: "Slideshow",
 			tipClickForFullScreen: "Click for full-screen photo"
 		}
@@ -117,6 +119,9 @@ L.Control.GuidePopup = L.Control.extend({
 				$(".leaflet-popup-content").append(btn);
 				btn.data("props", props);
 				btn.on("touchstart click", this.__onPopupClick);
+				$(".leaflet-popup-content img").on("touchstart click", this.__onPopupClick).css("cursor", "pointer").tooltip({
+					title: this.lang.clickToSee
+				});
 			}
 			
 		}
