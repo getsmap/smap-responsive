@@ -441,7 +441,7 @@ L.Control.GuidePopup = L.Control.extend({
 		$("body").append(div);
 		setTimeout(function() {
 			div.addClass("gp-fs-visible");			
-		}, 1);
+		}, 50);
 	},
 	
 	

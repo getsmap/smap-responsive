@@ -221,8 +221,8 @@ L.Control.Search = L.Control.extend({
 										item = $.trim(arr[i]);
 										if (item.length) {
 											out.push({
-												name: arr[i],
-												searchWords: "Adress=="+arr[i]
+												name: item,
+												searchWords: "Adress=="+item
 											});
 										}
 									}
