@@ -20,10 +20,10 @@ L.Control.Search = L.Control.extend({
 		},
 		suffix: "[Adress]", // If you want to distinguish it from other hits (usually only desirable if using vectorSearch)
 		vectorSearch: {
-			layerId: "guidelayer",
+			layerIds: ["guidelayer"],
 			suffix: "[Hus]",
 			keyVals: {
-				title: "Titel",
+				title: "Titel", // This first key will always be used as an identifier for a feature, when highlighting it
 				architect: "Arkitekt",
 				byggherre: "Byggherre",
 				address: "Husadress"
@@ -111,7 +111,7 @@ L.Control.Search = L.Control.extend({
 		if (!layer.options || layer.options._silent || !layer.options.layerId || layer.feature) {
 			return;
 		}
-		if (this.options.vectorSearch && this.options.vectorSearch.layerId === layer.options.layerId) {
+		if (this.options.vectorSearch && $.inArray(layer.options.layerId, this.options.vectorSearch.layerIds) > -1) {
 			this._setACOptions();
 			this._initVectorSearch(layer);
 		}
@@ -152,7 +152,7 @@ L.Control.Search = L.Control.extend({
 			out.push(obj);
 		});
 
-		this._acVector = out; // The cached search words for autocomplete
+		this._acVector = this._acVector ? this._acVector.concat(out) : out; // The cached search words for autocomplete
 		$("#smap-search-div input").prop("disabled", false);
 
 	},
@@ -162,6 +162,13 @@ L.Control.Search = L.Control.extend({
 		if (!o) {
 			return false;
 		}
+
+		// this._cachedLayers = {};
+		// var layerIds = this.options.vectorSearch.layerIds;
+		// for (var i = 0; i < layerIds.length; i++) {
+		// 	this._cachedLayers[layerIds[i]] = false;
+		// };
+
 		$("#smap-search-div input").prop("disabled", true);
 		if ($.isEmptyObject(layer._layers)) {
 			// Need to wait for features to load
@@ -184,8 +191,8 @@ L.Control.Search = L.Control.extend({
 
 		// Get any of the vector keys for distinguishing between address 
 		// search result and wfs result.
-		for (var anyVectorKey in vsConfig.keyVals) {break;};
-		var anyDisplayVectorKey = vsConfig.keyVals[anyVectorKey];
+		for (var firstKey in vsConfig.keyVals) {break;};
+		var firstDisplayVectorKey = vsConfig.keyVals[firstKey];
 
 		var vectorSuffix = this.options.vectorSearch.suffix,
 			addressSuffix = this.options.suffix;
@@ -276,7 +283,7 @@ L.Control.Search = L.Control.extend({
 					keyVal = keyVals[i].split("==");
 					dict[keyVal[0]] = keyVal[1];
 				}
-				if ( dict[anyDisplayVectorKey] ) {
+				if ( dict[firstDisplayVectorKey] ) {
 					return item.name + " " + vectorSuffix; //" [Hus]";
 				}
 				return item.name + " " + addressSuffix; //" [Adress]";
@@ -284,28 +291,39 @@ L.Control.Search = L.Control.extend({
 			afterSelect: function(item) {
 				// Do something with the result (geolocate it)
 
+
+
 				if ( encodeURIComponent(item).search(encodeURIComponent(addressSuffix)) > -1) {
 					item = $.trim(item.replace(addressSuffix, ""));
 					self._geoLocate(item, "");
 				}
 				else if (encodeURIComponent(item).search(encodeURIComponent(vectorSuffix)) > -1) {
 					item = $.trim(item.replace(vectorSuffix, ""));
-					var layer = smap.cmd.getLayer(self.options.vectorSearch.layerId),
-						lay, key;
-					for (key in layer._layers) {
-						lay = layer._layers[key];
-						if (lay.feature.properties.title === item) {
-							// This is the one
-							var latLng = lay.getLatLng();
-							smap.map.setView(latLng, 17);
-							smap.map.fire("selected", {
-								feature: lay.feature,
-								selectedFeatures: [lay],
-								layer: layer,
-								latLng: latLng,
-								shiftKeyWasPressed: false
-							});
-							break;
+
+					for (var firstKey in vsConfig.keyVals) {break;};
+					
+					var _lay, lay, layKey, key,
+						map = self.map;
+					for (key in map._layers) {
+						_lay = map._layers[key];
+						if (!_lay._layers) continue;
+						for (layKey in _lay._layers) {
+							lay = _lay._layers[layKey];
+							if (!lay.feature) continue;
+							if (lay.feature.properties[firstKey] === item) {
+								// This is the one
+								var latLng = lay.getLatLng();
+								map.setView(latLng, 17);
+								map.fire("selected", {
+									feature: lay.feature,
+									selectedFeatures: [lay],
+									layer: _lay,
+									latLng: latLng,
+									shiftKeyWasPressed: false
+								});
+								return
+							}
+							
 						}
 					}
 				}
