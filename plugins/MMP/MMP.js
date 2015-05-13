@@ -76,7 +76,7 @@ L.Control.MMP = L.Control.extend({
 				latLng = utils.projectLatLng(L.latLng(xy3008), "EPSG:3008", "EPSG:4326", true, false);
 			}
 			self._startEditAtLatLng(latLng);
-			
+
 
 		});
 		return this._container;
@@ -91,7 +91,10 @@ L.Control.MMP = L.Control.extend({
 			// For debug
 			url = url.replace("gkkundservice.test.malmo.se", "localhost");
 		}
-		else if (document.domain === "localhost")
+		else if (document.domain === "kartor.malmo.se") {
+			// While testing, and maybe keep after deploy
+			url = url.replace("gkkundservice.test.malmo.se/KartService.svc", "kartor.malmo.se/gkkundservicedev");
+		}
 
 		smap.cmd.loading(true);
 		$.ajax({
@@ -133,7 +136,7 @@ L.Control.MMP = L.Control.extend({
 		// -- Create params --
 
 		var dEntr = $.Deferred(),  // Entreprenörsområden
-			dAddress = $.Deferred();  // 
+			dAddress = $.Deferred();  // Nearest address
 
 		var p3008 = utils.projectPoint(this._latLng.lng, this._latLng.lat, "EPSG:4326", "EPSG:3008");
 		var east = p3008[0],
@@ -226,6 +229,8 @@ L.Control.MMP = L.Control.extend({
 			self._save(data);
 		}).always(function() {
 			smap.cmd.loading(false);
+		}).fail(function(a, b) {
+			console.log("Could not save location because: None or erroneous response from one or more services.");
 		});
 
 	},
