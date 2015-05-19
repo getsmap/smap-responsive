@@ -104,6 +104,9 @@ L.Control.Search = L.Control.extend({
 			var acConfig = this.options.wfsSearch;
 			this._setACOptions(acConfig);
 			var t, tt;
+
+			// This layer group is never added to the map but works only as a container for 
+			// caching the features in it, and for plucking features from it to add to the map.
 			this._wfsLayerGroup = L.layerGroup();
 			for (var i=0,len=acConfig.layerIds.length; i<len; i++) {
 				t = smap.cmd.getLayerConfig(acConfig.layerIds[i]);
@@ -118,7 +121,7 @@ L.Control.Search = L.Control.extend({
 						this._cacheLayer(layer, false, this.options.wfsSearch);
 						layer.off("load", onLayerLoad);
 					}
-					setTimeout(function() {
+					self.map.whenReady(function() {
 						layer._map = map;
 						layer.on("load", onLayerLoad, self);
 						layer._refresh();
