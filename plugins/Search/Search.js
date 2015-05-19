@@ -17,9 +17,20 @@ L.Control.Search = L.Control.extend({
 		autoScrollAcOnRowNbr: 2,
 		acOptions: {
 			items: 100
-		},
-		suffix: "[Adress]", // If you want to distinguish it from other hits (usually only desirable if using vectorSearch)
-		// vectorSearch: {
+		}
+		// ,
+		// suffix: "[Adress]", // If you want to distinguish it from other hits (usually only desirable if using vectorSearch)
+		// // vectorSearch: {
+		// // 	layerIds: ["guidelayer"],
+		// // 	suffix: "[Hus]",
+		// // 	keyVals: {
+		// // 		title: "Titel", // This first key will always be used as an identifier for a feature, when highlighting it
+		// // 		architect: "Arkitekt",
+		// // 		byggherre: "Byggherre",
+		// // 		address: "Husadress"
+		// // 	}
+		// // },
+		// wfsSearch: {
 		// 	layerIds: ["guidelayer"],
 		// 	suffix: "[Hus]",
 		// 	keyVals: {
@@ -28,17 +39,7 @@ L.Control.Search = L.Control.extend({
 		// 		byggherre: "Byggherre",
 		// 		address: "Husadress"
 		// 	}
-		// },
-		wfsSearch: {
-			layerIds: ["guidelayer"],
-			suffix: "[Hus]",
-			keyVals: {
-				title: "Titel", // This first key will always be used as an identifier for a feature, when highlighting it
-				architect: "Arkitekt",
-				byggherre: "Byggherre",
-				address: "Husadress"
-			}
-		}
+		// }
 	},
 	
 	_lang: {
