@@ -19,7 +19,17 @@ L.Control.Search = L.Control.extend({
 			items: 100
 		},
 		suffix: "[Adress]", // If you want to distinguish it from other hits (usually only desirable if using vectorSearch)
-		vectorSearch: {
+		// vectorSearch: {
+		// 	layerIds: ["guidelayer"],
+		// 	suffix: "[Hus]",
+		// 	keyVals: {
+		// 		title: "Titel", // This first key will always be used as an identifier for a feature, when highlighting it
+		// 		architect: "Arkitekt",
+		// 		byggherre: "Byggherre",
+		// 		address: "Husadress"
+		// 	}
+		// },
+		wfsSearch: {
 			layerIds: ["guidelayer"],
 			suffix: "[Hus]",
 			keyVals: {
@@ -66,6 +76,13 @@ L.Control.Search = L.Control.extend({
 		
 		this._container = L.DomUtil.create('div', 'leaflet-control-search'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
+
+		// Markers are added to searchLayer instead of directly to map.
+		// For vectorSearch (when searching in a vector layer) markers are 
+		// not added here, because they are already added to the map
+		// (or rather the vector layer).
+		this._searchLayer = L.layerGroup();
+		this.map.addLayer(this._searchLayer);
 		
 		if (this.options.gui === undefined || this.options.gui === true) {
 			this.$container = $(this._container);
@@ -76,8 +93,41 @@ L.Control.Search = L.Control.extend({
 		}
 		if (this.options.vectorSearch) {
 			// Initiate vector search (cache search/auto-complete values)
+			// this._cachedLayers = {}; // Keep track of which layers have been cached
+			this._cachedFeatures = this._cachedFeatures || {};
 			this.map.on("layeradd", this._onLayerAdd, this);
+			this.map.on("layerremove", this._onLayerRemove, this);
 			
+		}
+		if (this.options.wfsSearch) {
+			this._cachedFeatures = this._cachedFeatures || {};
+			var acConfig = this.options.wfsSearch;
+			this._setACOptions(acConfig);
+			var t, tt;
+			this._wfsLayerGroup = L.layerGroup();
+			for (var i=0,len=acConfig.layerIds.length; i<len; i++) {
+				t = smap.cmd.getLayerConfig(acConfig.layerIds[i]);
+				if (t) {
+					tt = $.extend(true, {}, t);
+					tt.options.layerId += 1;
+					var layer = smap.core.layerInst._createLayer(tt);
+					this._initVectorSearch(layer);
+					this._wfsLayerGroup.addLayer(layer);
+					
+					function onLayerLoad() {
+						this._cacheLayer(layer, false, this.options.wfsSearch);
+						layer.off("load", onLayerLoad);
+					}
+					setTimeout(function() {
+						layer._map = map;
+						layer.on("load", onLayerLoad, self);
+						layer._refresh();
+						layer._map = null;
+					}, 1000);
+				}
+
+			}
+
 		}
 		
 		// Bind events
@@ -112,8 +162,18 @@ L.Control.Search = L.Control.extend({
 			return;
 		}
 		if (this.options.vectorSearch && $.inArray(layer.options.layerId, this.options.vectorSearch.layerIds) > -1) {
-			this._setACOptions();
+			this._setACOptions(this.options.vectorSearch);
 			this._initVectorSearch(layer);
+		}
+	},
+
+	_onLayerRemove: function(e) {
+		var layer = e.layer || {};
+		if (!layer.options || layer.options._silent || !layer.options.layerId || layer.feature) {
+			return;
+		}
+		if (this.options.vectorSearch && $.inArray(layer.options.layerId, this.options.vectorSearch.layerIds) > -1) {
+			this._cacheLayer(layer, true); // Un-cache the layer
 		}
 	},
 
@@ -136,11 +196,21 @@ L.Control.Search = L.Control.extend({
 		return obj;
 	},
 
-	_cacheLayers: function(layer) {
+	_cacheLayer: function(layer, uncache, options) {
+		uncache = uncache || false; // If true, the property will instead be removed from the ac vector: <this._acVector>
+		options = options || {};
+
+		// if (this._cachedLayers[layer.options.layerId] === true) {
+		// 	return false;
+		// }
+
+		this._acVector = this._acVector || [];
+
 		var val, props, obj,
 			out = [],
 			cacheProperties = this._cacheProperties,
-			keyVals = this.options.vectorSearch.keyVals;
+			keyVals = options.keyVals,
+			acVector = this._acVector;
 		var keys = [], displayKeys = [];
 		for (var key in keyVals) {
 			keys.push( key );
@@ -149,10 +219,21 @@ L.Control.Search = L.Control.extend({
 		layer.eachLayer(function(lay) {
 			props = lay.feature.properties;
 			obj = cacheProperties(props, keys, displayKeys);
-			out.push(obj);
+			
+			acVector.splice(obj); // Always remove before caching to avoid duplicates
+			if (!uncache) {
+				out.push(obj);
+			}
 		});
+		
+		// if (uncache === true) {
+		// 	this._cachedLayers[layer.options.layerId] = false;
+		// }
+		// else {
+ 		//		this._cachedLayers[layer.options.layerId] = true;
+		// }
 
-		this._acVector = this._acVector ? this._acVector.concat(out) : out; // The cached search words for autocomplete
+		this._acVector = this._acVector.concat(out); // The cached search words for autocomplete
 		$("#smap-search-div input").prop("disabled", false);
 
 	},
@@ -170,31 +251,30 @@ L.Control.Search = L.Control.extend({
 		// };
 
 		$("#smap-search-div input").prop("disabled", true);
+
 		if ($.isEmptyObject(layer._layers)) {
 			// Need to wait for features to load
-			var onLayerLoad = function(e) {
-				this._cacheLayers(layer);
+			function onLayerLoad(e) {
+				this._cacheLayer(layer, false, this.options.vectorSearch);
 				layer.off("load", onLayerLoad);
-			};
+			}
 			layer.on("load", onLayerLoad, this);
 		}
 		else {
-			this._cacheLayers(layer); // Already loaded
+			this._cacheLayer(layer, false, this.options.vectorSearch); // Already loaded
 		}
 	},
 
-	_setACOptions: function() {
+	_setACOptions: function(acConfig) {
 		// Extend ac options to suit vector search
 		var self = this;
 
-		var vsConfig = this.options.vectorSearch;
-
 		// Get any of the vector keys for distinguishing between address 
 		// search result and wfs result.
-		for (var firstKey in vsConfig.keyVals) {break;};
-		var firstDisplayVectorKey = vsConfig.keyVals[firstKey];
+		for (var firstKey in acConfig.keyVals) {break;};
+		var firstDisplayVectorKey = acConfig.keyVals[firstKey];
 
-		var vectorSuffix = this.options.vectorSearch.suffix,
+		var vectorSuffix = acConfig.suffix,
 			addressSuffix = this.options.suffix;
 
 		// var typeaheadInst = $("#smap-search-div input").data("typeahead");
@@ -290,8 +370,7 @@ L.Control.Search = L.Control.extend({
 			},
 			afterSelect: function(item) {
 				// Do something with the result (geolocate it)
-
-
+				self._searchLayer.clearLayers();
 
 				if ( encodeURIComponent(item).search(encodeURIComponent(addressSuffix)) > -1) {
 					item = $.trim(item.replace(addressSuffix, ""));
@@ -300,10 +379,11 @@ L.Control.Search = L.Control.extend({
 				else if (encodeURIComponent(item).search(encodeURIComponent(vectorSuffix)) > -1) {
 					item = $.trim(item.replace(vectorSuffix, ""));
 
-					for (var firstKey in vsConfig.keyVals) {break;};
+					for (var firstKey in acConfig.keyVals) {break;};
 					
 					var _lay, lay, layKey, key,
 						map = self.map;
+
 					for (key in map._layers) {
 						_lay = map._layers[key];
 						if (!_lay._layers) continue;
@@ -321,11 +401,35 @@ L.Control.Search = L.Control.extend({
 									latLng: latLng,
 									shiftKeyWasPressed: false
 								});
-								return
+								return;
 							}
 							
 						}
 					}
+
+					// No results in vector layer. Try searching through wfs layer group.
+					self._wfsLayerGroup.eachLayer(function(_lay) {
+						_lay.eachLayer(function(lay) {
+							if (lay.feature) {
+								if (lay.feature.properties[firstKey] === item) {
+									// This is the one
+									self._searchLayer.addLayer(lay);
+									this.marker = lay;
+									var latLng = lay.getLatLng();
+									map.setView(latLng, 17);
+									map.fire("selected", {
+										feature: lay.feature,
+										selectedFeatures: [lay],
+										layer: _lay,
+										latLng: latLng,
+										shiftKeyWasPressed: false
+									});
+									return;
+								}
+							}
+						});
+					});
+
 				}
 			}
 		});
@@ -383,7 +487,7 @@ L.Control.Search = L.Control.extend({
 
 	_rmAdressMarker: function(marker){
 		if(marker != null){ 
-			this.map.removeLayer(marker);
+			this._searchLayer.removeLayer(marker);
 			this.addressMarker = null;
 		}
 	},
@@ -597,7 +701,7 @@ L.Control.Search = L.Control.extend({
 				success: function(json) {
 					var self = this;
 					if (this.marker) {
-						this.map.removeLayer(this.marker);
+						this._searchLayer.removeLayer(this.marker);
 						this.marker = null;
 					}
 					if (!json.features.length) {
@@ -616,7 +720,7 @@ L.Control.Search = L.Control.extend({
 					}
 					function onPopupOpen(e) {
 						$("#smap-search-popupbtn").off("click").on("click", function() {
-							self.map.removeLayer(self.marker);
+							self._searchLayer.removeLayer(self.marker);
 							self.marker = null;
 							return false;
 						});
@@ -624,7 +728,7 @@ L.Control.Search = L.Control.extend({
 					this.map.off("popupopen", onPopupOpen);
 					this.map.on("popupopen", onPopupOpen);
 					
-					this.marker = L.marker(latLng, {icon: L.icon(this.options.markerIcon) }).addTo(this.map);
+					this.marker = L.marker(latLng, {icon: L.icon(this.options.markerIcon) }).addTo(this._searchLayer);
 					this.marker.options.q = q; // Store for creating link to map
 					
 					this.marker.bindPopup('<p class="lead">'+decodeURIComponent(q)+'</p><div><button id="smap-search-popupbtn" class="btn btn-default btn-sm">'+this.lang.remove+'</button></div>');
