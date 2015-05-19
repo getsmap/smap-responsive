@@ -50,7 +50,7 @@ L.Control.MMP = L.Control.extend({
 			var ol = p.OL || "";
 			ol = ol.split(",");
 			ol.push(p.CATEGORY);
-			ol.join(",");
+			ol = ol.join(",");
 			p.OL = ol;
 		});
 		smap.event.on("smap.core.applyparams", function(e, p) {
@@ -59,21 +59,20 @@ L.Control.MMP = L.Control.extend({
 			// 	self._addEditInterface();
 			// }
 
-			// Get coordinates specified in parameter MMP_XYID
-			// If coordinates exist - the feature will be UPDATED
-			// If not – the feature will be INSERTED
 			var xy3008 = null,
 				latLng = null;
-			if (p.MMP_XYID) {
-				var xy3008WithId = p.MMP_XYID instanceof Array ? p.MMP_XYID : p.MMP_XYID.split(",");
-				var xy3008 = xy3008WithId.slice(0, 2);
-				self._tempId = xy3008WithId[2]; // Assuming {string} and thus no parsing needed
+			if (p.MMP_XY) {
+				var xy3008 = p.MMP_XY instanceof Array ? p.MMP_XY : p.MMP_XY.split(",");
 
 				// Convert items into floats
 				xy3008 = $.map(xy3008, function(val) {
 					return parseFloat(val);
 				});
 				latLng = utils.projectLatLng(L.latLng(xy3008), "EPSG:3008", "EPSG:4326", true, false);
+			}
+			if (p.MMP_ID) {
+				// This id is used by MMP to connect the report with the map data we return to them
+				self._tempId = p.MMP_ID; // parseInt needed?
 			}
 			self._startEditAtLatLng(latLng);
 
@@ -135,9 +134,6 @@ L.Control.MMP = L.Control.extend({
 
 		// -- Create params --
 
-		var dEntr = $.Deferred(),  // Entreprenörsområden
-			dAddress = $.Deferred();  // Nearest address
-
 		var p3008 = utils.projectPoint(this._latLng.lng, this._latLng.lat, "EPSG:4326", "EPSG:3008");
 		var east = p3008[0],
 			north = p3008[1];
@@ -147,44 +143,89 @@ L.Control.MMP = L.Control.extend({
 			return false;
 		}
 
-		// 1. Get Entreprenörsområde
-
-		var wfsParams = selectWmsInst._makeParams({
-				layers: "malmows:gk_entreprenorsomr_p",
-				version: "1.1.0", 
-				info_format: "application/json",
-				latLng: this._latLng,
-				srs: "EPSG:4326",
-				buffer: 1,
-				feature_count: 1
-		});
-
-		var wsGeoserver = "http://kartor.malmo.se/geoserver/malmows/wms";
-		if (document.domain === "localhost") {
-			// For debug
-			wsGeoserver = wsGeoserver.replace("kartor.malmo.se", "localhost");
+		function getFeatureInfo(typeName, latLng) {
+			var wsGeoserver = "http://kartor.malmo.se/geoserver/malmows/wms";
+			if (document.domain === "localhost") {
+				// For debug
+				wsGeoserver = wsGeoserver.replace("kartor.malmo.se", "localhost");
+			}
+			var wfsParams = selectWmsInst._makeParams({
+					layers: typeName,
+					version: "1.1.0", 
+					info_format: "application/json",
+					latLng: latLng,
+					srs: "EPSG:4326",
+					buffer: 1,
+					feature_count: 1
+			});
+			return $.ajax({
+				url: wsGeoserver,
+				data: wfsParams,
+				context: this,
+				dataType: "json"
+			});
 		}
 
-		$.ajax({
-			url: wsGeoserver,
-			data: wfsParams,
-			context: this,
-			dataType: "json",
-			success: function(resp) {
-				var fs = resp.features || [];
-				var p = fs[0].properties;
-				dEntr.resolve({
-					entreprenor_omrade: p.namn,
-					entreprenor_ansvar: p.entreprenad
-				});
+		// The requests/extractions is to be made from these layers, using given attributes.
+		var arrInfoLayers = [
+			{
+				typeName: "malmows:SMA_DELOMRADE_P",
+				keyVals: {
+					delomr: "delomrade"
+				}
 			},
-			error: function(a,b,c) {
-				dEntr.reject({});
+			{
+				typeName: "malmows:SMA_STADSDEL_P",
+				keyVals: {
+					sdfname: "stadsdel"
+				}
+			},
+			{
+				typeName: "malmows:SMA_STADSOMRADEN_P",
+				keyVals: {
+					sdf_namn: "stadsomrade"
+				}
 			}
-		});
+		];
 
-		// 2. Get Address
+		// Create one deferred object for each layer to be requested.
+		// When all deferreds are done, the when-function further done 
+		// will process the resolved result from each deferred.
+		var t, defs = [];
+		for (var i=0,len=arrInfoLayers.length; i<len; i++) {
+			t = arrInfoLayers[i];
+			defs.push( $.Deferred() );
+			getFeatureInfo(t.typeName, this._latLng).done(function(resp) {
+				var fs = resp.features || [];
+				var f = fs[0];
+				var tt, keyVals,
+					def;
+
+				// Get the correct config object by checking which request we are dealing with
+				for (var j = 0; j < arrInfoLayers.length; j++) {
+					tt = arrInfoLayers[j];
+					if (tt.typeName.split(":")[1] === f.id.split(".")[0]) {
+						keyVals = tt.keyVals;
+						def = defs[j];
+						break;
+					}
+				}
+				var p = f.properties,
+					out = {},
+					kv;
+				for (kv in keyVals) {
+					out[keyVals[kv]] = p[kv];
+				}
+				def.resolve(out);
+			}).fail(function(a, b, c) {
+				defs[i].reject({});
+			});
+		}
+
+		// -- Get-nearest-address deferred object --
 		
+		var dAddress = $.Deferred();  // Nearest address
+		defs.push(dAddress);
 		var wsAddressLocate = "http://kartor.malmo.se/api/v1/nearest_address/";
 		if (document.domain === "localhost") {
 			// For debug
@@ -202,8 +243,8 @@ L.Control.MMP = L.Control.extend({
 			success: function(resp) {
 				var t = resp.address[0];
 				dAddress.resolve({
-					address_name: t.address,
-					address_distm: t.distance
+					address_name: t.address
+					// address_distm: t.distance
 				});
 			},
 			error: function(a, b, c) {
@@ -218,15 +259,20 @@ L.Control.MMP = L.Control.extend({
 
 		// 3. Merge the requests into one. Save into MMPs service when done.
 		smap.cmd.loading(true);
-		$.when(dEntr, dAddress).done(function(tEntr, tAddress) {
+		// $.when.apply($, defs).done(function() {
+		$.when.apply($, defs).done(function(a,b,c,d,e) {
 			var data = {
 					tempId: self._tempId || null,
-					east: east,
-					north: north
+					east: parseInt(east),
+					north: parseInt(north)
 			};
-			$.extend(data, tEntr);
-			$.extend(data, tAddress);
-			self._save(data);
+			// Extend the output object with responses from the ajax calls
+			for (var i=0,len=arguments.length; i<len; i++) {
+				$.extend(data, arguments[i]);
+			}
+			alert(JSON.stringify(data));
+			// self._save(data);
+
 		}).always(function() {
 			smap.cmd.loading(false);
 		}).fail(function(a, b) {
