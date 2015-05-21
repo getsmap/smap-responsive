@@ -3,7 +3,7 @@ L.Control.MMP = L.Control.extend({
 	options: {
 		position: 'bottomright',
 		forcedDomain: null,
-		wsSave: "//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		wsSave: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
 	_lang: {
@@ -97,8 +97,8 @@ L.Control.MMP = L.Control.extend({
 
 		smap.cmd.loading(true);
 		$.ajax({
-			url: url,
-			type: "GET",
+			url: smap.config.ws.proxy + encodeURIComponent(url),
+			type: "POST",
 			data: data,
 			context: this,
 			dataType: "json",
