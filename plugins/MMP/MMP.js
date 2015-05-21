@@ -3,7 +3,7 @@ L.Control.MMP = L.Control.extend({
 	options: {
 		position: 'bottomright',
 		forcedDomain: null,
-		wsSave: "http://gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		wsSave: "//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
 	_lang: {
@@ -144,7 +144,7 @@ L.Control.MMP = L.Control.extend({
 		}
 
 		function getFeatureInfo(typeName, latLng) {
-			var wsGeoserver = "http://kartor.malmo.se/geoserver/malmows/wms";
+			var wsGeoserver = "//kartor.malmo.se/geoserver/malmows/wms";
 			if (document.domain === "localhost") {
 				// For debug
 				wsGeoserver = wsGeoserver.replace("kartor.malmo.se", "localhost");
@@ -226,7 +226,7 @@ L.Control.MMP = L.Control.extend({
 		
 		var dAddress = $.Deferred();  // Nearest address
 		defs.push(dAddress);
-		var wsAddressLocate = "http://kartor.malmo.se/api/v1/nearest_address/";
+		var wsAddressLocate = "//kartor.malmo.se/api/v1/nearest_address/";
 		if (document.domain === "localhost") {
 			// For debug
 			wsAddressLocate = wsAddressLocate.replace("kartor.malmo.se", "localhost");
@@ -270,8 +270,8 @@ L.Control.MMP = L.Control.extend({
 			for (var i=0,len=arguments.length; i<len; i++) {
 				$.extend(data, arguments[i]);
 			}
-			alert(JSON.stringify(data));
-			// self._save(data);
+			// alert(JSON.stringify(data));
+			self._save(data);
 
 		}).always(function() {
 			smap.cmd.loading(false);
