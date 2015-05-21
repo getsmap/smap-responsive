@@ -243,7 +243,7 @@ L.Control.MMP = L.Control.extend({
 			success: function(resp) {
 				var t = resp.address[0];
 				dAddress.resolve({
-					address_name: t.address
+					namn: t.address
 					// address_distm: t.distance
 				});
 			},
@@ -263,8 +263,8 @@ L.Control.MMP = L.Control.extend({
 		$.when.apply($, defs).done(function(a,b,c,d,e) {
 			var data = {
 					tempId: self._tempId || null,
-					east: parseInt(east),
-					north: parseInt(north)
+					x: parseInt(east),
+					y: parseInt(north)
 			};
 			// Extend the output object with responses from the ajax calls
 			for (var i=0,len=arguments.length; i<len; i++) {
