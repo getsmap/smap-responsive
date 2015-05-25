@@ -8,9 +8,3 @@ meeting_150126.txt
 plugins/**/*.css
 core/css/*.css
 dev.html
-
-dev.html
-
-README.md
-
-bower_components/Leaflet.print-smap/.bower.json
