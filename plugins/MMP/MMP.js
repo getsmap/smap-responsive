@@ -3,7 +3,7 @@ L.Control.MMP = L.Control.extend({
 	options: {
 		position: 'bottomright',
 		forcedDomain: null,
-		wsSave: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		wsSave: location.protocol+"//kartor.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
 	_lang: {
@@ -83,22 +83,29 @@ L.Control.MMP = L.Control.extend({
 
 	onRemove: function(map) {},
 
-	_save: function(data) {
-
-		var url = this.options.wsSave;
+	_adaptUrl: function(url) {
 		if (document.domain === "localhost") {
 			// For debug
-			url = url.replace("gkkundservice.test.malmo.se", "localhost");
+			url = url.replace("gkkundservice.test.malmo.se", "localhost").replace("kartor.malmo.se", "localhost");
 		}
 		else if (document.domain === "kartor.malmo.se") {
 			// While testing, and maybe keep after deploy
-			url = url.replace("gkkundservice.test.malmo.se/KartService.svc", "kartor.malmo.se/gkkundservicedev");
+			url = url.replace("gkkundservice.test.malmo.se/", "kartor.malmo.se/gkkundservicedev/");
 		}
+		return url;
+	},
+
+	_save: function(data) {
+
+		var url = this.options.wsSave;
+
+		url = this._adaptUrl(url);
+		
 
 		smap.cmd.loading(true);
 		$.ajax({
-			url: smap.config.ws.proxy + encodeURIComponent(url),
-			type: "POST",
+			url: url,  //smap.config.ws.proxy + encodeURIComponent(url),
+			type: "GET",
 			data: data,
 			context: this,
 			dataType: "json",
@@ -145,10 +152,7 @@ L.Control.MMP = L.Control.extend({
 
 		function getFeatureInfo(typeName, latLng) {
 			var wsGeoserver = "//kartor.malmo.se/geoserver/malmows/wms";
-			if (document.domain === "localhost") {
-				// For debug
-				wsGeoserver = wsGeoserver.replace("kartor.malmo.se", "localhost");
-			}
+			wsGeoserver = self._adaptUrl(wsGeoserver);
 			var wfsParams = selectWmsInst._makeParams({
 					layers: typeName,
 					version: "1.1.0", 
@@ -166,14 +170,30 @@ L.Control.MMP = L.Control.extend({
 			});
 		}
 
+		// http://gkkundservice.test.malmo.se/kartservice.svc/saveGeometry?
+		// tempId=9d6f1fd5-142b-4151-94e9-c7c95ce529ed&
+		// x=119488.939393&
+		// y=6161920.23645&
+		// namn=nm&delomrade=do&
+		// stadsdel=sd&
+		// stadsomrade=stadsomr&
+		// entromrade=entromr
+
+		// tempId=9d6f1fd5-142b-4151-94e9-c7c95ce529ed&
+		// x=119155&
+		// y=6162071&
+		// namn=Ystadv%C3%A4gen+19
+		// stadsdel=FOSIE&
+		// stadsomrade=S%C3%96DER&
+
 		// The requests/extractions is to be made from these layers, using given attributes.
 		var arrInfoLayers = [
-			{
-				typeName: "malmows:SMA_DELOMRADE_P",
-				keyVals: {
-					delomr: "delomrade"
-				}
-			},
+			// {
+			// 	typeName: "malmows:SMA_DELOMRADE_P",
+			// 	keyVals: {
+			// 		delomr: "delomrade"
+			// 	}
+			// },
 			{
 				typeName: "malmows:SMA_STADSDEL_P",
 				keyVals: {
@@ -184,6 +204,12 @@ L.Control.MMP = L.Control.extend({
 				typeName: "malmows:SMA_STADSOMRADEN_P",
 				keyVals: {
 					sdf_namn: "stadsomrade"
+				}
+			},
+			{
+				typeName: "malmows:gk_entreprenorsomr_p",
+				keyVals: {
+					namn: "entromrade"
 				}
 			}
 		];
@@ -227,10 +253,7 @@ L.Control.MMP = L.Control.extend({
 		var dAddress = $.Deferred();  // Nearest address
 		defs.push(dAddress);
 		var wsAddressLocate = "//kartor.malmo.se/api/v1/nearest_address/";
-		if (document.domain === "localhost") {
-			// For debug
-			wsAddressLocate = wsAddressLocate.replace("kartor.malmo.se", "localhost");
-		}
+		wsAddressLocate = this._adaptUrl(wsAddressLocate);
 
 		$.ajax({
 			url: wsAddressLocate,
@@ -260,7 +283,7 @@ L.Control.MMP = L.Control.extend({
 		// 3. Merge the requests into one. Save into MMPs service when done.
 		smap.cmd.loading(true);
 		// $.when.apply($, defs).done(function() {
-		$.when.apply($, defs).done(function(a,b,c,d,e) {
+		$.when.apply($, defs).done(function() {
 			var data = {
 					tempId: self._tempId || null,
 					x: parseInt(east),
