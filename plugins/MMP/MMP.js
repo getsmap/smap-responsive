@@ -2,8 +2,8 @@
 L.Control.MMP = L.Control.extend({
 	options: {
 		position: 'bottomright',
-		forcedDomain: null,
-		wsSave: location.protocol+"//kartor.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		// forcedDomain: null,
+		wsSave: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
 	_lang: {
@@ -34,10 +34,10 @@ L.Control.MMP = L.Control.extend({
 	},
 
 	onAdd: function(map) {
-		if (document.domain === "kartor.malmo.se" && this.options.forcedDomain) {
-			// Solve cross-domain issue between iframe and parent
-			document.domain = this.options.forcedDomain;
-		}
+		// if (document.domain === "kartor.malmo.se" && this.options.forcedDomain) {
+		// 	// Solve cross-domain issue between iframe and parent
+		// 	document.domain = this.options.forcedDomain;
+		// }
 		this.map = map;
 		this._container = L.DomUtil.create('div', 'leaflet-control-mmp');
 		L.DomEvent.disableClickPropagation(this._container);
@@ -170,7 +170,7 @@ L.Control.MMP = L.Control.extend({
 			});
 		}
 
-		// http://gkkundservice.test.malmo.se/kartservice.svc/saveGeometry?
+		// http://gkkundservice.test.malmo.se/KartService.svc/saveGeometry?
 		// tempId=9d6f1fd5-142b-4151-94e9-c7c95ce529ed&
 		// x=119488.939393&
 		// y=6161920.23645&
