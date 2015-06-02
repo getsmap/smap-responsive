@@ -120,20 +120,23 @@ var app = {
 				alert("Din dators datuminställningar är fel. Tjänsten kan inte användas.");
 			}
 
-			// If month is earlier than June (6th month), then include "previous year's" 
+			// If month is earlier than October (10th month), then include "previous year's" 
 			// term and the term starting after summer.
-			// If later than June, then the option will be visible but disabled.
-			var startYear = m < 6 ? yearNow - 1 : yearNow;
-			var years = [startYear, startYear+1],
+			// If later than that, the option will not be visible.
+
+			// var startYear = m < 10 ? yearNow - 1 : yearNow;
+
+			// Note! Set the years here when the data is ready (2014 means terms 2014/15)
+			var years = [2014, 2015], //[yearNow-1, yearNow],
 				y, tag;
 			for (var i=0,len=years.length; i<len; i++) {
 				y = years[i];
 				tag = $('<label class="radio-inline">\
 						<input type="radio" name="term" value="{yearValue}"> {yearText}\
 					</label>'.replace(/\{yearText\}/g, y+"/"+(y+1) ).replace(/\{yearValue\}/g, y.toString().replace("20","")+(y+1).toString().replace("20","") ));
-				if (y < yearNow && m >= 6) {
-					tag.addClass("disabled").find("input").prop("disabled", true);
-				}
+				// if (y < yearNow && m >= 6) {
+				// 	tag.addClass("disabled").find("input").prop("disabled", true);
+				// }
 				$(".termselect").append(tag);
 			}
 		},
