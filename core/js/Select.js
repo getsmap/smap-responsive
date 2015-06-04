@@ -235,7 +235,7 @@ smap.core.Select = L.Class.extend({
 						lay.unbindPopup();
 					}
 					lay.bindPopup(html, {autoPan: true, keepInView: false, autoPanPadding: L.point(smap.core.mainConfig.smapOptions.popupAutoPanPadding)});
-					if (lay._popup && lay._map) {
+					if (lay._map) {
 						lay.openPopup(latLng);
 						
 						var $content = $(".leaflet-popup-content:visible");
