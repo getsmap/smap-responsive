@@ -359,7 +359,7 @@ L.Control.SharePosition = L.Control.extend({
 	_refresh: function() {
 		// Before refresh - update the age filter
 		this.layer.options.params.filter = this._makeFilter();
-		this.layer._refresh(true);
+		this.layer._refresh({force: true});
 	},
 	
 	_getXml: function(latLng, accuracy, uName, oldId) {

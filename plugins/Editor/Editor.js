@@ -177,7 +177,7 @@ L.Control.Editor = L.Control.extend({
 				wfsLayer.clearLayers();
 			}
 			if (wfsLayer && wfsLayer._refresh) {
-				wfsLayer._refresh(true);
+				wfsLayer._refresh({force: true});
 			}
 			this.map.removeLayer(this._editLayer);
 		}
@@ -408,7 +408,7 @@ L.Control.Editor = L.Control.extend({
 			if (confirm(self.lang.ruSureRemove) === true) {
 				self._editLayer.wfstRemove(self._marker).done(function() {
 					self._editLayer.clearLayers();
-					self._editLayer._refresh(true);
+					self._editLayer._refresh({force: true});
 				});
 			}
 			return false;
@@ -505,7 +505,7 @@ L.Control.Editor = L.Control.extend({
 		var editToolbar = this._getEditToolbar();
 		editToolbar.handler._disableLayerEdit(this._markerGeometry || this._marker);
 		this._editLayer.clearLayers();
-		this._editLayer._refresh(true);
+		this._editLayer._refresh({force: true});
 		this._hideSaveToolbar();
 	},
 
@@ -540,7 +540,7 @@ L.Control.Editor = L.Control.extend({
 					self._inserts.push(self._marker);
 					self.save(function() {
 						self._editLayer.clearLayers();
-						self._editLayer._refresh(true);
+						self._editLayer._refresh({force: true});
 						self._hideSaveToolbar();
 					});
 				}

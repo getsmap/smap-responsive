@@ -125,7 +125,7 @@ L.Control.Search = L.Control.extend({
 					self.map.whenReady(function() {
 						layer._map = map;
 						layer.on("load", onLayerLoad, self);
-						layer._refresh();
+						layer._refresh({force: true, bounds: false});
 						layer._map = null;
 					}, 1000);
 				}
@@ -395,8 +395,15 @@ L.Control.Search = L.Control.extend({
 							lay = _lay._layers[layKey];
 							if (!lay.feature) continue;
 							if (lay.feature.properties[firstKey] === item) {
-								// This is the one
-								var latLng = lay.getLatLng();
+								
+								// This is the one - maybe
+								var latLng;
+								if (lay.getLatLng) {
+									latLng = lay.getLatLng();
+								}
+								else {
+									latLng = lay.getBounds().getCenter();
+								}
 								map.setView(latLng, 17);
 								map.fire("selected", {
 									feature: lay.feature,
