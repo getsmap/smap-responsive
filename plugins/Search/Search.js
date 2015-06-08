@@ -426,7 +426,13 @@ L.Control.Search = L.Control.extend({
 									// This is the one
 									self._searchLayer.addLayer(lay);
 									this.marker = lay;
-									var latLng = lay.getLatLng();
+									var latLng;
+									if (lay.getLatLng) {
+										latLng = lay.getLatLng();
+									}
+									else {
+										latLng = lay.getBounds().getCenter();
+									}
 									map.setView(latLng, 17);
 									map.fire("selected", {
 										feature: lay.feature,
