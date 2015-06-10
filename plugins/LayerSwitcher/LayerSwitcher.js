@@ -6,6 +6,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		olFirst: false,
 		unfoldAll: false,
 		btnHide: true,
+		zoomToExtent: true,
 		catIconClass: "fa fa-chevron-right" //fa-chevron-circle-right
 
 	},
@@ -235,11 +236,11 @@ L.Control.LayerSwitcher = L.Control.extend({
 			var isActive = row.hasClass("active");
 			if (row.length) {
 				if (e.type === "layeradd" && isActive === false) {
-					self._onRowTap({target: row});
+					self.onRowTap(row);
 					// row.addClass("active");						
 				}
 				else if (e.type === "layerremove" && isActive === true) {
-					self._onRowTap({target: row});
+					self.onRowTap(row);
 					// row.removeClass("active");
 				}
 			}
@@ -382,7 +383,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 
 		this.$panel.show();
 		if (this._panelIsSliding) {
-			utils.log("no slide");
 			return false;
 		}
 		this._panelIsSliding = true;
@@ -407,7 +407,6 @@ L.Control.LayerSwitcher = L.Control.extend({
 	
 	hidePanel: function() {
 		if (this._panelIsSliding) {
-			utils.log("no slide");
 			return false;
 		}
 		this._panelIsSliding = true;
@@ -451,27 +450,30 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	_onRowTap: function(e) {
-		
-		var tag = $(e.target);
-		
-		var theId = tag.attr("id");
+		var $tag = $(e.target);
+		this.onRowTap($tag);
+		return false;
+	},
+
+	onRowTap: function($tag) {
+		var theId = $tag.attr("id");
 		var layerId = this._unMakeId(theId),
 			isBaseLayer = $("#"+theId).parents("#lswitch-blcont").length > 0;
 		
 		if (isBaseLayer) {
-			// tag.siblings().removeClass("active");
+			// $tag.siblings().removeClass("active");
 			$("#lswitch-blcont").find("a.active").removeClass("active");
-			tag.addClass("active");
+			$tag.addClass("active");
 			this._setBaseLayer(layerId);
 			return false;
 		}
-		tag.toggleClass("active");
+		$tag.toggleClass("active");
 		
 		// Toggle active class of all parent headers (just as an indication that the headers have active children)
 		
 		// if (this.options.toggleSubLayersOnClick) {
-		var isActive = tag.hasClass("active");
-		var parentConts = tag.parents(".lswitch-catcont");
+		var isActive = $tag.hasClass("active");
+		var parentConts = $tag.parents(".lswitch-catcont");
 		parentConts.each(function() {
 			if (isActive) {
 				$(this).prev().addClass("active");
@@ -485,25 +487,35 @@ L.Control.LayerSwitcher = L.Control.extend({
 			}
 		});
 		// }
-		var isActive = tag.hasClass("active");
+		var isActive = $tag.hasClass("active");
 		
+		var layer;
 		if ( isActive ) {
 			// Show layer
-			var t = tag.data("t") || null; // Allow to store layer config in a custom way (not requiring to be present in config file)
-			var layer = this.showLayer(t || layerId);
-			// if (t.options.zoomToExtent) {
-			// 	layer.on("load", function() {
-			// 		this._map.fitBounds(this.getBounds());
-			// 	});
-			// }
+			var t = $tag.data("t") || null; // Allow to store layer config in a custom way (not requiring to be present in config file)
+			layer = this.showLayer(t || layerId);
 
+			// Adaptation for zooming to extent of layer
+			if ( (this.options.zoomToExtent || (t && t.options && t.options.zoomToExtent)) && !this._sumBounds && layer.getBounds) {
+				// This means, we are not in the process of summing up many layers' bounds
+				// so we can safely zoom to bounds of this layer.
+				if ($.isEmptyObject(layer._layers)) {
+					layer.once("load", function(e) {
+						e.layer._map.fitBounds(layer.getBounds());
+					});
+				}
+				else {
+					this.map.fitBounds(layer.getBounds());
+				}
+			}
 		}
 		else {
 			// Hide layer
 			this.map.closePopup();
-			this.hideLayer(layerId);
+			layer = this.hideLayer(layerId);
 		}
-		return false;
+		return layer;
+		
 	},
 	
 	_makeId: function(layerId) {
@@ -559,11 +571,46 @@ L.Control.LayerSwitcher = L.Control.extend({
 			else {
 				tag.toggleClass("active");
 			}
+
+
+			// Adaptation for zooming to extent of all sub-layers
+			var def, funcAddExtent;
+			this._sumBounds = null;
+			if (this.options.zoomToExtent && !headerIsActive && !this._sumBounds) {
+				def = $.Deferred();
+				def.done(function() {
+					if (self._sumBounds.isValid()) {
+						self.map.fitBounds(self._sumBounds);
+					}
+					self._rowCount = null;
+					self._sumBounds = null;
+				});
+				this._rowCount = this._rowCount || cont.find("a.list-group-item").length;
+				this._sumBounds = L.latLngBounds([]);
+				funcAddExtent = function(layer, def) {
+					this._rowCount -= 1;
+					this._sumBounds.extend(layer.getBounds());
+					if (this._rowCount === 0) {
+						def.resolve();
+					}
+				};
+
+			}
 			cont.children(".list-group-item").each(function() {
 				row = $(this);
 				rowIsActive = row.hasClass("active");
 				if (row[0].tagName === "A" && headerIsActive === rowIsActive) {
-					self._onRowTap({target: row});
+					var layer = self.onRowTap(row);
+					if (self._sumBounds && layer.getBounds) {
+						if ($.isEmptyObject(layer._layers) === true) {
+							layer.once("load", function() {
+								funcAddExtent.call(self, layer, def);
+							});
+						}
+						else {
+							funcAddExtent.call(self, layer, def);
+						}
+					}
 				}
 				else if (row[0].tagName === "DIV" && headerIsActive === rowIsActive) {
 					self._onHeaderClick({target: row}, {isSubHeader: true});
