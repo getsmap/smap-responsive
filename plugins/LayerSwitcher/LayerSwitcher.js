@@ -6,7 +6,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		olFirst: false,
 		unfoldAll: false,
 		btnHide: true,
-		zoomToExtent: true,
+		zoomToExtent: false,
 		catIconClass: "fa fa-chevron-right" //fa-chevron-circle-right
 
 	},
