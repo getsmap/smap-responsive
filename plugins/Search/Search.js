@@ -8,6 +8,15 @@ L.Control.Search = L.Control.extend({
 		whitespace: "%20", //"%2B"
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
+		funcSetPosition: function() {
+			// Function for setting position based on some more 
+			// complex rules which cannot be accomplished through css
+			var mod = smap.cmd.getControl("L.Control.LayerSwitcher");
+			if (!mod) {
+				$("#smap-search-div").css("left", "10px");
+			}
+			
+		},
 		gui: false,
 		addToMenu: false,
 		zoom: 15,
@@ -69,6 +78,12 @@ L.Control.Search = L.Control.extend({
 			$.extend(true, this._lang, this.options._lang);
 		}
 		this._setLang(options.langCode);
+		var funcSetPosition = this.options.funcSetPosition;
+		if (funcSetPosition) {
+			smap.event.on("smap.core.pluginsadded", function() {
+				funcSetPosition();
+			});
+		}
 	},
 
 	onAdd: function(map) {
