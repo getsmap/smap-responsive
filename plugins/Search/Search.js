@@ -15,7 +15,6 @@ L.Control.Search = L.Control.extend({
 			if (!mod) {
 				$("#smap-search-div").css("left", "10px");
 			}
-			
 		},
 		gui: false,
 		addToMenu: false,
