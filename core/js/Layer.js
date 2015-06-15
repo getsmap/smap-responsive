@@ -24,10 +24,14 @@ smap.core.Layer = L.Class.extend({
 		var self = this;
 		var map = this.map;
 		
-		// this._onLayerAdd = this._onLayerAdd || $.proxy(this.onLayerAdd, this);
-		// this._onLayerRemove = this._onLayerRemove || $.proxy(this.onLayerRemove, this);
-		map.on("layeradd", this.onLayerAdd, this);
-		map.on("layerremove", this.onLayerRemove, this);
+		// Leaflet bug with events? The context is not working the way it should: http://leafletjs.com/reference.html#events-addeventlistener
+		// map.on("layeradd", this.onLayerAdd, this);
+		// map.on("layerremove", this.onLayerRemove, this);
+
+		this._onLayerAdd = this._onLayerAdd || $.proxy(this.onLayerAdd, this);
+		this._onLayerRemove = this._onLayerRemove || $.proxy(this.onLayerRemove, this);
+		map.on("layeradd", this._onLayerAdd);
+		map.on("layerremove", this._onLayerRemove);
 		
 		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
 			var tBL;
