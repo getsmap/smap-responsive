@@ -1,4 +1,13 @@
-
+@media(min-width: 768px)
+	#submitDiv 
+		position: absolute;
+		right: 0;
+		bottom: 1em;
+	
+@media(max-width: 767px)
+	#submitDiv
+		margin-top: 1em;
+	
 // Fix padding caused by Malmo IT's CSS messing with bootstrap styles
 .sprint-modal
 	.checkbox
@@ -6,11 +15,10 @@
 		label
 			padding 0
 		
-#conditionsLink
-	span
-		color blue
-		text-decoration underline
-		cursor pointer
+.link
+	color blue
+	text-decoration underline
+	cursor pointer
 
 .print-conditions
 	font-size 0.9em

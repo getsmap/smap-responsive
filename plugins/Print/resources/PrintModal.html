@@ -58,19 +58,19 @@
 			</div>
 		</div>
 		<div class="row" style="margin-top: 2em;">
-			<div class="col-xs-12 col-sm-4"id="submitDiv" >
-				<button type="submit" disabled data-loading-text="${loading}" class="btn btn-primary btn-lg">${create}</button>
-			</div>
 			<div class="col-xs-12 col-sm-8">
 				<div class="checkbox " id="conditionsLink" >
 					<input name="conditions" type="checkbox"><a  tabindex="0"></a>${conditionsHeader}
 				</div>
 				<div id="conditions" class="print-conditions">${conditions}<br>
-				<div class="checkbox">
+				<div id="store" class="checkbox">
 				<input name="storeAnswer" type="checkbox" disabled><label>${confirm}</label>
 				</div>
 				</div>
 
+			</div>
+			<div class="col-xs-12 col-sm-4"id="submitDiv" >
+				<button type="submit" disabled data-loading-text="${loading}" class="btn btn-primary btn-lg">${create}</button>
 			</div>
 		</div>
 	</form>

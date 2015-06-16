@@ -2,7 +2,8 @@
 	L.Control.Print = L.Control.extend({
 		options: {
 			position: 'topleft',
-			printUrl: "//localhost/print-servlet/print" ////localhost/geoserver/pdf"
+			printUrl: "//localhost/print-servlet/print", ////localhost/geoserver/pdf
+			compactConditions: false
 		},
 
 		_lang: {
@@ -27,7 +28,7 @@
 				misc: "Övrigt",
 				legend: "Teckenförklaring",
 				couldNotLoadCapabilities: "Kan inte skriva ut/exportera. Fick inget/felaktigt svar från servern.",
-				conditionsHeader: "Jag godkänner <span>användarvillkoren</span>",
+				conditionsHeader: 'Jag godkänner <span>användarvillkoren</span>',
 				conditions:'För utdrag från kartan/flygfotot till tryck eller annan publicering, krävs tillstånd från Malmö Stadsbyggnadskontor. Vid frågor om tillstånd, användningsområden eller kartprodukter kontakta Stadsbyggnadskontorets kartförsäljning:<br>040-34 24 35 eller <a href="mailto:sbk.sma@malmo.se?subject=Best%E4lla karta">sbk.sma@malmo.se</a>.',
 				conditionsTip: 'För att kunna skriva ut måste du godkänna användarvillkoren.',
 				confirm: 'Kom ihåg mitt val'
@@ -303,6 +304,8 @@
 			if (document.URL.search(/\/dev.html/) > -1) {
 				src = "plugins/Print/"+src;
 			}
+
+
 			var clickEvent = L.Browser.touch ? "tap" : "click";
 			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
@@ -310,40 +313,50 @@
 
 				var conditionsText = self._modal.find('.print-conditions');
 				self.conditionsCheckbox = self._modal.find('[name="conditions"]');
-				var conditionsLink = self._modal.find('#conditionsLink span');
 				self.submitDiv = self._modal.find("#submitDiv");
-				var storeCheckbox = self._modal.find('[name="storeAnswer"]');
 				var btn = self._modal.find('button[type=submit]');
+				var conditionsLink = self._modal.find('#conditionsLink span');
+				var storeCheckbox = self._modal.find('[name="storeAnswer"]');
+				
+				if (self.options.compactConditions){
+					if (localStorage.getItem('smapConditionsAgreed') === 'yes'){
+						self.conditionsCheckbox.prop('checked', true);
+						storeCheckbox.prop({'checked': true, 'disabled': false});
+						btn.prop('disabled', false);
+					}
+					else {
+						self.conditionsCheckbox.prop('checked', false);
+					}
 
-				if (localStorage.getItem('smapConditionsAgreed') === 'yes'){
-					self.conditionsCheckbox.prop('checked', true);
-					storeCheckbox.prop({'checked': true, 'disabled': false});
-					btn.prop('disabled', false);
+					conditionsLink.addClass('link');
+					storeCheckbox.change(function() {
+						self._storeConditions(storeCheckbox.prop('checked'));
+					});
+					storeCheckbox.next().on(clickEvent, function() {
+						var cb = $(this).prev();
+						cb.prop("checked", !cb.prop("checked"));
+						return false;
+					});
+
+					conditionsText.hide();
+					conditionsLink.on(clickEvent, function() {
+						conditionsText.slideToggle(250);
+					});
 				}
+
 				else {
-					self.conditionsCheckbox.prop('checked', false);
-				}
+					conditionsLink.append(':');
+					self._modal.find('#store').hide();
 
-				storeCheckbox.change(function() {
-					self._storeConditions(storeCheckbox.prop('checked'));
-				});
-				storeCheckbox.next().on(clickEvent, function() {
-					var cb = $(this).prev();
-					cb.prop("checked", !cb.prop("checked"));
-					return false;
-				});
+				}
 
 				self.conditionsCheckbox.change( function() {
 					self._setButtonState(self.conditionsCheckbox.prop('checked'));
 				});
-				conditionsText.hide();
-				conditionsLink.on(clickEvent, function() {
-					conditionsText.slideToggle(250);
-				});
 				self.submitDiv.on(clickEvent, function(e) {
 					if (!self.conditionsCheckbox.prop('checked')) {
 						self.conditionsCheckbox = $('#printmodal').find('[name="conditions"]');
-						self.conditionsCheckbox.popover({content: self.lang.conditionsTip, trigger:('manual'), placement: 'bottom', animation: 'false' });
+						self.conditionsCheckbox.popover({content: self.lang.conditionsTip, trigger:('manual'), placement: 'right', animation: 'false' });
 						self.conditionsCheckbox.popover('show');
 						e.stopPropagation();
 						
@@ -397,10 +410,10 @@
 		_loadCapabilities: function() {
 			var self = this;
 
-			this._modal.find('button[type="submit"]').button("loading");
-			this.printProvider.loadCapabilities().done(function() {
-				self._modal.find('button[type="submit"]').button("reset");
-			});
+			// this._modal.find('button[type="submit"]').button("loading");
+			// this.printProvider.loadCapabilities().done(function() {
+			// 	self._modal.find('button[type="submit"]').button("reset");
+			// });
 
 		},
 
@@ -409,6 +422,7 @@
 
 			if (!this.printProvider._capabilities) {
 				this._loadCapabilities();
+				
 			}
 			if (this._modal) {
 				this._modal.modal("show");
