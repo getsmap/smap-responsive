@@ -249,7 +249,7 @@ for (var i=0,len=batches.length; i<len; i++) {
 					<div>${postnr}&nbsp;${ort}</div>\
 					<div>Stadsområde:&nbsp;${stadsomr}</div>\
 					<br><a target="_blank" href="${url}">Läs mer</a>\
-					<br><a target="_blank" href="http://xyz.malmo.se/urbex/index.htm?p=true&xy=${easting};${northing}">Visa snedbild över skolan</a>',
+					<br><a target="_blank" href="http://kartor.malmo.se/urbex/index.htm?p=true&xy=${easting};${northing}">Visa snedbild över skolan</a>',
 		o.zIndex = 1100 + i;
 		ol.push(tPoint);
 
@@ -267,7 +267,7 @@ for (var i=0,len=batches.length; i<len; i++) {
 					<div>${postnr}&nbsp;${ort}</div>\
 					<div>Stadsområde:&nbsp;${stadsomr}</div>\
 					<br><a target="_blank" href="${url}">Läs mer</a>\
-					<br><a target="_blank" href="http://xyz.malmo.se/urbex/index.htm?p=true&xy=${easting};${northing}">Visa snedbild över skolan</a>',
+					<br><a target="_blank" href="http://kartor.malmo.se/urbex/index.htm?p=true&xy=${easting};${northing}">Visa snedbild över skolan</a>',
 		ol.push(tArea);
 	}
 }
