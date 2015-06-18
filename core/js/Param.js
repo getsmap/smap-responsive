@@ -33,6 +33,7 @@ smap.core.Param = L.Class.extend({
 				this._cachedParams = paramsObject;
 			}
 		}
+
 		return paramsObject;
 	},
 
@@ -40,12 +41,16 @@ smap.core.Param = L.Class.extend({
 	 * Get the original web params, totally unmodified, as object.
 	 * @return {Object} The params as an object
 	 */
-	getWebParamsAsObject: function() {
-		var sep = "?";
+	getWebParamsAsObject: function(sep) {
+		sep = sep || "?";
 		var p = location.href.split(sep);
 		var pString = p.length > 1 ? p[1] : "";
 		paramsObject = utils.paramsStringToObject(pString, true);
 		return paramsObject;
+	},
+
+	getHashParamsAsObject: function() {
+		return this.getWebParamsAsObject("#");
 	},
 	
 	createParamsAsObject: function() {
@@ -185,8 +190,7 @@ smap.core.Param = L.Class.extend({
 		}
 		
 		smap.event.trigger("smap.core.applyparams", p);
-	},
-	
+	},	
 		
 //		var selArr = sel instanceof Array ? sel : sel.split(",");
 //		var selItem = selArr[0];

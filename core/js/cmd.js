@@ -79,6 +79,9 @@ smap.cmd = {
 			case "warning":
 				msgType = "alert-danger";
 				break;
+			case "info":
+				msgType = "alert-info";
+				break;
 			case "error":
 				msgType = "alert-danger";
 				break;
@@ -95,6 +98,14 @@ smap.cmd = {
 				setTimeout(function() {
 					msg.addClass("notify-visible");
 				}, 1);
+			}
+			if (this._notifyTimeOut) {
+				clearTimeout(this._notifyTimeOut);
+			}
+			if (options.fadeOut) {
+				this._notifyTimeOut = setTimeout(function() {
+					$(".alert").remove();
+				}, options.fadeOut || 7000);
 			}
 			return msg;
 		},

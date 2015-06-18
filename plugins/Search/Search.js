@@ -19,7 +19,7 @@ L.Control.Search = L.Control.extend({
 		gui: false,
 		addToMenu: false,
 		zoom: 15,
-		markerIcon: $.extend({}, new L.Icon.Default().options, {iconUrl: L.Icon.Default.imagePath + '/marker-icon.png'}),
+		iconOptions: $.extend({}, new L.Icon.Default().options, {iconUrl: L.Icon.Default.imagePath + '/marker-icon.png'}),
 		source: null,
 		acHeight: null, // CSS value - height of autocomplete div
 		autoScrollAcOnRowNbr: 2,
@@ -759,7 +759,7 @@ L.Control.Search = L.Control.extend({
 					this.map.off("popupopen", onPopupOpen);
 					this.map.on("popupopen", onPopupOpen);
 					
-					this.marker = L.marker(latLng, {icon: L.icon(this.options.markerIcon) }).addTo(this._searchLayer);
+					this.marker = L.marker(latLng, {iconOptions: L.icon(this.options.iconOptions) }).addTo(this._searchLayer);
 					this.marker.options.q = q; // Store for creating link to map
 					
 					this.marker.bindPopup('<p class="lead">'+decodeURIComponent(q)+'</p><div><button id="smap-search-popupbtn" class="btn btn-default btn-sm">'+this.lang.remove+'</button></div>');

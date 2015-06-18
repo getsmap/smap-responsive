@@ -57,7 +57,7 @@
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/"
   },
-  "overrides": {
+  "overrides": { 
     "leaflet-polyline-distance": {
       "main": [
         "dist/L.Polyline.measuredDistance.js"
@@ -106,6 +106,13 @@
         "dist/images/marker-icon-2x.png",
         "dist/images/marker-icon.png",
         "dist/images/marker-shadow.png"
+      ]
+    },
+    "Leaflet.awesome-markers": {
+      "main": [
+        "dist/leaflet.awesome-markers.css",
+        "dist/leaflet.awesome-markers.js",
+        "dist/images/*"
       ]
     },
     "leaflet-boundary-canvas": {
