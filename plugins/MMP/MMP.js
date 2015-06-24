@@ -11,7 +11,7 @@ L.Control.MMP = L.Control.extend({
 		"sv": {
 			btnLabel: "Spara",
 			clickHereToSave: "Klicka här för att spara positionen",
-			dragInfo: '<div style="font-size:1.2em;"><strong style="font-size:1.3em;">Instruktioner</strong><ol style="margin:0;padding-left:1.65em;margin-top:0.5em;"><li>Zooma in i kartan så mycket som möjligt</li><li>Klicka i kartan för att ange platsen som ärendet gäller<br />(pekskärm: peka och håll kvar fingret på en plats)</li></ol></div>',
+			dragInfo: '<div style="font-size:1.2em;"><strong style="font-size:1.3em;">Instruktioner</strong><ol style="margin:0;padding-left:1.65em;margin-top:0.5em;"><li>Zooma in i kartan så mycket som möjligt</li><li>Klicka i kartan för att markera platsen för ärendet<br />(pekskärm: peka och håll kvar fingret på en plats)</li></ol></div>',
 			youCanDragMeOrClick: "<strong>Klicka i kartan</strong> igen eller <strong>dra i markören</strong> för att ändra positionen",
 			btnSave: "Bekräfta position",
 			zoomInMore: "Du måste zooma in mer i kartan för att kunna lägga till markör"
@@ -233,7 +233,7 @@ L.Control.MMP = L.Control.extend({
 					alert("Could not save because "+resp.msg+". Error code: "+resp.code);
 				}
 				// "Reset" the map
-				this._tempId = null;
+				// this._tempId = null;
 			},
 			error: function(a, b, c) {
 				alert("Could not save because: "+b);
