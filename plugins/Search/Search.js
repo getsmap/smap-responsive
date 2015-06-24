@@ -338,9 +338,6 @@ L.Control.Search = L.Control.extend({
 								error: function() {},
 								complete: function() {
 									smap.cmd.loading(false);
-									if (self.options.clearEntryAfterSearch) {
-										$(".smap-search-div input").val(null);
-									}
 								}
 							});
 						}
@@ -393,6 +390,9 @@ L.Control.Search = L.Control.extend({
 			afterSelect: function(item) {
 				// Do something with the result (geolocate it)
 				self._searchLayer.clearLayers();
+				if (self.options.clearEntryAfterSearch) {
+					$(".smap-search-div input").val(null);
+				}
 
 				if ( encodeURIComponent(item).search(encodeURIComponent(addressSuffix)) > -1) {
 					item = $.trim(item.replace(addressSuffix, ""));
