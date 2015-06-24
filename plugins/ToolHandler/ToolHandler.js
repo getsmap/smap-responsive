@@ -1,7 +1,8 @@
 L.Control.ToolHandler = L.Control.extend({
 	options: {
 		position: 'bottomright',
-		showPopoverTitle: false
+		showPopoverTitle: false,
+		breakpoint: 991 // at this window px width the buttons will collapse
 	},
 
 	_lang: {
@@ -27,11 +28,11 @@ L.Control.ToolHandler = L.Control.extend({
 
 	onAdd: function(map) {
 		var self = this;
-		self._container = L.DomUtil.create('div', 'leaflet-control-toolhandler'); // second parameter is class name
-		L.DomEvent.disableClickPropagation(self._container);
+		this._container = L.DomUtil.create('div', 'leaflet-control-toolhandler'); // second parameter is class name
+		L.DomEvent.disableClickPropagation(this._container);
 
-		self.$container = $(self._container);
-		self.$container.css("display", "none");
+		this.$container = $(this._container);
+		this.$container.css("display", "none");
 
 		if (!utils.getBrowser().ie8) {
 			this._makeToolHandler();
@@ -47,7 +48,31 @@ L.Control.ToolHandler = L.Control.extend({
 				// });
 			});
 		}
-		return self._container;
+		this._onWinResize = $.proxy(this.onWinResize, this);
+
+		// Bind events
+		$(window).on("resize", this._onWinResize);
+		this.checkCollapsePoint();
+
+		return this._container;
+	},
+
+	onWinResize: function(e) {
+		this.checkCollapsePoint();
+	},
+
+	checkCollapsePoint: function() {
+		var w = $(window).width();
+		if (w <= this.options.breakpoint) {
+			// Collapse
+			console.log("Collapse");
+			$("#mapdiv").addClass("thandler-collapsed");
+		}
+		else {
+			// Un-collapse
+			console.log("Un-collapse");
+			$("#mapdiv").removeClass("thandler-collapsed");
+		}
 	},
 
 	activate: function() {},
@@ -173,8 +198,8 @@ L.Control.ToolHandler = L.Control.extend({
     },
 
 	onRemove: function(map) {
-		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
-		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
+		$(window).off("resize", this._onWinResize);
+		
 	}
 });
 

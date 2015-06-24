@@ -1,4 +1,5 @@
 .thandler-btn {
+  display: none;
   z-index: 1001;
   position: absolute;
   left: auto;
@@ -16,35 +17,31 @@
 .thandler-container.thandler-visible {
   display: block;
 }
-@media (max-width: 991px) {
-  .thandler-container {
-    display: none;
-  }
-  .thandler-popover {
-    left: auto !important;
-    right: 0.2em;
-  }
-  .thandler-popover .popover-content {
-    padding: 0;
-    padding-bottom: 1em;
-  }
-  .thandler-popover .popover-content .leaflet-control {
-    clear: none;
-    margin: 0.2em;
-  }
-  .thandler-popover .popover-content .leaflet-control button {
-    width: 2.75em;
-  }
-  .thandler-popover .dropdown-menu {
-    left: -17em !important;
-  }
-  .thandler-popover .arrow {
-    left: auto !important;
-    right: 17px;
-  }
+.thandler-collapsed .thandler-btn {
+  display: block;
 }
-@media (min-width: 992px) {
-  .thandler-btn {
-    display: none;
-  }
+.thandler-collapsed .thandler-container {
+  display: none;
+}
+.thandler-collapsed .thandler-popover {
+  left: auto !important;
+  right: 0.2em;
+}
+.thandler-collapsed .thandler-popover .popover-content {
+  padding: 0;
+  padding-bottom: 1em;
+}
+.thandler-collapsed .thandler-popover .popover-content .leaflet-control {
+  clear: none;
+  margin: 0.2em;
+}
+.thandler-collapsed .thandler-popover .popover-content .leaflet-control button {
+  width: 2.75em;
+}
+.thandler-collapsed .thandler-popover .dropdown-menu {
+  left: -17em !important;
+}
+.thandler-collapsed .thandler-popover .arrow {
+  left: auto !important;
+  right: 17px;
 }

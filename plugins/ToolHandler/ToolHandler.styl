@@ -2,6 +2,7 @@ generalMargins = 5px
 fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera Sans", sans-serif
 
 .thandler-btn
+	display none
 	z-index 1001
 	position absolute
 	left auto
@@ -19,16 +20,21 @@ fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera
 // 	margin 0px 0px 5px 0px !important
 
 // .leaflet-top.leaflet-right .leaflet-control, .thandler-container .leaflet-control
-	
+
 
 .thandler-container.thandler-visible
 	display block
 
-@media (max-width: 991px)
+// @media (max-width: 991px)
+
+
 	
+.thandler-collapsed
+	.thandler-btn
+		display block
 	.thandler-container
 		display none
-		
+
 	.thandler-popover
 		left auto !important
 		right .2em
@@ -46,13 +52,6 @@ fontFamily = "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera
 		.arrow
 			left auto !important
 			right 17px
-
-@media (min-width: 992px)
-	.thandler-btn
-		display none
-
-	// .thandler-popover
-	// 	display none !important
 	
 
 // @media (max-width: 480px)
