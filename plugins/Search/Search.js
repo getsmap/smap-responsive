@@ -8,6 +8,7 @@ L.Control.Search = L.Control.extend({
 		whitespace: "%20", //"%2B"
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
+		clearEntryAfterSearch: false, // Clear the input entry on found (success)
 		funcSetPosition: function() {
 			// Function for setting position based on some more 
 			// complex rules which cannot be accomplished through css
@@ -776,7 +777,9 @@ L.Control.Search = L.Control.extend({
 					if (options.showPopup) {
 						this.marker.openPopup();
 					}
-					$(".smap-search-div input").val(null);
+					if (this.options.clearEntryAfterSearch) {
+						$(".smap-search-div input").val(null);
+					}
 					$(".smap-search-div input").blur();
 					setTimeout(function() {
 						$(".smap-search-div input").blur();
