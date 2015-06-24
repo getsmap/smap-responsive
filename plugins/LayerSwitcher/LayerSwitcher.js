@@ -7,7 +7,19 @@ L.Control.LayerSwitcher = L.Control.extend({
 		unfoldAll: false,
 		btnHide: true,
 		zoomToExtent: false,
-		catIconClass: "fa fa-chevron-right" //fa-chevron-circle-right
+		catIconClass: "fa fa-chevron-right", //fa-chevron-circle-right
+		getFitBoundsOptions: function() {
+			// Adapts zoom to extent options (default function prevents the 
+			// layer switcher from covering markers).
+			var o = {
+				paddingTopLeft: [0, 0]
+			};
+			if ( $(".lswitch-panel:visible").length) {
+				// Adapt extent so markers don't appear under the layer switcher.
+				o.paddingTopLeft[0] = 330;
+			}
+			return o;	
+		}
 
 	},
 	
@@ -455,6 +467,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		return false;
 	},
 
+
 	onRowTap: function($tag) {
 		var theId = $tag.attr("id");
 		var layerId = this._unMakeId(theId),
@@ -495,17 +508,18 @@ L.Control.LayerSwitcher = L.Control.extend({
 			var t = $tag.data("t") || null; // Allow to store layer config in a custom way (not requiring to be present in config file)
 			layer = this.showLayer(t || layerId);
 
+			var fitBoundsOptions = this.options.getFitBoundsOptions ? this.options.getFitBoundsOptions() : null;
 			// Adaptation for zooming to extent of layer
 			if ( (this.options.zoomToExtent || (t && t.options && t.options.zoomToExtent)) && !this._sumBounds && layer.getBounds) {
 				// This means, we are not in the process of summing up many layers' bounds
 				// so we can safely zoom to bounds of this layer.
 				if ($.isEmptyObject(layer._layers)) {
 					layer.once("load", function(e) {
-						e.layer._map.fitBounds(layer.getBounds());
+						e.layer._map.fitBounds(layer.getBounds(), fitBoundsOptions);
 					});
 				}
 				else {
-					this.map.fitBounds(layer.getBounds());
+					this.map.fitBounds(layer.getBounds(), fitBoundsOptions);
 				}
 			}
 		}
@@ -580,7 +594,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 				def = $.Deferred();
 				def.done(function() {
 					if (self._sumBounds.isValid()) {
-						self.map.fitBounds(self._sumBounds);
+						self.map.fitBounds(self._sumBounds, self.options.getFitBoundsOptions ? self.options.getFitBoundsOptions() : null);
 					}
 					self._rowCount = null;
 					self._sumBounds = null;
