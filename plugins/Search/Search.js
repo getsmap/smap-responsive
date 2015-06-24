@@ -338,6 +338,9 @@ L.Control.Search = L.Control.extend({
 								error: function() {},
 								complete: function() {
 									smap.cmd.loading(false);
+									if (self.options.clearEntryAfterSearch) {
+										$(".smap-search-div input").val(null);
+									}
 								}
 							});
 						}
