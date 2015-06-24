@@ -12,6 +12,9 @@
   cursor: pointer;
   border-radius: 0 0.4em 0.4em 0;
 }
+#lswitch-btn span {
+  margin-left: 1px;
+}
 .lswitch-btnhide.btn {
   display: table-cell;
   right: 0;
