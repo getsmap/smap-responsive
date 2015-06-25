@@ -45,6 +45,7 @@ L.Control.FullScreen = L.Control.extend({
 					expTitle: l.fullExp,
 					compTitle: l.reset,
 					action: function () {
+						self._enableFullscreen();
 						var elem = document.getElementById('body');
 						if (screenfull.enabled) {
 							screenfull.toggle(elem);
@@ -100,13 +101,25 @@ L.Control.FullScreen = L.Control.extend({
 				self._updateButton();
 			});
 		}
-		
+
 		return this._container;
 	},
 
 	activate: function() {
 
 		this._properties().action();
+	},
+
+	_enableFullscreen: function() {
+		try {
+			var iframe = window.parent.document.getElementsByTagName('iframe')[0];
+			iframe.setAttribute('allowfullscreen', '');
+			utils.log(iframe);
+		}
+		catch(err) {
+			utils.log(err.message);
+		}
+		
 	},
 
 	_updateButton: function() {
