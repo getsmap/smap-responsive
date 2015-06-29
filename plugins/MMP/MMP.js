@@ -93,6 +93,7 @@ L.Control.MMP = L.Control.extend({
 			for (var i = 0; i < urls.length; i++) {
 				this._counterLayerId += 1;
 				url = urls[i];
+				url = decodeURIComponent(url);
 				this._addExternalData(url, {
 					layerId: "mmp-extlayer-"+this._counterLayerId
 				});
