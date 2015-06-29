@@ -87,6 +87,11 @@ L.Control.Editor = L.Control.extend({
 		return this._container;
 	},
 
+	// _onTouchHold: function(e) {
+		
+		
+	// },
+
 	onRemove: function(map) {},
 
 	_addBtnAdd: function() {
@@ -99,9 +104,43 @@ L.Control.Editor = L.Control.extend({
 				var drawToolbar = self._getDrawToolbar();
 				$(this).toggleClass("btn-danger");
 				if ($(this).hasClass("btn-danger")) {
+					if (drawToolbar.handler.type && drawToolbar.handler.type === "marker") {
+						self._onTouchHold = self._onTouchHold || function(e) {
+							var thisHandler = drawToolbar.handler;
+							if (!thisHandler._marker) {
+								thisHandler._marker = new L.Marker(e.latlng, {
+									icon: thisHandler.options.icon,
+									zIndexOffset: thisHandler.options.zIndexOffset
+								});
+								marker = thisHandler._marker;
+								// Bind to both marker and map to make sure we get the click event.
+								thisHandler._marker.on('click', thisHandler._onClick, thisHandler);
+								thisHandler._map
+									// .on('click', thisHandler._onClick, thisHandler)
+									.addLayer(thisHandler._marker);
+							}
+							else {
+								thisHandler._marker.setLatLng(e.latlng);
+							}
+							thisHandler._map.fire("click", {
+								latlng: e.latlng,
+								originalEvent: e
+							});
+							thisHandler._onClick();
+							thisHandler._marker = self._marker;
+							// alert("on hold");
+						}
+						self.map.on("contextmenu", self._onTouchHold, self);
+						//self._onTouchHold, self);
+
+					}
 					drawToolbar.handler.enable();
 				}
 				else {
+					if (L.Browser.touch && drawToolbar.handler.type && drawToolbar.handler.type === "marker") {
+						// Disable hack
+						self.map.off("contextmenu", self._onTouchHold);
+					}
 					drawToolbar.handler.disable();
 				}
 				return false;
