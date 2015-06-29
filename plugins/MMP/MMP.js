@@ -84,20 +84,19 @@ L.Control.MMP = L.Control.extend({
 		var hash = location.hash.substring(1);
 		var p = utils.paramsStringToObject(hash, true);
 		if (p && p.MMP_DATA) {
-			// Get URLs as an array
-			var urls = p.MMP_DATA instanceof Array ? p.MMP_DATA : p.MMP_DATA.split(","), //.split(";"),
-				url;
+			// // Get URLs as an array
+			// var urls = p.MMP_DATA instanceof Array ? p.MMP_DATA : p.MMP_DATA.split(","), //.split(";"),
+			// 	url;
 			
+			var url = p.MMP_DATA;
+			url = decodeURIComponent(url);
 			this._counterLayerId = this._counterLayerId || 0;
 			this._clearExternalData();
-			for (var i = 0; i < urls.length; i++) {
-				this._counterLayerId += 1;
-				url = urls[i];
-				url = decodeURIComponent(url);
-				this._addExternalData(url, {
-					layerId: "mmp-extlayer-"+this._counterLayerId
-				});
-			}
+			
+			this._counterLayerId += 1;
+			this._addExternalData(url, {
+				layerId: "mmp-extlayer-"+this._counterLayerId
+			});
 		}
 	},
 
