@@ -139,7 +139,7 @@ L.Control.Editor = L.Control.extend({
 				else {
 					if (L.Browser.touch && drawToolbar.handler.type && drawToolbar.handler.type === "marker") {
 						// Disable hack
-						self.map.off("contextmenu", self._onTouchHold);
+						self.map.off("contextmenu", self._onTouchHold, self);
 					}
 					drawToolbar.handler.disable();
 				}
