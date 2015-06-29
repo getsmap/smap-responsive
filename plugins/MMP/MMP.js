@@ -173,7 +173,7 @@ L.Control.MMP = L.Control.extend({
 				init: "L.GeoJSON.WFS",
 				options: $.extend(true, {
 					layerId: L.stamp(this),
-					xhrType: "GET",
+					xhrType: "POST",
 					attribution: "Malmö stad",
 					inputCrs: "EPSG:4326",
 					uniqueKey: "id", // TODO: Check this once
