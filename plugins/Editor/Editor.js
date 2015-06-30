@@ -108,9 +108,9 @@ L.Control.Editor = L.Control.extend({
 						
 						self._onTouchHold = self._onTouchHold || function(e) {
 							var thisHandler = drawToolbar.handler;
-							// if (self._marker) {
-							// 	self.map.removeLayer(self._marker);
-							// }
+							if (self._marker) {
+								self.map.removeLayer(self._marker);
+							}
 							if (!thisHandler._marker) {
 								thisHandler._marker = new L.Marker(e.latlng, {
 									icon: thisHandler.options.icon,
@@ -145,7 +145,7 @@ L.Control.Editor = L.Control.extend({
 							// thisHandler._onMouseMove(e);
 							thisHandler._onClick();
 							
-							thisHandler._marker = self._marker;
+							// thisHandler._marker = self._marker;
 
 							// $("#smap-editor-uglyhackconfirm").remove();
 							// var $btnConfirm = $('<button id="smap-editor-uglyhackconfirm" class="btn btn-primary">OK?</button>');
