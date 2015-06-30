@@ -130,7 +130,7 @@ L.Control.Editor = L.Control.extend({
 								latlng: e.latlng,
 								originalEvent: e
 							});
-							
+
 							// thisHandler._onClick({
 							// 	latlng: e.latlng,
 							// 	originalEvent: e
@@ -142,7 +142,9 @@ L.Control.Editor = L.Control.extend({
 							// 	originalEvent: e
 							// });
 							// thisHandler._onMouseMove(e);
-							thisHandler._onClick();
+							setTimeout(function() {
+								thisHandler._onClick();
+							}, 250);
 							
 							// thisHandler._marker = self._marker;
 							e.preventDefault();
