@@ -111,12 +111,12 @@ L.Control.Editor = L.Control.extend({
 							if (self._marker) {
 								self.map.removeLayer(self._marker);
 							}
-							if (!thisHandler._marker) {
-								thisHandler._marker = new L.Marker(e.latlng, {
-									icon: thisHandler.options.icon,
-									zIndexOffset: thisHandler.options.zIndexOffset
-								});
-							}
+							// if (!thisHandler._marker) {
+							// 	thisHandler._marker = new L.Marker(e.latlng, {
+							// 		icon: thisHandler.options.icon,
+							// 		zIndexOffset: thisHandler.options.zIndexOffset
+							// 	});
+							// }
 							// 	// Bind to both marker and map to make sure we get the click event.
 							// 	thisHandler._marker.on('click', thisHandler._onClick, thisHandler);
 							// 	thisHandler._map
@@ -145,7 +145,7 @@ L.Control.Editor = L.Control.extend({
 							// thisHandler._onMouseMove(e);
 							thisHandler._onClick();
 							
-							// thisHandler._marker = self._marker;
+							thisHandler._marker = self._marker;
 
 							// $("#smap-editor-uglyhackconfirm").remove();
 							// var $btnConfirm = $('<button id="smap-editor-uglyhackconfirm" class="btn btn-primary">OK?</button>');
