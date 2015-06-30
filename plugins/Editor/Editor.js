@@ -108,47 +108,10 @@ L.Control.Editor = L.Control.extend({
 						
 						self._onTouchHold = self._onTouchHold || function(e) {
 							var thisHandler = drawToolbar.handler;
-							// 	// Bind to both marker and map to make sure we get the click event.
-							// 	thisHandler._marker.on('click', thisHandler._onClick, thisHandler);
-							// 	thisHandler._map
-							// 		// .on('click', thisHandler._onClick, thisHandler)
-							// 		.addLayer(thisHandler._marker);
-							// }
-							// else {
-							// 	thisHandler._marker.setLatLng(e.latlng);
-							// }
-
 							thisHandler._map.fire("mousemove", {
 								latlng: e.latlng,
 								originalEvent: e
 							});
-
-							// thisHandler._onClick({
-							// 	latlng: e.latlng,
-							// 	originalEvent: e
-							// });
-							
-							
-							// thisHandler._map.fire("click", {
-							// 	latlng: e.latlng,
-							// 	originalEvent: e
-							// });
-							// thisHandler._onMouseMove(e);
-							thisHandler._onClick();
-							
-							thisHandler._marker = self._marker;
-
-							// $("#smap-editor-uglyhackconfirm").remove();
-							// var $btnConfirm = $('<button id="smap-editor-uglyhackconfirm" class="btn btn-primary">OK?</button>');
-							// $btnConfirm.css({
-							// 	"position": "absolute",
-							// 	"left": "10%",
-							// 	"bottom": "20px",
-							// 	"width": "80%",
-							// 	"z-index": "2001"
-							// });
-							// $("#maindiv").append($btnConfirm);
-							// alert("on hold");
 						}
 						
 						self.map.on("click", self._onTouchHold, self);
