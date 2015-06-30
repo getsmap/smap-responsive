@@ -100,38 +100,68 @@ L.Control.Editor = L.Control.extend({
 		if (!btnAdd.length) {
 			var btnAdd = $('<button class="btn btn-default btn-lg smap-editor-btnadd"><i class="glyphicon glyphicon-plus"></i></button>');
 			$(".leaflet-top.leaflet-left").prepend(btnAdd);
-			btnAdd.on("click", function() {
+			btnAdd.on("click touchend", function() {
 				var drawToolbar = self._getDrawToolbar();
 				$(this).toggleClass("btn-danger");
 				if ($(this).hasClass("btn-danger")) {
 					if (drawToolbar.handler.type && drawToolbar.handler.type === "marker") {
+						
 						self._onTouchHold = self._onTouchHold || function(e) {
 							var thisHandler = drawToolbar.handler;
-							if (!thisHandler._marker) {
-								thisHandler._marker = new L.Marker(e.latlng, {
-									icon: thisHandler.options.icon,
-									zIndexOffset: thisHandler.options.zIndexOffset
-								});
-								marker = thisHandler._marker;
-								// Bind to both marker and map to make sure we get the click event.
-								thisHandler._marker.on('click', thisHandler._onClick, thisHandler);
-								thisHandler._map
-									// .on('click', thisHandler._onClick, thisHandler)
-									.addLayer(thisHandler._marker);
-							}
-							else {
-								thisHandler._marker.setLatLng(e.latlng);
-							}
-							thisHandler._map.fire("click", {
+							// if (self._marker) {
+							// 	self.map.removeLayer(self._marker);
+							// }
+							// if (!thisHandler._marker) {
+							// 	thisHandler._marker = new L.Marker(e.latlng, {
+							// 		icon: thisHandler.options.icon,
+							// 		zIndexOffset: thisHandler.options.zIndexOffset
+							// 	});
+							// 	// Bind to both marker and map to make sure we get the click event.
+							// 	thisHandler._marker.on('click', thisHandler._onClick, thisHandler);
+							// 	thisHandler._map
+							// 		// .on('click', thisHandler._onClick, thisHandler)
+							// 		.addLayer(thisHandler._marker);
+							// }
+							// else {
+							// 	thisHandler._marker.setLatLng(e.latlng);
+							// }
+
+							thisHandler._map.fire("mousemove", {
 								latlng: e.latlng,
 								originalEvent: e
 							});
+							
+							// thisHandler._onClick({
+							// 	latlng: e.latlng,
+							// 	originalEvent: e
+							// });
+							
+							
+							// thisHandler._map.fire("click", {
+							// 	latlng: e.latlng,
+							// 	originalEvent: e
+							// });
+							// thisHandler._onMouseMove(e);
 							thisHandler._onClick();
-							thisHandler._marker = self._marker;
+							
+							// thisHandler._marker = self._marker;
+							e.preventDefault();
+							e.stopPropagation();
+
+							// $("#smap-editor-uglyhackconfirm").remove();
+							// var $btnConfirm = $('<button id="smap-editor-uglyhackconfirm" class="btn btn-primary">OK?</button>');
+							// $btnConfirm.css({
+							// 	"position": "absolute",
+							// 	"left": "10%",
+							// 	"bottom": "20px",
+							// 	"width": "80%",
+							// 	"z-index": "2001"
+							// });
+							// $("#maindiv").append($btnConfirm);
 							// alert("on hold");
 						}
-						self.map.on("contextmenu", self._onTouchHold, self);
-						//self._onTouchHold, self);
+						
+						self.map.on("click", self._onTouchHold, self);
 
 					}
 					drawToolbar.handler.enable();
@@ -139,7 +169,8 @@ L.Control.Editor = L.Control.extend({
 				else {
 					if (L.Browser.touch && drawToolbar.handler.type && drawToolbar.handler.type === "marker") {
 						// Disable hack
-						self.map.off("contextmenu", self._onTouchHold, self);
+						self.map.off("click", self._onTouchHold, self);
+						$("#smap-editor-uglyhackconfirm").remove();
 					}
 					drawToolbar.handler.disable();
 				}
