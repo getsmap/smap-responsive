@@ -111,6 +111,9 @@ L.Control.Editor = L.Control.extend({
 							if (self._marker) {
 								self.map.removeLayer(self._marker);
 							}
+							if (thisHandler._marker) {
+								thisHandler._marker.setLatLng(e.latlng);
+							}
 							// if (!thisHandler._marker) {
 							// 	thisHandler._marker = new L.Marker(e.latlng, {
 							// 		icon: thisHandler.options.icon,
