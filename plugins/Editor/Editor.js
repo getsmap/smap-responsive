@@ -108,6 +108,7 @@ L.Control.Editor = L.Control.extend({
 						
 						self._onTouchHold = self._onTouchHold || function(e) {
 							var thisHandler = drawToolbar.handler;
+							self._tooltip = self._tooltip || {updatePosition: function() {}};
 							thisHandler._onMouseMove({latlng: e.latlng});
 							thisHandler._onClick({latlng: e.latlng});
 						}
