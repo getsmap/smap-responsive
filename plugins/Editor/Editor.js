@@ -108,18 +108,6 @@ L.Control.Editor = L.Control.extend({
 						
 						self._onTouchHold = self._onTouchHold || function(e) {
 							var thisHandler = drawToolbar.handler;
-							if (self._marker) {
-								self.map.removeLayer(self._marker);
-							}
-							if (thisHandler._marker) {
-								thisHandler._marker.setLatLng(e.latlng);
-							}
-							// if (!thisHandler._marker) {
-							// 	thisHandler._marker = new L.Marker(e.latlng, {
-							// 		icon: thisHandler.options.icon,
-							// 		zIndexOffset: thisHandler.options.zIndexOffset
-							// 	});
-							// }
 							// 	// Bind to both marker and map to make sure we get the click event.
 							// 	thisHandler._marker.on('click', thisHandler._onClick, thisHandler);
 							// 	thisHandler._map
