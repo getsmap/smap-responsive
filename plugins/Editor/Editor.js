@@ -108,10 +108,8 @@ L.Control.Editor = L.Control.extend({
 						
 						self._onTouchHold = self._onTouchHold || function(e) {
 							var thisHandler = drawToolbar.handler;
-							thisHandler._map.fire("mousemove", {
-								latlng: e.latlng,
-								originalEvent: e
-							});
+							thisHandler._onMouseMove({latlng: e.latlng});
+							thisHandler._onClick({latlng: e.latlng});
 						}
 						
 						self.map.on("click", self._onTouchHold, self);
