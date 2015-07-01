@@ -143,7 +143,7 @@ L.Control.MMP = L.Control.extend({
 			// 	self._addEditInterface();
 			// }
 
-			if (p.MMP_EDIT) {
+			if (p.MMP_EDIT && p.MMP_EDIT.toUpperCase() === "TRUE" ) {
 				self.activateAddMarker();
 			}
 
