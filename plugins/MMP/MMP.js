@@ -51,9 +51,8 @@ L.Control.MMP = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'leaflet-control-mmp');
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
-		this._createBtn();
-		this._bindEvents();
 
+		this._bindEvents();
 		this._mmpExternalLayers = [];
 
 		return this._container;
@@ -64,6 +63,33 @@ L.Control.MMP = L.Control.extend({
 		this.$btn.empty().remove();
 
 		this._mmpExternalLayers = null;
+	},
+
+	activateAddMarker: function() {
+		this._editingIsActive = true;
+		this._createBtn();
+		var eventName;
+		if (L.Browser.touch) {
+			eventName = "contextmenu";
+		}
+		else {
+			eventName = "click";
+		}
+		this.map.on(eventName, this.onMapClick, this);
+	},
+
+	deactivateAddMarker: function() {
+		this._editingIsActive = false;
+		var eventName;
+		if (L.Browser.touch) {
+			eventName = "contextmenu";
+		}
+		else {
+			eventName = "click";
+		}
+		this.map.off(eventName, this.onMapClick);
+		$("#smap-mmp-btn").empty().remove();
+		this.$btn = null;
 	},
 
 	onMapClick: function(e) {
@@ -102,15 +128,6 @@ L.Control.MMP = L.Control.extend({
 
 	_bindEvents: function() {
 
-		var eventName;
-		if (L.Browser.touch) {
-			eventName = "contextmenu";
-		}
-		else {
-			eventName = "click";
-		}
-		this.map.on(eventName, this.onMapClick, this);
-
 		var self = this;
 		smap.event.on("smap.core.beforeapplyparams", function(e, p) {
 			// Make the category layer visible so we can snap to it
@@ -126,6 +143,10 @@ L.Control.MMP = L.Control.extend({
 			// 	self._addEditInterface();
 			// }
 
+			if (p.MMP_EDIT) {
+				self.activateAddMarker();
+			}
+
 			var xy3008 = null,
 				latLng = null;
 			if (p.MMP_XY) {
@@ -138,7 +159,10 @@ L.Control.MMP = L.Control.extend({
 				latLng = utils.projectLatLng(L.latLng(xy3008), "EPSG:3008", "EPSG:4326", true, false);
 			}
 			else {
-				smap.cmd.notify(self.lang.dragInfo, "info");
+				if (this._editingIsActive) {
+					// We need give instruction only if "add marker" is active
+					smap.cmd.notify(self.lang.dragInfo, "info");
+				}
 			}
 			if (p.MMP_ID) {
 				// This id is used by MMP to connect the report with the map data we return to them
@@ -452,9 +476,9 @@ L.Control.MMP = L.Control.extend({
 		else {
 			this._latLng = latLng;
 		}
-		var icon = L.AwesomeMarkers.icon({icon: 'arrows', markerColor: 'darkred', prefix: "fa", extraClasses: "mmpmarker"});
+		var icon = L.AwesomeMarkers.icon({icon: this._editingIsActive ? 'arrows' : "lock", markerColor: 'darkred', prefix: "fa", extraClasses: "mmpmarker"});
 		var marker = L.marker(latLng, {
-				draggable: true,
+				draggable: this._editingIsActive || false,
 				icon: icon
 				,
 				zIndexOffset: 999
@@ -477,8 +501,10 @@ L.Control.MMP = L.Control.extend({
 		marker.openPopup();
 		this._marker = marker;
 
-		this.$btn.removeClass("hidden");
-		$(".alert").remove(); // Dont let a message cover the button
+		if (this.$btn) {
+			this.$btn.removeClass("hidden");
+			$(".alert").remove(); // Dont let a message cover the button
+		}
 
 		// smap.cmd.notify(this.lang.youCanDragMeOrClick, "info");
 	}
