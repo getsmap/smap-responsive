@@ -33,6 +33,3 @@
 a:active {
   text-decoration: none;
 }
-button[type=submit] {
-  float: right;
-}

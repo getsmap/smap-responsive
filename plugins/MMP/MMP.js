@@ -197,14 +197,15 @@ L.Control.MMP = L.Control.extend({
 				init: "L.GeoJSON.WFS",
 				options: $.extend(true, {
 					layerId: L.stamp(this),
-					xhrType: "POST",
+					xhrType: "GET",
 					attribution: "Malmö stad",
-					inputCrs: "EPSG:4326",
-					uniqueKey: "id", // TODO: Check this once
+					inputCrs: "EPSG:3008",
+					uniqueKey: "arendeId", // TODO: Check this once
 					selectable: true,
 					reverseAxis: false,
 					reverseAxisBbox: true,
 					geomType: "POINT",
+					noParams: true,
 					popup: '*',
 					// noBbox: true,
 					style: {
@@ -249,7 +250,7 @@ L.Control.MMP = L.Control.extend({
 			context: this,
 			dataType: "json",
 			success: function(resp) {
-				if (resp.success) {
+				if (resp.success && JSON.parse(resp.success)) {
 					// Save successful
 					alert("Success, indeed yes");
 				}
