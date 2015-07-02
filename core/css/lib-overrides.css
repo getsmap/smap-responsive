@@ -9,5 +9,9 @@
 	margin-bottom: 800px;  /* to be able to use drop down menues in header*/
 }
 
+.leaflet-popup-content {
+	/* Force e.g. URL:s to break, not going outside the popup */
+	word-wrap: break-word;
+}
 
 
