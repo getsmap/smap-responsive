@@ -4,7 +4,7 @@ L.Control.FullScreen = L.Control.extend({
 		url_root: location.origin + location.pathname + '?',
 
 		// The type of fullscreen to display: replace and newTab is most suitable for maps in an iframe. full is 'real' HTML5-fullscreen. 
-		// replaceWindow: open map in the same window, like a regular html link. newTab: open map in new tab. realFull: show map in fullscreen.
+		// replace: open map in the same window, like a regular html link. newTab: open map in new tab. full: show map in fullscreen.
 		mode: 'full' // 'replace', 'newTab', or 'full'
 		
 	},
