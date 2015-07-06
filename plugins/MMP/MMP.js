@@ -197,12 +197,14 @@ L.Control.MMP = L.Control.extend({
 				init: "L.GeoJSON.WFS",
 				options: $.extend(true, {
 					layerId: L.stamp(this),
+					displayName: "Incidenter",
 					xhrType: "GET",
 					attribution: "Malmö stad",
 					inputCrs: "EPSG:3008",
 					uniqueKey: "arendeId", // TODO: Check this once
 					selectable: true,
 					reverseAxis: false,
+					showInLayerSwitcher: true,
 					reverseAxisBbox: true,
 					geomType: "POINT",
 					includeParams: ["bbox"],
@@ -217,7 +219,18 @@ L.Control.MMP = L.Control.extend({
 		};
 		// t.options.layerId = L.stamp(t);
 		// t.options.displayName = t.options.layerId;
-		var layer = smap.cmd.addLayerWithConfig(t);
+		
+		var layer,
+			layerSwitcherInst = smap.cmd.getControl("LayerSwitcher");
+		if (layerSwitcherInst) {
+			var $row = layerSwitcherInst._addRow(t);
+			$row.trigger("tap");
+			layer = smap.cmd.getLayer(t.layerId);
+		}
+		else {
+			layer = smap.cmd.addLayerWithConfig(t);	
+		}
+
 		this._mmpExternalLayers.push(layer); // so that we can clear/remove layers when called again
 		
 	},

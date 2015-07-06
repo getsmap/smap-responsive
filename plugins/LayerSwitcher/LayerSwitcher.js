@@ -726,9 +726,17 @@ L.Control.LayerSwitcher = L.Control.extend({
 		var parentTag;
 		if (o.isBaseLayer) {
 			parentTag = $("#lswitch-blcont");
+			if (!parentTag.is(":visible")) {
+				// If made invisible before, show it now.
+				$(".lswitch-panel-bl").show();
+			}
 		}
 		else {
 			parentTag = $("#lswitch-olcont");
+			if (!parentTag.is(":visible")) {
+				// If made invisible before, show it now.
+				$(".lswitch-panel-ol").show();
+			}
 		}
 		if (o.category) {
 			var cats = o.category,
