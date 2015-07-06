@@ -170,12 +170,17 @@ L.Control.Editor = L.Control.extend({
 	},
 
 	_disabledRowClick: function(e) {
+		if ( $(e.target).hasClass("smap-editor-switcher-icon") ) {
+			$(".smap-editor-switcher-icon").trigger("click")
+		}
+		else {
+			$(e.target).tooltip("show");
+			setTimeout(function() {
+				$(e.target).tooltip("hide");
+			}, 2000);
+		}
 		e.stopPropagation();
 		e.preventDefault();
-		$(e.target).tooltip("show");
-		setTimeout(function() {
-			$(e.target).tooltip("hide");
-		}, 2000);
 		return false;
 	},
 
@@ -204,7 +209,7 @@ L.Control.Editor = L.Control.extend({
 			this.map.removeLayer(this._editLayer);
 		}
 		$(".lswitch-panel-ol .list-group-item")
-			.off("click", this._disabledRowClick)
+			.off("touchstart mousedown", this._disabledRowClick)
 			.removeClass("list-group-item-danger");
 		$(".lswitch-panel-ol .list-group-item").tooltip("destroy");
 
@@ -261,7 +266,7 @@ L.Control.Editor = L.Control.extend({
 				placement: "right",
 				container: "#maindiv"
 			})
-			.on("click", this._disabledRowClick);
+			.on("touchstart mousedown", this._disabledRowClick);
 		row.addClass("list-group-item-danger");
 
 		// var defaults = {

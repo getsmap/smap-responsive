@@ -463,8 +463,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 	
 	_onRowTap: function(e) {
 		var $tag = $(e.target);
-		this.onRowTap($tag);
-		return false;
+		if ($tag.hasClass("list-group-item")) {
+			this.onRowTap($tag);
+			return false;
+		}
 	},
 
 

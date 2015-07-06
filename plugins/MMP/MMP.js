@@ -205,7 +205,9 @@ L.Control.MMP = L.Control.extend({
 					reverseAxis: false,
 					reverseAxisBbox: true,
 					geomType: "POINT",
-					noParams: true,
+					includeParams: ["bbox"],
+					separator: "&",
+					// noParams: true,
 					popup: '*',
 					// noBbox: true,
 					style: {
