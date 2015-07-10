@@ -15,7 +15,7 @@ smap.core.Init = L.Class.extend({
 	_checkBrowserSupport: function() {
 		var b = utils.getBrowser();
 		if (b.ie && b.ieVersion <= 8) {
-			smap.cmd.notify("Din webbläsare är gammal och kartan kommer därför inte fungera optimalt.", "warning");
+			smap.cmd.notify("Obs! Applikationen stödjer inte din webbläsare. Använd en nyare version.", "warning");
 		}
 	},
 	
