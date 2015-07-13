@@ -163,11 +163,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			$(".lswitch-panel-ol").hide();
 		}
 
-		var b = utils.getBrowser();
-		if ( !(b.ie && !b.ieVersion <= 8) ) {
-
-		}
-		
+		// var b = utils.getBrowser();
 		if (bls.length <= 1 && ols.length === 0) {
 			// Hide all 
 			$(".lswitch-panel span").css("color", "#fff");
@@ -203,7 +199,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		if (b.ie) {
 			lp.css("position", "absolute");
 		}
-		if ( !(b.ie && !b.ieVersion <= 8) ) {
+		if ( !L.Browser.touch && !(b.ie && b.ieVersion <= 8)) {
+			// Don't attempt to hide panel if touch device or old IE.
+			// For touch devices, resize cannot be done. And "orientationchange" 
+			// will take care of closing the switcher when that happens.
 			this.hidePanel();
 		}
 	},
