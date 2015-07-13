@@ -139,13 +139,14 @@ L.Control.Editor = L.Control.extend({
 			return false;
 
 		var self = this;
-		function onClick() {
+		function onClick(e) {
 			if ($(this).parent().hasClass("list-group-item-danger")) {
 				self.stopEditing();
 			}
 			else {
 				// Initiate editing of this layer
 				var t = $(this).data("t") || {};
+				t = $.extend(true, {}, t);
 				if (t.init === "L.GeoJSON.WFS") {
 					self.startEditing(t, $(this).parent());
 				}
@@ -170,6 +171,8 @@ L.Control.Editor = L.Control.extend({
 	},
 
 	_disabledRowClick: function(e) {
+		e.stopPropagation();
+		e.preventDefault();
 		if ( $(e.target).hasClass("smap-editor-switcher-icon") ) {
 			$(".smap-editor-switcher-icon").trigger("click")
 		}
@@ -179,8 +182,6 @@ L.Control.Editor = L.Control.extend({
 				$(e.target).tooltip("hide");
 			}, 2000);
 		}
-		e.stopPropagation();
-		e.preventDefault();
 		return false;
 	},
 
@@ -209,7 +210,7 @@ L.Control.Editor = L.Control.extend({
 			this.map.removeLayer(this._editLayer);
 		}
 		$(".lswitch-panel-ol .list-group-item")
-			.off("touchstart mousedown", this._disabledRowClick)
+			.off("click", this._disabledRowClick)
 			.removeClass("list-group-item-danger");
 		$(".lswitch-panel-ol .list-group-item").tooltip("destroy");
 
@@ -266,7 +267,7 @@ L.Control.Editor = L.Control.extend({
 				placement: "right",
 				container: "#maindiv"
 			})
-			.on("touchstart mousedown", this._disabledRowClick);
+			.on("click", this._disabledRowClick);
 		row.addClass("list-group-item-danger");
 
 		// var defaults = {

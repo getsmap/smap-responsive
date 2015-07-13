@@ -33,7 +33,7 @@ L.Control.Search = L.Control.extend({
 		// // 	layerIds: ["guidelayer"],
 		// // 	suffix: "[Hus]",
 		// // 	keyVals: {
-		// // 		title: "Titel", // This first key will always be used as an identifier for a feature, when highlighting it
+		// // 		title: "Titel", // This first key will be used as an identifier for a feature, when highlighting it, so the value should be unique
 		// // 		architect: "Arkitekt",
 		// // 		byggherre: "Byggherre",
 		// // 		address: "Husadress"
@@ -43,7 +43,7 @@ L.Control.Search = L.Control.extend({
 		// 	layerIds: ["guidelayer"],
 		// 	suffix: "[Hus]",
 		// 	keyVals: {
-		// 		title: "Titel", // This first key will always be used as an identifier for a feature, when highlighting it
+		// 		title: "Titel", // This first key will be used as an identifier for a feature, when highlighting it, so the value should be unique
 		// 		architect: "Arkitekt",
 		// 		byggherre: "Byggherre",
 		// 		address: "Husadress"

@@ -99,6 +99,10 @@ L.Control.ToolHandler = L.Control.extend({
 				$thBtn.popover("hide");
 			}
 			smap.event.trigger("smap.toolhandler.hide", e);
+			$(".thandler-container .leaflet-control button").each(function() {
+				$(this).trigger("blur"); // hide tooltips
+			});
+			$(".tooltip:visible").hide(); // Hack: Force hide tooltip
 		}
 
 		function togglePopover() {

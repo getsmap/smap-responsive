@@ -170,13 +170,15 @@ L.Control.MeasureDraw = L.Control.extend({
 		this._proxyListeners();
 
 		this._initDraw();
-		this._showButtonAsDisabled = L.Browser.touch && this.options.touchShowButtonAsDisabled;
-		if (!L.Browser.touch || this._showButtonAsDisabled) {
+		var showButtonAsDisabled = L.Browser.touch && this.options.touchShowButtonAsDisabled;
+		if (!L.Browser.touch || showButtonAsDisabled) {
+			// Only create a button if tool is enabled OR if it is going to be disabled 
+			// (if touchShowButtonAsDisabled is true). Otherwise, don't show at all.
 			var $btn = this._createBtn();
-			if (this._showButtonAsDisabled) {
+			if (showButtonAsDisabled) {
+				$btn.prop("disabled", true);
 				$btn.prop("title", this.lang.btnDisabledBecauseTouch);
 				$btn.tooltip({placement: "bottom"});
-				$btn.prop("disabled", true);
 			}
 			else {
 				smap.event.on("smap.core.pluginsadded", function() {
