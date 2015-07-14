@@ -257,6 +257,7 @@ L.Control.Editor = L.Control.extend({
 			return false;
 		}
 		this._addBtnAdd();
+		self._tooltip = self._tooltip || {updatePosition: function() {}};
 
 		$(".lswitch-panel-ol .list-group-item.active").trigger("tap"); // Hide all layers
 		$(".lswitch-panel-ol .list-group-item-danger").removeClass("list-group-item-danger");
@@ -304,6 +305,10 @@ L.Control.Editor = L.Control.extend({
 		// 		popup: '${*}<div class="popup-divider"></div><div style="white-space:nowrap;min-width:18em;" class="btn-group btn-group-sm editor-popup-edit"><button id="editor-popup-edit" type="button" class="btn btn-default">'+this.lang.editProps+'</button><button id="editor-popup-move" type="button" class="btn btn-default">'+this.lang.move+'</button><button id="editor-popup-remove" type="button" class="btn btn-default">'+this.lang.remove+'</button></div>'
 		// };
 		this._editLayer = L.wfst(t.url, opts);
+		
+		// Bug fix: L.Control.Draw checks for property editing and if not present cannot reload features after undoed edit geometry.
+		this._editLayer.options.editing = this._editLayer.options.editing || {};
+
 		this._editLayer.on("wfst:savesuccess", function() {
 			smap.cmd.loading(false);
 		});
