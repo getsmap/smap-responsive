@@ -18,7 +18,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 				// Adapt extent so markers don't appear under the layer switcher.
 				o.paddingTopLeft[0] = 330;
 			}
-			return o;	
+			return o;
 		}
 
 	},
