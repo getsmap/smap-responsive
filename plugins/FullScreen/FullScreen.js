@@ -44,9 +44,15 @@ L.Control.FullScreen = L.Control.extend({
 					expTitle: l.fullExp,
 					compTitle: l.reset,
 					action: function () {
-						var elem = document.getElementById('body');
 						if (screenfull.enabled) {
-							screenfull.toggle(elem);
+							screenfull.toggle();
+
+							// Workaround because IE11 makes maindiv 0x0 px after switch to fullscreen.
+							if (navigator.userAgent.indexOf('Trident/7.') > -1) {
+								var body = $('body')[0];
+								body.style.width = screen.width + 'px';
+								body.style.height = screen.height + 'px';
+							}
 						}
 					}
 				}
