@@ -239,8 +239,6 @@ body {
   font-weight: normal;
 }
 #loadingText {
-  background-color: #fff;
-  background-color: rgba(255,255,255,0.1);
   height: 5em;
   width: 5em;
   line-height: 5em;
