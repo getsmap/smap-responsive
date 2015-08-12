@@ -168,7 +168,7 @@ L.Control.RedirectClick = L.Control.extend({
 			this.staticTooltip.remove();
 		}
 		proj4.transform(source, dest,point);
-		url = url.replace(/\${x}/g, point.x).replace(/\${y}/g, point.y);
+		url = url.replace(/\${x}/g, Math.round(point.x)).replace(/\${y}/g, Math.round(point.y));
 		window.open(url, this.lang.name);
 	},
 });
