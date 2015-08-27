@@ -267,7 +267,8 @@ L.Control.MMP = L.Control.extend({
 			success: function(resp) {
 				if (resp.success && JSON.parse(resp.success)) {
 					// Save successful
-					alert("Success, indeed yes");
+					// alert("Success, indeed yes");
+					console.log('Saved position successfully. Code: ' + resp.code + '. Msg: ' + resp.msg);
 				}
 				else {
 					alert("Could not save because "+resp.msg+". Error code: "+resp.code);
@@ -300,8 +301,8 @@ L.Control.MMP = L.Control.extend({
 		var east = p3008[0],
 			north = p3008[1];
 		this._save({
-			easting: parseInt(east),
-			northing: parseInt(north),
+			x: parseInt(east),
+			y: parseInt(north),
 			tempId: this._tempId || null
 		});
 
