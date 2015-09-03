@@ -300,11 +300,11 @@ L.Control.MMP = L.Control.extend({
 		var p3008 = utils.projectPoint(this._latLng.lng, this._latLng.lat, "EPSG:4326", "EPSG:3008");
 		var east = p3008[0],
 			north = p3008[1];
-		// this._save({
-		// 	x: parseInt(east),
-		// 	y: parseInt(north),
-		// 	tempId: this._tempId || null
-		// });
+		this._save({
+			x: parseInt(east),
+			y: parseInt(north),
+			tempId: this._tempId || null
+		});
 
 		var selectWmsInst = smap.cmd.getControl("SelectWMS");
 		if (!selectWmsInst) {
