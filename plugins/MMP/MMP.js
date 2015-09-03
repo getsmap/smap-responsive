@@ -189,7 +189,6 @@ L.Control.MMP = L.Control.extend({
 
 	_addExternalData: function(url, options) {
 		options = options || {};
-
 		var icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
 		// L.marker([55.6, 13], {icon: icon}).addTo(this.map);
 		var t = {
@@ -201,7 +200,7 @@ L.Control.MMP = L.Control.extend({
 					xhrType: "GET",
 					attribution: "Malmö stad",
 					inputCrs: "EPSG:3008",
-					uniqueKey: "arendeId", // TODO: Check this once
+					uniqueKey: "ArendeId", // TODO: Check this once
 					selectable: true,
 					reverseAxis: false,
 					showInLayerSwitcher: true,
@@ -213,7 +212,7 @@ L.Control.MMP = L.Control.extend({
 					popup: '*',
 					// noBbox: true,
 					style: {
-						icon: icon
+						// icon: icon
 					}
 				}, options)
 		};
@@ -222,14 +221,14 @@ L.Control.MMP = L.Control.extend({
 		
 		var layer,
 			layerSwitcherInst = smap.cmd.getControl("LayerSwitcher");
-		if (layerSwitcherInst) {
-			var $row = layerSwitcherInst._addRow(t);
-			$row.trigger("tap");
-			layer = smap.cmd.getLayer(t.layerId);
-		}
-		else {
+		// if (layerSwitcherInst) {
+		// 	var $row = layerSwitcherInst._addRow(t);
+		// 	$row.trigger("tap");
+		// 	layer = smap.cmd.getLayer(t.layerId);
+		// }
+		// else {
 			layer = smap.cmd.addLayerWithConfig(t);	
-		}
+		// }
 
 		this._mmpExternalLayers.push(layer); // so that we can clear/remove layers when called again
 		
@@ -243,6 +242,7 @@ L.Control.MMP = L.Control.extend({
 		if (document.domain === "localhost") {
 			// For debug
 			url = url.replace("gkkundservice.test.malmo.se", "localhost").replace("kartor.malmo.se", "localhost");
+			// url = 'http://localhost/smap-responsive/examples/data/mmpsave.json';
 		}
 		else if (document.domain === "kartor.malmo.se") {
 			// While testing, and maybe keep after deploy
@@ -300,13 +300,13 @@ L.Control.MMP = L.Control.extend({
 		var p3008 = utils.projectPoint(this._latLng.lng, this._latLng.lat, "EPSG:4326", "EPSG:3008");
 		var east = p3008[0],
 			north = p3008[1];
-		this._save({
-			x: parseInt(east),
-			y: parseInt(north),
-			tempId: this._tempId || null
-		});
+		// this._save({
+		// 	x: parseInt(east),
+		// 	y: parseInt(north),
+		// 	tempId: this._tempId || null
+		// });
 
-		/*var selectWmsInst = smap.cmd.getControl("SelectWMS");
+		var selectWmsInst = smap.cmd.getControl("SelectWMS");
 		if (!selectWmsInst) {
 			alert("MMP plugin requires plugin SelectWMS");
 			return false;
@@ -356,6 +356,12 @@ L.Control.MMP = L.Control.extend({
 			// 		delomr: "delomrade"
 			// 	}
 			// },
+			// {
+			// 	typeName: "malmows:gk_entreprenorsomr_p",
+			// 	keyVals: {
+			// 		namn: "entromrade"
+			// 	}
+			// }
 			{
 				typeName: "malmows:SMA_STADSDEL_P",
 				keyVals: {
@@ -367,44 +373,48 @@ L.Control.MMP = L.Control.extend({
 				keyVals: {
 					sdf_namn: "stadsomrade"
 				}
-			},
-			{
-				typeName: "malmows:gk_entreprenorsomr_p",
-				keyVals: {
-					namn: "entromrade"
-				}
 			}
+
 		];
 
 		// Create one deferred object for each layer to be requested.
 		// When all deferreds are done, the when-function further done 
 		// will process the resolved result from each deferred.
+
+		//TODO: Resolve and save to MMP even when user clicked outside city limits.
 		var t, defs = [];
 		for (var i=0,len=arrInfoLayers.length; i<len; i++) {
 			t = arrInfoLayers[i];
 			defs.push( $.Deferred() );
 			getFeatureInfo(t.typeName, this._latLng).done(function(resp) {
+				console.log(resp);
+				// TODO if features array < 1, delomr = null
 				var fs = resp.features || [];
 				var f = fs[0];
 				var tt, keyVals,
-					def;
+					def = defs[0];
+					// Get the correct config object by checking which request we are dealing with
+					for (var j = 0; j < arrInfoLayers.length; j++) {
+						tt = arrInfoLayers[j];
+						if(f) {
+							if (tt.typeName.split(":")[1] === f.id.split(".")[0]) {
+								keyVals = tt.keyVals;
+								def = defs[j];
+								break;
+							}
+						}
+					}	
 
-				// Get the correct config object by checking which request we are dealing with
-				for (var j = 0; j < arrInfoLayers.length; j++) {
-					tt = arrInfoLayers[j];
-					if (tt.typeName.split(":")[1] === f.id.split(".")[0]) {
-						keyVals = tt.keyVals;
-						def = defs[j];
-						break;
-					}
-				}
-				var p = f.properties,
-					out = {},
-					kv;
-				for (kv in keyVals) {
-					out[keyVals[kv]] = p[kv];
-				}
-				def.resolve(out);
+					var p = f ? f.properties : [],
+						out = {},
+						keyVals = tt.keyVals,
+						kv;
+					for (kv in keyVals) {
+						out[keyVals[kv]] = p[kv] || '';
+						}
+					
+					def.resolve(out);
+
 			}).fail(function(a, b, c) {
 				defs[i].reject({});
 			});
@@ -412,30 +422,30 @@ L.Control.MMP = L.Control.extend({
 
 		// -- Get-nearest-address deferred object --
 		
-		var dAddress = $.Deferred();  // Nearest address
-		defs.push(dAddress);
-		var wsAddressLocate = "//kartor.malmo.se/api/v1/nearest_address/";
-		wsAddressLocate = this._adaptUrl(wsAddressLocate);
+		// var dAddress = $.Deferred();  // Nearest address
+		// defs.push(dAddress);
+		// var wsAddressLocate = "//kartor.malmo.se/api/v1/nearest_address/";
+		// wsAddressLocate = this._adaptUrl(wsAddressLocate);
 
-		$.ajax({
-			url: wsAddressLocate,
-			data: {
-				e: east,
-				n: north
-			},
-			context: this,
-			dataType: "json",
-			success: function(resp) {
-				var t = resp.address[0];
-				dAddress.resolve({
-					namn: t.address
-					// address_distm: t.distance
-				});
-			},
-			error: function(a, b, c) {
-				dAddress.reject({});
-			}
-		});
+		// $.ajax({
+		// 	url: wsAddressLocate,
+		// 	data: {
+		// 		e: east,
+		// 		n: north
+		// 	},
+		// 	context: this,
+		// 	dataType: "json",
+		// 	success: function(resp) {
+		// 		var t = resp.address[0];
+		// 		dAddress.resolve({
+		// 			namn: t.address
+		// 			// address_distm: t.distance
+		// 		});
+		// 	},
+		// 	error: function(a, b, c) {
+		// 		dAddress.reject({});
+		// 	}
+		// });
 
 		// http://kartor.malmo.se:8080/geoserver/malmows/wms?service=WMS&version=1.1.0&request=GetMap&layers=malmows:gk_entreprenorsomr_p&styles=&bbox=111087.4296875,6153218.0,128122.8046875,6168696.5&width=512&height=465&srs=EPSG:3008&format=application/openlayers
 		// http://kartor.malmo.se/api/v1/gk_entreprenorsomr/?e=119139&n=6164197
@@ -445,6 +455,7 @@ L.Control.MMP = L.Control.extend({
 		// 3. Merge the requests into one. Save into MMPs service when done.
 		smap.cmd.loading(true);
 		// $.when.apply($, defs).done(function() {
+
 		$.when.apply($, defs).done(function() {
 			var data = {
 					tempId: self._tempId || null,
@@ -455,14 +466,14 @@ L.Control.MMP = L.Control.extend({
 			for (var i=0,len=arguments.length; i<len; i++) {
 				$.extend(data, arguments[i]);
 			}
-			// alert(JSON.stringify(data));
+			alert(JSON.stringify(data));
 			self._save(data);
 
 		}).always(function() {
 			smap.cmd.loading(false);
 		}).fail(function(a, b) {
 			console.log("Could not save location because: None or erroneous response from one or more services.");
-		});*/
+		});
 
 	},
 
