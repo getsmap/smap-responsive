@@ -212,7 +212,7 @@ L.Control.MMP = L.Control.extend({
 					popup: '*',
 					// noBbox: true,
 					style: {
-						// icon: icon
+						icon: icon
 					}
 				}, options)
 		};
@@ -387,7 +387,6 @@ L.Control.MMP = L.Control.extend({
 			t = arrInfoLayers[i];
 			defs.push( $.Deferred() );
 			getFeatureInfo(t.typeName, this._latLng).done(function(resp) {
-				console.log(resp);
 				// TODO if features array < 1, delomr = null
 				var fs = resp.features || [];
 				var f = fs[0];
