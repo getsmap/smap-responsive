@@ -93,15 +93,17 @@ L.Control.MMP = L.Control.extend({
 	},
 
 	onMapClick: function(e) {
-		if (this.map.getZoom() < this.options.minZoom) {
-			smap.cmd.notify(this.lang.zoomInMore, "error", {fadeOut: 5000});
-			return;
-		}
-		if (this._marker) {
-			this.map.removeLayer(this._marker);
-			this._marker = null;
-		}
-		this._addMarker(e.latlng);
+
+			if (this.map.getZoom() < this.options.minZoom) {
+				smap.cmd.notify(this.lang.zoomInMore, "error", {fadeOut: 5000});
+				return;
+			}
+			if (this._marker) {
+				this.map.removeLayer(this._marker);
+				this._marker = null;
+			}
+			this._addMarker(e.latlng);
+		
 		
 	},
 
@@ -174,6 +176,15 @@ L.Control.MMP = L.Control.extend({
 			self.onHashChange();
 		});
 
+		// this.map.on("featureclick", function(e) {
+
+		// 	console.log('deactivating');
+		// 	self._editingIsActive = false;
+		// 	// e.originalEvent.stopImmediatePropagation();
+		// 	// self.deactivateAddMarker();
+		// 	self.map.off('click', self.onMapClick);
+		// });
+
 		this._onHashChange = $.proxy(this.onHashChange, this)
 		$(window).on("hashchange", this._onHashChange);
 
@@ -212,7 +223,7 @@ L.Control.MMP = L.Control.extend({
 					popup: '*',
 					// noBbox: true,
 					style: {
-						icon: icon
+						// icon: icon
 					}
 				}, options)
 		};
@@ -256,7 +267,7 @@ L.Control.MMP = L.Control.extend({
 	_save: function(data) {
 
 		var url = this.options.wsSave;
-		url = this._adaptUrl(url);
+		// url = this._adaptUrl(url);
 		smap.cmd.loading(true);
 		$.ajax({
 			url: url,  //smap.config.ws.proxy + encodeURIComponent(url),
@@ -299,38 +310,39 @@ L.Control.MMP = L.Control.extend({
 
 		var p3008 = utils.projectPoint(this._latLng.lng, this._latLng.lat, "EPSG:4326", "EPSG:3008");
 		var east = p3008[0],
-			north = p3008[1];
-		// this._save({
-		// 	x: parseInt(east),
-		// 	y: parseInt(north),
-		// 	tempId: this._tempId || null
-		// });
+			north = p3008[1],
+			data = {
+					x: parseInt(east),
+					y: parseInt(north),
+					tempId: this._tempId || null
+			};
+		this._save(data);
 
-		var selectWmsInst = smap.cmd.getControl("SelectWMS");
-		if (!selectWmsInst) {
-			alert("MMP plugin requires plugin SelectWMS");
-			return false;
-		}
+		// var selectWmsInst = smap.cmd.getControl("SelectWMS");
+		// if (!selectWmsInst) {
+		// 	alert("MMP plugin requires plugin SelectWMS");
+		// 	return false;
+		// }
 
-		function getFeatureInfo(typeName, latLng) {
-			var wsGeoserver = "//kartor.malmo.se/geoserver/malmows/wms";
-			wsGeoserver = self._adaptUrl(wsGeoserver);
-			var wfsParams = selectWmsInst._makeParams({
-					layers: typeName,
-					version: "1.1.0", 
-					info_format: "application/json",
-					latLng: latLng,
-					srs: "EPSG:4326",
-					buffer: 1,
-					feature_count: 1
-			});
-			return $.ajax({
-				url: wsGeoserver,
-				data: wfsParams,
-				context: this,
-				dataType: "json"
-			});
-		}
+		// function getFeatureInfo(typeName, latLng) {
+		// 	var wsGeoserver = "//kartor.malmo.se/geoserver/malmows/wms";
+		// 	wsGeoserver = self._adaptUrl(wsGeoserver);
+		// 	var wfsParams = selectWmsInst._makeParams({
+		// 			layers: typeName,
+		// 			version: "1.1.0", 
+		// 			info_format: "application/json",
+		// 			latLng: latLng,
+		// 			srs: "EPSG:4326",
+		// 			buffer: 1,
+		// 			feature_count: 1
+		// 	});
+		// 	return $.ajax({
+		// 		url: wsGeoserver,
+		// 		data: wfsParams,
+		// 		context: this,
+		// 		dataType: "json"
+		// 	});
+		// }
 
 		// http://gkkundservice.test.malmo.se/KartService.svc/saveGeometry?
 		// tempId=9d6f1fd5-142b-4151-94e9-c7c95ce529ed&
@@ -349,7 +361,7 @@ L.Control.MMP = L.Control.extend({
 		// stadsomrade=S%C3%96DER&
 
 		// The requests/extractions is to be made from these layers, using given attributes.
-		var arrInfoLayers = [
+		// var arrInfoLayers = [
 			// {
 			// 	typeName: "malmows:SMA_DELOMRADE_P",
 			// 	keyVals: {
@@ -362,62 +374,62 @@ L.Control.MMP = L.Control.extend({
 			// 		namn: "entromrade"
 			// 	}
 			// }
-			{
-				typeName: "malmows:SMA_STADSDEL_P",
-				keyVals: {
-					sdfname: "stadsdel"
-				}
-			},
-			{
-				typeName: "malmows:SMA_STADSOMRADEN_P",
-				keyVals: {
-					sdf_namn: "stadsomrade"
-				}
-			}
+		// 	{
+		// 		typeName: "malmows:SMA_STADSDEL_P",
+		// 		keyVals: {
+		// 			sdfname: "stadsdel"
+		// 		}
+		// 	},
+		// 	{
+		// 		typeName: "malmows:SMA_STADSOMRADEN_P",
+		// 		keyVals: {
+		// 			sdf_namn: "stadsomrade"
+		// 		}
+		// 	}
 
-		];
+		// ];
 
 		// Create one deferred object for each layer to be requested.
 		// When all deferreds are done, the when-function further done 
 		// will process the resolved result from each deferred.
 
 		//TODO: Resolve and save to MMP even when user clicked outside city limits.
-		var t, defs = [];
-		for (var i=0,len=arrInfoLayers.length; i<len; i++) {
-			t = arrInfoLayers[i];
-			defs.push( $.Deferred() );
-			getFeatureInfo(t.typeName, this._latLng).done(function(resp) {
-				// TODO if features array < 1, delomr = null
-				var fs = resp.features || [];
-				var f = fs[0];
-				var tt, keyVals,
-					def = defs[0];
-					// Get the correct config object by checking which request we are dealing with
-					for (var j = 0; j < arrInfoLayers.length; j++) {
-						tt = arrInfoLayers[j];
-						if(f) {
-							if (tt.typeName.split(":")[1] === f.id.split(".")[0]) {
-								keyVals = tt.keyVals;
-								def = defs[j];
-								break;
-							}
-						}
-					}	
+		// var t, defs = [];
+		// for (var i=0,len=arrInfoLayers.length; i<len; i++) {
+		// 	t = arrInfoLayers[i];
+		// 	defs.push( $.Deferred() );
+		// 	getFeatureInfo(t.typeName, this._latLng).done(function(resp) {
+		// 		// TODO if features array < 1, delomr = null
+		// 		var fs = resp.features || [];
+		// 		var f = fs[0];
+		// 		var tt, keyVals,
+		// 			def = defs[0];
+		// 			// Get the correct config object by checking which request we are dealing with
+		// 			for (var j = 0; j < arrInfoLayers.length; j++) {
+		// 				tt = arrInfoLayers[j];
+		// 				if(f) {
+		// 					if (tt.typeName.split(":")[1] === f.id.split(".")[0]) {
+		// 						keyVals = tt.keyVals;
+		// 						def = defs[j];
+		// 						break;
+		// 					}
+		// 				}
+		// 			}	
 
-					var p = f ? f.properties : [],
-						out = {},
-						keyVals = tt.keyVals,
-						kv;
-					for (kv in keyVals) {
-						out[keyVals[kv]] = p[kv] || '';
-						}
+		// 			var p = f ? f.properties : [],
+		// 				out = {},
+		// 				keyVals = tt.keyVals,
+		// 				kv;
+		// 			for (kv in keyVals) {
+		// 				out[keyVals[kv]] = p[kv] || '';
+		// 				}
 					
-					def.resolve(out);
+		// 			def.resolve(out);
 
-			}).fail(function(a, b, c) {
-				defs[i].reject({});
-			});
-		}
+		// 	}).fail(function(a, b, c) {
+		// 		defs[i].reject({});
+		// 	});
+		// }
 
 		// -- Get-nearest-address deferred object --
 		
@@ -452,27 +464,27 @@ L.Control.MMP = L.Control.extend({
 
 
 		// 3. Merge the requests into one. Save into MMPs service when done.
-		smap.cmd.loading(true);
+		// smap.cmd.loading(true);
 		// $.when.apply($, defs).done(function() {
 
-		$.when.apply($, defs).done(function() {
-			var data = {
-					tempId: self._tempId || null,
-					x: parseInt(east),
-					y: parseInt(north)
-			};
-			// Extend the output object with responses from the ajax calls
-			for (var i=0,len=arguments.length; i<len; i++) {
-				$.extend(data, arguments[i]);
-			}
-			alert(JSON.stringify(data));
-			self._save(data);
+		// $.when.apply($, defs).done(function() {
+		// 	var data = {
+		// 			tempId: self._tempId || null,
+		// 			x: parseInt(east),
+		// 			y: parseInt(north)
+		// 	};
+		// 	// Extend the output object with responses from the ajax calls
+		// 	for (var i=0,len=arguments.length; i<len; i++) {
+		// 		$.extend(data, arguments[i]);
+		// 	}
+		// 	alert(JSON.stringify(data));
+		// 	self._save(data);
 
-		}).always(function() {
-			smap.cmd.loading(false);
-		}).fail(function(a, b) {
-			console.log("Could not save location because: None or erroneous response from one or more services.");
-		});
+		// }).always(function() {
+		// 	smap.cmd.loading(false);
+		// }).fail(function(a, b) {
+		// 	console.log("Could not save location because: None or erroneous response from one or more services.");
+		// });
 
 	},
 
@@ -510,28 +522,33 @@ L.Control.MMP = L.Control.extend({
 				,
 				zIndexOffset: 999
 		});
-		// marker.bindPopup(this.lang.dragMe);
-		marker.on("dragstart", function(e) {
-			e.target.closePopup();
-		});
-		marker.on("dragend", function(e) {
-			// $("#smap-mmp-btn").prop("disabled", false).tooltip({
-			// 	// title: self.lang.clickHereToSave,
-			// 	placement: "bottom"
-			// }).tooltip("show");
+		var featuresSelected = smap.cmd.getControl('SelectVector')._selectedFeatures;
+		// var featuresSelected = smap.cmd.getControl('SelectVector')._sel;
+		console.log(featuresSelected);
+		if (featuresSelected === 0) {
+			// marker.bindPopup(this.lang.dragMe);
+			marker.on("dragstart", function(e) {
+				e.target.closePopup();
+			});
+			marker.on("dragend", function(e) {
+				// $("#smap-mmp-btn").prop("disabled", false).tooltip({
+				// 	// title: self.lang.clickHereToSave,
+				// 	placement: "bottom"
+				// }).tooltip("show");
 
-			// e.target.openPopup();
-			self._latLng = e.target.getLatLng();
-		});
-		this.map.addLayer(marker);
-		// this._addSnapping(marker);
-		marker.openPopup();
-		this._marker = marker;
+				// e.target.openPopup();
+				self._latLng = e.target.getLatLng();
+			});
+			this.map.addLayer(marker);
+			// this._addSnapping(marker);
+			marker.openPopup();
+			this._marker = marker;
 
-		if (this.$btn) {
-			this.$btn.removeClass("hidden");
-			$(".alert").remove(); // Dont let a message cover the button
-		}
+			if (this.$btn) {
+				this.$btn.removeClass("hidden");
+				$(".alert").remove(); // Dont let a message cover the button
+			}
+		}	
 
 		// smap.cmd.notify(this.lang.youCanDragMeOrClick, "info");
 	}
