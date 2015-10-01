@@ -267,7 +267,7 @@ L.Control.MMP = L.Control.extend({
 	_save: function(data) {
 
 		var url = this.options.wsSave;
-		// url = this._adaptUrl(url);
+		url = this._adaptUrl(url);
 		smap.cmd.loading(true);
 		$.ajax({
 			url: url,  //smap.config.ws.proxy + encodeURIComponent(url),
@@ -316,6 +316,7 @@ L.Control.MMP = L.Control.extend({
 					y: Math.round(north),
 					tempId: this._tempId || null
 			};
+		alert('Skickar: ' + JSON.stringify(data));
 		this._save(data);
 
 		// var selectWmsInst = smap.cmd.getControl("SelectWMS");
