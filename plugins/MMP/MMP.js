@@ -312,8 +312,8 @@ L.Control.MMP = L.Control.extend({
 		var east = p3008[0],
 			north = p3008[1],
 			data = {
-					x: parseInt(east),
-					y: parseInt(north),
+					x: Math.round(east),
+					y: Math.round(north),
 					tempId: this._tempId || null
 			};
 		this._save(data);
@@ -522,10 +522,6 @@ L.Control.MMP = L.Control.extend({
 				,
 				zIndexOffset: 999
 		});
-		var featuresSelected = smap.cmd.getControl('SelectVector')._selectedFeatures;
-		// var featuresSelected = smap.cmd.getControl('SelectVector')._sel;
-		console.log(featuresSelected);
-		if (featuresSelected === 0) {
 			// marker.bindPopup(this.lang.dragMe);
 			marker.on("dragstart", function(e) {
 				e.target.closePopup();
@@ -548,7 +544,6 @@ L.Control.MMP = L.Control.extend({
 				this.$btn.removeClass("hidden");
 				$(".alert").remove(); // Dont let a message cover the button
 			}
-		}	
 
 		// smap.cmd.notify(this.lang.youCanDragMeOrClick, "info");
 	}
