@@ -223,7 +223,7 @@ L.Control.MMP = L.Control.extend({
 					popup: '*',
 					// noBbox: true,
 					style: {
-						// icon: icon
+						icon: icon
 					}
 				}, options)
 		};
