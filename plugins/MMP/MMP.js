@@ -316,7 +316,7 @@ L.Control.MMP = L.Control.extend({
 					y: Math.round(north),
 					tempId: this._tempId || null
 			};
-		alert('Skickar: ' + JSON.stringify(data));
+		console.log('Skickar: ' + JSON.stringify(data));
 		this._save(data);
 
 		// var selectWmsInst = smap.cmd.getControl("SelectWMS");
