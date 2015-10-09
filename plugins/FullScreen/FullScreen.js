@@ -2,6 +2,13 @@ L.Control.FullScreen = L.Control.extend({
 	options: {
 		position: 'topright',
 		url_root: location.origin + location.pathname + '?',
+		// fetching fs-parameter from url:
+		fs_button: (function(){
+					var s = location.search;
+					return s.substring(s.indexOf('fs') + 3)
+		})(),
+		// Control-object to add when opening new tab or replacing parent window.
+		controlToAdd: false, 
 
 		// The type of fullscreen to display: replace and newTab is most suitable for maps in an iframe. full is 'real' HTML5-fullscreen. 
 		// replace: open map in the same window, like a regular html link. newTab: open map in new tab. full: show map in fullscreen.
@@ -13,6 +20,8 @@ L.Control.FullScreen = L.Control.extend({
 		var self = this;
 		var l = this.lang;
 		switch (this.options.mode) {
+			// in case of 'replace' or 'newTab' the 'fs' parameter is included in the url. This will alter appearence and function
+			// of the button in the target page.
 			case 'replace':
 				return {
 					expand: 'fa fa-expand',
@@ -20,7 +29,7 @@ L.Control.FullScreen = L.Control.extend({
 					expTitle: l.viewLarge,
 					compTitle: l.back,
 					action: function () {
-						window.parent.location.href = smap.cmd.createParams(self.options.url_root);
+						window.parent.location.href = smap.cmd.createParams(self.options.url_root) + '&fs=back';
 					}
 				}
 				break;
@@ -28,11 +37,11 @@ L.Control.FullScreen = L.Control.extend({
 			case 'newTab':
 				return {
 					expand: 'fa fa-external-link',
-					compress: 'fa fa-compress',
+					compress: 'fa fa-times',
 					expTitle: l.newTab,
-					compTitle: l.back,
+					compTitle: l.close,
 					action: function () {
-						window.open(smap.cmd.createParams(self.options.url_root));
+						window.open(smap.cmd.createParams(self.options.url_root) + '&fs=close');
 					}
 				}
 				break;
@@ -67,6 +76,7 @@ L.Control.FullScreen = L.Control.extend({
 			fullExp: "Visa kartan i fullskärm",
 			reset: "Återställ",
 			back: 'Tillbaka',
+			close: 'Stäng kartan',
 			notAllowed: 'Helskärmsläge stöds eller tillåts inte av din webläsare. Funktionen kommer inte vara tillgänglig'
 		},
 		"en": {
@@ -75,6 +85,7 @@ L.Control.FullScreen = L.Control.extend({
 			fullExp: "Show in fullscreen",
 			reset: "Reset",
 			back: 'Go back',
+			close: 'Close the map',
 			notAllowed: 'Fullscreen mode not supported/allowed by your browser. Feature will not be available.'
 		}
 	},
@@ -89,6 +100,12 @@ L.Control.FullScreen = L.Control.extend({
 	initialize: function(options) {
 		L.setOptions(this, options);
 		this._setLang(options.langCode);
+
+		// add custom control if needed.
+		if (this.options.fs_button === 'close' || this.options.fs_button === 'back') {
+			smap.core.pluginHandlerInst.addPlugins([this.options.controlToAdd]);
+		}
+
 	},
 
 	onAdd: function(map) {  
@@ -167,10 +184,35 @@ L.Control.FullScreen = L.Control.extend({
 	},
 
 	_createBtn: function() {
-		var self = this;
-		this.$btn = $('<button id="smap-fullscreen-btn" title="' + self._properties().expTitle + '" class="btn btn-default"><span class="' + self._properties().expand + '"></span></button>');
+		// btnParams depends on fs-parameter in url.
+		var self = this,
+			btnParams = {
+			title: self._properties().expTitle,
+			icon: self._properties().expand,
+			action: self._properties().action
+		}
+		if (self.options.fs_button === 'back') {
+			btnParams = {
+				title: self._properties().compTitle,
+				icon: self._properties().compress,
+				action: function() {
+					history.back()
+				}
+			}
+		}
+		else if (self.options.fs_button === 'close') {
+			btnParams = {
+				title: self._properties().compTitle,
+				icon: self._properties().compress,
+				action: function() {
+					window.close()
+				}
+			}
+		}
+		this.$btn = $('<button id="smap-fullscreen-btn" title="' + btnParams.title + '" class="btn btn-default"><span class="' + btnParams.icon + '"></span></button>');
 		this.$btn.on("click", function () {
-			self.activate();
+			btnParams.action();
+			this.blur();
 			return false;
 		});
 		this.$container.append(this.$btn);
