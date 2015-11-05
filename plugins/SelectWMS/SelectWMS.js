@@ -531,15 +531,20 @@ L.Control.SelectWMS = L.Control.extend({
 			success: function(resp, textStatus, jqXHR) {
 				var out;
 				var info_format = params.info_format;
-				if (info_format === "text/plain") {
-					out = this._parseText(resp);
-				}
-				else if (info_format === "application/json") {
-					out = JSON.parse(resp);
+				if (typeof info_format === "function") {
+					out = info_format.call(this, resp);
 				}
 				else {
-					console.log("Info format: "+info_format+" not yet supported.");
-					return false;
+					if (info_format === "text/plain") {
+						out = this._parseText(resp);
+					}
+					else if (info_format === "application/json") {
+						out = JSON.parse(resp);
+					}
+					else {
+						console.log("Info format: "+info_format+" not yet supported.");
+						return false;
+					}
 				}
 				options.onSuccess.call(this, out, {
 					latLng: options.latLng,
