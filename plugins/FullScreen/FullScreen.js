@@ -29,6 +29,7 @@ L.Control.FullScreen = L.Control.extend({
 					expTitle: l.viewLarge,
 					compTitle: l.back,
 					action: function () {
+						document.domain = 'malmo.se';
 						window.parent.location.href = smap.cmd.createParams(self.options.url_root) + '&fs=back';
 					}
 				}
