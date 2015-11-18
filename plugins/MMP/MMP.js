@@ -200,7 +200,8 @@ L.Control.MMP = L.Control.extend({
 
 	_addExternalData: function(url, options) {
 		options = options || {};
-		var icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
+		var self = this;
+		this.icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
 		// L.marker([55.6, 13], {icon: icon}).addTo(this.map);
 		var t = {
 				url: url,
@@ -222,11 +223,20 @@ L.Control.MMP = L.Control.extend({
 					// noParams: true,
 					popup: '*',
 					// noBbox: true,
-					style: {
-						icon: icon
-					}
+					style: function(feature) {
+						// debugger
+							console.log(feature)
+
+							return {icon: L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"})};
+							// return icon
+							
+							}()
+						
+					
 				}, options)
-		};
+
+				
+			};
 		// t.options.layerId = L.stamp(t);
 		// t.options.displayName = t.options.layerId;
 		
@@ -274,6 +284,7 @@ L.Control.MMP = L.Control.extend({
 			type: "GET",
 			data: data,
 			context: this,
+			cache: false,
 			dataType: "json",
 			success: function(resp) {
 				if (resp.success && JSON.parse(resp.success)) {
