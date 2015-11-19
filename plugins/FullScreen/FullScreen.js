@@ -100,6 +100,9 @@ L.Control.FullScreen = L.Control.extend({
 
 	initialize: function(options) {
 		L.setOptions(this, options);
+		if (this.options._lang) {
+			$.extend(true, this._lang, this.options._lang);
+		}
 		this._setLang(options.langCode);
 
 		// add custom control if needed.
