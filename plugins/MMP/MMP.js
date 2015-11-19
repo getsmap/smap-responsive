@@ -200,8 +200,7 @@ L.Control.MMP = L.Control.extend({
 
 	_addExternalData: function(url, options) {
 		options = options || {};
-		var self = this;
-		this.icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
+		var icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
 		// L.marker([55.6, 13], {icon: icon}).addTo(this.map);
 		var t = {
 				url: url,
@@ -223,14 +222,9 @@ L.Control.MMP = L.Control.extend({
 					// noParams: true,
 					popup: '*',
 					// noBbox: true,
-					style: function(feature) {
-						// debugger
-							console.log(feature)
-
-							return {icon: L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"})};
-							// return icon
-							
-							}()
+					style: {
+							icon: icon
+						}
 						
 					
 				}, options)
