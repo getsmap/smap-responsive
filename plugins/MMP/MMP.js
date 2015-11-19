@@ -13,7 +13,8 @@ L.Control.MMP = L.Control.extend({
 			clickHereToSave: "Klicka här för att spara positionen",
 			dragInfo: '<div style="font-size:1.2em;"><strong style="font-size:1.3em;">Instruktioner</strong><ol style="margin:0;padding-left:1.65em;margin-top:0.5em;"><li>Zooma in i kartan så mycket som möjligt</li><li>Klicka i kartan för att markera platsen för ärendet<br />(pekskärm: peka och håll kvar fingret på en plats)</li></ol></div>',
 			youCanDragMeOrClick: "<strong>Klicka i kartan</strong> igen eller <strong>dra i markören</strong> för att ändra positionen",
-			btnSave: "Bekräfta position",
+			btnSave: "Spara aktuell position",
+			btnSaved: "Position sparad",
 			zoomInMore: "Du måste zooma in mer i kartan för att kunna lägga till markör"
 			// dragMe: '<ol><li>Dra markören till platsen som ärendet avser</li>'+
 			// 	'<li>Zooma in så långt som möjligt</li>'+
@@ -24,7 +25,8 @@ L.Control.MMP = L.Control.extend({
 			clickHereToSave: "Click here to save new position",
 			dragInfo: '<h1>Instructions</h1><ol><li>Zoom the map as much as possible</li><li>Then click once in the map to set the location of the incident</li></ol>',
 			youCanDragMeOrClick: "Click on the map again or drag the marker to adjust the location",
-			btnSave: "Confirm position",
+			btnSave: "Save current position",
+			btnSaved: "Position saved",
 			zoomInMore: "You must zoom the map more before you can add a marker"
 			// dragMe: 'Drag the marker and then press <b>"Save"</b>.'
 		}
@@ -102,6 +104,7 @@ L.Control.MMP = L.Control.extend({
 				this.map.removeLayer(this._marker);
 				this._marker = null;
 			}
+			this._toggleBtn(false);
 			this._addMarker(e.latlng);
 		
 		
@@ -297,6 +300,7 @@ L.Control.MMP = L.Control.extend({
 			},
 			complete: function() {
 				smap.cmd.loading(false);
+				this._toggleBtn(true);
 			}
 		});
 	},
@@ -497,13 +501,22 @@ L.Control.MMP = L.Control.extend({
 	_createBtn: function() {
 		var self = this;
 
-		this.$btn = $('<button id="smap-mmp-btn" class="btn btn-primary btn-lg hidden"><span class="fa fa-check"></span> '+this.lang.btnSave+'</button>');
+		this.$btn = $('<button id="smap-mmp-btn" class="btn btn-primary btn-lg hidden"> '+this.lang.btnSave+'</button>');
 		this.$btn.on("click", function (e) {
 			e.stopPropagation();
 			self.save();
 			return false;
 		});
 		$("#mapdiv").append(this.$btn);
+	},
+
+	_toggleBtn: function(state) {
+		if (state){
+			this.$btn.removeClass('btn-primary').addClass('btn-success').html('<span class="fa fa-check"></span> ' + this.lang.btnSaved)
+		}
+		else {
+			this.$btn.removeClass('btn-success').addClass('btn-primary').html(this.lang.btnSave)
+		}
 	},
 
 	// _addSnapping: function(marker) {
@@ -539,6 +552,7 @@ L.Control.MMP = L.Control.extend({
 				// }).tooltip("show");
 
 				// e.target.openPopup();
+				self._toggleBtn(false);
 				self._latLng = e.target.getLatLng();
 			});
 			this.map.addLayer(marker);
