@@ -288,6 +288,7 @@ L.Control.MMP = L.Control.extend({
 					// Save successful
 					// alert("Success, indeed yes");
 					console.log('Saved position successfully. Code: ' + resp.code + '. Msg: ' + resp.msg);
+					this._toggleBtn(true);
 				}
 				else {
 					alert("Could not save because "+resp.msg+". Error code: "+resp.code);
@@ -300,7 +301,6 @@ L.Control.MMP = L.Control.extend({
 			},
 			complete: function() {
 				smap.cmd.loading(false);
-				this._toggleBtn(true);
 			}
 		});
 	},
