@@ -136,9 +136,9 @@
     },
     "leaflet.markercluster": {
       "main": [
-        "leaflet.markercluster.js",
-        "MarkerCluster.Default.css",
-        "MarkerCluster.css"
+        "dist/leaflet.markercluster.js",
+        "dist/MarkerCluster.Default.css",
+        "dist/MarkerCluster.css"
       ]
     },
     "leaflet-usermarker": {
