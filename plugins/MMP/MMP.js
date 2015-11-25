@@ -57,6 +57,10 @@ L.Control.MMP = L.Control.extend({
 		this._bindEvents();
 		this._mmpExternalLayers = [];
 
+		this._cluster = L.markerClusterGroup([]);
+		this._bindClusterEvents(this._cluster);
+		this.map.addLayer(this._cluster);
+
 		return this._container;
 	},
 
@@ -65,6 +69,30 @@ L.Control.MMP = L.Control.extend({
 		this.$btn.empty().remove();
 
 		this._mmpExternalLayers = null;
+
+		this.map.removeLayer(this._cluster);
+
+		this.map.off("zoomend dragend", this._refreshCluster);
+		this._cluster = null;
+	},
+
+	_bindClusterEvents: function(c) {
+		this.map.on("zoomend dragend", this._refreshCluster, this);
+	},
+
+	_refreshCluster: function() {
+		var self = this;
+		var c = this._cluster;
+		this._mmpExternalLayers.forEach(function(lay) {
+			if (lay._refresh) {
+				// c.removeLayer(lay);
+				lay._map = self.map;
+				lay._refresh();
+				delete lay._map;
+				// c.addLayer(lay);
+				
+			}
+		});
 	},
 
 	activateAddMarker: function() {
@@ -226,13 +254,9 @@ L.Control.MMP = L.Control.extend({
 					popup: '*',
 					// noBbox: true,
 					style: {
-							icon: icon
-						}
-						
-					
+						icon: icon
+					}
 				}, options)
-
-				
 			};
 		// t.options.layerId = L.stamp(t);
 		// t.options.displayName = t.options.layerId;
@@ -245,12 +269,27 @@ L.Control.MMP = L.Control.extend({
 		// 	layer = smap.cmd.getLayer(t.layerId);
 		// }
 		// else {
-			layer = smap.cmd.addLayerWithConfig(t);	
-		// }
+		// layer = smap.cmd.addLayerWithConfig(t);	
+		// this.map.removeLayer(layer);
+		layer = smap.core.layerInst._createLayer(t);
+		// layer._bindEvents(this.map);
 
 		this._mmpExternalLayers.push(layer); // so that we can clear/remove layers when called again
+		var self = this;
+		layer.on("load", function(e) {
+			// self._cluster.addLayer(e.target);
+			e.target.eachLayer(function(lay) {
+				self._cluster.addLayer(lay);
+			});
+		});
+		this.map.fire("layeradd", {layer: layer, target: layer});
+		// layer._refresh();
 		
+
 	},
+
+
+
 
 	_unbindEvents: function() {
 		this.map.off("click", this.onMapClick);
