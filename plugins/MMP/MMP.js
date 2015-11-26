@@ -283,6 +283,7 @@ L.Control.MMP = L.Control.extend({
 			});
 		});
 		this.map.fire("layeradd", {layer: layer, target: layer});
+		this._refreshCluster();
 		// layer._refresh();
 		
 
