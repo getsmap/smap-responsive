@@ -143,6 +143,11 @@ smap.core.Param = L.Class.extend({
 			zoom = this.map.options.minZoom || 0;
 		}
 		if (center) {
+			if (p.CENTER.length > 2) {
+				var epsgFrom = "EPSG:"+p.CENTER[2];
+				var newCenterArr = utils.projectPoint(p.CENTER[0], p.CENTER[1], epsgFrom, "EPSG:4326");
+				center = L.latLng(newCenterArr[1], newCenterArr[0]);
+			}
 			this.map.setView(center, zoom, {animate: false});
 		}
 		else {

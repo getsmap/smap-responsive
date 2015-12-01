@@ -55,10 +55,10 @@ L.Control.BackwardCompat = L.Control.extend({
 		delete p.ADDMARKER;
 
 		var c = p.CENTER;
-		if (c && c[0] > 96000 && c[0] < 215000 && c[1] > 6000000) {
+		if (c && c[0] > 96000 && c[0] < 215000 && c[1] > 6000000 && c.length === 2) {
 			// Take care of CENTER coordinates given in EPSG:3008 (old Stadsatlas)
-			var pArr = utils.projectPoint(c[0], c[1], "EPSG:3008", "EPSG:4326");
-			p.CENTER = pArr;
+			var pArr = utils.projectPoint(Number(c[0]), Number(c[1]), "EPSG:3008", "EPSG:4326");
+			p.CENTER = pArr.concat(c.slice(2)); // Extend in case more params
 
 			// We are now assuming zoom is also using old api, so we need to convert it.
 			if (p.ZOOM !== undefined && p.ZOOM <= 6) {
