@@ -2,7 +2,7 @@
 L.Control.MMP = L.Control.extend({
 	options: {
 		position: 'bottomright',
-		// minZoom: 14,
+		minZoom: 14,
 		// forcedDomain: null,
 		wsSave: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
