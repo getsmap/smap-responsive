@@ -306,7 +306,7 @@ L.Control.MMP = L.Control.extend({
 			// While testing, and maybe keep after deploy
 			url = url
 					.replace("gkkundservice.test.malmo.se/", "kartor.malmo.se/gkkundservicedev/")
-					.replace("gkkundservice.malmo.se/", "kartor.malmo.se/gkkundservicedev/");
+					.replace("gkkundservice.malmo.se/", "kartor.malmo.se/gkkundservice/");
 		}
 		return url;
 	},
