@@ -191,7 +191,12 @@ smap.core.Layer = L.Class.extend({
 					layer.setZIndex(opts.zIndex);
 				}
 				else {
-					layer = new init(t.url, opts);
+					if (!t.url) {
+						layer = new init(opts);
+					}
+					else {
+						layer = new init(t.url, opts);
+					}
 				}
 			}
 			// For ESRI bug
