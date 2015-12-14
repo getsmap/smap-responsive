@@ -218,7 +218,14 @@ smap.core.Select = L.Class.extend({
 						lay = arr[i];
 						if (lay !== layer) {
 							if (lay.resetStyle) {
-								lay.resetStyle(lay);
+								if (lay._layers) {
+									lay.eachLayer(function(subLay) {
+										lay.resetStyle(subLay);
+									});
+								}
+								else {
+									lay.resetStyle(lay);
+								}
 							}
 							lay._selectedFeatures = [];
 						}

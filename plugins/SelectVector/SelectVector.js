@@ -213,7 +213,14 @@ L.Control.SelectVector = L.Control.extend({
 				for (var i=0,len=arr.length; i<len; i++) {
 					lay = arr[i];
 					if (lay.resetStyle && lay !== parentLayer) {
-						lay.resetStyle(lay);
+						if (lay._layers) {
+							lay.eachLayer(function(subLay) {
+								lay.resetStyle(subLay);
+							});
+						}
+						else {
+							lay.resetStyle(lay);
+						}
 					}
 				}
 			}
