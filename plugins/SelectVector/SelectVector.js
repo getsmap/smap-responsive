@@ -161,11 +161,16 @@ L.Control.SelectVector = L.Control.extend({
 	},
 	
 	_layerFromFeature: function(_f, theLay) {
-		var layersObj = theLay._layers;
+		var layersObj = theLay._layers,
+			layFid, fid;
 		for (var nbr in layersObj) {
 			var _lay = layersObj[nbr];
-			if (_lay.feature && _lay.feature.id === _f.id) {
-				return _lay;					
+			if (_lay.feature) {
+				layFid =  _lay.feature.id || _lay.feature.ID;
+				fid = _f.id || _f.ID;
+				if (layFid === fid) {
+					return _lay;
+				}
 			}
 		}
 		return null;
