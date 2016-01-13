@@ -29,7 +29,7 @@ L.Control.FullScreen = L.Control.extend({
 					expTitle: l.viewLarge,
 					compTitle: l.back,
 					action: function () {
-						document.domain = 'malmo.se';
+						// document.domain = 'malmo.se';
 						window.parent.location.href = smap.cmd.createParams(self.options.url_root) + '&fs=back';
 					}
 				}
@@ -109,6 +109,9 @@ L.Control.FullScreen = L.Control.extend({
 		if (this.options.fs_button === 'close' || this.options.fs_button === 'back') {
 			smap.core.pluginHandlerInst.addPlugins([this.options.controlToAdd]);
 		}
+		// if (this.options.forceDomain) {
+ 	// 		document.domain = this.options.forceDomain;
+ 	// 	}
 
 	},
 
