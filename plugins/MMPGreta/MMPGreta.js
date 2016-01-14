@@ -1,8 +1,9 @@
 
 L.Control.MMPGreta = L.Control.MMP.extend({
 	options: {
-		wsSave: location.protocol+"//gkvmgretaws.gkmalmo.local/test/KartService.svc/saveGeometry",
-		xhrType: "POST"
+		// wsSave: location.protocol+"//gkvmgretaws.gkmalmo.local/KartService.svc/saveGeometry",
+		wsSave: location.protocol+"//kartor.malmo.se/gkgreta/KartService.svc/saveGeometry",
+		xhrType: "GET"
 	},
 	
 	_lang: {
@@ -33,6 +34,7 @@ L.Control.MMPGreta = L.Control.MMP.extend({
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
 		this._createBtn();
+
 		return this._container;
 	},
 
@@ -40,20 +42,100 @@ L.Control.MMPGreta = L.Control.MMP.extend({
 		L.Control.MMP.prototype.onRemove.apply(this, arguments);
 	},
 
-	_adaptUrl: function(url) {
-		if (document.domain === "localhost") {
-			// For debug
-			url = url.replace("gkvmgretaws.gkmalmo.local", "localhost").replace("kartor.malmo.se", "localhost");
-			// url = 'http://localhost/smap-responsive/examples/data/mmpsave.json';
+	onHashChange: function(e, originalEvent) {
+		// Add external data
+		var hash = location.hash.substring(1);
+		var p = utils.paramsStringToObject(hash, true);
+		if (p && p.MMP_DATA) {
+			// // Get URLs as an array
+			// var urls = p.MMP_DATA instanceof Array ? p.MMP_DATA : p.MMP_DATA.split(","), //.split(";"),
+			// 	url;
+			
+			var url = p.MMP_DATA;
+
+			url = this._adaptUrl(url);
+
+			url = decodeURIComponent(url);
+			this._counterLayerId = this._counterLayerId || 0;
+			this._clearExternalData();
+			
+			this._counterLayerId += 1;
+
+			var options = $.extend({
+					layerId: "mmp-extlayer-"+this._counterLayerId
+				}, this.options.externalDataLayerOptions);
+			this._addExternalData(url, {
+				reverseAxis: true
+			});
 		}
-		// else if (document.domain === "kartor.malmo.se") {
-		// 	// While testing, and maybe keep after deploy
-		// 	url = url
-		// 			.replace("gkvmgretaws.gkmalmo.local/", "kartor.malmo.se/gkkundservicedev/")
-		// 			.replace("gkkundservice.malmo.se/", "kartor.malmo.se/gkkundservice/");
-		// }
-		return url;
 	},
+
+	_adaptUrl: function(url) {
+		if (!url || !url.length || !(typeof url === "string")) {
+			return url;
+		}
+		switch(document.domain) {
+			case "localhost":
+				return url.replace("kartor.malmo.se", "localhost");
+			case "kartor.malmo.se":
+				return url;
+			default:
+				return url;
+
+		}
+	},
+
+	save: function() {
+		var self = this;
+		// var p = this.map.getCenter();
+
+		// setTimeout(function() {
+		// 	var data = {easting: self._latLng.lng, northing: self._latLng.lat};
+		// 	parent.$("body").trigger("smap:updatedata", data);
+		// 	smap.cmd.loading(false);
+		// }, 1000);
+
+		// -- Create params --
+
+		var p3008 = utils.projectPoint(this._latLng.lng, this._latLng.lat, "EPSG:4326", "EPSG:3008");
+		var east = p3008[0],
+			north = p3008[1];
+
+		
+		east = Math.round(east);
+		north = Math.round(north);
+		var tempId = this._tempId || null;
+
+		var geoJson = {
+				type: "FeatureCollection",
+				features: [
+					{
+						geometry: {
+							coordinates: [east, north],	// <= The coordinates resulting from user interaction with the marker
+							type: "Point"
+						},
+						properties: {
+							ArendeId: self._tempId,		// <= The ID from parameter MMP_ID
+							Aktiv: "true"
+						},
+						type: "Feature"
+					}
+				],
+				crs: {
+					properties: {
+						name: "EPSG:3008",
+						code: "3008"
+					},
+					type: "Name"
+				}
+		};
+
+		console.log('Skickar: ' + JSON.stringify(geoJson));
+		this._save(JSON.stringify(geoJson), {
+			contentType: "text/plain; charset=utf-8"
+		});
+	}
+
 
 	// _createBtn: function() {
 	// 	var self = this;
