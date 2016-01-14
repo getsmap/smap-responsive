@@ -2,6 +2,10 @@ smap.core.Param = L.Class.extend({
 	
 	initialize: function(map) {
 		this.map = map;
+
+		$(window).on("hashchange", function(e) {
+			smap.event.trigger("hashchange", e);
+		});
 	},
 	
 	_lang: {
