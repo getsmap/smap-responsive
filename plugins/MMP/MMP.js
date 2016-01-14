@@ -3,6 +3,7 @@ L.Control.MMP = L.Control.extend({
 	options: {
 		position: 'bottomright',
 		minZoom: 14,
+		externalDataLayerOptions: null,
 		// forcedDomain: null,
 		wsSave: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
@@ -138,7 +139,7 @@ L.Control.MMP = L.Control.extend({
 		
 	},
 
-	onHashChange: function(e) {
+	onHashChange: function(e, originalEvent) {
 		// Add external data
 		var hash = location.hash.substring(1);
 		var p = utils.paramsStringToObject(hash, true);
@@ -148,14 +149,19 @@ L.Control.MMP = L.Control.extend({
 			// 	url;
 			
 			var url = p.MMP_DATA;
+
+			url = this._adaptUrl(url);
+
 			url = decodeURIComponent(url);
 			this._counterLayerId = this._counterLayerId || 0;
 			this._clearExternalData();
 			
 			this._counterLayerId += 1;
-			this._addExternalData(url, {
-				layerId: "mmp-extlayer-"+this._counterLayerId
-			});
+
+			var options = $.extend({
+					layerId: "mmp-extlayer-"+this._counterLayerId
+				}, this.options.externalDataLayerOptions);
+			this._addExternalData(url, options);
 		}
 	},
 
@@ -216,8 +222,7 @@ L.Control.MMP = L.Control.extend({
 		// 	self.map.off('click', self.onMapClick);
 		// });
 
-		this._onHashChange = $.proxy(this.onHashChange, this)
-		$(window).on("hashchange", this._onHashChange);
+		smap.event.on("hashchange", this.onHashChange.bind(this));
 
 	},
 
@@ -239,7 +244,7 @@ L.Control.MMP = L.Control.extend({
 				options: $.extend(true, {
 					layerId: L.stamp(this),
 					displayName: "Incidenter",
-					xhrType: "GET",
+					xhrType: this.options.xhrType ? this.options.xhrType : "GET",
 					attribution: "Malmö stad",
 					inputCrs: "EPSG:3008",
 					uniqueKey: "ArendeId", // TODO: Check this once
@@ -250,7 +255,7 @@ L.Control.MMP = L.Control.extend({
 					geomType: "POINT",
 					includeParams: ["bbox"],
 					separator: "&",
-					// noParams: true,
+					noParams: options.noParams || false,
 					popup: '*',
 					// noBbox: true,
 					style: {
@@ -297,9 +302,15 @@ L.Control.MMP = L.Control.extend({
 	},
 
 	_adaptUrl: function(url) {
+		if (!url || !url.length || !(typeof url === "string")) {
+			return url;
+		}
 		if (document.domain === "localhost") {
 			// For debug
-			url = url.replace("gkkundservice.test.malmo.se", "localhost").replace("kartor.malmo.se", "localhost");
+			url = url
+						.replace("gkkundservice.malmo.se", "localhost/gkkundservicedev")
+						.replace("gkkundservice.test.malmo.se", "localhost/gkkundservicedev")
+						.replace("kartor.malmo.se", "localhost");
 			// url = 'http://localhost/smap-responsive/examples/data/mmpsave.json';
 		}
 		else if (document.domain === "kartor.malmo.se") {
@@ -311,14 +322,14 @@ L.Control.MMP = L.Control.extend({
 		return url;
 	},
 
-	_save: function(data) {
+	_save: function(data, xhrOptions) {
 
 		var url = this.options.wsSave;
 		url = this._adaptUrl(url);
 		smap.cmd.loading(true);
-		$.ajax({
+		$.ajax($.extend({
 			url: url,  //smap.config.ws.proxy + encodeURIComponent(url),
-			type: "GET",
+			type: "POST",
 			data: data,
 			context: this,
 			cache: false,
@@ -342,7 +353,7 @@ L.Control.MMP = L.Control.extend({
 			complete: function() {
 				smap.cmd.loading(false);
 			}
-		});
+		}, xhrOptions));
 	},
 
 	save: function() {
