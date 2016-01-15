@@ -125,17 +125,16 @@ L.Control.MMP = L.Control.extend({
 
 	onMapClick: function(e) {
 
-			if (this.map.getZoom() < this.options.minZoom) {
-				smap.cmd.notify(this.lang.zoomInMore, "error", {fadeOut: 5000});
-				return;
-			}
-			if (this._marker) {
-				this.map.removeLayer(this._marker);
-				this._marker = null;
-			}
-			this._toggleBtn(false);
-			this._addMarker(e.latlng);
-		
+		if (this.map.getZoom() < this.options.minZoom) {
+			smap.cmd.notify(this.lang.zoomInMore, "error", {fadeOut: 5000});
+			return;
+		}
+		if (this._marker) {
+			this.map.removeLayer(this._marker);
+			this._marker = null;
+		}
+		this._toggleBtn(false);
+		this._addMarker(e.latlng);
 		
 	},
 
@@ -329,7 +328,7 @@ L.Control.MMP = L.Control.extend({
 		smap.cmd.loading(true);
 		$.ajax($.extend({
 			url: url,  //smap.config.ws.proxy + encodeURIComponent(url),
-			type: "POST",
+			type: "GET",
 			data: data,
 			context: this,
 			cache: false,
