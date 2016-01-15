@@ -132,7 +132,8 @@ L.Control.MMPGreta = L.Control.MMP.extend({
 
 		console.log('Skickar: ' + JSON.stringify(geoJson));
 		this._save(JSON.stringify(geoJson), {
-			contentType: "text/plain; charset=utf-8"
+			contentType: "text/plain; charset=utf-8",
+			type: "POST"
 		});
 	}
 
