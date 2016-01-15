@@ -199,7 +199,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		if (b.ie) {
 			lp.css("position", "absolute");
 		}
-		if ( !L.Browser.touch && !(b.ie && b.ieVersion <= 8)) {
+		if ( !utils.isTouchOnly() && !(b.ie && b.ieVersion <= 8)) {
 			// Don't attempt to hide panel if touch device or old IE.
 			// For touch devices, resize cannot be done. And "orientationchange" 
 			// will take care of closing the switcher when that happens.
@@ -228,7 +228,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		var showPanel = $.proxy(this.showPanel, this),
 			hidePanel = $.proxy(this.hidePanel, this);
 		
-		if (L.Browser.touch) {
+		if (utils.isTouchOnly()) {
 			$(window).on("orientationchange", function() {
 				if (self.$panel.is(":visible")) {
 					hidePanel();
@@ -715,7 +715,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		row.on("tap", this.__onRowTap);
 		row.data("t", t); // Faster to fetch than fetching from config on click
 		
-		if (o.legend && !(L.Browser.touch && $(window).width() < this.options.pxDesktop)) {
+		if (o.legend && !(utils.isTouchOnly() && $(window).width() < this.options.pxDesktop)) {
 			this._addLegend(row, o.legend);
 		}
 		if (o.dialog) {

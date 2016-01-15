@@ -499,7 +499,7 @@ L.Control.Helper = L.Control.extend({
 			}
 			this._showHelperTimeout = setTimeout(function() {
 				self._$clickTip.addClass("smap-helper-fadein");
-				if (!L.Browser.touch && !self._helperPopoverShownOnce) {
+				if (!utils.isTouchOnly() && !self._helperPopoverShownOnce) {
 					self._helperPopoverShownOnce = true;
 					$(".smap-helper-clicktip").popover({
 						// title: "Tip!",

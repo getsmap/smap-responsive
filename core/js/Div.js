@@ -17,6 +17,7 @@ smap.core.Div = L.Class.extend({
 		}
 		
 		// Fix things after orientation change.
+		var isTouchOnly = utils.isTouchOnly();
 		if (L.Browser.touch) {
 			$(window).on("orientationchange", function() {
 				window.scrollTo(0,0);

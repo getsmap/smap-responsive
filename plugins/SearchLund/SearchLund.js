@@ -111,7 +111,7 @@ L.Control.SearchLund = L.Control.extend({
 		function activate() {
 			// Note! This is the breakpoint for small devices
 			var w = $(window).width();
-			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
+			if ( w >= self.options.pxDesktop || !utils.isTouchOnly()) {
 				return;
 			}
 
@@ -128,7 +128,7 @@ L.Control.SearchLund = L.Control.extend({
 		};
 		function deactivate() {
 			var w = $(window).width();
-			if ( w >= self.options.pxDesktop || !L.Browser.touch) {
+			if ( w >= self.options.pxDesktop || !utils.isTouchOnly()) {
 				return;
 			}
 			$searchDiv.removeClass("searchlund-active");

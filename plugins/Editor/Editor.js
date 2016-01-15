@@ -119,7 +119,7 @@ L.Control.Editor = L.Control.extend({
 					drawToolbar.handler.enable();
 				}
 				else {
-					if (L.Browser.touch && drawToolbar.handler.type && drawToolbar.handler.type === "marker") {
+					if (utils.isTouchOnly() && drawToolbar.handler.type && drawToolbar.handler.type === "marker") {
 						// Disable hack
 						self.map.off("click", self._onTouchHold, self);
 						$("#smap-editor-uglyhackconfirm").remove();

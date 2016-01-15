@@ -366,7 +366,7 @@ smap.core.Select = L.Class.extend({
 							row = $('<a href="#" class="list-group-item"><span><strong>'+theSf.options.displayName+'</strong>'+pText+'</span>'+
 								'<div class="btn btn-success select-btn-zoom-to-feature">Zooma hit</div></a>');
 							row.data("index", i);
-							if (L.Browser.touch) {
+							if (utils.isTouchOnly()) {
 								row.addClass("select-row-touch");
 							}
 							bContent.append(row);

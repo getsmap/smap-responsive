@@ -306,7 +306,7 @@
 			}
 
 
-			var clickEvent = L.Browser.touch ? "tap" : "click";
+			var clickEvent = utils.isTouchOnly() ? "tap" : "click";
 			$.get(src, function(html) {
 				html = utils.extractToHtml(html, self.lang);
 				self._modal = utils.drawDialog(self.lang.mTitle, html);

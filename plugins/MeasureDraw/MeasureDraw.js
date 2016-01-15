@@ -171,10 +171,10 @@ L.Control.MeasureDraw = L.Control.extend({
 
 		this._initDraw();
 
-		this._isATouchOnlyDevice = !(!L.Browser.touch && !L.Browser.msTouch);
+		this._isTouchOnly = utils.isTouchOnly();
 
-		var showButtonAsDisabled = this._isATouchOnlyDevice && this.options.touchShowButtonAsDisabled;
-		if (!this._isATouchOnlyDevice || showButtonAsDisabled) {
+		var showButtonAsDisabled = this._isTouchOnly && this.options.touchShowButtonAsDisabled;
+		if (!this._isTouchOnly || showButtonAsDisabled) {
 			// Only create a button if tool is enabled OR if it is going to be disabled 
 			// (if touchShowButtonAsDisabled is true). Otherwise, don't show at all.
 			var $btn = this._createBtn();
@@ -615,7 +615,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		var className = "leaflet-maplabel "+fidClass;
 
 
-		if (this._isATouchOnlyDevice) {
+		if (this._isTouchOnly) {
 			
 		}
 		else {

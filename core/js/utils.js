@@ -11,6 +11,10 @@ var utils = {
 			}
 		},
 
+		isTouchOnly: function() {
+			return !(!L.Browser.touch && !L.Browser.msTouch);
+		},
+
 		capitalize: function(theString) {
 			return theString.charAt(0).toUpperCase() + theString.slice(1);
 		},

@@ -100,7 +100,7 @@ L.Control.MMP = L.Control.extend({
 		this._editingIsActive = true;
 		this._createBtn();
 		var eventName;
-		if (L.Browser.touch) {
+		if (utils.isTouchOnly()) {
 			eventName = "contextmenu";
 		}
 		else {
@@ -112,7 +112,7 @@ L.Control.MMP = L.Control.extend({
 	deactivateAddMarker: function() {
 		this._editingIsActive = false;
 		var eventName;
-		if (L.Browser.touch) {
+		if (utils.isTouchOnly()) {
 			eventName = "contextmenu";
 		}
 		else {
