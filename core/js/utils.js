@@ -12,7 +12,7 @@ var utils = {
 		},
 
 		isTouchOnly: function() {
-			return !(!L.Browser.touch && !L.Browser.msTouch);
+			return L.Browser.touch && (L.Browser.ie ? L.Browser.msTouch : true);
 		},
 
 		capitalize: function(theString) {
