@@ -237,8 +237,8 @@ smap.core.Param = L.Class.extend({
 		if (p.GEOJSON) {
 			var pGeoJson = p.GEOJSON instanceof Array ? p.GEOJSON : p.GEOJSON.split(",");
 			var url = decodeURIComponent(pGeoJson[0]);
-			var doClustering = pGeoJson.length > 1 ? (pGeoJson[1].toString().toUpperCase() === "FALSE" ? false : true) : true;
-			this._loadGeoJson(url, doClustering);
+			var noClustering = pGeoJson.length > 1 ? (pGeoJson[1].toString().toUpperCase() === "TRUE" ? true : false) : false;
+			this._loadGeoJson(url, !noClustering);
 		}
 	},
 	

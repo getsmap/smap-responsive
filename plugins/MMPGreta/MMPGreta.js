@@ -1,5 +1,5 @@
 
-L.Control.MMPGreta = L.Control.MMP.extend({
+L.Control.MMPGreta = L.Control.extend({
 	options: {
 		// wsSave: location.protocol+"//gkvmgretaws.gkmalmo.local/KartService.svc/saveGeometry",
 		wsSave: location.protocol+"//kartor.malmo.se/gkgreta/KartService.svc/saveGeometry",
@@ -16,11 +16,8 @@ L.Control.MMPGreta = L.Control.MMP.extend({
 	},
 
 	initialize: function(options) {
-		L.Control.MMP.prototype.initialize.apply(this, arguments);
 		L.setOptions(this, options);
-		this._lang = $.extend(true, L.Control.MMP.prototype._lang, this._lang);
 		if (options._lang) {
-
 			// Always allow setting lang through options
 			$.extend(true, this._lang, options._lang);
 		}
@@ -40,34 +37,6 @@ L.Control.MMPGreta = L.Control.MMP.extend({
 
 	onRemove: function(map) {
 		L.Control.MMP.prototype.onRemove.apply(this, arguments);
-	},
-
-	onHashChange: function(e, originalEvent) {
-		// Add external data
-		var hash = location.hash.substring(1);
-		var p = utils.paramsStringToObject(hash, true);
-		if (p && p.MMP_DATA) {
-			// // Get URLs as an array
-			// var urls = p.MMP_DATA instanceof Array ? p.MMP_DATA : p.MMP_DATA.split(","), //.split(";"),
-			// 	url;
-			
-			var url = p.MMP_DATA;
-
-			url = this._adaptUrl(url);
-
-			url = decodeURIComponent(url);
-			this._counterLayerId = this._counterLayerId || 0;
-			this._clearExternalData();
-			
-			this._counterLayerId += 1;
-
-			var options = $.extend({
-					layerId: "mmp-extlayer-"+this._counterLayerId
-				}, this.options.externalDataLayerOptions);
-			this._addExternalData(url, {
-				reverseAxis: true
-			});
-		}
 	},
 
 	_adaptUrl: function(url) {
