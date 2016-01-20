@@ -3,9 +3,12 @@ smap.core.Param = L.Class.extend({
 	initialize: function(map) {
 		this.map = map;
 
-		$(window).on("hashchange", function(e) {
-			smap.event.trigger("hashchange", e);
-		});
+		$(window).on("hashchange", (function(e) {
+			var p = this._getHashAsObject();
+			p._originalEvent = e;
+			smap.event.trigger("hashchange", p);
+		}).bind(this)  );
+		smap.event.on("hashchange", this._onHashChange.bind(this));
 	},
 	
 	_lang: {
@@ -37,8 +40,14 @@ smap.core.Param = L.Class.extend({
 				this._cachedParams = paramsObject;
 			}
 		}
-
 		return paramsObject;
+	},
+
+	_getHashAsObject: function(hash) {
+		hash = hash || location.hash.substring(1);
+
+		var p = utils.paramsStringToObject(hash, true);
+		return p;
 	},
 
 	/**
@@ -131,6 +140,107 @@ smap.core.Param = L.Class.extend({
 		}
 		return pString;
 	},
+
+	_loadGeoJson: function(url, doClustering) {
+		// Allows map caller to add external GeoJSON data using a parameter
+
+		doClustering = doClustering === false ? false : true;
+
+		var layer = this._geoJsonLayer,
+			cluster = this._cluster;
+
+
+		if (cluster) {
+			cluster.clearLayers();
+		}
+		if (layer) {
+			layer.clearLayers();
+			layer._featureIndexes = [];
+			layer.getFeatureUrl = url;
+		}
+		if (!layer) {
+			// Create a layer
+			var layerConfig = {
+					url: url,
+					init: "L.GeoJSON.WFS",
+					options: {
+						layerId: L.stamp(this),
+						displayName: "External data",
+						xhrType: "GET",
+						attribution: "",
+						inputCrs: "EPSG:4326",
+						uniqueKey: "id", // Important! This must be set
+						selectable: true,
+						reverseAxis: false,
+						reverseAxisBbox: false,
+						showInLayerSwitcher: true,
+						geomType: "POINT",
+						includeParams: ["bbox"],
+						separator: "&",
+						noParams: false, // set to true if u don't want to request service again on drag and zoom
+						popup: '*',
+						style: {
+							icon: L.AwesomeMarkers.icon({icon: "circle", markerColor: 'blue', prefix: "fa"})
+						}
+					}
+			};
+
+			// Allow overriding layer options through an smap option.
+			layerConfig.options = $.extend(true, layerConfig.options, smap.core.mainConfig.smapOptions.externalJsonOptions);
+
+			// Let the plugins have the last word if they want to override something
+			smap.event.trigger("smap.core.createjsonlayer", layerConfig.options);
+			layer = smap.core.layerInst._createLayer(layerConfig);
+			this._geoJsonLayer = layer;
+		}
+
+
+		// smap.event.trigger("smap.core.beforeaddjsonlayer", layer);
+
+		if (doClustering) {
+			if (!cluster) {
+				cluster = L.markerClusterGroup();
+				this._cluster = cluster;
+				this.map.addLayer(cluster);
+				
+				function refreshLayer() {
+					if (this._prevZoom && this._prevZoom < this.map.getZoom()) {
+						this._prevZoom = this.map.getZoom();
+						return;
+					}
+					this._prevZoom = this.map.getZoom();
+					layer._map = smap.map;
+					layer._refresh();
+					delete layer._map;
+				}
+				function onLoad(e) {
+					e.target.eachLayer(function(lay) {
+						cluster.addLayer(lay);
+					});
+				}
+				this.map.fire("layeradd", {layer: layer, target: layer}); // Enables select and other core functionality
+				layer.on("load", onLoad);
+				this.map.on("zoomend dragend", refreshLayer.bind(this));
+			}
+			refreshLayer.call(this);
+		}
+		else {
+			this.map.addLayer(layer);
+			layer._refresh();
+		}
+
+		smap.event.trigger("smap.core.addedjsonlayer", [layer, cluster]);
+		
+	},
+
+	_onHashChange: function(e, p) {
+		if (p.GEOJSON) {
+			var pGeoJson = p.GEOJSON instanceof Array ? p.GEOJSON : p.GEOJSON.split(",");
+			var url = decodeURIComponent(pGeoJson[0]);
+			var doClustering = pGeoJson.length > 1 ? (pGeoJson[1].toString().toUpperCase() === "FALSE" ? false : true) : true;
+			this._loadGeoJson(url, doClustering);
+		}
+	},
 	
 	applyParams: function(p) {
 		p = p || {};
@@ -196,6 +306,10 @@ smap.core.Param = L.Class.extend({
 				this.map.off("popupopen", onPopupOpen).on("popupopen", onPopupOpen);
 				marker.bindPopup(html).openPopup();
 			}
+		}
+		var hash = paramsObject._hash = this._getHashAsObject();
+		if (hash) {
+			this._onHashChange(null, hash);
 		}
 		
 		smap.event.trigger("smap.core.applyparams", p);
