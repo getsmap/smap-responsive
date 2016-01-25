@@ -24,13 +24,19 @@ L.Control.MMPGreta = L.Control.extend({
 		this._setLang(options.langCode);
 	},
 
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode;
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;			
+		}
+	},
+
 	onAdd: function(map) {
-		L.Control.MMP.prototype.onAdd.apply(this, arguments);
 		this.map = map;
 		this._container = L.DomUtil.create('div', 'leaflet-control-MMPGreta'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
-		this._createBtn();
+		// this._createBtn();
 
 		return this._container;
 	},
