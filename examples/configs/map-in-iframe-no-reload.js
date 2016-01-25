@@ -63,7 +63,7 @@ var config = {
 		bl: [	
 		{
 				init: "L.TileLayer.WMS",
-				url: "http://kartor.malmo.se/arcgis/services/malmokarta_3857_wms/MapServer/WMSServer",
+				url: "http://kartor.malmo.se/arcgis/services/atlaskarta_3857_wms/MapServer/WMSServer",
 				options: {
 					layerId: "stadskartan",
 					displayName: "Stadskarta",
@@ -80,7 +80,7 @@ var config = {
 					zIndex: 50
 					// printLayer: {
 					// 	init: "L.TileLayer.WMS",
-					// 	url: "http://kartor.malmo.se/arcgis/services/malmokarta_3857_wms/MapServer/WMSServer",
+					// 	url: "http://kartor.malmo.se/arcgis/services/atlaskarta_3857_wms/MapServer/WMSServer",
 					// 	options: {
 					// 		layers: '0',
 					// 		format: 'image/png',

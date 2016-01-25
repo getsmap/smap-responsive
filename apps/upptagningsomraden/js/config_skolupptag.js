@@ -38,7 +38,7 @@ var config = {
 
 		{
 			init: "L.TileLayer.WMS",
-			url: "http://kartor.malmo.se/arcgis/services/malmokarta_3857_wms/MapServer/WMSServer",
+			url: "http://kartor.malmo.se/arcgis/services/malmoatlas_3857_wms/MapServer/WMSServer",
 			options: {
 				layerId: "stadskartan",
 				displayName: "Stadskarta",
