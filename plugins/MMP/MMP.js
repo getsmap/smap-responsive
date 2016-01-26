@@ -1,6 +1,12 @@
 
 L.Control.MMP = L.Control.extend({
 	options: {
+		iconColors: { // Available colors: 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+			Registrerat: 'orange',
+			Pågående: 'cadetblue',
+			Vidarebefordrat: 'darkpurple',
+			Åtgärdat:  'green'
+		},
 		position: 'bottomright',
 		minZoom: 14,
 		externalDataLayerOptions: null,
@@ -235,7 +241,7 @@ L.Control.MMP = L.Control.extend({
 
 	_addExternalData: function(url, options) {
 		options = options || {};
-		var icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
+		// var icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
 		// L.marker([55.6, 13], {icon: icon}).addTo(this.map);
 		var t = {
 				url: url,
@@ -256,10 +262,18 @@ L.Control.MMP = L.Control.extend({
 					separator: "&",
 					noParams: options.noParams || false,
 					popup: '*',
-					// noBbox: true,
-					style: {
-						icon: icon
-					}
+					pointToLayer: function (feat, latlng) {
+
+						var markerIcon = L.AwesomeMarkers.icon({
+						    icon: 'warning',
+						    prefix: 'fa',
+						    markerColor: self.options.iconColors[feat.properties.Status] || 'white'
+						  });
+
+				        return L.marker(latlng, {icon: markerIcon});
+				    }
+					
+					
 				}, options)
 			};
 		// t.options.layerId = L.stamp(t);
