@@ -1,8 +1,6 @@
 sMap-responsive
 ===========
 
-<img src="https://kartor.malmo.se/rest/resources/smap/smap-responsive-demo.gif" width="600" />
-
 ###Examples
 - [Malmö Stadsatlas (City Map of Malmö)](http://kartor.malmo.se/init/?appid=stadsatlas-v1&lang=en)
 - [Guided tour](http://kartor.malmo.se/init/?appid=tema_vh-v1&lang=en) for pedestrians in Western Harbour, Malmö (and [more tours](http://malmo.se/kartor/promenadstaden/))
