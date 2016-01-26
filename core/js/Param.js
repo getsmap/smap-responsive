@@ -141,10 +141,11 @@ smap.core.Param = L.Class.extend({
 		return pString;
 	},
 
-	_loadGeoJson: function(url, doClustering) {
+	_loadGeoJson: function(url, doClustering, zoomToExtent) {
 		// Allows map caller to add external GeoJSON data using a parameter
 
 		doClustering = doClustering === false ? false : true;
+		zoomToExtent = zoomToExtent || false;
 
 		var layer = this._geoJsonLayer,
 			cluster = this._cluster;
@@ -219,7 +220,7 @@ smap.core.Param = L.Class.extend({
 					});
 				}
 				this.map.fire("layeradd", {layer: layer, target: layer}); // Enables select and other core functionality
-				layer.on("load", onLoad);
+				layer.on("load", onLoad.bind(this));
 				this.map.on("zoomend dragend", refreshLayer.bind(this));
 			}
 			refreshLayer.call(this);
@@ -227,6 +228,14 @@ smap.core.Param = L.Class.extend({
 		else {
 			this.map.addLayer(layer);
 			layer._refresh();
+		}
+		if (zoomToExtent === true) {
+			function funcZoomToExtent(e) {
+				var b = e.target.getBounds();
+				this.map.fitBounds(b);
+			}
+			layer.on("load", funcZoomToExtent.bind(this));
+
 		}
 
 		smap.event.trigger("smap.core.addedjsonlayer", [layer, cluster]);
@@ -238,7 +247,8 @@ smap.core.Param = L.Class.extend({
 			var pGeoJson = p.GEOJSON instanceof Array ? p.GEOJSON : p.GEOJSON.split(",");
 			var url = decodeURIComponent(pGeoJson[0]);
 			var noClustering = pGeoJson.length > 1 ? (pGeoJson[1].toString().toUpperCase() === "TRUE" ? true : false) : false;
-			this._loadGeoJson(url, !noClustering);
+			var zoomToExtent = pGeoJson.length > 2 ? (pGeoJson[2].toString().toUpperCase() === "TRUE" ? true : false) : false;
+			this._loadGeoJson(url, !noClustering, zoomToExtent);
 		}
 	},
 	
