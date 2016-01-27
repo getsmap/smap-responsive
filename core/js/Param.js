@@ -56,7 +56,9 @@ smap.core.Param = L.Class.extend({
 	 */
 	getWebParamsAsObject: function(sep) {
 		sep = sep || "?";
-		var p = location.href.split(sep);
+
+		var href = location.href;
+		var p = href.substring(0, href.indexOf("#")).split(sep);
 		var pString = p.length > 1 ? p[1] : "";
 		paramsObject = utils.paramsStringToObject(pString, true);
 		return paramsObject;
@@ -175,7 +177,7 @@ smap.core.Param = L.Class.extend({
 						reverseAxis: false,
 						reverseAxisBbox: false,
 						showInLayerSwitcher: true,
-						geomType: "POINT",
+						// geomType: "POINT",
 						includeParams: ["bbox"],
 						separator: "&",
 						noParams: false, // set to true if u don't want to request service again on drag and zoom
@@ -233,8 +235,10 @@ smap.core.Param = L.Class.extend({
 			function funcZoomToExtent(e) {
 				var b = e.target.getBounds();
 				this.map.fitBounds(b);
+				layer.off("load", _funcZoomToExtent); // only zoom to extent once
 			}
-			layer.on("load", funcZoomToExtent.bind(this));
+			var _funcZoomToExtent = funcZoomToExtent.bind(this);
+			layer.on("load", _funcZoomToExtent);
 
 		}
 
