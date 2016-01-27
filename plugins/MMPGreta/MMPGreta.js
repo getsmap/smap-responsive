@@ -8,10 +8,20 @@ L.Control.MMPGreta = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			btnLabel: "Ett exempel"
+			addPoint: "Rita punkt",
+			addPolyline: "Rita linje",
+			addPolygon: "Rita yta",
+			remove: "Ta bort",
+			edit: "Redigera",
+			save: "Spara"
 		},
 		"en": {
-			btnLabel: "An example"
+			addPoint: "Draw point",
+			addPolyline: "Draw line",
+			addPolygon: "Draw polygon",
+			remove: "Remove",
+			edit: "Edit",
+			save: "Save"
 		}
 	},
 
@@ -36,14 +46,51 @@ L.Control.MMPGreta = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'leaflet-control-MMPGreta'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
+		this._bindEvents();
+
+		this._tools = {};
+
 		// this._createBtn();
 
 		return this._container;
 	},
 
-	onRemove: function(map) {
-		L.Control.MMP.prototype.onRemove.apply(this, arguments);
+	_bindEvents: function() {
+		smap.event.on("smap.core.beforeapplyparams", (function(e, p) {
+			// self._snapLayer = smap.cmd.getLayer(p.CATEGORY);
+			// if (self._snapLayer) {
+			// 	self._addEditInterface();
+			// }
+
+			// if (p.GRETA_EDIT && p.GRETA_EDIT.toUpperCase() === "TRUE" ) {
+			// 	// Show the edit panel
+			// 	this.addEditPanel();
+			// }
+			if (p.GRETA_EDITID) {
+				// This means, we should start editing (modifying, deleting or creating new features).
+				// The ID is used for allowing editing of features with the given id only.
+				this._editId = parseInt(p.GRETA_EDITID);
+				smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
+
+					layer.on("load", (function(e) {
+						var fg = L.featureGroup([]);
+						fg.options = {}; // editable: false
+						this.map.removeLayer(layer);
+						layer.eachLayer(function(lay) {
+							fg.addLayer(lay);
+						});
+						this._editLayer = fg;
+						this.map.addLayer(fg);
+						// layer._map = this.map;
+						this.addEditPanel(fg);
+					}).bind(this));
+				}).bind(this));
+			}
+		}).bind(this));
 	},
+
+	onRemove: function(map) {},
+
 
 	_adaptUrl: function(url) {
 		if (!url || !url.length || !(typeof url === "string")) {
@@ -60,68 +107,246 @@ L.Control.MMPGreta = L.Control.extend({
 		}
 	},
 
-	save: function() {
-		var self = this;
-		// var p = this.map.getCenter();
+	_getTool: function(type) {
+		type = utils.capitalize(type.toLowerCase());
 
-		// setTimeout(function() {
-		// 	var data = {easting: self._latLng.lng, northing: self._latLng.lat};
-		// 	parent.$("body").trigger("smap:updatedata", data);
-		// 	smap.cmd.loading(false);
-		// }, 1000);
+		if (!this._tools[type]) {
+			var init, tool;
+			switch (type) {
+				case "Delete":
+					init = L.EditToolbar.Delete;
+					var options = {featureGroup: this._editLayer};
+					tool = new init(this.map, options);
+					this.map.on("draw:deleted", (function(e) {
+						alert("deleted");
+						this._editLayer.removeLayer(e.layers);
 
-		// -- Create params --
+						// this._drawControl.options.edit.featureGroup.removeLayer(e.layers);
+					}).bind(this));
+					break;
+				case "Edit":
+					tool = {
+						enable: this.startEditing.bind(this),
+						disable: this.stopEditing.bind(this)
+					};
+					break;
+				default:
+					init = L.Draw[type] || L.Edit[type] || L.EditToolbar[type];
+					tool = new init(this.map, options);
+					var options = this._drawControl.options.draw[type];
+					var color = "#0077E2";
+					tool.options.shapeOptions = {color: color, fillColor: color};
 
-		var p3008 = utils.projectPoint(this._latLng.lng, this._latLng.lat, "EPSG:4326", "EPSG:3008");
-		var east = p3008[0],
-			north = p3008[1];
+			}
 
-		
-		east = Math.round(east);
-		north = Math.round(north);
-		var tempId = this._tempId || null;
+			// $.extend(true, tool.options, {
+			// 	selectedPathoptions: {
+			// 		maintainColor: true,
+			// 		opacity: 0.3
+			// 	}
+			// });
+			this._tools[type] = tool;
+		}
+		return this._tools[type];
 
-		var geoJson = {
-				type: "FeatureCollection",
-				features: [
-					{
-						geometry: {
-							coordinates: [east, north],	// <= The coordinates resulting from user interaction with the marker
-							type: "Point"
-						},
-						properties: {
-							ArendeId: self._tempId,		// <= The ID from parameter MMP_ID
-							Aktiv: "true"
-						},
-						type: "Feature"
-					}
-				],
-				crs: {
-					properties: {
-						name: "EPSG:3008",
-						code: "3008"
-					},
-					type: "Name"
-				}
-		};
+	},
 
-		console.log('Skickar: ' + JSON.stringify(geoJson));
-		this._save(JSON.stringify(geoJson), {
-			contentType: "text/plain; charset=utf-8",
-			type: "POST"
+	_deactivateAllTools: function(except) {
+		for (var type in this._tools) {
+			if (except && type.toUpperCase() === except.toUpperCase()) {
+				continue;
+			}
+			this._deactivateTool(type);
+		}	
+	},
+
+	_activateTool: function(type) {
+		this._deactivateAllTools(type);
+		var tool = this._getTool(type);
+		tool.enable();
+	},
+
+	_deactivateTool: function(type) {
+		var tool = this._getTool(type);
+		tool.disable();
+		$(".mmpgreta-type-"+type.toLowerCase()).removeClass("active");
+
+	},
+
+	startEditing: function() {
+		this._editLayer.options.editable = true;
+		this._editLayer.eachLayer(function(layer) {
+			layer.editing.enable();
 		});
+	},
+
+	stopEditing: function() {
+		this._editLayer.options.editable = false;
+		this._editLayer.eachLayer(function(layer) {
+			layer.editing.disable();
+		});
+	},
+
+	addEditPanel: function(editLayer) {
+		var drawControl = new L.Control.Draw({
+				draw: false,
+				edit: {
+					// edit: true,
+					featureGroup: editLayer,
+					remove: false
+				}
+		});
+		this.map.addControl(drawControl);
+		this._drawControl = drawControl;
+		$(".leaflet-draw").remove(); // Remove the default interface
+
+		function onAdd(e) {
+			var type = e.layerType,
+				layer = e.layer;
+
+			// layer = L.GeoJSON.geometryToLayer(layer.toGeoJSON());
+			editLayer.addLayer(layer);
+			// layer.options.clickable = true;
+			// layer.on("click", function() {
+			// 	alert("click");
+			// 	editLayer.removeLayer(layer);
+			// });
+
+			// layer.off("click").on("click", function() {
+			// 	alert("he");
+			// });
+			// for (var k in layer._layers) {
+			// }
+			// editLayer._refresh(); // Make the layer update
+			this._deactivateAllTools();
+		}
+		this.map.on('draw:created', onAdd.bind(this));
+
+		var self = this;
+
+		function onClick(e) {
+			var $this = $(this);
+			var type = $this.prop("data-geomtype");
+			if ($this.toggleClass("active").hasClass("active")) {
+				self._activateTool(type);
+			}
+			else {
+				self._deactivateTool(type);
+			}
+			return false;
+		}
+
+		var $btnSave = this._addBtn("fa fa-save", this.lang.save, (function() {
+			this._deactivateAllTools();
+			this.save();
+		}).bind(this));
+
+		this._addToolBtn("fa fa-eraser", this.lang.remove, "DELETE", onClick);
+		this._addToolBtn("fa fa-edit", this.lang.edit, "EDIT", onClick);
+		this._addToolBtn("fa fa-object-ungroup", this.lang.addPolygon, "POLYGON", onClick);
+		this._addToolBtn("fa fa-code-fork", this.lang.addPolyline, "POLYLINE", onClick);
+		this._addToolBtn("fa fa-map-marker", this.lang.addPoint, "MARKER", onClick);
+
+
+		// this._addBtn("fa fa-edit", this.lang.edit);
+	},
+
+	removeEditPanel: function() {},
+
+	_addBtn: function(iconClass, title, onClick) {
+		var $btn = $('<div class="leaflet-control"><button id="smap-template-btn" title="' + title + '" class="btn btn-default"><span class="'+iconClass+'"></span></button></div>');
+		$btn.find(".btn").on("click", onClick);
+		$(".leaflet-top.leaflet-right").append($btn);
+		$btn.prop("title", title).tooltip({placement: "bottom"});
+		return $btn;
+	},
+
+	_addToolBtn: function(iconClass, title, type, onClick) {
+		var $btn = this._addBtn(iconClass, title, onClick);
+		$btn.find(".btn").prop("data-geomtype", type).addClass("mmpgreta-type-"+type.toLowerCase());
+
+	},
+
+	save: function() {
+		// The following code is possible only because can always expect 
+		// that everything in the layer should be saved and all features 
+		// share the same ArendeId
+
+		var self = this;
+		var geoJson = this._editLayer.toGeoJSON();
+		geoJson.features.forEach(function(f) {
+			f.properties.ArendeId = self._editId; // Important, so that saving will work server-side
+		});
+		console.log(geoJson);
+
+		// $.ajax({
+		// 	type: "POST",
+		// 	contentType: "text/plain; charset=utf-8",
+		// 	url: this._adaptUrl(this.options.wsSave),
+		// 	data: JSON.stringify(geoJson),
+		// 	dataType: "json",
+		// 	success: function (data, status) {
+		// 		if (data.success === "true") {
+
+		// 		}
+		// 	},
+		// 	error: function (a, b, c) {
+		// 		console.log(a.responseText);
+		// 	}
+		// });
+
 	}
 
-
-	// _createBtn: function() {
+	// save: function() {
 	// 	var self = this;
+	// 	// var p = this.map.getCenter();
 
-	// 	this.$btn = $('<button id="smap-MMPGreta-btn" title="' + self.lang.btnLabel + '" class="btn btn-default"><span class="fa fa-expand"></span></button>');
-	// 	this.$btn.on("click", function () {
-	// 		self.activate();
-	// 		return false;
+	// 	// setTimeout(function() {
+	// 	// 	var data = {easting: self._latLng.lng, northing: self._latLng.lat};
+	// 	// 	parent.$("body").trigger("smap:updatedata", data);
+	// 	// 	smap.cmd.loading(false);
+	// 	// }, 1000);
+
+	// 	// -- Create params --
+
+	// 	var p3008 = utils.projectPoint(this._latLng.lng, this._latLng.lat, "EPSG:4326", "EPSG:3008");
+	// 	var east = p3008[0],
+	// 		north = p3008[1];
+
+		
+	// 	east = Math.round(east);
+	// 	north = Math.round(north);
+	// 	var tempId = this._tempId || null;
+
+	// 	var geoJson = {
+	// 			type: "FeatureCollection",
+	// 			features: [
+	// 				{
+	// 					geometry: {
+	// 						coordinates: [east, north],	// <= The coordinates resulting from user interaction with the marker
+	// 						type: "Point"
+	// 					},
+	// 					properties: {
+	// 						ArendeId: self._tempId,		// <= The ID from parameter MMP_ID
+	// 						Aktiv: "true"
+	// 					},
+	// 					type: "Feature"
+	// 				}
+	// 			],
+	// 			crs: {
+	// 				properties: {
+	// 					name: "EPSG:3008",
+	// 					code: "3008"
+	// 				},
+	// 				type: "Name"
+	// 			}
+	// 	};
+
+	// 	console.log('Skickar: ' + JSON.stringify(geoJson));
+	// 	this._save(JSON.stringify(geoJson), {
+	// 		contentType: "text/plain; charset=utf-8",
+	// 		type: "POST"
 	// 	});
-	// 	this.$container.append(this.$btn);
 	// }
 });
 
