@@ -251,9 +251,9 @@ smap.core.Param = L.Class.extend({
 		if (p.GEOJSON) {
 			var pGeoJson = p.GEOJSON instanceof Array ? p.GEOJSON : p.GEOJSON.split(",");
 			var url = decodeURIComponent(pGeoJson[0]);
-			var noClustering = pGeoJson.length > 1 ? (pGeoJson[1].toString().toUpperCase() === "TRUE" ? true : false) : false;
+			var doClustering = pGeoJson.length > 1 ? (pGeoJson[1].toString().toUpperCase() === "TRUE" ? true : false) : false;
 			var zoomToExtent = pGeoJson.length > 2 ? (pGeoJson[2].toString().toUpperCase() === "TRUE" ? true : false) : false;
-			this._loadGeoJson(url, !noClustering, zoomToExtent);
+			this._loadGeoJson(url, doClustering, zoomToExtent);
 		}
 	},
 	
