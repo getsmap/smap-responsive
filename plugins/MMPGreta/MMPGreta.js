@@ -4,7 +4,12 @@ L.Control.MMPGreta = L.Control.extend({
 		// wsSave: location.protocol+"//gkvmgretaws.gkmalmo.local/KartService.svc/saveGeometry",
 		wsSave: location.protocol+"//kartor.malmo.se/gkgreta/KartService.svc/saveGeometry",
 		xhrType: "GET",
-		saveCrs: "EPSG:3008"
+		inputCrs: "EPSG:3008",
+		saveCrs: "EPSG:3008",
+		uniqueKey: "ArendeId",
+		reverseAxis: true,
+		reverseAxisBbox: true
+
 	},
 	
 	_lang: {
@@ -73,6 +78,18 @@ L.Control.MMPGreta = L.Control.extend({
 				// This means, we should start editing (modifying, deleting or creating new features).
 				// The ID is used for allowing editing of features with the given id only.
 				this._editId = parseInt(p.GRETA_EDITID);
+
+				smap.event.on("smap.core.createjsonlayer", (function(e, layerOptions) {
+					// Modify external layer options before created (this can also be done in config using smapOptions.externalJsonOptions)
+
+					$.extend(layerOptions, {
+						inputCrs: this.options.inputCrs,
+						uniqueKey: this.options.uniqueKey,
+						reverseAxis: this.options.reverseAxis,
+						reverseAxisBbox: this.options.reverseAxisBbox
+					});
+				}).bind(this));
+
 				smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
 
 					layer.on("load", (function(e) {
