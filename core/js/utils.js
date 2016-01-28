@@ -357,17 +357,28 @@ var utils = {
 		},
 
 
-		projectFeature: function(feature, inputCrs, options) {
+		projectFeature: function(feature, inputCrs, outputCrs, options) {
 			options = options || {};
+
+			var decimals = options.decimals;
+			var doRound = options.decimals || options.decimals === 0 ? true : false;
+
+
+			function roundIt(nbr, nbrOfDecimals) {
+				return Math.round(nbr * Math.pow(10, nbrOfDecimals)) / Math.pow(10, nbrOfDecimals);
+			}
 
 			var _projectPoint = this.projectPoint;
 			function projectPoint(coordinates, inputCrs) {
-				return _projectPoint(coordinates[0], coordinates[1], inputCrs, "EPSG:4326");
+				var out = _projectPoint(coordinates[0], coordinates[1], inputCrs, outputCrs);
+				if (doRound) {
+					out = [roundIt(out[0], decimals), roundIt(out[1], decimals)];
+				}
+				return out;
 			};
 
 			function swapCoords(coords) {
-				coords = [coords[1], coords[0]];
-				return coords;
+				return [coords[1], coords[0]];
 			};
 			
 			var coords, coordsArr, projectedCoords, i, p, geom;
@@ -376,19 +387,25 @@ var utils = {
 			switch (geom.type) {
 				case "Point":
 					coords = geom.coordinates;
-					if (options.reverseAxis) {
-						coords = this.swapCoords(coords);
+					if (options.reverseAxisInput) {
+						coords = swapCoords(coords);
 					}
 					projectedCoords = projectPoint(coords, inputCrs);
+					if (options.reverseAxisOutput) {
+						projectedCoords = swapCoords(projectedCoords);
+					}
 					geom.coordinates = projectedCoords;
 					break;
 				case "MultiPoint":
 					for (p=0, len2=geom.coordinates.length; p<len2; p++) {
 						coords = geom.coordinates[p];
-						if (options.reverseAxis) {
-							coords = this.swapCoords(coords);
+						if (options.reverseAxisInput) {
+							coords = swapCoords(coords);
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
+						if (options.reverseAxisOutput) {
+							projectedCoords = swapCoords(projectedCoords);
+						}
 						geom.coordinates[p] = projectedCoords;
 					}
 					break;
@@ -397,10 +414,13 @@ var utils = {
 					coordsArr = geom.coordinates[0];
 					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
 						coords = coordsArr[p];
-						if (options.reverseAxis) {
-							coords = this.swapCoords( coords );
+						if (options.reverseAxisInput) {
+							coords = swapCoords( coords );
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
+						if (options.reverseAxisOutput) {
+							projectedCoords = swapCoords(projectedCoords);
+						}
 						coordsArr[p] = projectedCoords;
 					}
 					break;
@@ -411,10 +431,13 @@ var utils = {
 						coordsArr = geom.coordinates[p];
 						for (pp=0, len3=coordsArr.length; pp<len3; pp++) {
 							coords = coordsArr[pp];
-							if (options.reverseAxis) {
+							if (options.reverseAxisInput) {
 								coords = swapCoords( coords );
 							}
 							projectedCoords = projectPoint(coords, inputCrs);
+							if (options.reverseAxisOutput) {
+								projectedCoords = swapCoords(projectedCoords);
+							}
 							coordsArr[pp] = projectedCoords;
 						}
 						geom.coordinates[p] = coordsArr; // needed?
@@ -424,10 +447,13 @@ var utils = {
 					coordsArr = geom.coordinates[0];
 					for (p=0, lenP=coordsArr.length; p<lenP; p++) {
 						coords = coordsArr[p];
-						if (options.reverseAxis) {
-							coords = this.swapCoords( coords );
+						if (options.reverseAxisInput) {
+							coords = swapCoords( coords );
 						}
 						projectedCoords = projectPoint(coords, inputCrs);
+						if (options.reverseAxisOutput) {
+							projectedCoords = swapCoords(projectedCoords);
+						}
 						coordsArr[p] = projectedCoords;
 					}
 					break;
@@ -440,10 +466,13 @@ var utils = {
 							coordsArr2 = coordsArr[pp];
 							for (ppp=0, len4=coordsArr2.length; ppp<len4; ppp++) {
 								coords = coordsArr2[ppp];
-								if (options.reverseAxis) {
+								if (options.reverseAxisInput) {
 									coords = swapCoords( coords );
 								}
 								projectedCoords = projectPoint(coords, inputCrs);
+								if (options.reverseAxisOutput) {
+									projectedCoords = swapCoords(projectedCoords);
+								}
 								coordsArr2[ppp] = projectedCoords;
 							}
 						}

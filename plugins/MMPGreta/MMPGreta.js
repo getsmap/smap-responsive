@@ -3,7 +3,8 @@ L.Control.MMPGreta = L.Control.extend({
 	options: {
 		// wsSave: location.protocol+"//gkvmgretaws.gkmalmo.local/KartService.svc/saveGeometry",
 		wsSave: location.protocol+"//kartor.malmo.se/gkgreta/KartService.svc/saveGeometry",
-		xhrType: "GET"
+		xhrType: "GET",
+		saveCrs: "EPSG:3008"
 	},
 	
 	_lang: {
@@ -13,7 +14,8 @@ L.Control.MMPGreta = L.Control.extend({
 			addPolygon: "Rita yta",
 			remove: "Ta bort",
 			edit: "Redigera",
-			save: "Spara"
+			save: "Spara",
+			instructEditing: "Klicka här igen när du redigerat klart"
 		},
 		"en": {
 			addPoint: "Draw point",
@@ -21,7 +23,8 @@ L.Control.MMPGreta = L.Control.extend({
 			addPolygon: "Draw polygon",
 			remove: "Remove",
 			edit: "Edit",
-			save: "Save"
+			save: "Save",
+			instructEditing: "Click here when you are done editing"
 		}
 	},
 
@@ -163,13 +166,38 @@ L.Control.MMPGreta = L.Control.extend({
 	_activateTool: function(type) {
 		this._deactivateAllTools(type);
 		var tool = this._getTool(type);
+		// switch (type) {
+		// 	case "EDIT":
+		// 		var $btnEdit = $(".mmpgreta-type-edit:parent");
+		// 		$btnEdit.popover({
+		// 			placement: "bottom",
+		// 			title: false, //this.lang.instructEditing,
+		// 			content: this.lang.instructEditing,
+		// 			delay: {hide: 5000},
+		// 			trigger: "manual"
+
+		// 		}).popover("show")
+		// 		break;
+		// 	default:
+		// 		break;
+
+		// }
 		tool.enable();
 	},
 
 	_deactivateTool: function(type) {
 		var tool = this._getTool(type);
 		tool.disable();
-		$(".mmpgreta-type-"+type.toLowerCase()).removeClass("active");
+		$(".mmpgreta-type-"+type.toLowerCase()).removeClass("active btn-danger");
+		// switch (type) {
+		// 	case "EDIT":
+		// 		var $btnEdit = $(".mmpgreta-type-edit:parent");
+		// 		$btnEdit.popover("destroy");
+		// 		break;
+		// 	default:
+		// 		break;
+
+		// }
 
 	},
 
@@ -227,7 +255,7 @@ L.Control.MMPGreta = L.Control.extend({
 		function onClick(e) {
 			var $this = $(this);
 			var type = $this.prop("data-geomtype");
-			if ($this.toggleClass("active").hasClass("active")) {
+			if ($this.toggleClass("active btn-danger").hasClass("active")) {
 				self._activateTool(type);
 			}
 			else {
@@ -264,6 +292,7 @@ L.Control.MMPGreta = L.Control.extend({
 	_addToolBtn: function(iconClass, title, type, onClick) {
 		var $btn = this._addBtn(iconClass, title, onClick);
 		$btn.find(".btn").prop("data-geomtype", type).addClass("mmpgreta-type-"+type.toLowerCase());
+		return $btn;
 
 	},
 
@@ -274,7 +303,16 @@ L.Control.MMPGreta = L.Control.extend({
 
 		var self = this;
 		var geoJson = this._editLayer.toGeoJSON();
+
+		
+		
+
 		geoJson.features.forEach(function(f) {
+			// Project to desired projection
+			utils.projectFeature(f, "EPSG:4326", self.options.saveCrs, {
+				reverseAxisOutput: true,
+				decimals: 0
+			});
 			f.properties.ArendeId = self._editId; // Important, so that saving will work server-side
 		});
 		console.log(geoJson);
@@ -353,3 +391,14 @@ L.Control.MMPGreta = L.Control.extend({
 //L.control.MMPGreta = function (options) {
 //	return new L.Control.mMPGreta(options);
 //};
+
+
+
+// Bug fix for this class
+L.Edit.Poly.addInitHook(function () {
+	if (this._poly && !this._poly.options.editing) {
+		this._poly.options.editing = {};
+	}
+
+
+});

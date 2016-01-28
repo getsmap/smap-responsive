@@ -79,7 +79,7 @@ L.Control.SelectWMS = L.Control.extend({
 						o = t.options;
 						if (o.selectOptions && o.selectOptions.srs && o.selectOptions.srs !== "EPSG:4326") {
 							// Project into wgs84 coords
-							utils.projectFeature(f, o.selectOptions.srs, {
+							utils.projectFeature(f, o.selectOptions.srs, "EPSG:4326", {
 								// reverseAxis: true
 							});
 						}
