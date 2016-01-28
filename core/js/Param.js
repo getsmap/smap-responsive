@@ -58,7 +58,8 @@ smap.core.Param = L.Class.extend({
 		sep = sep || "?";
 
 		var href = location.href;
-		var p = href.substring(0, href.indexOf("#")).split(sep);
+		var indexHash = href.indexOf("#");
+		var p = href.substring(0, indexHash === -1 ? href.length : indexHash).split(sep);
 		var pString = p.length > 1 ? p[1] : "";
 		paramsObject = utils.paramsStringToObject(pString, true);
 		return paramsObject;
