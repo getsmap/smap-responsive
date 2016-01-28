@@ -75,22 +75,6 @@ L.Control.MMPGreta = L.Control.extend({
 			});
 		}).bind(this));
 
-		smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
-
-			layer.on("load", (function(e) {
-				var fg = L.featureGroup([]);
-				fg.options = {}; // editable: false
-				this.map.removeLayer(layer);
-				layer.eachLayer(function(lay) {
-					fg.addLayer(lay);
-				});
-				this._editLayer = fg;
-				this.map.addLayer(fg);
-				// layer._map = this.map;
-				this.addEditPanel(fg);
-			}).bind(this));
-		}).bind(this));
-		
 		smap.event.on("smap.core.beforeapplyparams", (function(e, p) {
 			// self._snapLayer = smap.cmd.getLayer(p.CATEGORY);
 			// if (self._snapLayer) {
@@ -106,6 +90,22 @@ L.Control.MMPGreta = L.Control.extend({
 				// This means, we should start editing (modifying, deleting or creating new features).
 				// The ID is used for allowing editing of features with the given id only.
 				this._editId = parseInt(p.GRETA_EDITID);
+
+				smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
+
+					layer.on("load", (function(e) {
+						var fg = L.featureGroup([]);
+						fg.options = {}; // editable: false
+						this.map.removeLayer(layer);
+						layer.eachLayer(function(lay) {
+							fg.addLayer(lay);
+						});
+						this._editLayer = fg;
+						this.map.addLayer(fg);
+						// layer._map = this.map;
+						this.addEditPanel(fg);
+					}).bind(this));
+				}).bind(this));
 
 			}
 		}).bind(this));
