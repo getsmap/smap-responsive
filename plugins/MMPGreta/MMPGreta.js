@@ -70,6 +70,33 @@ L.Control.MMPGreta = L.Control.extend({
 			// 	self._addEditInterface();
 			// }
 
+			smap.event.on("smap.core.createjsonlayer", (function(e, layerOptions) {
+				// Modify external layer options before created (this can also be done in config using smapOptions.externalJsonOptions)
+
+				$.extend(layerOptions, {
+					inputCrs: this.options.inputCrs,
+					uniqueKey: this.options.uniqueKey,
+					reverseAxis: this.options.reverseAxis,
+					reverseAxisBbox: this.options.reverseAxisBbox
+				});
+			}).bind(this));
+
+			smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
+
+				layer.on("load", (function(e) {
+					var fg = L.featureGroup([]);
+					fg.options = {}; // editable: false
+					this.map.removeLayer(layer);
+					layer.eachLayer(function(lay) {
+						fg.addLayer(lay);
+					});
+					this._editLayer = fg;
+					this.map.addLayer(fg);
+					// layer._map = this.map;
+					this.addEditPanel(fg);
+				}).bind(this));
+			}).bind(this));
+			
 			// if (p.GRETA_EDIT && p.GRETA_EDIT.toUpperCase() === "TRUE" ) {
 			// 	// Show the edit panel
 			// 	this.addEditPanel();
@@ -79,32 +106,6 @@ L.Control.MMPGreta = L.Control.extend({
 				// The ID is used for allowing editing of features with the given id only.
 				this._editId = parseInt(p.GRETA_EDITID);
 
-				smap.event.on("smap.core.createjsonlayer", (function(e, layerOptions) {
-					// Modify external layer options before created (this can also be done in config using smapOptions.externalJsonOptions)
-
-					$.extend(layerOptions, {
-						inputCrs: this.options.inputCrs,
-						uniqueKey: this.options.uniqueKey,
-						reverseAxis: this.options.reverseAxis,
-						reverseAxisBbox: this.options.reverseAxisBbox
-					});
-				}).bind(this));
-
-				smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
-
-					layer.on("load", (function(e) {
-						var fg = L.featureGroup([]);
-						fg.options = {}; // editable: false
-						this.map.removeLayer(layer);
-						layer.eachLayer(function(lay) {
-							fg.addLayer(lay);
-						});
-						this._editLayer = fg;
-						this.map.addLayer(fg);
-						// layer._map = this.map;
-						this.addEditPanel(fg);
-					}).bind(this));
-				}).bind(this));
 			}
 		}).bind(this));
 	},
