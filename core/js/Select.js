@@ -64,9 +64,10 @@ smap.core.Select = L.Class.extend({
 					// Add http
 					href = "http://" + href;
 				}
-				var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
+				var target = $this.attr('target') || '_blank';
+				var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>');
 				// Get the anchor href value and set it to the onclick value.
-				$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
+				$btn.attr("onclick", 'window.open("'+href+'", "'+target+'")');
 				$this.after($btn);
 			}
 			// If no valid href - just remove it. Fix for: https://github.com/getsmap/smap-responsive/issues/115
