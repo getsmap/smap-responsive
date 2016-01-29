@@ -10,6 +10,7 @@ L.Control.MMP = L.Control.extend({
 			atgardat: 			'green',
 			senare_behandling: 	'darkred'
 		},
+		GeoJsonUniqueKey: 'ID',
 		position: 'bottomright',
 		minZoom: 14,
 		externalDataLayerOptions: null,
@@ -264,7 +265,7 @@ L.Control.MMP = L.Control.extend({
 					xhrType: this.options.xhrType ? this.options.xhrType : "GET",
 					attribution: "Malmö stad",
 					inputCrs: "EPSG:3008",
-					uniqueKey: "ArendeId", // TODO: Check this once
+					uniqueKey: this.options.GeoJsonUniqueKey, // TODO: Check this once
 					selectable: true,
 					reverseAxis: false,
 					showInLayerSwitcher: true,
