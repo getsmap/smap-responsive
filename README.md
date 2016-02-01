@@ -1,7 +1,7 @@
 sMap-responsive
 ===========
 
-<img src="https://kartor.malmo.se/rest/resources/smap/smap-responsive-demo.gif" width="600" />
+<img src="img/demo/smap-responsive-demo.gif" width="600" />
 
 ###Examples
 - [Malmö Stadsatlas (City Map of Malmö)](http://kartor.malmo.se/init/?appid=stadsatlas-v1&lang=en)
