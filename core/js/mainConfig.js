@@ -21,5 +21,5 @@ smap.core.mainConfig = {
 		toolbarPlugin: "Menu",
 		defaultTheme: "smap",
 
-		configFolders: ["/rest/leaf/configs-1.0/"]
+		configDirs: ["configs/", "dist/configs/", "/rest/leaf/configs-1.0/"]  // Paths where smap will try to find the config file (if no dir is specified)
 };

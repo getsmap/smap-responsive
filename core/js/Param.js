@@ -27,7 +27,6 @@ smap.core.Param = L.Class.extend({
 		}
 	},
 
-	
 	getParams: function() {
 		var paramsObject = this._cachedParams || null;
 		if (!paramsObject) {
@@ -68,6 +67,16 @@ smap.core.Param = L.Class.extend({
 	getHashParamsAsObject: function() {
 		return this.getWebParamsAsObject("#");
 	},
+
+	// /**
+	//  * Set a parameter to a different value than specified in the URL.
+	//  * @param {String} key
+	//  * @param {String} val
+	//  */
+	// setParam: function(key, val) {
+	// 	this._modifiedParams = this._modifiedParams || {};
+	// 	this._modifiedParams[key] = val;
+	// },
 	
 	createParamsAsObject: function() {
 		var c = this.map.getCenter(),

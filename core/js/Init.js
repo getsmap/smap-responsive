@@ -40,29 +40,52 @@ smap.core.Init = L.Class.extend({
 		smap.core.paramInst = new smap.core.Param(this.map);
 		smap.core.pluginHandlerInst = new smap.core.PluginHandler(this.map);
 		var params = options.params || smap.core.paramInst.getParams(); //Parameters from URL / config
-		this.loadConfig(params.CONFIG).done(function() {
-				function applyConfig() {
-					smap.config.configName = params.CONFIG; // Store for creating params
-					smap.config.langCode = smap.cmd.getLang();
-					self.applyConfig(smap.config);
-					// params = smap.core.paramInst.getParams();
-					params = $.extend({}, utils.objectToUpperCase(smap.config.params || {}), params);
-					smap.core.paramInst.applyParams(params);
-					smap.cmd.loading(false);
-				}
 
-				smap.config = config || window.config;
-				if (smap.config.onLoad) {
-					var deferred = smap.config.onLoad(smap.config);
-					deferred.done(applyConfig);
+		// Solves: https://github.com/getsmap/smap-responsive/issues/212
+		var configUrlsAttempted = [];
+		var fileName = params.CONFIG.substring(params.CONFIG.lastIndexOf('/') + 1);
+		function loadConfig(url) {
+			configUrlsAttempted.push(url);
+			self.loadConfig(url).done(function() {
+					if (configUrlsAttempted.length > 1) {
+						// Means first try did not work, so we need to modify the config parameter 
+						// when someone tries to create a URL reproducing this map.
+						smap.event.on("smap.core.createparams", function(e, p) {
+							p.config = url;
+						});
+					}
+					function applyConfig() {
+						smap.config.configName = params.CONFIG; // Store for creating params
+						smap.config.langCode = smap.cmd.getLang();
+						self.applyConfig(smap.config);
+						// params = smap.core.paramInst.getParams();
+						params = $.extend({}, utils.objectToUpperCase(smap.config.params || {}), params);
+						smap.core.paramInst.applyParams(params);
+						smap.cmd.loading(false);
+					}
+
+					smap.config = config || window.config;
+					if (smap.config.onLoad) {
+						var deferred = smap.config.onLoad(smap.config);
+						deferred.done(applyConfig);
+					}
+					else {
+						applyConfig(smap.config);
+					}
+			}).fail(function(a, text, c) {
+				// Try finding the config in the directories – if any – specified in mainConfig
+				// Stop when all dirs have been tested with no result (reference: https://github.com/getsmap/smap-responsive/issues/212)
+				var configDirs = smap.core.mainConfig.configDirs || null;
+				if (configDirs && configDirs instanceof Array && configUrlsAttempted.length <= configDirs.length) {
+					loadConfig( configDirs[configUrlsAttempted.length-1] + fileName );
 				}
 				else {
-					applyConfig(smap.config);
+					smap.cmd.loading(false);
+					throw new Error("The specified config file was not found: " + params.CONFIG);
 				}
-		}).fail(function(a, text, c) {
-			console.log("Config not loaded because: "+text);
-			smap.cmd.loading(false);
-		});
+			});
+		}
+		loadConfig(params.CONFIG);
 	},
 	
 	applyConfig: function(theConfig) {
@@ -186,16 +209,16 @@ smap.core.Init = L.Class.extend({
 	
 	loadConfig: function(configName) {
 		configName = configName || "config.js";
-		if (configName.search(/\//g) === -1) {
-			if (document.URL.split("?")[0].search("dev.html") > -1) {
-				// dev.html (dev/test)
-				configName = "dist/configs/" + configName;
-			}
-			else {
-				// index.html (production)
-				configName = "configs/" + configName;
-			}
-		}
+		// if (configName.search(/\//g) === -1) {
+		// 	if (document.URL.split("?")[0].search("dev.html") > -1) {
+		// 		// dev.html (dev/test)
+		// 		configName = "dist/configs/" + configName;
+		// 	}
+		// 	else {
+		// 		// index.html (production)
+		// 		configName = "configs/" + configName;
+		// 	}
+		// }
 		// if (location.protocol === "https:") {
 		// 	// Create an absolute path or otherwise the ajax call will not work on https
 			
