@@ -8,7 +8,13 @@ L.Control.MMPGreta = L.Control.extend({
 		saveCrs: "EPSG:3008",
 		uniqueKey: "ArendeId",
 		reverseAxis: true,
-		reverseAxisBbox: true
+		reverseAxisBbox: true,
+		statusKey: "Attribut",
+		statusColors: {
+			"p": "gray",
+			"n": "darkred",
+			"f": "orange"
+		}
 
 	},
 	
@@ -67,11 +73,55 @@ L.Control.MMPGreta = L.Control.extend({
 		smap.event.on("smap.core.createjsonlayer", (function(e, layerOptions) {
 			// Modify external layer options before created (this can also be done in config using smapOptions.externalJsonOptions)
 
+			function onMouseOver(e) {
+				var text = '<b>'+e.target.feature.properties.TooltipTitle+"</b><p>"+e.target.feature.properties.Tooltip+"</p>";
+				if ( !$(".leaflet-top.leaflet-right").find("button.active").length) {
+					this._tooltip = utils.createLabel(e.latlng, text, "mmpgreta-tooltip");
+					this._map.addLayer(this._tooltip);
+				}
+			}
+			function onMouseOut(e) {
+				if (this._tooltip) {
+					this._map.removeLayer(this._tooltip);
+				}
+			}
+
+			var i = 0;
 			$.extend(layerOptions, {
 				inputCrs: this.options.inputCrs,
 				uniqueKey: this.options.uniqueKey,
 				reverseAxis: this.options.reverseAxis,
-				reverseAxisBbox: this.options.reverseAxisBbox
+				reverseAxisBbox: this.options.reverseAxisBbox,
+				noBindZoom: true,
+				noBindDrag: true,
+				pointToLayer: (function (f, latLng) {
+					var props = f.properties;
+					
+					// - For dev only! -
+					var rand = Math.floor( Math.random() * 3 );
+					var val = ["f", "n", "p"][rand];
+					props[this.options.statusKey] = val;
+					// - End dev -
+					
+					var markerIcon = L.AwesomeMarkers.icon({
+						icon: 'warning',
+						prefix: 'fa',
+						markerColor: this.options.statusColors[props[this.options.statusKey]] || 'white'
+					});
+
+					var marker = L.marker(latLng, {icon: markerIcon});
+					marker.on("mouseover", onMouseOver.bind(this));
+					marker.on("mouseout", onMouseOut.bind(this));
+
+					if (f.id && f.id.toUpperCase().indexOf("POI_ARENDE_") > -1) {
+						marker.options.editable = false;
+						marker.options.draggable = false;
+						delete marker.editing;
+						marker.editing = {enable: function() {}, disable: function() {}, _marker: marker}; // attach nonsence func to avoid error
+					}
+					
+					return marker;
+				}).bind(this)
 			});
 		}).bind(this));
 
@@ -92,8 +142,7 @@ L.Control.MMPGreta = L.Control.extend({
 				this._editId = parseInt(p.GRETA_EDITID);
 
 				smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
-
-					layer.on("load", (function(e) {
+					var onLayerLoad = (function() {
 						var fg = L.featureGroup([]);
 						fg.options = {}; // editable: false
 						this.map.removeLayer(layer);
@@ -104,10 +153,23 @@ L.Control.MMPGreta = L.Control.extend({
 						this.map.addLayer(fg);
 						// layer._map = this.map;
 						this.addEditPanel(fg);
-					}).bind(this));
+						layer.off("load", onLayerLoad);
+					}).bind(this);
+					layer.on("load", onLayerLoad);
 				}).bind(this));
 
 			}
+			else {
+				smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
+					delete layer.pointToLayer;
+				}).bind(this));
+			}
+			this._map.on("selected", (function() {
+				if (this._tooltip) {
+					this.map.removeLayer(this._tooltip);
+				}
+			}).bind(this));
+
 		}).bind(this));
 	},
 
@@ -139,12 +201,6 @@ L.Control.MMPGreta = L.Control.extend({
 					init = L.EditToolbar.Delete;
 					var options = {featureGroup: this._editLayer};
 					tool = new init(this.map, options);
-					this.map.on("draw:deleted", (function(e) {
-						alert("deleted");
-						this._editLayer.removeLayer(e.layers);
-
-						// this._drawControl.options.edit.featureGroup.removeLayer(e.layers);
-					}).bind(this));
 					break;
 				case "Edit":
 					tool = {
@@ -185,22 +241,25 @@ L.Control.MMPGreta = L.Control.extend({
 	_activateTool: function(type) {
 		this._deactivateAllTools(type);
 		var tool = this._getTool(type);
-		// switch (type) {
-		// 	case "EDIT":
-		// 		var $btnEdit = $(".mmpgreta-type-edit:parent");
-		// 		$btnEdit.popover({
-		// 			placement: "bottom",
-		// 			title: false, //this.lang.instructEditing,
-		// 			content: this.lang.instructEditing,
-		// 			delay: {hide: 5000},
-		// 			trigger: "manual"
+		switch (type) {
+			case "DELETE":
+				// this._map.fire("draw:deleteactive");
+				break;
+			// case "EDIT":
+			// 	var $btnEdit = $(".mmpgreta-type-edit:parent");
+			// 	$btnEdit.popover({
+			// 		placement: "bottom",
+			// 		title: false, //this.lang.instructEditing,
+			// 		content: this.lang.instructEditing,
+			// 		delay: {hide: 5000},
+			// 		trigger: "manual"
 
-		// 		}).popover("show")
-		// 		break;
-		// 	default:
-		// 		break;
+			// 	}).popover("show")
+			// 	break;
+			default:
+				break;
 
-		// }
+		}
 		tool.enable();
 	},
 
@@ -267,7 +326,19 @@ L.Control.MMPGreta = L.Control.extend({
 			// editLayer._refresh(); // Make the layer update
 			this._deactivateAllTools();
 		}
+		var self = this;
 		this.map.on('draw:created', onAdd.bind(this));
+		// this._map.on("draw:deleteactive", (function() {
+		// 	// this._editLayer.removeLayer(e.layers);
+		// 	// this._drawControl.options.edit.featureGroup.removeLayer(e.layers);
+		// 	this._editLayer.eachLayer(function(marker) {
+		// 		var f = marker.feature;
+		// 		if (f.id && f.id.toUpperCase().indexOf("POI_ARENDE_") > -1) {
+		// 			marker.options.editable = false;
+		// 		}
+		// 	});
+
+		// }).bind(this));
 
 		var self = this;
 
@@ -323,16 +394,18 @@ L.Control.MMPGreta = L.Control.extend({
 		var self = this;
 		var geoJson = this._editLayer.toGeoJSON();
 
-		
-		
-
-		geoJson.features.forEach(function(f) {
+		geoJson.features.forEach(function(f, i) {
 			// Project to desired projection
 			utils.projectFeature(f, "EPSG:4326", self.options.saveCrs, {
 				reverseAxisOutput: true,
 				decimals: 0
 			});
 			f.properties.ArendeId = self._editId; // Important, so that saving will work server-side
+		});
+
+		// Don't save ÄrendePunkter
+		geoJson.features = geoJson.features.filter(function(item) {
+			return !item.id || item.id && item.id.toUpperCase().indexOf("POI_ARENDE_") === -1;
 		});
 		console.log(geoJson);
 
@@ -418,6 +491,21 @@ L.Edit.Poly.addInitHook(function () {
 	if (this._poly && !this._poly.options.editing) {
 		this._poly.options.editing = {};
 	}
-
-
 });
+
+L.EditToolbar.Delete.addInitHook(function() {
+	this._removeLayer = function (e) {
+		var layer = e.layer || e.target || e;
+
+		var marker = layer.editing._marker;
+		if ( !(marker.options.hasOwnProperty("editable") && marker.options.editable === false)) {
+			this._deletableLayers.removeLayer(layer);
+			this._deletedLayers.addLayer(layer);
+		}
+		else {
+			smap.cmd.notify("Ärendepunkter kan inte redigeras/tas bort", "warning", {fade: true});
+		}
+	}
+	
+});
+
