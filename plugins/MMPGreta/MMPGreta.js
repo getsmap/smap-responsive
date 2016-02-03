@@ -71,6 +71,10 @@ L.Control.MMPGreta = L.Control.extend({
 
 	_bindEvents: function() {
 		smap.event.on("smap.core.createjsonlayer", (function(e, layerOptions) {
+			if (this._hasInitiated) {
+				return false;
+			}
+			this._hasInitiated = true;
 			// Modify external layer options before created (this can also be done in config using smapOptions.externalJsonOptions)
 
 			function onMouseOver(e) {
