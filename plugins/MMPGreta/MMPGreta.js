@@ -6,8 +6,8 @@ L.Control.MMPGreta = L.Control.extend({
 		xhrType: "GET",
 		inputCrs: "EPSG:3008",
 		saveCrs: "EPSG:3008",
-		uniqueKey: "ArendeId",
-		reverseAxis: true,
+		uniqueKey: false, //"ArendeId",
+		reverseAxis: false,
 		reverseAxisBbox: true,
 		statusKey: "Attribut",
 		statusColors: {
@@ -286,14 +286,21 @@ L.Control.MMPGreta = L.Control.extend({
 	startEditing: function() {
 		this._editLayer.options.editable = true;
 		this._editLayer.eachLayer(function(layer) {
-			layer.editing.enable();
+			switch (layer.editing) {
+				case undefined:
+					break;
+				default:
+					layer.editing.enable();
+			}
 		});
 	},
 
 	stopEditing: function() {
 		this._editLayer.options.editable = false;
 		this._editLayer.eachLayer(function(layer) {
-			layer.editing.disable();
+			if (layer.editing) {
+				layer.editing.disable();
+			}
 		});
 	},
 
@@ -502,7 +509,7 @@ L.EditToolbar.Delete.addInitHook(function() {
 		var layer = e.layer || e.target || e;
 
 		var marker = layer.editing._marker;
-		if ( !(marker.options.hasOwnProperty("editable") && marker.options.editable === false)) {
+		if ( !marker || !(marker.options.hasOwnProperty("editable") && marker.options.editable === false)) {
 			this._deletableLayers.removeLayer(layer);
 			this._deletedLayers.addLayer(layer);
 		}
