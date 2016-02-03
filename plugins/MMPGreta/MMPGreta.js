@@ -71,10 +71,6 @@ L.Control.MMPGreta = L.Control.extend({
 
 	_bindEvents: function() {
 		smap.event.on("smap.core.createjsonlayer", (function(e, layerOptions) {
-			if (this._hasInitiated) {
-				return false;
-			}
-			this._hasInitiated = true;
 			// Modify external layer options before created (this can also be done in config using smapOptions.externalJsonOptions)
 
 			function onMouseOver(e) {
@@ -146,6 +142,10 @@ L.Control.MMPGreta = L.Control.extend({
 				this._editId = parseInt(p.GRETA_EDITID);
 
 				smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
+					if (this._hasInitiated) {
+						return false;
+					}
+					this._hasInitiated = true;
 					var onLayerLoad = (function() {
 						var fg = L.featureGroup([]);
 						fg.options = {}; // editable: false
