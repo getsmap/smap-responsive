@@ -243,9 +243,11 @@ smap.core.Param = L.Class.extend({
 		}
 		if (zoomToExtent === true) {
 			function funcZoomToExtent(e) {
-				var b = e.target.getBounds();
-				this.map.fitBounds(b);
-				layer.off("load", _funcZoomToExtent); // only zoom to extent once
+				this.map.whenReady((function() {
+					var b = e.target.getBounds();
+					this.map.fitBounds(b);
+					layer.off("load", _funcZoomToExtent); // only zoom to extent once
+				}).bind(this));
 			}
 			var _funcZoomToExtent = funcZoomToExtent.bind(this);
 			layer.on("load", _funcZoomToExtent);
