@@ -15,7 +15,7 @@ L.Control.MMP = L.Control.extend({
 		minZoom: 14,
 		externalDataLayerOptions: null,
 		// forcedDomain: null,
-		wsSave: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		wsSave: location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
 	_lang: {
