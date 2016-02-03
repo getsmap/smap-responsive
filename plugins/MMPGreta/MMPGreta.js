@@ -98,9 +98,9 @@ L.Control.MMPGreta = L.Control.extend({
 					var props = f.properties;
 					
 					// - For dev only! -
-					var rand = Math.floor( Math.random() * 3 );
-					var val = ["f", "n", "p"][rand];
-					props[this.options.statusKey] = val;
+					// var rand = Math.floor( Math.random() * 3 );
+					// var val = ["f", "n", "p"][rand];
+					// props[this.options.statusKey] = val;
 					// - End dev -
 					
 					var markerIcon = L.AwesomeMarkers.icon({
