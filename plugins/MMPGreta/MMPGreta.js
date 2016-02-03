@@ -285,23 +285,31 @@ L.Control.MMPGreta = L.Control.extend({
 
 	startEditing: function() {
 		this._editLayer.options.editable = true;
-		this._editLayer.eachLayer(function(layer) {
-			switch (layer.editing) {
-				case undefined:
-					break;
-				default:
-					layer.editing.enable();
-			}
-		});
+		smap.cmd.loading(true);
+		setTimeout((function() {
+			this._editLayer.eachLayer(function(layer) {
+				switch (layer.editing) {
+					case undefined:
+						break;
+					default:
+						layer.editing.enable();
+				}
+			});
+			smap.cmd.loading(false);
+		}).bind(this), 1);
 	},
 
 	stopEditing: function() {
 		this._editLayer.options.editable = false;
-		this._editLayer.eachLayer(function(layer) {
-			if (layer.editing) {
-				layer.editing.disable();
-			}
-		});
+		smap.cmd.loading(true);
+		setTimeout((function() {
+			this._editLayer.eachLayer(function(layer) {
+				if (layer.editing) {
+					layer.editing.disable();
+				}
+			});
+			smap.cmd.loading(false);
+		}).bind(this), 1);
 	},
 
 	addEditPanel: function(editLayer) {
