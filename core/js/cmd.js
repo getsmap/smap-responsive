@@ -98,6 +98,7 @@ smap.cmd = {
 				setTimeout(function() {
 					msg.addClass("notify-visible");
 				}, 1);
+				options.fadeOut = options.fadeOut || 3000;
 			}
 			if (this._notifyTimeOut) {
 				clearTimeout(this._notifyTimeOut);
@@ -105,7 +106,7 @@ smap.cmd = {
 			if (options.fadeOut) {
 				this._notifyTimeOut = setTimeout(function() {
 					$(".alert").remove();
-				}, options.fadeOut || 7000);
+				}, options.fadeOut);
 			}
 			return msg;
 		},
