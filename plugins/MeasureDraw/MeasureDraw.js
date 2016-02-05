@@ -788,11 +788,11 @@ L.Control.MeasureDraw = L.Control.extend({
 		this.map.on("draw:drawstart", function() {
 			self._nodes = [];
 			self._selection(false); // Deactivate select
-			self.map.on("click", self._onNodeClick);
+			self.map.on("mousedown", self._onNodeClick); // "mousedown" instead of "click" solves: https://github.com/getsmap/smap-responsive/issues/214
 		});
 
 		this.map.on("draw:drawstop", function(e) {
-			self.map.off("click", self._onNodeClick);
+			self.map.off("mousedown", self._onNodeClick);
 			// Reactivate select
 			
 			if (self._nodes && _.indexOf(["polygon", "rectangle"], e.layerType) > -1) {
