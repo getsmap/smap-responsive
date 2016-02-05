@@ -1,8 +1,10 @@
+﻿
 L.Control.SelectWMS = L.Control.extend({
 	options: {
 		wmsVersion: "1.3.0",
 		// outputFormat: "GML2",
 		info_format: "text/plain",
+		//parser: false,
 		maxFeatures: 20,
 		buffer: 12,
 		useProxy: false
@@ -34,9 +36,9 @@ L.Control.SelectWMS = L.Control.extend({
 		this.deactivate();
 	},
 
+
 	onSuccess: function(responses) {
 		responses = responses || [];
-
 		var resp;
 		var fs, f, t, o, geodata, other, params;
 		for (var ii=0,lenii=responses.length; ii<lenii; ii++) {
@@ -66,7 +68,7 @@ L.Control.SelectWMS = L.Control.extend({
 									for (var j=0,lenj=arr.length; j<lenj; j++) {
 										if (arr[j].search(lName) > -1) {
 											var layers = arr[j];
-											t = smap.cmd.getLayerConfigBy("options.layers", layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", layers);
+											t = smap.cmd.getLayerConfigBy("options.layerId", layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", layers);
 										}
 									}
 								}
@@ -111,7 +113,7 @@ L.Control.SelectWMS = L.Control.extend({
 						ps = geodata[typishName];
 						var valArr = typishName.split(":");
 						var val = valArr[valArr.length-1];
-						var t = smap.cmd.getLayerConfigBy("layers", val, {inText: true});
+						var t = smap.cmd.getLayerConfigBy("layerId", val, {inText: true}) ||  smap.cmd.getLayerConfigBy("layers", val, {inText: true});
 						if (!t || !t.options || !t.options.layerId) {
 							continue;
 						}
@@ -311,6 +313,7 @@ L.Control.SelectWMS = L.Control.extend({
 			}
 		});
 
+		var parser;
 		var params;
 		setTimeout($.proxy(function() {
 			if (this._dblclickWasRegistered === true) {
@@ -320,7 +323,7 @@ L.Control.SelectWMS = L.Control.extend({
 				var responses = [];
 				for (var URL in ts) {
 					t = ts[URL];
-					// t.selectOptions = t.selectOptions || {};
+					parser = t.selectOptions.parser;
 					params = this._makeParams({
 						layers: t.layerNames.join(","),
 						version: t._wmsVersion || this.options.wmsVersion, 
@@ -332,7 +335,6 @@ L.Control.SelectWMS = L.Control.extend({
 						params.version = "1.1.1";
 					}			
 					var onSuccess = this.onSuccess;
-					console.log("requesting");
 					this.request(
 						t.selectOptions.url || t.url, params, {
 							onSuccess: function(geodata, other) {
@@ -347,7 +349,7 @@ L.Control.SelectWMS = L.Control.extend({
 							},
 							layerId: t.layerId,
 							latLng: latLng
-					});
+					}, parser);
 				}
 			}
 		}, this), 100);
@@ -407,6 +409,7 @@ L.Control.SelectWMS = L.Control.extend({
 				typename: overrideParams.layers,
 				query_layers: overrideParams.layers,
 				info_format: overrideParams.info_format,
+				//parser: overrideParams.parser,
 				feature_count: this.options.maxFeatures,
 				x: utils.round(px.x),
 				y: utils.round(px.y),
@@ -421,7 +424,37 @@ L.Control.SelectWMS = L.Control.extend({
 	},
 	
 	
+	
+	_parseTextArcGis: function(resp, layerId) 
+	{
+		out = {};
+		dict = {};
+		features = [];
+		numcols = 0;
+		featurtype = "";
+		rows = resp.split("\n");
+		cols = rows[0].split(";");
+		if(cols.length % 2 == 1)
+		{
+			numcols = (cols.length -1) / 2;
+		}
+		else
+		{
+			numcols = cols.length / 2;
+		}
+		for(var i=0;i<numcols;i++)
+		{
+			dict[cols[i]] = cols[i+numcols];
+		}
+		features[0] = dict;
+		featurtype = layerId;
+		out[featurtype] = features;
+		return out;
+	},
+						
+						
 	_parseText: function(resp) {
+
 
 		var out = {},
 			dict = {},
@@ -510,7 +543,9 @@ L.Control.SelectWMS = L.Control.extend({
 		return out;
 	},
 	
-	request: function(url, params, options) {
+	
+	request: function(url, params, options, parser) {
+		
 		params = params || {};
 		options = options || {};
 		
@@ -531,8 +566,15 @@ L.Control.SelectWMS = L.Control.extend({
 			success: function(resp, textStatus, jqXHR) {
 				var out;
 				var info_format = params.info_format;
-				if (typeof info_format === "function") {
-					out = info_format.call(this, resp);
+				
+				if (typeof(parser) != "undefined") {
+					if(parser=="PLAINTEXT")
+						out = this._parseText(resp);
+					else if (parser=="JSON")
+						out = JSON.parse(resp);
+					else if (parser=="ARCGIS")
+						out = this._parseTextArcGis(resp, options["layerId"]);
+
 				}
 				else {
 					if (info_format === "text/plain") {
@@ -542,7 +584,6 @@ L.Control.SelectWMS = L.Control.extend({
 						out = JSON.parse(resp);
 					}
 					else {
-						console.log("Info format: "+info_format+" not yet supported.");
 						return false;
 					}
 				}
@@ -561,8 +602,11 @@ L.Control.SelectWMS = L.Control.extend({
 	},
 	
 	
+	
+	
 	CLASS_NAME: "L.Control.SelectWMS"
 });
+
 
 
 // Do something when the map initializes (example taken from Leaflet attribution control)
@@ -582,3 +626,4 @@ L.Control.SelectWMS = L.Control.extend({
 L.control.selectWMS = function (options) {
 	return new L.Control.SelectWMS(options);
 };
+

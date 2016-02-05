@@ -1,4 +1,4 @@
-var utils = {
+﻿var utils = {
 		rmPx: function(text) {
 			if (text && text.replace)
 				return parseInt( text.replace(/px/gi, "").replace(/em/gi, "").replace(/pt/gi, "") );
@@ -247,7 +247,7 @@ var utils = {
 							extractedAttribute = a[attr] || ""; // If attribute does not exist – use empty string "".
 						}
 					}
-					txt = txt.replace("${"+attr+"}", extractedAttribute);
+					txt = txt.replace("${"+attr+"}", extractedAttribute.replace(/^\'+|\'+$/gm,'') );
 				}
 				return txt;
 			}

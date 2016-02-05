@@ -1,4 +1,4 @@
-smap.core.Select = L.Class.extend({
+﻿smap.core.Select = L.Class.extend({
 
 	options: {
 		manyUseDialog: true
@@ -84,11 +84,16 @@ smap.core.Select = L.Class.extend({
 		for (var key in props) {
 			allProps += template.replace(/_key_/g, key).replace(/_val_/g, "${"+key+"}");
 		}
+
+
 		var repl = "*";
 		if (popupText.search(/\$\{\*\}/) > -1) {
 			repl = /\$\{\*\}/g;
 		}
 		return popupText.replace(repl, allProps);
+		
+		
+
 	},
 	
 	_bindEvents: function(map) {
@@ -356,7 +361,7 @@ smap.core.Select = L.Class.extend({
 							}
 							pText = self._processHtml(pText);
 							// <strong>'+theSf.options.displayName+'</strong>
-							row = $('<a href="#" class="list-group-item"><span><strong>'+theSf.options.displayName+'</strong>'+pText+'</span>'+
+							row = $('<a href="#" class="list-group-item"><span><strong>'+theSf.options.displayName+'</strong>'+pText.replace(/^\'+|\'+$/gm,'')+'</span>'+
 								'<div class="btn btn-success select-btn-zoom-to-feature">Zooma hit</div></a>');
 							row.data("index", i);
 							if (L.Browser.touch) {
@@ -490,6 +495,9 @@ smap.core.Select = L.Class.extend({
 				var html = "";
 				// f = closest || f;
 				var props = f.properties;
+
+				
+
 				var popupText = f.options.popup;
 				if (popupText && popupText === "*" || popupText.search(/\$\{\*\}/) > -1) {
 					popupText = self._extractAllAttributes(popupText, props);
