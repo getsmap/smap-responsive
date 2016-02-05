@@ -1,10 +1,21 @@
 
 L.Control.MMP = L.Control.extend({
 	options: {
+		statusColors: { // Available colors: 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+			avslutat: 			'black',
+			avvisat: 			'red',
+			pagaende: 			'orange',
+			registrerat: 		'blue',
+			vidarebefordrat: 	'darkpurple',
+			atgardat: 			'green',
+			senare_behandling: 	'darkred'
+		},
+		GeoJsonUniqueKey: 'ID',
 		position: 'bottomright',
-		// minZoom: 14,
+		minZoom: 14,
+		externalDataLayerOptions: null,
 		// forcedDomain: null,
-		wsSave: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		wsSave: location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
 	_lang: {
@@ -13,7 +24,8 @@ L.Control.MMP = L.Control.extend({
 			clickHereToSave: "Klicka här för att spara positionen",
 			dragInfo: '<div style="font-size:1.2em;"><strong style="font-size:1.3em;">Instruktioner</strong><ol style="margin:0;padding-left:1.65em;margin-top:0.5em;"><li>Zooma in i kartan så mycket som möjligt</li><li>Klicka i kartan för att markera platsen för ärendet<br />(pekskärm: peka och håll kvar fingret på en plats)</li></ol></div>',
 			youCanDragMeOrClick: "<strong>Klicka i kartan</strong> igen eller <strong>dra i markören</strong> för att ändra positionen",
-			btnSave: "Bekräfta position",
+			btnSave: "Spara aktuell position",
+			btnSaved: "Position sparad",
 			zoomInMore: "Du måste zooma in mer i kartan för att kunna lägga till markör"
 			// dragMe: '<ol><li>Dra markören till platsen som ärendet avser</li>'+
 			// 	'<li>Zooma in så långt som möjligt</li>'+
@@ -24,7 +36,8 @@ L.Control.MMP = L.Control.extend({
 			clickHereToSave: "Click here to save new position",
 			dragInfo: '<h1>Instructions</h1><ol><li>Zoom the map as much as possible</li><li>Then click once in the map to set the location of the incident</li></ol>',
 			youCanDragMeOrClick: "Click on the map again or drag the marker to adjust the location",
-			btnSave: "Confirm position",
+			btnSave: "Save current position",
+			btnSaved: "Position saved",
 			zoomInMore: "You must zoom the map more before you can add a marker"
 			// dragMe: 'Drag the marker and then press <b>"Save"</b>.'
 		}
@@ -55,6 +68,10 @@ L.Control.MMP = L.Control.extend({
 		this._bindEvents();
 		this._mmpExternalLayers = [];
 
+		this._cluster = L.markerClusterGroup([]);
+		this._bindClusterEvents(this._cluster);
+		this.map.addLayer(this._cluster);
+
 		return this._container;
 	},
 
@@ -63,13 +80,37 @@ L.Control.MMP = L.Control.extend({
 		this.$btn.empty().remove();
 
 		this._mmpExternalLayers = null;
+
+		this.map.removeLayer(this._cluster);
+
+		this.map.off("zoomend dragend", this._refreshCluster);
+		this._cluster = null;
+	},
+
+	_bindClusterEvents: function(c) {
+		this.map.on("zoomend dragend", this._refreshCluster, this);
+	},
+
+	_refreshCluster: function() {
+		var self = this;
+		var c = this._cluster;
+		this._mmpExternalLayers.forEach(function(lay) {
+			if (lay._refresh) {
+				// c.removeLayer(lay);
+				lay._map = self.map;
+				lay._refresh();
+				delete lay._map;
+				// c.addLayer(lay);
+				
+			}
+		});
 	},
 
 	activateAddMarker: function() {
 		this._editingIsActive = true;
 		this._createBtn();
 		var eventName;
-		if (L.Browser.touch) {
+		if (utils.isTouchOnly()) {
 			eventName = "contextmenu";
 		}
 		else {
@@ -81,7 +122,7 @@ L.Control.MMP = L.Control.extend({
 	deactivateAddMarker: function() {
 		this._editingIsActive = false;
 		var eventName;
-		if (L.Browser.touch) {
+		if (utils.isTouchOnly()) {
 			eventName = "contextmenu";
 		}
 		else {
@@ -94,20 +135,20 @@ L.Control.MMP = L.Control.extend({
 
 	onMapClick: function(e) {
 
-			if (this.map.getZoom() < this.options.minZoom) {
-				smap.cmd.notify(this.lang.zoomInMore, "error", {fadeOut: 5000});
-				return;
-			}
-			if (this._marker) {
-				this.map.removeLayer(this._marker);
-				this._marker = null;
-			}
-			this._addMarker(e.latlng);
-		
+		if (this.map.getZoom() < this.options.minZoom) {
+			smap.cmd.notify(this.lang.zoomInMore, "error", {fadeOut: 5000});
+			return;
+		}
+		if (this._marker) {
+			this.map.removeLayer(this._marker);
+			this._marker = null;
+		}
+		this._toggleBtn(false);
+		this._addMarker(e.latlng);
 		
 	},
 
-	onHashChange: function(e) {
+	onHashChange: function(e, originalEvent) {
 		// Add external data
 		var hash = location.hash.substring(1);
 		var p = utils.paramsStringToObject(hash, true);
@@ -117,14 +158,19 @@ L.Control.MMP = L.Control.extend({
 			// 	url;
 			
 			var url = p.MMP_DATA;
+
+			url = this._adaptUrl(url);
+
 			url = decodeURIComponent(url);
 			this._counterLayerId = this._counterLayerId || 0;
 			this._clearExternalData();
 			
 			this._counterLayerId += 1;
-			this._addExternalData(url, {
-				layerId: "mmp-extlayer-"+this._counterLayerId
-			});
+
+			var options = $.extend({
+					layerId: "mmp-extlayer-"+this._counterLayerId
+				}, this.options.externalDataLayerOptions);
+			this._addExternalData(url, options);
 		}
 	},
 
@@ -185,8 +231,7 @@ L.Control.MMP = L.Control.extend({
 		// 	self.map.off('click', self.onMapClick);
 		// });
 
-		this._onHashChange = $.proxy(this.onHashChange, this)
-		$(window).on("hashchange", this._onHashChange);
+		smap.event.on("hashchange", this.onHashChange.bind(this));
 
 	},
 
@@ -199,8 +244,17 @@ L.Control.MMP = L.Control.extend({
 	},
 
 	_addExternalData: function(url, options) {
+		function adapt(s){
+			return s
+				.toLowerCase()
+				.replace(/ /g, '_')
+				.replace(/å/g, 'a')
+				.replace(/ä/g, 'a')
+				.replace(/ö/g, 'o');
+		}
+
 		options = options || {};
-		var icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
+		// var icon = L.AwesomeMarkers.icon({icon: 'warning', markerColor: 'black', prefix: "fa"});
 		// L.marker([55.6, 13], {icon: icon}).addTo(this.map);
 		var t = {
 				url: url,
@@ -208,10 +262,10 @@ L.Control.MMP = L.Control.extend({
 				options: $.extend(true, {
 					layerId: L.stamp(this),
 					displayName: "Incidenter",
-					xhrType: "GET",
+					xhrType: this.options.xhrType ? this.options.xhrType : "GET",
 					attribution: "Malmö stad",
 					inputCrs: "EPSG:3008",
-					uniqueKey: "ArendeId", // TODO: Check this once
+					uniqueKey: this.options.GeoJsonUniqueKey, // TODO: Check this once
 					selectable: true,
 					reverseAxis: false,
 					showInLayerSwitcher: true,
@@ -219,14 +273,21 @@ L.Control.MMP = L.Control.extend({
 					geomType: "POINT",
 					includeParams: ["bbox"],
 					separator: "&",
-					// noParams: true,
+					noParams: options.noParams || false,
 					popup: '*',
-					// noBbox: true,
-					style: {
-						icon: icon
-					}
+					pointToLayer: function (feat, latlng) {
+						var markerIcon = L.AwesomeMarkers.icon({
+						    icon: 'warning',
+						    prefix: 'fa',
+						    markerColor: self.options.statusColors[adapt(feat.properties.Status)] || 'white'
+						  });
+
+				        return L.marker(latlng, {icon: markerIcon});
+				    }
+					
+					
 				}, options)
-		};
+			};
 		// t.options.layerId = L.stamp(t);
 		// t.options.displayName = t.options.layerId;
 		
@@ -238,48 +299,72 @@ L.Control.MMP = L.Control.extend({
 		// 	layer = smap.cmd.getLayer(t.layerId);
 		// }
 		// else {
-			layer = smap.cmd.addLayerWithConfig(t);	
-		// }
+		// layer = smap.cmd.addLayerWithConfig(t);	
+		// this.map.removeLayer(layer);
+		layer = smap.core.layerInst._createLayer(t);
+		// layer._bindEvents(this.map);
 
 		this._mmpExternalLayers.push(layer); // so that we can clear/remove layers when called again
+		var self = this;
+		layer.on("load", function(e) {
+			// self._cluster.addLayer(e.target);
+			e.target.eachLayer(function(lay) {
+				self._cluster.addLayer(lay);
+			});
+		});
+		this.map.fire("layeradd", {layer: layer, target: layer});
+		this._refreshCluster();
+		// layer._refresh();
 		
+
 	},
+
+
+
 
 	_unbindEvents: function() {
 		this.map.off("click", this.onMapClick);
 	},
 
 	_adaptUrl: function(url) {
+		if (!url || !url.length || !(typeof url === "string")) {
+			return url;
+		}
 		if (document.domain === "localhost") {
 			// For debug
-			url = url.replace("gkkundservice.test.malmo.se", "localhost").replace("kartor.malmo.se", "localhost");
+			url = url
+						.replace("gkkundservice.malmo.se", "localhost/gkkundservicedev")
+						.replace("gkkundservice.test.malmo.se", "localhost/gkkundservicedev")
+						.replace("kartor.malmo.se", "localhost");
 			// url = 'http://localhost/smap-responsive/examples/data/mmpsave.json';
 		}
 		else if (document.domain === "kartor.malmo.se") {
 			// While testing, and maybe keep after deploy
 			url = url
 					.replace("gkkundservice.test.malmo.se/", "kartor.malmo.se/gkkundservicedev/")
-					.replace("gkkundservice.malmo.se/", "kartor.malmo.se/gkkundservicedev/");
+					.replace("gkkundservice.malmo.se/", "kartor.malmo.se/gkkundservice/");
 		}
 		return url;
 	},
 
-	_save: function(data) {
+	_save: function(data, xhrOptions) {
 
 		var url = this.options.wsSave;
 		url = this._adaptUrl(url);
 		smap.cmd.loading(true);
-		$.ajax({
+		$.ajax($.extend({
 			url: url,  //smap.config.ws.proxy + encodeURIComponent(url),
 			type: "GET",
 			data: data,
 			context: this,
+			cache: false,
 			dataType: "json",
 			success: function(resp) {
 				if (resp.success && JSON.parse(resp.success)) {
 					// Save successful
 					// alert("Success, indeed yes");
 					console.log('Saved position successfully. Code: ' + resp.code + '. Msg: ' + resp.msg);
+					this._toggleBtn(true);
 				}
 				else {
 					alert("Could not save because "+resp.msg+". Error code: "+resp.code);
@@ -293,7 +378,7 @@ L.Control.MMP = L.Control.extend({
 			complete: function() {
 				smap.cmd.loading(false);
 			}
-		});
+		}, xhrOptions));
 	},
 
 	save: function() {
@@ -492,13 +577,22 @@ L.Control.MMP = L.Control.extend({
 	_createBtn: function() {
 		var self = this;
 
-		this.$btn = $('<button id="smap-mmp-btn" class="btn btn-primary btn-lg hidden"><span class="fa fa-check"></span> '+this.lang.btnSave+'</button>');
+		this.$btn = $('<button id="smap-mmp-btn" class="btn btn-primary btn-lg hidden"> '+this.lang.btnSave+'</button>');
 		this.$btn.on("click", function (e) {
 			e.stopPropagation();
 			self.save();
 			return false;
 		});
 		$("#mapdiv").append(this.$btn);
+	},
+
+	_toggleBtn: function(state) {
+		if (state){
+			this.$btn.removeClass('btn-primary').addClass('btn-success').html('<span class="fa fa-check"></span> ' + this.lang.btnSaved)
+		}
+		else {
+			this.$btn.removeClass('btn-success').addClass('btn-primary').html(this.lang.btnSave)
+		}
 	},
 
 	// _addSnapping: function(marker) {
@@ -534,6 +628,7 @@ L.Control.MMP = L.Control.extend({
 				// }).tooltip("show");
 
 				// e.target.openPopup();
+				self._toggleBtn(false);
 				self._latLng = e.target.getLatLng();
 			});
 			this.map.addLayer(marker);

@@ -2,6 +2,13 @@ smap.core.Param = L.Class.extend({
 	
 	initialize: function(map) {
 		this.map = map;
+
+		$(window).on("hashchange", (function(e) {
+			var p = this._getHashAsObject();
+			p._originalEvent = e;
+			smap.event.trigger("hashchange", p);
+		}).bind(this)  );
+		smap.event.on("hashchange", this._onHashChange.bind(this));
 	},
 	
 	_lang: {
@@ -20,7 +27,6 @@ smap.core.Param = L.Class.extend({
 		}
 	},
 
-	
 	getParams: function() {
 		var paramsObject = this._cachedParams || null;
 		if (!paramsObject) {
@@ -33,8 +39,14 @@ smap.core.Param = L.Class.extend({
 				this._cachedParams = paramsObject;
 			}
 		}
-
 		return paramsObject;
+	},
+
+	_getHashAsObject: function(hash) {
+		hash = hash || location.hash.substring(1);
+
+		var p = utils.paramsStringToObject(hash, true);
+		return p;
 	},
 
 	/**
@@ -43,7 +55,10 @@ smap.core.Param = L.Class.extend({
 	 */
 	getWebParamsAsObject: function(sep) {
 		sep = sep || "?";
-		var p = location.href.split(sep);
+
+		var href = location.href;
+		var indexHash = href.indexOf("#");
+		var p = href.substring(0, indexHash === -1 ? href.length : indexHash).split(sep);
 		var pString = p.length > 1 ? p[1] : "";
 		paramsObject = utils.paramsStringToObject(pString, true);
 		return paramsObject;
@@ -52,6 +67,16 @@ smap.core.Param = L.Class.extend({
 	getHashParamsAsObject: function() {
 		return this.getWebParamsAsObject("#");
 	},
+
+	// /**
+	//  * Set a parameter to a different value than specified in the URL.
+	//  * @param {String} key
+	//  * @param {String} val
+	//  */
+	// setParam: function(key, val) {
+	// 	this._modifiedParams = this._modifiedParams || {};
+	// 	this._modifiedParams[key] = val;
+	// },
 	
 	createParamsAsObject: function() {
 		var c = this.map.getCenter(),
@@ -127,6 +152,121 @@ smap.core.Param = L.Class.extend({
 		}
 		return pString;
 	},
+
+	_loadGeoJson: function(url, doClustering, zoomToExtent) {
+		// Allows map caller to add external GeoJSON data using a parameter
+
+		doClustering = doClustering === false ? false : true;
+		zoomToExtent = zoomToExtent || false;
+
+		var layer = this._geoJsonLayer,
+			cluster = this._cluster;
+
+
+		if (cluster) {
+			cluster.clearLayers();
+		}
+		if (layer) {
+			layer.clearLayers();
+			layer._featureIndexes = [];
+			layer.getFeatureUrl = url;
+		}
+		if (!layer) {
+			// Create a layer
+			var layerConfig = {
+					url: url,
+					init: "L.GeoJSON.WFS",
+					options: {
+						layerId: L.stamp(this),
+						displayName: "External data",
+						xhrType: "GET",
+						attribution: "",
+						inputCrs: "EPSG:4326",
+						uniqueKey: "id", // Important! This must be set
+						selectable: true,
+						reverseAxis: false,
+						reverseAxisBbox: false,
+						showInLayerSwitcher: true,
+						// geomType: "POINT",
+						includeParams: ["bbox"],
+						separator: "&",
+						noParams: false, // set to true if u don't want to request service again on drag and zoom
+						popup: '*',
+						style: {
+							icon: L.AwesomeMarkers.icon({icon: "circle", markerColor: 'blue', prefix: "fa"})
+						}
+					}
+			};
+
+			// Allow overriding layer options through an smap option.
+			layerConfig.options = $.extend(true, layerConfig.options, smap.core.mainConfig.smapOptions.externalJsonOptions);
+
+			// Let the plugins have the last word if they want to override something
+			smap.event.trigger("smap.core.createjsonlayer", layerConfig.options);
+			layer = smap.core.layerInst._createLayer(layerConfig);
+			this._geoJsonLayer = layer;
+		}
+
+
+		// smap.event.trigger("smap.core.beforeaddjsonlayer", layer);
+
+		if (doClustering) {
+			if (!cluster) {
+				cluster = L.markerClusterGroup();
+				this._cluster = cluster;
+				this.map.addLayer(cluster);
+				
+				function refreshLayer() {
+					if (this._prevZoom && this._prevZoom < this.map.getZoom()) {
+						this._prevZoom = this.map.getZoom();
+						return;
+					}
+					this._prevZoom = this.map.getZoom();
+					layer._map = smap.map;
+					layer._refresh();
+					delete layer._map;
+				}
+				function onLoad(e) {
+					e.target.eachLayer(function(lay) {
+						cluster.addLayer(lay);
+					});
+				}
+				this.map.fire("layeradd", {layer: layer, target: layer}); // Enables select and other core functionality
+				layer.on("load", onLoad.bind(this));
+				this.map.on("zoomend dragend", refreshLayer.bind(this));
+			}
+			refreshLayer.call(this);
+		}
+		else {
+			this.map.addLayer(layer);
+			layer._refresh();
+		}
+		if (zoomToExtent === true) {
+			function funcZoomToExtent(e) {
+				this.map.whenReady((function() {
+					var b = e.target.getBounds();
+					this.map.fitBounds(b);
+					layer.off("load", _funcZoomToExtent); // only zoom to extent once
+				}).bind(this));
+			}
+			var _funcZoomToExtent = funcZoomToExtent.bind(this);
+			layer.on("load", _funcZoomToExtent);
+
+		}
+
+		smap.event.trigger("smap.core.addedjsonlayer", [layer, cluster]);
+		
+	},
+
+	_onHashChange: function(e, p) {
+		if (p.GEOJSON) {
+			var pGeoJson = p.GEOJSON instanceof Array ? p.GEOJSON : p.GEOJSON.split(",");
+			var url = decodeURIComponent(pGeoJson[0]);
+			var doClustering = pGeoJson.length > 1 ? (pGeoJson[1].toString().toUpperCase() === "TRUE" ? true : false) : false;
+			var zoomToExtent = pGeoJson.length > 2 ? (pGeoJson[2].toString().toUpperCase() === "TRUE" ? true : false) : false;
+			this._loadGeoJson(url, doClustering, zoomToExtent);
+		}
+	},
 	
 	applyParams: function(p) {
 		p = p || {};
@@ -143,6 +283,11 @@ smap.core.Param = L.Class.extend({
 			zoom = this.map.options.minZoom || 0;
 		}
 		if (center) {
+			if (p.CENTER.length > 2) {
+				var epsgFrom = "EPSG:"+p.CENTER[2];
+				var newCenterArr = utils.projectPoint(p.CENTER[0], p.CENTER[1], epsgFrom, "EPSG:4326");
+				center = L.latLng(newCenterArr[1], newCenterArr[0]);
+			}
 			this.map.setView(center, zoom, {animate: false});
 		}
 		else {
@@ -187,6 +332,10 @@ smap.core.Param = L.Class.extend({
 				this.map.off("popupopen", onPopupOpen).on("popupopen", onPopupOpen);
 				marker.bindPopup(html).openPopup();
 			}
+		}
+		var hash = paramsObject._hash = this._getHashAsObject();
+		if (hash) {
+			this._onHashChange(null, hash);
 		}
 		
 		smap.event.trigger("smap.core.applyparams", p);

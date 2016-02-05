@@ -41,11 +41,11 @@ L.Control.RedirectClick = L.Control.extend({
 
 	addHooks: function () {
 		this.map.on("click", this.onMapClick, this);
-		if (L.Browser.touch) {
+		if (utils.isTouchOnly()) {
 			this.staticTooltip = $('<div class="rclick-static-tooltip">'+this.lang.hoverText+'</div>');
 			$("#mapdiv").append(this.staticTooltip);
 		}
-		else if (!L.Browser.touch) {
+		else {
 			this._tooltip = {};
 			this._tooltip.text = this.lang.hoverText; // L.Tooltip expects an object with key "text"
 			this.tooltip = new L.Tooltip(this.map).updateContent(this._tooltip);

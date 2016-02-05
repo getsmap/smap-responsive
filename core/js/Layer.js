@@ -191,11 +191,16 @@ smap.core.Layer = L.Class.extend({
 					layer.setZIndex(opts.zIndex);
 				}
 				else {
-					layer = new init(t.url, opts);
+					if (!t.url) {
+						layer = new init(opts);
+					}
+					else {
+						layer = new init(t.url, opts);
+					}
 				}
 			}
 			// For ESRI bug
-			if (layer instanceof L.esri.DynamicMapLayer) {
+			if (layer instanceof L.esri.Layers.DynamicMapLayer || layer instanceof L.esri.Layers.TiledMapLayer) {
 				this._layers[t.options.layerId] = layer;
 				// layer.setZIndex(layer.options.zIndex);
 			}

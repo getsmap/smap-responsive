@@ -64,9 +64,10 @@
 					// Add http
 					href = "http://" + href;
 				}
-				var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>')
+				var target = $this.attr('target') || '_blank';
+				var $btn = $('<button class="btn btn-default btn-sm">'+text+'</button>');
 				// Get the anchor href value and set it to the onclick value.
-				$btn.attr("onclick", 'window.open("'+href+'", "_blank")');
+				$btn.attr("onclick", 'window.open("'+href+'", "'+target+'")');
 				$this.after($btn);
 			}
 			// If no valid href - just remove it. Fix for: https://github.com/getsmap/smap-responsive/issues/115
@@ -223,7 +224,14 @@
 						lay = arr[i];
 						if (lay !== layer) {
 							if (lay.resetStyle) {
-								lay.resetStyle(lay);
+								if (lay._layers) {
+									lay.eachLayer(function(subLay) {
+										lay.resetStyle(subLay);
+									});
+								}
+								else {
+									lay.resetStyle(lay);
+								}
 							}
 							lay._selectedFeatures = [];
 						}
@@ -364,7 +372,7 @@
 							row = $('<a href="#" class="list-group-item"><span><strong>'+theSf.options.displayName+'</strong>'+pText.replace(/^\'+|\'+$/gm,'')+'</span>'+
 								'<div class="btn btn-success select-btn-zoom-to-feature">Zooma hit</div></a>');
 							row.data("index", i);
-							if (L.Browser.touch) {
+							if (utils.isTouchOnly()) {
 								row.addClass("select-row-touch");
 							}
 							bContent.append(row);

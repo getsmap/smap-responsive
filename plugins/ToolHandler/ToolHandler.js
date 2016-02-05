@@ -37,12 +37,18 @@ L.Control.ToolHandler = L.Control.extend({
 		if (!utils.getBrowser().ie8) {
 			this._makeToolHandler();
 			smap.event.on("smap.core.pluginsadded", function() {
-				$(".thandler-container .leaflet-control button").each(function() {
-					$(this).tooltip({
-						placement: "bottom",
-						container: "#maindiv"
+				var $btns = $(".thandler-container .leaflet-control button");
+				if (!$btns.length) {
+					$(".thandler-btn").hide(); // Don't show the expand button if there are no tools to show
+				}
+				else {
+					$(".thandler-container .leaflet-control button").each(function() {
+						$(this).tooltip({
+							placement: "bottom",
+							container: "#maindiv"
+						});
 					});
-				});
+				}
 				// $('.leaflet-control').children("button").each(function(){
 				// 	self._addButton( $(this) );
 				// });

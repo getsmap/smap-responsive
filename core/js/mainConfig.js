@@ -14,11 +14,12 @@ smap.core.mainConfig = {
 			title: "sMap-responsive",
 			favIcon: "https://assets-cdn.github.com/favicon.ico", //"//assets.malmo.se/external/v4/favicon.ico"
 			popupAutoPanPadding: [0, 70],  // left(right, top/bottom
-			defaultLanguage: "sv"
+			defaultLanguage: "sv",
+			externalJsonOptions: {}
 		},
 
 		toolbarPlugin: "Menu",
 		defaultTheme: "smap",
 
-		configFolders: ["/rest/leaf/configs-1.0/"]
+		configDirs: ["/rest/leaf/configs-1.0/", "configs/", "dist/configs/"]  // Paths where smap will try to find the config file (if no dir is specified)
 };

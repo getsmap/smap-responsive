@@ -20,7 +20,7 @@ L.Control.MeasureDraw = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			btnDisabledBecauseTouch: "Rita & Mät stödjer inte din nuvarande enhet",
+			btnDisabledBecauseTouch: "Rita & Mät stödjer inte pekskärmar",
 			close: "Stäng",
 			drawTools: "Ritverktyg",
 			draggableMarker: "Markören är dragbar",
@@ -84,7 +84,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			// coordinates: "Koordinater"
 		},
 		"en": {
-			btnDisabledBecauseTouch: "Draw & Measure is not supported on your device",
+			btnDisabledBecauseTouch: "Draw & Measure does not work on touch screens",
 			close: "Close",
 			drawTools: "Draw tools",
 			draggableMarker: "The marker is draggable",
@@ -170,8 +170,11 @@ L.Control.MeasureDraw = L.Control.extend({
 		this._proxyListeners();
 
 		this._initDraw();
-		var showButtonAsDisabled = L.Browser.touch && this.options.touchShowButtonAsDisabled;
-		if (!L.Browser.touch || showButtonAsDisabled) {
+
+		this._isTouchOnly = utils.isTouchOnly();
+
+		var showButtonAsDisabled = this._isTouchOnly && this.options.touchShowButtonAsDisabled;
+		if (!this._isTouchOnly || showButtonAsDisabled) {
 			// Only create a button if tool is enabled OR if it is going to be disabled 
 			// (if touchShowButtonAsDisabled is true). Otherwise, don't show at all.
 			var $btn = this._createBtn();
@@ -612,7 +615,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		var className = "leaflet-maplabel "+fidClass;
 
 
-		if (L.Browser.touch) {
+		if (this._isTouchOnly) {
 			
 		}
 		else {
@@ -785,11 +788,11 @@ L.Control.MeasureDraw = L.Control.extend({
 		this.map.on("draw:drawstart", function() {
 			self._nodes = [];
 			self._selection(false); // Deactivate select
-			self.map.on("click", self._onNodeClick);
+			self.map.on("mousedown", self._onNodeClick); // "mousedown" instead of "click" solves: https://github.com/getsmap/smap-responsive/issues/214
 		});
 
 		this.map.on("draw:drawstop", function(e) {
-			self.map.off("click", self._onNodeClick);
+			self.map.off("mousedown", self._onNodeClick);
 			// Reactivate select
 			
 			if (self._nodes && _.indexOf(["polygon", "rectangle"], e.layerType) > -1) {
