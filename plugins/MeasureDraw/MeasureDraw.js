@@ -370,16 +370,29 @@ L.Control.MeasureDraw = L.Control.extend({
 		return utils.round(val, decimals) + " " + unit;
 	},
 
+	_renderLabel: function(center, len) {
+		this._labels = this._labels || [];
+
+		var label = utils.createLabel(center, this.readableDistance(len, 1), "leaflet-maplabel leaflet-maplabel-small");
+		this._layer.addLayer(label);
+		this._labels.push(label);
+
+		// Center the tag
+		var labelTag = $(".leaflet-maplabel.leaflet-maplabel-small:last");
+		labelTag.css({
+			"margin-left": (-labelTag.width()/2)+"px"
+		});
+	},
+
 	onNodeClick: function(e) {
+		this._nodes = this._nodes || [];
+
 		var latLng = e.latlng || null;
 		var nds = this._nodes;
-
-		this._labels = this._labels || [];
-	
+		
 		if (latLng) {
 			nds.push(latLng);
 		}
-
 		if (nds.length > 1) {
 			var latLngs = nds.slice(nds.length-2);
 			var len = utils.getLength(latLngs);
@@ -387,16 +400,7 @@ L.Control.MeasureDraw = L.Control.extend({
 				return false;
 			}
 			var center = L.latLng( (latLngs[0].lat+latLngs[1].lat)/2, (latLngs[0].lng+latLngs[1].lng)/2 );
-			var label = utils.createLabel(center, this.readableDistance(len, 1), "leaflet-maplabel leaflet-maplabel-small");
-			this._layer.addLayer(label);
-
-			this._labels.push(label);
-
-			// Center the tag
-			var labelTag = $(".leaflet-maplabel.leaflet-maplabel-small:last");
-			labelTag.css({
-				"margin-left": (-labelTag.width()/2)+"px"
-			});
+			this._renderLabel(center, len);
 		}
 
 		console.log("node click");
@@ -785,14 +789,18 @@ L.Control.MeasureDraw = L.Control.extend({
 			this._removeAlerts();
 		}, this);
 
+		var onVertexChanged = (function(e) {
+			this.onNodeClick(e);
+		}).bind(this);
+
 		this.map.on("draw:drawstart", function() {
 			self._nodes = [];
 			self._selection(false); // Deactivate select
-			self.map.on("mousedown", self._onNodeClick); // "mousedown" instead of "click" solves: https://github.com/getsmap/smap-responsive/issues/214
+			self._map.on("draw:vertexchanged", onVertexChanged); // Solves: https://github.com/getsmap/smap-responsive/issues/214
 		});
 
 		this.map.on("draw:drawstop", function(e) {
-			self.map.off("mousedown", self._onNodeClick);
+			self._map.off("draw:vertexchanged", onVertexChanged);
 			// Reactivate select
 			
 			if (self._nodes && _.indexOf(["polygon", "rectangle"], e.layerType) > -1) {
@@ -1030,3 +1038,14 @@ L.Control.MeasureDraw = L.Control.extend({
 L.control.measureDraw = function (options) {
 	return new L.Control.MeasureDraw(options);
 };
+
+L.Draw.Polyline.addInitHook(function() {
+	this._vertexChanged = function (latlng, added) {
+		this._updateFinishHandler();
+		this._updateRunningMeasure(latlng, added);
+		this._clearGuides();
+		this._updateTooltip();
+		this._map.fire("draw:vertexchanged", {latlng: latlng}); // So that we can add a label
+	};
+
+});
