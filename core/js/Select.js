@@ -155,7 +155,7 @@
 				});
 			}
 			else {
-				self._selectedFeaturesVector = [];				
+				self._selectedFeaturesVector = [];
 				self._selectedFeaturesWms = [];
 			}
 		});

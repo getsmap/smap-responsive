@@ -196,7 +196,9 @@ L.Control.MMPGreta = L.Control.extend({
 					}
 					this._hasInitiated = true;
 					var onLayerLoad = (function() {
-						var fg = L.featureGroup([]);
+						var fg = L.featureGroup([], {
+							selectable: true
+						});
 						fg.options = {}; // editable: false
 						this.map.removeLayer(layer);
 						layer.eachLayer(function(lay) {
@@ -206,6 +208,17 @@ L.Control.MMPGreta = L.Control.extend({
 						this.map.addLayer(fg);
 						// layer._map = this.map;
 						this.addEditPanel(fg);
+
+						// Make sure edited features are also rendered as unselected on map click e.g.
+						this.map.on("unselected", function() {
+							fg.eachLayer(function(lay) {
+								if (lay.editing && lay.editing._poly) {
+									var poly = lay.editing._poly;
+									poly.setStyle(poly.options.style);
+									// self._updateLayerStyle(poly.options._saved, lay);
+								}
+							});
+						});
 						layer.off("load", onLayerLoad);
 					}).bind(this);
 					layer.on("load", onLayerLoad);
@@ -390,7 +403,6 @@ L.Control.MMPGreta = L.Control.extend({
 			// layer = L.GeoJSON.geometryToLayer(layer.toGeoJSON());
 			editLayer.addLayer(layer);
 
-
 			// layer.options.clickable = true;
 			// layer.on("click", function() {
 			// 	alert("click");
@@ -550,10 +562,13 @@ L.Control.MMPGreta = L.Control.extend({
 
 		if (layer.setStyle) {
 			color = saved ? this.options.colorSaved : this.options.colorUnSaved;
-			layer.setStyle({
+			var style = {
 					fillColor: color,
 					color: color
-			});
+			};
+			layer.setStyle(style);
+			layer.options.style = style;
+			// layer.editing._poly.options.style = style;
 		}
 		else {
 			color = saved ? "green" : "red";
