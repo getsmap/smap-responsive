@@ -139,7 +139,8 @@ L.Control.MMPGreta = L.Control.extend({
 				noBindDrag: true,
 				style: {
 					fillColor: this.options.colorSaved,
-					color: this.options.colorSaved
+					color: this.options.colorSaved,
+					opacity: 1
 				},
 				pointToLayer: (function (f, latLng) {
 					var props = f.properties;
@@ -150,10 +151,11 @@ L.Control.MMPGreta = L.Control.extend({
 					// props[this.options.statusKey] = val;
 					// - End dev -
 					
+					var markerColor = this.options.statusColors[props[this.options.statusKey]];
 					var markerIcon = L.AwesomeMarkers.icon({
-						icon: 'warning',
+						icon: markerColor ? 'warning' : "fa-question",
 						prefix: 'fa',
-						markerColor: this.options.statusColors[props[this.options.statusKey]] || 'white'
+						markerColor: markerColor || "black"
 					});
 
 					var marker = L.marker(latLng, {icon: markerIcon});
