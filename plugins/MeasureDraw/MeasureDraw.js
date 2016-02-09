@@ -117,6 +117,19 @@ L.Control.MeasureDraw = L.Control.extend({
 	},
 
 	initialize: function(options) {
+
+		// Adapt edit tool so that we can capture when a vertex changes and
+		// add a label on the side of the poly-feature.
+		L.Draw.Polyline.addInitHook(function() {
+			this._vertexChanged = function (latlng, added) {
+				this._updateFinishHandler();
+				this._updateRunningMeasure(latlng, added);
+				this._clearGuides();
+				this._updateTooltip();
+				this._map.fire("draw:vertexchanged", {latlng: latlng, context: this}); // So that we can add a label
+			};
+		});
+
 		L.setOptions(this, options);
 		this._setLang(options.langCode);
 		this._tools = {};
@@ -1038,14 +1051,3 @@ L.Control.MeasureDraw = L.Control.extend({
 L.control.measureDraw = function (options) {
 	return new L.Control.MeasureDraw(options);
 };
-
-L.Draw.Polyline.addInitHook(function() {
-	this._vertexChanged = function (latlng, added) {
-		this._updateFinishHandler();
-		this._updateRunningMeasure(latlng, added);
-		this._clearGuides();
-		this._updateTooltip();
-		this._map.fire("draw:vertexchanged", {latlng: latlng}); // So that we can add a label
-	};
-
-});

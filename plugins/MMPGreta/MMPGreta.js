@@ -9,6 +9,8 @@ L.Control.MMPGreta = L.Control.extend({
 		uniqueKey: false, //"ArendeId",
 		reverseAxis: false,
 		reverseAxisBbox: true,
+		colorSaved: "#71A500",
+		colorUnSaved: "#FF0000",
 		statusKey: "Attribut",
 		statusColors: {
 			"passed": "gray",
@@ -50,6 +52,43 @@ L.Control.MMPGreta = L.Control.extend({
 			$.extend(true, this._lang, options._lang);
 		}
 		this._setLang(options.langCode);
+
+		// Init hooks
+		L.Edit.Poly.addInitHook(function () {
+			if (this._poly && !this._poly.options.editing) {
+				this._poly.options.editing = {};
+			}
+			this._fireEdit = function () {
+				this._poly.edited = true;
+				this._poly.fire('edit');
+				smap.map.fire("draw:editedpoly", this._poly);
+			};
+		});
+		L.Edit.Marker.addInitHook(function () {
+			this._onDragEnd = function (e) {
+				var layer = e.target;
+				layer.edited = true;
+				smap.map.fire("draw:editedmarker", layer);
+			};
+		});
+
+		L.EditToolbar.Delete.addInitHook(function() {
+			this._removeLayer = function (e) {
+				var layer = e.layer || e.target || e;
+
+				var marker = layer.editing._marker;
+				if ( !marker || !(marker.options.hasOwnProperty("editable") && marker.options.editable === false)) {
+					this._deletableLayers.removeLayer(layer);
+					this._deletedLayers.addLayer(layer);
+					this._map.fire("mmpgreta:edited");
+				}
+				else {
+					smap.cmd.notify("Ärendepunkter kan inte redigeras/tas bort", "warning", {fade: true});
+				}
+			}
+		});
+
+
 	},
 
 	_setLang: function(langCode) {
@@ -98,6 +137,10 @@ L.Control.MMPGreta = L.Control.extend({
 				reverseAxisBbox: this.options.reverseAxisBbox,
 				noBindZoom: true,
 				noBindDrag: true,
+				style: {
+					fillColor: this.options.colorSaved,
+					color: this.options.colorSaved
+				},
 				pointToLayer: (function (f, latLng) {
 					var props = f.properties;
 					
@@ -128,7 +171,7 @@ L.Control.MMPGreta = L.Control.extend({
 				}).bind(this)
 			});
 		}).bind(this));
-
+		var self = this;
 		smap.event.on("smap.core.beforeapplyparams", (function(e, p) {
 			// self._snapLayer = smap.cmd.getLayer(p.CATEGORY);
 			// if (self._snapLayer) {
@@ -199,6 +242,10 @@ L.Control.MMPGreta = L.Control.extend({
 		}
 	},
 
+	onStartEdit: function() {
+		alert("edited indeed");
+	},
+
 	_getTool: function(type) {
 		type = utils.capitalize(type.toLowerCase());
 
@@ -220,8 +267,11 @@ L.Control.MMPGreta = L.Control.extend({
 					init = L.Draw[type] || L.Edit[type] || L.EditToolbar[type];
 					tool = new init(this.map, options);
 					var options = this._drawControl.options.draw[type];
-					var color = "#0077E2";
-					tool.options.shapeOptions = {color: color, fillColor: color};
+					var color = this.options.colorUnSaved; //"#0077E2";
+					tool.options.shapeOptions = {
+						color: color,
+						fillColor: color
+					};
 
 			}
 
@@ -291,6 +341,7 @@ L.Control.MMPGreta = L.Control.extend({
 	startEditing: function() {
 		this._editLayer.options.editable = true;
 		smap.cmd.loading(true);
+		var self = this;
 		setTimeout((function() {
 			this._editLayer.eachLayer(function(layer) {
 				switch (layer.editing) {
@@ -301,7 +352,7 @@ L.Control.MMPGreta = L.Control.extend({
 				}
 			});
 			smap.cmd.loading(false);
-			this._map.fire("mmpgreta:edited");
+			// this._map.fire("mmpgreta:edited");
 		}).bind(this), 1);
 	},
 
@@ -336,6 +387,8 @@ L.Control.MMPGreta = L.Control.extend({
 				layer = e.layer;
 			// layer = L.GeoJSON.geometryToLayer(layer.toGeoJSON());
 			editLayer.addLayer(layer);
+
+
 			// layer.options.clickable = true;
 			// layer.on("click", function() {
 			// 	alert("click");
@@ -349,15 +402,9 @@ L.Control.MMPGreta = L.Control.extend({
 			// }
 			// editLayer._refresh(); // Make the layer update
 			this._deactivateAllTools();
-			this._map.fire("mmpgreta:edited");
+			this._map.fire("mmpgreta:edited", layer);
 		}
 		this.map.on('draw:created', onAdd.bind(this));
-		
-		// This event is never triggered…
-		// this.map.on('draw:edited', (function() {
-		// 	alert("draw:edited");
-		// 	smap.map.fire("mmpgreta:edited");
-		// }).bind(this));
 
 
 		// this._map.on("draw:deleteactive", (function() {
@@ -390,17 +437,45 @@ L.Control.MMPGreta = L.Control.extend({
 			this._deactivateAllTools();
 			this.save();
 		}).bind(this));
-		$btnSave.find(".btn").prop("disabled", true);
+		$btnSave.prop("id", "btn-save");
+		this._allowSaving(false);
 		
-		this._map.on("mmpgreta:edited", (function() {
-			$btnSave.find(".btn").prop("disabled", false); //.addClass("btn-warning");
+		this._map.on("draw:editedpoly", function(layer) {
+			self._updateLayerStyle(false, layer.editing._poly);
+			self._allowSaving(true);
+			layer.options._saved = false;
+		});
+		this._map.on("draw:editedmarker", function(layer) {
+			self._updateLayerStyle(false, layer.editing._marker);
+			self._allowSaving(true);
+			layer.options._saved = false;
+		});
+
+		// this._map.on("draw:vertexchanged", function(e) {
+		// 	var poly;
+		// 	if (poly) {
+		// 		self._map.fire("mmpgreta:edited", poly);
+		// 	}
+		// });
+		this._map.on("mmpgreta:edited", (function(layer) {
+			this._allowSaving(true);
+			if (layer && layer.options.icon) {
+				var marker = layer.editing._marker || layer;
+				marker.setIcon(L.AwesomeMarkers.icon({
+						icon: 'warning',
+						prefix: 'fa',
+						markerColor: "red"
+					})
+				)
+				layer.options._saved = false;
+			}
 
 			// if (this._prevJson && this._prevJson == this.filterBeforeSave(this._editLayer.toGeoJSON())) {
 			// 	// Nothing has changed
 			// 	console.log("nothing changed");
 			// }
 			// else {
-			// 	$btnSave.find(".btn").prop("disabled", false); //.addClass("btn-warning");
+			// 	this._allowSaving(true); //.addClass("btn-warning");
 			// 	console.log("Changed! …");
 			// }
 		}).bind(this));
@@ -416,6 +491,16 @@ L.Control.MMPGreta = L.Control.extend({
 
 
 		// this._addBtn("fa fa-edit", this.lang.edit);
+	},
+
+	_allowSaving: function(doEnable) {
+		var $btnSave = $("#btn-save .btn");
+		if (doEnable) {
+			$btnSave.prop("disabled", false);
+		}
+		else {
+			$btnSave.prop("disabled", true);
+		}
 	},
 
 	removeEditPanel: function() {},
@@ -454,6 +539,40 @@ L.Control.MMPGreta = L.Control.extend({
 		return geoJson; // not needed since we modify the object, but anyways…
 	},
 
+	_updateLayerStyle: function(saved, layer) {
+		layer = layer || this._editLayer;
+		
+		var color;
+
+		if (layer.setStyle) {
+			color = saved ? this.options.colorSaved : this.options.colorUnSaved;
+			layer.setStyle({
+					fillColor: color,
+					color: color
+			});
+		}
+		else {
+			color = saved ? "green" : "red";
+			var prevColor = saved ? "red" : "green";
+
+			// var icon = L.AwesomeMarkers.icon({
+			// 	icon: null, //'warning',
+			// 	prefix: 'fa',
+			// 	markerColor: color
+			// });
+			// if (layer.setIcon && color !== layer.options.icon.options.markerColor) {
+			// 	layer.setIcon(icon);
+			// }
+			var prefix = "awesome-marker-icon-";
+			layer.options.icon.options.markerColor = color;
+			$(layer._icon).removeClass(prefix+prevColor).addClass(prefix+color);
+			// layer.options.icon.options.className = layer.options.icon.options.className.replace(prefix+prevColor, prefix+color);
+
+			// layer._initIcon();
+			// layer.update();
+		}
+	},
+
 	save: function() {
 		// The following code is possible only because can always expect 
 		// that everything in the layer should be saved and all features 
@@ -466,9 +585,23 @@ L.Control.MMPGreta = L.Control.extend({
 		this._prevJson = geoJson;
 		console.log(geoJson);
 		smap.cmd.notify(this.lang.saveSuccess, "success", {fade: true});
-		$(".fa-save").parent().prop("disabled", true); //.removeClass("btn-warning");
+		this._allowSaving(false);
 		// -- dev end --
 		
+		// On success:
+		this._updateLayerStyle(true);
+
+		// this._editLayer.setStyle({
+		// 		fillColor: this.options.colorSaved,
+		// 		color: this.options.colorSaved
+		// });
+		var self = this;
+		this._editLayer.eachLayer(function(layer) {
+			if (layer.options._saved === false) {
+				layer.options._saved = true;
+				self._updateLayerStyle(true, layer);
+			}
+		});
 
 		// $.ajax({
 		// 	type: "POST",
@@ -480,7 +613,7 @@ L.Control.MMPGreta = L.Control.extend({
 		// 	success: function (data, status) {
 		// 		if (data.success === "true") {
 					// smap.cmd.notify(this.lang.saveSuccess, "success", {fade: true});
-					// $btnSave.find(".btn").prop("disabled", true);
+					// this._allowSaving(false);
 					// this._prevJson = geoJson;
 		// 		}
 		// 		else {
@@ -551,30 +684,4 @@ L.Control.MMPGreta = L.Control.extend({
 //L.control.MMPGreta = function (options) {
 //	return new L.Control.mMPGreta(options);
 //};
-
-
-
-// Bug fix for this class
-L.Edit.Poly.addInitHook(function () {
-	if (this._poly && !this._poly.options.editing) {
-		this._poly.options.editing = {};
-	}
-});
-
-L.EditToolbar.Delete.addInitHook(function() {
-	this._removeLayer = function (e) {
-		var layer = e.layer || e.target || e;
-
-		var marker = layer.editing._marker;
-		if ( !marker || !(marker.options.hasOwnProperty("editable") && marker.options.editable === false)) {
-			this._deletableLayers.removeLayer(layer);
-			this._deletedLayers.addLayer(layer);
-			this._map.fire("mmpgreta:edited");
-		}
-		else {
-			smap.cmd.notify("Ärendepunkter kan inte redigeras/tas bort", "warning", {fade: true});
-		}
-	}
-	
-});
 
