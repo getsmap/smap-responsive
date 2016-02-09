@@ -251,7 +251,7 @@
 							extractedAttribute = a[attr] || ""; // If attribute does not exist – use empty string "".
 						}
 					}
-					txt = txt.replace("${"+attr+"}", extractedAttribute.replace ? extractedAttribute.replace(/^\'+|\'+$/gm,'') : extractedAttribute );
+					txt = txt.replace("${"+attr+"}", extractedAttribute && extractedAttribute.replace ? extractedAttribute.replace(/^\'+|\'+$/gm,'') : extractedAttribute );
 				}
 				return txt;
 			}
