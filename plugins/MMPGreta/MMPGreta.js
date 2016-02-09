@@ -582,49 +582,43 @@ L.Control.MMPGreta = L.Control.extend({
 		geoJson = this.filterBeforeSave(geoJson);
 
 		// -- dev only --
-		this._prevJson = geoJson;
-		console.log(geoJson);
-		smap.cmd.notify(this.lang.saveSuccess, "success", {fade: true});
-		this._allowSaving(false);
+		// this._prevJson = geoJson;
+		// console.log(geoJson);
+		// smap.cmd.notify(this.lang.saveSuccess, "success", {fade: true});
 		// -- dev end --
-		
-		// On success:
-		this._updateLayerStyle(true);
 
-		// this._editLayer.setStyle({
-		// 		fillColor: this.options.colorSaved,
-		// 		color: this.options.colorSaved
-		// });
 		var self = this;
-		this._editLayer.eachLayer(function(layer) {
-			if (layer.options._saved === false) {
-				layer.options._saved = true;
-				self._updateLayerStyle(true, layer);
+		
+
+		$.ajax({
+			type: "POST",
+			contentType: "text/plain; charset=utf-8",
+			url: this._adaptUrl(this.options.wsSave),
+			data: JSON.stringify(geoJson),
+			dataType: "json",
+		 	context: this,
+			success: function (data, status) {
+				if (data.success === "true") {
+					smap.cmd.notify(this.lang.saveSuccess, "success", {fade: true});
+					this._allowSaving(false);
+					// this._updateLayerStyle(true); // necessary???
+					this._editLayer.eachLayer(function(layer) {
+						if (layer.options._saved === false) {
+							layer.options._saved = true;
+							self._updateLayerStyle(true, layer); // necessary???
+						}
+					});
+					this._prevJson = geoJson;
+				}
+				else {
+					smap.cmd.notify(this.lang.saveError, "error", {fade: true});
+				}
+			},
+			error: function (a, b, c) {
+				console.log(a.responseText);
+				smap.cmd.notify(this.lang.saveError, "error", {fade: true});
 			}
 		});
-
-		// $.ajax({
-		// 	type: "POST",
-		// 	contentType: "text/plain; charset=utf-8",
-		// 	url: this._adaptUrl(this.options.wsSave),
-		// 	data: JSON.stringify(geoJson),
-		// 	dataType: "json",
-		//  context: this,
-		// 	success: function (data, status) {
-		// 		if (data.success === "true") {
-					// smap.cmd.notify(this.lang.saveSuccess, "success", {fade: true});
-					// this._allowSaving(false);
-					// this._prevJson = geoJson;
-		// 		}
-		// 		else {
-		// 			smap.cmd.notify(this.lang.saveError, "error", {fade: true});
-		// 		}
-		// 	},
-		// 	error: function (a, b, c) {
-		// 		console.log(a.responseText);
-		// 		smap.cmd.notify(this.lang.saveError, "error", {fade: true});
-		// 	}
-		// });
 
 	}
 
