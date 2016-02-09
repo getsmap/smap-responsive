@@ -443,11 +443,13 @@ L.Control.MMPGreta = L.Control.extend({
 		this._map.on("draw:editedpoly", function(layer) {
 			self._updateLayerStyle(false, layer.editing._poly);
 			self._allowSaving(true);
+			layer.editing._poly.options._save = false;
 			layer.options._saved = false;
 		});
 		this._map.on("draw:editedmarker", function(layer) {
 			self._updateLayerStyle(false, layer.editing._marker);
 			self._allowSaving(true);
+			layer.editing._marker.options._save = false;
 			layer.options._saved = false;
 		});
 
@@ -526,7 +528,7 @@ L.Control.MMPGreta = L.Control.extend({
 		geoJson.features.forEach(function(f, i) {
 			// Project to desired projection
 			utils.projectFeature(f, "EPSG:4326", self.options.saveCrs, {
-				reverseAxisOutput: true,
+				reverseAxisOutput: false,
 				decimals: 0
 			});
 			f.properties.ArendeId = self._editId; // Important, so that saving will work server-side
@@ -589,6 +591,7 @@ L.Control.MMPGreta = L.Control.extend({
 
 		var self = this;
 		
+		console.log(geoJson);
 
 		$.ajax({
 			type: "POST",
@@ -601,7 +604,7 @@ L.Control.MMPGreta = L.Control.extend({
 				if (data.success === "true") {
 					smap.cmd.notify(this.lang.saveSuccess, "success", {fade: true});
 					this._allowSaving(false);
-					// this._updateLayerStyle(true); // necessary???
+					this._updateLayerStyle(true); // necessary???
 					this._editLayer.eachLayer(function(layer) {
 						if (layer.options._saved === false) {
 							layer.options._saved = true;
