@@ -155,10 +155,11 @@ L.Control.MMPGreta = L.Control.extend({
 					// - End dev -
 					
 					var markerColor = this.options.statusColors[props[this.options.statusKey]];
+					var isObject = !markerColor ? true : false; // Greta has 2 types of features: Objects and POIs
 					var markerIcon = L.AwesomeMarkers.icon({
-						icon: markerColor ? 'warning' : "circle",
+						icon: isObject ? "warning" : "warning",
 						prefix: 'fa',
-						markerColor: markerColor || "black"
+						markerColor: isObject ? "green" : markerColor
 					});
 
 					var marker = L.marker(latLng, {icon: markerIcon});
