@@ -26,6 +26,24 @@ L.Control.ToolHandler = L.Control.extend({
 		this._setLang(options.langCode);
 	},
 
+	update: function() {
+		var $btns = $(".thandler-container .leaflet-control button");
+		if (!$btns.length) {
+			// Note! If buttons are added later – this module has no way of knowing that happens.
+			// Therefore, you will need to call `update` to make it visible
+			$(".thandler-btn").addClass("thandler-deactivated"); // Don't show the expand button if there are no tools to show
+		}
+		else {
+			$(".thandler-btn").removeClass("thandler-deactivated");
+			$(".thandler-container .leaflet-control button").each(function() {
+				$(this).tooltip({
+					placement: "bottom",
+					container: "#maindiv"
+				});
+			});
+		}
+	},
+
 	onAdd: function(map) {
 		var self = this;
 		this._container = L.DomUtil.create('div', 'leaflet-control-toolhandler'); // second parameter is class name
@@ -36,23 +54,7 @@ L.Control.ToolHandler = L.Control.extend({
 
 		if (!utils.getBrowser().ie8) {
 			this._makeToolHandler();
-			smap.event.on("smap.core.pluginsadded", function() {
-				var $btns = $(".thandler-container .leaflet-control button");
-				if (!$btns.length) {
-					$(".thandler-btn").hide(); // Don't show the expand button if there are no tools to show
-				}
-				else {
-					$(".thandler-container .leaflet-control button").each(function() {
-						$(this).tooltip({
-							placement: "bottom",
-							container: "#maindiv"
-						});
-					});
-				}
-				// $('.leaflet-control').children("button").each(function(){
-				// 	self._addButton( $(this) );
-				// });
-			});
+			smap.event.on("smap.core.pluginsadded", this.update);
 		}
 		this._onWinResize = $.proxy(this.onWinResize, this);
 
