@@ -117,10 +117,13 @@ L.Control.MMPGreta = L.Control.extend({
 			// Modify external layer options before created (this can also be done in config using smapOptions.externalJsonOptions)
 
 			function onMouseOver(e) {
-				var text = '<b>'+e.target.feature.properties.TooltipTitle+"</b><p>"+e.target.feature.properties.Tooltip+"</p>";
-				if ( !$(".leaflet-top.leaflet-right").find("button.active").length) {
-					this._tooltip = utils.createLabel(e.latlng, text, "mmpgreta-tooltip");
-					this._map.addLayer(this._tooltip);
+				var props = e.target.feature.properties;
+				if (props.TooltipTitle && props.Tooltip) {
+					var text = '<b>'+props.TooltipTitle+"</b><p>"+props.Tooltip+"</p>";
+					if ( !$(".leaflet-top.leaflet-right").find("button.active").length) {
+						this._tooltip = utils.createLabel(e.latlng, text, "mmpgreta-tooltip");
+						this._map.addLayer(this._tooltip);
+					}
 				}
 			}
 			function onMouseOut(e) {
@@ -153,7 +156,7 @@ L.Control.MMPGreta = L.Control.extend({
 					
 					var markerColor = this.options.statusColors[props[this.options.statusKey]];
 					var markerIcon = L.AwesomeMarkers.icon({
-						icon: markerColor ? 'warning' : "fa-question",
+						icon: markerColor ? 'warning' : "circle",
 						prefix: 'fa',
 						markerColor: markerColor || "black"
 					});
