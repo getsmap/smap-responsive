@@ -13,7 +13,7 @@ L.Control.MMPGreta = L.Control.extend({
 		colorUnSaved: "#FF0000",
 		statusKey: "Attribut",
 		statusColors: {
-			"passed": "gray",
+			"passed": "blue",
 			"now": "darkred",
 			"future": "orange"
 		}
