@@ -511,6 +511,13 @@ L.Control.MMPGreta = L.Control.extend({
 
 
 		// this._addBtn("fa fa-edit", this.lang.edit);
+
+		// Since we are adding buttons async, the Toolhandler module won't know it should show its button
+		var toolhandler = smap.cmd.getControl("ToolHandler");
+		if (toolhandler) {
+			toolhandler.update();
+		}
+
 	},
 
 	_allowSaving: function(doEnable) {
