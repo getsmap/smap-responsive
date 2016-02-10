@@ -51,9 +51,14 @@ smap.cmd = {
 			var inst,
 				ctrls = smap.core.controls || [],
 				foundControls = [];
+			var theClassOfWhichWeWantAnInstance = L.Control[controlName];
+			if (!theClassOfWhichWeWantAnInstance) {
+				throw("smap.cmd.getControls: No control with name L.Control."+controlName);
+				return [];
+			}
 			for (var i=0,len=ctrls.length; i<len; i++) {
 				inst = ctrls[i];
-				if (inst instanceof L.Control[controlName]) {
+				if (inst instanceof theClassOfWhichWeWantAnInstance) {
 					foundControls.push(inst);
 				}
 			}

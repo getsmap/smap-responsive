@@ -10,18 +10,19 @@ smap.core.PluginHandler = L.Class.extend({
 		});
 	},
 	
-	getPlugin: function(pluginName) {
-		// e.g. "Attribution" or "Scale"
-		var inst,
-			ctrls = smap.core.controls || [];
-		for (var i=0,len=ctrls.length; i<len; i++) {
-			inst = ctrls[i];
-			if (inst instanceof L.Control[controlName]) {
-				return inst;
-			}
-		}
-		return null;
-	},
+	// -- Deprecated – use smap.cmd.getPlugin instead --
+	// getPlugin: function(pluginName) {
+	// 	// e.g. "Attribution" or "Scale"
+	// 	var inst,
+	// 		ctrls = smap.core.controls || [];
+	// 	for (var i=0,len=ctrls.length; i<len; i++) {
+	// 		inst = ctrls[i];
+	// 		if (inst instanceof L.Control[controlName]) {
+	// 			return inst;
+	// 		}
+	// 	}
+	// 	return null;
+	// },
 	
 	addPlugins: function(arr) {
 		var t, init,
