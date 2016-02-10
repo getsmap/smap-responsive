@@ -479,7 +479,7 @@ L.Control.MMPGreta = L.Control.extend({
 		// });
 		this._map.on("mmpgreta:edited", (function(layer) {
 			this._allowSaving(true);
-			if (layer && layer.options.icon) {
+			if (layer && layer.options && layer.options.icon) {
 				var marker = layer.editing._marker || layer;
 				marker.setIcon(L.AwesomeMarkers.icon({
 						icon: 'warning',
