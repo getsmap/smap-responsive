@@ -15,7 +15,7 @@ L.Control.MMP = L.Control.extend({
 		minZoom: 14,
 		externalDataLayerOptions: null,
 		// forcedDomain: null,
-		wsSave: location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		wsSave: {dev: null, prod: null} // location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
 	_lang: {
@@ -71,6 +71,18 @@ L.Control.MMP = L.Control.extend({
 		this._cluster = L.markerClusterGroup([]);
 		this._bindClusterEvents(this._cluster);
 		this.map.addLayer(this._cluster);
+
+		smap.event.on("smap.core.applyparams", function(p) {
+			if (p.ISPROD) {
+				 var wsSave = {
+				 	"FALSE": this.options.wsSave.dev,
+				 	"TRUE": this.options.wsSave.prod
+				 }
+				 this.options.wsSave = wsSave[p.ISPROD];
+			}
+		});
+
+		this.options.wsSave = document.domain === "kartor.malmo.se"
 
 		return this._container;
 	},
