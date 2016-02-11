@@ -15,7 +15,7 @@ L.Control.MMP = L.Control.extend({
 		minZoom: 14,
 		externalDataLayerOptions: null,
 		// forcedDomain: null,
-		wsSave: {dev: null, prod: null} // location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		wsSave: null // location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
 	},
 	
 	_lang: {
@@ -75,10 +75,10 @@ L.Control.MMP = L.Control.extend({
 		smap.event.on("smap.core.applyparams", (function(e, p) {
 			if (p.ISPROD) {
 				 var wsSave = {
-				 	"FALSE": this.options.wsSave.dev,
-				 	"TRUE": this.options.wsSave.prod
-				 }
-				 this.options.wsSave = wsSave[p.ISPROD];
+				 	"FALSE": location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry",	//this.options.wsSave.dev,
+				 	"TRUE": location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry"	//this.options.wsSave.prod
+				 };
+				 this.options.wsSave = wsSave[p.ISPROD.toUpperCase()];
 			}
 		}).bind(this));
 
