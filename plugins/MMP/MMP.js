@@ -72,7 +72,7 @@ L.Control.MMP = L.Control.extend({
 		this._bindClusterEvents(this._cluster);
 		this.map.addLayer(this._cluster);
 
-		smap.event.on("smap.core.applyparams", function(p) {
+		smap.event.on("smap.core.applyparams", (function(e, p) {
 			if (p.ISPROD) {
 				 var wsSave = {
 				 	"FALSE": this.options.wsSave.dev,
@@ -80,7 +80,7 @@ L.Control.MMP = L.Control.extend({
 				 }
 				 this.options.wsSave = wsSave[p.ISPROD];
 			}
-		});
+		}).bind(this));
 
 		this.options.wsSave = document.domain === "kartor.malmo.se"
 
