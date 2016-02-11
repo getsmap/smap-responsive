@@ -75,14 +75,12 @@ L.Control.MMP = L.Control.extend({
 		smap.event.on("smap.core.applyparams", (function(e, p) {
 			if (p.ISPROD) {
 				 var wsSave = {
-				 	"FALSE": location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry",	//this.options.wsSave.dev,
-				 	"TRUE": location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry"	//this.options.wsSave.prod
+				 	"FALSE": this.options.wsSave.dev,
+				 	"TRUE": this.options.wsSave.prod
 				 };
 				 this.options.wsSave = wsSave[p.ISPROD.toUpperCase()];
 			}
 		}).bind(this));
-
-		this.options.wsSave = document.domain === "kartor.malmo.se"
 
 		return this._container;
 	},
