@@ -15,7 +15,10 @@ L.Control.MMP = L.Control.extend({
 		minZoom: 14,
 		externalDataLayerOptions: null,
 		// forcedDomain: null,
-		wsSave: null // location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry" // location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry"
+		wsSave: {
+			dev: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry",
+			prod: location.protocol+"//gkkundservice.malmo.se/KartService.svc/saveGeometry"
+		}
 	},
 	
 	_lang: {
@@ -71,16 +74,6 @@ L.Control.MMP = L.Control.extend({
 		this._cluster = L.markerClusterGroup([]);
 		this._bindClusterEvents(this._cluster);
 		this.map.addLayer(this._cluster);
-
-		smap.event.on("smap.core.applyparams", (function(e, p) {
-			if (p.ISPROD) {
-				 var wsSave = {
-				 	"FALSE": this.options.wsSave.dev,
-				 	"TRUE": this.options.wsSave.prod
-				 };
-				 this.options.wsSave = wsSave[p.ISPROD.toUpperCase()];
-			}
-		}).bind(this));
 
 		return this._container;
 	},
@@ -200,7 +193,13 @@ L.Control.MMP = L.Control.extend({
 			// if (self._snapLayer) {
 			// 	self._addEditInterface();
 			// }
-
+			if (p.ISPROD && self.options.wsSave instanceof Object) {
+				 var wsSave = {
+				 	"FALSE": self.options.wsSave.dev,
+				 	"TRUE": self.options.wsSave.prod
+				 };
+				 self.options.wsSave = wsSave[p.ISPROD.toUpperCase()];
+			}
 			if (p.MMP_EDIT && p.MMP_EDIT.toUpperCase() === "TRUE" ) {
 				self.activateAddMarker();
 			}
