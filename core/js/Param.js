@@ -245,7 +245,10 @@ smap.core.Param = L.Class.extend({
 			function funcZoomToExtent(e) {
 				this.map.whenReady((function() {
 					var b = e.target.getBounds();
-					this.map.fitBounds(b);
+					setTimeout( (function() {
+						// Give the map some more time, or it can get locked without zooming to extent
+						this.map.fitBounds(b);
+					}).bind(this), 100);
 					layer.off("load", _funcZoomToExtent); // only zoom to extent once
 				}).bind(this));
 			}
