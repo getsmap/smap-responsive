@@ -216,10 +216,21 @@ L.Control.MMPGreta = L.Control.extend({
 						// Make sure edited features are also rendered as unselected on map click e.g.
 						this.map.on("unselected", function() {
 							fg.eachLayer(function(lay) {
-								if (lay.editing && lay.editing._poly) {
+								if (lay.editing && lay.editing._poly && (lay.options || lay.editing._poly.options)) {
 									var poly = lay.editing._poly;
-									poly.setStyle(poly.options.style);
-									// self._updateLayerStyle(poly.options._saved, lay);
+									var style = lay.editing._poly.options || lay.options;
+									// poly.setStyle(poly.options.style);
+									var wasSaved = style.color === "#FF0000" ? false : true;
+									if (wasSaved === false) {
+										setTimeout(function() {
+											self._updateLayerStyle(wasSaved, poly);
+										}, 0);
+									}
+									else {
+										self._updateLayerStyle(wasSaved, poly);
+									}
+									// console.log(poly.options.style.color === "#FF0000");
+									// self._updateLayerStyle(lay.options._saved, lay.editing._poly);
 								}
 							});
 						});
@@ -462,13 +473,12 @@ L.Control.MMPGreta = L.Control.extend({
 			self._updateLayerStyle(false, layer.editing._poly);
 			self._allowSaving(true);
 			layer.editing._poly.options._save = false;
-			layer.options._saved = false;
+			layer.editing._poly.options._saved = layer.options._saved = false;
 		});
 		this._map.on("draw:editedmarker", function(layer) {
 			self._updateLayerStyle(false, layer.editing._marker);
 			self._allowSaving(true);
-			layer.editing._marker.options._save = false;
-			layer.options._saved = false;
+			layer.editing._marker.options._save = layer.options._saved = false;
 		});
 
 		// this._map.on("draw:vertexchanged", function(e) {
@@ -575,7 +585,8 @@ L.Control.MMPGreta = L.Control.extend({
 			color = saved ? this.options.colorSaved : this.options.colorUnSaved;
 			var style = {
 					fillColor: color,
-					color: color
+					color: color,
+					opacity: 1
 			};
 			layer.setStyle(style);
 			layer.options.style = style;
