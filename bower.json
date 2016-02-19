@@ -46,7 +46,6 @@
     "proj4": "~2.3.5",
     "jquery": "1.11.2",
     "bootstrap-3": "./lib/bootstrap-3/",
-    "malmo_shared_assets": "malmostad/shared_assets",
     "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
     "lodash": "./lib/lodash/",
     "json3": "~3.3.2",
