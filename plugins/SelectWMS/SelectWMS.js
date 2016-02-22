@@ -68,7 +68,7 @@ L.Control.SelectWMS = L.Control.extend({
 									for (var j=0,lenj=arr.length; j<lenj; j++) {
 										if (arr[j].search(lName) > -1) {
 											var layers = arr[j];
-											t = smap.cmd.getLayerConfigBy("options.layerId", layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", layers);
+											t = smap.cmd.getLayerConfigBy("options.layers", layers) || smap.cmd.getLayerConfigBy("options.selectOptions.layers", layers);
 										}
 									}
 								}
