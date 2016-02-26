@@ -14,6 +14,9 @@
 .mf-v4 .thandler-btn {
   top: 48px;
 }
+.thandler-deactivated {
+  display: none !important;
+}
 .thandler-container.thandler-visible {
   display: block;
 }

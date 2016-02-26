@@ -363,7 +363,10 @@
 						for (var i=0,len=selectedFeatures.length; i<len; i++) {
 							theSf = selectedFeatures[i];
 							props = theSf.properties;
-							pText = utils.extractToHtml(theSf.options.popup, props);
+							if (!theSf.options || !theSf.options.popup) {
+								continue;
+							}
+							pText = theSf.options && theSf.options.popup ? utils.extractToHtml(theSf.options.popup, props) : "";
 							if (pText && pText === "*" || pText.search(/\$\{\*\}/) > -1) {
 								pText = self._extractAllAttributes(pText, props);
 							}
