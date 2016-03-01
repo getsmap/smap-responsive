@@ -285,7 +285,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 	
 	_addBtn: function() {
-		var btn = $('<div id="lswitch-btn"><span class="fa fa-bars fa-2x"></span></div>');
+		var btn = $('<div id="lswitch-btn" class="lswitch-btn-outslided"><span class="fa fa-angle-right"></span></div>');
 		$("#mapdiv").prepend(btn);
 		btn.on("mousedown "+L.DomEvent._touchstart, $.proxy(function() {
 			if (!this._panelIsSliding) {
@@ -302,6 +302,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 		btn.on("dblclick", function() {
 			return false;
 		});
+		setTimeout(function() {
+			$("#lswitch-btn").removeClass("lswitch-btn-outslided");
+		}, 1000);
 	},
 	
 	_addPanel: function() {
@@ -397,7 +400,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			return false;
 		}
 		this._panelIsSliding = true;
-		$("#lswitch-btn span").removeClass("fa-bars").addClass("fa-chevron-left");
+		$("#lswitch-btn span").addClass("lsw-angle-turned");
 
 		setTimeout(function() {
 			$(".lswitch-panel").addClass("panel-visible");
@@ -421,7 +424,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			return false;
 		}
 		this._panelIsSliding = true;
-		$("#lswitch-btn span").removeClass("fa-chevron-left").addClass("fa-bars");
+		$("#lswitch-btn span").removeClass("lsw-angle-turned");
 		$("#mapdiv").css({
 			"margin-left": "0",
 			"width": "100%"

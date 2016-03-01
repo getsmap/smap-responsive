@@ -1,19 +1,34 @@
 #lswitch-btn {
-  font-size: 0.7em;
+  font-size: 2em;
   z-index: 1001;
   position: absolute;
   left: 0px;
   bottom: 80px;
-  padding: 7px 3px 5px 0px;
+  padding: 5px 10px 8px 8px;
   border: 1px solid #999;
   border-width: 1px 1px 1px 0;
   background-color: #fff;
   background-color: rgba(255,255,255,0.8);
   cursor: pointer;
   border-radius: 0 0.4em 0.4em 0;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
 }
 #lswitch-btn span {
   margin-left: 1px;
+  -webkit-transition: -webkit-transform 1s;
+  transition: transform 1s;
+}
+#lswitch-btn:hover {
+  padding-left: 11px;
+}
+#lswitch-btn.lswitch-btn-outslided {
+  margin-left: -32px;
+}
+.lsw-angle-turned {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 .lswitch-btnhide.btn {
   display: table-cell;

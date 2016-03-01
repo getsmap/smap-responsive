@@ -17,15 +17,15 @@ cpPanelBg = none
 mobPanelBg = #38454e
 
 indentDist = 1.3em
-
+btnHoverOffset = 11px
 
 #lswitch-btn
-	font-size .7em
+	font-size 2em //.7em
 	z-index 1001
 	position absolute
 	left 0px
 	bottom 80px
-	padding 7px 3px 5px 0px
+	padding 5px 10px 8px 8px
 	border 1px solid #999
 	border-width 1px 1px 1px 0
 	// box-shadow 1px 1px 4px 0 rgba(100,100,100,.5)
@@ -33,8 +33,19 @@ indentDist = 1.3em
 	background-color rgba(255,255,255,.8)
 	cursor pointer
 	border-radius 0 0.4em 0.4em 0
+	transition all 0.2s
 	span
 		margin-left 1px
+		transition transform 1s
+
+#lswitch-btn:hover
+	padding-left btnHoverOffset
+
+#lswitch-btn.lswitch-btn-outslided
+	margin-left -32px
+
+.lsw-angle-turned
+	transform rotate(180deg)
 
 .lswitch-btnhide.btn
 	display table-cell
