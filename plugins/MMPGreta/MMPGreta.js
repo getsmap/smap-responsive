@@ -614,6 +614,24 @@ L.Control.MMPGreta = L.Control.extend({
 		}
 	},
 
+	/**
+	 * If needed, add this to fool the browser's cache by creating a unique URL.
+	 * @param {String} url The URL to be modified.
+	 * @returns {String} Url with the custom parameter "_"
+	 */
+	_addPreventCacheParam: function(url) {
+		var lastChar = url.charAt(url.length-1);
+		var containsQ = url.indexOf("?") > 0;
+		if (!containsQ) {
+			url += "?";
+		}
+		else if (lastChar !== "&" && lastChar !== "?") {
+			url += "&";
+		}
+		return url + "_=" + (new Date()).getTime(); // Add parameter
+
+	},
+
 	save: function() {
 		// The following code is possible only because can always expect 
 		// that everything in the layer should be saved and all features 
