@@ -14,6 +14,7 @@ L.Control.MMP = L.Control.extend({
 		position: 'bottomright',
 		minZoom: 14,
 		externalDataLayerOptions: null,
+		disableClusteringAtZoom: 13,
 		// forcedDomain: null,
 		wsSave: {
 			dev: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry",
@@ -71,7 +72,9 @@ L.Control.MMP = L.Control.extend({
 		this._bindEvents();
 		this._mmpExternalLayers = [];
 
-		this._cluster = L.markerClusterGroup([]);
+		this._cluster = L.markerClusterGroup({
+			disableClusteringAtZoom: this.options.disableClusteringAtZoom || this.map.options.maxZoom+1
+		});
 		this._bindClusterEvents(this._cluster);
 		this.map.addLayer(this._cluster);
 
