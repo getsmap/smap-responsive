@@ -7,6 +7,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		unfoldAll: false,
 		btnHide: true,
 		zoomToExtent: false,
+		showTooltip: true, // Can also be a number which is then ms of visibility
 		catIconClass: "fa fa-chevron-right", //fa-chevron-circle-right
 		getFitBoundsOptions: function() {
 			// Adapts zoom to extent options (default function prevents the 
@@ -31,7 +32,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 			hide: "Göm",
 			btnHideTooltip: "Göm lagerväljaren",
 			btnShowTooltip: "Visa lagerväljaren",
-			layerSwitcher: "Lagerväljare"
+			layerSwitcher: "Lagerväljare",
+			btnToggleTooltip: "Lagermeny"
 		},
 		"en": {
 			baselayers: "Baselayers",
@@ -40,7 +42,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 			hide: "Hide",
 			btnHideTooltip: "Hide layer switcher",
 			btnShowTooltip: "Show layer switcher",
-			layerSwitcher: "Layer switcher"
+			layerSwitcher: "Layer switcher",
+			btnToggleTooltip: "Lager switcher"
 		}
 	},
 	
@@ -302,8 +305,31 @@ L.Control.LayerSwitcher = L.Control.extend({
 		btn.on("dblclick", function() {
 			return false;
 		});
+		var self = this;
+		var optionShowTooltip = this.options.showTooltip || false;
+		var btnToggleTooltip = this.lang.btnToggleTooltip;
 		setTimeout(function() {
 			$("#lswitch-btn").removeClass("lswitch-btn-outslided");
+			if (optionShowTooltip) {
+				self._showBtnTooltip(btnToggleTooltip, optionShowTooltip);
+			}
+		}, 1000)
+
+	},
+
+	_showBtnTooltip: function(text, ms) {
+		
+		setTimeout(function() {
+			$("#lswitch-btn").popover({
+				content: text,
+				trigger: "manual",
+				placement: "right"
+			});
+			$("#lswitch-btn").popover("show");
+
+			setTimeout(function() {
+				$("#lswitch-btn").popover("destroy");
+			}, typeof ms === "number" ? ms : 3000);
 		}, 1000);
 	},
 	
