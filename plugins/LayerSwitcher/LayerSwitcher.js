@@ -33,7 +33,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			btnHideTooltip: "Göm lagerväljaren",
 			btnShowTooltip: "Visa lagerväljaren",
 			layerSwitcher: "Lagerväljare",
-			btnToggleTooltip: "Lagermeny"
+			btnToggleTooltip: "Lagerväljare"
 		},
 		"en": {
 			baselayers: "Baselayers",
@@ -43,7 +43,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			btnHideTooltip: "Hide layer switcher",
 			btnShowTooltip: "Show layer switcher",
 			layerSwitcher: "Layer switcher",
-			btnToggleTooltip: "Lager switcher"
+			btnToggleTooltip: "Layer switcher"
 		}
 	},
 	
@@ -208,6 +208,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 			// will take care of closing the switcher when that happens.
 			this.hidePanel();
 		}
+		if ( $("#lswitch-btn:visible").length && !this._btnToggleTooltipShown) {
+			this._showBtnTooltip(this.lang.btnToggleTooltip, this.options.optionShowTooltip);
+		}
 	},
 	
 	_bindEvents: function() {
@@ -313,12 +316,15 @@ L.Control.LayerSwitcher = L.Control.extend({
 			if (optionShowTooltip) {
 				self._showBtnTooltip(btnToggleTooltip, optionShowTooltip);
 			}
-		}, 1000)
+		}, 800);
 
 	},
 
 	_showBtnTooltip: function(text, ms) {
-		
+		if ( !$("#lswitch-btn:visible").length ) {
+			return;
+		}
+		this._btnToggleTooltipShown = true;
 		setTimeout(function() {
 			$("#lswitch-btn").popover({
 				content: text,
