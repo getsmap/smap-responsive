@@ -294,7 +294,9 @@ L.Control.MMP = L.Control.extend({
 						    markerColor: self.options.statusColors[adapt(feat.properties.Status)] || 'white'
 						  });
 
-				        return L.marker(latlng, {icon: markerIcon});
+				        var m = L.marker(latlng, {icon: markerIcon});
+				        m.options.icon.options.className += " easyincident-smallmarker"; // So that we can style the div of the marker
+				        return m;
 				    }
 					
 					
