@@ -2,13 +2,14 @@
 L.Control.MMP = L.Control.extend({
 	options: {
 		statusColors: { // Available colors: 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpuple', 'cadetblue'
+			ej_registrerat: 	'darkred',
+			registrerat: 		'orange',
+			pagaende: 			'cadetblue',
 			avslutat: 			'black',
-			avvisat: 			'red',
-			pagaende: 			'orange',
-			registrerat: 		'blue',
+			avvisat: 			'black',
 			vidarebefordrat: 	'darkpurple',
 			atgardat: 			'green',
-			senare_behandling: 	'darkred'
+			senare_behandling: 	'black'
 		},
 		GeoJsonUniqueKey: 'ID',
 		position: 'bottomright',
@@ -418,173 +419,7 @@ L.Control.MMP = L.Control.extend({
 		console.log('Skickar: ' + JSON.stringify(data));
 		this._save(data);
 
-		// var selectWmsInst = smap.cmd.getControl("SelectWMS");
-		// if (!selectWmsInst) {
-		// 	alert("MMP plugin requires plugin SelectWMS");
-		// 	return false;
-		// }
-
-		// function getFeatureInfo(typeName, latLng) {
-		// 	var wsGeoserver = "//kartor.malmo.se/geoserver/malmows/wms";
-		// 	wsGeoserver = self._adaptUrl(wsGeoserver);
-		// 	var wfsParams = selectWmsInst._makeParams({
-		// 			layers: typeName,
-		// 			version: "1.1.0", 
-		// 			info_format: "application/json",
-		// 			latLng: latLng,
-		// 			srs: "EPSG:4326",
-		// 			buffer: 1,
-		// 			feature_count: 1
-		// 	});
-		// 	return $.ajax({
-		// 		url: wsGeoserver,
-		// 		data: wfsParams,
-		// 		context: this,
-		// 		dataType: "json"
-		// 	});
-		// }
-
-		// http://gkkundservice.test.malmo.se/KartService.svc/saveGeometry?
-		// tempId=9d6f1fd5-142b-4151-94e9-c7c95ce529ed&
-		// x=119488.939393&
-		// y=6161920.23645&
-		// namn=nm&delomrade=do&
-		// stadsdel=sd&
-		// stadsomrade=stadsomr&
-		// entromrade=entromr
-
-		// tempId=9d6f1fd5-142b-4151-94e9-c7c95ce529ed&
-		// x=119155&
-		// y=6162071&
-		// namn=Ystadv%C3%A4gen+19
-		// stadsdel=FOSIE&
-		// stadsomrade=S%C3%96DER&
-
-		// The requests/extractions is to be made from these layers, using given attributes.
-		// var arrInfoLayers = [
-			// {
-			// 	typeName: "malmows:SMA_DELOMRADE_P",
-			// 	keyVals: {
-			// 		delomr: "delomrade"
-			// 	}
-			// },
-			// {
-			// 	typeName: "malmows:gk_entreprenorsomr_p",
-			// 	keyVals: {
-			// 		namn: "entromrade"
-			// 	}
-			// }
-		// 	{
-		// 		typeName: "malmows:SMA_STADSDEL_P",
-		// 		keyVals: {
-		// 			sdfname: "stadsdel"
-		// 		}
-		// 	},
-		// 	{
-		// 		typeName: "malmows:SMA_STADSOMRADEN_P",
-		// 		keyVals: {
-		// 			sdf_namn: "stadsomrade"
-		// 		}
-		// 	}
-
-		// ];
-
-		// Create one deferred object for each layer to be requested.
-		// When all deferreds are done, the when-function further done 
-		// will process the resolved result from each deferred.
-
-		//TODO: Resolve and save to MMP even when user clicked outside city limits.
-		// var t, defs = [];
-		// for (var i=0,len=arrInfoLayers.length; i<len; i++) {
-		// 	t = arrInfoLayers[i];
-		// 	defs.push( $.Deferred() );
-		// 	getFeatureInfo(t.typeName, this._latLng).done(function(resp) {
-		// 		// TODO if features array < 1, delomr = null
-		// 		var fs = resp.features || [];
-		// 		var f = fs[0];
-		// 		var tt, keyVals,
-		// 			def = defs[0];
-		// 			// Get the correct config object by checking which request we are dealing with
-		// 			for (var j = 0; j < arrInfoLayers.length; j++) {
-		// 				tt = arrInfoLayers[j];
-		// 				if(f) {
-		// 					if (tt.typeName.split(":")[1] === f.id.split(".")[0]) {
-		// 						keyVals = tt.keyVals;
-		// 						def = defs[j];
-		// 						break;
-		// 					}
-		// 				}
-		// 			}	
-
-		// 			var p = f ? f.properties : [],
-		// 				out = {},
-		// 				keyVals = tt.keyVals,
-		// 				kv;
-		// 			for (kv in keyVals) {
-		// 				out[keyVals[kv]] = p[kv] || '';
-		// 				}
-					
-		// 			def.resolve(out);
-
-		// 	}).fail(function(a, b, c) {
-		// 		defs[i].reject({});
-		// 	});
-		// }
-
-		// -- Get-nearest-address deferred object --
-		
-		// var dAddress = $.Deferred();  // Nearest address
-		// defs.push(dAddress);
-		// var wsAddressLocate = "//kartor.malmo.se/api/v1/nearest_address/";
-		// wsAddressLocate = this._adaptUrl(wsAddressLocate);
-
-		// $.ajax({
-		// 	url: wsAddressLocate,
-		// 	data: {
-		// 		e: east,
-		// 		n: north
-		// 	},
-		// 	context: this,
-		// 	dataType: "json",
-		// 	success: function(resp) {
-		// 		var t = resp.address[0];
-		// 		dAddress.resolve({
-		// 			namn: t.address
-		// 			// address_distm: t.distance
-		// 		});
-		// 	},
-		// 	error: function(a, b, c) {
-		// 		dAddress.reject({});
-		// 	}
-		// });
-
-		// http://kartor.malmo.se:8080/geoserver/malmows/wms?service=WMS&version=1.1.0&request=GetMap&layers=malmows:gk_entreprenorsomr_p&styles=&bbox=111087.4296875,6153218.0,128122.8046875,6168696.5&width=512&height=465&srs=EPSG:3008&format=application/openlayers
-		// http://kartor.malmo.se/api/v1/gk_entreprenorsomr/?e=119139&n=6164197
-		// http://kartor.malmo.se/api/v1/nearest_address/?e=119149&n=6164197
-
-
-		// 3. Merge the requests into one. Save into MMPs service when done.
-		// smap.cmd.loading(true);
-		// $.when.apply($, defs).done(function() {
-
-		// $.when.apply($, defs).done(function() {
-		// 	var data = {
-		// 			tempId: self._tempId || null,
-		// 			x: parseInt(east),
-		// 			y: parseInt(north)
-		// 	};
-		// 	// Extend the output object with responses from the ajax calls
-		// 	for (var i=0,len=arguments.length; i<len; i++) {
-		// 		$.extend(data, arguments[i]);
-		// 	}
-		// 	alert(JSON.stringify(data));
-		// 	self._save(data);
-
-		// }).always(function() {
-		// 	smap.cmd.loading(false);
-		// }).fail(function(a, b) {
-		// 	console.log("Could not save location because: None or erroneous response from one or more services.");
-		// });
+	
 
 	},
 

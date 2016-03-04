@@ -8,3 +8,6 @@ meeting_150126.txt
 plugins/**/*.css
 core/css/*.css
 dev.html
+configs/
+examples/
+dev_iframe.html
