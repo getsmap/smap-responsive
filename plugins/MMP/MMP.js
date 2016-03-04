@@ -13,7 +13,7 @@ L.Control.MMP = L.Control.extend({
 		},
 		GeoJsonUniqueKey: 'ID',
 		position: 'bottomright',
-		minZoom: 14,
+		minZoom: 13,
 		externalDataLayerOptions: null,
 		disableClusteringAtZoom: 13,
 		// forcedDomain: null,
