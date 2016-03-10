@@ -20,7 +20,7 @@
   transition: transform 1s;
 }
 #lswitch-btn:hover {
-  padding-left: 11px;
+  background-color: rgba(240,240,240,0.8);
 }
 #lswitch-btn.lswitch-btn-outslided {
   margin-left: -32px;
@@ -80,7 +80,7 @@
   padding-right: 1px;
   padding-top: 5px;
   overflow-y: auto;
-  -ms-overflow-style: -ms-autohiding-scrollbar !important;
+  -ms-overflow-style: -ms-autohiding-scrollbar !important /* Nasty bug fix Required for WP8 IE10!!! */;
   font-size: 0.9em;
 }
 .lswitch-panel .panel-heading {
