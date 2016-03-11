@@ -224,7 +224,7 @@
   .lswitch-btnhide.btn,
   .mf-v4 .btn {
     display: none !important;
-    visible: hidden;
+    visibility: hidden;
   }
   .lswitch-cat {
     color: #fff;
