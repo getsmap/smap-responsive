@@ -19,6 +19,7 @@ L.Control.Search = L.Control.extend({
 		},
 		gui: false,
 		addToMenu: false,
+		popupContent: null,
 		zoom: 15,
 		iconOptions: $.extend({}, new L.Icon.Default().options, {iconUrl: L.Icon.Default.imagePath + '/marker-icon.png'}),
 		source: null,
@@ -744,7 +745,8 @@ L.Control.Search = L.Control.extend({
 						smap.cmd.notify(this.lang.addressNotFound, "error");
 						return;
 					}
-					var coords = json.features[0].geometry.coordinates;
+					var feature = json.features[0];
+					var coords = feature.geometry.coordinates;
 					var latLng = L.latLng( coords[1], coords[0] );
 					
 					var wgs84 = "EPSG:4326";
@@ -766,7 +768,18 @@ L.Control.Search = L.Control.extend({
 					this.marker = L.marker(latLng, {iconOptions: L.icon(this.options.iconOptions) }).addTo(this._searchLayer);
 					this.marker.options.q = q; // Store for creating link to map
 					
-					this.marker.bindPopup('<p class="lead">'+decodeURIComponent(q)+'</p><div><button id="smap-search-popupbtn" class="btn btn-default btn-sm">'+this.lang.remove+'</button></div>');
+					var btnRemoveHtml = '<div><button id="smap-search-popupbtn" class="btn btn-default btn-sm">'+this.lang.remove+'</button></div>';
+					var titleHtml = '<p class="lead">'+decodeURIComponent(q)+'</p>';
+					var popupDefaultContent = titleHtml + btnRemoveHtml;
+					
+					var popupContent = popupDefaultContent;
+					if (this.options.popupContent) {
+						popupContent = "";
+						popupContent += titleHtml;
+						popupContent += utils.extractToHtml(this.options.popupContent, feature.properties);
+						popupContent += btnRemoveHtml;
+					}
+					this.marker.bindPopup(popupContent);
 					
 					var zoom = options.zoom || this.options.zoom;
 					if (options.setView) {

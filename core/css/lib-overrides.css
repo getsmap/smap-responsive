@@ -13,5 +13,8 @@
 	/* Force e.g. URL:s to break, not going outside the popup */
 	word-wrap: break-word;
 }
+.leaflet-popup-content a {
+	color: #000;
+}
 
 
