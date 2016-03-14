@@ -1,11 +1,7 @@
 {
   "name": "smap-responsive",
-  "version": "1.2.1",
-  "description": "A web mapping framework",
-  "main": "gulpfile.js",
-  "directories": {
-    "example": "examples"
-  },
+  "version": "1.2.2",
+  "description": "A framework for creating responsive web maps",
   "dependencies": {},
   "devDependencies": {
     "css-condense": "^0.0.6",
@@ -43,17 +39,63 @@
     "node-sass": "^3.0.0-alpha.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "open http://127.0.0.1/smap-responsive/dev.html?config=config.js",
+    "start": "open http://127.0.0.1/smap-responsive/dist/index.html?config=config.js",
+    "predeploy": "npm install && bower install && gulp full",
+    "prepublish": "npm install && bower install && gulp full"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/getsmap/smap-responsive"
   },
   "keywords": [
-    "map"
+    "map", "responsive", "leaflet"
   ],
-  "author": "Johan Lahti",
+  "author": "Johan Lahti <johanlahti@gmail.com>",
+  "contributors": [
+      {
+        "name": "tyskan",
+        "email": "britta.duvehansen@lund.se"
+      },
+      {
+        "name": "karl-magnus",
+        "email": "Karl-Magnus.Jonsson@kristianstad.se"
+      },
+      {
+        "name": "matslund",
+        "email": "mats.karlsson@lund.se"
+      },
+      {
+        "name": "Johan Lahti",
+        "email": "johanlahti@gmail.com"
+      },
+      {
+        "name": "Ulf Mineur",
+        "email": "ulf.minor@malmo.se"
+      },
+      {
+        "name": "kristian",
+        "email": "Kristian.Bergstrand@helsingborg.se"
+      },
+      {
+        "name": "Cleber Arruda",
+        "email": "Cleber.DomingosArruda@helsingborg.se"
+      },
+      {
+        "name": "Maja Karlsson",
+        "email": "maja.karlsson@malmo.se"
+      },
+      {
+        "name": "Peter Ahlström",
+        "email": "Peter.Ahlstrom@malmo.se"
+      },
+      {
+        "name": "Cleber",
+        "email": "cleverdo@gmail.com"
+      }
+  ],
   "license": "AGPL-3.0",
+  "analyze": true,
   "bugs": {
     "url": "https://github.com/getsmap/smap-responsive/issues"
   },
