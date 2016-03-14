@@ -95,6 +95,7 @@
       }
   ],
   "license": "AGPL-3.0",
+  "private": false,
   "analyze": true,
   "bugs": {
     "url": "https://github.com/getsmap/smap-responsive/issues"
