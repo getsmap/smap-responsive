@@ -44,11 +44,11 @@ L.Control.MalmoHeader = L.Control.extend({
 		
 		var headerHtml = 
 			'<!--[if IE]><meta content="IE=edge" http-equiv="X-UA-Compatible" /><![endif]-->'+
-			'    <!--[if lte IE 8]><script src="//assets.malmo.se/external/v4/html5shiv-printshiv.js" type="text/javascript"></script><![endif]-->'+
-			'    <link href="//assets.malmo.se/external/v4/masthead_standalone.css" media="all" rel="stylesheet" type="text/css"/>'+
-			'    <!--[if lte IE 8]><link href="//assets.malmo.se/external/v4/legacy/ie8.css" media="all" rel="stylesheet" type="text/css"/><![endif]-->'+
-			'    <noscript><link href="//assets.malmo.se/external/v4/icons.fallback.css" rel="stylesheet"></noscript>'+
-			'    <link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico" />'
+			'<!--[if lte IE 8]><script src="//assets.malmo.se/external/v4/html5shiv-printshiv.js" type="text/javascript"></script><![endif]-->'+
+			'<link href="//assets.malmo.se/external/v4/masthead_standalone.css" media="all" rel="stylesheet" type="text/css"/>'+
+			'<!--[if lte IE 8]><link href="//assets.malmo.se/external/v4/legacy/ie8.css" media="all" rel="stylesheet" type="text/css"/><![endif]-->'+
+			'<noscript><link href="//assets.malmo.se/external/v4/icons.fallback.css" rel="stylesheet"></noscript>'+
+			'<link rel="icon" type="image/x-icon" href="//assets.malmo.se/external/v4/favicon.ico" />'
 		$("head").prepend(headerHtml);
 		$("body").addClass("mf-v4 no-footer");
 		// $("body").addClass("test"); // during dev only
