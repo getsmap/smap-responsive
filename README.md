@@ -14,6 +14,8 @@ sMap-responsive
 
 sMap-responsive is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which support a range of different browsers and devices (specified in the wiki).
 
+> Quick install with [npm](https://nodejs.org/): `npm install --save smap-responsive`
+
 ###Credit
 The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) together with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors). Credit should also go to the testers and users providing feedback – as well as those who have shared a link to their maps above. If you also want to share your map with us, please contact the [the site admin](https://github.com/johanlahti).
 
@@ -53,6 +55,10 @@ First, make sure you have the following applications installed.
 - A webserver like Apache, Nginx, IIS, or whatever your prefer (either locally installed or on a server)
 
 <br />
+
+> The easy way: [Install npm](https://nodejs.org/) and execute this command:
+`npm install --save smap-responsive`
+inside a directory of your choice (locate the folder node_modules/smap-responsive)
 
 ####2. Clone and install dependencies
 If you are using a Mac or Linux computer, you may need to use ```sudo``` before some of the commands.
