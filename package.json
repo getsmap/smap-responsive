@@ -1,6 +1,6 @@
 {
   "name": "smap-responsive",
-  "version": "1.2.2",
+  "version": "1.2.9",
   "description": "A framework for creating responsive web maps",
   "dependencies": {},
   "devDependencies": {
@@ -38,11 +38,21 @@
     "multipipe": "^0.1.2",
     "node-sass": "^3.0.0-alpha.0"
   },
+  "files": [
+    "core",
+    "dist",
+    "examples",
+    "img",
+    "plugins",
+    "tutorials",
+    "bower.json",
+    "dev.html",
+    "gulpfile.js",
+    "index_template.html"
+  ],
   "scripts": {
-    "test": "open http://127.0.0.1/smap-responsive/dev.html?config=config.js",
-    "start": "open http://127.0.0.1/smap-responsive/dist/index.html?config=config.js",
-    "predeploy": "npm install && bower install && gulp full",
-    "prepublish": "npm install && bower install && gulp full"
+    "start": "open http://localhost/smap-responsive/dist/index.html?config=config.js",
+    "prepublish": "bower install && gulp full && exit 0"
   },
   "repository": {
     "type": "git",
