@@ -11,7 +11,7 @@ L.Control.MMP = L.Control.extend({
 			atgardat: 			'green',
 			senare_behandling: 	'black'
 		},
-		GeoJsonUniqueKey: 'ID',
+		geoJsonUniqueKey: 'ID',
 		position: 'bottomright',
 		minZoom: 13,
 		externalDataLayerOptions: null,
@@ -197,12 +197,13 @@ L.Control.MMP = L.Control.extend({
 			// if (self._snapLayer) {
 			// 	self._addEditInterface();
 			// }
-			if (p.ISPROD && self.options.wsSave instanceof Object) {
-				 var wsSave = {
-				 	"FALSE": self.options.wsSave.dev,
-				 	"TRUE": self.options.wsSave.prod
-				 };
-				 self.options.wsSave = wsSave[p.ISPROD.toUpperCase()];
+			if (self.options.wsSave instanceof Object) {
+				var isProd = p.ISPROD && p.ISPROD.length ? p.ISPROD.toUpperCase() : "FALSE";
+				var wsSave = {
+					"FALSE": self.options.wsSave.dev,
+					"TRUE": self.options.wsSave.prod
+				};
+				self.options.wsSave = wsSave[isProd];
 			}
 			if (p.MMP_EDIT && p.MMP_EDIT.toUpperCase() === "TRUE" ) {
 				self.activateAddMarker();
@@ -278,7 +279,7 @@ L.Control.MMP = L.Control.extend({
 					xhrType: this.options.xhrType ? this.options.xhrType : "GET",
 					attribution: "Malmö stad",
 					inputCrs: "EPSG:3008",
-					uniqueKey: this.options.GeoJsonUniqueKey, // TODO: Check this once
+					uniqueKey: this.options.geoJsonUniqueKey, // TODO: Check this once
 					selectable: true,
 					reverseAxis: false,
 					showInLayerSwitcher: true,
