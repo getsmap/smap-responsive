@@ -2,7 +2,7 @@ L.Control.Info = L.Control.extend({
 	options: {
         addToMenu: false,
 		autoActivate: false,
-		position: 'bottomright',
+		position: 'topright',
 		_lang: {
 			"sv": {
 				titleInfo: "<h4>Välkommen till Kävlingeåns vattenstrategiska planeringsunderlag!</h4>",

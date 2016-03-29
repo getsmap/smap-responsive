@@ -170,7 +170,9 @@ var config = {
 							olFirst: false,							// If true, the overlays panel is shown at the top
 							pxDesktop: 992,							// Breakpoint for switching between mobile and desktop switcher
 							btnHide: true,							// Show a hide button at the top header
-							catIconClass: "fa fa-chevron-right"		// Icon class for foldable headers
+							catIconClass: "fa fa-chevron-right",		// Icon class for foldable headers
+							showTooltip: false, // If true (or a number - milliseconds), then an initial tooltip will be shown over the toggle button. The duration can be set by providing a number here (in milliseconds).
+							hoverTooltip: true // Shows the tooltip on hover (non-touch interaction only)
 						}
 					},
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -203,7 +205,7 @@ var config = {
 						init: "L.Control.SelectWMS",
 						options: {
 							wmsVersion: "1.3.0",		// The WMS version to use in the getfeatureinfo request
-							info_format: "text/plain",	// The fallback info format to fetch from the WMS service. Overridden by layer's info_format in layer's selectOptions.
+							info_format: "text/plain",	// The default (fallback) info format to fetch from the WMS service. Overridden by layer's info_format in layer's selectOptions.
 							maxFeatures: 20,			// Max features to fetch on click
 							buffer: 12,					// Buffer around click (a larger number makes it easier to click on lines and points)
 							useProxy: false				// If you want call the URL with a prepended proxy URL (defined in ws above)
@@ -228,7 +230,7 @@ var config = {
 					},
 
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
-					// Search connects to a autocomplete and geolocate service and places a marker
+					// Search connects to an autocomplete and geolocate service and places a marker
 					// at the geolocated location.
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
 					{
@@ -239,12 +241,12 @@ var config = {
 								"en": {search: "Search address or place"},	// english
 								"sv": {search: "Sök adress eller plats"}	// swedish
 							},
+							wsAcUrl: "//kartor.malmo.se/api/v1/addresses/autocomplete/", // Required. Autocomplete service.
+							wsLocateUrl: "//kartor.malmo.se/api/v1/addresses/geolocate/", // Required. Geolocate service.
 							gui: true,					// If false, entry is not shown but the plugin can still take the POI URL parameter
 							whitespace: "%20",			// How to encode whitespace.
 							wsOrgProj: "EPSG:3008",		// The projection of the returned coordinates from the web service
 							useProxy: false,			// If you want call the URL with a prepended proxy URL (defined in ws above)
-							wsAcUrl: "//kartor.malmo.se/api/v1/addresses/autocomplete/", // Required. Autocomplete service.
-							wsLocateUrl: "//kartor.malmo.se/api/v1/addresses/geolocate/", // Required. Geolocate service.
 							acOptions: {				// typeahead options (Bootstrap's autocomplete library)
 								items: 100				// Number of options to display on autocomplete
 							}
