@@ -7,7 +7,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 		unfoldAll: false,
 		btnHide: true,
 		zoomToExtent: false,
-		showTooltip: false, // Can also be a number which is then ms of visibility
+		showTooltip: true, // Can also be a number which is then ms of visibility
+		hoverTooltip: false, // Show tooltip on hover
 		catIconClass: "fa fa-chevron-right", //fa-chevron-circle-right
 		getFitBoundsOptions: function() {
 			// Adapts zoom to extent options (default function prevents the 
@@ -308,6 +309,19 @@ L.Control.LayerSwitcher = L.Control.extend({
 		btn.on("dblclick", function() {
 			return false;
 		});
+		if ( this.options.hoverTooltip && !utils.isTouchOnly() ) {
+			btn.on("mouseenter", (function() {
+				this._isHoveringToggleBtn = true;
+				this._bindToggleBtnPopover(this.lang.btnToggleTooltip);
+				$("#lswitch-btn").popover("show");
+
+			}).bind(this));
+
+			btn.on("mouseleave", (function() {
+				$("#lswitch-btn").popover("hide");
+				this._isHoveringToggleBtn = false;
+			}).bind(this));
+		}
 		var self = this;
 		var optionShowTooltip = this.options.showTooltip || false;
 		var btnToggleTooltip = this.lang.btnToggleTooltip;
@@ -320,22 +334,39 @@ L.Control.LayerSwitcher = L.Control.extend({
 
 	},
 
-	_showBtnTooltip: function(text, ms) {
-		if ( !$("#lswitch-btn:visible").length ) {
-			return;
-		}
-		this._btnToggleTooltipShown = true;
-		setTimeout(function() {
+	/**
+	 * Bind a popover for the toggle button. To be shown either
+	 * automatically or on hover.
+	 * 
+	 * @return {[type]} [description]
+	 */
+	_bindToggleBtnPopover: function(text) {
+		// $("#lswitch-btn").popover("destroy");
+		if (!$("#lswitch-btn").data('bs.popover')) {
 			$("#lswitch-btn").popover({
 				content: text,
 				trigger: "manual",
 				placement: "right"
 			});
-			$("#lswitch-btn").popover("show");
+		}
+	},
 
-			setTimeout(function() {
-				$("#lswitch-btn").popover("destroy");
-			}, typeof ms === "number" ? ms : 3000);
+	_showBtnTooltip: function(text, ms) {
+		if ( !$("#lswitch-btn:visible").length ) {
+			return;
+		}
+		this._btnToggleTooltipShown = true;
+		var self = this;
+		setTimeout(function() {
+			if (!self._isHoveringToggleBtn) {
+				self._bindToggleBtnPopover(text);
+				$("#lswitch-btn").popover("show");
+				setTimeout(function() {
+					if (!self._isHoveringToggleBtn) {
+						$("#lswitch-btn").popover("destroy");
+					}
+				}, typeof ms === "number" ? ms : 3000);
+			}
 		}, 1000);
 	},
 	
