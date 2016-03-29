@@ -1,6 +1,7 @@
 L.Control.Geolocate = L.Control.extend({
 	options: {
 		position: 'bottomright',
+		hoverTooltip: true,
 		locateOptions: {
 			maxZoom: 17,
 			enableHighAccuracy: true
@@ -11,11 +12,13 @@ L.Control.Geolocate = L.Control.extend({
 	_lang: {
 		"sv": {
 			errorGeolocate: "Kunde inte hitta din position",
-			notSupported: "Din webbläsare stödjer inte geolokalisering"
+			notSupported: "Din webbläsare stödjer inte geolokalisering",
+			hoverTooltip: "Hitta din position"
 		},
 		"en": {
 			errorGeolocate: "The browser could not detect your position",
-			notSupported: "Your browser does not support geolocation"
+			notSupported: "Your browser does not support geolocation",
+			hoverTooltip: "Find your current location"
 		}
 	},
 	
@@ -61,6 +64,16 @@ L.Control.Geolocate = L.Control.extend({
 			}
 			return false;
 		}, this));
+
+		if (this.options.hoverTooltip) {
+			if (!btn.parent().data('bs.popover')) {
+				btn.parent().popover({
+					content: this.lang.hoverTooltip,
+					trigger: "hover",
+					placement: "left"
+				});
+			}
+		}
 	},
 	
 	activate: function() {

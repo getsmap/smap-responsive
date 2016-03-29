@@ -7,8 +7,8 @@ L.Control.LayerSwitcher = L.Control.extend({
 		unfoldAll: false,
 		btnHide: true,
 		zoomToExtent: false,
-		showTooltip: true, // Can also be a number which is then ms of visibility
-		hoverTooltip: false, // Show tooltip on hover
+		showTooltip: false, // Can also be a number which is then ms of visibility
+		hoverTooltip: true, // Show tooltip on hover
 		catIconClass: "fa fa-chevron-right", //fa-chevron-circle-right
 		getFitBoundsOptions: function() {
 			// Adapts zoom to extent options (default function prevents the 
