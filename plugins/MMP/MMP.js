@@ -11,6 +11,10 @@ L.Control.MMP = L.Control.extend({
 			atgardat: 			'green',
 			senare_behandling: 	'black'
 		},
+		userMarker: {
+			color: 'black',
+			icon: 'arrows'
+		},
 		geoJsonUniqueKey: 'ID',
 		position: 'bottomright',
 		minZoom: 13,
@@ -460,7 +464,7 @@ L.Control.MMP = L.Control.extend({
 		else {
 			this._latLng = latLng;
 		}
-		var icon = L.AwesomeMarkers.icon({icon: this._editingIsActive ? 'arrows' : "lock", markerColor: 'darkred', prefix: "fa", extraClasses: "mmpmarker"});
+		var icon = L.AwesomeMarkers.icon({icon: this._editingIsActive ? self.options.userMarker.icon : "lock", markerColor: self.options.userMarker.color, prefix: "fa", extraClasses: "mmpmarker"});
 		var marker = L.marker(latLng, {
 				draggable: this._editingIsActive || false,
 				icon: icon
