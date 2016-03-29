@@ -184,7 +184,7 @@ smap.core.Layer = L.Class.extend({
 					newOpts = _.pick(newOpts, ["service", "request", "version", "layers", "styles", "format", "width", "height", "bbox",
 										"angle", "buffer", "cql_filter", "env", "featureid", "filter", "format_options", "maxfeatures", "namespace",
 										"palette", "propertyname", "tiled", "tilesorigin", "scalemethod",
-										"srs", "map_resolution", "transparent"]);
+										"srs", "map_resolution", "transparent", "sld", "sld_body"]);
 					layer = new init(t.url, newOpts);
 					$.extend(layer.wmsParams, newOpts);
 					$.extend(layer.options, opts);
