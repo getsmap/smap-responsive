@@ -298,7 +298,15 @@ var config = {
 							position: "topright",		// Button's position
 							url: "http://kartor.malmo.se/urbex/index.htm?p=true&xy=${x};${y}", 	// Malmö pictometry
 							btnClass: "fa fa-plane",	// Button's icon class
-							cursor: "crosshair"			// Cursor shown in map before click
+							cursor: "crosshair",			// Cursor shown in map before click
+							_lang: {
+								en: {
+									name: "Redirect" // tooltip for the button in English
+								},
+								sv: {
+									name: "Länka vidare" // tooltip for the button in Swedish
+								}
+							}
 						}
 					},
 

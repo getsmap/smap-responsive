@@ -45,9 +45,8 @@
     "bootstrap-stylus": "~4.0.3",
     "proj4": "~2.3.5",
     "jquery": "1.11.2",
-    "bootstrap-3": "./lib/bootstrap-3/",
     "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
-    "lodash": "./lib/lodash/",
+    "lodash": "lodash",
     "json3": "~3.3.2",
     "jquery-placeholder": "~2.1.0",
     "jquery.scrollTo": "~2.1.0",
@@ -67,24 +66,12 @@
         "bootstrap3-typeahead.js"
       ]
     },
-    "notify-custom": {
-      "main": [
-        "notify.js"
-      ]
-    },
     "sass-bootstrap": {
       "main": [
         "./dist/js/bootstrap.js",
         "./dist/css/bootstrap.css",
         "./dist/fonts/*",
         "./dist/css/bootstrap-theme.min.css"
-      ]
-    },
-    "bootstrap-3": {
-      "main": [
-        "css/bootstrap.icon-large.css",
-        "css/bootstrap-theme.min.css",
-        "fonts/glyphicons-draw.png"
       ]
     },
     "es5-shim": {
