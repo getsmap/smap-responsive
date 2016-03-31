@@ -308,9 +308,10 @@ var config = {
 					{
  						init: "L.Control.Info",
  						options: {
- 							addToMenu: false,			// Create toggle button or not
+ 							autoActivate: true,			// If you want the Info dialog to open from start, set this to true
+							dontShowAgainBox: true,		// Requires autoActivate: true. Allows the user to check a box to not show the info dialog again (utilizing localStorage)
+							addToMenu: true,			// Creates a button that toggles the info dialog (if autoActivate is false this should probably be set to true)
  							position: "topright",		// Button's position (requires addToMenu == true)
-							autoActivate: false,		// Open from start
 
 							// Here follows the content of the modal – language dependent!
 							_lang: {

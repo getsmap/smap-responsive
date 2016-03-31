@@ -1,62 +1,38 @@
 L.Control.Info = L.Control.extend({
 	options: {
-        addToMenu: false,
-		autoActivate: false,
-		position: 'topright',
+		autoActivate: true,			// If you want the Info dialog to open from start, set this to true
+		dontShowAgainBox: true,		// Requires autoActivate: true. Allows the user to check the box to not show this box again (using localStorage)
+		addToMenu: true,			// Creates a button that toggles the info dialog (if autoActivate is false this should probably be set to true)
+		position: 'topright',		// The position using Leaflet's positioning system
+
+		// This is how you fill the Info dialog with content (utilizing the language support 
+		// functionality in smap-responsive)
 		_lang: {
 			"sv": {
-				titleInfo: "<h4>Välkommen till Kävlingeåns vattenstrategiska planeringsunderlag!</h4>",
-				bodyContent:
-					'<p>Kävlingeåns vattenstrategiska planeringsunderlag (VSPU) är samlad kartinformation om hela avrinningsområdet vars syfte är informationsspridning och samordning över kommungränser. </p>'+
-					'<p>Asterisk (*) betyder att lagret är klickbart för mer information. Vid problem kan det hjälpa att zooma in.</p>'+
-					'<p>Källor</p>'+
-					'SMHI: Hydrologi<br/>'+
-					'LST: Dikningsföretag, Riksintressen, Tillståndsverksamhet<br/>'+
-					'Vattenmyndigheten: Vattenförvaltning, Miljöövervakning<br/>'+
-					'Kommuner: Planer, VA, Miljö<br/>'+
-					'Naturvårdsverket: Skyddade områden<br/>'+
-					'Jordbruksverket: Äng- och betesmark<br/>'+
-					'Riksantikvarieämbetet: Fornminnen<br/>'+
-					'SGU: Berg och jord<br/>'+
-					'Skogsstyrelsen: Nyckelbiotop, Sumpskog<br/>'+
-					'<p>Länkar</p>'+
-					'<p><a href="http://kavlingean.se">Vattenrådets hemsida</a></br>'+
-					'<a href="https://www.geodata.se/GeodataExplorer/index.jsp?loc=sv" target="_blank">Geodataportalen</a><br/>'+
-					'<a href="http://vattenwebb.smhi.se/" target="_blank">SMHI Vattenwebb</a><br/>'+
-					'<a href=http://www.smhi.se/klimatdata/hydrologi/ladda-ner-data-fran-svenskt-vattenarkiv-1.20127" target="_blank">SMHI SVAR (Svenskt Vattenarkiv)</a><br/>'+
-					'<a href="http://opendata-catalog.smhi.se/explore/" target="_blank">SMHI Datautforskaren</a><br/>'+
-					'<a href="http://viss.lansstyrelsen.se/Monitoringprograms.aspx?monitoringProgramID=189" target="_blank">Kävlingeån på VISS</a>'+
-					'<p>VSPU administreras av vattenrådet och data uppdateras av rådets medlemskommuner. Kontakt:...</p>'+
-					'<h4>Smap</h4>'+
-					'<p>Smap-responsive är ett ramverk för att skapa kartor med "responsiv design". '+
-					'<p>Ramverket har ursprungligen utvecklats av Malmö Stadsbyggnadskontor men utvecklas numera tillsammans med Kristianstad, Helsingborg och Lunds kommun.'+
-					'<p>Har du synpunkter, frågor eller vill hjälpa till med utvecklingen? Kontakta <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>, Malmö stad.</p>'+
-					'<p>Vill du veta mer om andra öppenkällkodsprojekt som drivs under namnet sMap – eller veta mer om bakomliggande geodata? Kontakta <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> eller '+
-					'<a href="mailto :Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
+				titleInfo: "<h4>Välkommen till smap-responsive!</h4>",
+				bodyContent: '<p>Jag är dialogen kropp.</p>',
+				tooltipText: "Visa info"
+					
 			},
-			// "en": {
-				// titleInfo: "<h4>Welcome to smap-responsive!</h4>",
-				// bodyContent:
-					// '<h4>What?</h4>'+
-			  		// '<p>Smap-responsive is a framework for creating maps with a "responsive design". '+
-			  			// 'This means the site adapts the content to the screen size. The framework can be extended with plugins (Leaflet controls).</p>'+
-		  			// '<p>The code is open source and can be downloaded free from <a target="_blank" href="https://github.com/getsmap/smap-responsive/">GitHub</a>.</p>'+
-		  			// '<h4>Who?</h4>'+
-			  		// '<p>The framework was originally developed by Malmö Stadsbyggnadskontor but is now developed together with the municipalities of Kristianstad, Helsingborg and Lund.'+
-			  		// '<h4>Feed-back!</h4>'+
-					// '<p>Do you have suggestions, or are you interested in contributing to the development of sMap-responsive? Please contact <a href="mailto:johan.lahti@malmo.se">Johan Lahti</a>.</p>'+
-					// '<p>Do you want more info about other open source projects denoted as "sMap" – or do you want to know more about the geodata in the map(s)? Then contact <a href="mailto:ulf.minor@malmo.se">Ulf Minör</a> or '+
-					// '<a href="mailto:Karl-Magnus.Jonsson@kristianstad.se">Karl-Magnus Jönsson.</a></p>'
-			// }
+			"en": {
+				titleInfo: "<h4>Welcome to smap-responsive!</h4>",
+				bodyContent: '<p>I am the body of the dialog.</p>',
+				tooltipText: "Show info"
+			}
 		}
 	},
 	
+	// Please don't touch these :) These can be overridden from options so you can set your own titleInfo, bodyContent and tooltipText
 	_lang: {
 		"sv": {
-			close: "Stäng"
+			close: "Stäng",
+			tooltipText: "Visa info",
+			dontShowAgain: "Visa inte från start nästa gång"
 		},
 		"en": {
-			close: "Close"
+			close: "Close",
+			tooltipText: "Show info",
+			dontShowAgain: "Don't show from start next time"
 		}
 	},
 	
@@ -91,36 +67,73 @@ L.Control.Info = L.Control.extend({
 		// Do everything "opposite" of onAdd – e.g. unbind events and destroy things
 		// map.off('layeradd', this._onLayerAdd).off('layerremove', this._onLayerRemove);
 	},
+
+	_getLocalStorage: function() {
+		return window.localStorage ? window.localStorage : false;
+	},
 	
-	activate: function() {
+	activate: function(activatedFromClick) {
+		activatedFromClick = activatedFromClick || false;
+
+		var o = this.options;
+		var store = this._getLocalStorage();
+		if (!activatedFromClick && store && store.dontShowAgain) {
+			return false;
+		}
 		if (!this._$dialog) {
-			var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
-			this._$dialog = utils.drawDialog(this.lang.titleInfo, this.lang.bodyContent, footerContent);
+			var $footerContent = $('<div class="smap-info-footer"><button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button></div>');
+			var $bodyContent = this._drawBody(this.lang.bodyContent);
+			$footerContent.prepend( this._createCheckbox() );
+			this._$dialog = utils.drawDialog(this.lang.titleInfo, $bodyContent, $footerContent);
 		}
 		this._$dialog.modal("show");
 	},
-	
+
+	_drawBody: function(bodyContent) {
+		var $newBody = $("<div />");
+		$newBody.append(bodyContent);
+
+		return $newBody;
+	},
+
+	_createCheckbox: function() {
+		var addCheckbox = this.options.autoActivate && this.options.dontShowAgainBox;
+		var store = this._getLocalStorage();
+		if (!store) {
+			return null;
+		}
+		if (addCheckbox === true) {
+			var startChecked = store.dontShowAgain ? true : false;
+			var $cb = $('<div class="checkbox">\
+				<label>\
+					<input type="checkbox"> '+this.lang.dontShowAgain+' \
+				</label>\
+			</div>');
+			var self = this;
+			$cb.find("input").on("change", function() {
+				var isChecked = $(this).is(":checked");
+				if (isChecked) {
+					store.dontShowAgain = "1"; 
+				}
+				else {
+					delete store.dontShowAgain;
+				}
+			}).prop("checked", startChecked);
+		}
+		return $cb;
+	},
 	
 	_drawBtn: function() {
 		var self = this;
 
-        if(this.options.addToMenu) {
-            smap.cmd.addToolButton( "", "fa fa-info", function () {
-                self.activate();
-                return false;
-            },null);
-        }
-
-        else {
-            var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info"></span></button>');
-//		$("#mapdiv").append($btn);
-            $btn.on("click", function () {
-                self.activate();
-                return false;
-            });
-            this.$container.append($btn);
-        }
-
+		if (this.options.addToMenu) {
+			var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info"></span></button>');
+			$btn.on("click", function () {
+				self.activate(true);
+				return false;
+			});
+			this.$container.append($btn);
+		}
 	}
 });
 
