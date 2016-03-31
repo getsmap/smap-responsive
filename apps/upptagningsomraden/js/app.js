@@ -127,7 +127,7 @@ var app = {
 			// var startYear = m < 10 ? yearNow - 1 : yearNow;
 
 			// Note! Set the years here when the data is ready (2014 means terms 2014/15)
-			var years = [2014, 2015], //[yearNow-1, yearNow],
+			var years = [2015, 2016], //[yearNow-1, yearNow],
 				y, nextY, tag;
 			for (var i=0,len=years.length; i<len; i++) {
 				y = years[i];

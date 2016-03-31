@@ -38,7 +38,7 @@ var config = {
 
 		{
 			init: "L.TileLayer.WMS",
-			url: "http://kartor.malmo.se/arcgis/services/malmoatlas_3857_wms/MapServer/WMSServer",
+			url: "http://kartor.malmo.se/arcgis/services/atlaskarta_3857_wms/MapServer/WMSServer",
 			options: {
 				layerId: "stadskartan",
 				displayName: "Stadskarta",
@@ -124,7 +124,21 @@ var config = {
 							wsAcUrl: "http://kartor.malmo.se/WS/search-1.0/autocomplete.ashx", // autocomplete
 							wsLocateUrl: "http://kartor.malmo.se/WS/search-1.0/sokexakt.ashx" // locate
 						}
-					}// ,
+					} ,
+					{
+						 init: "L.Control.FullScreen",
+							options: {
+								 // mode: the type of fullscreen to display. replace and newTab is most suitable for maps in an iframe. full is 'real' HTML5-fullscreen. 
+								 // replace: open map in the same window, like a regular html link. newTab: open map in new tab. full: show map in fullscreen.
+								// controlToAdd: in this case, add the Malmö header when opening map in a new tab or replacing parent window.
+								mode: 'newTab',
+								controlToAdd: {
+									init: "L.Control.MalmoHeader",
+									options: {}
+								},
+								position: 'bottomright'
+							}
+					},
 					//{
 					//	init: "L.Control.ShareLink",
 					//	options: {
@@ -175,11 +189,14 @@ var config = {
 					// 	}
 					// },
 					// {
- 				// 		init: "L.Control.Print",
- 				// 		options: {
- 				// 			printUrl: "http://localhost/print-servlet/leaflet_print/", //http://kartor.malmo.se/print-servlet/leaflet_print/", // http://161.52.15.157/geoserver/pdf
- 				// 			position: "topright"
- 				// 		}
+ 				
+				{
+					init: "L.Control.Print",
+					options: {
+						printUrl: "//kartor.malmo.se/print-servlet/leaflet_print/", // //161.52.15.157/geoserver/pdf
+						position: "topright"
+					}
+				}
  				//  	},
 				// 	{
 				// 		init: "L.Control.ToolHandler",
@@ -208,7 +225,7 @@ var selectOptions = {
 
 var ol = config.ol,
 	batches = "0,1,2,3,4,5,6,7,8,9".split(","),
-	terms = ["1415", "1516"], // Remember to change this when adding new layers. TODO automatically create this array based on current date
+	terms = ["1516", "1617"], // Remember to change this when adding new layers. TODO automatically create this array based on current date
 	template = {
 		init: "L.NonTiledLayer.WMS",
 		url: "http://kartor.malmo.se/geoserver/wms", //"http://kartor.malmo.se/geoserver/wms",
