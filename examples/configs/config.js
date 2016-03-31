@@ -308,10 +308,12 @@ var config = {
 					{
  						init: "L.Control.Info",
  						options: {
- 							autoActivate: true,			// If you want the Info dialog to open from start, set this to true
-							dontShowAgainBox: true,		// Requires autoActivate: true. Allows the user to check a box to not show the info dialog again (utilizing localStorage)
-							addToMenu: true,			// Creates a button that toggles the info dialog (if autoActivate is false this should probably be set to true)
- 							position: "topright",		// Button's position (requires addToMenu == true)
+ 							addToMenu: true,				// Creates a button that toggles the info dialog (if autoActivate is false this should probably be set to true)
+							autoActivate: true,				// If you want the Info dialog to open from start, set this to true
+							dontShowAgainBox: true,			// Requires autoActivate: true. Allows the user to check the box to not show this box again (using localStorage)
+							dateLastUpdated: "2016-03-31",	// Requires dontShowAgainBox: true. Setting a date here means dontShowAgain checkbox checked by user before this date will expire.
+							daysExpired: 90,				// Requires dontShowAgainBox: true. If set, the dontShowAgain choice will expire after this many days.
+ 							position: "topright",			// Requires addToMenu: true. Button's position.
 
 							// Here follows the content of the modal – language dependent!
 							_lang: {

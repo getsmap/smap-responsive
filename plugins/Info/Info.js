@@ -1,8 +1,10 @@
 L.Control.Info = L.Control.extend({
 	options: {
+		addToMenu: true,			// Creates a button that toggles the info dialog (if autoActivate is false this should probably be set to true)
 		autoActivate: true,			// If you want the Info dialog to open from start, set this to true
 		dontShowAgainBox: true,		// Requires autoActivate: true. Allows the user to check the box to not show this box again (using localStorage)
-		addToMenu: true,			// Creates a button that toggles the info dialog (if autoActivate is false this should probably be set to true)
+		dateLastUpdated: "2016-03-31",	// Requires dontShowAgainBox: true. Setting a date here means dontShowAgain checkbox checked by user before this date will expire.
+		daysExpired: 90,			// Requires dontShowAgainBox: true. If set, the dontShowAgain choice will expire after this many days.
 		position: 'topright',		// The position using Leaflet's positioning system
 
 		// This is how you fill the Info dialog with content (utilizing the language support 
@@ -48,6 +50,13 @@ L.Control.Info = L.Control.extend({
 		if (this.options._lang) {
 			$.extend(true, this._lang, this.options._lang);
 		}
+		if (this.options.dateLastUpdated) {
+			if (this.options.dateLastUpdated.search("T") === -1) {
+				// If date is given like 2016-03-31 then add additional required text for ISO date strings (time defaults to 12 at night).
+				this.options.dateLastUpdated += "T00:00:00.000Z";
+			}
+			this._updateExpirationStatus();
+		}
 		this._setLang(options.langCode);
 	},
 
@@ -71,13 +80,47 @@ L.Control.Info = L.Control.extend({
 	_getLocalStorage: function() {
 		return window.localStorage ? window.localStorage : false;
 	},
+
+	_updateExpirationStatus: function() {
+		var store = this._getLocalStorage();
+		if (!store || !store.dontShowAgain) return false;
+		
+		var dontShowAgain = new Date(store.dontShowAgain);
+		var lastUpdated = new Date(this.options.dateLastUpdated);
+		var now = new Date();
+		
+		var isExpired = lastUpdated > dontShowAgain;
+		
+		var daysExpired = this.options.daysExpired;
+		if (!isExpired && typeof daysExpired === "number") {
+			var ageInDays = ((now - dontShowAgain) / 1000 / 3600 / 24);
+			isExpired = ageInDays >= daysExpired;
+		}
+		if (isExpired) {
+			delete store.dontShowAgain;
+		}
+	},
+
+	_shouldShow: function(dontShowAgain) {
+		if (!dontShowAgain) return true;
+
+		var store = this._getLocalStorage();
+
+		dontShowAgain = new Date(dontShowAgain);
+		var lastUpdated = new Date(this.options.dateLastUpdated);
+		if ( lastUpdated > dontShowAgain ) {
+			delete store.dontShowAgain; // expired - clean up
+			return true;
+		}
+		return false;
+	},
 	
 	activate: function(activatedFromClick) {
 		activatedFromClick = activatedFromClick || false;
 
 		var o = this.options;
 		var store = this._getLocalStorage();
-		if (!activatedFromClick && store && store.dontShowAgain) {
+		if (!activatedFromClick && store && this._shouldShow(store.dontShowAgain) !== true) {
 			return false;
 		}
 		if (!this._$dialog) {
@@ -103,7 +146,7 @@ L.Control.Info = L.Control.extend({
 			return null;
 		}
 		if (addCheckbox === true) {
-			var startChecked = store.dontShowAgain ? true : false;
+			var startChecked = !this._shouldShow(store.dontShowAgain) ? true : false;
 			var $cb = $('<div class="checkbox">\
 				<label>\
 					<input type="checkbox"> '+this.lang.dontShowAgain+' \
@@ -113,7 +156,7 @@ L.Control.Info = L.Control.extend({
 			$cb.find("input").on("change", function() {
 				var isChecked = $(this).is(":checked");
 				if (isChecked) {
-					store.dontShowAgain = "1"; 
+					store.dontShowAgain = (new Date()).toISOString();
 				}
 				else {
 					delete store.dontShowAgain;
