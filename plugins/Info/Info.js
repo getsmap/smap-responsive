@@ -81,6 +81,11 @@ L.Control.Info = L.Control.extend({
 		return window.localStorage ? window.localStorage : false;
 	},
 
+	/**
+	 * This func removes dontShowAgain from localStorage if
+	 * it does not satisfy the conditions (older than last update <dateLastUpdated> or age limit <daysExpired>)
+	 * @return {void}
+	 */
 	_updateExpirationStatus: function() {
 		var store = this._getLocalStorage();
 		if (!store || !store.dontShowAgain) return false;
@@ -100,27 +105,13 @@ L.Control.Info = L.Control.extend({
 			delete store.dontShowAgain;
 		}
 	},
-
-	_shouldShow: function(dontShowAgain) {
-		if (!dontShowAgain) return true;
-
-		var store = this._getLocalStorage();
-
-		dontShowAgain = new Date(dontShowAgain);
-		var lastUpdated = new Date(this.options.dateLastUpdated);
-		if ( lastUpdated > dontShowAgain ) {
-			delete store.dontShowAgain; // expired - clean up
-			return true;
-		}
-		return false;
-	},
 	
 	activate: function(activatedFromClick) {
 		activatedFromClick = activatedFromClick || false;
 
 		var o = this.options;
 		var store = this._getLocalStorage();
-		if (!activatedFromClick && store && this._shouldShow(store.dontShowAgain) !== true) {
+		if (!activatedFromClick && store && store.dontShowAgain) {
 			return false;
 		}
 		if (!this._$dialog) {
@@ -146,7 +137,7 @@ L.Control.Info = L.Control.extend({
 			return null;
 		}
 		if (addCheckbox === true) {
-			var startChecked = !this._shouldShow(store.dontShowAgain) ? true : false;
+			var startChecked = store.dontShowAgain ? true : false;
 			var $cb = $('<div class="checkbox">\
 				<label>\
 					<input type="checkbox"> '+this.lang.dontShowAgain+' \
