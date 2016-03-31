@@ -127,7 +127,7 @@ L.Control.Info = L.Control.extend({
 		var self = this;
 
 		if (this.options.addToMenu) {
-			var $btn = $('<button id="smap-info-btn" class="btn btn-default"><span class="fa fa-info"></span></button>');
+			var $btn = $('<button id="smap-info-btn" title="'+this.lang.tooltipText+'" class="btn btn-default"><span class="fa fa-info"></span></button>');
 			$btn.on("click", function () {
 				self.activate(true);
 				return false;
