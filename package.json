@@ -6,7 +6,7 @@
   "devDependencies": {
     "css-condense": "^0.0.6",
     "event-stream": "^3.1.5",
-    "gulp": "^3.8.5",
+    "gulp": "^3.9.1",
     "gulp-autoprefixer": "^0.0.7",
     "gulp-cache": "^0.2.0",
     "gulp-changed": "^0.4.0",
@@ -59,50 +59,52 @@
     "url": "https://github.com/getsmap/smap-responsive"
   },
   "keywords": [
-    "map", "responsive", "leaflet"
+    "map",
+    "responsive",
+    "leaflet"
   ],
   "author": "Johan Lahti <johanlahti@gmail.com>",
   "contributors": [
-      {
-        "name": "tyskan",
-        "email": "britta.duvehansen@lund.se"
-      },
-      {
-        "name": "karl-magnus",
-        "email": "Karl-Magnus.Jonsson@kristianstad.se"
-      },
-      {
-        "name": "matslund",
-        "email": "mats.karlsson@lund.se"
-      },
-      {
-        "name": "Johan Lahti",
-        "email": "johanlahti@gmail.com"
-      },
-      {
-        "name": "Ulf Mineur",
-        "email": "ulf.minor@malmo.se"
-      },
-      {
-        "name": "kristian",
-        "email": "Kristian.Bergstrand@helsingborg.se"
-      },
-      {
-        "name": "Cleber Arruda",
-        "email": "Cleber.DomingosArruda@helsingborg.se"
-      },
-      {
-        "name": "Maja Karlsson",
-        "email": "maja.karlsson@malmo.se"
-      },
-      {
-        "name": "Peter Ahlström",
-        "email": "Peter.Ahlstrom@malmo.se"
-      },
-      {
-        "name": "Cleber",
-        "email": "cleverdo@gmail.com"
-      }
+    {
+      "name": "tyskan",
+      "email": "britta.duvehansen@lund.se"
+    },
+    {
+      "name": "karl-magnus",
+      "email": "Karl-Magnus.Jonsson@kristianstad.se"
+    },
+    {
+      "name": "matslund",
+      "email": "mats.karlsson@lund.se"
+    },
+    {
+      "name": "Johan Lahti",
+      "email": "johanlahti@gmail.com"
+    },
+    {
+      "name": "Ulf Mineur",
+      "email": "ulf.minor@malmo.se"
+    },
+    {
+      "name": "kristian",
+      "email": "Kristian.Bergstrand@helsingborg.se"
+    },
+    {
+      "name": "Cleber Arruda",
+      "email": "Cleber.DomingosArruda@helsingborg.se"
+    },
+    {
+      "name": "Maja Karlsson",
+      "email": "maja.karlsson@malmo.se"
+    },
+    {
+      "name": "Peter Ahlström",
+      "email": "Peter.Ahlstrom@malmo.se"
+    },
+    {
+      "name": "Cleber",
+      "email": "cleverdo@gmail.com"
+    }
   ],
   "license": "AGPL-3.0",
   "private": false,
