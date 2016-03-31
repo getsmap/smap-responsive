@@ -15,6 +15,7 @@ L.Control.MMP = L.Control.extend({
 			color: 'black',
 			icon: 'arrows'
 		},
+		geolocateMoveUserMarker: true,
 		geoJsonUniqueKey: 'ID',
 		position: 'bottomright',
 		minZoom: 13,
@@ -485,6 +486,13 @@ L.Control.MMP = L.Control.extend({
 				self._toggleBtn(false);
 				self._latLng = e.target.getLatLng();
 			});
+			if (self.options.geolocateMoveUserMarker) {
+				self.map.on("locationfound", function(e) {
+					locationLatLng = L.latLng(e.latlng.lat, e.latlng.lng)
+					self._toggleBtn(false);
+					self._marker.setLatLng(locationLatLng);
+				});
+			}
 			this.map.addLayer(marker);
 			// this._addSnapping(marker);
 			marker.openPopup();
