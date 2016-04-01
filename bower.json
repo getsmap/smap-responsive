@@ -53,7 +53,8 @@
     "Leaflet.GeometryUtil": "https://github.com/makinacorpus/Leaflet.GeometryUtil.git#~0.3.2",
     "Leaflet.Snap": "./lib/leaflet.snap/",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
-    "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/"
+    "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/",
+    "seiyria-bootstrap-slider": "~6.1.6"
   },
   "overrides": {
     "leaflet-polyline-distance": {

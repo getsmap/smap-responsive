@@ -30,7 +30,7 @@ L.Control.Template = L.Control.extend({
 	},
 
 	onAdd: function(map) {
-		this.map = map;
+		// this._map // map can be accessed using *this* from all functions
 		this._container = L.DomUtil.create('div', 'leaflet-control-template'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
