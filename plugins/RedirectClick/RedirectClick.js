@@ -1,23 +1,52 @@
 L.Control.RedirectClick = L.Control.extend({
 	
 	options: {
-		position: 'topright'
+		position: "topright",		// Button's position
+		url: "http://kartor.malmo.se/urbex/index.htm?p=true&xy=${x};${y}", 	// Where to get linked to (including coordinates)
+		btnClass: "fa fa-plane",	// Button's icon class
+		cursor: "crosshair",		// Cursor shown in map before click
+		destProj: "EPSG:4326",		// Optional. Convert the clicked coordinates to this coordinate system before inserting into URL
+		reverseAxisDest: false,		// Optional. Some projections have inverted the x and y axis (applies to destination projection)
+		
+		// <><><> Don't touch these unless you are running Leaflet in another projection which is uncommon <><><><><><><><><><><><>
+		srcProj: "EPSG:4326",		// Optional.
+		reverseAxisSrc: false		// Optional. Some projections have inverted the x and y axis (applies to source projection)
+		// <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+		// _lang: {
+		// 	en: {
+		// 		name: "Click the map to be redirected" // tooltip for the button in English
+		// 	},
+		// 	sv: {
+		// 		name: "Klicka i kartan och länkas vidare" // tooltip for the button in Swedish
+		// 	}
+		// }
+	},
+
+	// Don't touch these, instead override from options
+	_lang: {
+		en: {
+			name: "Click map -> redirect", // tooltip for the button in English
+			hoverText: "Click the map"
+		},
+		sv: {
+			name: "Klicka i kartan -> länkas vidare", // tooltip for the button in Swedish
+			hoverText: "Klicka i kartan"
+		}
 	},
 	
 	_setLang: function(langCode) {
 		langCode = langCode || smap.config.langCode || navigator.language.split("-")[0] || "en";
 		if (this._lang) {
-			this._lang = $.extend( true, this._lang, this.options._lang);
-			this.lang = this._lang ? this._lang[langCode] : null;
+			this.lang = this._lang ? this._lang[langCode] : null;			
 		}
 	},
 
 	initialize: function(options) {
-		this._lang = {
-			"sv": {},
-			"en": {}
-		};
 		L.setOptions(this, options);
+		if (this.options._lang) {
+			$.extend(true, this._lang, this.options._lang);
+		}
 		this._setLang(options.langCode);
 	},
 	
@@ -158,17 +187,17 @@ L.Control.RedirectClick = L.Control.extend({
 	onDone : function(e) {
 		var self = this;
 		var url = self.options.url;
-		var source = new proj4.Proj('EPSG:4326');    	//source coordinates will be in Longitude/Latitude
-		var dest = new proj4.Proj('EPSG:3008');     	//destination coordinates in WGS84, south of Leaflet
-		var point = {
-			x:e.latlng.lng,
-			y:e.latlng.lat
-		};
+		var latLng = e.latlng;
+		if (this.options.destProj && this.options.destProj !== this.options.srcProj) {
+			// Convert coords before inserting
+			latLng = utils.projectLatLng(latLng, this.options.srcProj, this.options.destProj,
+				this.options.reverseAxisSrc || false,
+				this.options.reverseAxisDest || false);	
+		}
 		if (this.staticTooltip) {
 			this.staticTooltip.remove();
 		}
-		proj4.transform(source, dest,point);
-		url = url.replace(/\${x}/g, Math.round(point.x)).replace(/\${y}/g, Math.round(point.y));
+		url = url.replace(/\${x}/g, utils.round(latLng.lng, 5)).replace(/\${y}/g, utils.round(latLng.lat, 5));
 		window.open(url, this.lang.name);
 	},
 });

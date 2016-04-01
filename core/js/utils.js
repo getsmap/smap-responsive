@@ -364,9 +364,7 @@
 			var doRound = options.decimals || options.decimals === 0 ? true : false;
 
 
-			function roundIt(nbr, nbrOfDecimals) {
-				return Math.round(nbr * Math.pow(10, nbrOfDecimals)) / Math.pow(10, nbrOfDecimals);
-			}
+			var roundIt = this.round;
 
 			var _projectPoint = this.projectPoint;
 			function projectPoint(coordinates, inputCrs) {

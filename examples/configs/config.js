@@ -149,6 +149,61 @@ var config = {
 		
 		plugins: [
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+					// Creates a button e.g. in the toolbar which simply redirects
+					// the user to another URL. You can create several version of this
+					// plugin for the same map.
+					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+					{
+						init: "L.Control.Redirect",
+						options: {
+							position: 'topright',		// Leaflet container (default is topright)
+							url: '//malmo.se/kartor',	// Where to redirect
+							target: 'newTab',			// How to open the link: sameWindow or newTab
+							btnClass: "fa fa-home",		// The icon class (e.g. fa or glyphicon)
+							_lang: {						
+								sv: {
+									name: "Länk till Malmös kartor"			// Optional custom tooltip
+								},
+								en: {
+									name: "Link to Malmö's maps"			// Optional custom tooltip
+								}
+							}
+						}
+					},
+					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+					// RedirectClick opens a new browser tab when the user clicks on the map.
+					// The easting ${x} and northing ${y} is sent along to the url. See example below.
+					// You can create several version of this plugin for the same map.
+					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+					{
+						init : "L.Control.RedirectClick", // Pictometry
+						options: {
+							position: "topright",		// Button's position
+							url: "http://www.malmo.se/karta?xy=${x},${y},This%20is%20where%20you%20clicked", 	// Where to get linked to (including coordinates)
+							btnClass: "fa fa-plane",	// Button's icon class
+							cursor: "crosshair",		// Cursor shown in map before click
+							destProj: "EPSG:4326",		// Optional. Convert the clicked coordinates to this coordinate system before inserting into URL
+							reverseAxisDest: false,		// Optional. Some projections have inverted the x and y axis (applies to destination projection)
+							_lang: {
+								en: {
+									name: "Click the map to be redirected" // tooltip for the button in English
+								},
+								sv: {
+									name: "Klicka i kartan och länkas vidare" // tooltip for the button in Swedish
+								}
+							}
+						}
+					},
+					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+					// Opacity lets the user change the opacity of currently visible layers.
+					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+					{
+						init: "L.Control.Opacity",
+						options: {
+							addToMenu: true
+						}
+					},
+					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
 					// Scale is Leaflet's in-built scale bar control. See options: http://leafletjs.com/reference.html#control-scale
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
 					{
@@ -285,28 +340,6 @@ var config = {
 						options: {
 							position: "topright",
 							root: location.protocol + "//malmo.se/karta?" // location.protocol + "//kartor.malmo.se/init/?appid=stadsatlas-v1&" // Link to malmo.se instead of directly to map
-						}
-					},
-
-					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
-					// RedirectClick opens a new browser tab when the user clicks on the map.
-					// The easting ${x} and northing ${y} is sent along to the url. See example below.
-					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
-					{
-						init : "L.Control.RedirectClick", // Pictometry
-						options: {
-							position: "topright",		// Button's position
-							url: "http://kartor.malmo.se/urbex/index.htm?p=true&xy=${x};${y}", 	// Malmö pictometry
-							btnClass: "fa fa-plane",	// Button's icon class
-							cursor: "crosshair",			// Cursor shown in map before click
-							_lang: {
-								en: {
-									name: "Redirect" // tooltip for the button in English
-								},
-								sv: {
-									name: "Länka vidare" // tooltip for the button in Swedish
-								}
-							}
 						}
 					},
 
