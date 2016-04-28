@@ -307,7 +307,9 @@ smap.core.Param = L.Class.extend({
 				html = null;
 			if (p.XY.length > 2) {
 				var thirdParam = p.XY[2];
-				html = '<p>'+thirdParam+'</p><button class="btn btn-default smap-core-btn-popup">'+this.lang.remove+'</button>';
+				if (thirdParam && thirdParam.length && thirdParam != "null") {
+					html = '<p>'+thirdParam+'</p><button class="btn btn-default smap-core-btn-popup">'+this.lang.remove+'</button>';
+				}
 				if (p.XY.length > 3) {
 					var fourthParam = p.XY[3];
 					if (/^EPSG:/.test(fourthParam) != true) {
