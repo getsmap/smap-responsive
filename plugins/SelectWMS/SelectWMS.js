@@ -113,7 +113,9 @@ L.Control.SelectWMS = L.Control.extend({
 						ps = geodata[typishName];
 						var valArr = typishName.split(":");
 						var val = valArr[valArr.length-1];
-						var t = smap.cmd.getLayerConfigBy("layerId", val, {inText: true}) ||  smap.cmd.getLayerConfigBy("layers", val, {inText: true});
+						var t = smap.cmd.getLayerConfigBy("layerId", val, {inText: true}) ||  smap.cmd.getLayerConfigBy("layers", val, {inText: true}) 
+						|| smap.cmd.getLayerConfigBy("options.selectOptions.layers", val, {inText: true});
+						
 						if (!t || !t.options || !t.options.layerId) {
 							continue;
 						}
