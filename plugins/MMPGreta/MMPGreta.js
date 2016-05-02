@@ -13,9 +13,9 @@ L.Control.MMPGreta = L.Control.extend({
 		colorUnSaved: "#FF0000",
 		statusKey: "Attribut",
 		statusColors: {
-			"passed": "blue",
-			"now": "darkred",
-			"future": "orange"
+			"passed": 	"blue",
+			"now": 		"darkred",
+			"future": 	"orange"
 		}
 
 	},
@@ -156,8 +156,11 @@ L.Control.MMPGreta = L.Control.extend({
 					
 					var markerColor = this.options.statusColors[props[this.options.statusKey]];
 					var isObject = !markerColor ? true : false; // Greta has 2 types of features: Objects and POIs
+
+					// The iconClass can be overriden from the Icon property, otherwise defaults to the below.
+					var iconClass = props.Icon && props.Icon.length ? props.Icon : (isObject ? "warning" : "warning"); 
 					var markerIcon = L.AwesomeMarkers.icon({
-						icon: isObject ? "warning" : "warning",
+						icon: iconClass,
 						prefix: 'fa',
 						markerColor: isObject ? "green" : markerColor
 					});
@@ -199,6 +202,12 @@ L.Control.MMPGreta = L.Control.extend({
 						return false;
 					}
 					this._hasInitiated = true;
+					layer.options.popup =
+									'<div class="mmp-greta-table">\
+									<div class="mmp-greta-row"><b>ArendeId:&nbsp;</b><span>${ArendeId}</span></div>\
+									<div class="mmp-greta-row"><b>Attribut:&nbsp;</b><span>${Attribut}</span></div>\
+									<div class="mmp-greta-row"><b>TooltipTitle:&nbsp;</b><span>${TooltipTitle}</span></div>\
+									<div class="mmp-greta-row"><b>Tooltip:&nbsp;</b><span>${Tooltip}</span></div></div>';
 					var onLayerLoad = (function() {
 						var fg = L.featureGroup([], {
 							selectable: true
