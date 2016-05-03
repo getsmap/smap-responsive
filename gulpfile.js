@@ -114,7 +114,7 @@ var p = {
 		"!plugins/MyPlugin/**/*.js",
 		"!plugins/SideBars/**/*.js",
 		"!plugins/ThreeD/**/*.js",
-		"!plugins/WorkshopPlugin/**/*.js",
+		// "!plugins/WorkshopPlugin/**/*.js",
 		"!plugins/PluginTemplate.js",
 		'!core/js/buildLibOverrides.js'
 	]

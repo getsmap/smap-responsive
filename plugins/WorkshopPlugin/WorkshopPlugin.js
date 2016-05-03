@@ -1,3 +1,8 @@
+/**
+ * This plugin creates a button which onclick will zoom to the world's extent.
+ * The plugin was used during a workshop showing how to create a plugin for smap-responsive.
+ */
+
 L.Control.WorkshopPlugin = L.Control.extend({
 	options: {
 		position: 'bottomright',

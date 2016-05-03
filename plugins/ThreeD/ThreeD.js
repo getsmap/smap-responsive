@@ -35,8 +35,6 @@ L.Control.ThreeD = L.Control.extend({
 		
 		this._bindEvents();
 		
-		
-		
 //		this.testDraw();
 		
 		return this._container;
