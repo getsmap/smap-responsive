@@ -1,47 +1,33 @@
-.op-modal-slideeffect{
-	opacity: 0.5 !important;
+.smap-opacity-popcontainer {
+  padding: 1em 2em;
+  font-size: 0.8em;
 }
-#op-rowsdiv {
-	margin-top: 1em;
+.smap-opacity-row {
+  margin-top: 1em;
 }
-.op-rows {
-	margin-top: 0.5em;
-	position: relative;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	outline: 0;
-	clear: both;
-	padding: 20px 10px 20px 0px;
+.smap-opacity-row .smap-opacity-values {
+  text-align: left;
 }
-#op-collapsebtn {
-	width: 100%;
+.smap-opacity-row .smap-opacity-label {
+  float: left;
+  margin-left: -0.8em;
 }
-.op-mapname{
-	float: left;
-	margin-right: 5px;
+.smap-opacity-row .smap-opacity-value {
+  float: right;
+  margin-right: -1em;
 }
-.op-values{
-	float: right;
-	margin-right: 10px;
-	margin-left: 15px;
+.opacity-popover {
+  left: auto !important;
+  right: 0.2em;
 }
-.slider{
-	float: right;
+.opacity-popover .arrow {
+  left: auto !important;
+  right: 12px;
 }
-#op-prefdiv{
-	float:left;
-}
-#op-prefs{
-	margin-left: 5px;
-	margin-right: 10px;	
-}
-#op-rowsdiv > div.op-rows:nth-child(odd) {
-	background-color: none;
-}
-#op-rowsdiv > div.op-rows:nth-child(even) {
-	color: gray;
-}
+/*.slider-selection*/
+/*
+.tooltip-main
+	background #000
+	color #fff
+	z-index 2000000
+	padding 2em*/

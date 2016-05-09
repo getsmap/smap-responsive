@@ -16,5 +16,8 @@
 .leaflet-popup-content a {
 	color: #000;
 }
+.leaflet-top.leaflet-right {
+	z-index: 1001; /* Make it appear on top of zoom buttons (bottom-right panel) */
+}
 
 
