@@ -99,7 +99,7 @@ L.Control.ToolHandler = L.Control.extend({
 		
 		function hidePopover(e) {
 			var isVisible = $(".thandler-popover").length && parseInt($(".thandler-popover").css("opacity") || 0) > 0;
-			var $popCont = $(".popover-content");
+			var $popCont = $(".thandler-popover .popover-content");
 			if ( $thBtn.data('bs.popover') && isVisible && $popCont.children().length) {
 				if (utils.getBrowser().ie9) {
 					onPopoverHidden();
@@ -133,7 +133,7 @@ L.Control.ToolHandler = L.Control.extend({
 				drawBtns.removeClass('drawBtnsTight');
 			}*/
 			$(window).off("resize", hidePopover);
-			var $popCont = $(".popover-content");
+			var $popCont = $(".thandler-popover .popover-content");
 
 			// It seems as though the hidden.bs.popover-event is triggered before animation 
 			// is completed - so we need to add a timeout, to avoid ugly animation.
@@ -153,6 +153,7 @@ L.Control.ToolHandler = L.Control.extend({
 						onPopoverHidden();
 					}
 					$this.popover("hide");
+					smap.event.trigger("smap.toolhandler.hide");
 					return false;
 				}
 			}
@@ -166,12 +167,13 @@ L.Control.ToolHandler = L.Control.extend({
 				});
 
 				$this.on("shown.bs.popover", function() {
-					var $popover = $(".popover"),
-						$popCont = $(".popover-content");
+					var $popover = $(this).next();
+					var $popCont = $popover.find(".popover-content");
 					if (!self.options.showPopoverTitle) {
 						$popover.find("h3").remove();
 					}
 					$popover.addClass("thandler-popover");
+					$popover.find(".arrow").addClass("thandler-arrow");
 
 					// Move control divs into the popover - but only those which contains a button tag
 					var btns = $(".thandler-container").children(".leaflet-control:has('button')").detach();

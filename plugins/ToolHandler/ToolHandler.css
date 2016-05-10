@@ -44,7 +44,7 @@
 .thandler-collapsed .thandler-popover .dropdown-menu {
   left: -17em !important;
 }
-.thandler-collapsed .thandler-popover .arrow {
+.thandler-collapsed .thandler-popover .thandler-arrow {
   left: auto !important;
   right: 17px;
 }

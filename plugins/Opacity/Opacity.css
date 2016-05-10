@@ -1,28 +1,45 @@
 .smap-opacity-popcontainer {
-  padding: 1em 2em;
+  padding: 1em;
   font-size: 0.8em;
+}
+.smap-opacity-sliderrow-container {
+  margin-top: 2.5em;
+}
+.smap-opacity-headerrow {
+  width: 100%;
+}
+.smap-opacity-headerrow label:nth-child(1) {
+  float: left;
+}
+.smap-opacity-headerrow label:nth-child(2) {
+  float: right;
+}
+.smap-opacity-valuerow {
+  text-align: left;
+}
+.smap-opacity-valuerow span {
+  display: inline-block;
+}
+.smap-opacity-valuerow span:nth-child(1) {
+  float: left;
+  max-width: 70%;
+}
+.smap-opacity-valuerow span:nth-child(2) {
+  float: right;
 }
 .smap-opacity-row {
   margin-top: 1em;
+  width: 100%;
 }
-.smap-opacity-row .smap-opacity-values {
-  text-align: left;
-}
-.smap-opacity-row .smap-opacity-label {
-  float: left;
-  margin-left: -0.8em;
-}
-.smap-opacity-row .smap-opacity-value {
-  float: right;
-  margin-right: -1em;
-}
-.opacity-popover {
-  left: auto !important;
-  right: 0.2em;
-}
-.opacity-popover .arrow {
-  left: auto !important;
-  right: 12px;
+@media (min-width: 992px) {
+  .opacity-popover {
+    left: auto !important;
+    right: 0.2em;
+  }
+  .opacity-popover .arrow {
+    left: auto !important;
+    right: 12px;
+  }
 }
 /*.slider-selection*/
 /*

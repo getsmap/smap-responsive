@@ -12,7 +12,9 @@ L.Control.Opacity = L.Control.extend({
 			popoverTitle: "Genomskinlighet",
 			transparency: "Genomskinlighet",
 			transparent: "Genomskinlig",
-			opaque: "Synlig"
+			opaque: "Synlig",
+			visibility: "Synlighet",
+			layerName: "Kartskikt"
 
 		},
 		"en": {
@@ -22,7 +24,9 @@ L.Control.Opacity = L.Control.extend({
 			popoverTitle: "Transparency",
 			transparency: "Transparency",
 			transparent: "Transparent",
-			opaque: "Visible"
+			opaque: "Visible",
+			visibility: "Opacity",
+			layerName: "Layer"
 		}
 	},
 
@@ -50,9 +54,17 @@ L.Control.Opacity = L.Control.extend({
 		this.$container = $(this._container);
 		
 		this._createBtn();
+		this.$popContainer.append('<div class="smap-opacity-headerrow"><label>'+this.lang.layerName+'</label><label>'+this.lang.visibility+'</label></div>');
+		this.$sliderRowContainer = $('<div class="smap-opacity-sliderrow-container" />');
+		this.$popContainer.append( this.$sliderRowContainer );
 		this._bindEvents();
 		
 		return this._container;
+	},
+
+	hide: function() {
+		this.$popContainer.hide();
+		this.$btn.popover("hide");
 	},
 
 	_bindEvents: function() {
@@ -74,6 +86,11 @@ L.Control.Opacity = L.Control.extend({
 		}).bind(this);
 
 		this._map.on("layeradd layerremove", onAddRemove);
+		
+		var hide = this.hide.bind(this);
+		$(window).on("resize orientationchange", hide);
+		this._map.on("click dragstart", hide);
+
 	},
 
 	_createId: function(layerId) {
@@ -102,19 +119,21 @@ L.Control.Opacity = L.Control.extend({
 	onSlide: function(e) {
 		// console.log(e);
 		var $target = $(e.target);
+		var val = $target.val();
 		var layerId = this._unCreateId( $target.prop("id") );
 		var layer = smap.cmd.getLayer(layerId);
 		
-		this._setLayerOpacity(layer, 1-(e.value/100));
+		this._setLayerOpacity(layer, val / 100);
 		
 		var $valueLabel = $target.parent().find(".smap-opacity-value");
-		this._setLabelValue($valueLabel, e.value);
+		this._setLabelValue($valueLabel, val);
 
 
 	},
 
 	_addRow: function(layer) {
-		var $c = this.$popContainer;
+		// var $c = this.$popContainer;
+		var $c = this.$sliderRowContainer;
 		var theId = this._createId(layer.options.layerId);
 		if ( $c.find("#"+theId).length ) {
 			return false;
@@ -138,14 +157,14 @@ L.Control.Opacity = L.Control.extend({
 			}	
 		}
 		opacity = opacity || (typeof layer.options.opacity === "number" ? layer.options.opacity : 1);
-		var displayValue = (1 - opacity )*100;
+		var displayValue = opacity * 100; //(1 - opacity )*100;
 		var row = '<div class="smap-opacity-row">'+
-					'<div class="smap-opacity-values">'+
+					'<div class="smap-opacity-valuerow">'+
 						'<span class="smap-opacity-label">'+(layer.options.displayName || layer.options.layerId || "no name")+'</span>'+
 						'<span class="smap-opacity-value">'+displayValue+'</span>'+
 					'</div>'+
 					'<input type="text" id="'+theId+'" data-provide="slider" '+
-					'data-slider-min="0" data-slider-max="100" data-slider-step="10" data-slider-value="'+displayValue+'" '+
+					'data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="'+displayValue+'" '+
 					'data-slider-tooltip="hide">'+
 				'</div>';
 		$c.prepend(row);
@@ -162,25 +181,26 @@ L.Control.Opacity = L.Control.extend({
 			// 	// return textTransparency+": "+ value+" %";
 			// }
 		});
-		$slider.on("slide", this.onSlide.bind(this));
+		// $slider.on("slide", this.onSlide.bind(this));
+		$slider.on("change", this.onSlide.bind(this));
 		this._setLabelValue($c.find(".smap-opacity-value"), displayValue);
 	},
 
 	_removeRow: function(layer) {
-		var c = this.$popContainer;
+		var $c = this.$sliderRowContainer;
 		var theId = this._createId(layer.options.layerId);
-		c.find("#"+theId).parent().remove();
+		$c.find("#"+theId).parent().remove();
 	},
 
 	_createBtn: function() {
 		var self = this;
 		var $btn = $('<button id="smap-opacity-btn" title="' + this.lang.btnTitle + '" class="btn btn-default"><span class="fa fa-adjust"></span></button>');
-		$btn.on("click", function () {
+		this.$btn = $btn;
+		$btn.on("click touchstart", function () {
 			self.activate();
 			return false;
 		});
 		this.$container.append($btn);
-		this.$btn = $btn;
 
 		this.$popContainer = $('<div class="smap-opacity-popcontainer" />');
 		$btn.popover({
@@ -191,12 +211,17 @@ L.Control.Opacity = L.Control.extend({
 			},
 			placement: "bottom",
 			// title: this.lang.popoverTitle, // set by the btn's title attribute
-			trigger: "click"
+			trigger: "manual"
+		});
+
+		$btn.on("click touchstart", function() {
+			$(this).popover("toggle");
 		});
 
 		// Draw dropdown
-		$btn.on("shown.bs.popover", function() {
-			var $popover = $(".popover");
+		$btn.on("shown.bs.popover", function(e) {
+			$(".smap-opacity-popcontainer").show();
+			var $popover = $(this).next(); //$(".popover");
 				// $popCont = $(".smap-opacity-popover");
 			// if (!self.options.showPopoverTitle) {
 			// 	$popover.find("h3").remove();

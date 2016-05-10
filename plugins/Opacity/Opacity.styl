@@ -1,25 +1,46 @@
 
+// This breakpoint should ideally be same as ToolHandler's breakPoint 
+// so that the opacity tool is appropriately shown when inside the toolhandler container
+collapseBreakPoint = 992px
+
 .smap-opacity-popcontainer
-	padding 1em 2em
+	padding 1em
 	font-size 0.8em
+
+.smap-opacity-sliderrow-container
+	margin-top 2.5em
+
+.smap-opacity-headerrow
+	width 100%
+	label:nth-child(1)
+		float left
+	label:nth-child(2)
+		float right
+
+.smap-opacity-valuerow
+	text-align left
+	span
+		display inline-block
+	span:nth-child(1)
+		float left
+		max-width 70%
+		// margin-left -0.8em
+	span:nth-child(2)
+		float right
+		// margin-right -1em
 
 .smap-opacity-row
 	margin-top 1em
-	.smap-opacity-values
-		text-align left
-	.smap-opacity-label
-		float left
-		margin-left -0.8em
-	.smap-opacity-value
-		float right
-		margin-right -1em
+	width 100%
 
-.opacity-popover
-	left auto !important
-	right 0.2em
-	.arrow
+@media (min-width: collapseBreakPoint)
+	// Add an offset so that the popover don't go outside the window
+	.opacity-popover
 		left auto !important
-		right 12px
+		right 0.2em
+		.arrow
+			left auto !important
+			right 12px
 
 
 /*.slider-selection*/
