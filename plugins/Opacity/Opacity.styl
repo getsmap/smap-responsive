@@ -7,6 +7,13 @@ collapseBreakPoint = 992px
 	padding 1em
 	font-size 0.8em
 
+.smap-opacity-popcontainer.smap-opacity-scrollable
+	overflow-x hidden
+	overflow-y auto
+	// Prevent sliders to go behind scrollbar
+	padding-right 2.5em
+	margin-right -1em
+
 .smap-opacity-sliderrow-container
 	margin-top 2.5em
 
@@ -32,6 +39,7 @@ collapseBreakPoint = 992px
 .smap-opacity-row
 	margin-top 1em
 	width 100%
+	
 
 @media (min-width: collapseBreakPoint)
 	// Add an offset so that the popover don't go outside the window

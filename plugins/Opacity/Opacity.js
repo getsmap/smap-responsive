@@ -63,7 +63,6 @@ L.Control.Opacity = L.Control.extend({
 	},
 
 	hide: function() {
-		this.$popContainer.hide();
 		this.$btn.popover("hide");
 	},
 
@@ -131,6 +130,23 @@ L.Control.Opacity = L.Control.extend({
 
 	},
 
+	_adjustSize: function() {
+		var $p = $(".opacity-popover");
+		if (!$p.length) return;
+		var availableHeight = $("#mapdiv").innerHeight(),
+			usedHeight = $p.outerHeight() + $p.offset().top,
+			buffer = 30;
+		if ( (availableHeight - usedHeight - buffer) < 0) {
+			// Set max height and make it scrollable
+			var $pc = $p.find(".smap-opacity-popcontainer");
+			$pc.addClass("smap-opacity-scrollable");
+			$pc.css("max-height", (availableHeight - buffer - 150) + "px");
+		}
+		else {
+			$pc.css("max-height", "auto").removeClass("smap-opacity-scrollable");
+		}
+	},
+
 	_addRow: function(layer) {
 		// var $c = this.$popContainer;
 		var $c = this.$sliderRowContainer;
@@ -184,12 +200,14 @@ L.Control.Opacity = L.Control.extend({
 		// $slider.on("slide", this.onSlide.bind(this));
 		$slider.on("change", this.onSlide.bind(this));
 		this._setLabelValue($c.find(".smap-opacity-value"), displayValue);
+		this._adjustSize();
 	},
 
 	_removeRow: function(layer) {
 		var $c = this.$sliderRowContainer;
 		var theId = this._createId(layer.options.layerId);
 		$c.find("#"+theId).parent().remove();
+		this._adjustSize();
 	},
 
 	_createBtn: function() {
@@ -218,16 +236,36 @@ L.Control.Opacity = L.Control.extend({
 			$(this).popover("toggle");
 		});
 
+		function stopEvents($tag) {
+			function stopEvent(e) {
+				e.stopPropagation();
+			}
+			$tag
+				.on("dblclick", stopEvent)
+				.on("mousewheel", stopEvent) // prevent scroll
+				.on("mousedown", stopEvent);
+		}
+
 		// Draw dropdown
 		$btn.on("shown.bs.popover", function(e) {
+			if (!self._popoverInititated) {
+				var $popover = $(this).next();
+				stopEvents($popover);
+				$popover.addClass("opacity-popover");
+				self._popoverInititated = true;
+			}
 			$(".smap-opacity-popcontainer").show();
-			var $popover = $(this).next(); //$(".popover");
-				// $popCont = $(".smap-opacity-popover");
+			// $popCont = $(".smap-opacity-popover");
 			// if (!self.options.showPopoverTitle) {
 			// 	$popover.find("h3").remove();
 			// }
-			$popover.addClass("opacity-popover");
 		});
+
+		$btn.on("hidden.bs.popover", (function(e) {
+			// This code should execute after the hide animation 
+			// is done – but it with the current version of Bootstrap it doesnt seem to happen
+			$(".smap-opacity-popcontainer").hide();
+		}).bind(this));
 	},
 
 
