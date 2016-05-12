@@ -9,6 +9,7 @@ sMap-responsive
 - [Find your school](http://malmo.se/Forskola--utbildning/Grundskola/Grundskolor-och-forskoleklass/Att-valja-skola/Upptagningsomraden-och-hemskola.html) in Malmö (map integrated in a form)
 - [Lunds Stadskarta (City Map of Lund)](http://www.lund.se/Tillbehor/Karta-over-Lund/)
 - [Map with editable points, lines and polygons](http://kartor.malmo.se/init/?appid=edit_demo) (using WFS-T, requires password to save)
+- [Kävlingeån map](http://kartor.lund.se/vspu/?zoom=14&center=13.1278,55.78562&ol=VE,Haro&bl=mapboxcolor&md=url%2C%7B:t:%22FeatureCollection%22%2C:fs:%5B%7B:t::F:%2C:p%7B%22id%22:42%2C:mt::%22H%C3%A4r%20ligger%20M%C3%A5s%C3%A4ngen%22%2C%22radius%22:134.4049356995406%2C%22popupIsOpen%22:true%7D%2C:g:%7B:t::P:%2C:c:%5B13.12283%2C55.79042%5D%7D%7D%5D%7D) [(project site)](http://www.kavlingean.se/)
 
 ###Introduction
 
