@@ -1,6 +1,10 @@
 .smap-opacity-popcontainer {
   padding: 1em;
   font-size: 0.8em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .smap-opacity-popcontainer.smap-opacity-scrollable {
   overflow-x: hidden;

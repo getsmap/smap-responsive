@@ -301,6 +301,7 @@ L.Control.Opacity = L.Control.extend({
 
 	_removeRow: function(layer) {
 		var defaults = this._getDefaults(true);
+		if (!defaults[layer]) return;
 		this._setLayerOpacity(layer, defaults[layer.options.layerId]); // Reset opacity to original value
 		var $c = this.$sliderRowContainer;
 		var theId = this._createId(layer.options.layerId);
@@ -341,7 +342,7 @@ L.Control.Opacity = L.Control.extend({
 			$tag
 				.on("click", stopEvent)
 				.on("dblclick", stopEvent)
-				.on("mousewheel", stopEvent) // prevent scroll
+				.on("mousewheel DOMMouseScroll MozMousePixelScroll", stopEvent) // prevent scroll
 				.on("mousedown", stopEvent);
 		}
 
