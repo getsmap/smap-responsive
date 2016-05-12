@@ -94,7 +94,7 @@ L.Control.Opacity = L.Control.extend({
 		
 		var hide = this.hide.bind(this);
 		$(window).on("resize orientationchange", hide);
-		this._map.on("click dragstart", hide);
+		this._map.on("mousedown dragstart", hide);
 
 		smap.event.on("smap.core.aftercreateparams", this.onAfterCreateParams.bind(this));
 		smap.event.on("smap.core.applyparams", this.onApplyParams.bind(this));
@@ -334,11 +334,12 @@ L.Control.Opacity = L.Control.extend({
 			$(this).popover("toggle");
 		});
 
+		function stopEvent(e) {
+			e.stopPropagation();
+		}
 		function stopEvents($tag) {
-			function stopEvent(e) {
-				e.stopPropagation();
-			}
 			$tag
+				.on("click", stopEvent)
 				.on("dblclick", stopEvent)
 				.on("mousewheel", stopEvent) // prevent scroll
 				.on("mousedown", stopEvent);
