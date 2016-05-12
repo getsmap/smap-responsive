@@ -44,7 +44,7 @@
   margin-top: 1em;
   width: 100%;
 }
-@media (min-width: 992px) {
+@media (min-width: 30em) {
   .opacity-popover {
     left: auto !important;
     right: 0.2em;

@@ -242,6 +242,15 @@ L.Control.Opacity = L.Control.extend({
 		else {
 			$pc.css("max-height", "none").removeClass("smap-opacity-scrollable");
 		}
+
+		if ( !this._popoverRepositioned && $(".thandler-popover:visible").length ) {
+			// Force popover to reposition ( using popover("show") ) but avoid iternal recursion
+			this._popoverRepositioned = true;
+			this.$btn.popover("show");
+			setTimeout( (function() {
+				this._popoverRepositioned = false;
+			}).bind(this), 0);
+		}
 	},
 
 	_addRow: function(layer) {
