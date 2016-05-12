@@ -18,6 +18,9 @@
 .smap-opacity-headerrow {
   width: 100%;
 }
+.smap-opacity-headerrow label {
+  font-weight: bold;
+}
 .smap-opacity-headerrow label:nth-child(1) {
   float: left;
 }

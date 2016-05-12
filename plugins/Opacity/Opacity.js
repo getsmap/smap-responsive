@@ -1,7 +1,7 @@
 L.Control.Opacity = L.Control.extend({
 	options: {
 		position: 'topright',
-		addToMenu: false
+		showTitle: false
 	},
 
 	_lang: {
@@ -325,7 +325,10 @@ L.Control.Opacity = L.Control.extend({
 			// container: 'body',
 			content: function() {
 				// console.log($(this).data("bs.popover"));
-				$(this).data("bs.popover").$tip.find(".popover-content").append( self.$popContainer );
+				var $popoverContent = $(this).data("bs.popover").$tip.find(".popover-content");
+				if ( $popoverContent.find(".smap-opacity-popcontainer").length === 0 ) {
+					$popoverContent.append( self.$popContainer );
+				}
 			},
 			placement: "bottom",
 			// title: this.lang.popoverTitle, // set by the btn's title attribute
@@ -353,6 +356,9 @@ L.Control.Opacity = L.Control.extend({
 				var $popover = $(this).next();
 				stopEvents($popover);
 				$popover.addClass("opacity-popover");
+				if (!self.options.showTitle) {
+					$popover.find("h3").remove();
+				}
 				self._popoverInititated = true;
 			}
 			$(".smap-opacity-popcontainer").show();
