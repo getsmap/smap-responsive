@@ -91,10 +91,11 @@ L.Control.Opacity = L.Control.extend({
 		}).bind(this);
 
 		this._map.on("layeradd layerremove", onAddRemove);
-		
 		var hide = this.hide.bind(this);
-		$(window).on("resize orientationchange", hide);
 		this._map.on("mousedown dragstart", hide);
+		$(window).on("resize orientationchange", hide);
+		// $("#mapdiv").on("touchstart", hide);
+		smap.event.on("smap.toolhandler.hide", hide);
 
 		smap.event.on("smap.core.aftercreateparams", this.onAfterCreateParams.bind(this));
 		smap.event.on("smap.core.applyparams", this.onApplyParams.bind(this));
@@ -301,7 +302,7 @@ L.Control.Opacity = L.Control.extend({
 
 	_removeRow: function(layer) {
 		var defaults = this._getDefaults(true);
-		if (!defaults[layer]) return;
+		if (!defaults[layer.options.layerId]) return;
 		this._setLayerOpacity(layer, defaults[layer.options.layerId]); // Reset opacity to original value
 		var $c = this.$sliderRowContainer;
 		var theId = this._createId(layer.options.layerId);

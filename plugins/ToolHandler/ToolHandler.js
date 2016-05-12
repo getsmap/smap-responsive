@@ -106,7 +106,6 @@ L.Control.ToolHandler = L.Control.extend({
 				}
 				$thBtn.popover("hide");
 			}
-			smap.event.trigger("smap.toolhandler.hide", e);
 			$(".thandler-container .leaflet-control button").each(function() {
 				$(this).trigger("blur"); // hide tooltips
 			});
@@ -134,6 +133,7 @@ L.Control.ToolHandler = L.Control.extend({
 			}*/
 			$(window).off("resize", hidePopover);
 			var $popCont = $(".thandler-popover .popover-content");
+			smap.event.trigger("smap.toolhandler.hide");
 
 			// It seems as though the hidden.bs.popover-event is triggered before animation 
 			// is completed - so we need to add a timeout, to avoid ugly animation.
@@ -153,7 +153,6 @@ L.Control.ToolHandler = L.Control.extend({
 						onPopoverHidden();
 					}
 					$this.popover("hide");
-					smap.event.trigger("smap.toolhandler.hide");
 					return false;
 				}
 			}
