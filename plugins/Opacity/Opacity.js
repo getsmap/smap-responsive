@@ -58,6 +58,12 @@ L.Control.Opacity = L.Control.extend({
 		this.$sliderRowContainer = $('<div class="smap-opacity-sliderrow-container" />');
 		this.$popContainer.append( this.$sliderRowContainer );
 		this._bindEvents();
+
+
+		// this._addResetBtn(); // TODO
+		// var $btnReset = $('<button class="btn btn-default">Reset</button>');
+		// $btnReset.on("click touchstart", this.reset.bind(this) );
+		// this.$popContainer.prepend($btnReset);
 		
 		return this._container;
 	},
@@ -90,6 +96,54 @@ L.Control.Opacity = L.Control.extend({
 		$(window).on("resize orientationchange", hide);
 		this._map.on("click dragstart", hide);
 
+		smap.event.on("smap.core.aftercreateparams", this.onAfterCreateParams.bind(this));
+		smap.event.on("smap.core.applyparams", this.onApplyParams.bind(this));
+	},
+
+	onAfterCreateParams: function(e, p) {
+		// Find which layers have had their opacity modified
+		var defaults = this._getDefaults(true);
+		var unCreateId = this._unCreateId;
+		var values = {};
+		this.$sliderRowContainer.find("input").each(function(index) {
+			var actualValue = Number( $(this).val() );
+			var layerId = unCreateId( $(this).prop("id") );
+			if (actualValue !== defaults[layerId] * 100) {
+				values[layerId] = actualValue;
+			}
+		});
+		if ( $.isEmptyObject(values) === false ) {
+			var paramVals = [];
+
+			p.ol.forEach(function(layerId) {
+				// Follow the same order as OLs so that we can "re-use" the layerIds
+				paramVals.push( values[layerId] !== undefined ? values[layerId] : "" ); // If no value exists, keep the order by pushing empty string
+			});
+
+			// Now, we should not forget our baselayer. See if it also needs to be added.
+			var defaultsArr = this._getDefaults();
+			var nbrOfSliders = this.$sliderRowContainer.find("input").length;
+			if (p.ol.length < nbrOfSliders && values[p.bl] !== undefined && values[p.bl] !== defaults[p.bl] * 100) {
+				paramVals.push( values[p.bl] );
+			}
+			p.opacity = paramVals.join(",").replace(/,+$/, ""); // Trim commas at the end of string
+			console.log(p.opacity);
+		}
+	},
+
+	onApplyParams: function(e, p) {
+		if (p.OPACITY) {
+			var opacityArr = p.OPACITY instanceof Array ? p.OPACITY : p.OPACITY.split(",");
+			var ols = p.OL;
+			var setLayerOpacity = this._setLayerOpacity;
+			var self = this;
+			opacityArr.forEach(function(displayOpacity, index) {
+				if (displayOpacity.length === 0) return;
+				displayOpacity = Number(displayOpacity);
+				var layerId = ols.length > index ? ols[index] : layerId = p.BL;
+				self._setSliderOpacity( self._createId(layerId), displayOpacity ); // this will also trigger opacity change in layer
+			});
+		}
 	},
 
 	_createId: function(layerId) {
@@ -115,10 +169,54 @@ L.Control.Opacity = L.Control.extend({
 		}
 	},
 
+	_setSliderOpacity: function(sliderId, displayValue) {
+		this.$sliderRowContainer.find("#"+sliderId)
+				.val( displayValue )
+				.trigger("change")
+				.slider('setValue', displayValue);
+	},
+
+	reset: function() {
+		var d = this._getDefaults();
+		var self = this;
+		this.$sliderRowContainer.find("input").each(function(index, val) {
+			var displayValue = d[index] * 100;
+			self._setSliderOpacity( $(this).prop("id"), displayValue );
+			// .trigger("create"); //TODO How to redraw/update slider element
+			// $(this).slider({value: d[index] * 100});
+		});
+
+	},
+
+	/**
+	 * Return original opacity values for the layers added to the opacity panel.
+	 * @return {[type]} [description]
+	 */
+	_getDefaults: function(asObject) {
+		asObject = asObject || false;
+		var defaults = [];
+		if (asObject) {
+			defaults = {};
+		}
+		var unCreateId = this._unCreateId;
+		this.$sliderRowContainer.find("input").each(function() {
+			var layerId = unCreateId( $(this).prop("id") );
+			var t = smap.cmd.getLayerConfig( layerId );
+			var opacity = t.options.opacity || 1;
+			if (asObject) {
+				defaults[layerId] = opacity;
+			}
+			else {
+				defaults.push(opacity);
+			}
+		});
+		return defaults;
+	},
+
 	onSlide: function(e) {
 		// console.log(e);
 		var $target = $(e.target);
-		var val = $target.val();
+		var val = Number( $target.val() );
 		var layerId = this._unCreateId( $target.prop("id") );
 		var layer = smap.cmd.getLayer(layerId);
 		
@@ -127,23 +225,21 @@ L.Control.Opacity = L.Control.extend({
 		var $valueLabel = $target.parent().find(".smap-opacity-value");
 		this._setLabelValue($valueLabel, val);
 
-
 	},
 
 	_adjustSize: function() {
 		var $p = $(".opacity-popover");
 		if (!$p.length) return;
-		var availableHeight = $("#mapdiv").innerHeight(),
-			usedHeight = $p.outerHeight() + $p.offset().top,
-			buffer = 30;
-		if ( (availableHeight - usedHeight - buffer) < 0) {
+		var $pc = $p.find(".smap-opacity-popcontainer");
+		var availableHeight = $("#mapdiv").innerHeight();
+		var estimatedHeightRemaining = availableHeight - $pc.offset().top - ($pc.outerHeight() + 100);
+		if (estimatedHeightRemaining < 0) {
 			// Set max height and make it scrollable
-			var $pc = $p.find(".smap-opacity-popcontainer");
 			$pc.addClass("smap-opacity-scrollable");
-			$pc.css("max-height", (availableHeight - buffer - 150) + "px");
+			$pc.css("max-height", (availableHeight - $p.offset().top - 70) + "px");
 		}
 		else {
-			$pc.css("max-height", "auto").removeClass("smap-opacity-scrollable");
+			$pc.css("max-height", "none").removeClass("smap-opacity-scrollable");
 		}
 	},
 
@@ -174,7 +270,7 @@ L.Control.Opacity = L.Control.extend({
 		}
 		opacity = opacity || (typeof layer.options.opacity === "number" ? layer.options.opacity : 1);
 		var displayValue = opacity * 100; //(1 - opacity )*100;
-		var row = '<div class="smap-opacity-row">'+
+		var $row = $('<div class="smap-opacity-row">'+
 					'<div class="smap-opacity-valuerow">'+
 						'<span class="smap-opacity-label">'+(layer.options.displayName || layer.options.layerId || "no name")+'</span>'+
 						'<span class="smap-opacity-value">'+displayValue+'</span>'+
@@ -182,12 +278,12 @@ L.Control.Opacity = L.Control.extend({
 					'<input type="text" id="'+theId+'" data-provide="slider" '+
 					'data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="'+displayValue+'" '+
 					'data-slider-tooltip="hide">'+
-				'</div>';
-		$c.prepend(row);
+				'</div>');
+		$c.prepend($row);
 
-		var $slider = $c.find('#'+theId);
+		var $input = $row.find('#'+theId);
 		var textTransparency = this.lang.transparency;
-		$slider.slider({
+		$input.slider({
 			tooltip_position: 'bottom'
 			// ticks: [0, 100],
 			// ticks_positions: [0, 100],
@@ -197,13 +293,15 @@ L.Control.Opacity = L.Control.extend({
 			// 	// return textTransparency+": "+ value+" %";
 			// }
 		});
-		// $slider.on("slide", this.onSlide.bind(this));
-		$slider.on("change", this.onSlide.bind(this));
-		this._setLabelValue($c.find(".smap-opacity-value"), displayValue);
+		// $input.on("slide", this.onSlide.bind(this));
+		$input.on("change", this.onSlide.bind(this));
+		this._setLabelValue( $row.find(".smap-opacity-value"), displayValue );
 		this._adjustSize();
 	},
 
 	_removeRow: function(layer) {
+		var defaults = this._getDefaults(true);
+		this._setLayerOpacity(layer, defaults[layer.options.layerId]); // Reset opacity to original value
 		var $c = this.$sliderRowContainer;
 		var theId = this._createId(layer.options.layerId);
 		$c.find("#"+theId).parent().remove();
@@ -255,6 +353,7 @@ L.Control.Opacity = L.Control.extend({
 				self._popoverInititated = true;
 			}
 			$(".smap-opacity-popcontainer").show();
+			self._adjustSize();
 			// $popCont = $(".smap-opacity-popover");
 			// if (!self.options.showPopoverTitle) {
 			// 	$popover.find("h3").remove();

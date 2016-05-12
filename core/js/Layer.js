@@ -33,7 +33,7 @@ smap.core.Layer = L.Class.extend({
 		map.on("layeradd", this._onLayerAdd);
 		map.on("layerremove", this._onLayerRemove);
 		
-		smap.event.on("smap.core.applyparams", $.proxy(function(e, p) {
+		smap.event.on("smap.core.applyparams", (function(e, p) {
 			var tBL;
 			if (p.BL) {
 				tBL = smap.cmd.getLayerConfig( p.BL );
@@ -51,9 +51,8 @@ smap.core.Layer = L.Class.extend({
 				for (i=0,len=ol.length; i<len; i++) {
 					this._addLayerWithConfig( smap.cmd.getLayerConfig(ol[i]) );
 				}
-			}
-			
-		}, this));
+			}	
+		}).bind(this));
 		
 	},
 	

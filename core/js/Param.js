@@ -113,6 +113,7 @@ smap.core.Param = L.Class.extend({
 		}
 		
 		smap.event.trigger("smap.core.createparams", p);
+		smap.event.trigger("smap.core.aftercreateparams", p); // Make it possible to add params after other plugins (e.g. Opacity plugin which needs a steady OL value)
 		
 		// Remove all undefined or null values
 //		$.map(p, function(i, val) {
