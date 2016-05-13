@@ -5,9 +5,10 @@ sMap-responsive
 
 ###Examples
 - [Malmö Stadsatlas (City Map of Malmö)](http://kartor.malmo.se/init/?appid=stadsatlas-v1&lang=en)
+- [Kristianstadkartan (City Map of Kristianstad)](http://kartor.kristianstad.se/kristianstadskartan/)
+- [Lunds Stadskarta (City Map of Lund)](http://www.lund.se/Tillbehor/Karta-over-Lund/)
 - [Guided tour](http://kartor.malmo.se/init/?appid=tema_vh-v1&lang=en) for pedestrians in Western Harbour, Malmö (and [more tours](http://malmo.se/kartor/promenadstaden/))
 - [Find your school](http://malmo.se/Forskola--utbildning/Grundskola/Grundskolor-och-forskoleklass/Att-valja-skola/Upptagningsomraden-och-hemskola.html) in Malmö (map integrated in a form)
-- [Lunds Stadskarta (City Map of Lund)](http://www.lund.se/Tillbehor/Karta-over-Lund/)
 - [Map with editable points, lines and polygons](http://kartor.malmo.se/init/?appid=edit_demo) (using WFS-T, requires password to save)
 - [Kävlingeån map](http://kartor.lund.se/vspu/?zoom=14&center=13.1278,55.78562&ol=VE,Haro&bl=mapboxcolor&md=url%2C%7B:t:%22FeatureCollection%22%2C:fs:%5B%7B:t::F:%2C:p%7B%22id%22:42%2C:mt::%22H%C3%A4r%20ligger%20M%C3%A5s%C3%A4ngen%22%2C%22radius%22:134.4049356995406%2C%22popupIsOpen%22:true%7D%2C:g:%7B:t::P:%2C:c:%5B13.12283%2C55.79042%5D%7D%7D%5D%7D) [(project site)](http://www.kavlingean.se/)
 
@@ -17,13 +18,13 @@ sMap-responsive is a software framework for web maps built with Leaflet and Boot
 
 > Quick install with [npm](https://nodejs.org/): `npm install --save smap-responsive`
 
-###Credit
-The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) together with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors). Credit should also go to the testers and users providing feedback – as well as those who have shared a link to their maps above. If you also want to share your map with us, please contact the [the site admin](https://github.com/johanlahti).
+###Who to blame?
+The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) together with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors).
 
 ###Why another framework?
-First of all. This framework is based around Leaflet controls. This means most of the code here is **reusable** in any other Leaflet-based framework. You can easily pick other Leaflet tools from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework.
+First of all. This framework is based around Leaflet controls (plugins). The controls are **reusable** in any other Leaflet-based framework. You can pick Leaflet controls from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework (with few or no modifications needed).
 
-Second. This framework is built to be **dynamic** and serve multiple objectives in various contexts. Smap-responsive is used in many different types of external applications as well as for stand-alone maps. Although every map is unique, most functionality can be re-used for each map. As a bonus, this also means existing functionality has been well tested.
+Second. This framework is built to be **dynamic** and serve multiple objectives in various contexts. Smap-responsive is used in many different types of external applications as well as for stand-alone maps. Although every map is unique, most functionality can be re-used for every map.
 
 Third. In order to minimise the need of programmers' hands-on – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying one configuration file. This gives the administrator a lot of **power** and **flexibility** – without doing any programming.
 
@@ -181,6 +182,7 @@ This section describes:
 | Event name | Triggered… | Example | 
 | ---------- | ----------- | ------- | 
 | smap.core.createparams | …when URL params are created. Useful if your plugin needs to add something to the URL. | ```smap.event.on("smap.core.createparams", function(e, paramsObject) { paramsObject.new_param = 3; });``` |
+| smap.core.aftercreateparams | …after createparams have been triggered. Useful e.g. if you have a param dependency for your own param(s). | ```smap.event.on("smap.core.createparams", function(e, paramsObject) { paramsObject.new_param = 3; });``` |
 | smap.core.beforeapplyparams | …before URL params are applied in core | ```smap.event.on("smap.core.beforeapplyparams", function(e, paramsObj) { alert(paramsObj.MY_PARAM); });``` |
 | smap.core.applyparams | …after URL params have been applied in core | – " " – |
 | smap.core.pluginsadded | …when all plugins have been added. Useful if you need another plugin to be added before you do something. | ```smap.event.on("smap.core.pluginsadded", function() {}); ``` |
