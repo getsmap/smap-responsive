@@ -1,8 +1,8 @@
 L.Control.Opacity = L.Control.extend({
 	options: {
 		position: 'topright',
-		showTitle: false,
-		btnReset: true
+		showTitle: false,		// Show the popover title
+		btnReset: true			// Show a reset button
 	},
 
 	_lang: {
