@@ -40,7 +40,7 @@ body {
 .modal-dialog {
   font-size: 1em;
 }
-.leaflet-control-container .btn {
+.leaflet-control-container .leaflet-control > .btn {
   padding: 12px 18px;
   max-width: 4.1em;
   min-width: 3.1em;
@@ -116,8 +116,8 @@ body {
   clear: none !important;
   margin: 0;
 }
-.leaflet-top.leaflet-right .leaflet-control .btn-group,
-.leaflet-top.leaflet-right .leaflet-control button {
+.leaflet-top.leaflet-right .leaflet-control > button,
+.leaflet-top.leaflet-right .leaflet-control .btn-group > button {
   display: block;
   border: none;
   border-radius: 0;
@@ -129,7 +129,7 @@ body {
 .leaflet-right .leaflet-control {
   margin-right: 10px;
 }
-.leaflet-right .leaflet-control button {
+.leaflet-right .leaflet-control > button {
   border-radius: 0 !important;
 }
 .unselectable {

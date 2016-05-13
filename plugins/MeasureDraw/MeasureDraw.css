@@ -1,3 +1,6 @@
+.leaflet-control-measuredraw {
+  z-index: 1000;
+}
 .leaflet-control-measuredraw .dropdown-menu {
   overflow: hidden;
   left: auto;

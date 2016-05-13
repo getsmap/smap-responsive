@@ -4,7 +4,7 @@
 collapseBreakPoint = 30em
 
 .smap-opacity-popcontainer
-	padding 1em
+	padding 0.1em 0
 	font-size 0.8em
 	user-select none
 
@@ -16,7 +16,8 @@ collapseBreakPoint = 30em
 	margin-right -1em
 
 .smap-opacity-sliderrow-container
-	margin-top 2.5em
+	margin-top 2em
+	padding 0.1em 0 1em 0
 
 .smap-opacity-headerrow
 	width 100%
@@ -42,6 +43,15 @@ collapseBreakPoint = 30em
 .smap-opacity-row
 	margin-top 1em
 	width 100%
+
+.smap-opacity-btnresetrow
+	width 100%
+	padding 0.6em 1em 1.9em 1em // 0.6em 1em
+	border-top 1px solid #ddd
+	.smap-opacity-btnhideall
+		float left
+	.smap-opacity-btnreset
+		float right
 
 @media (min-width: collapseBreakPoint)
 	// Add an offset so that the popover don't go outside the window

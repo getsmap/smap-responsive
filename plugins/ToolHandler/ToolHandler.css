@@ -30,21 +30,22 @@
   left: auto !important;
   right: 0.2em;
 }
-.thandler-collapsed .thandler-popover .popover-content {
+.thandler-collapsed .thandler-popover > .popover-content {
   padding: 0;
   padding-bottom: 1em;
 }
-.thandler-collapsed .thandler-popover .popover-content .leaflet-control {
+.thandler-collapsed .thandler-popover > .popover-content .leaflet-control {
   clear: none;
   margin: 0.2em;
 }
-.thandler-collapsed .thandler-popover .popover-content .leaflet-control button {
-  width: 2.75em;
-}
-.thandler-collapsed .thandler-popover .dropdown-menu {
+.thandler-collapsed .thandler-popover > .popover-content .dropdown-menu {
   left: -17em !important;
 }
-.thandler-collapsed .thandler-popover .thandler-arrow {
+.thandler-collapsed .thandler-arrow {
   left: auto !important;
   right: 17px;
+}
+.thandler-collapsed .thandler-popover > .popover-content .leaflet-control > button,
+.thandler-collapsed .thandler-popover > .popover-content .leaflet-control .btn-group > button {
+  width: 2.75em;
 }

@@ -123,7 +123,7 @@ L.Control.ToolHandler = L.Control.extend({
 			hidePopover();
 		}
 		
-		this._map.on("click dragstart", hidePopover);
+		this._map.on("mousedown dragstart", hidePopover);
 		$(window).on("orientationchange", hidePopover);
 	
 		var onPopoverHidden = function() {

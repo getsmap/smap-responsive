@@ -53,7 +53,7 @@ html, body
 .modal-dialog
 	font-size 1em
 
-.leaflet-control-container .btn
+.leaflet-control-container .leaflet-control > .btn
 	padding 12px 18px  //9px 15px
 	max-width 4.1em
 	min-width 3.1em
@@ -141,18 +141,19 @@ html, body
 		clear none !important
 		// margin 8px 0 0 .5em
 		margin 0
-		.btn-group, button
-			display block
-			border none
-			border-radius 0
-			max-width none
-			max-height none
-			width 54px
-			height 45px
+	.leaflet-control > button, .leaflet-control .btn-group > button
+		display block
+		border none
+		border-radius 0
+		max-width none
+		max-height none
+		width 54px
+		height 45px
 
-.leaflet-right .leaflet-control
-	margin-right generalMarginsRight
-	button
+.leaflet-right
+	.leaflet-control
+		margin-right generalMarginsRight
+	.leaflet-control > button
 		border-radius 0 !important
 
 // .leaflet-bottom .leaflet-control

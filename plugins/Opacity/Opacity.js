@@ -1,7 +1,8 @@
 L.Control.Opacity = L.Control.extend({
 	options: {
 		position: 'topright',
-		showTitle: false
+		showTitle: false,
+		btnReset: true
 	},
 
 	_lang: {
@@ -14,7 +15,9 @@ L.Control.Opacity = L.Control.extend({
 			transparent: "Genomskinlig",
 			opaque: "Synlig",
 			visibility: "Synlighet",
-			layerName: "Kartskikt"
+			layerName: "Kartskikt",
+			resetAll: "Återställ alla",
+			hideAll: "Göm alla"
 
 		},
 		"en": {
@@ -26,7 +29,9 @@ L.Control.Opacity = L.Control.extend({
 			transparent: "Transparent",
 			opaque: "Visible",
 			visibility: "Opacity",
-			layerName: "Layer"
+			layerName: "Layer",
+			resetAll: "Reset all",
+			hideAll: "Hide all"
 		}
 	},
 
@@ -59,17 +64,17 @@ L.Control.Opacity = L.Control.extend({
 		this.$popContainer.append( this.$sliderRowContainer );
 		this._bindEvents();
 
+		// -- For debug only --
+		// setTimeout(function() {
+		// 	$("#smap-opacity-btn").click();
+		// }, 100);
 
-		// this._addResetBtn(); // TODO
-		// var $btnReset = $('<button class="btn btn-default">Reset</button>');
-		// $btnReset.on("click touchstart", this.reset.bind(this) );
-		// this.$popContainer.prepend($btnReset);
-		
 		return this._container;
 	},
 
 	hide: function() {
 		this.$btn.popover("hide");
+		this.$btn.parent().find(".opacity-popover").hide();
 	},
 
 	_bindEvents: function() {
@@ -90,15 +95,29 @@ L.Control.Opacity = L.Control.extend({
 			}
 		}).bind(this);
 
-		this._map.on("layeradd layerremove", onAddRemove);
 		var hide = this.hide.bind(this);
+		this._map.on("layeradd layerremove", onAddRemove);
 		this._map.on("mousedown dragstart", hide);
 		$(window).on("resize orientationchange", hide);
 		// $("#mapdiv").on("touchstart", hide);
-		smap.event.on("smap.toolhandler.hide", hide);
+		smap.event.on("smap.toolhandler.hide", (function() {
+			this.$btn.parent().find(".opacity-popover").hide();
+			hide();
+		}).bind(this));
 
 		smap.event.on("smap.core.aftercreateparams", this.onAfterCreateParams.bind(this));
 		smap.event.on("smap.core.applyparams", this.onApplyParams.bind(this));
+	},
+
+	_addBtnReset: function() {
+		var $btnResetDiv = $('<div class="smap-opacity-btnresetrow" />');
+		var $btnReset = $('<button class="btn btn-default btn-xs smap-opacity-btnreset">'+this.lang.resetAll+'</button>');
+		var $btnHideAll = $('<button class="btn btn-default btn-xs smap-opacity-btnhideall">'+this.lang.hideAll+'</button>');
+		$btnResetDiv.append($btnReset)
+		$btnResetDiv.append($btnHideAll);
+		$btnReset.on("click touchstart", this.reset.bind(this) );
+		$btnHideAll.on("click touchstart", this.hideAll.bind(this) );
+		this.$popContainer.parent().parent().append($btnResetDiv);
 	},
 
 	onAfterCreateParams: function(e, p) {
@@ -187,6 +206,13 @@ L.Control.Opacity = L.Control.extend({
 			// $(this).slider({value: d[index] * 100});
 		});
 
+	},
+
+	hideAll: function() {
+		var self = this;
+		this.$sliderRowContainer.find("input").each(function(index, val) {
+			self._setSliderOpacity( $(this).prop("id"), 0 );
+		});
 	},
 
 	/**
@@ -321,7 +347,7 @@ L.Control.Opacity = L.Control.extend({
 
 	_createBtn: function() {
 		var self = this;
-		var $btn = $('<button id="smap-opacity-btn" title="' + this.lang.btnTitle + '" class="btn btn-default"><span class="fa fa-adjust"></span></button>');
+		var $btn = $('<button id="smap-opacity-btn" title="' + this.lang.btnTitle + '" class="btn btn-default"><span class="fa fa-sliders"></span></button>');
 		this.$btn = $btn;
 		$btn.on("click touchstart", function () {
 			self.activate();
@@ -338,6 +364,10 @@ L.Control.Opacity = L.Control.extend({
 				if ( $popoverContent.find(".smap-opacity-popcontainer").length === 0 ) {
 					$popoverContent.append( self.$popContainer );
 				}
+				if ( self.options.btnReset && $popoverContent.parent().find(".smap-opacity-btnresetrow").length === 0 ) {
+					self._addBtnReset();
+				}
+
 			},
 			placement: "bottom",
 			// title: this.lang.popoverTitle, // set by the btn's title attribute
@@ -382,6 +412,7 @@ L.Control.Opacity = L.Control.extend({
 			// This code should execute after the hide animation 
 			// is done – but it with the current version of Bootstrap it doesnt seem to happen
 			$(".smap-opacity-popcontainer").hide();
+
 		}).bind(this));
 	},
 
