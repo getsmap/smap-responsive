@@ -4,6 +4,9 @@
   "description": "A framework for creating responsive web maps",
   "dependencies": {},
   "devDependencies": {
+    "casper-chai": "^0.3.0",
+    "casperjs": "^1.1.1",
+    "chai": "^3.5.0",
     "css-condense": "^0.0.6",
     "event-stream": "^3.1.5",
     "gulp": "^3.9.1",
@@ -26,6 +29,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-rimraf": "^0.1.1",
     "gulp-sass": "^1.3.3",
+    "gulp-shell": "^0.5.2",
     "gulp-strip-debug": "^0.3.0",
     "gulp-stylus": "^1.3.4",
     "gulp-todo": "^0.3.6",
@@ -35,8 +39,11 @@
     "imagemin-pngcrush": "^0.1.0",
     "main-bower-files": "^1.0.2",
     "matchdep": "^0.3.0",
+    "mocha": "^2.4.5",
+    "mocha-casperjs": "^0.5.7",
     "multipipe": "^0.1.2",
-    "node-sass": "^3.0.0-alpha.0"
+    "node-sass": "^3.0.0-alpha.0",
+    "phantomjs": "^2.1.7"
   },
   "files": [
     "core",
@@ -52,7 +59,8 @@
   ],
   "scripts": {
     "start": "open http://localhost/smap-responsive/dist/index.html?config=config.js",
-    "prepublish": "bower install && gulp full && exit 0"
+    "prepublish": "bower install && gulp full && exit 0",
+    "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "repository": {
     "type": "git",

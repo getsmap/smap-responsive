@@ -1,6 +1,9 @@
 
 var gulp = require('gulp');
 
+const shell = require('gulp-shell');
+// const fs = require("fs");
+
 var autoprefixer = require('gulp-autoprefixer');
 var bowerfiles = require('main-bower-files');
 var flatten = require('gulp-flatten');
@@ -293,6 +296,7 @@ gulp.task('html', ["htmlcompress"]);
 
 
 
+
 // Build our code (during dev)
 gulp.task('ourcode', ["ourcss", "ourjs"]);  // "move"
 
@@ -304,10 +308,12 @@ gulp.task('full', ["cleancode"], function() {
 	return gulp.start("_full");
 });
 
-gulp.task('fullmalmo', ["cleancode"], function() {
-	// p.ourSass.unshift("dist/lib/malmo_shared_assets/**/*.scss");  In case we need advanced sass functionality from malmo assets
-	p.htmlTemplate = indexTemplate;
-	return gulp.start("_full");
+gulp.task('test', function() {
+	// var pluginFolders = fs.readdirSync("./plugins");
+	// console.log(pluginFolders);
+	
+	return gulp.src('test/*.js', {read: false})
+		.pipe(shell(["node_modules/.bin/mocha-casperjs test/opacity.js"]));
 });
 
 // Note! It's wise to run <bower update> before resetting. Thereby, packages will be
