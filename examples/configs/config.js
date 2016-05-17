@@ -149,6 +149,18 @@ var config = {
 		
 		plugins: [
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+					// Lets the user adjust the opacity of most layers added 
+					// to the map.
+					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+					{
+						init: "L.Control.Opacity",
+						options: {
+							position: 'topright',	// Leaflet container (default is topright)
+							showTitle: false,		// Show the popover title
+							btnReset: true			// Show a reset button and a "zero" button
+						}
+					},
+					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
 					// Creates a button e.g. in the toolbar which simply redirects
 					// the user to another URL. You can create several version of this
 					// plugin for the same map.
