@@ -10,4 +10,5 @@ core/css/*.css
 dev.html
 configs/
 examples/
+test/screenshots/*
 dev_iframe.html
