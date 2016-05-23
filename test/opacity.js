@@ -1,20 +1,12 @@
-// var casper    = require("casper").create();
-
-// var assert    = require("chai").assert;
-// var expect    = require("chai").expect;
-// var should    = require("chai").should();
-
 
 var testConfig = require("./resources/config.js").config;
 var utils = require("./resources/utils.js").utils;
 
-var testUrl = 'http://localhost/smap-responsive/dev.html?config=malmo_atlas.js&ol=lekplatser';
 
-describe("Opacity plugin desktop", function(test) {
-	before(function() {
-		casper.options.viewportSize = testConfig.casperOptions.viewportSize;
-		casper.start(testUrl);
-	});
+/**
+ * Tests to run before starting device specific tests
+ */
+function runPreTests() {
 	it('intro dialog shows up', function() {
 		casper.waitForSelector('.smap-info-footer', function() {
 			expect('.smap-info-footer').to.be.visible;
@@ -28,6 +20,12 @@ describe("Opacity plugin desktop", function(test) {
 			utils.capture("after_closing_introwin.png");
 		});
 	});
+}
+
+/**
+ * Tests which are not device specific
+ */
+function runTests(test) {
 
 	it('button element should exist and be visible', function(){
 		expect('#smap-opacity-btn').to.be.inDOM;
@@ -64,4 +62,39 @@ describe("Opacity plugin desktop", function(test) {
 		});
 			
 	});
-});
+}
+
+function main() {
+	var testUrl = "http://localhost/smap-responsive/dev.html?config=malmo_atlas.js&ol=lekplatser";
+
+	// -- Desktop tests ----------------------------------
+	describe("Opacity plugin: desktop", function(test) {
+		before(function() {
+			casper.options.viewportSize = testConfig.casperOptions.viewportSizeDesktop;
+			casper.start(testUrl);
+		});
+		runPreTests(test);
+		runTests(test);
+	});
+
+	// -- Mobile tests ----------------------------------
+	describe("Opacity plugin: mobile", function(test) {
+		before(function() {
+			casper.options.viewportSize = testConfig.casperOptions.viewportSizeMobile;
+			casper.start(testUrl);
+		});
+		runPreTests(test);
+		it('collapse button click should reveal the opacity button', function() {
+			casper.then(function() {
+				this.mouse.click(".thbtn");
+			}).waitForSelector('#smap-opacity-btn', function() {
+				expect('#smap-opacity-btn').to.be.visible;
+				utils.capture("toolhandler-toggled-open.png");
+			});
+		});
+		runTests(test);
+	});
+}
+
+main();
+
