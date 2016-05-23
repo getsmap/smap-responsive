@@ -4,18 +4,16 @@
 // var expect    = require("chai").expect;
 // var should    = require("chai").should();
 
-// var testConfig = require("./test/testConfig.js").config;
 
-function capture(fileName) {
-	var screenshotsFolder = "test/screenshots/";
-	casper.capture(screenshotsFolder + fileName);
-}
+var testConfig = require("./resources/config.js").config;
+var utils = require("./resources/utils.js").utils;
+
+var testUrl = 'http://localhost/smap-responsive/dev.html?config=malmo_atlas.js&ol=lekplatser';
 
 describe("Opacity plugin desktop", function(test) {
-	// this.timeout(300);
 	before(function() {
-		casper.options.viewportSize = {width: 1200, height: 600};
-		casper.start('http://localhost/smap-responsive/dev.html?config=malmo_atlas.js&ol=lekplatser');
+		casper.options.viewportSize = testConfig.casperOptions.viewportSize;
+		casper.start(testUrl);
 	});
 	it('intro dialog shows up', function() {
 		casper.waitForSelector('.smap-info-footer', function() {
@@ -27,11 +25,11 @@ describe("Opacity plugin desktop", function(test) {
 			this.mouse.click(".smap-info-footer button");	
 		}).waitWhileVisible('.modal', function() {
 			expect('.smap-info-footer').not.to.be.visible;
-			capture("after_closing_introwin.png");
+			utils.capture("after_closing_introwin.png");
 		});
 	});
 
-	it('button element should exists and be visible', function(){
+	it('button element should exist and be visible', function(){
 		expect('#smap-opacity-btn').to.be.inDOM;
 		expect('#smap-opacity-btn').to.be.visible;
 	});
@@ -41,7 +39,7 @@ describe("Opacity plugin desktop", function(test) {
 			this.mouse.click("#smap-opacity-btn");
 		}).waitForSelector('.opacity-popover', function() {
 			expect("document.querySelectorAll('.slider-handle.min-slider-handle').length").evaluate.to.equal(2);
-			capture("slider.png");
+			utils.capture("slider.png");
 		});
 	});
 
@@ -53,18 +51,17 @@ describe("Opacity plugin desktop", function(test) {
 			styles.forEach(function(style) {
 				expect(style).to.contain("0%");
 			});
-			capture("hide_all.png");
+			utils.capture("hide_all.png");
 
-			// -- This example shows how to use evalute ---
+			// -- This example shows how to use evaluate to run a custom query command ---
 			// var style = this.evaluate(function() {
 			// 	return document.querySelectorAll('.slider-handle.min-slider-handle')[0].style;
 			// });
 			// expect(style.left).to.equal("0%");
+			
+			// -- This example is a different approach for evaluating a custom query command ---
+			// expect("document.querySelectorAll('.slider-handle.min-slider-handle')[1].style").evaluate.to.equal("left: 0%;");
 		});
 			
-			// expect("document.querySelectorAll('.slider-handle.min-slider-handle')[1].style").evaluate.to.equal("left: 0%;");
-			// setTimeout(function() {
-			// 	done();
-			// }, 250);
 	});
 });
