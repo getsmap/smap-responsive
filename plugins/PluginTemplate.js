@@ -1,7 +1,7 @@
 
 L.Control.Template = L.Control.extend({
 	options: {
-		position: 'bottomright'
+		position: 'topright'
 	},
 	
 	_lang: {
