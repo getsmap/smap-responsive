@@ -16,7 +16,12 @@ L.Control.MMPGreta = L.Control.extend({
 			"passed": 	"blue",
 			"now": 		"darkred",
 			"future": 	"orange"
-		}
+		},
+		popup:	'<div>'+
+					'<div>${TooltipTitle}</div>'+
+					'<div>${Tooltip}</div>'+
+					'<div style="margin-top: 0.7em;">${TooltipUrl}</div>'+
+				'</div>'
 
 	},
 	
@@ -202,12 +207,7 @@ L.Control.MMPGreta = L.Control.extend({
 						return false;
 					}
 					this._hasInitiated = true;
-					layer.options.popup =
-									'<div>'+
-										'<div>${TooltipTitle}</div>'+
-										'<div>${Tooltip}</div>'+
-										'<div style="margin-top: 0.7em;">${TooltipUrl}</div>'+
-									'</div>';
+					layer.options.popup = self.options.popup;
 					var onLayerLoad = (function() {
 						var fg = L.featureGroup([], {
 							selectable: true
@@ -251,6 +251,7 @@ L.Control.MMPGreta = L.Control.extend({
 			}
 			else {
 				smap.event.on("smap.core.addedjsonlayer", (function(e, layer) {
+					layer.options.popup = self.options.popup;
 					delete layer.pointToLayer;
 				}).bind(this));
 			}
