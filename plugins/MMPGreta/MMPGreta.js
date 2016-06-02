@@ -203,11 +203,11 @@ L.Control.MMPGreta = L.Control.extend({
 					}
 					this._hasInitiated = true;
 					layer.options.popup =
-									'<div>\
-										<div>${TooltipTitle}</div>\
-										<div>${Tooltip}</div>\
-										<div style="margin-top: 0.7em;">${TooltipUrl}</div>\
-									</div>';
+									'<div>'+
+										'<div>${TooltipTitle}</div>'+
+										'<div>${Tooltip}</div>'+
+										'<div style="margin-top: 0.7em;">${TooltipUrl}</div>'+
+									'</div>';
 					var onLayerLoad = (function() {
 						var fg = L.featureGroup([], {
 							selectable: true
