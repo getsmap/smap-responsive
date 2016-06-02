@@ -241,11 +241,11 @@ gulp.task('ourjs:merge', function() {
 
 
 gulp.task('ourjs', function(callback) {
-	return runWebPack(function() {
+	runWebPack(function() {
 		gulp.start("ourjs:merge");
 		callback();
 	});
-	// return through2.obj();
+	return through2.obj();
 });
 
 
@@ -342,7 +342,9 @@ gulp.task('html', ["htmlcompress"]);
 // Build our code (during dev)
 gulp.task('ourcode', ["ourcss", "ourjs"]);  // "move"
 
-gulp.task('_full', ["images", "html", "move", "configs"]);
+gulp.task('_full', ["images", "move", "configs", "ourcode"], function() {
+	gulp.start("html");
+});
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).
