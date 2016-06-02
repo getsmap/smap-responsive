@@ -78,7 +78,7 @@ L.Control.Opacity = L.Control.extend({
 	},
 
 	_bindEvents: function() {
-		var onAddRemove = (function(e) {
+		var onAddRemove = (e => {
 			if (!e.layer.options || !e.layer.options.layerId || e.layer.feature) { 
 				return;
 			}
