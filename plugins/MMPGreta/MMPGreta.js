@@ -163,7 +163,8 @@ L.Control.MMPGreta = L.Control.extend({
 					var isObject = !markerColor ? true : false; // Greta has 2 types of features: Objects and POIs
 
 					// The iconClass can be overriden from the Icon property, otherwise defaults to the below.
-					var iconClass = props.Icon && props.Icon.length ? props.Icon : (isObject ? "warning" : "warning"); 
+					var iconClass = props.Icon && props.Icon.length ? props.Icon : (isObject ? "warning" : "warning");
+					iconClass = iconClass.replace("fa fa-", "").replace(/fa/g, "");
 					var markerIcon = L.AwesomeMarkers.icon({
 						icon: iconClass,
 						prefix: 'fa',
