@@ -1,34 +1,69 @@
 
+// import { introGuide } from "intro-guide"
+
 L.Control.IntroHelp = L.Control.extend({
 	options: {
 		position: 'topright',
 		autoActivate: true,			// {Boolean} Begin automatically from start
 
-		steps: [
-
-			{
-				element: ".leaflet-control-RedirectClick",
-				title: "Snedbild",
-				content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+		_lang: {
+			sv: {
+				steps: [
+					{
+						element: ".leaflet-control-RedirectClick",
+						title: "Starta turen",
+						content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+					},
+					{
+						element: ".leaflet-control-RedirectClick",
+						title: "Snedbild",
+						content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+					},
+					{ 
+						element: ".leaflet-control-ShareLink",
+						title: "Share link",
+						content: 'Click here to share the current map as a link, preserving zoom, center point etc.'
+					},
+					{
+						element: "#smap-search-div",
+						title: "Search",
+						content: 'You can search for anything… limited to addresses.'
+					}
+				]
 			},
-			{
-				element: ".leaflet-control-ShareLink",
-				title: "Share link",
-				content: 'Click here to share the current map as a link, preserving zoom, center point etc.'
-			},
-			{
-				element: "#smap-search-div",
-				title: "Search",
-				content: 'You can search for anything… limited to addresses.'
+			en: {
+				steps: [
+					{
+						element: ".leaflet-control-RedirectClick",
+						title: "Start tour",
+						content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+					},
+					{
+						element: ".leaflet-control-RedirectClick",
+						title: "Snedbild",
+						content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+					},
+					{
+						element: ".leaflet-control-ShareLink",
+						title: "Share link",
+						content: 'Click here to share the current map as a link, preserving zoom, center point etc.'
+					},
+					{
+						element: "#smap-search-div",
+						title: "Search",
+						content: 'You can search for anything… limited to addresses.'
+					}
+				]
 			}
-		]
+
+		}
 
 
 	},
 	
 	_lang: {
 		"sv": {
-			btnLabel: "Ett exempel"
+			btnLabel: "Ett exempels"
 		},
 		"en": {
 			btnLabel: "An example"
@@ -44,9 +79,9 @@ L.Control.IntroHelp = L.Control.extend({
 
 	initialize: function(options) {
 		L.setOptions(this, options);
-		if (options._lang) {
+		if (this.options._lang) {
 			// Always allow setting lang through options
-			$.extend(true, this._lang, options._lang);
+			$.extend(true, this._lang, this.options._lang);
 		}
 		this._setLang(options.langCode);
 	},
@@ -59,6 +94,7 @@ L.Control.IntroHelp = L.Control.extend({
 
 		this._createBtn();
 
+		alert(introGuide);
 		return this._container;
 	},
 
@@ -76,7 +112,7 @@ L.Control.IntroHelp = L.Control.extend({
 			return false;
 		}
 		this.active = true;
-		this.start(steps || this.options.steps, force);
+		this.start(steps || this.lang.steps, force);
 		return true;
 	},
 
@@ -96,7 +132,7 @@ L.Control.IntroHelp = L.Control.extend({
 		this.$btn = $('<button id="smap-introhelp-btn" title="' + self.lang.btnLabel + '" class="btn btn-default"><span class="fa fa-question-circle-o"></span></button>');
 		var self = this;
 		this.$btn.on("click", (function () {
-			this.activate(this.options.steps, true);
+			this.activate(this.lang.steps, true);
 			return false;
 		}).bind(this));
 		this.$container.append(this.$btn);

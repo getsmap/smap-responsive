@@ -26,7 +26,7 @@
     "Leaflet.awesome-markers": "~2.0.2",
     "bootstrap3-typeahead": "~3.1.1",
     "es5-shim": "~4.1.0",
-    "font-awesome": "latest",
+    "font-awesome": "~4.6.3",
     "jquery-xml2json": "~0.0.6",
     "leaflet-usermarker": "https://github.com/heyman/leaflet-usermarker.git",
     "leaflet.markercluster": "~0.4.0",
@@ -54,7 +54,8 @@
     "Leaflet.Snap": "./lib/leaflet.snap/",
     "Leaflet.print-smap": "./lib/leaflet.print-smap/",
     "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/",
-    "seiyria-bootstrap-slider": "~6.1.6"
+    "seiyria-bootstrap-slider": "~6.1.6",
+    "intro-guide": "https://github.com/johanlahti/intro-guide.git"
   },
   "overrides": {
     "leaflet-polyline-distance": {
