@@ -22,9 +22,9 @@ L.Control.Template = L.Control.extend({
 
 	initialize: function(options) {
 		L.setOptions(this, options);
-		if (options._lang) {
+		if (this.options._lang) {
 			// Always allow setting lang through options
-			$.extend(true, this._lang, options._lang);
+			$.extend(true, this._lang, this.options._lang);
 		}
 		this._setLang(options.langCode);
 	},
