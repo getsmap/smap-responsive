@@ -19,24 +19,23 @@ function runTests(test) {
 		expect('#smap-opacity-btn').to.be.visible;
 	});
 
-	it('button element click should open the popover with exactly 1 slider', function() {
-		casper.then(function() {
-			this.mouse.click("#smap-opacity-btn");
-		}).waitForSelector('.opacity-popover', function() {
+	it('button element click should open the popover with exactly 2 sliders', function() {
+		utils.capture("slider.png");
+		casper.thenClick("#smap-opacity-btn");
+		casper.waitForSelector('.opacity-popover', function() {
 			expect("document.querySelectorAll('.slider-handle.min-slider-handle').length").evaluate.to.equal(2);
 			utils.capture("slider.png");
 		});
 	});
 
 	it("button hideall should move slider to the left and set value to 0%", function(done) {
+		casper.thenClick(".smap-opacity-btnhideall");
 		casper.then(function() {
-			this.mouse.click(".smap-opacity-btnhideall");
-		}).then(function() {
 			var styles = this.getElementsAttribute(".slider-handle.min-slider-handle", "style");
 			styles.forEach(function(style) {
 				expect(style).to.contain("0%");
 			});
-			utils.capture("hide_all.png");
+			utils.capture("hide-all.png");
 
 			// -- This example shows how to use evaluate to run a custom query command ---
 			// var style = this.evaluate(function() {

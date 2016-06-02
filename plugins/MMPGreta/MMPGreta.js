@@ -203,11 +203,11 @@ L.Control.MMPGreta = L.Control.extend({
 					}
 					this._hasInitiated = true;
 					layer.options.popup =
-									'<div class="mmp-greta-table">\
-									<div class="mmp-greta-row"><b>ArendeId:&nbsp;</b><span>${ArendeId}</span></div>\
-									<div class="mmp-greta-row"><b>Attribut:&nbsp;</b><span>${Attribut}</span></div>\
-									<div class="mmp-greta-row"><b>TooltipTitle:&nbsp;</b><span>${TooltipTitle}</span></div>\
-									<div class="mmp-greta-row"><b>Tooltip:&nbsp;</b><span>${Tooltip}</span></div></div>';
+									'<div>\
+										<div>${TooltipTitle}</div>\
+										<div>${Tooltip}</div>\
+										<div style="margin-top: 0.7em;">${TooltipUrl}</div>\
+									</div>';
 					var onLayerLoad = (function() {
 						var fg = L.featureGroup([], {
 							selectable: true
