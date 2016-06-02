@@ -2,7 +2,8 @@
 var gulp = require('gulp');
 
 const shell = require('gulp-shell');
-// const fs = require("fs");
+const fs = require("fs");
+const path = require("path");
 
 var autoprefixer = require('gulp-autoprefixer');
 var bowerfiles = require('main-bower-files');
@@ -33,6 +34,13 @@ var connect = require('gulp-connect');
 
 var es = require('event-stream');
 var pngcrush = require('imagemin-pngcrush');
+var browserify = require('browserify');
+var babel = require('babelify');
+const source = require("vinyl-source-stream");
+const browserSync = require('browser-sync').create();
+const runSequence = require('run-sequence');  // Note! When gulp 4.0 is out this lib is not needed anymore. Source: https://www.npmjs.com/package/run-sequence
+var exec = require('child_process').exec;
+const through2 = require('through2');
 
 var indexTemplate = "index_template.html";
 
@@ -108,17 +116,16 @@ var p = {
 	ourJs: [
 		"core/js/smap.js",
 		"core/js/*.js",
-		// "plugins/MMP/MMP.js",
-		"plugins/**/*.js",
-		"!plugins/**/_*.js",
-		"!plugins/Test/**/*.js",
-		"!plugins/DrawSmap/*.js",
-		"!plugins/Edit/**/*.js",
-		"!plugins/MyPlugin/**/*.js",
-		"!plugins/SideBars/**/*.js",
-		"!plugins/ThreeD/**/*.js",
-		// "!plugins/WorkshopPlugin/**/*.js",
-		"!plugins/PluginTemplate.js",
+		"dist/plugins/*.js",
+		// "plugins/**/*.js",
+		// "!plugins/**/_*.js",
+		// "!plugins/Test/**/*.js",
+		// "!plugins/DrawSmap/*.js",
+		// "!plugins/Edit/**/*.js",
+		// "!plugins/MyPlugin/**/*.js",
+		// "!plugins/SideBars/**/*.js",
+		// "!plugins/ThreeD/**/*.js",
+		// "!plugins/PluginTemplate.js",
 		'!core/js/buildLibOverrides.js'
 	]
 
@@ -133,6 +140,7 @@ var p = {
 gulp.task('cleancode', function() {
 	gulp.src("dist/css").pipe(rimraf());
 	gulp.src("dist/js").pipe(rimraf());
+	gulp.src("dist/plugins").pipe(rimraf());
 	gulp.src("dist/*.*").pipe(rimraf());
 });
 gulp.task('cleanlib', function() {
@@ -192,35 +200,69 @@ gulp.task('ourcss', ['ourcsscompile'], function() {
 });
 
 
+function runWebPack(callback) {
+	exec('node_modules/.bin/webpack', function(error) {
+		if (error) {
+			console.error(`exec error: ${error}`);
+			return;
+		}
+		callback();
+	});
+}
 
-gulp.task('ourjs', function() {
-	return gulp
-		.src(p.ourJs)
+// gulp.task("webpack", function() {
+// 	var pass = through2.obj();
+// 	runWebPack();
+// 	return pass;
+// });
+gulp.task("watch:js", function() {
+	gulp.watch(["plugins/**/*.js"]).on('change', function(file) {
+		const inFile = file.path;
+		const outFile = path.join(__dirname, "dist/plugins", path.basename(file.path));
+		// console.log(file.path + " " + outFile);
+		const commandLine = ["node_modules/.bin/webpack", inFile, outFile, "--config webpack.config.watch.js"].join(" ");
+		exec(commandLine);
+	});
+});
+
+gulp.task('ourjs:merge', function() {
+	return gulp.src(p.ourJs)
 		// .pipe(order(p.ourJs.concat("*")))
 		// .pipe(jshint())
   // 		.pipe(jshint.reporter('default'))
+		// .pipe(fs.createWriteStream("bundle.js"))
   		.pipe(stripDebug())
   		.pipe(ngAnnotate())
 		.pipe(uglify())  // {mangle: false}
   		.pipe(concat("smap.js"))
-		.pipe(gulp.dest("dist"))
-		.pipe(connect.reload());
+		.pipe(gulp.dest("dist"));
+
 });
+
+
+gulp.task('ourjs', function(callback) {
+	return runWebPack(function() {
+		gulp.start("ourjs:merge");
+		callback();
+	});
+	// return through2.obj();
+});
+
 
 
 
 
 gulp.task('images', function () {
 	var imgDest = 'dist/img';
-    return gulp
-    	.src(['img/**/*.{png,jpg,jpeg,gif}'])
-    	.pipe(changed(imgDest))
-        .pipe(imagemin({
-        	progressive: true,
-            svgoPlugins: [{removeViewBox: false}],
-            use: [pngcrush()]
-        }))
-        .pipe(gulp.dest(imgDest));
+	return gulp
+		.src(['img/**/*.{png,jpg,jpeg,gif}'])
+		.pipe(changed(imgDest))
+		.pipe(imagemin({
+			progressive: true,
+			svgoPlugins: [{removeViewBox: false}],
+			use: [pngcrush()]
+		}))
+		.pipe(gulp.dest(imgDest));
 });
 
 gulp.task('configs', function() {
@@ -329,11 +371,9 @@ gulp.task('webserver', function() {
 });
 
 gulp.task('watch', function() {
-	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
+	var filesToWatch = p.ourCss.concat(p.ourStylus).concat(["plugins/**/*.js"]);
 	// var js = p.ourJs.concat("dist/configs/*.js");
-	var tasks = ["ourcode"];
-	gulp.start(tasks); // Start by running once
-	return gulp.watch(css, tasks);
+	return gulp.watch(filesToWatch, "ourcode"); //.on('change', browserSync.reload);
 });
 
 gulp.task('watchweb', ["webserver", "watch"]); // Allow auto-publishing whenever something changes
