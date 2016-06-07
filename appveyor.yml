@@ -1,11 +1,4 @@
 version: 1.0.{build}
-clone_folder: E:\inetpub\wwwroot\rest\leaf\1.0-dev-appveyor
-install:
-- cmd: .\node_modules\gulp full
 cache:
 - node_modules
 - bower_components
-build:
-  verbosity: minimal
-after_deploy:
-- cmd: ./node_modules/.bin/gulp full
