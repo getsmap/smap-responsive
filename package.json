@@ -2,9 +2,7 @@
   "name": "smap-responsive",
   "version": "1.2.9",
   "description": "A framework for creating responsive web maps",
-  "dependencies": {
-    "intro-guide": "file:///Library/WebServer/Documents/intro-guide/intro-guide-0.0.0.tgz"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.9.1",
     "babel-loader": "^6.2.4",
