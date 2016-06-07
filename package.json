@@ -3,7 +3,7 @@
   "version": "1.2.9",
   "description": "A framework for creating responsive web maps",
   "dependencies": {
-    "intro-guide": "git+https://github.com/johanlahti/intro-guide.git"
+    "intro-guide": "file:///Library/WebServer/Documents/intro-guide/intro-guide-0.0.0.tgz"
   },
   "devDependencies": {
     "babel-core": "^6.9.1",
@@ -57,7 +57,6 @@
     "phantomjs": "^2.1.7",
     "run-sequence": "^1.2.1",
     "through2": "^2.0.1",
-    "vinyl-source-stream": "^1.1.0",
     "webpack": "^1.13.1"
   },
   "files": [
