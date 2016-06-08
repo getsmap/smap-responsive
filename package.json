@@ -73,7 +73,7 @@
   "scripts": {
     "start": "open http://localhost/smap-responsive/dist/index.html?config=config.js",
     "prepublish": "bower install && gulp full && exit 0",
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "./node_modules/.bin/mocha-casperjs test/opacity.js"
   },
   "repository": {
     "type": "git",
