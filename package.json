@@ -72,7 +72,7 @@
   ],
   "scripts": {
     "start": "open http://localhost/smap-responsive/dist/index.html?config=config.js",
-    "prepublish": "node_modules/.bin/bower install && node_modules/.bin/gulp full",
+    "build": "node_modules/.bin/bower install && node_modules/.bin/gulp full",
     "test": "./node_modules/.bin/mocha-casperjs test/opacity.js"
   },
   "repository": {
