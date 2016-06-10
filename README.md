@@ -1,6 +1,6 @@
 sMap-responsive
 ===========
-
+ 
 <img src="img/demo/smap-responsive-demo.gif" width="600" />
 
 ###Examples
