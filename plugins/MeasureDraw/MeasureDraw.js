@@ -435,7 +435,7 @@ L.Control.MeasureDraw = L.Control.extend({
 			btnShow = '<br><button ondrag="return false;" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i>&nbsp;&nbsp;'+this.lang.moreCoords+'</button></div></div>';
 		}
 
-		html =	draggable+
+		var html =	draggable+
 				'<div>'+"<strong>WGS 84 (EPSG:4326)</strong><br>"+
 				"Lat: &nbsp;"+utils.round(wgs.lng, 5)+"<br>"+
 				"Lon: &nbsp;"+utils.round(wgs.lat, 5)+'<div>'+btnShow;
