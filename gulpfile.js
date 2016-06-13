@@ -116,7 +116,7 @@ var p = {
 	ourJs: [
 		"core/js/smap.js",
 		"core/js/*.js",
-		"dist/plugins/*.js",
+		"dist/plugins/**/*.js",
 		// "plugins/**/*.js",
 		// "!plugins/**/_*.js",
 		// "!plugins/Test/**/*.js",
