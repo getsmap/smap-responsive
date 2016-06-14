@@ -57,7 +57,13 @@
   background-position: -92px -2px;
 }
 .drawicons.leaflet-draw-draw-marker {
-  background-position: -122px -3px;
+  background-position: -125px -5px;
+  left: 5px;
+  top: 6px;
+}
+.popover-content .drawicons.leaflet-draw-draw-marker {
+  left: -3px;
+  top: 0;
 }
 .dropdown-toggle .drawicons.leaflet-draw-draw-marker {
   background-position: -125px -5px;
