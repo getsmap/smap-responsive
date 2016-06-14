@@ -371,14 +371,14 @@ var config = {
 							// Here follows the content of the modal – language dependent!
 							_lang: {
 								"en": {
-									titleInfo: "<h4>A header</h4>",
+									titleInfo: "<h4>A test header</h4>",
 									bodyContent:
-										'<p>Some content</p>'
+										'<p>Some test content</p>'
 								},
 								"sv": {
-									titleInfo: "<h4>En rubrik</h4>",
+									titleInfo: "<h4>En testrubrik</h4>",
 									bodyContent:
-										'<p>Lite innehåll</p>'
+										'<p>Lite testinnehåll</p>'
 								}
 							}
  						}
