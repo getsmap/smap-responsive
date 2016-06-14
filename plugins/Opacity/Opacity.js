@@ -83,6 +83,10 @@ L.Control.Opacity = L.Control.extend({
 				return;
 			}
 			var layer = e.layer;
+			if (layer && layer.options && layer.options.hasOwnProperty("showInOpacityTool") && layer.options.showInOpacityTool === false) {
+				// Allows for config not to display a layer in the opacity switcher
+				return;
+			}
 			switch (e.type) {
 				case "layeradd":
 					// Add slider to GUI
