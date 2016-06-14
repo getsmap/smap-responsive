@@ -51,8 +51,8 @@
     "jquery-placeholder": "~2.1.0",
     "jquery.scrollTo": "~2.1.0",
     "Leaflet.GeometryUtil": "https://github.com/makinacorpus/Leaflet.GeometryUtil.git#~0.3.2",
-    "Leaflet.Snap": "./lib/leaflet.snap/",
-    "Leaflet.print-smap": "./lib/leaflet.print-smap/",
+    "Leaflet.Snap": "./lib/Leaflet.snap/",
+    "Leaflet.print-smap": "./lib/Leaflet.print-smap/",
     "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/",
     "seiyria-bootstrap-slider": "~6.1.6"
   },

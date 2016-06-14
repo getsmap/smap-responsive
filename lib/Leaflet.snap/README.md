@@ -5,7 +5,7 @@ Enables snapping of draggable markers to polylines and other layers !
 
 Check out the [demo](http://makinacorpus.github.com/Leaflet.Snap/) !
 
-
+ 
 It depends on [Leaflet.GeometryUtil](https://github.com/makinacorpus/Leaflet.GeometryUtil).
 
 For snapping on shape drawing or edition snapping, it also depends on [Leaflet.draw](https://github.com/Leaflet/Leaflet.draw).
