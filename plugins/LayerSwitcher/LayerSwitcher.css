@@ -15,8 +15,8 @@
   transition: all 0.2s;
 }
 #lswitch-btn span {
-  -webkit-transition: -webkit-transform 1s;
-  transition: transform 1s;
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
 }
 #lswitch-btn:hover {
   background-color: rgba(240,240,240,0.8);
