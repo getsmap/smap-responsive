@@ -203,7 +203,7 @@ gulp.task('ourcss', ['ourcsscompile'], function() {
 function runWebPack(callback) {
 	exec( path.resolve('node_modules/.bin/webpack'), function(error) {
 		if (error) {
-			console.error(`exec error: ${error}`);
+			console.error('exec error: '+error);
 			return;
 		}
 		callback();
