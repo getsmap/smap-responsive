@@ -145,7 +145,7 @@
       ]
     },
     "lodash": {
-      "main": "lodash.min.js"
+      "main": "dist/lodash.min.js"
     },
     "smap.leaflet.wfs-t": {
       "main": [
