@@ -19,19 +19,12 @@
   vertical-align: middle;
 }
 .leaflet-control-measuredraw .dropdown-menu li a span:first-child {
-  top: 3px;
+  top: 4px;
 }
 .leaflet-control-measuredraw .dropdown-menu li a .drawicons {
   width: 30px;
   height: 20px;
   margin-right: 0.2em;
-}
-.thandler-popover .measuredraw-btntoggle-image {
-  width: 30px;
-  height: 20px;
-  margin-right: 0.2em;
-  left: -7px;
-  top: -4px;
 }
 .drawicons {
   background-image: url("lib/leaflet.draw/dist/images/spritesheet-2x.png");
@@ -60,13 +53,6 @@
   background-position: -125px -5px;
   left: 5px;
   top: 6px;
-}
-.popover-content .drawicons.leaflet-draw-draw-marker {
-  left: -3px;
-  top: 0;
-}
-.dropdown-toggle .drawicons.leaflet-draw-draw-marker {
-  background-position: -125px -5px;
 }
 .drawicons.leaflet-draw-edit-edit {
   background-position: -152px -2px;

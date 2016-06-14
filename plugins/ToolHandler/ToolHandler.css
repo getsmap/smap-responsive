@@ -48,4 +48,5 @@
 .thandler-collapsed .thandler-popover > .popover-content .leaflet-control > button,
 .thandler-collapsed .thandler-popover > .popover-content .leaflet-control .btn-group > button {
   width: 2.75em;
+  height: 2.4em;
 }

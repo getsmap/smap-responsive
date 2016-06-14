@@ -1025,7 +1025,7 @@ L.Control.MeasureDraw = L.Control.extend({
 		var $btn = $('<div class="btn-group">'+
 				// '<button id="smap-measuredraw-btn" title="' + self.lang.btnTitle + '" class="btn btn-default"><span class="fa fa-expand"></span></button>'+
 				'<button type="button" title="'+this.lang.btnTitle+'" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'+
-					'<span class="drawicons leaflet-draw-draw-marker measuredraw-btntoggle-image"></span>'+
+					'<span class="fa fa-map-marker"></span>'+
 				'</button>'+
 				'<ul class="dropdown-menu" role="menu">'+
 					// '<li>'+this.lang.drawTools+'</li>'+
