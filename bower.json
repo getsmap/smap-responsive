@@ -144,6 +144,9 @@
         "dist/leaflet.label.css"
       ]
     },
+    "lodash": {
+      "main": "lodash.min.js"
+    },
     "smap.leaflet.wfs-t": {
       "main": [
         "js/leaflet.gml.js",
