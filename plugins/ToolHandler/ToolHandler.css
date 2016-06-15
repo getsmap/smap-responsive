@@ -20,6 +20,11 @@
 .thandler-container.thandler-visible {
   display: block;
 }
+@media (min-width: 400px) {
+  .thandler-popover {
+    max-width: none;
+  }
+}
 .thandler-collapsed .thandler-btn {
   display: block;
 }
