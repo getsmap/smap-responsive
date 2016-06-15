@@ -1,0 +1,6 @@
+notify:
+  webhook:
+    urls:
+      - https://kartor.malmo.se/deploy-smap-from-droneio
+    header:
+      Authorization-Drone: theSecretPswd
