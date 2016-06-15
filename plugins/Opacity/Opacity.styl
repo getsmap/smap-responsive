@@ -3,6 +3,9 @@
 // so that the opacity tool is appropriately shown when inside the toolhandler container
 collapseBreakPoint = 30em
 
+.leaflet-control-opacity
+	z-index 1000 // makes drop down go on top of other tool buttons
+
 .smap-opacity-popcontainer
 	padding 0.1em 0
 	font-size 0.8em
