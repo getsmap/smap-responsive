@@ -1,6 +1,8 @@
 sMap-responsive
 ===========
- 
+
+[![Build Status](https://drone.io/github.com/getsmap/smap-responsive/status.png)](https://drone.io/github.com/getsmap/smap-responsive/latest)
+
 <img src="img/demo/smap-responsive-demo.gif" width="600" />
 
 ###Examples
