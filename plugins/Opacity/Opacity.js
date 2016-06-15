@@ -233,7 +233,7 @@ L.Control.Opacity = L.Control.extend({
 		this.$sliderRowContainer.find("input").each(function() {
 			var layerId = unCreateId( $(this).prop("id") );
 			var t = smap.cmd.getLayerConfig( layerId );
-			var opacity = t.options.opacity || 1;
+			var opacity = t && t.options ? (t.options.opacity || 1) : 1;
 			if (asObject) {
 				defaults[layerId] = opacity;
 			}
