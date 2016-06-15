@@ -66,9 +66,9 @@ L.Control.Geolocate = L.Control.extend({
 		}, this));
 
 		if (this.options.hoverTooltip) {
-			if (!btn.parent().data('bs.popover')) {
-				btn.parent().popover({
-					content: this.lang.hoverTooltip,
+			if (!btn.parent().data('bs.tooltip')) {
+				btn.parent().tooltip({
+					title: this.lang.hoverTooltip,
 					trigger: "hover",
 					placement: "left"
 				});

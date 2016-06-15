@@ -313,12 +313,12 @@ L.Control.LayerSwitcher = L.Control.extend({
 			btn.on("mouseenter", (function() {
 				this._isHoveringToggleBtn = true;
 				this._bindToggleBtnPopover(this.lang.btnToggleTooltip);
-				$("#lswitch-btn").popover("show");
+				$("#lswitch-btn").tooltip("show");
 
 			}).bind(this));
 
 			btn.on("mouseleave", (function() {
-				$("#lswitch-btn").popover("hide");
+				$("#lswitch-btn").tooltip("hide");
 				this._isHoveringToggleBtn = false;
 			}).bind(this));
 		}
@@ -342,9 +342,9 @@ L.Control.LayerSwitcher = L.Control.extend({
 	 */
 	_bindToggleBtnPopover: function(text) {
 		// $("#lswitch-btn").popover("destroy");
-		if (!$("#lswitch-btn").data('bs.popover')) {
-			$("#lswitch-btn").popover({
-				content: text,
+		if (!$("#lswitch-btn").data('bs.tooltip')) {
+			$("#lswitch-btn").tooltip({
+				title: text,
 				trigger: "manual",
 				placement: "right"
 			});
@@ -360,10 +360,10 @@ L.Control.LayerSwitcher = L.Control.extend({
 		setTimeout(function() {
 			if (!self._isHoveringToggleBtn) {
 				self._bindToggleBtnPopover(text);
-				$("#lswitch-btn").popover("show");
+				$("#lswitch-btn").tooltip("show");
 				setTimeout(function() {
 					if (!self._isHoveringToggleBtn) {
-						$("#lswitch-btn").popover("destroy");
+						$("#lswitch-btn").tooltip("destroy");
 					}
 				}, typeof ms === "number" ? ms : 3000);
 			}
