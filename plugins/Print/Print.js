@@ -3,7 +3,7 @@
 		options: {
 			position: 'topleft',
 			printUrl: "//localhost/print-servlet/print", ////localhost/geoserver/pdf
-			compactConditions: false
+			compactConditions: true
 		},
 
 		_lang: {
@@ -192,7 +192,7 @@
 		_makeLegends: function() {
 			var classes = [];
 			var layers = this.map._layers;
-			var layInst, url, displayName, o, useLegend;
+			var layInst, url, displayName, o, useLegend, lid;
 			for (lid in layers) {
 				layInst = layers[lid];
 				o = layInst.options;
