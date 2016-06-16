@@ -277,11 +277,14 @@ L.Control.Opacity = L.Control.extend({
 		if (!$p.length) return;
 		var $pc = $p.find(".smap-opacity-popcontainer");
 		var availableHeight = $("#mapdiv").innerHeight();
-		var estimatedHeightRemaining = availableHeight - $pc.offset().top - ($pc.outerHeight() + 100);
+		var pcOffset = $pc.offset() || {},
+			pOffset = $p.offset() || {},
+			pcOuterHeight = $pc.outerHeight();
+		var estimatedHeightRemaining = availableHeight - pcOffset.top - (pcOuterHeight + 100);
 		if (estimatedHeightRemaining < 0) {
 			// Set max height and make it scrollable
 			$pc.addClass("smap-opacity-scrollable");
-			$pc.css("max-height", (availableHeight - $p.offset().top - 70) + "px");
+			$pc.css("max-height", (availableHeight - pOffset.top - 70) + "px");
 		}
 		else {
 			$pc.css("max-height", "none").removeClass("smap-opacity-scrollable");
