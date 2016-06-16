@@ -9,6 +9,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		zoomToExtent: false,
 		showTooltip: false, // Can also be a number which is then ms of visibility
 		hoverTooltip: true, // Show tooltip on hover
+		showTooltipOnCollapse: false, // Show tooltip (once only) when the layerswitcher is collapsed
 		catIconClass: "fa fa-chevron-right", //fa-chevron-circle-right
 		getFitBoundsOptions: function() {
 			// Adapts zoom to extent options (default function prevents the 
@@ -209,7 +210,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			// will take care of closing the switcher when that happens.
 			this.hidePanel();
 		}
-		if ( $("#lswitch-btn:visible").length && !this._btnToggleTooltipShown) {
+		if ( $("#lswitch-btn:visible").length && this.options.showTooltipOnCollapse && !this._btnToggleTooltipShown) {
 			this._showBtnTooltip(this.lang.btnToggleTooltip, this.options.optionShowTooltip);
 		}
 	},
