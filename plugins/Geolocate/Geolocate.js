@@ -54,7 +54,7 @@ L.Control.Geolocate = L.Control.extend({
 		var btn = $('<button id="smap-glocate-btn" class="btn btn-default"><span class="fa fa-location-arrow"></span></button>');
 		this.$container.append(btn);
 		this.btn = btn;
-		btn.on("click", $.proxy(function() {
+		btn.on("touchstart click", $.proxy(function() {
 			// Toggle the geolocation on btn click
 			if (this.active) {
 				this.deactivate();				
