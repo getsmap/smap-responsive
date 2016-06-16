@@ -200,6 +200,7 @@ L.Control.Opacity = L.Control.extend({
 		this.$sliderRowContainer.find("#"+sliderId)
 				.val( displayValue )
 				.trigger("change")
+				.trigger("slideStop")
 				.slider('setValue', displayValue);
 	},
 
@@ -209,6 +210,7 @@ L.Control.Opacity = L.Control.extend({
 		this.$sliderRowContainer.find("input").each(function(index, val) {
 			var displayValue = d[index] * 100;
 			self._setSliderOpacity( $(this).prop("id"), displayValue );
+
 			// .trigger("create"); //TODO How to redraw/update slider element
 			// $(this).slider({value: d[index] * 100});
 		});
