@@ -309,7 +309,8 @@ L.Control.Opacity = L.Control.extend({
 		if ( $c.find("#"+theId).length ) {
 			return false;
 		}
-		if (!layer) {
+		var isVector = layer.hasOwnProperty("_layers");
+		if (!layer || isVector) {
 			return;
 		}
 		var opacity;
@@ -362,7 +363,8 @@ L.Control.Opacity = L.Control.extend({
 
 	_removeRow: function(layer) {
 		var defaults = this._getDefaults(true);
-		if (!defaults[layer.options.layerId]) return;
+		var isVector = layer.hasOwnProperty("_layers");
+		if (!defaults[layer.options.layerId] || isVector) return;
 		this._setLayerOpacity(layer, defaults[layer.options.layerId]); // Reset opacity to original value
 		var $c = this.$sliderRowContainer;
 		var theId = this._createId(layer.options.layerId);
