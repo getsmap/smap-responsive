@@ -373,7 +373,7 @@ gulp.task('webserver', function() {
 });
 
 gulp.task('watch', function() {
-	var filesToWatch = p.ourCss.concat(p.ourStylus).concat(["plugins/**/*.js"]);
+	var filesToWatch = [].concat(p.ourStylus.concat(["plugins/**/*.js"]));
 	// var js = p.ourJs.concat("dist/configs/*.js");
 	return gulp.watch(filesToWatch, "ourcode"); //.on('change', browserSync.reload);
 });
