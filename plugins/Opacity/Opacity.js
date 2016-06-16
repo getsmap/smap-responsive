@@ -187,13 +187,13 @@ L.Control.Opacity = L.Control.extend({
 			layer.setOpacity( val );
 			
 		}
-		else {
-			layer.eachLayer(function(marker) {
-				if (marker.setOpacity) {
-					marker.setOpacity( val );
-				}
-			});
-		}
+		// else {
+		// 	layer.eachLayer(function(marker) {
+		// 		if (marker.setOpacity) {
+		// 			marker.setOpacity( val );
+		// 		}
+		// 	});
+		// }
 	},
 
 	_setSliderOpacity: function(sliderId, displayValue) {
