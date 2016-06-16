@@ -331,19 +331,8 @@ body {
   background-color: #eee;
   background-color: rgba(220,220,220,0.5);
 }
-.leaflet-popup-content-wrapper-multichoice {
-  background: #fff;
-  background: rgba(255,255,255,0.9);
-}
-.leaflet-popup-content-wrapper-multichoice .leaflet-popup-content {
-  overflow-y: auto;
-  max-height: 40em;
-  overflow-x: hidden;
-}
-.leaflet-popup-content-wrapper-multichoice .popup-divider {
-  width: 100%;
-  margin: 0;
-  left: 0;
+.leaflet-popup-content {
+  font-size: 0.9em;
 }
 .leaflet-container {
   font: 1em "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera Sans", sans-serif;
