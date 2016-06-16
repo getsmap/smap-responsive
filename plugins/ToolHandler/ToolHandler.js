@@ -119,9 +119,10 @@ L.Control.ToolHandler = L.Control.extend({
 			}
 		}
 
-		function onFocusOut() {
-			hidePopover();
-		}
+		// function onFocusOut() {
+		// 	hidePopover();
+		// }
+		// $(".thandler-btn button").on("focusout", onFocusOut);
 		
 		this._map.on("mousedown dragstart", hidePopover);
 		$(window).on("orientationchange", hidePopover);
@@ -133,6 +134,11 @@ L.Control.ToolHandler = L.Control.extend({
 			}*/
 			$(window).off("resize", hidePopover);
 			var $popCont = $(".thandler-popover .popover-content");
+
+
+			$popCont.find("button").each(function() {
+				$(this).blur(); // Make the tooltip disappear
+			});
 			smap.event.trigger("smap.toolhandler.hide");
 
 			// It seems as though the hidden.bs.popover-event is triggered before animation 
