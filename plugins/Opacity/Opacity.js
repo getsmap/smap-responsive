@@ -185,6 +185,7 @@ L.Control.Opacity = L.Control.extend({
 	_setLayerOpacity: function(layer, val) {
 		if (layer.setOpacity) {
 			layer.setOpacity( val );
+			
 		}
 		else {
 			layer.eachLayer(function(marker) {
@@ -242,6 +243,19 @@ L.Control.Opacity = L.Control.extend({
 			}
 		});
 		return defaults;
+	},
+
+	onSlideStop: function(e) {
+		if (utils.isTouchOnly()) {
+			// Fixes darkening of layer bug on iOS (and possibly other touch devices?)
+			var $target = $(e.target);
+			var val = Number( $target.val() );
+			var layerId = this._unCreateId( $target.prop("id") );
+			var layer = smap.cmd.getLayer(layerId);
+			if (layer.redraw) {
+				layer.redraw();
+			}
+		}
 	},
 
 	onSlide: function(e) {
@@ -335,6 +349,7 @@ L.Control.Opacity = L.Control.extend({
 		});
 		// $input.on("slide", this.onSlide.bind(this));
 		$input.on("change", this.onSlide.bind(this));
+		$input.on("slideStop", this.onSlideStop.bind(this));
 		this._setLabelValue( $row.find(".smap-opacity-value"), displayValue );
 		this._adjustSize();
 	},
