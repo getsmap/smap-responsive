@@ -313,19 +313,20 @@ L.Control.Opacity = L.Control.extend({
 			return;
 		}
 		var opacity;
-		if (!layer.setOpacity && layer._layers) {
+		if (!layer.setOpacity) {  // && layer._layers) {
+			return; // no support for vector layers
 			// Check if the opacity can be changed for features in this layer. If not, return.
-			var firstFeature;
-			for (var key in layer._layers) {
-				firstFeature = layer._layers[key];
-				break;
-			}
-			if (firstFeature && firstFeature.setOpacity) {
-				opacity = firstFeature.options.opacity;
-			}
-			else {
-				return;
-			}	
+			// var firstFeature;
+			// for (var key in layer._layers) {
+			// 	firstFeature = layer._layers[key];
+			// 	break;
+			// }
+			// if (firstFeature && firstFeature.setOpacity) {
+			// 	opacity = firstFeature.options.opacity;
+			// }
+			// else {
+			// 	return;
+			// }	
 		}
 		opacity = opacity || (typeof layer.options.opacity === "number" ? layer.options.opacity : 1);
 		var displayValue = opacity * 100; //(1 - opacity )*100;
