@@ -254,7 +254,8 @@ L.Control.Opacity = L.Control.extend({
 		var val = Number( $target.val() );
 		var layerId = this._unCreateId( $target.prop("id") );
 		var layer = smap.cmd.getLayer(layerId);
-		if (layer.redraw) {
+		if (layer.redraw && L.NonTiledLayer && layer instanceof L.NonTiledLayer.WMS) {
+			// L.NonTiledLayer.WMS is giving us a "darkening bug" in most browsers
 			layer.redraw();
 		}
 	},
@@ -267,9 +268,15 @@ L.Control.Opacity = L.Control.extend({
 		var layer = smap.cmd.getLayer(layerId);
 		
 		this._setLayerOpacity(layer, val / 100);
-		
+		if (layer.redraw && L.NonTiledLayer && layer instanceof L.NonTiledLayer.WMS) {
+			// L.NonTiledLayer.WMS is giving us a "darkening bug" in most browsers
+			setTimeout(function() {
+				layer.redraw();
+			}, 1000);
+		}
 		var $valueLabel = $target.parent().find(".smap-opacity-value");
 		this._setLabelValue($valueLabel, val);
+
 
 	},
 
