@@ -248,15 +248,14 @@ L.Control.Opacity = L.Control.extend({
 	},
 
 	onSlideStop: function(e) {
-		if (utils.isTouchOnly()) {
-			// Fixes darkening of layer bug on iOS (and possibly other touch devices?)
-			var $target = $(e.target);
-			var val = Number( $target.val() );
-			var layerId = this._unCreateId( $target.prop("id") );
-			var layer = smap.cmd.getLayer(layerId);
-			if (layer.redraw) {
-				layer.redraw();
-			}
+		// if (utils.isTouchOnly()) {
+			// Fixes darkening of layer bug
+		var $target = $(e.target);
+		var val = Number( $target.val() );
+		var layerId = this._unCreateId( $target.prop("id") );
+		var layer = smap.cmd.getLayer(layerId);
+		if (layer.redraw) {
+			layer.redraw();
 		}
 	},
 
