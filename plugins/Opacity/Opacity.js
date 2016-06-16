@@ -267,7 +267,7 @@ L.Control.Opacity = L.Control.extend({
 		var layerId = this._unCreateId( $target.prop("id") );
 		var layer = smap.cmd.getLayer(layerId);
 		
-		this._setLayerOpacity(layer, parseInt(val / 100) );
+		this._setLayerOpacity(layer, val / 100);
 		if (layer.redraw && L.NonTiledLayer && layer instanceof L.NonTiledLayer.WMS) {
 			// L.NonTiledLayer.WMS is giving us a "darkening bug" in most browsers
 			layer.redraw();
