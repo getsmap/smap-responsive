@@ -189,7 +189,9 @@ L.Control.Opacity = L.Control.extend({
 		}
 		else {
 			layer.eachLayer(function(marker) {
-				marker.setOpacity( val );
+				if (marker.setOpacity) {
+					marker.setOpacity( val );
+				}
 			});
 		}
 	},
