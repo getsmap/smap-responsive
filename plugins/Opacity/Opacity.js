@@ -247,18 +247,18 @@ L.Control.Opacity = L.Control.extend({
 		return defaults;
 	},
 
-	onSlideStop: function(e) {
-		// if (utils.isTouchOnly()) {
-			// Fixes darkening of layer bug
-		var $target = $(e.target);
-		var val = Number( $target.val() );
-		var layerId = this._unCreateId( $target.prop("id") );
-		var layer = smap.cmd.getLayer(layerId);
-		if (layer.redraw && L.NonTiledLayer && layer instanceof L.NonTiledLayer.WMS) {
-			// L.NonTiledLayer.WMS is giving us a "darkening bug" in most browsers
-			layer.redraw();
-		}
-	},
+	// onSlideStop: function(e) {
+	// 	// if (utils.isTouchOnly()) {
+	// 		// Fixes darkening of layer bug
+	// 	var $target = $(e.target);
+	// 	var val = Number( $target.val() );
+	// 	var layerId = this._unCreateId( $target.prop("id") );
+	// 	var layer = smap.cmd.getLayer(layerId);
+	// 	if (layer.redraw && L.NonTiledLayer && layer instanceof L.NonTiledLayer.WMS) {
+	// 		// L.NonTiledLayer.WMS is giving us a "darkening bug" in most browsers
+	// 		layer.redraw();
+	// 	}
+	// },
 
 	onSlide: function(e) {
 		// console.log(e);
@@ -267,10 +267,16 @@ L.Control.Opacity = L.Control.extend({
 		var layerId = this._unCreateId( $target.prop("id") );
 		var layer = smap.cmd.getLayer(layerId);
 		
-		this._setLayerOpacity(layer, val / 100);
-		if (layer.redraw && L.NonTiledLayer && layer instanceof L.NonTiledLayer.WMS) {
-			// L.NonTiledLayer.WMS is giving us a "darkening bug" in most browsers
-			layer.redraw();
+		var decVal = val / 100;
+
+		if (L.NonTiledLayer && layer instanceof L.NonTiledLayer.WMS) {
+			// Fix for L.NonTiledLayer.WMS is giving us a "darkening bug" in most browsers
+			layer._div.style.visibility = 'hidden';
+			this._setLayerOpacity(layer, decVal);
+			layer._div.style.visibility = 'visible';
+		}
+		else {
+			this._setLayerOpacity(layer, decVal);
 		}
 		var $valueLabel = $target.parent().find(".smap-opacity-value");
 		this._setLabelValue($valueLabel, val);
@@ -360,7 +366,7 @@ L.Control.Opacity = L.Control.extend({
 		});
 		// $input.on("slide", this.onSlide.bind(this));
 		$input.on("change", this.onSlide.bind(this));
-		$input.on("slideStop", this.onSlideStop.bind(this));
+		// $input.on("slideStop", this.onSlideStop.bind(this));
 		this._setLabelValue( $row.find(".smap-opacity-value"), displayValue );
 		this._adjustSize();
 	},
