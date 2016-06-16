@@ -272,7 +272,7 @@ L.Control.Opacity = L.Control.extend({
 			// L.NonTiledLayer.WMS is giving us a "darkening bug" in most browsers
 			setTimeout(function() {
 				layer.redraw();
-			}, 1000);
+			}, 1);
 		}
 		var $valueLabel = $target.parent().find(".smap-opacity-value");
 		this._setLabelValue($valueLabel, val);
