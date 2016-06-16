@@ -585,6 +585,7 @@ L.Control.Search = L.Control.extend({
 			.on("focus", function() {
 				$(this).parent().addClass("smap-search-div-focused");
 				$("#mapdiv").trigger("touchstart"); // Hide switcher panel
+				self.map.fire("mousedown"); // Closes toolhandler popover, let other things know when to deactivate by listening to this event
 				activate();
 			})
 			.on("blur", function() {
