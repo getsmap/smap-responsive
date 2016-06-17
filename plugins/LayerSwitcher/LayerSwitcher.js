@@ -471,6 +471,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		}, 1);
 		setTimeout(function() {
 			self._panelIsSliding = false;
+			// $("#mapdiv").addClass("mapdiv-lsw-visible"); // blur mapdiv
 		}, 300);
 		
 		$("#mapdiv").addClass("mapdiv-slidetransition");
@@ -502,7 +503,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 			this._panelIsSliding = false;
 			this.$panel.hide();
 			$("#maindiv").removeClass("lswitch-overflow-hidden");
-			// $("#lswitch-btn").show();
+			// $("#mapdiv").removeClass("mapdiv-lsw-visible"); // remove blur mapdiv
 		}, this), 300);
 	},
 	
