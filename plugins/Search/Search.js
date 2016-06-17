@@ -781,8 +781,8 @@ L.Control.Search = L.Control.extend({
 					this.marker = L.marker(latLng, {iconOptions: L.icon(this.options.iconOptions) }).addTo(this._searchLayer);
 					this.marker.options.q = q; // Store for creating link to map
 					
-					var btnRemoveHtml = '<div><button id="smap-search-popupbtn" class="btn btn-default btn-sm">'+this.lang.remove+'</button></div>';
-					var titleHtml = '<p class="lead">'+decodeURIComponent(q)+'</p>';
+					var btnRemoveHtml = '<div class="smap-search-btnremove"><button id="smap-search-popupbtn" class="btn btn-default btn-sm">'+this.lang.remove+'</button></div>';
+					var titleHtml = '<p class="smap-search-popupcontent lead">'+decodeURIComponent(q)+'</p>';
 					var popupDefaultContent = titleHtml + btnRemoveHtml;
 					
 					var popupContent = popupDefaultContent;

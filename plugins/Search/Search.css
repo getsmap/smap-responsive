@@ -76,6 +76,12 @@
   width: 95% !important;
   max-width: 635px;
 }
+.smap-search-popupcontent.lead {
+  margin: 1em 0 0.6em 0;
+}
+.smap-search-btnremove {
+  margin-top: 1em;
+}
 @media (max-width: 767px) {
   .smap-search-div-in-toolbar {
     max-width: 80% !important;
