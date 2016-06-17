@@ -705,6 +705,18 @@ L.Control.Search = L.Control.extend({
 			$menu.css({"max-height": this.options.acHeight});
 		}
 	},
+
+	_processLinks: function(html) {
+		// return html.replace(/\<a /g, '<a ontouch="function(e){alert(\'hej\'); window.open(this.href, this.target || \'_blank\' ); e.preventDefault() }" ');
+		var $div = $("<div />");
+		$div.append(html);
+		$div.find("a").each(function() {
+			var $newAnchor = $('<a onclick="window.open(\''+$(this).prop("href")+'\')"><i class=\"fa fa-external-link\"></i> '+$(this).text()+'</a>');
+			$(this).after($newAnchor);
+			$(this).remove();
+		});
+		return $div.html();
+	},
 	
 	
 	_geoLocate: function(q, options) {
@@ -777,7 +789,7 @@ L.Control.Search = L.Control.extend({
 					if (this.options.popupContent) {
 						popupContent = "";
 						popupContent += titleHtml;
-						popupContent += utils.extractToHtml(this.options.popupContent, feature.properties);
+						popupContent += this._processLinks( utils.extractToHtml(this.options.popupContent, feature.properties) );
 						popupContent += btnRemoveHtml;
 					}
 					this.marker.bindPopup(popupContent);

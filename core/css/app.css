@@ -334,6 +334,10 @@ body {
 .leaflet-popup-content {
   font-size: 0.9em;
 }
+.leaflet-popup-content a {
+  cursor: pointer;
+  white-space: nowrap;
+}
 .leaflet-container {
   font: 1em "OpenSans", "Droid Sans", "Verdana", "DejaVu Sans", "Bitstream Vera Sans", sans-serif;
 }
