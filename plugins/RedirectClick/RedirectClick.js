@@ -139,6 +139,30 @@ L.Control.RedirectClick = L.Control.extend({
 		self.$container.append($btn);
 	},
 
+	/**
+	 * Activate or deactivate select tools so they dont interfer with our tool.
+	 * @param  {Boolean} activate (true) or deactivate (false)
+	 * @return {undefined}
+	 */
+	_selection: function(activate) {
+		var arr = [
+				smap.cmd.getControl("L.Control.SelectWMS"),
+				smap.cmd.getControl("L.Control.SelectVector")
+		];
+		var c, i;
+		for (i=0; i<arr.length; i++) {
+			c = arr[i];
+			if (c) {
+				if (activate === true) {
+					c.activate();
+				}
+				else {
+					c.deactivate();
+				}
+			}
+		}
+	},
+
 	_activate: function() {
 		if (this.active) {
 			return false; 
@@ -150,6 +174,7 @@ L.Control.RedirectClick = L.Control.extend({
 			this.removeHooks();
 			this.addHooks();
 			$("#mapdiv").css({'cursor': this.options.cursor});
+			this._selection(false);
 		}
 
 		else {
@@ -167,6 +192,7 @@ L.Control.RedirectClick = L.Control.extend({
 			this.staticTooltip.remove();
 		}
 		$("#mapdiv").css({'cursor': ''}); //reset cursor CSS
+		this._selection(true);
 		
 	},
 
