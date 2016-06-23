@@ -7,6 +7,7 @@ const path = require("path");
 
 var autoprefixer = require('gulp-autoprefixer');
 var bowerfiles = require('main-bower-files');
+const npmFiles = require('gulp-npm-files');
 var flatten = require('gulp-flatten');
 var cache = require('gulp-cache');
 var changed = require('gulp-changed');
@@ -73,6 +74,7 @@ var p = {
 		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
 		'dist/lib/**/*.js',
 		'!dist/lib/leaflet-dist/*', // messing up
+		// '!dist/lib/intro-guide-js/**/*.js', // Not using global include but UMD import in IntroHelp plugin and built with webpack
 		'!dist/lib/libs.js', // Don't use previously compressed lib file
 		'!dist/lib/add-to-homescreen/**/*.js', // Exclude this lib, it's optionally injected by plugin
 		'core/js/buildLibOverrides.js'  // Override libs js
@@ -132,7 +134,13 @@ var p = {
 };
 
 
+var autoPrefixerOptions = {
+	browsers: ["ie >= 8", "last 3 versions", "iOS >= 7"],
+	cascade: true,
+	add: true,
+	remove: true
 
+}
 
 
 // ----- Tasks ------
@@ -180,7 +188,7 @@ gulp.task('ourcsscompile', function() {
 	// 		.pipe(sass());
 
 	return es.merge(streamStylus) //streamSass)
-			.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9")) //.on('error', onError)
+			.pipe(autoprefixer(autoPrefixerOptions)) //.on('error', onError)
 			.pipe(gulp.dest("."));
 });
 
@@ -188,7 +196,7 @@ gulp.task('ourcsscompile', function() {
 gulp.task('ourcss', ['ourcsscompile'], function() {
 	return gulp
 		.src(p.ourCss)
-		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9"))
+		.pipe(autoprefixer(autoPrefixerOptions)) //"last 1 version", "> 1%", "ie 8", "ie 9"))
 		// .pipe(csslint())
 		// .pipe(csslint.reporter())
 		// .pipe(order(p.ourCss.concat("*")))
@@ -215,15 +223,7 @@ function runWebPack(callback) {
 // 	runWebPack();
 // 	return pass;
 // });
-gulp.task("watch:js", function() {
-	gulp.watch(["plugins/**/*.js"]).on('change', function(file) {
-		const inFile = file.path;
-		const outFile = path.join(__dirname, "dist/plugins", path.basename(file.path));
-		// console.log(file.path + " " + outFile);
-		const commandLine = ["node_modules/.bin/webpack", inFile, outFile, "--config webpack.config.watch.js"].join(" ");
-		exec(commandLine);
-	});
-});
+
 
 gulp.task('ourjs:merge', function() {
 	return gulp.src(p.ourJs)
@@ -277,7 +277,11 @@ gulp.task('configs', function() {
 // 		.pipe(gulp.dest("dist/css"));
 // });
 
-gulp.task('libs', function() {
+gulp.task("libs:npmfiles", function() {
+	gulp.src(npmFiles(), {base: "./node_modules/"}).pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
+});
+
+gulp.task('libs', ["libs:npmfiles"], function() {
 	return gulp.src(bowerfiles(), {base: "./bower_components/"}).pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
 });
 
@@ -372,10 +376,35 @@ gulp.task('webserver', function() {
 	});
 });
 
-gulp.task('watch', function() {
-	var filesToWatch = [].concat(p.ourStylus.concat(["plugins/**/*.js"]));
-	// var js = p.ourJs.concat("dist/configs/*.js");
-	return gulp.watch(filesToWatch, "ourcode"); //.on('change', browserSync.reload);
+gulp.task('watch:css', function() {
+	var filesToWatch = [].concat(p.ourStylus);
+	// var info = autoprefixer(autoPrefixerOptions).info();
+	// console.log(info);
+	return gulp.watch(filesToWatch).on('change', function(file) {
+		return gulp.src( file.path )
+			.pipe(stylus()).on("error", onError)
+			.pipe(autoprefixer(autoPrefixerOptions)).on('error', onError)
+			.pipe(gulp.dest( path.dirname(file.path) ));
+
+	});
+});
+
+// gulp.task("testcss", function() {
+// 	return gulp.src( "./plugins/IntroHelp/IntroHelp.css" )
+// 			.pipe(autoprefixer(autoPrefixerOptions)).on('error', onError)
+// 			.pipe(gulp.dest( "./plugins/IntroHelp/IntroHelp" ));
+// });
+
+gulp.task("watch:js", function() {
+	return gulp.watch(["plugins/**/*.js"]).on('change', function(file) {
+		const inFile = file.path;
+		const outFile = path.join(__dirname, "dist/plugins", path.basename(file.path));
+		// const outFile = path.join(path.dirname(file.path), path.basename(file.path).split(".").slice(0, -1).concat([".js"]).join("."));
+		
+		// console.log(file.path + " " + outFile);
+		const commandLine = ["node_modules/.bin/webpack", inFile, outFile, "--config webpack.config.watch.js"].join(" ");
+		exec(commandLine);
+	});
 });
 
 gulp.task('watchweb', ["webserver", "watch"]); // Allow auto-publishing whenever something changes
