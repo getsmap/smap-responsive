@@ -39,6 +39,7 @@
   margin: 2em 0;
 }
 .gp-fullscreen .carousel {
+  max-height: -webkit-calc(100% - 50px);
   max-height: calc(100% - 50px);
 }
 .gp-fs-visible {

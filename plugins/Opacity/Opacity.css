@@ -18,6 +18,7 @@
 .smap-opacity-sliderrow-container {
   margin-top: 2em;
   padding: 0.1em 0 1em 0;
+  z-index: 1000;
 }
 .smap-opacity-headerrow {
   width: 100%;

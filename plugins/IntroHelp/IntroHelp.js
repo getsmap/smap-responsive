@@ -1,5 +1,5 @@
 
-// import { introGuide } from "intro-guide"
+// import { introGuide } from "intro-guide-js"
 
 L.Control.IntroHelp = L.Control.extend({
 	options: {
@@ -10,48 +10,58 @@ L.Control.IntroHelp = L.Control.extend({
 			sv: {
 				steps: [
 					{
-						element: ".leaflet-control-RedirectClick",
+						selector: ".leaflet-control-RedirectClick button",
 						title: "Starta turen",
-						content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+						description: 'Click here and then in the map to see a "Snedbild"'
 					},
 					{
-						element: ".leaflet-control-RedirectClick",
+						selector: ".leaflet-top.leaflet-right .leaflet-control-RedirectClick",
 						title: "Snedbild",
-						content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+						description: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
 					},
 					{ 
-						element: ".leaflet-control-ShareLink",
+						selector: ".leaflet-control-ShareLink",
 						title: "Share link",
-						content: 'Click here to share the current map as a link, preserving zoom, center point etc.'
+						description: 'Click here to share the current map as a link, preserving zoom, center point etc.'
 					},
 					{
-						element: "#smap-search-div",
+						selector: "#smap-search-div",
 						title: "Search",
-						content: 'You can search for anything… limited to addresses.'
+						description: 'You can search for anything… limited to addresses.'
+					},
+					{
+						selector: ".lswitch-btnhide",
+						title: "Minimera lagermenyn",
+						description: "Klicka här för att minimera/expandera lagermenyn"
 					}
 				]
 			},
 			en: {
 				steps: [
 					{
-						element: ".leaflet-control-RedirectClick",
+						selector: ".leaflet-control-RedirectClick",
 						title: "Start tour",
-						content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+						description: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
 					},
 					{
-						element: ".leaflet-control-RedirectClick",
+						selector: ".leaflet-control-RedirectClick",
 						title: "Snedbild",
-						content: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
+						description: 'Click here and then in the map to see a "Snedbild" as we call it in Swedish'
 					},
 					{
-						element: ".leaflet-control-ShareLink",
+						selector: ".leaflet-control-ShareLink",
 						title: "Share link",
-						content: 'Click here to share the current map as a link, preserving zoom, center point etc.'
+						description: 'Click here to share the current map as a link, preserving zoom, center point etc.'
 					},
 					{
-						element: "#smap-search-div",
+						selector: "#smap-search-div",
 						title: "Search",
-						content: 'You can search for anything… limited to addresses.'
+						description: 'You can search for anything… limited to addresses.'
+					},
+					{
+						selector: ".lswitch-btnhide",
+						title: "Minimera lagermenyn",
+						description: "Klicka här för att minimera/expandera lagermenyn"
 					}
 				]
 			}
@@ -91,10 +101,8 @@ L.Control.IntroHelp = L.Control.extend({
 		this._container = L.DomUtil.create('div', 'leaflet-control-introhelp'); // second parameter is class name
 		L.DomEvent.disableClickPropagation(this._container);
 		this.$container = $(this._container);
-
 		this._createBtn();
 
-		alert(introGuide);
 		return this._container;
 	},
 
@@ -112,7 +120,15 @@ L.Control.IntroHelp = L.Control.extend({
 			return false;
 		}
 		this.active = true;
-		this.start(steps || this.lang.steps, force);
+
+		var $container = $('<div class="smap-introhelp-container" />').appendTo($("#maindiv"));
+		var container = $container[0]
+		// var container = document.querySelector("#intro"); // This is where the intro-guide will reside
+		this._myIntroGuide = initIntroGuide.introGuide(container, {
+			steps: this.lang.steps,
+			stepIndex: 0
+		});
+		this._myIntroGuide.start();
 		return true;
 	},
 
@@ -136,38 +152,8 @@ L.Control.IntroHelp = L.Control.extend({
 			return false;
 		}).bind(this));
 		this.$container.append(this.$btn);
-	},
-
-	/**
-	 * Run the help with the given steps.
-	 * @param  {Array( {Object} )}	steps
-	 * @return {null}
-	 */
-	start: function(steps, force) {
-		force = force || false;
-		this._tour = new Tour({
-			steps: steps,
-			backdrop: true,
-			backdropContainer: "#mapdiv",
-			storage: window.localStorage,
-			onEnd: this.deactivate.bind(this)
-
-		});
-		
-		// Initialize the tour
-		var wasInitiated = this._tour.init()._inited || force;
-		if (!wasInitiated) {
-			return this.deactivate();
-		}
-		this._tour.restart();
-		this._tour.start(steps, force);
-	},
-
-	stop: function() {
-		if (this._tour._inited) {
-			this._tour.end();
-		}
 	}
+
 });
 
 //L.control.IntroHelp = function (options) {
