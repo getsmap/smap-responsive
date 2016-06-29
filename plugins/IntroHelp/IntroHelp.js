@@ -1,5 +1,5 @@
 
-// import { introGuide } from "intro-guide-js"
+import { introGuide } from "intro-guide-js"
 
 L.Control.IntroHelp = L.Control.extend({
 	options: {
@@ -184,7 +184,8 @@ L.Control.IntroHelp = L.Control.extend({
 		var $container = $('<div class="smap-introhelp-container" />').appendTo($("#maindiv"));
 		var container = $container[0]
 		// var container = document.querySelector("#intro"); // This is where the intro-guide will reside
-		this._myIntroGuide = initIntroGuide.introGuide(container, {
+		// this._myIntroGuide = introGuide.introGuide(container, { // <= global include syntax
+		this._myIntroGuide = introGuide(container, {
 			steps: this.lang.steps,
 			stepIndex: 0,
 			onStop: () => {

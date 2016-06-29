@@ -74,7 +74,7 @@ var p = {
 		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
 		'dist/lib/**/*.js',
 		'!dist/lib/leaflet-dist/*', // messing up
-		// '!dist/lib/intro-guide-js/**/*.js', // Not using global include but UMD import in IntroHelp plugin and built with webpack
+		'!dist/lib/intro-guide-js/**/*.js', // Not using global include but UMD import in IntroHelp plugin and built with webpack
 		'!dist/lib/libs.js', // Don't use previously compressed lib file
 		'!dist/lib/add-to-homescreen/**/*.js', // Exclude this lib, it's optionally injected by plugin
 		'core/js/buildLibOverrides.js'  // Override libs js

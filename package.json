@@ -2,7 +2,9 @@
   "name": "smap-responsive",
   "version": "1.2.10",
   "description": "A framework for creating responsive web maps",
-  "dependencies": {},
+  "dependencies": {
+    "intro-guide-js": "0.0.0"
+  },
   "devDependencies": {
     "babel-core": "^6.9.1",
     "babel-loader": "^6.2.4",
@@ -60,16 +62,7 @@
     "webpack": "^1.13.1"
   },
   "files": [
-    "core",
-    "dist",
-    "examples",
-    "img",
-    "plugins",
-    "tutorials",
-    "bower.json",
-    "dev.html",
-    "gulpfile.js",
-    "index_template.html"
+    "dist"
   ],
   "scripts": {
     "start": "open http://localhost/smap-responsive/dist/index.html?config=config.js",
