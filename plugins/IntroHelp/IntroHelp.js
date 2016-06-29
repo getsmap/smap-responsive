@@ -10,6 +10,46 @@ L.Control.IntroHelp = L.Control.extend({
 			sv: {
 				steps: [
 					{
+						selector: null,
+						title: "Välkommen!",
+						description: 'Vill du ha en kort introduktion till webbkartan?',
+						btnLeftLabel: "Nej",
+						btnRightLabel: "Ja",
+						btnLeftIcon: false, //"fa fa-thumbs-down",
+						btnRightIcon: false //"fa fa-thumbs-up"
+					},
+					{
+						selector: ".thandler-btn",
+						title: "Visa verktyg",
+						description: "Klicka här för att visa verktygen"
+						// beforeShow: function() {
+
+						// }
+						// condition: function() {
+						// 	return !utils.isTouchOnly();
+						// }
+					},
+					{
+						selector: ".thandler-popover",
+						title: "Verktyg",
+						description: "Verktygen visas",
+						beforeShow: function(callback, utils) {
+							var ms = null;
+							if (utils.tagIsVisible( document.querySelector(".thandler-btn") ) === true && utils.tagIsVisible( document.querySelector(".thandler-popover") ) === false) {
+								document.querySelector(".thandler-btn").click();
+								ms = 300;
+							}
+							callback(ms);
+						}
+						// ,
+						// hide: function(callback, utils) {
+						// 	if (utils.tagIsVisible( document.querySelector(".thandler-popover") ) === true) {
+						// 		document.querySelector(".thandler-btn").click();
+						// 	}
+						// 	callback();
+						// }
+					},
+					{
 						selector: ".leaflet-control-RedirectClick button",
 						title: "Starta turen",
 						description: 'Click here and then in the map to see a "Snedbild"'
@@ -33,11 +73,31 @@ L.Control.IntroHelp = L.Control.extend({
 						selector: ".lswitch-btnhide",
 						title: "Minimera lagermenyn",
 						description: "Klicka här för att minimera/expandera lagermenyn"
+					},
+					{
+						selector: ".leaflet-control-introhelp",
+						title: "Hjälp",
+						description: 'Du kan vid ett senare tillfälle starta guiden igen genom att klicka här'
+						// btnRightLabel: "Avsluta guiden",
+						// btnRightIcon: "fa fa-check"
+					},
+					{
+						selector: null,
+						title: "Klart!",
+						description: "För frågor om webbkartan, kontakta stadsatlas@malmo.se",
+						btnRightLabel: "Avsluta guiden",
+						btnRightIcon: "fa fa-check"
 					}
+						
 				]
 			},
 			en: {
 				steps: [
+					{
+						selector: null,
+						title: "Vill du ha en kort introduktion?",
+						description: 'Följ med på en tur i funktionerna i kartan'
+					},
 					{
 						selector: ".leaflet-control-RedirectClick",
 						title: "Start tour",
@@ -73,10 +133,10 @@ L.Control.IntroHelp = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			btnLabel: "Ett exempels"
+			btnLabel: "Hjälp/Introduktion"
 		},
 		"en": {
-			btnLabel: "An example"
+			btnLabel: "Help/Introduction"
 		}
 	},
 	
@@ -126,7 +186,10 @@ L.Control.IntroHelp = L.Control.extend({
 		// var container = document.querySelector("#intro"); // This is where the intro-guide will reside
 		this._myIntroGuide = initIntroGuide.introGuide(container, {
 			steps: this.lang.steps,
-			stepIndex: 0
+			stepIndex: 0,
+			onStop: () => {
+				this.deactivate();
+			}
 		});
 		this._myIntroGuide.start();
 		return true;
@@ -136,8 +199,8 @@ L.Control.IntroHelp = L.Control.extend({
 		if (!this.active) {
 			return false;
 		}
-		this.stop();
 		this.active = false;
+		this._myIntroGuide.stop();
 		return true;
 	},
 
