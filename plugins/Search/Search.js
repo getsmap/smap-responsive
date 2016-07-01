@@ -17,12 +17,16 @@ L.Control.Search = L.Control.extend({
 				$("#smap-search-div").css("left", "10px");
 			}
 		},
+		onMarkerAdded: null,	// Optional function which is called after the search marker has been added
 		gui: false,
 		addToMenu: false,
 		popupContent: null,
 		hideMarkerTimeout: false,	// {Integer} Hide search marker after given milliseconds
 		zoom: 15,
-		iconOptions: $.extend({}, new L.Icon.Default().options, {iconUrl: L.Icon.Default.imagePath + '/marker-icon.png'}),
+		icon: null,			// icon will override iconOptions
+		iconOptions: null,
+		opacity: 1, 
+		// markerOptions: null,
 		source: null,
 		acHeight: null, // CSS value - height of autocomplete div
 		autoScrollAcOnRowNbr: 2,
@@ -782,7 +786,16 @@ L.Control.Search = L.Control.extend({
 					this.map.off("popupopen", onPopupOpen);
 					this.map.on("popupopen", onPopupOpen);
 					
-					this.marker = L.marker(latLng, {iconOptions: L.icon(this.options.iconOptions) }).addTo(this._searchLayer);
+					var defaultIconOptions = $.extend({}, (new L.Icon.Default()).options, {iconUrl: L.Icon.Default.imagePath + '/marker-icon.png'});
+					this.marker = L.marker(latLng, {
+							icon: this.options.icon || L.icon( this.options.iconOptions || defaultIconOptions )
+						}).addTo(this._searchLayer);
+
+					if (this.options.opacity) {
+						this.marker.setOpacity(this.options.opacity);
+					}
+					
+					// $.extend(this.marker.options, this.options.markerOptions || {});
 					this.marker.options.q = q; // Store for creating link to map
 					
 					var btnRemoveHtml = '<div class="smap-search-btnremove"><button id="smap-search-popupbtn" class="btn btn-default btn-sm">'+this.lang.remove+'</button></div>';
@@ -824,6 +837,10 @@ L.Control.Search = L.Control.extend({
 							this._searchLayer.removeLayer(this.marker);
 							this.marker = null;
 						}, this.options.hideMarkerTimeout);
+					}
+
+					if (this.options.onMarkerAdded) {
+						this.options.onMarkerAdded(this.marker);
 					}
 				},
 				complete: function() {
