@@ -20,6 +20,7 @@ L.Control.Search = L.Control.extend({
 		gui: false,
 		addToMenu: false,
 		popupContent: null,
+		hideMarkerTimeout: false,	// {Integer} Hide search marker after given milliseconds
 		zoom: 15,
 		iconOptions: $.extend({}, new L.Icon.Default().options, {iconUrl: L.Icon.Default.imagePath + '/marker-icon.png'}),
 		source: null,
@@ -749,6 +750,9 @@ L.Control.Search = L.Control.extend({
 		var callbacks = {
 				success: function(json) {
 					var self = this;
+					if (this._hideMarkerTimeout) {
+						clearTimeout(this._hideMarkerTimeout); // so we don't remove unwanted search markers
+					}
 					if (this.marker) {
 						this._searchLayer.removeLayer(this.marker);
 						this.marker = null;
@@ -813,6 +817,14 @@ L.Control.Search = L.Control.extend({
 					setTimeout(function() {
 						$(".smap-search-div input").blur();
 					}, 100);
+
+					if (this.options.hideMarkerTimeout) {
+						// Optional timeout to remove marker after a given number of milliseconds. Developed for #237
+						this._hideMarkerTimeout = setTimeout(() => {
+							this._searchLayer.removeLayer(this.marker);
+							this.marker = null;
+						}, this.options.hideMarkerTimeout);
+					}
 				},
 				complete: function() {
 					smap.cmd.loading(false);
