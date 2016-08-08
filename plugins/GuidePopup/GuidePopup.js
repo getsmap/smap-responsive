@@ -422,7 +422,7 @@ L.Control.GuidePopup = L.Control.extend({
 				}
 			});
 			setTimeout(function() {
-				$(".gp-fullscreen").empty().remove();
+				$(".gp-fullscreen").empty().remove(); 
 			}, 500);
 			return false;
 		};
@@ -451,6 +451,7 @@ L.Control.GuidePopup = L.Control.extend({
 	
 	
 	_makeMediaContent: function(mediaType, sources) {
+		var content;
 		switch (mediaType.toLowerCase()) {
 		case "image":
 			// Make a slideshow
