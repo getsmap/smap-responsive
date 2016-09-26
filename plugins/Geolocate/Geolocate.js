@@ -11,14 +11,25 @@ L.Control.Geolocate = L.Control.extend({
 	
 	_lang: {
 		"sv": {
-			errorGeolocate: "Kunde inte hitta din position",
 			notSupported: "Din webbläsare stödjer inte geolokalisering",
-			hoverTooltip: "Hitta din position"
+			hoverTooltip: "Hitta din position",
+
+			errorGeolocate: "Kunde inte hitta din position",
+
+			// Targeted error messages can be created by putting a matching phrase as the key (matched using .search()) and the desired message as a value
+			errorMessages: {
+				"User denied Geolocation": "Kunde inte hitta din position. Ändra platsinställningarna i din telefon.",
+				"Only secure origins are allowed": "Kunde inte hitta din position. Anslutningen är osäker (kräver https:)."
+			}
 		},
 		"en": {
-			errorGeolocate: "The browser could not detect your position",
 			notSupported: "Your browser does not support geolocation",
-			hoverTooltip: "Find your current location"
+			hoverTooltip: "Find your current location",
+			errorGeolocate: "The browser could not detect your position",
+			errorMessages: {
+				"User denied Geolocation": "Could not geolocate you. Change the geolocation settings in your phone.",
+				"Only secure origins are allowed": "Could not geolocate you. The connection is insecure (requires https:)."
+			}
 		}
 	},
 	
@@ -148,7 +159,16 @@ L.Control.Geolocate = L.Control.extend({
 	
 	_onLocationError: function(e) {
 		smap.cmd.loading(false);
-		var msgTag = smap.cmd.notify(this.lang.errorGeolocate+": "+e.message, "error", {parent: $("body")});
+
+		var displayMsg = this.lang.errorGeolocate+": "+e.message; // default error message
+		var errorMessages = this.lang.errorMessages;
+		for (var matchPhrase in errorMessages) {
+			if (e.message.search( matchPhrase ) > -1) {
+				displayMsg = errorMessages[matchPhrase]; 	// hurray, we found a more specific error message
+				break;
+			}
+		}
+		var msgTag = smap.cmd.notify(displayMsg, "error", {parent: $("body")});
 		msgTag.on("touchstart", function() {
 			$("body").find(".alert").remove();
 		});
