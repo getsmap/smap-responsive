@@ -5,7 +5,8 @@ L.Control.Editor = L.Control.extend({
 		useProxy: false,
 		reverseAxis: false,
 		encodeKeys: null, // values with these keys will be encoded before saved to server. For example: ["id", "someattribute", "pics"] or "*" for encode all
-		saveOnPressEnter: false
+		saveOnPressEnter: false,
+		noEditProps: ["id", "fid", "gid"] // These values will not be editable through the form
 	},
 	
 	_lang: {
@@ -610,9 +611,10 @@ L.Control.Editor = L.Control.extend({
 		var cont = this._modalEdit.find("#smap-editor-content");
 		var key, val, group, inputId,
 			form = $('<form role="form" />'),
-			encodeKeys = this.options.encodeKeys || [];
+			encodeKeys = this.options.encodeKeys || [],
+			noEditProps = this.options.noEditProps || [];
 		for (key in props) {
-			if (key === "fid" || key === "id" || key === "gid") {
+			if ( $.inArray(key, noEditProps) > -1) {
 				continue;
 			}
 			val = props[key];
