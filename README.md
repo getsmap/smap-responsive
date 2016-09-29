@@ -137,6 +137,39 @@ The application can be called with various URL parameters. For instance, [http:/
 | lang          | {String}      | Sets language | lang=en (for English) |
 
 <br />
+
+###### Hash parameters
+
+| Parameter key |  Parameter value(s) | Decides | Example value | Default value |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| geojson | Takes 3 parameters (see below) | This allows you to render vector data on the fly (just be aware of [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)). Being a hash parameter it won't reload the map if the value changes. | - | - |
+| (param 1) | {String} | Encoded URL pointing to a GeoJSON source | "http://some.geosjon/source.json" (but should be encoded using encodeURIComponent() | null (required) |
+| (param 2) | {Boolean} | Cluster features | true | false |
+| (param 3) | {Boolean} | Zoom to extent of features | true | false |
+
+**Examples**
+<br />
+<br />
+This will show some features residing in a geojson file (the path is encoded):
+<br />
+```
+?config=myconfig.js#geojson=geojson=my%2Fgeojson.json,false,false
+```
+
+This will make the map zoom to the features' extent, after the features have loaded:
+<br />
+```
+?config=myconfig.js#geojson=geojson=my%2Fgeojson.json,false,true
+```
+
+This will cluster the features:
+<br />
+```
+?config=myconfig.js#geojson=geojson=my%2Fgeojson.json,true,false
+```
+
+
+<br />
 #####Plugin parameters (for the plugins hosted here):
 
 | Parameter key |  Parameter value(s) | Decides | Example value | Plugin |
