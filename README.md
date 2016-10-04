@@ -43,7 +43,7 @@ Third. In order to minimise the need of programmers' hands-on – we put a lot o
 **Basic chapters:**
 - Getting started (1-2)
 - Creating a map (3)
-- URL parameters (4)
+- URL parameters (4) 
 
 **Advanced chapters:**
 - Include external plugins (5)
