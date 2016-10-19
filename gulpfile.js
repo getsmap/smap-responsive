@@ -257,7 +257,7 @@ gulp.task('ourjs', function(callback) {
 gulp.task('images', function () {
 	var imgDest = 'dist/img';
 	return gulp
-		.src(['img/**/*.{png,jpg,jpeg,gif}'])
+		.src(['img/**/*.{png,jpg,jpeg,gif,ico}'])
 		.pipe(changed(imgDest))
 		.pipe(imagemin({
 			progressive: true,

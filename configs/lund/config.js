@@ -34,7 +34,7 @@ var config = {
 		title: "Lunds kommun",
 
 		// The favicon to be used
-		favIcon: "//assets-cdn.github.com/favicon.ico"
+		favIcon: "img/lund-favicon.ico"
 	},
 
 	// -- Baselayers (background layers) --
@@ -255,27 +255,27 @@ var config = {
 				popup: "<p>${extid}</p><p><a href=${url}>länk till plan</a></p>",
 				zIndex: 9
 			}
-		},	
+		},
 		{
-                	init: "L.TileLayer.WMS",
-                	url: "http://kartor.lund.se/geoserver/wms",
-                	options: 
+			init: "L.TileLayer.WMS",
+			url: "http://kartor.lund.se/geoserver/wms",
+			options:
 			{
-                    		//legend: true,
-                    	    category: ["Bygga, bo & miljö"],
-                    		layerId: "plan_pagaende",
-                    		displayName: "Pågående planer",
-                    		layers: 'plan_pagaende',
-                    		format: 'image/png',
-                    		featureType: "polygon",
-                    		selectable: true,
-                    		transparent: true,
-                    		opacity: 1,
-                    		attribution: "@ Lunds kommuns",
-                    		popup: "<p>Plan: ${popularnamn}</p><p>Nummer: ${pa}</p><p>Skede: ${status}</p><p><a href=http://www.lund.se/${pa}>läs mer</a></p>",
-                    		zIndex: 10,
-				
-           		}
+				//legend: true,
+				category: ["Bygga, bo & miljö"],
+				layerId: "plan_pagaende",
+				displayName: "Pågående planer",
+				layers: 'plan_pagaende',
+				format: 'image/png',
+				featureType: "polygon",
+				selectable: true,
+				transparent: true,
+				opacity: 1,
+				attribution: "@ Lunds kommuns",
+				popup: "<p>Plan: ${popularnamn}</p><p>Nummer: ${pa}</p><p>Skede: ${status}</p><p><a href=http://www.lund.se/${pa}>läs mer</a></p>",
+				zIndex: 10,
+
+			}
 
 
 		},
@@ -940,29 +940,46 @@ var config = {
 			}
 		},
 
+		{
+			init: "L.Control.SearchLund",
+			options: {
+				gui: true,
+				useProxy: true,
+				wsAcUrl: "http://kartor.lund.se/gist/objectsearch",
+				wsLocateUrl: "http://kartor.lund.se/gist/getobject",
+				//wsAcUrl : "http://kartor.lund.se/gist/multisearch",
+				//wsLocateUrl: "http://kartor.lund.se/gist/multisearch",
+				//wsAcUrl : "http://kartor.lund.se/lkarta_sokproxy/auto_lund.ashx",
+				//wsLocateUrl: "http://kartor.lund.se/lkarta_sokproxy/sokexakt_lund.ashx",
+				//wsAcUrl : "http://nominatim.openstreetmap.org/search",
+				//wsLocateUrl : "http://nominatim.openstreetmap.org/search",
+				wsOrgProj: "EPSG:4326"
+			}
+		},
+
 		// <><><><><><><><><><><><><><><><><><><><><><><><><><>
 		// Search connects to an autocomplete and geolocate service and places a marker
 		// at the geolocated location.
 		// <><><><><><><><><><><><><><><><><><><><><><><><><><>
-		{
-			init: "L.Control.Search",
-			options: {
-				_lang: {
-					// Watermark/placeholder for text entry. Language dependent.
-					"en": { search: "Search address or place" },	// english
-					"sv": { search: "Sök adress eller plats" }	// swedish
-				},
-				wsAcUrl: "//kartor.malmo.se/api/v1/addresses/autocomplete/", // Required. Autocomplete service.
-				wsLocateUrl: "//kartor.malmo.se/api/v1/addresses/geolocate/", // Required. Geolocate service.
-				gui: true,					// If false, entry is not shown but the plugin can still take the POI URL parameter
-				whitespace: "%20",			// How to encode whitespace.
-				wsOrgProj: "EPSG:3008",		// The projection of the returned coordinates from the web service
-				useProxy: false,			// If you want call the URL with a prepended proxy URL (defined in ws above)
-				acOptions: {				// typeahead options (Bootstrap's autocomplete library)
-					items: 100				// Number of options to display on autocomplete
-				}
-			}
-		},
+		// {
+		// 	init: "L.Control.Search",
+		// 	options: {
+		// 		_lang: {
+		// 			// Watermark/placeholder for text entry. Language dependent.
+		// 			"en": { search: "Search address or place" },	// english
+		// 			"sv": { search: "Sök adress eller plats" }	// swedish
+		// 		},
+		// 		wsAcUrl: "//kartor.malmo.se/api/v1/addresses/autocomplete/", // Required. Autocomplete service.
+		// 		wsLocateUrl: "//kartor.malmo.se/api/v1/addresses/geolocate/", // Required. Geolocate service.
+		// 		gui: true,					// If false, entry is not shown but the plugin can still take the POI URL parameter
+		// 		whitespace: "%20",			// How to encode whitespace.
+		// 		wsOrgProj: "EPSG:3008",		// The projection of the returned coordinates from the web service
+		// 		useProxy: false,			// If you want call the URL with a prepended proxy URL (defined in ws above)
+		// 		acOptions: {				// typeahead options (Bootstrap's autocomplete library)
+		// 			items: 100				// Number of options to display on autocomplete
+		// 		}
+		// 	}
+		// },
 
 		// <><><><><><><><><><><><><><><><><><><><><><><><><><>
 		// Print creates a downloadable image server-side. Requires Geoserver and the plugin "Mapfish print".
