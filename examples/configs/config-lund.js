@@ -255,6 +255,29 @@ var config = {
 				popup: "<p>${extid}</p><p><a href=${url}>länk till plan</a></p>",
 				zIndex: 9
 			}
+		},	
+		{
+                	init: "L.TileLayer.WMS",
+                	url: "http://kartor.lund.se/geoserver/wms",
+                	options: 
+			{
+                    		//legend: true,
+                    	    category: ["Bygga, bo & miljö"],
+                    		layerId: "plan_pagaende",
+                    		displayName: "Pågående planer",
+                    		layers: 'plan_pagaende',
+                    		format: 'image/png',
+                    		featureType: "polygon",
+                    		selectable: true,
+                    		transparent: true,
+                    		opacity: 1,
+                    		attribution: "@ Lunds kommuns",
+                    		popup: "<p>Plan: ${popularnamn}</p><p>Nummer: ${pa}</p><p>Skede: ${status}</p><p><a href=http://www.lund.se/${pa}>läs mer</a></p>",
+                    		zIndex: 10,
+				
+           		}
+
+
 		},
 		{
 			init: "L.TileLayer.WMS",
