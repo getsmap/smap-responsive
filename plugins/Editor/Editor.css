@@ -19,10 +19,6 @@
 .leaflet-control-container .smap-editor-savetoolbar button {
   max-width: none;
 }
-.leaflet-edit-marker-selected {
-  width: 33px !important;
-  height: 49px !important;
-}
 .editor-popup-edit button {
   min-width: 8em;
 }
