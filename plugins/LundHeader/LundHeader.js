@@ -57,6 +57,10 @@ L.Control.LundHeader = L.Control.extend({
         '</nav>'
 	    );
 $("body").append($div);
+$("#smap-search-div").addClass("lund-header");
+$(".leaflet-top.leaflet-right").addClass("lund-header");
+$(".lswitch-panel").addClass("lund-header");
+
         //$("#maindiv").prepend($div);
         //this.$container.append($div);
 
