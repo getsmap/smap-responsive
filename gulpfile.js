@@ -45,6 +45,8 @@ const through2 = require('through2');
 
 var indexTemplate = "index_template.html";
 
+var configPath = "examples/configs";
+
 var p = {
 
 	htmlTemplate: indexTemplate,
@@ -265,9 +267,12 @@ gulp.task('images', function () {
 		.pipe(gulp.dest(imgDest));
 });
 
+
+
+
 gulp.task('configs', function() {
 	return gulp
-		.src(['examples/configs/*.js'])
+		.src([configPath + '/*.js'])
 			.pipe(gulp.dest("dist/configs"));
 });
 
@@ -354,6 +359,11 @@ gulp.task('_full', ["images", "move", "configs", "ourcode"], function() {
 // compile js/css/sass/styl and insert into HTML).
 gulp.task('full', ["cleancode"], function() {
 	return gulp.start("_full");
+});
+
+gulp.task('fullLund', function() {
+  configPath = 'configs/lund';
+  gulp.start('full');
 });
 
 gulp.task('test', function() {
