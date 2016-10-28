@@ -99,7 +99,7 @@ var config = {
 					xhrType: "POST",							// The request method (using jquery ajax)
 					attribution: "Malmö stad",					// Copyright
 					inputCrs: "EPSG:4326",						// The projection to request for. If not EPSG:4326 it will be projected on the fly.
-					uniqueKey: "gid",							// Important! WFS layers must have a unique id (used for caching already fetched features)
+					// uniqueKey: false,						
 					selectable: true,							// Selectable or not
 					reverseAxis: false,							// If WFS service returns coordinates as [northing, easting] then set this to true
 					reverseAxisBbox: true,						// If WFS service expects coordinates as [north, west, south, east] then set this to true
@@ -122,7 +122,7 @@ var config = {
 					layerId: "western_harbour_local",				// A required unique id
 					attribution: "Malmö stad",					// Copyright
 					inputCrs: "EPSG:4326",						// The projection to request for. If not EPSG:4326 it will be projected on the fly.
-					uniqueKey: "gid",							// Important! WFS layers must have a unique id (used for caching already fetched features)
+					// uniqueKey: false,						
 					selectable: true,							// Selectable or not
 					reverseAxis: false,							// If WFS service returns coordinates as [northing, easting] then set this to true
 					reverseAxisBbox: true,						// If WFS service expects coordinates as [north, west, south, east] then set this to true
@@ -130,6 +130,36 @@ var config = {
 					popup: 										// HTML template for popup. Extract properties by writing the column name inside brackets ${}
 						'<h4>${namn} </h4>'+
 						'<p>Some nonsense info</p>'
+				}
+			},
+
+			// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+			// A WFS layer using local GeoJSON data.
+			// <><><><><><><><><><><><><><><><><><><><><><><><><><>
+			{
+				init: "L.GeoJSON.WFS",
+				url: document.URL.search(/dev.html?/) > 0 ? "examples/data/delomraden.geojson" : "../examples/data/delomraden.geojson",
+				options: {
+					displayName: "Polygons",					// Name visible to users
+					category: ["Vector layers"],				// Category
+					layerId: "polygons",			// A required unique id
+					attribution: "Malmö stad",					// Copyright
+					inputCrs: "EPSG:4326",						// The projection to request for. If not EPSG:4326 it will be projected on the fly.
+					// uniqueKey: false,						// Only set this if your geojson response does not expose unique ids on the feature. Then you can use a property as a fallback.
+					selectable: true,							// Selectable or not
+					reverseAxis: false,							// If WFS service returns coordinates as [northing, easting] then set this to true
+					reverseAxisBbox: true,						// If WFS service expects coordinates as [north, west, south, east] then set this to true
+					// geomType: "POINT",							// geometry type (used so far only by the Editor plugin)
+					popup: 										// HTML template for popup. Extract properties by writing the column name inside brackets ${}
+						'<h4>${delomr} </h4>'+
+						'<p>Some info</p>'
+					// style: {
+					// 	fillColor: "#0000FF",
+					// 	color: "#000000",
+					// 	fillOpacity: 0.5,
+					// 	strokeOpacity: 1,
+					// 	weight: 3
+					// }
 				}
 			}
 
@@ -204,15 +234,6 @@ var config = {
 									name: "Klicka i kartan och länkas vidare" // tooltip for the button in Swedish
 								}
 							}
-						}
-					},
-					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
-					// Opacity lets the user change the opacity of currently visible layers.
-					// <><><><><><><><><><><><><><><><><><><><><><><><><><>
-					{
-						init: "L.Control.Opacity",
-						options: {
-							addToMenu: true
 						}
 					},
 					// <><><><><><><><><><><><><><><><><><><><><><><><><><>

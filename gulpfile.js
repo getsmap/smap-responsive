@@ -34,7 +34,7 @@ var gutil = require('gulp-util');
 var connect = require('gulp-connect');
 
 var es = require('event-stream');
-var pngcrush = require('imagemin-pngcrush');
+//var pngcrush = require('imagemin-pngcrush');
 var browserify = require('browserify');
 var babel = require('babelify');
 // const source = require("vinyl-source-stream");
@@ -56,7 +56,8 @@ var p = {
 		'dist/lib/font-awesome/**/*.css',
 		'dist/lib/sass-bootstrap/**/*.css',
 		'dist/lib/leaflet/**/*.css',
-		'dist/lib/**/*.css'
+		'dist/lib/**/*.css',
+		'!dist/lib/intro-guide-js/**/*'
 	],
 	libsJs: [
 		'dist/lib/es5-shim/es5-shim.js',
@@ -76,7 +77,7 @@ var p = {
 		'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
 		'dist/lib/**/*.js',
 		'!dist/lib/leaflet-dist/*', // messing up
-		'!dist/lib/intro-guide-js/**/*.js', // Not using global include but UMD import in IntroHelp plugin and built with webpack
+		'!dist/lib/intro-guide-js/**/*', // Not using global include but UMD import in IntroHelp plugin and built with webpack
 		'!dist/lib/libs.js', // Don't use previously compressed lib file
 		'!dist/lib/add-to-homescreen/**/*.js', // Exclude this lib, it's optionally injected by plugin
 		'core/js/buildLibOverrides.js'  // Override libs js
@@ -254,18 +255,18 @@ gulp.task('ourjs', function(callback) {
 
 
 
-gulp.task('images', function () {
-	var imgDest = 'dist/img';
-	return gulp
-		.src(['img/**/*.{png,jpg,jpeg,gif,ico}'])
-		.pipe(changed(imgDest))
-		.pipe(imagemin({
-			progressive: true,
-			svgoPlugins: [{removeViewBox: false}],
-			use: [pngcrush()]
-		}))
-		.pipe(gulp.dest(imgDest));
-});
+// gulp.task('images', function () {
+// 	var imgDest = 'dist/img';
+// 	return gulp
+// 		.src(['img/**/*.{png,jpg,jpeg,gif,ico}'])
+// 		.pipe(changed(imgDest))
+// 		.pipe(imagemin({
+// 			progressive: true,
+// 			svgoPlugins: [{removeViewBox: false}],
+// 			use: [pngcrush()]
+// 		}))
+// 		.pipe(gulp.dest(imgDest));
+// });
 
 
 
@@ -351,7 +352,7 @@ gulp.task('html', ["htmlcompress"]);
 // Build our code (during dev)
 gulp.task('ourcode', ["ourcss", "ourjs"]);  // "move"
 
-gulp.task('_full', ["images", "move", "configs", "ourcode"], function() {
+gulp.task('_full', ["move", "configs", "ourcode"], function() {
 	gulp.start("html");
 });
 

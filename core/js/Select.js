@@ -634,7 +634,7 @@
 				function onLoadWfs() {
 					var thisLayer = this,
 						thisLayerId = this.options.layerId,
-						thisKey = this.options.uniqueKey,
+						thisKey = (!this.options.uniqueKey || !this.options.uniqueKey.length) ? false : this.options.uniqueKey,
 						selFeature;
 						
 					var theItem = obj[thisLayerId];
@@ -648,13 +648,18 @@
 						selFeature = null;
 						$.each(thisLayer._layers, function(i, f) {
 							if (f.feature) {
-								props = f.feature.properties;
-								if (thisKey.split(";").length > 1) {
-									keyArr = thisKey.split(";");
-									val = props[keyArr[0]] + ";" + props[keyArr[1]];
+								if (thisKey === false) {
+									val = f.feature.id;
 								}
 								else {
-									val = f.feature.properties[thisKey];
+									props = f.feature.properties;
+									if (thisKey.split(";").length > 1) {
+										keyArr = thisKey.split(";");
+										val = props[keyArr[0]] + ";" + props[keyArr[1]];
+									}
+									else {
+										val = f.feature.properties[thisKey];
+									}	
 								}
 								if (!val) {
 									return false; // No such property, no use iterating
