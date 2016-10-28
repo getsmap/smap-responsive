@@ -113,6 +113,7 @@ var p = {
 		"!plugins/MyPlugin/**/*.css",
 		"!plugins/SideBars/**/*.css",
 		"!plugins/ThreeD/**/*.css",
+		"!plugins/IntroHelp/**/*",
 		"!plugins/WorkshopPlugin/**/*.css",
 		"core/css/themes/theme-malmo.css"
 
@@ -122,6 +123,8 @@ var p = {
 		"core/js/smap.js",
 		"core/js/*.js",
 		"dist/plugins/**/*.js",
+		"!dist/plugins/IntroHelp.js",
+		"!plugins/IntroHelp/**/*.js",
 		// "plugins/**/*.js",
 		// "!plugins/**/_*.js",
 		// "!plugins/Test/**/*.js",
