@@ -661,6 +661,20 @@ L.Control.MMPGreta = L.Control.extend({
 		
 		console.log(geoJson);
 
+
+		smap.cmd.notify(this.lang.saveSuccess, "success", {fade: true});
+		this._allowSaving(false);
+		this._updateLayerStyle(true); // necessary???
+		this._editLayer.eachLayer(function(layer) {
+			if (layer.options._saved === false) {
+				layer.options._saved = true;
+				self._updateLayerStyle(true, layer); // necessary???
+			}
+		});
+		this._prevJson = geoJson;
+		
+		// - Uncomment after testing is done
+
 		$.ajax({
 			type: "POST",
 			contentType: "text/plain; charset=utf-8",
@@ -690,6 +704,8 @@ L.Control.MMPGreta = L.Control.extend({
 				smap.cmd.notify(this.lang.saveError, "error", {fade: true});
 			}
 		});
+
+		// - End Uncomment
 
 	}
 
