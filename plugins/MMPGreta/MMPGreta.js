@@ -704,7 +704,6 @@ L.Control.MMPGreta = L.Control.extend({
 				smap.cmd.notify(this.lang.saveError, "error", {fade: true});
 			}
 		});
-
 		// - End Uncomment
 
 	}

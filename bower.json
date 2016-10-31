@@ -30,7 +30,6 @@
     "jquery-xml2json": "~0.0.6",
     "leaflet-usermarker": "https://github.com/heyman/leaflet-usermarker.git",
     "leaflet.markercluster": "~0.4.0",
-    "leaflet": "0.7.3",
     "modernizr": "~2.8.3",
     "openlayers-smap": "./lib/openlayers-smap/",
     "spinjs": "~2.0.1",
@@ -38,7 +37,6 @@
     "add-to-homescreen": "~3.1.1",
     "screenfull": "~2.0.0",
     "esri-leaflet": "1.0.2",
-    "leaflet.draw": "latest",
     "leaflet-plugins": "~1.3.3",
     "TileLayer.EsriRest": "https://raw.githubusercontent.com/jimmyrocks/EsriRest-leaflet/master/src/TileLayer.EsriRest.js",
     "leaflet-polyline-distance": "./lib/leaflet-polyline-distance/",
@@ -54,7 +52,9 @@
     "Leaflet.Snap": "./lib/Leaflet.snap/",
     "Leaflet.print-smap": "./lib/Leaflet.print-smap/",
     "smap.leaflet.wfs-t": "./lib/smap.leaflet.wfs-t/",
-    "seiyria-bootstrap-slider": "~6.1.6"
+    "seiyria-bootstrap-slider": "~6.1.6",
+    "leaflet": "0.7",
+    "leaflet-draw": "leaflet.draw#0.2.4"
   },
   "overrides": {
     "leaflet-polyline-distance": {
