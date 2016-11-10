@@ -753,7 +753,8 @@ var config = {
 			init: "L.Control.ShareLink",
 			options: {
 				position: "topright",
-				root: location.protocol + "//lund.se/lkarta?" // location.protocol + "//kartor.malmo.se/init/?appid=stadsatlas-v1&" // Link to malmo.se instead of directly to map
+//				root: location.protocol + "//kartor.lund.se/m?" // location.protocol + "//kartor.malmo.se/init/?appid=stadsatlas-v1&" // Link to malmo.se instead of directly to map
+				root: location.protocol + "//" + location.hostname + ":" + location.port + location.pathname + "?" // location.protocol + "//kartor.malmo.se/init/?appid=stadsatlas-v1&" // Link to malmo.se instead of directly to map
 			}
 		},
 
