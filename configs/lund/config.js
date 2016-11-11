@@ -661,7 +661,7 @@ var config = {
 				unfoldAll: false,						// If true, all subheaders will be unfolded when unfolding a header.
 				olFirst: false,							// If true, the overlays panel is shown at the top
 				pxDesktop: 992,							// Breakpoint for switching between mobile and desktop switcher
-				btnHide: true,							// Show a hide button at the top header
+				btnHide: false,							// Show a hide button at the top header
 				catIconClass: "fa fa-chevron-right",		// Icon class for foldable headers
 				showTooltip: false, // If true (or a number - milliseconds), then an initial tooltip will be shown over the toggle button. The duration can be set by providing a number here (in milliseconds).
 				hoverTooltip: true // Shows the tooltip on hover (non-touch interaction only)
