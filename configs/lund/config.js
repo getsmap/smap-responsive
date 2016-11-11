@@ -752,31 +752,29 @@ var config = {
 		{
 			init: "L.Control.ShareLink",
 			options: {
-				position: "topright",
-//				root: location.protocol + "//kartor.lund.se/m?" // location.protocol + "//kartor.malmo.se/init/?appid=stadsatlas-v1&" // Link to malmo.se instead of directly to map
-				root: location.protocol + "//" + location.hostname + ":" + location.port + location.pathname + "?" // location.protocol + "//kartor.malmo.se/init/?appid=stadsatlas-v1&" // Link to malmo.se instead of directly to map
+				position: "topright"
 			}
 		},
 
 		
-		{
-			init: "L.Control.HistoryBack",
-			options: {
-				position: "topright",
-				btnClass: "glyphicon glyphicon-home",
-				_lang: {
-					en: {
-						name: "lund.se",
-						hoverText: "back to lund.se"
-					},
-					sv: {
-						name: "lund.se",
-						hoverText: "tillbaks till lund.se"
-					}
-				}
-			},
+		// {
+		// 	init: "L.Control.HistoryBack",
+		// 	options: {
+		// 		position: "topright",
+		// 		btnClass: "glyphicon glyphicon-home",
+		// 		_lang: {
+		// 			en: {
+		// 				name: "lund.se",
+		// 				hoverText: "back to lund.se"
+		// 			},
+		// 			sv: {
+		// 				name: "lund.se",
+		// 				hoverText: "tillbaks till lund.se"
+		// 			}
+		// 		}
+		// 	},
 
-		},
+		// },
 
 		{
 			init: "L.Control.LundHeader",
