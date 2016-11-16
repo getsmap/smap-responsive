@@ -3,7 +3,7 @@ L.Control.ShareLink = L.Control.extend({
 		position: 'bottomright', // just an example
 		addToMenu: false,
 		maxLen: 2083,
-		root: null
+		root: location.protocol + "//" + location.hostname + ":" + location.port + location.pathname + "?" 
 	},
 
 	_lang: {
