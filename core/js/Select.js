@@ -4,11 +4,28 @@
 		manyUseDialog: true
 	},
 
+	_lang: {
+		"sv": {
+			manyHits: "%s träffar: Välj ett objekt"
+		},
+		"en": {
+			manyHits: "%s hits: Please select one"
+		}
+		
+	},
+
 	/**
 	 * Containers for selected features (Vector and WMS).
 	 */
 	_selectedFeaturesVector: [],
 	_selectedFeaturesWms: [],
+
+	_setLang: function(langCode) {
+		langCode = langCode || smap.config.langCode;
+		if (this._lang) {
+			this.lang = this._lang ? this._lang[langCode] : null;
+		}
+	},
 	
 	initialize: function(map) {
 		this.map = map;
@@ -60,7 +77,7 @@
 			var href = $this.attr("href"),
 				text = $this.text();
 			if (href && href.length >= 4 && $.inArray(href, ["null", "undefined"]) === -1) {
-				if (href.substring(0, 4).toUpperCase() !== "HTTP") {
+				if (href.substring(0, 4).toUpperCase() !== "HTTP" && href.substring(0, 7).toUpperCase() !== "MAILTO:") {
 					// Add http
 					href = "http://" + href;
 				}
@@ -99,6 +116,11 @@
 	
 	_bindEvents: function(map) {
 		var self = this;
+
+		smap.event.on("smap.core.applyparams", (function(p) {
+			// By this time the config is loaded and lang code has been set
+			this._setLang();
+		}).bind(this));
 
 		function onPopupOpen(e) {
 			// Add close popup button without unselecting feature (btnMinimize)
@@ -343,8 +365,8 @@
 								self._selectManyModal.modal("hide");
 								return false;
 							});
-
-							self._selectManyModal = utils.drawDialog('Flera träffar: Välj ett objekt', bodyContent, footerContent, {
+							var nbrOfHits = selectedFeatures.length;
+							self._selectManyModal = utils.drawDialog(self.lang.manyHits.replace("%s", nbrOfHits), bodyContent, footerContent, {
 								size: "sm"
 							});
 							self._selectManyModal.find(".modal-header").addClass("panel-heading");
