@@ -107,7 +107,7 @@ var config = {
 
 			parentTag: "service",
 			options: {
-				category: ["Trafik & infrastruktur"],
+				category: ["Trafik & stadsplanering"],
 				layerId: "cykelpump",
 				displayName: "Cykelpumpar",
 				layers: 'lkarta_cykelpumpar',
@@ -126,7 +126,7 @@ var config = {
 			url: "http://kartor.lund.se/geoserver/wms",
 			parentTag: "service",
 			options: {
-				category: ["Trafik & infrastruktur"],
+				category: ["Trafik & stadsplanering"],
 				layerId: "offentliga_toaletter",
 				displayName: "Offentliga toaletter",
 				layers: 'offentliga_toaletter',
@@ -182,7 +182,7 @@ var config = {
 			url: "http://kartor.lund.se/geoserver/wms",
 			options: {
 				//legend: true,
-				category: ["Bygga, bo & miljö"],
+				category: ["Trafik & stadsplanering"],
 				layerId: "PlangranserWGS84",
 				displayName: "Gällande detaljplaner",
 				layers: 'PlangranserWGS84Extern',
@@ -203,7 +203,7 @@ var config = {
 			options:
 			{
 				//legend: true,
-				category: ["Bygga, bo & miljö"],
+				category: ["Trafik & stadsplanering"],
 				layerId: "plan_pagaende",
 				displayName: "Pågående planer",
 				layers: 'plan_pagaende',
@@ -244,7 +244,7 @@ var config = {
 			url: "http://kartor.lund.se/geoserver/wms",
 			options: {
 				//legend: true,
-				category: ["Trafik & infrastruktur"],
+				category: ["Trafik & stadsplanering"],
 				layerId: "vagnatPlaneradHastighet",
 				displayName: "Hastighet, kommunal väg",
 				layers: 'vagnatPlaneradHastighet',
@@ -626,6 +626,125 @@ var config = {
 				popup: "<p>${form}&nbsp;${skoltyp}</p><p>${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
 				zIndex: 10
 			}
+		},
+		// Spårväg
+			{
+                	init: "L.TileLayer.WMS",
+                	url: "http://kartor.lund.se/geoserver/wms",
+                	options: 
+			{
+                    		//legend: true,
+                    		category: ["Trafik & stadsplanering", "Kunskapsstråket"],
+                    		layerId: "kunskapsstraket_delomrade",
+                    		displayName: "Delområden",
+                    		layers: 'kunskapsstraket_delomrade ',
+                    		format: 'image/png',
+                    		featureType: "polygon",
+                    		selectable: true,
+                    		transparent: true,
+                    		opacity: 1,
+                    		attribution: "@ Lunds kommuns",
+                    		popup: "<p>${namn}</p><p>${text}</p><p><a href='${url}'>läs mer</a></p>",
+                    		zIndex: 10,
+				
+           		}
+
+
+		},
+		{
+                	init: "L.TileLayer.WMS",
+                	url: "http://kartor.lund.se/geoserver/wms",
+                	options: 
+			{
+                    		//legend: true,
+                    		category: ["Trafik & stadsplanering", "Kunskapsstråket"],
+                    		layerId: "kunskapsstraket_ramomraden",
+                    		displayName: "Ramprogram",
+                    		layers: 'kunskapsstraket_ramomraden',
+                    		format: 'image/png',
+                    		featureType: "polygon",
+                    		selectable: true,
+                    		transparent: true,
+                    		opacity: 1,
+                    		attribution: "@ Lunds kommuns",
+                    		popup: "<p>${namn}</p><p>${text}</p><p><a href='${url}'>läs mer</a></p>",
+                    		zIndex: 10,
+				
+           		}
+
+
+		},
+
+ 
+{
+                	init: "L.TileLayer.WMS",
+                	url: "http://kartor.lund.se/geoserver/wms",
+                	options: 
+			{
+                    		//legend: true,
+                    		category: ["Trafik & stadsplanering", "Kunskapsstråket"],
+                    		layerId: "kunskapsstraket_pagaendeplaner",
+                    		displayName: "Pågående planer",
+                    		layers: 'kunskapsstraket_pagaendeplaner',
+                    		format: 'image/png',
+                    		featureType: "polygon",
+                    		selectable: true,
+                    		transparent: true,
+                    		opacity: 1,
+                    		attribution: "@ Lunds kommuns",
+                    		popup: "<p>${pa}</p><p>Typ: ${typavplan}</p><p>Status: ${status}</p><p><a href='http://www.lund.se/${pa}'>läs mer</a></p>",
+                    		zIndex: 10,
+				
+           		}
+
+
+		},
+
+		{
+                	init: "L.TileLayer.WMS",
+                	url: "http://kartor.lund.se/geoserver/wms",
+                	options: 
+			{
+                    		//legend: true,
+                    		category: ["Trafik & stadsplanering", "Kunskapsstråket"],
+                    		layerId: "kunskapsstraket_sparvagstrackning",
+                    		displayName: "Spåväg, sträckning",
+                    		layers: 'kunskapsstraket_sparvagstrackning',
+                    		format: 'image/png',
+                    		featureType: "line",
+                    		selectable: true,
+                    		transparent: true,
+                    		opacity: 1,
+                    		attribution: "@ Lunds kommuns",
+                    		popup: "<p>${pa}</p><p>${text}</p><p><a href='${url}'>läs mer</a></p>",
+                    		zIndex: 10,
+				
+           		}
+
+
+		},
+		{
+                	init: "L.TileLayer.WMS",
+                	url: "http://kartor.lund.se/geoserver/wms",
+                	options: 
+			{
+                    		//legend: true,
+                    		category: ["Trafik & stadsplanering", "Kunskapsstråket"],
+                    		layerId: "kunskapsstraket_sparvaghallplatser",
+                    		displayName: "Spåväg, hållplatser",
+                    		layers: "kunskapsstraket_sparvaghallplatser",
+                    		format: 'image/png',
+                    		featureType: "point",
+                    		selectable: true,
+                    		transparent: true,
+                    		opacity: 1,
+                    		attribution: "@ Lunds kommuns",
+                    		popup: "<p>${pa}</p><p>${hallplat}</p><p>Status: ${text}</p><p><a href='${url}'>läs mer</a></p>",
+                    		zIndex: 10,
+				
+           		}
+
+
 		}
 
 	],
