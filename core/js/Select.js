@@ -365,8 +365,7 @@
 								self._selectManyModal.modal("hide");
 								return false;
 							});
-							var nbrOfHits = selectedFeatures.length;
-							self._selectManyModal = utils.drawDialog(self.lang.manyHits.replace("%s", nbrOfHits), bodyContent, footerContent, {
+							self._selectManyModal = utils.drawDialog("", bodyContent, footerContent, {
 								size: "sm"
 							});
 							self._selectManyModal.find(".modal-header").addClass("panel-heading");
@@ -477,6 +476,10 @@
 							// })
 						}
 
+						// Set modal title
+						var nbrOfHits = selectedFeatures.length;
+						var title = self.lang.manyHits.replace("%s", nbrOfHits);
+						self._selectManyModal.find(".modal-title").text(title);
 						self._selectManyModal.modal("show");
 						return true;
 					}
