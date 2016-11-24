@@ -339,12 +339,13 @@ smap.core.Param = L.Class.extend({
 				marker.bindPopup(html).openPopup();
 			}
 		}
+		
 		var hash = paramsObject._hash = this._getHashAsObject();
 		if (hash) {
 			this._onHashChange(null, hash);
 		}
-		
 		smap.event.trigger("smap.core.applyparams", p);
+		
 	},	
 		
 //		var selArr = sel instanceof Array ? sel : sel.split(",");

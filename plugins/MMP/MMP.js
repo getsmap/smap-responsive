@@ -18,9 +18,10 @@ L.Control.MMP = L.Control.extend({
 		geolocateMoveUserMarker: true,
 		geoJsonUniqueKey: 'ID',
 		position: 'bottomright',
-		minZoom: 13,
-		externalDataLayerOptions: null,
+		zoomLevelToLoadData: 15, // for loading the data
+		minZoom: 15, // for clustering
 		disableClusteringAtZoom: 13,
+		externalDataLayerOptions: null,
 		// forcedDomain: null,
 		wsSave: {
 			dev: location.protocol+"//gkkundservice.test.malmo.se/KartService.svc/saveGeometry",
@@ -81,6 +82,7 @@ L.Control.MMP = L.Control.extend({
 		this._cluster = L.markerClusterGroup({
 			disableClusteringAtZoom: this.options.disableClusteringAtZoom || this.map.options.maxZoom+1
 		});
+
 		this._bindClusterEvents(this._cluster);
 		this.map.addLayer(this._cluster);
 
@@ -129,6 +131,7 @@ L.Control.MMP = L.Control.extend({
 			eventName = "click";
 		}
 		this.map.on(eventName, this.onMapClick, this);
+		console.log(eventName+" event bound");
 	},
 
 	deactivateAddMarker: function() {
@@ -146,7 +149,7 @@ L.Control.MMP = L.Control.extend({
 	},
 
 	onMapClick: function(e) {
-
+		console.log("map was clicked");
 		if (this.map.getZoom() < this.options.minZoom) {
 			smap.cmd.notify(this.lang.zoomInMore, "error", {fadeOut: 5000});
 			return;
@@ -161,6 +164,8 @@ L.Control.MMP = L.Control.extend({
 	},
 
 	onHashChange: function(e, originalEvent) {
+		var self = this;
+
 		// Add external data
 		var hash = location.hash.substring(1);
 		var p = utils.paramsStringToObject(hash, true);
@@ -168,7 +173,7 @@ L.Control.MMP = L.Control.extend({
 			// // Get URLs as an array
 			// var urls = p.MMP_DATA instanceof Array ? p.MMP_DATA : p.MMP_DATA.split(","), //.split(";"),
 			// 	url;
-			
+			this._dataAdded = false;
 			var url = p.MMP_DATA;
 
 			url = this._adaptUrl(url);
@@ -182,7 +187,31 @@ L.Control.MMP = L.Control.extend({
 			var options = $.extend({
 					layerId: "mmp-extlayer-"+this._counterLayerId
 				}, this.options.externalDataLayerOptions);
-			this._addExternalData(url, options);
+
+
+			// The following code is a hack to solve the issue where hovering 
+			// a cluster during map start up disables the previously bound map 
+			// click event used for adding the "incident marker". With the below
+			// solution, geojson data is only loaded after zooming in at least one
+			// step from initial zoom.
+			function isZoomOkForLoadingData() {
+				var minZoom = self.options.zoomLevelToLoadData;
+				return self.map.getZoom() >= minZoom;
+			}
+
+			if (isZoomOkForLoadingData() === true ) {
+				this._addExternalData(url, options);
+				this._dataAdded = true;
+			}
+			else {
+				this.map.on("zoomend", function() {
+					if (!self._dataAdded && isZoomOkForLoadingData() === true) {
+						this._addExternalData(url, options);
+						self._dataAdded = true;
+					}
+				}, this);
+				
+			}
 		}
 	},
 
@@ -284,7 +313,7 @@ L.Control.MMP = L.Control.extend({
 					xhrType: this.options.xhrType ? this.options.xhrType : "GET",
 					attribution: "Malmö stad",
 					inputCrs: "EPSG:3008",
-					uniqueKey: this.options.geoJsonUniqueKey, // TODO: Check this once
+					uniqueKey: false, //this.options.geoJsonUniqueKey, // TODO: Check this once
 					selectable: true,
 					reverseAxis: false,
 					showInLayerSwitcher: true,
