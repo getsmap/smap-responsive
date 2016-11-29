@@ -141,21 +141,23 @@ var config = {
 			}
 		},
 
-		{
-			init: "L.esri.dynamicMapLayer",
-			url: "http://arcgisserver.lund.se/arcgis/rest/services/extern/Registerkarta_Lund/MapServer",
-			options: {
-			//	legend: "img/legend/fastinfo.png",
-				category: ["Bygga, bo & miljö"],
-				displayName: "Fastigheter",
-				transparent: true,
-				layerId: "registerkartadyn",
-				attribution: "Stadsbyggnadskontoret, Lund",
-				popup: '${OBJECTID}',
-				uniqueKey: "OBJECTID",
-				selectable: true // select doesn't work with this ESRI layer
-			}
-		},
+		// {
+		// 	init: "L.esri.dynamicMapLayer",
+		// 	url: "http://arcgisserver.lund.se/arcgis/rest/services/extern/Registerkarta_Lund/MapServer",
+		// 	options: {
+		// 	//	legend: "img/legend/fastinfo.png",
+		// 		category: ["Bygga, bo & miljö"],
+		// 		displayName: "Fastigheter",
+		// 		transparent: true,
+		// 		layerId: "registerkartadyn",
+		// 		attribution: "Stadsbyggnadskontoret, Lund",
+		// 		popup: '${OBJECTID}',
+		// 		uniqueKey: "OBJECTID",
+		// 		selectable: true // select doesn't work with this ESRI layer
+		// 	}
+		// },
+
+		
 		{
 
 			init: "L.TileLayer.WMS",
@@ -384,7 +386,7 @@ var config = {
 				displayName: "Idrottsplatser",
 				layers: 'lkarta_idrott_fritid_idrottsplatser',
 				format: 'image/png',
-				featureType: "polygon",
+				featureType: "point",
 				selectable: true,
 				transparent: true,
 				opacity: 1,
@@ -404,7 +406,7 @@ var config = {
 				displayName: "Fritidshem",
 				layers: 'lkarta_fritidshem',
 				format: 'image/png',
-				featureType: "polygon",
+				featureType: "point",
 				selectable: true,
 				transparent: true,
 				opacity: 1,
@@ -424,7 +426,7 @@ var config = {
 				displayName: "Fritidsgård",
 				layers: 'lkarta_fritidsgard',
 				format: 'image/png',
-				featureType: "polygon",
+				featureType: "point",
 				selectable: true,
 				transparent: true,
 				opacity: 1,
@@ -570,6 +572,44 @@ var config = {
 			}
 		},
 		//------------------SKOLOR--------------------------------------------------------------------------
+		// 			{
+		// 	init: "L.TileLayer.WMS",
+		// 	url: "http://arcgisserver.lund.se/arcgis/services/extern/Skolor/MapServer/WMSServer",
+		// 	options: {
+		// 	//	legend: "img/legend/fastinfo.png",
+		// 		category: ["Kommun & politik", "Skolor"],
+		// 		displayName: "Skolval",
+		// 		transparent: true,
+		// 		layerId: "Skolor",
+		// 		layers: "1",
+		// 		format: 'image/png',
+		// 		selectable: true,
+		// 		transparent: true,
+		// 		opacity: 1,
+		// 		//attribution: "@ Lunds kommun",
+		// 		popup: "<p>${namn}</p>",
+		// 		zIndex: 9
+		// 	}
+		// },
+			{
+			init: "L.TileLayer.WMS",
+			url: "http://kartor.lund.se/geoserver/wms",
+			options: {
+				//legend: true,
+				category: ["Kommun & politik", "Skolor"],
+				layerId: "lkarta_skolor_skolval",
+				displayName: "Skolval",
+				layers: 'lkarta_skolor_skolval',
+				format: 'image/png',
+				featureType: "point",
+				selectable: true,
+				transparent: true,
+				opacity: 1,
+				attribution: "@ Lunds kommuns",
+				popup: "${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
+				zIndex: 10
+			}
+		},
 		{
 			init: "L.TileLayer.WMS",
 			url: "http://kartor.lund.se/geoserver/wms",
@@ -585,7 +625,7 @@ var config = {
 				transparent: true,
 				opacity: 1,
 				attribution: "@ Lunds kommuns",
-				popup: "<p>${form}&nbsp;${skoltyp}</p><p>${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
+				popup: "<p>${form}<p>${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
 				zIndex: 10
 			}
 		},
@@ -604,7 +644,7 @@ var config = {
 				transparent: true,
 				opacity: 1,
 				attribution: "@ Lunds kommun",
-				popup: "<p>${form}&nbsp;${skoltyp}</p><p>${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
+				popup: "<p>${form}<p>${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
 				zIndex: 10
 			}
 		},
@@ -623,7 +663,7 @@ var config = {
 				transparent: true,
 				opacity: 1,
 				attribution: "@ Lunds kommun",
-				popup: "<p>${form}&nbsp;${skoltyp}</p><p>${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
+				popup: "<p>${form}<p>${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
 				zIndex: 10
 			}
 		},
@@ -745,7 +785,123 @@ var config = {
            		}
 
 
-		}
+		},
+		// ---------------------------------- Äldreboende
+		{
+                init: "L.TileLayer.WMS",
+                url: "http://kartor.lund.se/geoserver/wms",
+                options: {
+                    //legend: true,
+                    category: ["Kommun & politik", "Senior & äldreboende"],
+                    layerId: "voo_lunchrest_style",
+                    displayName: "Lunchrestaurang",
+                    layers: 'voo_lunchrest',
+                    format: 'image/png',
+                    featureType: "polygon",
+                    selectable: true,
+                    transparent: true,
+                    opacity: 1,
+                    attribution: "@ Lunds kommun",
+                    popup: "<p>${namn}<br/></p><p><a href='${url}'>Mer information</a></p>",
+                    zIndex: 10
+                }
+            },
+			{
+                init: "L.TileLayer.WMS",
+                url: "http://kartor.lund.se/geoserver/wms",
+                options: {
+                    //legend: true,
+                    category: ["Senior & äldreboende",],
+                    layerId: "voo_traffpunkt_style",
+                    displayName: "Träffpunkt",
+                    layers: 'voo_traffpunkt',
+                    format: 'image/png',
+                    featureType: "polygon",
+                    selectable: true,
+                    transparent: true,
+                    opacity: 1,
+                    attribution: "@ Lunds kommun",
+                    popup: "<p>${namn}<br/></p><p><a href='${url}'>Mer information</a></p>",
+                    zIndex: 10
+                }
+            },
+			//{
+            //  init: "L.TileLayer.WMS",
+            //  url: "http://kartor.lund.se/geoserver/wms",
+            //  options: {
+                    //legend: true,
+            //      category: ["Senior & äldreboende","Äldreboende & demensboende"],
+            //      layerId: "voo_aldreboende_style",
+            //      displayName: "Äldreboende",
+            //      layers: 'voo_aldreboende',
+            //      format: 'image/png',
+            //      featureType: "polygon",
+            //      selectable: true,
+            //      transparent: true,
+            //      opacity: 1,
+            //      attribution: "@ Lunds kommun",
+            //      popup: "<p>${namn}<br/></p><p><a href='${url}'>Mer information</a></p>",
+            //      zIndex: 10
+            //  }
+            // },
+			{
+                init: "L.TileLayer.WMS",
+                url: "http://kartor.lund.se/geoserver/wms",
+                options: {
+                    //legend: true,
+                    category: ["Senior & äldreboende"],
+                    layerId: "voo_aldredemensboende_style",
+                    displayName: "Äldreboende",
+                    layers: 'voo_aldredemensboende',
+                    format: 'image/png',
+                    featureType: "polygon",
+                    selectable: true,
+                    transparent: true,
+                    opacity: 1,
+                    attribution: "@ Lunds kommun",
+                    popup: "<p>${namn}<br/></p><p><a href='${url}'>Mer information</a></p>",
+                    zIndex: 10
+                }
+            }, 
+			{
+                init: "L.TileLayer.WMS",
+                url: "http://kartor.lund.se/geoserver/wms",
+                options: {
+                    //legend: true,
+                    category: ["Senior & äldreboende"],
+                    layerId: "voo_demensboende_style",
+                    displayName: "Demensboende",
+                    layers: 'voo_demensboende',
+                    format: 'image/png',
+                    featureType: "polygon",
+                    selectable: true,
+                    transparent: true,
+                    opacity: 1,
+                    attribution: "@ Lunds kommun",
+                    popup: "<p>${namn}<br/></p><p><a href='${url}'>Mer information</a></p>",
+                    zIndex: 10
+                }
+            },
+			//Fnuttarna i href='${url}' i  popup: "<p><br/>${namn}</p><p><a href='${url}'>Mer information</a></p>", görvid en dålig länk att den påverkas ej, använd
+			//{
+            //     init: "L.TileLayer.WMS",
+            //    url: "http://kartor.lund.se/geoserver/wms",
+            //    options: {
+            //      //legend: true,
+            //      category: ["Senior & äldreboende","Områdesindelning"],
+            //      layerId: "voo_omradesindelning_style",
+            //      displayName: "Områdesindelning",
+            //        layers: 'voo_omradesindelning',
+            //        format: 'image/png',
+            //        featureType: "polygon",
+            //        selectable: true,
+            //        transparent: true,
+            //        opacity: 1,
+            //        attribution: "@ Lunds kommun",
+            //        popup: "<p>Område:<br/>${omrade}, ${omrade_2}</p><p>Team:<br/>${omrade_team}</p><p><a href='${url}'></a></p>",
+            //        zIndex: 10
+            //    }
+            // },
 
 	],
 
