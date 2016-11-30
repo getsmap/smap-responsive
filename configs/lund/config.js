@@ -300,6 +300,45 @@ var config = {
 			}
 		},
 		{
+                init: "L.TileLayer.WMS",
+                url: "http://kartor.lund.se/geoserver/wms",
+                options: {
+                    //legend: true,
+                    category: ["Bygga, bo & miljö","Värdefulla miljöer"],
+                    layerId: "bevaringsprogram_byggnadsinventering",
+                    displayName: "Bevaringsprogrammet",
+                    layers: 'bevaringsprogram_byggnadsinventering',
+                    format: 'image/png',
+                    featureType: "polygon",
+                    selectable: true,
+                    transparent: true,
+                    opacity: 1,
+                    attribution: "@ Lunds kommuns",
+                    popup: "<p>${klass}</p><p><a href='${url}'>läs mer</a></p>",
+                    zIndex: 10
+           		 }
+		     },
+
+			{
+                init: "L.TileLayer.WMS",
+                url: "http://kartor.lund.se/geoserver/wms",
+                options: {
+                    //legend: true,
+                    category: ["Bygga, bo & miljö","Värdefulla miljöer"],
+                    layerId: "annan_kulturhistorisk_miljo",
+                    displayName: "Kulturhistorisk miljö",
+                    layers: 'annan_kulturhistorisk_miljo',
+                    format: 'image/png',
+                    featureType: "polygon",
+                    selectable: true,
+                    transparent: true,
+                    opacity: 1,
+                    attribution: "@ Lunds kommuns",
+                    popup: "<p>${typ}</p><p>${namn}</p><p>Den här miljön ingår i kulturmiljöprogrammet för Lunds kommun. Kontakta gärna stadsantikvarie Henrik Borg, henrik.borg@lund.se, för mer information.</p>",
+                    zIndex: 10
+           		 }
+		     },
+		{
 			init: "L.TileLayer.WMS",
 			url: "http://kartor.lund.se/geoserver/wms",
 			options: {
