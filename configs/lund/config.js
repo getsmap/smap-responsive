@@ -279,26 +279,26 @@ var config = {
 				zIndex: 10
 			}
 		},
-		{
-			init: "L.TileLayer.WMS",
-			url: "http://kartor.lund.se/geoserver/wms",
+		// {
+		// 	init: "L.TileLayer.WMS",
+		// 	url: "http://kartor.lund.se/geoserver/wms",
 
-			parentTag: "service",
-			options: {
-				category: ["Bygga, bo & miljö"],
-				layerId: "atervinnings",
-				displayName: "Återvinning i Lund",
-				layers: 'lkarta_atervinnings',
-				// selectLayers:"polka_fastigheter",
-				format: 'image/png',
-				featureType: "polygon",
-				selectable: true,
-				transparent: true,
-				attribution: "@ Lunds kommun",
-				popup: "<p>${typ}</p><p>${namn}</p><p>${adress}</p><p>${postadress}</p><p>${extras}</p><p><a href=${url}>läs mer</a></p>"
-				//zIndex: 9
-			}
-		},
+		// 	parentTag: "service",
+		// 	options: {
+		// 		category: ["Bygga, bo & miljö"],
+		// 		layerId: "atervinnings",
+		// 		displayName: "Återvinning i Lund",
+		// 		layers: 'lkarta_atervinnings',
+		// 		// selectLayers:"polka_fastigheter",
+		// 		format: 'image/png',
+		// 		featureType: "polygon",
+		// 		selectable: true,
+		// 		transparent: true,
+		// 		attribution: "@ Lunds kommun",
+		// 		popup: "<p>${typ}</p><p>${namn}</p><p>${adress}</p><p>${postadress}</p><p>${extras}</p><p><a href=${url}>läs mer</a></p>"
+		// 		//zIndex: 9
+		// 	}
+		// },
 		{
                 init: "L.TileLayer.WMS",
                 url: "http://kartor.lund.se/geoserver/wms",
