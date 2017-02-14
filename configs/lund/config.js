@@ -706,6 +706,25 @@ var config = {
 				zIndex: 10
 			}
 		},
+		{
+			init: "L.TileLayer.WMS",
+			url: "http://kartor.lund.se/geoserver/wms",
+			options: {
+				//legend: true,
+				category: ["Kommun & politik", "Skolor"],
+				layerId: "uteklassrum",
+				displayName: "Uteklassrum",
+				layers: 'uteklassrum',
+				format: 'image/png',
+				featureType: "polygon",
+				selectable: true,
+				transparent: true,
+				opacity: 1,
+				attribution: "@ Lunds kommun",
+				popup: "<p>${form}<p>${skolnamn}</p><p><a href='${url}'>läs mer</a></p>",
+				zIndex: 10
+			}
+		},
 		// Spårväg
 			{
                 	init: "L.TileLayer.WMS",
@@ -787,7 +806,7 @@ var config = {
                     		//legend: true,
                     		category: ["Trafik & stadsplanering", "Kunskapsstråket"],
                     		layerId: "kunskapsstraket_sparvagstrackning",
-                    		displayName: "Spåväg, sträckning",
+                    		displayName: "Spårväg, sträckning",
                     		layers: 'kunskapsstraket_sparvagstrackning',
                     		format: 'image/png',
                     		featureType: "line",
@@ -810,7 +829,7 @@ var config = {
                     		//legend: true,
                     		category: ["Trafik & stadsplanering", "Kunskapsstråket"],
                     		layerId: "kunskapsstraket_sparvaghallplatser",
-                    		displayName: "Spåväg, hållplatser",
+                    		displayName: "Spårväg, hållplatser",
                     		layers: "kunskapsstraket_sparvaghallplatser",
                     		format: 'image/png',
                     		featureType: "point",
