@@ -1,11 +1,9 @@
 sMap-responsive
 ===========
 
-[![Build Status](https://drone.io/github.com/getsmap/smap-responsive/status.png)](https://drone.io/github.com/getsmap/smap-responsive/latest)
+<img src="img/demo/smap-responsive-demo.gif" width="600"></img>
 
-<img src="img/demo/smap-responsive-demo.gif" width="600" />
-
-###Examples
+## Examples
 - [Malmö Stadsatlas (City Map of Malmö)](http://kartor.malmo.se/init/?appid=stadsatlas-v1&lang=en)
 - [Kristianstadkartan (City Map of Kristianstad)](http://kartor.kristianstad.se/kristianstadskartan/)
 - [Lunds Stadskarta (City Map of Lund)](http://www.lund.se/Tillbehor/Karta-over-Lund/)
@@ -14,21 +12,21 @@ sMap-responsive
 - [Map with editable points, lines and polygons](http://kartor.malmo.se/init/?appid=edit_demo) (using WFS-T, requires password to save)
 - [Kävlingeån map](http://kartor.lund.se/vspu/?zoom=14&center=13.1278,55.78562&ol=VE,Haro&bl=mapboxcolor&md=url%2C%7B:t:%22FeatureCollection%22%2C:fs:%5B%7B:t::F:%2C:p%7B%22id%22:42%2C:mt::%22H%C3%A4r%20ligger%20M%C3%A5s%C3%A4ngen%22%2C%22radius%22:134.4049356995406%2C%22popupIsOpen%22:true%7D%2C:g:%7B:t::P:%2C:c:%5B13.12283%2C55.79042%5D%7D%7D%5D%7D) [(project site)](http://www.kavlingean.se/)
 
-###Introduction
+## Introduction
 
 sMap-responsive is a software framework for web maps built with Leaflet and Bootstrap. The purpose of the framework is to facilitate creation of maps which support a range of different browsers and devices (specified in the wiki).
 
 > Quick install with [npm](https://nodejs.org/): `npm install --save smap-responsive`
 
-###Who to blame?
-The framework is developed by [Johan Lahti](https://github.com/johanlahti) at [City of Malmö](http://www.malmo.se) together with a team of valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors).
+### Developers
+The framework has been developed by [Johan Lahti](https://github.com/johanlahti) together with valuable [contributors](https://github.com/getsmap/smap-responsive/graphs/contributors).
 
-###Why another framework?
-First of all. This framework is based around Leaflet controls (plugins). The controls are **reusable** in any other Leaflet-based framework. You can pick Leaflet controls from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework (with few or no modifications needed).
+### Why another framework?
+First. This framework is based around Leaflet controls (plugins). The controls are **reusable** in any other Leaflet-based framework. You can pick Leaflet controls from the [Leaflet plugin site](http://leafletjs.com/plugins.html) or vice versa – pick controls from here and use in your own Leaflet based framework (with few or no modifications needed).
 
 Second. This framework is built to be **dynamic** and serve multiple objectives in various contexts. Smap-responsive is used in many different types of external applications as well as for stand-alone maps. Although every map is unique, most functionality can be re-used for every map.
 
-Third. In order to minimise the need of programmers' hands-on – we put a lot of effort into making this framework as **easy to use** as possible for the administrator. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying one configuration file. This gives the administrator a lot of **power** and **flexibility** – without doing any programming.
+Third. In order to minimise the need of programmers' hands-on – we've put a lot of effort into making this framework as **easy to use** as possible for the administrator. New maps – from the most advanced to the simplest of simple – can be created by just copying and modifying one configuration file. This gives the administrator a lot of **power** and **flexibility** – without doing any programming.
 
 <br />
 
@@ -36,9 +34,9 @@ Third. In order to minimise the need of programmers' hands-on – we put a lot o
 
 <br />
 
-###Tutorial
+### Tutorial
 
-####0. Overview
+#### 0. Overview
 
 **Basic chapters:**
 - Getting started (1-2)
@@ -52,7 +50,7 @@ Third. In order to minimise the need of programmers' hands-on – we put a lot o
 
 <br />
 
-####1. Preconditions
+#### 1. Preconditions
 First, make sure you have the following applications installed.
 - node and npm: [https://nodejs.org/download/](https://nodejs.org/download/)
 - bower: [http://bower.io/](http://bower.io/)
@@ -64,7 +62,7 @@ First, make sure you have the following applications installed.
 `npm install --save smap-responsive`
 inside a directory of your choice (locate the folder node_modules/smap-responsive)
 
-####2. Clone and install dependencies
+#### 2. Clone and install dependencies
 If you are using a Mac or Linux computer, you may need to use ```sudo``` before some of the commands.
 Clone the project using Git or Subversion (you can also use a GUI version of the mentioned):
 ```
@@ -124,7 +122,7 @@ Next step is to change the application's behaviour using URL parameters.
 
 The application can be called with various URL parameters. For instance, [http://localhost/smap?config=another_config.js&zoom=12](http://ralocalhost/smap?config=another_config.js&zoom=12) will load the config file ``` another_config.js ``` and set the zoom to 12 (higher means more zoomed in).
 
-#####Core parameters:
+##### Core parameters:
 
 | Parameter key |  Parameter value(s) | Decides | Example value |
 | ------------- | ------------- | ------------- | ------------- |
@@ -170,7 +168,7 @@ This will cluster the features:
 
 
 <br />
-#####Plugin parameters (for the plugins hosted here):
+##### Plugin parameters (for the plugins hosted here):
 
 | Parameter key |  Parameter value(s) | Decides | Example value | Plugin |
 | ------------- | ------------- | ------------- | ------------- | ---------- |
@@ -277,7 +275,7 @@ This section describes:
 
 <br />
 
-###Scope
+### Scope
 
 sMap as a product consists of source code developed by the contributors of this repository. This code is released under the [AGPL-v3 license](http://www.gnu.org/licenses/agpl-3.0.html).
 
@@ -285,16 +283,16 @@ The product uses a number of third-party libraries, such as Leaflet and Bootstra
 
 The sMap package (i.e. the contents of this repository) consists of the sMap product on one hand, and the required third-party libraries on the other.
 
-###Important information regarding data sources
+### Important information regarding data sources
 
 Data sources – whether belonging to the contributors' organisation, or to anyone else – are not included, neither in the product, nor in the package. You need to seek permission from the publisher and/or from the copyright owner to use these data. This also applies if the data is linked from any other code.
 
-###Support
+### Support
 
-If you are using sMap-responsive to make your own map, or if you change it, we would be grateful if you let us know and share your experiences and your code. Please contact [the site admin](https://github.com/johanlahti) if you want to publish it in the examples section above.
+If you are using sMap-responsive to make your own map, or if you change it, we would more than happy if you would like to share it. Although not actively developed, feel free to raise issues or contribute.
 
-###Questions or suggestions?
+### Questions or suggestions?
 
-We are happy for any type of constructive feed-back.
+We are happy for any type of feedback.
 
-If you have questions regarding smap-reponsive, please contact [Johan Lahti](https://github.com/johanlahti) 
+For questions, please contact [us](https://github.com/getsmap/smap-responsive/graphs/contributors).
