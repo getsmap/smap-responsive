@@ -14,7 +14,6 @@ var changed = require('gulp-changed');
 var concat = require('gulp-concat');
 var cssvalidator = require('gulp-css-validator');
 var csslint = require('gulp-csslint');
-var imagemin = require('gulp-imagemin');
 var inject = require('gulp-inject');
 var jshint = require('gulp-jshint');
 var mincss = require('gulp-minify-css');
@@ -24,7 +23,6 @@ var order = require('gulp-order');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var rimraf = require('gulp-rimraf');
-// var sass = require('gulp-sass');
 var stripDebug = require('gulp-strip-debug');
 var stylus = require('gulp-stylus');
 var todo = require('gulp-todo');
@@ -34,10 +32,8 @@ var gutil = require('gulp-util');
 var connect = require('gulp-connect');
 
 var es = require('event-stream');
-//var pngcrush = require('imagemin-pngcrush');
 var browserify = require('browserify');
 var babel = require('babelify');
-// const source = require("vinyl-source-stream");
 const browserSync = require('browser-sync').create();
 const runSequence = require('run-sequence');  // Note! When gulp 4.0 is out this lib is not needed anymore. Source: https://www.npmjs.com/package/run-sequence
 var exec = require('child_process').exec;
@@ -203,12 +199,8 @@ gulp.task('ourcss', ['ourcsscompile'], function() {
 	return gulp
 		.src(p.ourCss)
 		.pipe(autoprefixer(autoPrefixerOptions)) //"last 1 version", "> 1%", "ie 8", "ie 9"))
-		// .pipe(csslint())
-		// .pipe(csslint.reporter())
-		// .pipe(order(p.ourCss.concat("*")))
 		.pipe(concat('smap.css'))
 		.pipe(mincss())
-		// .pipe(rename("smap.css"))
 		.pipe(gulp.dest("dist"))
 		.pipe(connect.reload());
 });
@@ -224,19 +216,8 @@ function runWebPack(callback) {
 	});
 }
 
-// gulp.task("webpack", function() {
-// 	var pass = through2.obj();
-// 	runWebPack();
-// 	return pass;
-// });
-
-
 gulp.task('ourjs:merge', function() {
 	return gulp.src(p.ourJs)
-		// .pipe(order(p.ourJs.concat("*")))
-		// .pipe(jshint())
-  // 		.pipe(jshint.reporter('default'))
-		// .pipe(fs.createWriteStream("bundle.js"))
   		.pipe(stripDebug())
   		.pipe(ngAnnotate())
 		.pipe(uglify())  // {mangle: false}
@@ -254,37 +235,12 @@ gulp.task('ourjs', function(callback) {
 	return through2.obj();
 });
 
-
-
-
-
-// gulp.task('images', function () {
-// 	var imgDest = 'dist/img';
-// 	return gulp
-// 		.src(['img/**/*.{png,jpg,jpeg,gif,ico}'])
-// 		.pipe(changed(imgDest))
-// 		.pipe(imagemin({
-// 			progressive: true,
-// 			svgoPlugins: [{removeViewBox: false}],
-// 			use: [pngcrush()]
-// 		}))
-// 		.pipe(gulp.dest(imgDest));
-// });
-
-
-
-
 gulp.task('configs', function() {
 	return gulp
 		.src([configPath + '/*.js'])
 			.pipe(gulp.dest("dist/configs"));
 });
 
-// gulp.task('movecssresources', function() {
-// 	return gulp
-// 		.src(['dist/lib/**/*.{eot,svg,ttf,woff,png,jpg,jpeg,gif}'], {base: "dist/lib/", ignorePath: "dist/lib/"})
-// 		.pipe(gulp.dest("dist/css"));
-// });
 
 gulp.task("libs:npmfiles", function() {
 	gulp.src(npmFiles(), {base: "./node_modules/"}).pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
@@ -297,26 +253,11 @@ gulp.task('libs', ["libs:npmfiles"], function() {
 gulp.task('libsjs', ["libs"], function() {
 	return gulp
 		.src(p.libsJs)
-		// .pipe(order(p.libsJs.concat("*")))
-		// .pipe(using())
   		.pipe(concat("libs.js"))
-		// .pipe(uglify())  // {mangle: false}
 		.on('error', onError)
 		.pipe(gulp.dest("dist"));
 });
 
-// gulp.task('libscss', function() {
-// 	return gulp
-// 		.src(p.libsCss)
-// 		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8"))
-// 		// .pipe(csslint())
-// 		// .pipe(csslint.reporter())
-// 		// .pipe(order(p.ourCss.concat("*")))
-// 		.pipe(concat('libs.css'))
-// 		.pipe(mincss())
-// 		// .pipe(rename("smap.css"))
-// 		.pipe(gulp.dest("dist"));
-// });
 
 gulp.task('htmlinjectdev', ["libs", "ourcss", "ourjs"], function() {
 	var libsJs = p.libsJs.slice(0, p.libsJs.length-1); // we don't want buildLibOverrides.js because we don't compress libs
@@ -371,8 +312,6 @@ gulp.task('fullLund', function() {
 });
 
 gulp.task('test', function() {
-	// var pluginFolders = fs.readdirSync("./plugins");
-	// console.log(pluginFolders);
 	
 	return gulp.src('test/*.js', {read: false})
 		.pipe(shell(["node_modules/.bin/mocha-casperjs test/opacity.js"]));
@@ -403,19 +342,11 @@ gulp.task('watch:css', function() {
 	});
 });
 
-// gulp.task("testcss", function() {
-// 	return gulp.src( "./plugins/IntroHelp/IntroHelp.css" )
-// 			.pipe(autoprefixer(autoPrefixerOptions)).on('error', onError)
-// 			.pipe(gulp.dest( "./plugins/IntroHelp/IntroHelp" ));
-// });
 
 gulp.task("watch:js", function() {
 	return gulp.watch(["plugins/**/*.js"]).on('change', function(file) {
 		const inFile = file.path;
 		const outFile = path.join(__dirname, "dist/plugins", path.basename(file.path));
-		// const outFile = path.join(path.dirname(file.path), path.basename(file.path).split(".").slice(0, -1).concat([".js"]).join("."));
-		
-		// console.log(file.path + " " + outFile);
 		const commandLine = ["node_modules/.bin/webpack", inFile, outFile, "--config webpack.config.watch.js"].join(" ");
 		exec(commandLine);
 	});
