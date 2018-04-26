@@ -12,7 +12,7 @@
 		},
 
 		isTouchOnly: function() {
-			return L.Browser.touch && ( (L.Browser.ie ? L.Browser.msTouch : true) || (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().indexOf("windows phone") > -1) );
+			return (L.Browser.touch && L.Browser.msPointer) || (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().indexOf("windows phone") > -1);
 		},
 
 		capitalize: function(theString) {
