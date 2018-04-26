@@ -43,7 +43,7 @@
     "bootstrap-stylus": "~4.0.3",
     "proj4": "~2.3.5",
     "jquery": "1.11.2",
-    "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git",
+    "Leaflet.NonTiledLayer": "https://github.com/ptv-logistics/Leaflet.NonTiledLayer.git#0.7.3",
     "lodash": "latest",
     "json3": "~3.3.2",
     "jquery-placeholder": "~2.1.0",
