@@ -11,6 +11,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 		hoverTooltip: true, // Show tooltip on hover
 		showTooltipOnCollapse: false, // Show tooltip (once only) when the layerswitcher is collapsed
 		catIconClass: "fa fa-chevron-right", //fa-chevron-circle-right
+		contentAsIframe: true, // If false, html with popup-content is extracted from url and displayed directly in modal 
 		getFitBoundsOptions: function() {
 			// Adapts zoom to extent options (default function prevents the 
 			// layer switcher from covering markers).
@@ -65,6 +66,7 @@ L.Control.LayerSwitcher = L.Control.extend({
 	},
 
 	initialize: function(options) {
+		console.log('layerswitcher');
 		L.setOptions(this, options);
 		this._setLang(options.lang);
 	},
@@ -720,15 +722,23 @@ L.Control.LayerSwitcher = L.Control.extend({
 		var o = $(e.target).parents(".list-group-item:first").data("t").options,
 			body = "";
 		var dialogContent = o.dialog;
+		var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
+		var body = '';
+		var d = utils.drawDialog(o.displayName, body, footerContent, {});
+		var dBody = d.find(".modal-body");
+		d.addClass("lswitch-dialog");
+
 		if (dialogContent.substring(0, 4) === "http" || dialogContent.substring(0, 2) === "//") {
 			// We are dealing with a URL
-			body = '<div class="modal-body-container"><iframe frameborder="0" scrolling="auto" src="'+dialogContent+'" width="100%" height="100%" style="position:absolute;left:0;top:0;margin:0;padding:0;" frameborder="0"></iframe></div>';
+			if (this.options.contentAsIframe) {
+				dBody.append('<div class="modal-body-container"><iframe frameborder="0" scrolling="auto" src="'+dialogContent+'" width="100%" height="100%" style="position:absolute;left:0;top:0;margin:0;padding:0;" frameborder="0"></iframe></div>');
+			}
+			else {
+				this._htmlToDialog(dialogContent, d);
+			}
 		}
-		var footerContent = '<button type="button" class="btn btn-default" data-dismiss="modal">'+this.lang.close+'</button>';
-		var d = utils.drawDialog(o.displayName, body, footerContent, {});
-		d.addClass("lswitch-dialog");
-		d.modal("show");
 
+		d.modal("show");
 		var h = $("#mapdiv").height();
 		h = h > 500 ? 500 : h; // set max height
 		d.find(".modal-body").css({
@@ -737,7 +747,23 @@ L.Control.LayerSwitcher = L.Control.extend({
 		d.on("hidden.bs.modal", function() {
 			$(this).empty().remove();
 		});
+
 		return false;
+	},
+
+	_htmlToDialog: function(path, target) {
+		$.get(path, function(data) {
+			// Replace all relative paths in src-attributes.
+			var baseURL = path.match(/.*\//)[0]; //removes filename from end of URL
+			data = data.split('\n').map(function(x) {
+				var filePath = (x.match(/src="(?!http)(.*?)"/) != null) ? x.match(/src="(.*?)"/)[1]: '';
+				//remove all scripts from page
+				x = x.replace(/<script.*\/script>/, ''); 
+				return x.replace(/src="(.*?)"/, 'src="' + baseURL + filePath + '"');
+			}).join('\n');
+
+			target.find(".modal-body").append(data)
+		});
 	},
 
 	_addBtnDialog: function(row, t) {
