@@ -1,11 +1,9 @@
-L.Control.SearchLund = L.Control.extend({
+L.Control.LundSearch = L.Control.extend({
 	options: {
-
 		whitespace: "%2B", //%20
 		wsOrgProj: "EPSG:3006", //"EPSG:3008"
 		pxDesktop: 992,
 		addToMenu: false
-		
 	},
 	
 	_lang: {
@@ -205,7 +203,7 @@ L.Control.SearchLund = L.Control.extend({
 						var arr = $.parseJSON(resp);
 						//alert (arr.items[0].name);
 						var arr2 = [];
-						for (i=0, len=arr.items.length; i<len; i++) {
+						for (var i=0, len=arr.items.length; i<len; i++) {
 							//alert("in");
 							arr2[i]= arr.items[i].name; //.split(",")[0];
 							//alert("ut");
@@ -387,9 +385,9 @@ L.Control.SearchLund = L.Control.extend({
 				
 	},
 	
-	CLASS_NAME: "L.Control.SearchLund"
+	CLASS_NAME: "L.Control.LundSearch",
 });
 
-L.control.searchLund = function (options) {
-	return new L.Control.SearchLund(options);
+L.control.LundSearch = function (options) {
+	return new L.Control.LundSearch(options);
 };

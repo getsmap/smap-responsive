@@ -43,9 +43,9 @@ smap.core.Init = L.Class.extend({
 
 		// Solves: https://github.com/getsmap/smap-responsive/issues/212
 		var configUrlsAttempted = [];
-		if (!params.CONFIG) {
+		// if (!params.CONFIG) {
 			params.CONFIG = "config.js";
-		}
+		// }
 		var fileName = params.CONFIG.substring(params.CONFIG.lastIndexOf('/') + 1);
 		function loadConfig(url) {
 			configUrlsAttempted.push(url);

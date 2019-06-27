@@ -56,11 +56,7 @@ L.Control.HistoryBack = L.Control.extend({
 
 });
 
-/*
- * This code just makes removes the need for
- * using "new" when instantiating the class. It
- * is a Leaflet convention and should be there.
- */
+
 L.control.HistoryBack = function (options) {
 	return new L.Control.HistoryBack(options);
 };

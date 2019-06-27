@@ -48,9 +48,9 @@ L.Control.LundHeader = L.Control.extend({
 	
 	    '<nav class="navbar navbar-default navbar-fixed-top">' +
              '<div class="container-fluid">' +
-             '<div class="navbar-header"><a href="#" class="navbar-left" onclick="history.go(-1);"><img alt="lund.se" aria-label="Tillbaka till lund.se" class="img-lund-logo" src="img/lund-logo.png" >' +
-             '<a class="navbar-brand lund-header" href="#" onclick="history.go(-1);" >' +
-             'Tillbaka till lund.se' +
+             '<div class="navbar-header"><a href="#" class="navbar-left" ><img alt="Lunds kommun" aria-label="Lunds kommun" class="img-lund-logo" src="img/lund-logo.png" >' +
+             '<a class="navbar-brand lund-header" href="#" >' +
+             'Lunds kommun' +
       '</a>' +
     '</div>' +
   '</div>     ' +        
@@ -58,6 +58,7 @@ L.Control.LundHeader = L.Control.extend({
 	    );
 $("body").append($div);
 $("#smap-search-div").addClass("lund-header");
+$("#smap-searchlund-div").addClass("lund-header");
 $(".leaflet-top.leaflet-right").addClass("lund-header");
 $(".lswitch-panel").addClass("lund-header");
 
